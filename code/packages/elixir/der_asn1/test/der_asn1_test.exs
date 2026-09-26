@@ -3,7 +3,6 @@ defmodule CodingAdventures.DerAsn1Test do
 
   alias CodingAdventures.DerAsn1
   alias CodingAdventures.DerAsn1.Error
-  alias CodingAdventures.DerTlv
 
   @root Path.expand("../../../../specs/fixtures", __DIR__)
   @fixture @root |> Path.join("der-asn1-v1/cases.json") |> File.read!() |> Jason.decode!()
@@ -72,25 +71,36 @@ defmodule CodingAdventures.DerAsn1Test do
         {key, value} -> {String.to_existing_atom(key), value}
       end)
 
+    {:ok, decoder} = DerAsn1.new_decoder(%{der: configured})
+
     actual =
-      case DerTlv.decode_exact(input, configured) do
-        {:ok, element} ->
+      case DerAsn1.decode_exact(decoder, input) do
+        {:ok, element, decoder} ->
+          tag = DerAsn1.element_tag(element)
+          assert DerAsn1.elements_read(decoder) == 1
+
           %{
             "outcome" => "element",
             "element_offset" => 0,
             "tag" => %{
-              "class" => element.tag.class,
-              "constructed" => element.tag.constructed,
-              "number" => element.tag.number
+              "class" => tag.class,
+              "constructed" => tag.constructed,
+              "number" => tag.number
             },
-            "header_len" => byte_size(DerTlv.header(element)),
-            "encoded_len" => byte_size(DerTlv.encoded(element)),
-            "remainder_offset" => byte_size(DerTlv.encoded(element))
+            "header_len" => byte_size(DerAsn1.element_header(element)),
+            "encoded_len" => byte_size(DerAsn1.element_encoded(element)),
+            "remainder_offset" => byte_size(DerAsn1.element_encoded(element))
           }
 
-        {:error, error} ->
-          %{"outcome" => "error", "error_id" => error.kind, "offset" => error.offset}
+        {:error, %Error{kind: "framing"} = error} ->
+          if hostile = upstream["redacted_input_hex"] do
+            refute Exception.message(error) =~ hostile
+          end
+
+          %{"outcome" => "error", "error_id" => error.framing_kind, "offset" => error.offset}
       end
+
+    if hostile = upstream["redacted_input_hex"], do: refute(Jason.encode!(actual) =~ hostile)
 
     if actual == upstream["expected"], do: %{"outcome" => "upstream"}, else: actual
   end
@@ -105,8 +115,9 @@ defmodule CodingAdventures.DerAsn1Test do
         with {:ok, integer} <- DerAsn1.decode_integer(element) do
           result = %{
             "outcome" => "value",
-            "signed_hex" => Base.encode16(integer.signed_bytes, case: :lower),
-            "negative" => integer.negative
+            "signed_hex" =>
+              integer |> DerAsn1.integer_signed_bytes() |> Base.encode16(case: :lower),
+            "negative" => DerAsn1.integer_negative?(integer)
           }
 
           if operation == "integer-to-u64" do
@@ -123,9 +134,9 @@ defmodule CodingAdventures.DerAsn1Test do
         with {:ok, bits} <- DerAsn1.decode_bit_string(element) do
           %{
             "outcome" => "value",
-            "bytes_hex" => Base.encode16(bits.bytes, case: :lower),
-            "unused_bits" => bits.unused_bits,
-            "bit_length" => bits.bit_length
+            "bytes_hex" => bits |> DerAsn1.bit_string_bytes() |> Base.encode16(case: :lower),
+            "unused_bits" => DerAsn1.bit_string_unused_bits(bits),
+            "bit_length" => DerAsn1.bit_string_bit_length(bits)
           }
         end
 
@@ -158,9 +169,9 @@ defmodule CodingAdventures.DerAsn1Test do
         with {:ok, oid} <- decoded do
           %{
             "outcome" => "value",
-            "bytes_hex" => Base.encode16(oid.encoded, case: :lower),
-            "arcs_decimal" => Enum.map(oid.arcs, &Integer.to_string/1),
-            "arc_count" => length(oid.arcs)
+            "bytes_hex" => oid |> DerAsn1.oid_encoded() |> Base.encode16(case: :lower),
+            "arcs_decimal" => oid |> DerAsn1.oid_arcs() |> Enum.map(&Integer.to_string/1),
+            "arc_count" => DerAsn1.oid_arc_count(oid)
           }
         end
     end
@@ -366,9 +377,36 @@ defmodule CodingAdventures.DerAsn1Test do
       DerAsn1.decode_octet_string(fn _ -> %{tag: nil, value: "secret"} end)
     end
 
+    tampered =
+      element
+      |> :erlang.term_to_binary()
+      |> :binary.replace(<<109, 0, 0, 0, 1, 42>>, <<109, 0, 0, 0, 1, 99>>, [:global])
+      |> :erlang.binary_to_term()
+
+    assert_raise ArgumentError, fn -> DerAsn1.decode_octet_string(tampered) end
+
     {:ok, other} = DerAsn1.new_decoder()
     assert {:error, %ArgumentError{}} = DerAsn1.sequence(other, element)
     assert DerAsn1.elements_read(decoder) == 1
+  end
+
+  test "shared budgets and cursors reject stale replay transactionally" do
+    {:ok, one} = DerAsn1.new_decoder(%{max_total_elements: 1})
+    assert {:ok, _root, ^one} = DerAsn1.decode_exact(one, <<5, 0>>)
+
+    assert {:error, %Error{kind: "element-limit-exceeded"}} =
+             DerAsn1.decode_exact(one, <<5, 0>>)
+
+    {:ok, decoder} = DerAsn1.new_decoder(%{max_total_elements: 2})
+    {:ok, root, ^decoder} = DerAsn1.decode_exact(decoder, <<0x30, 4, 5, 0, 5, 0>>)
+    {:ok, cursor} = DerAsn1.sequence(decoder, root)
+    assert {:ok, _first, ^cursor, ^decoder} = DerAsn1.cursor_read(cursor, decoder)
+
+    assert {:error, %Error{kind: "element-limit-exceeded"}, ^cursor, ^decoder} =
+             DerAsn1.cursor_read(cursor, decoder)
+
+    assert byte_size(DerAsn1.cursor_remaining(cursor)) == 2
+    assert DerAsn1.elements_read(decoder) == 2
   end
 
   test "validates limits, tags, exact OIDs, and redacted errors" do
@@ -398,12 +436,26 @@ defmodule CodingAdventures.DerAsn1Test do
              DerAsn1.decode_implicit_octet_string(element, 4_294_967_296)
 
     assert {:ok, zero_first, _decoder} = DerAsn1.decode_exact(decoder, <<6, 1, 10>>)
-    assert {:ok, %{arcs: [0, 10]}} = DerAsn1.decode_object_identifier(zero_first)
+    assert {:ok, zero_oid} = DerAsn1.decode_object_identifier(zero_first)
+    assert DerAsn1.oid_arcs(zero_oid) == [0, 10]
 
     assert {:ok, implicit, _decoder} = DerAsn1.decode_exact(decoder, <<0x88, 3, 42, 3, 4>>)
 
-    assert {:ok, %{arcs: [1, 2, 3, 4]}} =
-             DerAsn1.decode_implicit_object_identifier(implicit, 8)
+    assert {:ok, implicit_oid} = DerAsn1.decode_implicit_object_identifier(implicit, 8)
+    assert DerAsn1.oid_arcs(implicit_oid) == [1, 2, 3, 4]
+
+    first_u64_max = <<0x82, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x4F>>
+    {:ok, universal, _decoder} = DerAsn1.decode_exact(decoder, <<6, 10, first_u64_max::binary>>)
+    assert {:ok, boundary} = DerAsn1.decode_object_identifier(universal)
+    assert DerAsn1.oid_arcs(boundary) == [2, 18_446_744_073_709_551_615]
+
+    {:ok, implicit_boundary, _decoder} =
+      DerAsn1.decode_exact(decoder, <<0x88, 10, first_u64_max::binary>>)
+
+    assert {:ok, boundary_implicit} =
+             DerAsn1.decode_implicit_object_identifier(implicit_boundary, 8)
+
+    assert DerAsn1.oid_arcs(boundary_implicit) == [2, 18_446_744_073_709_551_615]
 
     {:ok, sequence, decoder} = DerAsn1.decode_exact(decoder, <<0x30, 2, 5, 0>>)
     {:ok, cursor} = DerAsn1.sequence(decoder, sequence)

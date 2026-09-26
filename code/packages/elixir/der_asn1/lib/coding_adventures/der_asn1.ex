@@ -2,9 +2,9 @@ defmodule CodingAdventures.DerAsn1 do
   @moduledoc """
   Bounded, payload-blind typed ASN.1 DER decoding above `CodingAdventures.DerTlv`.
 
-  Decoder, element, and cursor values are sealed immutable closures. Their
-  lexical function identity prevents callers from forging validated elements
-  while normal BEAM value sharing keeps parsing free of ambient authority.
+  Decoder, element, cursor, and typed values are authenticated opaque closures.
+  Shared atomics make decoder budgets and cursor progress replay-safe while
+  normal BEAM value sharing keeps parsing free of ambient authority.
   """
 
   import Bitwise
@@ -23,6 +23,13 @@ defmodule CodingAdventures.DerAsn1 do
     max_total_elements: 16_384,
     max_oid_arcs: 128
   }
+
+  @on_load :initialize_seal
+
+  defp initialize_seal do
+    :persistent_term.put({__MODULE__, :seal_secret}, {make_ref(), make_ref()})
+    :ok
+  end
 
   defmodule Decoder do
     @moduledoc "Opaque immutable decoder state produced by `new_decoder/1`."
@@ -53,32 +60,30 @@ defmodule CodingAdventures.DerAsn1 do
 
   defmodule IntegerValue do
     @moduledoc "A validated canonical DER INTEGER."
-    @enforce_keys [:signed_bytes, :negative, :value_offset]
-    defstruct [:signed_bytes, :negative, :value_offset]
+    @opaque t :: (term() -> term())
   end
 
   defmodule BitString do
     @moduledoc "A validated DER BIT STRING."
-    @enforce_keys [:bytes, :unused_bits, :bit_length]
-    defstruct [:bytes, :unused_bits, :bit_length]
+    @opaque t :: (term() -> term())
   end
 
   defmodule ObjectIdentifier do
     @moduledoc "A completely validated DER OBJECT IDENTIFIER."
-    @enforce_keys [:encoded, :arcs]
-    defstruct [:encoded, :arcs]
+    @opaque t :: (term() -> term())
   end
 
   def default_limits, do: @default_limits
 
   def new_decoder(limits \\ %{}) do
     with {:ok, normalized} <- normalize_limits(limits) do
-      {:ok, decoder_fun(%{owner: make_ref(), limits: normalized, elements_read: 0})}
+      budget = :atomics.new(1, signed: false)
+      {:ok, sealed_fun(:decoder, %{owner: make_ref(), limits: normalized, budget: budget})}
     end
   end
 
   def decoder_limits(decoder), do: decoder_data!(decoder).limits
-  def elements_read(decoder), do: decoder_data!(decoder).elements_read
+  def elements_read(decoder), do: decoder_data!(decoder).budget |> :atomics.get(1)
 
   def decode_exact(decoder, input) when is_binary(input) do
     data = decoder_data!(decoder)
@@ -87,20 +92,24 @@ defmodule CodingAdventures.DerAsn1 do
       data.limits.max_depth == 0 ->
         {:error, error("depth-limit-exceeded", 0)}
 
-      data.elements_read >= data.limits.max_total_elements ->
-        {:error, error("element-limit-exceeded", 0)}
-
-      byte_size(input) > data.limits.der.max_input_len ->
-        {:error, error("framing", 0, "input-limit-exceeded")}
-
       true ->
-        case DerTlv.decode_exact(:binary.copy(input), data.limits.der) do
-          {:ok, framed} ->
-            element = wrap_element(framed, 0, data.owner)
-            {:ok, element, decoder_fun(%{data | elements_read: data.elements_read + 1})}
+        with :ok <- reserve_budget(data, 0) do
+          cond do
+            byte_size(input) > data.limits.der.max_input_len ->
+              release_budget(data)
+              {:error, error("framing", 0, "input-limit-exceeded")}
 
-          {:error, failure} ->
-            {:error, framing(failure)}
+            true ->
+              case DerTlv.decode_exact(:binary.copy(input), data.limits.der) do
+                {:ok, framed} ->
+                  element = wrap_element(framed, 0, data.owner, data.budget)
+                  {:ok, element, decoder}
+
+                {:error, failure} ->
+                  release_budget(data)
+                  {:error, framing(failure)}
+              end
+          end
         end
     end
   end
@@ -122,60 +131,87 @@ defmodule CodingAdventures.DerAsn1 do
          {:ok, decoder_data, element_data} <- owned(decoder, element),
          :ok <- expect_tag(element_data, "context-specific", true, tag_number),
          :ok <- check_child_depth(element_data.depth, decoder_data.limits),
-         :ok <- check_total_budget(decoder_data, element_data.value_offset) do
+         :ok <- reserve_budget(decoder_data, element_data.value_offset) do
       case DerTlv.decode_exact(element_data.value, decoder_data.limits.der) do
         {:ok, framed} ->
-          child = wrap_element(framed, element_data.depth + 1, decoder_data.owner)
+          child =
+            wrap_element(
+              framed,
+              element_data.depth + 1,
+              decoder_data.owner,
+              decoder_data.budget
+            )
 
-          {:ok, child,
-           decoder_fun(%{decoder_data | elements_read: decoder_data.elements_read + 1})}
+          {:ok, child, decoder}
 
         {:error, failure} ->
+          release_budget(decoder_data)
           {:error, framing(failure)}
       end
     end
   end
 
-  def cursor_remaining(cursor), do: cursor_data!(cursor).framing |> DerTlv.remaining()
+  def cursor_remaining(cursor) do
+    data = cursor_data!(cursor)
+    offset = :atomics.get(data.progress, 1)
+    binary_part(data.input, offset, byte_size(data.input) - offset)
+  end
 
   def cursor_finish(cursor) do
-    data = cursor_data!(cursor)
-
-    case DerTlv.finish(data.framing) do
-      :ok -> :ok
-      {:error, failure} -> {:error, framing(failure)}
-    end
+    if byte_size(cursor_remaining(cursor)) == 0,
+      do: :ok,
+      else: {:error, error("framing", data_prefix(cursor), "trailing-data")}
   end
 
   def cursor_read(cursor, decoder) do
     cursor_data = cursor_data!(cursor)
     decoder_data = decoder_data!(decoder)
 
-    cond do
-      byte_size(DerTlv.remaining(cursor_data.framing)) == 0 ->
-        {:end, cursor}
+    with_cursor_lock(cursor_data, fn ->
+      offset = :atomics.get(cursor_data.progress, 1)
+      lower_count = :atomics.get(cursor_data.progress, 2)
 
-      decoder_data.owner != cursor_data.owner ->
-        {:error, error("decoder-limit-mismatch", 0), cursor, decoder}
+      cond do
+        offset == byte_size(cursor_data.input) ->
+          {:end, cursor}
 
-      decoder_data.elements_read >= decoder_data.limits.max_total_elements ->
-        {:error, error("element-limit-exceeded", 0), cursor, decoder}
+        decoder_data.owner != cursor_data.owner or
+            decoder_data.budget != cursor_data.budget ->
+          {:error, error("decoder-limit-mismatch", 0), cursor, decoder}
 
-      true ->
-        case DerTlv.read(cursor_data.framing) do
-          {:ok, framed, next_framing} ->
-            child = wrap_element(framed, cursor_data.depth, cursor_data.owner)
-            next_cursor = cursor_fun(%{cursor_data | framing: next_framing})
+        true ->
+          with :ok <- reserve_budget(decoder_data, 0) do
+            framing = %DerTlv.Cursor{
+              input: cursor_data.input,
+              limits: cursor_data.limits,
+              offset: offset,
+              elements_read: lower_count
+            }
 
-            next_decoder =
-              decoder_fun(%{decoder_data | elements_read: decoder_data.elements_read + 1})
+            case DerTlv.read(framing) do
+              {:ok, framed, next_framing} ->
+                :atomics.put(cursor_data.progress, 1, next_framing.offset)
+                :atomics.put(cursor_data.progress, 2, next_framing.elements_read)
 
-            {:ok, child, next_cursor, next_decoder}
+                child =
+                  wrap_element(
+                    framed,
+                    cursor_data.depth,
+                    cursor_data.owner,
+                    cursor_data.budget
+                  )
 
-          {:error, failure, _same} ->
-            {:error, framing(failure), cursor, decoder}
-        end
-    end
+                {:ok, child, cursor, decoder}
+
+              {:error, failure, _same} ->
+                release_budget(decoder_data)
+                {:error, framing(failure), cursor, decoder}
+            end
+          else
+            {:error, failure} -> {:error, failure, cursor, decoder}
+          end
+      end
+    end)
   end
 
   def decode_boolean(element) do
@@ -195,31 +231,36 @@ defmodule CodingAdventures.DerAsn1 do
       <<first, _::binary>> = value
 
       {:ok,
-       %IntegerValue{
+       sealed_fun(:integer_value, %{
          signed_bytes: value,
          negative: (first &&& 0x80) != 0,
          value_offset: offset
-       }}
+       })}
     end
   end
 
-  def integer_to_u64(%IntegerValue{negative: true, value_offset: offset}),
-    do: {:error, error("negative-integer", offset)}
+  def integer_signed_bytes(integer), do: typed_data!(integer, :integer_value).signed_bytes
+  def integer_negative?(integer), do: typed_data!(integer, :integer_value).negative
 
-  def integer_to_u64(%IntegerValue{} = integer) do
-    bytes =
-      case integer.signed_bytes do
-        <<0, rest::binary>> when byte_size(rest) > 0 -> rest
-        value -> value
-      end
+  def integer_to_u64(integer) do
+    data = typed_data!(integer, :integer_value)
 
-    if byte_size(bytes) > 8,
-      do: {:error, error("integer-overflow", integer.value_offset)},
-      else: {:ok, :binary.decode_unsigned(bytes)}
+    if data.negative do
+      {:error, error("negative-integer", data.value_offset)}
+    else
+      bytes =
+        case data.signed_bytes do
+          <<0, rest::binary>> when byte_size(rest) > 0 -> rest
+          value -> value
+        end
+
+      if byte_size(bytes) > 8,
+        do: {:error, error("integer-overflow", data.value_offset)},
+        else: {:ok, :binary.decode_unsigned(bytes)}
+    end
+  rescue
+    ArgumentError -> {:error, %ArgumentError{message: "expected validated INTEGER"}}
   end
-
-  def integer_to_u64(_),
-    do: {:error, %ArgumentError{message: "expected validated INTEGER"}}
 
   def decode_bit_string(element) do
     with {:ok, value, offset} <- primitive(element, "universal", 3) do
@@ -241,11 +282,11 @@ defmodule CodingAdventures.DerAsn1 do
 
             true ->
               {:ok,
-               %BitString{
+               sealed_fun(:bit_string, %{
                  bytes: payload,
                  unused_bits: unused,
                  bit_length: byte_size(payload) * 8 - unused
-               }}
+               })}
           end
 
         _ ->
@@ -253,6 +294,10 @@ defmodule CodingAdventures.DerAsn1 do
       end
     end
   end
+
+  def bit_string_bytes(bits), do: typed_data!(bits, :bit_string).bytes
+  def bit_string_unused_bits(bits), do: typed_data!(bits, :bit_string).unused_bits
+  def bit_string_bit_length(bits), do: typed_data!(bits, :bit_string).bit_length
 
   def decode_octet_string(element), do: primitive_value(element, "universal", 4)
 
@@ -291,20 +336,30 @@ defmodule CodingAdventures.DerAsn1 do
          do: decode_oid(value, offset, configured.max_oid_arcs)
   end
 
-  def oid_equals?(%ObjectIdentifier{arcs: arcs}, expected), do: arcs == Enum.to_list(expected)
+  def oid_encoded(oid), do: typed_data!(oid, :object_identifier).encoded
+  def oid_arcs(oid), do: typed_data!(oid, :object_identifier).arcs
+
+  def oid_arc_count(oid),
+    do: oid |> typed_data!(:object_identifier) |> Map.fetch!(:arcs) |> length()
+
+  def oid_equals?(oid, expected),
+    do: typed_data!(oid, :object_identifier).arcs == Enum.to_list(expected)
 
   defp container(decoder, element, tag_class, constructed, number) do
     with {:ok, decoder_data, element_data} <- owned(decoder, element),
          :ok <- expect_tag(element_data, tag_class, constructed, number),
          :ok <- check_child_depth(element_data.depth, decoder_data.limits) do
-      {:ok, framing} = DerTlv.new_cursor(element_data.value, decoder_data.limits.der)
+      {:ok, _framing} = DerTlv.new_cursor(element_data.value, decoder_data.limits.der)
+      progress = :atomics.new(3, signed: false)
 
       {:ok,
-       cursor_fun(%{
+       sealed_fun(:cursor, %{
          owner: decoder_data.owner,
-         framing: framing,
-         depth: element_data.depth + 1,
-         limits: decoder_data.limits
+         budget: decoder_data.budget,
+         input: element_data.value,
+         limits: decoder_data.limits.der,
+         progress: progress,
+         depth: element_data.depth + 1
        })}
     end
   end
@@ -342,7 +397,7 @@ defmodule CodingAdventures.DerAsn1 do
     do: {:error, error("empty-object-identifier", offset)}
 
   defp decode_oid(value, offset, max_arcs) do
-    with {:ok, first, index} <- oid_subidentifier(value, 0, offset) do
+    with {:ok, first, index} <- oid_subidentifier(value, 0, offset, @u64_max + 80) do
       arcs =
         cond do
           first < 40 -> [0, first]
@@ -352,42 +407,43 @@ defmodule CodingAdventures.DerAsn1 do
 
       if length(arcs) > max_arcs,
         do: {:error, error("oid-arc-limit-exceeded", offset)},
-        else: decode_oid_tail(value, index, offset, max_arcs, arcs)
+        else: decode_oid_tail(value, index, offset, max_arcs, 2, Enum.reverse(arcs))
     end
   end
 
-  defp decode_oid_tail(value, index, _offset, _max_arcs, arcs) when index == byte_size(value),
-    do: {:ok, %ObjectIdentifier{encoded: value, arcs: arcs}}
+  defp decode_oid_tail(value, index, _offset, _max_arcs, _count, reversed)
+       when index == byte_size(value),
+       do: {:ok, sealed_fun(:object_identifier, %{encoded: value, arcs: Enum.reverse(reversed)})}
 
-  defp decode_oid_tail(value, index, offset, max_arcs, arcs) do
-    with {:ok, arc, next} <- oid_subidentifier(value, index, offset) do
-      if length(arcs) >= max_arcs,
+  defp decode_oid_tail(value, index, offset, max_arcs, count, reversed) do
+    with {:ok, arc, next} <- oid_subidentifier(value, index, offset, @u64_max) do
+      if count >= max_arcs,
         do: {:error, error("oid-arc-limit-exceeded", offset + index)},
-        else: decode_oid_tail(value, next, offset, max_arcs, arcs ++ [arc])
+        else: decode_oid_tail(value, next, offset, max_arcs, count + 1, [arc | reversed])
     end
   end
 
-  defp oid_subidentifier(value, start, offset) do
+  defp oid_subidentifier(value, start, offset, maximum) do
     if :binary.at(value, start) == 0x80,
       do: {:error, error("non-minimal-object-identifier", offset + start)},
-      else: oid_loop(value, start, offset, 0)
+      else: oid_loop(value, start, offset, 0, maximum)
   end
 
-  defp oid_loop(value, index, offset, _number) when index >= byte_size(value),
+  defp oid_loop(value, index, offset, _number, _maximum) when index >= byte_size(value),
     do: {:error, error("unterminated-object-identifier", offset + index)}
 
-  defp oid_loop(value, index, offset, number) do
+  defp oid_loop(value, index, offset, number, maximum) do
     octet = :binary.at(value, index)
     payload = octet &&& 0x7F
 
-    if number > div(@u64_max - payload, 128) do
+    if number > div(maximum - payload, 128) do
       {:error, error("object-identifier-overflow", offset + index)}
     else
       next_number = number * 128 + payload
 
       if (octet &&& 0x80) == 0,
         do: {:ok, next_number, index + 1},
-        else: oid_loop(value, index + 1, offset, next_number)
+        else: oid_loop(value, index + 1, offset, next_number, maximum)
     end
   end
 
@@ -395,7 +451,7 @@ defmodule CodingAdventures.DerAsn1 do
     decoder_data = decoder_data!(decoder)
     element_data = element_data!(element)
 
-    if decoder_data.owner == element_data.owner,
+    if decoder_data.owner == element_data.owner and decoder_data.budget == element_data.budget,
       do: {:ok, decoder_data, element_data},
       else: {:error, %ArgumentError{message: "element belongs to another decoder"}}
   end
@@ -414,11 +470,22 @@ defmodule CodingAdventures.DerAsn1 do
       else: :ok
   end
 
-  defp check_total_budget(data, offset) do
-    if data.elements_read >= data.limits.max_total_elements,
-      do: {:error, error("element-limit-exceeded", offset)},
-      else: :ok
+  defp reserve_budget(data, offset) do
+    current = :atomics.get(data.budget, 1)
+
+    cond do
+      current >= data.limits.max_total_elements ->
+        {:error, error("element-limit-exceeded", offset)}
+
+      :atomics.compare_exchange(data.budget, 1, current, current + 1) == :ok ->
+        :ok
+
+      true ->
+        reserve_budget(data, offset)
+    end
   end
+
+  defp release_budget(data), do: :atomics.add(data.budget, 1, -1)
 
   defp validate_tag_number(value)
        when is_integer(value) and value >= 0 and value <= 0xFFFF_FFFF,
@@ -461,13 +528,14 @@ defmodule CodingAdventures.DerAsn1 do
   defp normalize_limits_with_der(_limits, _der),
     do: {:error, %ArgumentError{message: "DER limits must be a map"}}
 
-  defp wrap_element(framed, depth, owner) do
+  defp wrap_element(framed, depth, owner, budget) do
     header = :binary.copy(DerTlv.header(framed))
     value = :binary.copy(DerTlv.value(framed))
     encoded = :binary.copy(DerTlv.encoded(framed))
 
-    element_fun(%{
+    sealed_fun(:element, %{
       owner: owner,
+      budget: budget,
       tag: framed.tag,
       header: header,
       value: value,
@@ -477,28 +545,67 @@ defmodule CodingAdventures.DerAsn1 do
     })
   end
 
-  defp decoder_fun(data), do: fn :__der_asn1_decoder__ -> data end
-  defp element_fun(data), do: fn :__der_asn1_element__ -> data end
-  defp cursor_fun(data), do: fn :__der_asn1_cursor__ -> data end
+  defp with_cursor_lock(data, operation) do
+    case :atomics.compare_exchange(data.progress, 3, 0, 1) do
+      :ok ->
+        try do
+          operation.()
+        after
+          :atomics.put(data.progress, 3, 0)
+        end
 
-  defp decoder_data!(value),
-    do: sealed_data!(value, decoder_fun(%{}), :__der_asn1_decoder__, "decoder")
-
-  defp element_data!(value),
-    do: sealed_data!(value, element_fun(%{}), :__der_asn1_element__, "element")
-
-  defp cursor_data!(value),
-    do: sealed_data!(value, cursor_fun(%{}), :__der_asn1_cursor__, "cursor")
-
-  defp sealed_data!(value, sample, message, name) when is_function(value, 1) do
-    fields = [:module, :new_uniq, :new_index]
-
-    if Enum.all?(fields, &(:erlang.fun_info(value, &1) == :erlang.fun_info(sample, &1))),
-      do: value.(message),
-      else: raise(ArgumentError, "expected validated #{name}")
+      _ ->
+        :erlang.yield()
+        with_cursor_lock(data, operation)
+    end
   end
 
-  defp sealed_data!(_value, _sample, _message, name),
+  defp data_prefix(cursor) do
+    data = cursor_data!(cursor)
+    :atomics.get(data.progress, 1)
+  end
+
+  defp seal_signature(kind, data) do
+    secret = :persistent_term.get({__MODULE__, :seal_secret})
+
+    {
+      :erlang.phash2({secret, 1, kind, data}, 4_294_967_296),
+      :erlang.phash2({data, kind, 2, secret}, 4_294_967_296),
+      :erlang.phash2({kind, secret, data, 3}, 4_294_967_296),
+      :erlang.phash2({4, data, secret, kind}, 4_294_967_296)
+    }
+  end
+
+  defp sealed_fun(kind, data) do
+    signature = seal_signature(kind, data)
+    fn :__der_asn1_sealed__ -> {kind, data, signature} end
+  end
+
+  defp decoder_data!(value), do: sealed_data!(value, :decoder, "decoder")
+  defp element_data!(value), do: sealed_data!(value, :element, "element")
+  defp cursor_data!(value), do: sealed_data!(value, :cursor, "cursor")
+  defp typed_data!(value, kind), do: sealed_data!(value, kind, Atom.to_string(kind))
+
+  defp sealed_data!(value, kind, name) when is_function(value, 1) do
+    sample = sealed_fun(:sample, %{})
+    fields = [:module, :new_uniq, :new_index]
+
+    if Enum.all?(fields, &(:erlang.fun_info(value, &1) == :erlang.fun_info(sample, &1))) do
+      case value.(:__der_asn1_sealed__) do
+        {^kind, data, signature} ->
+          if signature == seal_signature(kind, data),
+            do: data,
+            else: raise(ArgumentError, "expected validated #{name}")
+
+        _ ->
+          raise ArgumentError, "expected validated #{name}"
+      end
+    else
+      raise ArgumentError, "expected validated #{name}"
+    end
+  end
+
+  defp sealed_data!(_value, _kind, name),
     do: raise(ArgumentError, "expected validated #{name}")
 
   defp framing(%DerTlv.Error{kind: kind, offset: offset}), do: error("framing", offset, kind)

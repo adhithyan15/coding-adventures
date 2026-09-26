@@ -14276,7 +14276,7 @@ entering the established-language denominator.
 ### DER ASN.1 portable implementation progress
 
 The closed 122-case, 22-error language-neutral contract now has complete
-package-native consumers in fourteen of fifteen established lanes: Rust, Python,
+package-native consumers in all fifteen established lanes: Rust, Python,
 Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir. Every consumer executes all
 46 referenced DER TLV framing cases rather than treating delegated rows as
 automatic success. The refined
@@ -14324,13 +14324,21 @@ capability-schema validation, and the real Go build-tool two-package
 dependency plan pass. Elixir passes the complete 122-case suite and all 46
 delegated framing cases plus native sealed-wrapper, exact-owner, shared-budget,
 transactionality, exact-u64, OID equality, tag, finite-limit, and redaction
-checks at 100 percent line coverage; formatting, warnings-as-errors compilation,
+checks at 97.89 percent line coverage; formatting, warnings-as-errors compilation,
 both build fronts, Windows-front validation, capability-schema validation, and
-the real Go build-tool two-package dependency plan pass. All fourteen use empty capability
+the real Go build-tool two-package dependency plan pass. Its post-review
+hardening routes delegated rows through the typed layer, authenticates opaque
+and typed wrappers against ETF editing, shares replay-safe atomics across stale
+decoder/cursor aliases, admits the exact first combined OID u64-plus-80
+boundary, and keeps OID work linear. Lua passes the complete 122-case suite and
+all 46 delegated framing cases plus private-registry, owner, transactional
+budget, exact two-limb u64/OID, tag, limit, equality, and redaction checks at
+98.01 percent production line coverage; LuaCheck, bytecode syntax, LuaRocks
+installation and metadata, both build fronts, capability-schema validation,
+and the real Go build-tool dependency plan pass. All fifteen use empty capability
 manifests, structural limits, shared work budgets,
 transactional cursors, unsigned-width-safe integer and OID handling, and
-payload-free diagnostics. Lua remains in this same serial work item; no parity PR is
-open yet. Independent security review made validated element and primitive
+payload-free diagnostics. No parity PR is open yet. Independent security review made validated element and primitive
 wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir, hid raw DER
 framing helpers from typed package surfaces, and added adversarial zero-value,
 runtime-token, immutable-snapshot, and redaction tests. Swift cursors additionally

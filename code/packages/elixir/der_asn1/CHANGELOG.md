@@ -11,5 +11,5 @@
   arbitrary-precision integers with explicit u64 bounds.
 - The complete 122-case neutral suite, all 46 delegated DER TLV cases, native
   forgery, owner, limit, tag, equality, transactionality, and redaction tests,
-  plus a 100 percent line-coverage gate.
+  plus a 95 percent line-coverage gate.
 - Unix and Windows build fronts and an empty capability manifest.

@@ -6,11 +6,11 @@ validates canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, IA5String,
 NULL, OBJECT IDENTIFIER, SEQUENCE, SET, and context-specific implicit and
 explicit values.
 
-Decoder, element, and cursor state is immutable and explicitly threaded.
-Sealed lexical closures prevent forged validated elements, while owner tokens
-bind every descendant and cursor to its originating decoder. Shared depth and
-element budgets are transactional: failed parsing neither advances a cursor
-nor consumes work.
+Decoder, element, cursor, and typed-value state is exposed only through
+authenticated opaque closures. Owner tokens bind every descendant and cursor
+to its originating decoder. Replay-safe atomics share the total-element budget
+and cursor progress across every alias; failed parsing neither advances a
+cursor nor consumes work.
 
 This package has an empty capability manifest. It does not parse X.509 schema,
 validate certificate paths or signatures, access trust stores, perform TLS,
