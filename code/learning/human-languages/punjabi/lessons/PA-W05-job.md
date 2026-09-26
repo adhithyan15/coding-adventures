@@ -49,7 +49,10 @@ Join **ਨੌ + ਕ + ਰੀ = ਨੌਕਰੀ**. It means “job.” Copy **ਨ
 Cover the model, say the meaning, and write the value once. Repair only the first differing piece.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-WORK-JOB-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-WORK-JOB-01, PA-LEX-ANCHOR-MAUSAM] -->
 <!-- hl-activity: {"id":"PA-W05-job-check","kind":"text","assesses":["PA-FORM-WORK-JOB-01"],"prompt":"Copy the Gurmukhi work value meaning job.","answer":"ਨੌਕਰੀ","accepted":[],"feedback":{"correct":"ਨੌਕਰੀ means job.","incorrect":"Rebuild ਨੌ + ਕ + ਰੀ, then compare once."},"response_seconds":18} -->
+
+[PAUSE 2s] Which word from earlier in this chapter carries the same ੌ?
+(**ਮੌਸਮ**, *mausam*, the weather.)
 
 The two values remain separate until the next lesson.

@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Build the Work Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:53d015895901fc4d",
+  "sourceHash": "fnv1a64:c6219848e5b71b55",
   "lessons": [
     {
       "id": "PA-W05-ka",
@@ -577,7 +577,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:75203e4ff6117ecb",
+      "sourceHash": "fnv1a64:d3f9bc24f11d4279",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -628,6 +628,16 @@
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word from earlier in this chapter carries the same ੌ (au-matra)? (ਮੌਸਮ, mausam, the weather.)"
+            },
             {
               "kind": "speech",
               "text": "The two values remain separate until the next lesson."
