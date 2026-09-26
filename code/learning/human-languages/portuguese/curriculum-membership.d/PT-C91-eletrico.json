@@ -1,0 +1,11 @@
+{
+  "id": "PT-C91-eletrico",
+  "pathSegment": "PT-PATH-91-VIAGEM91",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-91-VIAGEM91",
+      "order": 1
+    }
+  ]
+}

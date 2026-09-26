@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-92-VIAGEM92",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PT-EXT-92-VIAGEM92"
+  ],
+  "after": []
+}

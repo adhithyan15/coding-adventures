@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:150527ce0798cdfa",
+  "lessonIds": [
+    "PT-C112-cliente",
+    "PT-C112-chefe",
+    "PT-C112-turma",
+    "PT-C112-aula",
+    "PT-C112-exame"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch112.txt",
+  "json": "portuguese/narration/ch112.json",
+  "textHash": "fnv1a64:1c2ab4b5dc7086bd",
+  "jsonHash": "fnv1a64:c771a7c26f3e0424",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C131-por",
+  "pathSegment": "PT-PATH-131-VERBOS131",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-131-VERBOS131",
+      "order": 1
+    }
+  ]
+}

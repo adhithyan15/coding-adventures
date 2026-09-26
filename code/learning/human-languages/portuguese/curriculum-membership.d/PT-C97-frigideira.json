@@ -1,0 +1,11 @@
+{
+  "id": "PT-C97-frigideira",
+  "pathSegment": "PT-PATH-97-CASA97",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-97-CASA97",
+      "order": 1
+    }
+  ]
+}

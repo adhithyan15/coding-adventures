@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C96-armario",
+    "language": "portuguese",
+    "chapter": 96,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b00990d26e7a9b21"
+  },
+  "findings": []
+}

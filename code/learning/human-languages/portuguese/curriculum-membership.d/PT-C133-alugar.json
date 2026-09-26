@@ -1,0 +1,11 @@
+{
+  "id": "PT-C133-alugar",
+  "pathSegment": "PT-PATH-133-VERBOS133",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-133-VERBOS133",
+      "order": 1
+    }
+  ]
+}

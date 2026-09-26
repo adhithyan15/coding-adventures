@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:a2f2e765a4e46d3c",
+  "lessonIds": [
+    "PT-C87-escritorio",
+    "PT-C87-esquina",
+    "PT-C87-cruzamento",
+    "PT-C87-semaforo",
+    "PT-C87-estacionamento"
+  ],
+  "tex": "portuguese/book/chapters/ch87-office-street-corner-crossroads-traffic-lights-car-park.tex"
+}

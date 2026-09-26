@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:f570b990b9109714",
+  "lessonIds": [
+    "PT-C110-enfermeira",
+    "PT-C110-cozinheiro",
+    "PT-C110-empregado",
+    "PT-C110-agricultor",
+    "PT-C110-padeiro"
+  ],
+  "tex": "portuguese/book/chapters/ch110-nurse-cook-waiter-farmer-baker.tex"
+}

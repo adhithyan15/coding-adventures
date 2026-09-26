@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:72f0f873f5e502e4",
+  "lessonIds": [
+    "PT-C105-carne-de-vaca",
+    "PT-C105-legumes",
+    "PT-C105-cogumelo",
+    "PT-C105-pepino",
+    "PT-C105-morango"
+  ],
+  "tex": "portuguese/book/chapters/ch105-beef-vegetables-mushroom-cucumber-strawberry.tex"
+}

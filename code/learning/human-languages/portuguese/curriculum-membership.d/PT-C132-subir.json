@@ -1,0 +1,11 @@
+{
+  "id": "PT-C132-subir",
+  "pathSegment": "PT-PATH-132-VERBOS132",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-132-VERBOS132",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Drawing, Life, Concert, Party, Grass",
+  "label": "ch:pt-drawing-life-concert-party-grass",
+  "canDo": "I can say a drawing, life, a concert, a party and grass.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C115-relva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a drawing, life, a concert, a party and grass.",
+    "assesses": [
+      "PT-LEX-C115-LAZER115-03",
+      "PT-LEX-C115-LAZER115-04",
+      "PT-LEX-C115-LAZER115-05"
+    ]
+  }
+}

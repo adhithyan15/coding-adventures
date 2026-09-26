@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:9a45b3879d6359a5",
+  "lessonIds": [
+    "PT-C128-pesado",
+    "PT-C128-magro",
+    "PT-C128-contente",
+    "PT-C128-fim-de-semana",
+    "PT-C128-data"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch128.txt",
+  "json": "portuguese/narration/ch128.json",
+  "textHash": "fnv1a64:9cab683bc0dd74ea",
+  "jsonHash": "fnv1a64:1c54cb041d9d42cf",
+  "findings": []
+}

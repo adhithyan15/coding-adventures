@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:39c34e54ce447dd7",
+  "lessonIds": [
+    "PT-C88-elevador",
+    "PT-C88-norte",
+    "PT-C88-sul",
+    "PT-C88-leste",
+    "PT-C88-oeste"
+  ],
+  "tex": "portuguese/book/chapters/ch88-lift-north-south-east-west.tex"
+}

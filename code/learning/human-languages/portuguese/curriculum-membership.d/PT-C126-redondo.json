@@ -1,0 +1,11 @@
+{
+  "id": "PT-C126-redondo",
+  "pathSegment": "PT-PATH-126-QUALIDADES126",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-126-QUALIDADES126",
+      "order": 3
+    }
+  ]
+}

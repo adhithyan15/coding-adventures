@@ -1,0 +1,11 @@
+{
+  "id": "PT-C104-trovao",
+  "pathSegment": "PT-PATH-104-ROUPA104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-104-ROUPA104",
+      "order": 3
+    }
+  ]
+}

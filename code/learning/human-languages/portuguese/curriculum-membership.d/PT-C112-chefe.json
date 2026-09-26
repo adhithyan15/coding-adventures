@@ -1,0 +1,11 @@
+{
+  "id": "PT-C112-chefe",
+  "pathSegment": "PT-PATH-112-ESCOLA112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-112-ESCOLA112",
+      "order": 1
+    }
+  ]
+}

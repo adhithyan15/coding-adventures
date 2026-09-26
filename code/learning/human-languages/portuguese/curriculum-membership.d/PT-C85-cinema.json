@@ -1,0 +1,11 @@
+{
+  "id": "PT-C85-cinema",
+  "pathSegment": "PT-PATH-85-LUGARES85",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-85-LUGARES85",
+      "order": 3
+    }
+  ]
+}

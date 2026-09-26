@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C96-lixo",
+    "language": "portuguese",
+    "chapter": 96,
+    "sequence": 4550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:022f7aa8e7261c2f"
+  },
+  "findings": []
+}

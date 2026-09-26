@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Nurse, Cook, Waiter, Farmer, Baker",
+  "label": "ch:pt-nurse-cook-waiter-farmer-baker",
+  "canDo": "I can say a nurse, a cook, a waiter, a farmer and a baker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C110-padeiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a nurse, a cook, a waiter, a farmer and a baker.",
+    "assesses": [
+      "PT-LEX-C110-TRABALHO110-03",
+      "PT-LEX-C110-TRABALHO110-04",
+      "PT-LEX-C110-TRABALHO110-05"
+    ]
+  }
+}

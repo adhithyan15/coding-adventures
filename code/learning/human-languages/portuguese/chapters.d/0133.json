@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "To go down, To rent, To repair, To tell, To walk",
+  "label": "ch:pt-to-go-down-to-rent-to-repair-to-tell-to-walk",
+  "canDo": "I can say to go down, to rent, to repair, to tell and to walk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-R133-second-pass-numbers-and-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say to go down, to rent, to repair, to tell and to walk.",
+    "assesses": [
+      "PT-LEX-C133-VERBOS133-03",
+      "PT-LEX-C133-VERBOS133-04",
+      "PT-LEX-C133-VERBOS133-05"
+    ]
+  }
+}

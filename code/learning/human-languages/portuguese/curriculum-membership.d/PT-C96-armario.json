@@ -1,0 +1,11 @@
+{
+  "id": "PT-C96-armario",
+  "pathSegment": "PT-PATH-96-CASA96",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-96-CASA96",
+      "order": 4
+    }
+  ]
+}

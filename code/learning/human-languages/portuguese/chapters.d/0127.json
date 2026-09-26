@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Narrow, Angry, Bitter, Salty, Light",
+  "label": "ch:pt-narrow-angry-bitter-salty-light",
+  "canDo": "I can say narrow, angry, bitter, salty and light.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C127-leve",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say narrow, angry, bitter, salty and light.",
+    "assesses": [
+      "PT-LEX-C127-QUALIDADES127-03",
+      "PT-LEX-C127-QUALIDADES127-04",
+      "PT-LEX-C127-QUALIDADES127-05"
+    ]
+  }
+}

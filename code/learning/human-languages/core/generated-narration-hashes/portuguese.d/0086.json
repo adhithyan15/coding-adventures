@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:bb72bb881ed3566c",
+  "lessonIds": [
+    "PT-C86-supermercado",
+    "PT-C86-bomba-de-gasolina",
+    "PT-C86-piscina",
+    "PT-C86-estadio",
+    "PT-C86-fabrica"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch86.txt",
+  "json": "portuguese/narration/ch86.json",
+  "textHash": "fnv1a64:bd7b3ad046a185b9",
+  "jsonHash": "fnv1a64:576d1b7a31174b9c",
+  "findings": []
+}

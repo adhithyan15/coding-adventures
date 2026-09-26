@@ -1,0 +1,11 @@
+{
+  "id": "PT-C99-caixa-de-correio",
+  "pathSegment": "PT-PATH-99-CASA99",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-99-CASA99",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C128-contente",
+  "pathSegment": "PT-PATH-128-QUALIDADES128",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-128-QUALIDADES128",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:2edd70ef5de15136",
+  "lessonIds": [
+    "PT-C111-motorista",
+    "PT-C111-advogado",
+    "PT-C111-engenheiro",
+    "PT-C111-bombeiro",
+    "PT-C111-carteiro"
+  ],
+  "tex": "portuguese/book/chapters/ch111-driver-lawyer-engineer-firefighter-postman.tex"
+}

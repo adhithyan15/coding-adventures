@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:c3bd6ca9df2d725e",
+  "lessonIds": [
+    "PT-C116-nevoeiro",
+    "PT-C116-tempestade",
+    "PT-C116-gelo",
+    "PT-C116-rocha",
+    "PT-C116-onda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch116.txt",
+  "json": "portuguese/narration/ch116.json",
+  "textHash": "fnv1a64:62c7feac503123bb",
+  "jsonHash": "fnv1a64:7e4a56dbc4155508",
+  "findings": []
+}

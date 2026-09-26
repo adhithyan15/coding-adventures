@@ -1,0 +1,11 @@
+{
+  "id": "PT-C94-cortina",
+  "pathSegment": "PT-PATH-94-CASA94",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-94-CASA94",
+      "order": 3
+    }
+  ]
+}

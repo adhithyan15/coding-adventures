@@ -1,0 +1,11 @@
+{
+  "id": "PT-C121-ocupado",
+  "pathSegment": "PT-PATH-121-CORES121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-121-CORES121",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-R133-first-pass-more-describing-words-and-time",
+  "pathSegment": "PT-PATH-133-VERBOS133",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-133-VERBOS133",
+      "order": 5
+    }
+  ]
+}

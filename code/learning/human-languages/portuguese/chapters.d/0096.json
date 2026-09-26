@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Rubbish, Broom, Washing machine, Sofa, Cupboard",
+  "label": "ch:pt-rubbish-broom-washing-machine-sofa-cupboard",
+  "canDo": "I can say rubbish, a broom, a washing machine, a sofa and a cupboard.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C96-armario",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say rubbish, a broom, a washing machine, a sofa and a cupboard.",
+    "assesses": [
+      "PT-LEX-C96-CASA96-03",
+      "PT-LEX-C96-CASA96-04",
+      "PT-LEX-C96-CASA96-05"
+    ]
+  }
+}

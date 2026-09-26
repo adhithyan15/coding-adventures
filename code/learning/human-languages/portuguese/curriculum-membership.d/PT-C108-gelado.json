@@ -1,0 +1,11 @@
+{
+  "id": "PT-C108-gelado",
+  "pathSegment": "PT-PATH-108-COMIDA108",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-108-COMIDA108",
+      "order": 1
+    }
+  ]
+}

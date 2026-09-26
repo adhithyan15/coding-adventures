@@ -1,0 +1,11 @@
+{
+  "id": "PT-C112-turma",
+  "pathSegment": "PT-PATH-112-ESCOLA112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-112-ESCOLA112",
+      "order": 2
+    }
+  ]
+}

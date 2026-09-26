@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:7b0c44c714399196",
+  "lessonIds": [
+    "PT-C110-enfermeira",
+    "PT-C110-cozinheiro",
+    "PT-C110-empregado",
+    "PT-C110-agricultor",
+    "PT-C110-padeiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch110.txt",
+  "json": "portuguese/narration/ch110.json",
+  "textHash": "fnv1a64:30485623820a5cc3",
+  "jsonHash": "fnv1a64:901a11dcffb58894",
+  "findings": []
+}

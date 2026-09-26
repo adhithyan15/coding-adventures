@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:7f3e1b2ad79531be",
+  "lessonIds": [
+    "PT-C90-passeio",
+    "PT-C90-quiosque",
+    "PT-C90-pastelaria",
+    "PT-C90-padaria",
+    "PT-C90-talho"
+  ],
+  "tex": "portuguese/book/chapters/ch90-pavement-kiosk-pastry-shop-bakery-butcher-s.tex"
+}

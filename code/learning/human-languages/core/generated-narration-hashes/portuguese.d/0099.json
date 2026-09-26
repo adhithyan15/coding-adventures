@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:5704563370f4cba3",
+  "lessonIds": [
+    "PT-C99-chavena",
+    "PT-C99-garrafa",
+    "PT-C99-caixa-de-correio",
+    "PT-C99-massa",
+    "PT-C99-pera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch99.txt",
+  "json": "portuguese/narration/ch99.json",
+  "textHash": "fnv1a64:6e34820afa66ee71",
+  "jsonHash": "fnv1a64:52d6a0763f4c336e",
+  "findings": []
+}

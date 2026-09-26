@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:3cbeca5c77b30303",
+  "lessonIds": [
+    "PT-C108-iogurte",
+    "PT-C108-gelado",
+    "PT-C108-bife",
+    "PT-C108-fiambre",
+    "PT-C108-sumo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch108.txt",
+  "json": "portuguese/narration/ch108.json",
+  "textHash": "fnv1a64:032fb63237b1794b",
+  "jsonHash": "fnv1a64:40ad39854c8f7401",
+  "findings": []
+}

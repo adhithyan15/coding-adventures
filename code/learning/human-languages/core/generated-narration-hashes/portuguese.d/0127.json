@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:f19fa70bec9d90ed",
+  "lessonIds": [
+    "PT-C127-estreito",
+    "PT-C127-zangado",
+    "PT-C127-amargo",
+    "PT-C127-salgado",
+    "PT-C127-leve"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch127.txt",
+  "json": "portuguese/narration/ch127.json",
+  "textHash": "fnv1a64:9e5e363057786d46",
+  "jsonHash": "fnv1a64:20047793e195edc5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:6202e62809a54a30",
+  "lessonIds": [
+    "PT-C89-em-frente",
+    "PT-C89-atras",
+    "PT-C89-ao-lado",
+    "PT-C89-entre",
+    "PT-C89-bairro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch89.txt",
+  "json": "portuguese/narration/ch89.json",
+  "textHash": "fnv1a64:984e8f0c18013b78",
+  "jsonHash": "fnv1a64:5bedbbbada31b128",
+  "findings": []
+}

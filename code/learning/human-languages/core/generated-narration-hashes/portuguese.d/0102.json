@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:4d66fa19c4dcb3b7",
+  "lessonIds": [
+    "PT-C102-mochila",
+    "PT-C102-mundo",
+    "PT-C102-pessoas",
+    "PT-C102-rapaz",
+    "PT-C102-arco-iris"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch102.txt",
+  "json": "portuguese/narration/ch102.json",
+  "textHash": "fnv1a64:fe9bbf310f1d7e02",
+  "jsonHash": "fnv1a64:bca82049098d54fe",
+  "findings": []
+}

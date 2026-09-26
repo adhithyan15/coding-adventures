@@ -1,0 +1,11 @@
+{
+  "id": "PT-C99-garrafa",
+  "pathSegment": "PT-PATH-99-CASA99",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-99-CASA99",
+      "order": 1
+    }
+  ]
+}

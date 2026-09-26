@@ -1,0 +1,11 @@
+{
+  "id": "PT-C99-pera",
+  "pathSegment": "PT-PATH-99-CASA99",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-99-CASA99",
+      "order": 4
+    }
+  ]
+}

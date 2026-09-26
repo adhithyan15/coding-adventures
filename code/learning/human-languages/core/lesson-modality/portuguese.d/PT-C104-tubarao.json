@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C104-tubarao",
+    "language": "portuguese",
+    "chapter": 104,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03fd3c2ffeda648e"
+  },
+  "findings": []
+}

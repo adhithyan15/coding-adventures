@@ -1,0 +1,11 @@
+{
+  "id": "PT-C90-pastelaria",
+  "pathSegment": "PT-PATH-90-LUGARES90",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-90-LUGARES90",
+      "order": 2
+    }
+  ]
+}

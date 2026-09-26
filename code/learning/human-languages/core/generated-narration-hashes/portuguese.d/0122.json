@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:86d42bd2b8254ff4",
+  "lessonIds": [
+    "PT-C122-aberto",
+    "PT-C122-fechado",
+    "PT-C122-calmo",
+    "PT-C122-barulhento",
+    "PT-C122-ultimo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch122.txt",
+  "json": "portuguese/narration/ch122.json",
+  "textHash": "fnv1a64:bffcda33883af869",
+  "jsonHash": "fnv1a64:d4336fef5abe3395",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C120-labios",
+  "pathSegment": "PT-PATH-120-CORPO120",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-120-CORPO120",
+      "order": 3
+    }
+  ]
+}

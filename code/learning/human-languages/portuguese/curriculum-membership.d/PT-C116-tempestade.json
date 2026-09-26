@@ -1,0 +1,11 @@
+{
+  "id": "PT-C116-tempestade",
+  "pathSegment": "PT-PATH-116-NATUREZA116",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-116-NATUREZA116",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C131-conduzir",
+  "pathSegment": "PT-PATH-131-VERBOS131",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-131-VERBOS131",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C132-sentar-se",
+  "pathSegment": "PT-PATH-132-VERBOS132",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-132-VERBOS132",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:10172852de7d36f7",
+  "lessonIds": [
+    "PT-C117-vulcao",
+    "PT-C117-gruta",
+    "PT-C117-cascata",
+    "PT-C117-bosque",
+    "PT-C117-burro"
+  ],
+  "tex": "portuguese/book/chapters/ch117-volcano-cave-waterfall-wood-donkey.tex"
+}

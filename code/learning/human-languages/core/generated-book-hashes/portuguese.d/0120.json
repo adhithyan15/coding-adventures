@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:5f797283bdfa0442",
+  "lessonIds": [
+    "PT-C120-tornozelo",
+    "PT-C120-pulso",
+    "PT-C120-bochecha",
+    "PT-C120-labios",
+    "PT-C120-peito"
+  ],
+  "tex": "portuguese/book/chapters/ch120-ankle-wrist-cheek-lips-chest.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C113-borracha",
+  "pathSegment": "PT-PATH-113-ESCOLA113",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-113-ESCOLA113",
+      "order": 2
+    }
+  ]
+}

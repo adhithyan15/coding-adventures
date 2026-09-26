@@ -1,0 +1,11 @@
+{
+  "id": "PT-C114-pagina",
+  "pathSegment": "PT-PATH-114-LAZER114",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-114-LAZER114",
+      "order": 1
+    }
+  ]
+}

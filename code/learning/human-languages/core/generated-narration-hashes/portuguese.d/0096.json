@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:ae344bfbc09a11e9",
+  "lessonIds": [
+    "PT-C96-lixo",
+    "PT-C96-vassoura",
+    "PT-C96-maquina-de-lavar",
+    "PT-C96-sofa",
+    "PT-C96-armario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch96.txt",
+  "json": "portuguese/narration/ch96.json",
+  "textHash": "fnv1a64:6ba59c0c6c74a6d8",
+  "jsonHash": "fnv1a64:6753d41a2b9616f3",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Sixty, Seventy, Eighty, Ninety, To begin",
+  "label": "ch:pt-sixty-seventy-eighty-ninety-to-begin",
+  "canDo": "I can say sixty, seventy, eighty, ninety and to begin.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "PT-C130-comecar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say sixty, seventy, eighty, ninety and to begin.",
+    "assesses": [
+      "PT-LEX-C130-NUMEROS130-03",
+      "PT-LEX-C130-NUMEROS130-04",
+      "PT-LEX-C130-NUMEROS130-05"
+    ]
+  }
+}

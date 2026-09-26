@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:a9fecf2845d23d5e",
+  "lessonIds": [
+    "PT-C94-duche",
+    "PT-C94-banheira",
+    "PT-C94-prateleira",
+    "PT-C94-cortina",
+    "PT-C94-cobertor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch94.txt",
+  "json": "portuguese/narration/ch94.json",
+  "textHash": "fnv1a64:dd73a6683a1fdbcd",
+  "jsonHash": "fnv1a64:b03071a1de4c5b9f",
+  "findings": []
+}

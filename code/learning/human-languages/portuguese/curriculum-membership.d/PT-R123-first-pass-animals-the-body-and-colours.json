@@ -1,0 +1,11 @@
+{
+  "id": "PT-R123-first-pass-animals-the-body-and-colours",
+  "pathSegment": "PT-PATH-123-QUALIDADES123",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-123-QUALIDADES123",
+      "order": 5
+    }
+  ]
+}

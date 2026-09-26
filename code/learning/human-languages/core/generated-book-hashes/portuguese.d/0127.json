@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:50ff5bcbb2a63d65",
+  "lessonIds": [
+    "PT-C127-estreito",
+    "PT-C127-zangado",
+    "PT-C127-amargo",
+    "PT-C127-salgado",
+    "PT-C127-leve"
+  ],
+  "tex": "portuguese/book/chapters/ch127-narrow-angry-bitter-salty-light.tex"
+}

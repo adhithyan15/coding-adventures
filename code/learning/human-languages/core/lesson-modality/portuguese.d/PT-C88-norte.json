@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C88-norte",
+    "language": "portuguese",
+    "chapter": 88,
+    "sequence": 4110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c5b8f247449a644"
+  },
+  "findings": []
+}

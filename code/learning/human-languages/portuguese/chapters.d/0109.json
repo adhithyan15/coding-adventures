@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Peach, Jam, Walnut, Pepper, Planet",
+  "label": "ch:pt-peach-jam-walnut-pepper-planet",
+  "canDo": "I can say a peach, jam, a walnut, pepper and a planet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C109-planeta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a peach, jam, a walnut, pepper and a planet.",
+    "assesses": [
+      "PT-LEX-C109-COMIDA109-03",
+      "PT-LEX-C109-COMIDA109-04",
+      "PT-LEX-C109-COMIDA109-05"
+    ]
+  }
+}

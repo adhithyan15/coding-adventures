@@ -1,0 +1,11 @@
+{
+  "id": "PT-C122-barulhento",
+  "pathSegment": "PT-PATH-122-QUALIDADES122",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-122-QUALIDADES122",
+      "order": 3
+    }
+  ]
+}

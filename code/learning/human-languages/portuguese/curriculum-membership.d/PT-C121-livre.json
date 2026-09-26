@@ -1,0 +1,11 @@
+{
+  "id": "PT-C121-livre",
+  "pathSegment": "PT-PATH-121-CORES121",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-121-CORES121",
+      "order": 4
+    }
+  ]
+}

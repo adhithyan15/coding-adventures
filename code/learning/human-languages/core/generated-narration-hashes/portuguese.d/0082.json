@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:f4ede508519e6f37",
+  "lessonIds": [
+    "PT-C82-poder",
+    "PT-C82-dever",
+    "PT-C82-necessidade",
+    "PT-C82-oficio",
+    "PT-C82-levar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch82.txt",
+  "json": "portuguese/narration/ch82.json",
+  "textHash": "fnv1a64:c8461ffba2b7006a",
+  "jsonHash": "fnv1a64:20f162daad68a8cd",
+  "findings": []
+}

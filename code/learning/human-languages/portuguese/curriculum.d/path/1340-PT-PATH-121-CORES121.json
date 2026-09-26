@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-121-CORES121",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "PT-EXT-121-CORES121"
+  ],
+  "after": []
+}

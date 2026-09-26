@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C82-oficio",
+    "language": "portuguese",
+    "chapter": 82,
+    "sequence": 3830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c425377734636159"
+  },
+  "findings": []
+}

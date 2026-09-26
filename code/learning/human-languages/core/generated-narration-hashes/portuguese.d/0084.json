@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:479aceb606755707",
+  "lessonIds": [
+    "PT-C84-razao",
+    "PT-C84-motivo",
+    "PT-C84-entao",
+    "PT-C84-por-isso",
+    "PT-C84-causa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch84.txt",
+  "json": "portuguese/narration/ch84.json",
+  "textHash": "fnv1a64:7b6336523a5ba0dd",
+  "jsonHash": "fnv1a64:db3415e9bbcffe55",
+  "findings": []
+}

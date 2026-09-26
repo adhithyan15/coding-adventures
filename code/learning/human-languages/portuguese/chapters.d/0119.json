@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Squirrel, Owl, Whale, Dolphin, Elbow",
+  "label": "ch:pt-squirrel-owl-whale-dolphin-elbow",
+  "canDo": "I can say a squirrel, an owl, a whale, a dolphin and an elbow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C119-cotovelo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a squirrel, an owl, a whale, a dolphin and an elbow.",
+    "assesses": [
+      "PT-LEX-C119-ANIMAIS119-03",
+      "PT-LEX-C119-ANIMAIS119-04",
+      "PT-LEX-C119-ANIMAIS119-05"
+    ]
+  }
+}

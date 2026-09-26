@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:c97481c95de712f1",
+  "lessonIds": [
+    "PT-C88-elevador",
+    "PT-C88-norte",
+    "PT-C88-sul",
+    "PT-C88-leste",
+    "PT-C88-oeste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch88.txt",
+  "json": "portuguese/narration/ch88.json",
+  "textHash": "fnv1a64:7372bd5d9307b425",
+  "jsonHash": "fnv1a64:b83657427887a7ee",
+  "findings": []
+}

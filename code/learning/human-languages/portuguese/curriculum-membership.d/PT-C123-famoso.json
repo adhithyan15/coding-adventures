@@ -1,0 +1,11 @@
+{
+  "id": "PT-C123-famoso",
+  "pathSegment": "PT-PATH-123-QUALIDADES123",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-123-QUALIDADES123",
+      "order": 0
+    }
+  ]
+}

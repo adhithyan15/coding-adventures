@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C93-computador",
+    "language": "portuguese",
+    "chapter": 93,
+    "sequence": 4420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5ae410a2393c10f"
+  },
+  "findings": []
+}

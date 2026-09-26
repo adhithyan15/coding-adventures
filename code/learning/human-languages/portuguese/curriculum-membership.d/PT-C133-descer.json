@@ -1,0 +1,11 @@
+{
+  "id": "PT-C133-descer",
+  "pathSegment": "PT-PATH-133-VERBOS133",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-133-VERBOS133",
+      "order": 0
+    }
+  ]
+}

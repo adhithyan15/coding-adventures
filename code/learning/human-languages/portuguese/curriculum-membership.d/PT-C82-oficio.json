@@ -1,0 +1,11 @@
+{
+  "id": "PT-C82-oficio",
+  "pathSegment": "PT-PATH-82-PODER82",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-82-PODER82",
+      "order": 3
+    }
+  ]
+}
