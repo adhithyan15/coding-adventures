@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added — app identity in `[app]` (UI32, UI89 §2.2)
+
+`display-name` (1 to 64 characters, no control characters) and
+`bundle-identifier` (reverse DNS: two or more dot-separated parts of letters,
+digits and `-`, at most 155 characters), both optional, for installed apps.
+New errors `InvalidDisplayName` and `InvalidBundleIdentifier`.
+
 ### Added — `[[app.layouts]]` and the layout selector (UI48 ENV3)
 
 The `layouts` module: `select_variant` (first rule whose axes all hold, or the

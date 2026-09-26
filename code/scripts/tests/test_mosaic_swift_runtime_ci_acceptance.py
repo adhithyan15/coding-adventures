@@ -104,6 +104,24 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("-destination 'generic/platform=iOS'", block)
         self.assertIn("nm -gU", block)
 
+    def test_ios_app_target_builds_installs_and_launches(self) -> None:
+        """UI89 §2.2: the generated Xcode project builds an .app with the
+        package's identity and the engine, and it keeps running on a
+        simulator."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# An installable iOS / iPadOS APP (UI89")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn("xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator", block)
+        self.assertIn("nm -gU \"$ios_app/App\"", block)
+        self.assertIn("= dev.codingadventures.trestle", block)
+        self.assertIn("xcrun simctl install", block)
+        self.assertIn("xcrun simctl launch", block)
+        self.assertIn("launchctl list | grep -q 'dev.codingadventures.trestle'", block)
+
+    def test_ios_project_generator_requires_acceptance(self) -> None:
+        self.assertIn("rust/mosaic-ios-project", MODULE.ACCEPTANCE_PACKAGES)
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_swift_runtime(
@@ -187,7 +205,9 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "Round-trip Rust engine through standard SwiftUI binding", workflow
         )
-        self.assertIn("timeout-minutes: 15", swift_runtime_step)
+        # 30, not 15: since UI89 §2.2 the step also boots an iOS simulator
+        # and launches the generated app.
+        self.assertIn("timeout-minutes: 30", swift_runtime_step)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,

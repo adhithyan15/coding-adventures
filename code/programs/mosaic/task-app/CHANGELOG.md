@@ -4,6 +4,10 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+- `[app]` names the installed app **Trestle** with the identity
+  `dev.codingadventures.trestle`, used by the generated iOS / iPadOS project
+  (UI89 §2.2).
+
 ### Changed — Checklists empty states use the toolkit EmptyState
 
 - Both Checklists empty states ("No checklists yet" in the library, "Pick a
