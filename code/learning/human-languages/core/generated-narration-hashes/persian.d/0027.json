@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:cea043c2980ff237",
+  "lessonIds": [
+    "FA-C27-sar",
+    "FA-C27-gush",
+    "FA-C27-bini",
+    "FA-C27-dahan",
+    "FA-C27-dandan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch27.txt",
+  "json": "persian/narration/ch27.json",
+  "textHash": "fnv1a64:a4b28040d0c99936",
+  "jsonHash": "fnv1a64:d8df9c5abcda4249",
+  "findings": []
+}

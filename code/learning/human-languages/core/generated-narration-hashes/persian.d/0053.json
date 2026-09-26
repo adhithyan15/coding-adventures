@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:0df1ebac96d5704a",
+  "lessonIds": [
+    "FA-C53-mase",
+    "FA-C53-abr",
+    "FA-C53-darya",
+    "FA-C53-atash",
+    "FA-C53-barf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch53.txt",
+  "json": "persian/narration/ch53.json",
+  "textHash": "fnv1a64:cc3b92217bf4cdf1",
+  "jsonHash": "fnv1a64:12efdcd5a57ef720",
+  "findings": []
+}

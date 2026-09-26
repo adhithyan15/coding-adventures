@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-33-FAMILY33",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "FA-EXT-33-FAMILY33"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Fast, Easy, Hard, Expensive, Cheap",
+  "label": "ch:fa-fast-easy-hard-expensive-cheap",
+  "canDo": "I can say fast, easy, hard, difficult, expensive and cheap.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C60-arzan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say fast, easy, hard, difficult, expensive and cheap.",
+    "assesses": [
+      "FA-LEX-C60-ADJ60-03",
+      "FA-LEX-C60-ADJ60-04",
+      "FA-LEX-C60-ADJ60-05"
+    ]
+  }
+}

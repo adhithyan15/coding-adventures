@@ -1,0 +1,11 @@
+{
+  "id": "FA-C72-docharkhe",
+  "pathSegment": "FA-PATH-72-TOWN72",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-72-TOWN72",
+      "order": 1
+    }
+  ]
+}

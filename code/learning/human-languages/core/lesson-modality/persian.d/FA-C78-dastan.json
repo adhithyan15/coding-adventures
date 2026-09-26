@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C78-dastan",
+    "language": "persian",
+    "chapter": 78,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60a9219e5f9322be"
+  },
+  "findings": []
+}

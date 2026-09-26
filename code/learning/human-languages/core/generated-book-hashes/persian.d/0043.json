@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:9756d2274265d798",
+  "lessonIds": [
+    "FA-C43-limu",
+    "FA-C43-mast",
+    "FA-C43-piyaz",
+    "FA-C43-sobhane",
+    "FA-C43-nahar"
+  ],
+  "tex": "persian/book/chapters/ch43-lemon-yoghurt-onion-breakfast-lunch.tex"
+}

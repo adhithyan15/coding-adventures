@@ -1,0 +1,11 @@
+{
+  "id": "FA-C36-forukhtan",
+  "pathSegment": "FA-PATH-36-VERBS36",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-36-VERBS36",
+      "order": 4
+    }
+  ]
+}

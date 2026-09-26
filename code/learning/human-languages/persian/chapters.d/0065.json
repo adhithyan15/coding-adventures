@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Minute, Today, Yesterday, Tomorrow, Now",
+  "label": "ch:fa-minute-today-yesterday-tomorrow-now",
+  "canDo": "I can say a minute, today, yesterday, tomorrow and now.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FA-C65-hala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say a minute, today, yesterday, tomorrow and now.",
+    "assesses": [
+      "FA-LEX-C65-TIME65-03",
+      "FA-LEX-C65-TIME65-04",
+      "FA-LEX-C65-TIME65-05"
+    ]
+  }
+}

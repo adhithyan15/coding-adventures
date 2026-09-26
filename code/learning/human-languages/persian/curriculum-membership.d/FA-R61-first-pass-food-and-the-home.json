@@ -1,0 +1,11 @@
+{
+  "id": "FA-R61-first-pass-food-and-the-home",
+  "pathSegment": "FA-PATH-61-ADJ61",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-61-ADJ61",
+      "order": 5
+    }
+  ]
+}

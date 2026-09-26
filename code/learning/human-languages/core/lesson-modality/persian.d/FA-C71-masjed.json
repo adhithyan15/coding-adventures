@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C71-masjed",
+    "language": "persian",
+    "chapter": 71,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:495fc4f5ecad8c9a"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-46-HOME46",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "FA-EXT-46-HOME46"
+  ],
+  "after": []
+}

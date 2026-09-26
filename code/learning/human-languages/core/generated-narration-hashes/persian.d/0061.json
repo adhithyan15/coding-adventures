@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:26c8f98d85787b7a",
+  "lessonIds": [
+    "FA-C61-por",
+    "FA-C61-khali",
+    "FA-C61-puldar",
+    "FA-C61-faghir",
+    "FA-C61-tamiz",
+    "FA-R61-first-pass-food-and-the-home",
+    "FA-R61-second-pass-school-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch61.txt",
+  "json": "persian/narration/ch61.json",
+  "textHash": "fnv1a64:7791a39005d102d4",
+  "jsonHash": "fnv1a64:6356f7bad04e1a61",
+  "findings": []
+}

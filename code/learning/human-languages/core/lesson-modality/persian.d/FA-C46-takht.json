@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C46-takht",
+    "language": "persian",
+    "chapter": 46,
+    "sequence": 2170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fd379159c1bb0c8"
+  },
+  "findings": []
+}

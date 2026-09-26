@@ -221,7 +221,9 @@ describe("real curriculum", () => {
       // first Persian a reader can take off a page without knowing the letters.
       // 21 -> 26: HL-C443, one lesson per letter the reader had read in words and
       // never written -- eighteen letters in chapters 22-26, each from its word.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
+      // 26 -> 78: the pre-A1 vocabulary tranche, fifty-two chapters of five
+      // words in three runs, each run closed by two reviews.
+    ).toEqual(Array.from({ length: 78 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")

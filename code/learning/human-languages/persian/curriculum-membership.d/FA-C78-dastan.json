@@ -1,0 +1,11 @@
+{
+  "id": "FA-C78-dastan",
+  "pathSegment": "FA-PATH-78-WORLD78",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-78-WORLD78",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C71-masjed",
+  "pathSegment": "FA-PATH-71-TOWN71",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-71-TOWN71",
+      "order": 1
+    }
+  ]
+}

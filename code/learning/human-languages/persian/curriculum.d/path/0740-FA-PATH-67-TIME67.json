@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-67-TIME67",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "FA-EXT-67-TIME67"
+  ],
+  "after": []
+}

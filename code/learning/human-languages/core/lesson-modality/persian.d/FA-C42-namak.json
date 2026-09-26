@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C42-namak",
+    "language": "persian",
+    "chapter": 42,
+    "sequence": 1950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca40c075e58ca21e"
+  },
+  "findings": []
+}

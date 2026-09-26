@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:5fadabe69ca5da7f",
+  "lessonIds": [
+    "FA-C71-pol",
+    "FA-C71-masjed",
+    "FA-C71-hotel",
+    "FA-C71-edare",
+    "FA-C71-polis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch71.txt",
+  "json": "persian/narration/ch71.json",
+  "textHash": "fnv1a64:822307b800d1ac4e",
+  "jsonHash": "fnv1a64:7adefdbc31fc1e82",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C70-ghatar",
+    "language": "persian",
+    "chapter": 70,
+    "sequence": 3420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d6877f5aa2a31e5"
+  },
+  "findings": []
+}

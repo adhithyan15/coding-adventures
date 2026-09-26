@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C47-ghashogh",
+    "language": "persian",
+    "chapter": 47,
+    "sequence": 2250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb3f696d161d7474"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:28ef277e5ba9702f",
+  "lessonIds": [
+    "FA-C66-hamishe",
+    "FA-C66-gahi",
+    "FA-C66-zud",
+    "FA-C66-dir",
+    "FA-C66-ghabl"
+  ],
+  "tex": "persian/book/chapters/ch66-always-sometimes-early-late-before.tex"
+}

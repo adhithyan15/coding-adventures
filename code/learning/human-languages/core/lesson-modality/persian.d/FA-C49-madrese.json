@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C49-madrese",
+    "language": "persian",
+    "chapter": 49,
+    "sequence": 2330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94ee9b69932c34cc"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:5af9218addfc5d8c",
+  "lessonIds": [
+    "FA-C43-limu",
+    "FA-C43-mast",
+    "FA-C43-piyaz",
+    "FA-C43-sobhane",
+    "FA-C43-nahar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch43.txt",
+  "json": "persian/narration/ch43.json",
+  "textHash": "fnv1a64:5aec11d7bb2df555",
+  "jsonHash": "fnv1a64:bea19ffd88c5fab7",
+  "findings": []
+}

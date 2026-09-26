@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:3970e827cbeb94bd",
+  "lessonIds": [
+    "FA-C60-tond",
+    "FA-C60-asan",
+    "FA-C60-sakht",
+    "FA-C60-geran",
+    "FA-C60-arzan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch60.txt",
+  "json": "persian/narration/ch60.json",
+  "textHash": "fnv1a64:44a23fde2fb94f05",
+  "jsonHash": "fnv1a64:38fbe2a5eeaa3791",
+  "findings": []
+}

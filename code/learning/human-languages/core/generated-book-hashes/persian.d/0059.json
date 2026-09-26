@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:a899d9211d8d2422",
+  "lessonIds": [
+    "FA-C59-boland",
+    "FA-C59-kutah",
+    "FA-C59-garm",
+    "FA-C59-sard",
+    "FA-C59-aheste"
+  ],
+  "tex": "persian/book/chapters/ch59-long-short-warm-cold-slow.tex"
+}

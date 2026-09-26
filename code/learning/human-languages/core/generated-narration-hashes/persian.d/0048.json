@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:e58024890804582e",
+  "lessonIds": [
+    "FA-C48-bottri",
+    "FA-C48-ashpazkhane",
+    "FA-C48-hammam",
+    "FA-C48-livan",
+    "FA-C48-daftar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch48.txt",
+  "json": "persian/narration/ch48.json",
+  "textHash": "fnv1a64:6ae7e69d85b45b71",
+  "jsonHash": "fnv1a64:576b4d39c33c41c3",
+  "findings": []
+}

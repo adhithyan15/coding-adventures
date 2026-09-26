@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:f948325ca26f039d",
+  "lessonIds": [
+    "FA-C29-khun",
+    "FA-C29-zanu",
+    "FA-C29-posht",
+    "FA-C29-shekam",
+    "FA-C29-lab"
+  ],
+  "tex": "persian/book/chapters/ch29-blood-knee-back-belly-lip.tex"
+}

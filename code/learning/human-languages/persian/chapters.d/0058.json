@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Wolf, Big, Small, Fresh, Old",
+  "label": "ch:fa-wolf-big-small-fresh-old",
+  "canDo": "I can say a wolf, big, small, fresh, new and old.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C58-ghadimi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can say a wolf, big, small, fresh, new and old.",
+    "assesses": [
+      "FA-LEX-C58-ANIMALS58-03",
+      "FA-LEX-C58-ANIMALS58-04",
+      "FA-LEX-C58-ANIMALS58-05"
+    ]
+  }
+}

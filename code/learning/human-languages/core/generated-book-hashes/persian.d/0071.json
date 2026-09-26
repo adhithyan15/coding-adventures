@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:d0257d60b4cccb35",
+  "lessonIds": [
+    "FA-C71-pol",
+    "FA-C71-masjed",
+    "FA-C71-hotel",
+    "FA-C71-edare",
+    "FA-C71-polis"
+  ],
+  "tex": "persian/book/chapters/ch71-bridge-mosque-hotel-office-police.tex"
+}

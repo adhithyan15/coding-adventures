@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C61-khali",
+    "language": "persian",
+    "chapter": 61,
+    "sequence": 2920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d8707dc50e56ddb"
+  },
+  "findings": []
+}

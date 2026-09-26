@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:9ccebd9f7a611700",
+  "lessonIds": [
+    "FA-C36-khabidan",
+    "FA-C36-istadan",
+    "FA-C36-davidan",
+    "FA-C36-kharidan",
+    "FA-C36-forukhtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch36.txt",
+  "json": "persian/narration/ch36.json",
+  "textHash": "fnv1a64:49a4809e5278511b",
+  "jsonHash": "fnv1a64:6222667638c90db1",
+  "findings": []
+}

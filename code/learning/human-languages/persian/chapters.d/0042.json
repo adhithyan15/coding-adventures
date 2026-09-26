@@ -1,0 +1,19 @@
+{
+  "chapter": 42,
+  "title": "Sugar, Salt, Butter, Grapes, Orange",
+  "label": "ch:fa-sugar-salt-butter-grapes-orange",
+  "canDo": "I can say sugar, salt, butter, grapes and an orange.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FA-C42-porteghal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 42: i can say sugar, salt, butter, grapes and an orange.",
+    "assesses": [
+      "FA-LEX-C42-FOOD42-03",
+      "FA-LEX-C42-FOOD42-04",
+      "FA-LEX-C42-FOOD42-05"
+    ]
+  }
+}

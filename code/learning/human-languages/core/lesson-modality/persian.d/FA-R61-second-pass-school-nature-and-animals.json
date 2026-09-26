@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R61-second-pass-school-nature-and-animals",
+    "language": "persian",
+    "chapter": 61,
+    "sequence": 2970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b469dc4c39aa8d28"
+  },
+  "findings": []
+}

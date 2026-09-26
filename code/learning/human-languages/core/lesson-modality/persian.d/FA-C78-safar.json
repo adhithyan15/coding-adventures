@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C78-safar",
+    "language": "persian",
+    "chapter": 78,
+    "sequence": 3780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:772cdf7e0f44bf5d"
+  },
+  "findings": []
+}

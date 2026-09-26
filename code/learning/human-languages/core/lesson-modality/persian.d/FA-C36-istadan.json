@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C36-istadan",
+    "language": "persian",
+    "chapter": 36,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88e7a6c9ea89c912"
+  },
+  "findings": []
+}

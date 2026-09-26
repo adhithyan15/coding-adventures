@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:64c668f80b1824b4",
+  "lessonIds": [
+    "FA-C42-shekar",
+    "FA-C42-namak",
+    "FA-C42-kare",
+    "FA-C42-angur",
+    "FA-C42-porteghal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch42.txt",
+  "json": "persian/narration/ch42.json",
+  "textHash": "fnv1a64:5ec1618a7d2bf9ca",
+  "jsonHash": "fnv1a64:48784d47fea4750d",
+  "findings": []
+}

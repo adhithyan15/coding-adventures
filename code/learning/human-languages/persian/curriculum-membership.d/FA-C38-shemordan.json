@@ -1,0 +1,11 @@
+{
+  "id": "FA-C38-shemordan",
+  "pathSegment": "FA-PATH-38-VERBS38",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-38-VERBS38",
+      "order": 4
+    }
+  ]
+}

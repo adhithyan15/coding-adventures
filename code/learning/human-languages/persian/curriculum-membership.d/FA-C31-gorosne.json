@@ -1,0 +1,11 @@
+{
+  "id": "FA-C31-gorosne",
+  "pathSegment": "FA-PATH-31-HEALTH31",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-31-HEALTH31",
+      "order": 3
+    }
+  ]
+}

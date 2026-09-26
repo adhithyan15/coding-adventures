@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "House, Room, Window, Chair, Table",
+  "label": "ch:fa-house-room-window-chair-table",
+  "canDo": "I can say a house, home, a room, a window, a chair and a table.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FA-C45-miz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can say a house, home, a room, a window, a chair and a table.",
+    "assesses": [
+      "FA-LEX-C45-HOME45-03",
+      "FA-LEX-C45-HOME45-04",
+      "FA-LEX-C45-HOME45-05"
+    ]
+  }
+}

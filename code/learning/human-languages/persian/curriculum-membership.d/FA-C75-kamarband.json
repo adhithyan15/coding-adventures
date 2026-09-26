@@ -1,0 +1,11 @@
+{
+  "id": "FA-C75-kamarband",
+  "pathSegment": "FA-PATH-75-CLOTHES75",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-75-CLOTHES75",
+      "order": 1
+    }
+  ]
+}

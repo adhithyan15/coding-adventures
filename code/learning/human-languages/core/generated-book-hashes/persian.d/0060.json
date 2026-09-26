@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:aea6d310905ce13f",
+  "lessonIds": [
+    "FA-C60-tond",
+    "FA-C60-asan",
+    "FA-C60-sakht",
+    "FA-C60-geran",
+    "FA-C60-arzan"
+  ],
+  "tex": "persian/book/chapters/ch60-fast-easy-hard-expensive-cheap.tex"
+}

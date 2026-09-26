@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:87823cd8aa71efbc",
+  "lessonIds": [
+    "FA-C69-inja",
+    "FA-C69-anja",
+    "FA-C69-rast",
+    "FA-C69-chap",
+    "FA-C69-khiyaban"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch69.txt",
+  "json": "persian/narration/ch69.json",
+  "textHash": "fnv1a64:013ffd8625c41c51",
+  "jsonHash": "fnv1a64:3b0d6f09698a760f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "To give, To close, To cook, To wash, To laugh",
+  "label": "ch:fa-to-give-to-close-to-cook-to-wash-to-laugh",
+  "canDo": "I can say to give, to close, to cook, to wash and to laugh.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C37-khandidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 37: i can say to give, to close, to cook, to wash and to laugh.",
+    "assesses": [
+      "FA-LEX-C37-VERBS37-03",
+      "FA-LEX-C37-VERBS37-04",
+      "FA-LEX-C37-VERBS37-05"
+    ]
+  }
+}
