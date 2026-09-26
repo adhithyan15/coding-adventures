@@ -274,8 +274,13 @@ describe("the real corpus", () => {
   // small я is the word "I", taught in chapter 2; a case pair is one letter in
   // two forms, so the capital is now anchored by that word, the way が is
   // anchored by か and ゛. The small я keeps its own lesson in chapter 28.
+  //
+  // Arabic's last two cold lessons (2 -> 0) were the mark sets of chapter 2.
+  // Headwords are written without marks, so no word held them. Two vocalized
+  // words now come first: مُدَرِّس (fatha, kasra, damma, shadda) and أَهْلًا
+  // (sukun, tanwin).
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
-    arabic: [2, 4, 0],
+    arabic: [0, 4, 0],
     bengali: [0, 11, 0],
     chinese: [0, 51, 0],
     gujarati: [4, 4, 0],

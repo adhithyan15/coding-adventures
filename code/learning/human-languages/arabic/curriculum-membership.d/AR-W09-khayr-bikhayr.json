@@ -1,11 +1,11 @@
 {
   "id": "AR-W09-khayr-bikhayr",
   "pathSegment": "AR-PATH-008",
-  "pathOrder": 9,
+  "pathOrder": 11,
   "extensions": [
     {
       "id": "AR-EXT-008-SCRIPT",
-      "order": 9
+      "order": 11
     }
   ]
 }

@@ -16,14 +16,14 @@ etymology_hook: "kayfa is a question word, not a root-and-pattern noun — it si
 duration:
   max_seconds: 180
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-MUDARRIS, AR-LEX-ANCHOR-AHLAN]
 introduces:
   knowledge: [AR-CONCEPT-C03-KAYFA-01, AR-CONCEPT-C03-KAYFA-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-C03-KAYFA-01, AR-CONCEPT-C03-KAYFA-02]
+  knowledge: [AR-CONCEPT-C03-KAYFA-01, AR-CONCEPT-C03-KAYFA-02, AR-LEX-ANCHOR-MUDARRIS, AR-LEX-ANCHOR-AHLAN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,10 +35,12 @@ reviews_of: [AR-C02-maa, AR-C02-anta-anti]
 # كيف (kayfa) — "how"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-MUDARRIS, AR-LEX-ANCHOR-AHLAN] -->
 
 [PAUSE 2s] Chapter 2 gave you **ما** (*mā*, "what"). Here is its partner:
 **كيف** (*kayfa*, "how"). Two question words, and you can already build with both.
+
+[PAUSE 2s] Two words from the marks lessons: say *mudarris* and *ahlan*, and what each means.
 
 ## You'll want to know — The letters in this word
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C03-KAYFA-01]; assesses=[] -->

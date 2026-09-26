@@ -1,11 +1,11 @@
 {
-  "id": "AR-C03-haajj",
+  "id": "AR-C02-ahlan",
   "pathSegment": "AR-PATH-008",
-  "pathOrder": 8,
+  "pathOrder": 5,
   "extensions": [
     {
       "id": "AR-EXT-008-SCRIPT",
-      "order": 8
+      "order": 5
     }
   ]
 }
