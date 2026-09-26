@@ -2757,6 +2757,17 @@ fn build_package_inner(
     // written into `backend_dir` alongside the per-component
     // artifacts. The per-emitter banner contract (UI32 spec §3.5)
     // means a re-build overwrites them deterministically.
+    // Compose components call their platform's half of drag and drop
+    // (UI89 §3.4); the desktop one ships beside them in every Compose build.
+    if matches!(opts.backend, Backend::Compose) && !components_built.is_empty() {
+        let platform = backend_dir.join("MosaicPlatform.kt");
+        write_file(
+            &platform,
+            mosaic_emit_compose::pipeline::DESKTOP_PLATFORM_KT.as_bytes(),
+        )?;
+        artifacts.push(platform);
+    }
+
     if opts.emit_project {
         if let Some(first_component) = components_built.first() {
             let shell_artifacts = emit_project_shell(ProjectShellOptions {
@@ -3846,18 +3857,25 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 written.push(p);
             }
 
+            let sources = build_compose_main_kt(
+                component,
+                &mosmodel_out.component.slots,
+                require_runtime,
+                initial_window_size,
+            );
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
-            let main_kt = compose_main_with_host_effects(
-                &build_compose_main_kt(
-                    component,
-                    &mosmodel_out.component.slots,
-                    require_runtime,
-                    initial_window_size,
-                ),
-                host_effects,
-            )?;
+            let main_kt = compose_main_with_host_effects(&sources.main, host_effects)?;
             write_file(&main_nested, main_kt.as_bytes())?;
             written.push(main_nested);
+            let shell_nested = backend_dir.join("src/main/kotlin/MosaicAppShell.kt");
+            write_file(&shell_nested, sources.shell.as_bytes())?;
+            written.push(shell_nested);
+            let platform_nested = backend_dir.join("src/main/kotlin/MosaicPlatform.kt");
+            write_file(
+                &platform_nested,
+                mosaic_emit_compose::pipeline::DESKTOP_PLATFORM_KT.as_bytes(),
+            )?;
+            written.push(platform_nested);
 
             // A package shell is also the package's native compile boundary.
             // Keep every exported component in Gradle's source set, even
@@ -5131,12 +5149,20 @@ fn build_compose_build_gradle_kts(
     )
 }
 
+/// The Compose app's two Kotlin sources (UI89 §3.4): `Main.kt`, the desktop
+/// entry point (window and host loader), and `MosaicAppShell.kt`, the app
+/// shell every Compose platform shares.
+struct ComposeShellSources {
+    main: String,
+    shell: String,
+}
+
 fn build_compose_main_kt(
     component_name: &str,
     slots: &[SlotDecl],
     require_runtime: bool,
     initial_window_size: Option<&WindowSize>,
-) -> String {
+) -> ComposeShellSources {
     let root = build_compose_root_invocation(component_name, slots, require_runtime);
     let component_label = escape_kotlin_string(component_name);
     let host_loader = if require_runtime {
@@ -5167,14 +5193,9 @@ fn build_compose_main_kt(
     };
     let (window_imports, window_state_argument) = match initial_window_size {
         Some(size) => (
-            format!(
-                "import androidx.compose.ui.unit.DpSize\n{}import androidx.compose.ui.window.rememberWindowState\n",
-                if require_runtime {
-                    ""
-                } else {
-                    "import androidx.compose.ui.unit.dp\n"
-                }
-            ),
+            // Main.kt imports `dp` itself: since the split (UI89 §3.4) the
+            // startup imports that used to supply it are in MosaicAppShell.kt.
+            "import androidx.compose.ui.unit.DpSize\nimport androidx.compose.ui.unit.dp\nimport androidx.compose.ui.window.rememberWindowState\n".to_string(),
             format!(
                 ", state = rememberWindowState(size = DpSize({}.dp, {}.dp))",
                 size.width, size.height
@@ -5232,17 +5253,13 @@ fn build_compose_main_kt(
         "    val mosaicHost = remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }\n"
     };
     let window_body = if require_runtime {
-        "        MosaicStartup()\n"
+        "        MosaicStartup(::loadMosaicHost)\n"
     } else {
         "        MosaicApp(mosaicHost)\n"
     };
     let strict_startup = if require_runtime {
         format!(
             concat!(
-                "private fun loadMosaicHost(): MosaicComposeHost {{\n",
-                "    val mosaicHost = {host_loader}\n",
-                "    return mosaicHost\n",
-                "}}\n\n",
                 "private sealed interface MosaicStartupState {{\n",
                 "    data object Loading : MosaicStartupState\n",
                 "    data class Ready(\n",
@@ -5253,7 +5270,7 @@ fn build_compose_main_kt(
                 "}}\n\n",
                 "@Composable\n",
                 "fun MosaicStartup(\n",
-                "    loadHost: () -> MosaicComposeHost = ::loadMosaicHost,\n",
+                "    loadHost: () -> MosaicComposeHost,\n",
                 "    content: @Composable (MosaicComposeHost, Map<String, Any?>) -> Unit =\n",
                 "        {{ host, response -> MosaicApp(host, response) }},\n",
                 ") {{\n",
@@ -5308,8 +5325,22 @@ fn build_compose_main_kt(
                 "    }}\n",
                 "}}\n\n",
             ),
-            host_loader = host_loader,
             component_label = component_label,
+        )
+    } else {
+        String::new()
+    };
+    // The platform half of a strict app: load the host (package effect
+    // handlers are installed here, see `compose_main_with_host_effects`).
+    let load_host = if require_runtime {
+        format!(
+            concat!(
+                "private fun loadMosaicHost(): MosaicComposeHost {{\n",
+                "    val mosaicHost = {host_loader}\n",
+                "    return mosaicHost\n",
+                "}}\n",
+            ),
+            host_loader = host_loader,
         )
     } else {
         String::new()
@@ -5323,7 +5354,7 @@ fn build_compose_main_kt(
         ""
     } else {
         concat!(
-            "private class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {\n",
+            "internal class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {\n",
             "    override fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
             "    override fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
             "    override fun setPropsChangedHandler(handler: (() -> Unit)?) { invoke(\"setPropsChangedHandler\", handler) }\n",
@@ -5350,18 +5381,12 @@ fn build_compose_main_kt(
     } else {
         ""
     };
-    format!(
+    let main = format!(
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
-            "import androidx.compose.material.MaterialTheme\n",
-            "{startup_import}",
-            "import androidx.compose.runtime.Composable\n",
-            "import androidx.compose.runtime.DisposableEffect\n",
-            "import androidx.compose.runtime.LaunchedEffect\n",
-            "import androidx.compose.runtime.getValue\n",
-            "import androidx.compose.runtime.mutableStateOf\n",
+            "// The desktop half of the app (UI89 §3.4): the window and the host\n",
+            "// loader. Everything shared with Android is in MosaicAppShell.kt.\n",
             "import androidx.compose.runtime.remember\n",
-            "import androidx.compose.runtime.setValue\n",
             "{window_imports}",
             "import androidx.compose.ui.window.Window\n",
             "import androidx.compose.ui.window.application\n\n",
@@ -5370,7 +5395,30 @@ fn build_compose_main_kt(
             "    Window(onCloseRequest = ::exitApplication, title = \"{}\"{window_state_argument}) {{\n",
             "{window_body}",
             "    }}\n",
-            "}}\n\n",
+            "}}\n",
+            "{load_host_separator}{load_host}",
+        ),
+        component_label,
+        window_imports = window_imports,
+        window_state_argument = window_state_argument,
+        main_host = main_host,
+        window_body = window_body,
+        load_host_separator = if load_host.is_empty() { "" } else { "\n" },
+        load_host = load_host,
+    );
+    let shell = format!(
+        concat!(
+            "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "// The app shell shared by every Compose platform (UI89 §3.4).\n",
+            "import androidx.compose.material.MaterialTheme\n",
+            "{startup_import}",
+            "import androidx.compose.runtime.Composable\n",
+            "import androidx.compose.runtime.DisposableEffect\n",
+            "import androidx.compose.runtime.LaunchedEffect\n",
+            "import androidx.compose.runtime.getValue\n",
+            "import androidx.compose.runtime.mutableStateOf\n",
+            "import androidx.compose.runtime.remember\n",
+            "import androidx.compose.runtime.setValue\n\n",
             "{strict_startup}",
             "interface MosaicComposeHost : AutoCloseable {{\n",
             "    fun props(): Map<String, Any?>?\n",
@@ -5450,12 +5498,7 @@ fn build_compose_main_kt(
             "): @Composable () -> Unit =\n",
             "    props[name] as? (@Composable () -> Unit) ?: fallback\n",
         ),
-        component_label,
         startup_import = startup_import,
-        window_imports = window_imports,
-        window_state_argument = window_state_argument,
-        main_host = main_host,
-        window_body = window_body,
         strict_startup = strict_startup,
         app_signature = app_signature,
         initial_props_decl = initial_props_decl,
@@ -5464,7 +5507,8 @@ fn build_compose_main_kt(
         root_body = root_body,
         legacy_bridge = legacy_bridge,
         required_helpers = required_helpers,
-    )
+    );
+    ComposeShellSources { main, shell }
 }
 
 fn build_compose_required_prop_helpers() -> &'static str {
@@ -9909,7 +9953,9 @@ layout NativeEvents {
         let report = fs::read_to_string(report_path).unwrap();
         assert!(report.contains("\"nativeComplete\": true"));
 
-        let main = fs::read_to_string(out.path().join("compose/src/main/kotlin/Main.kt")).unwrap();
+        let main = fs::read_to_string(out.path().join("compose/src/main/kotlin/Main.kt")).unwrap()
+            + &fs::read_to_string(out.path().join("compose/src/main/kotlin/MosaicAppShell.kt"))
+                .unwrap();
         assert!(main.contains(
             "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
         ));
@@ -13339,6 +13385,7 @@ version = "1"
                     "settings.gradle.kts",
                     "build.gradle.kts",
                     "src/main/kotlin/Main.kt",
+                    "src/main/kotlin/MosaicAppShell.kt",
                     "src/main/kotlin/Grid.kt",
                     "README.md",
                 ],
@@ -13554,7 +13601,7 @@ version = "1"
                     ],
                 ),
                 Backend::Compose => (
-                    "src/main/kotlin/Main.kt",
+                    "src/main/kotlin/MosaicAppShell.kt",
                     &[
                         "contentSurface = mosaicNode(hostProps, \"content-surface\"",
                         "private fun mosaicNode(",
@@ -13861,7 +13908,10 @@ version = "1"
         assert!(gradle.contains("testImplementation(kotlin(\"test\"))"));
         assert!(gradle.contains("mainClass = \"MainKt\""));
         assert!(gradle.contains("packageName = \"mosaic_pkg_grid\""));
-        let main_kt = fs::read_to_string(dir.join("src/main/kotlin/Main.kt")).expect("Main.kt");
+        // Main.kt (desktop) and MosaicAppShell.kt (shared) together (UI89 §3.4).
+        let main_kt = fs::read_to_string(dir.join("src/main/kotlin/Main.kt")).expect("Main.kt")
+            + &fs::read_to_string(dir.join("src/main/kotlin/MosaicAppShell.kt"))
+                .expect("MosaicAppShell.kt");
         assert!(main_kt.contains("fun main() = application"));
         assert!(main_kt.contains("Window(onCloseRequest = ::exitApplication, title = \"Grid\")"));
         assert!(main_kt.contains("interface MosaicComposeHost"));
@@ -16167,7 +16217,9 @@ handlers = [
             required: false,
             default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
         }];
-        let generated = build_compose_main_kt("AuthorComponentName", &slots, false, None);
+        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None);
+        // The anchor is in Main.kt, which is what the installer edits.
+        let generated = sources.main.clone();
 
         let anchor = generated
             .find("val mosaicHost =")
@@ -16188,8 +16240,9 @@ handlers = [
         }
         // And the fixture really did carry those strings into the file, or the
         // assertions above pass for the wrong reason.
+        let both = format!("{}{}", sources.main, sources.shell);
         for needle in ["AuthorComponentName", "authorSlotName"] {
-            assert!(generated.contains(needle), "fixture inert: {needle}");
+            assert!(both.contains(needle), "fixture inert: {needle}");
         }
     }
 
@@ -16203,7 +16256,7 @@ handlers = [
     #[test]
     fn the_anchor_matches_a_genuinely_emitted_compose_main() {
         for require_runtime in [false, true] {
-            let generated = build_compose_main_kt("Probe", &[], require_runtime, None);
+            let generated = build_compose_main_kt("Probe", &[], require_runtime, None).main;
             assert_eq!(
                 generated.contains("requireNotNull(MosaicRuntimeHost.load())"),
                 require_runtime,

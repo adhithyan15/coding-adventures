@@ -115,7 +115,9 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "Text(( row [ 3 ] ), ",
             'Text("Your Inbox is ready", ',
         ),
-        "src/main/kotlin/Main.kt": (
+        # The shared app shell (UI89 §3.4): the startup UI and the host wiring
+        # that desktop and Android both use.
+        "src/main/kotlin/MosaicAppShell.kt": (
             "fun MosaicStartup(",
             'testTag("mosaic-startup-loading")',
             'Text("Starting TaskApp…")',
