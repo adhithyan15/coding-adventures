@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C132-sentar-se",
+    "language": "portuguese",
+    "chapter": 132,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdd305e02a7e98f4"
+  },
+  "findings": []
+}

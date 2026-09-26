@@ -1,0 +1,11 @@
+{
+  "id": "PT-C127-salgado",
+  "pathSegment": "PT-PATH-127-QUALIDADES127",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-127-QUALIDADES127",
+      "order": 3
+    }
+  ]
+}

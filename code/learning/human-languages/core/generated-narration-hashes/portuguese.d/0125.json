@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:badcc5aadd8bebb3",
+  "lessonIds": [
+    "PT-C125-pronto",
+    "PT-C125-seguro",
+    "PT-C125-perigoso",
+    "PT-C125-molhado",
+    "PT-C125-seco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch125.txt",
+  "json": "portuguese/narration/ch125.json",
+  "textHash": "fnv1a64:872798dc15f266b8",
+  "jsonHash": "fnv1a64:6b2a077afc57cad5",
+  "findings": []
+}

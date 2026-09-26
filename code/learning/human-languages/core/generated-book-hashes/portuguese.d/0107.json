@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:57fe6c74d1432384",
+  "lessonIds": [
+    "PT-C107-sandes",
+    "PT-C107-molho",
+    "PT-C107-vinagre",
+    "PT-C107-sobremesa",
+    "PT-C107-refeicao"
+  ],
+  "tex": "portuguese/book/chapters/ch107-sandwich-sauce-vinegar-dessert-meal.tex"
+}

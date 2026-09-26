@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:66148c1fbf8e28c6",
+  "lessonIds": [
+    "PT-C122-aberto",
+    "PT-C122-fechado",
+    "PT-C122-calmo",
+    "PT-C122-barulhento",
+    "PT-C122-ultimo"
+  ],
+  "tex": "portuguese/book/chapters/ch122-open-closed-calm-noisy-last.tex"
+}

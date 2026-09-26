@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:bd983574725daacc",
+  "lessonIds": [
+    "PT-C130-sessenta",
+    "PT-C130-setenta",
+    "PT-C130-oitenta",
+    "PT-C130-noventa",
+    "PT-C130-comecar"
+  ],
+  "tex": "portuguese/book/chapters/ch130-sixty-seventy-eighty-ninety-to-begin.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C97-corda",
+  "pathSegment": "PT-PATH-97-CASA97",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-97-CASA97",
+      "order": 3
+    }
+  ]
+}

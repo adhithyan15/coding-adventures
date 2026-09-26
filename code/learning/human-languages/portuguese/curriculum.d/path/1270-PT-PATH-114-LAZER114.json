@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-114-LAZER114",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "PT-EXT-114-LAZER114"
+  ],
+  "after": []
+}

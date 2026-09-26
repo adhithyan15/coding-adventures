@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:c99f7894abf68ebd",
+  "lessonIds": [
+    "PT-C131-visitar",
+    "PT-C131-por",
+    "PT-C131-acreditar",
+    "PT-C131-conduzir",
+    "PT-C131-vestir-se"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch131.txt",
+  "json": "portuguese/narration/ch131.json",
+  "textHash": "fnv1a64:7d506bde15bf43a4",
+  "jsonHash": "fnv1a64:4caec5832df4a51e",
+  "findings": []
+}

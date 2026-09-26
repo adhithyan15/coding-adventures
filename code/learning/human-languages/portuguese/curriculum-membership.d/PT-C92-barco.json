@@ -1,0 +1,11 @@
+{
+  "id": "PT-C92-barco",
+  "pathSegment": "PT-PATH-92-VIAGEM92",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-92-VIAGEM92",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:763422856c673a00",
+  "lessonIds": [
+    "PT-C114-frase",
+    "PT-C114-pagina",
+    "PT-C114-musica",
+    "PT-C114-filme",
+    "PT-C114-cancao"
+  ],
+  "tex": "portuguese/book/chapters/ch114-sentence-page-music-film-song.tex"
+}

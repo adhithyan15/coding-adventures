@@ -1,0 +1,11 @@
+{
+  "id": "PT-C116-gelo",
+  "pathSegment": "PT-PATH-116-NATUREZA116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-116-NATUREZA116",
+      "order": 2
+    }
+  ]
+}

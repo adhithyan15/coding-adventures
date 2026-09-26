@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:4013dff639c2dbd5",
+  "lessonIds": [
+    "PT-C105-carne-de-vaca",
+    "PT-C105-legumes",
+    "PT-C105-cogumelo",
+    "PT-C105-pepino",
+    "PT-C105-morango"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch105.txt",
+  "json": "portuguese/narration/ch105.json",
+  "textHash": "fnv1a64:3fb9447fa6ba7ea7",
+  "jsonHash": "fnv1a64:4bafd3b438e21390",
+  "findings": []
+}

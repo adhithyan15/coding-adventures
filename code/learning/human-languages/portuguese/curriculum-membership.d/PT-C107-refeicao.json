@@ -1,0 +1,11 @@
+{
+  "id": "PT-C107-refeicao",
+  "pathSegment": "PT-PATH-107-COMIDA107",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-107-COMIDA107",
+      "order": 4
+    }
+  ]
+}

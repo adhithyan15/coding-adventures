@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:1e2b402946d26f7e",
+  "lessonIds": [
+    "PT-C97-panela",
+    "PT-C97-frigideira",
+    "PT-C97-balde",
+    "PT-C97-corda",
+    "PT-C97-prego"
+  ],
+  "tex": "portuguese/book/chapters/ch97-pot-frying-pan-bucket-rope-nail.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C113-problema",
+  "pathSegment": "PT-PATH-113-ESCOLA113",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-113-ESCOLA113",
+      "order": 4
+    }
+  ]
+}

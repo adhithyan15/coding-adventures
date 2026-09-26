@@ -1,0 +1,11 @@
+{
+  "id": "PT-C115-desenho",
+  "pathSegment": "PT-PATH-115-LAZER115",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-115-LAZER115",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C105-pepino",
+  "pathSegment": "PT-PATH-105-COMIDA105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-105-COMIDA105",
+      "order": 3
+    }
+  ]
+}

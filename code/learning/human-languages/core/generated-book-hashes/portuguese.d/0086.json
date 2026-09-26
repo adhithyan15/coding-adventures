@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:36fbab874e782df6",
+  "lessonIds": [
+    "PT-C86-supermercado",
+    "PT-C86-bomba-de-gasolina",
+    "PT-C86-piscina",
+    "PT-C86-estadio",
+    "PT-C86-fabrica"
+  ],
+  "tex": "portuguese/book/chapters/ch86-supermarket-petrol-station-swimming-pool-stadium-factory.tex"
+}

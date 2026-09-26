@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:e5cc22f50fac82cc",
+  "lessonIds": [
+    "PT-C83-querer",
+    "PT-C83-gostaria",
+    "PT-C83-preferir",
+    "PT-C83-desejar",
+    "PT-C83-desejo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch83.txt",
+  "json": "portuguese/narration/ch83.json",
+  "textHash": "fnv1a64:45a56988ca748d06",
+  "jsonHash": "fnv1a64:0da563dda43475d7",
+  "findings": []
+}

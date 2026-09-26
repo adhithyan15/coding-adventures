@@ -1,0 +1,11 @@
+{
+  "id": "PT-C108-iogurte",
+  "pathSegment": "PT-PATH-108-COMIDA108",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-108-COMIDA108",
+      "order": 0
+    }
+  ]
+}

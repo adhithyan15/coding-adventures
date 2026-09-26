@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:551012bf04b5b85b",
+  "lessonIds": [
+    "PT-C114-frase",
+    "PT-C114-pagina",
+    "PT-C114-musica",
+    "PT-C114-filme",
+    "PT-C114-cancao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch114.txt",
+  "json": "portuguese/narration/ch114.json",
+  "textHash": "fnv1a64:73136c795f724eaa",
+  "jsonHash": "fnv1a64:21b1ebac8114d169",
+  "findings": []
+}

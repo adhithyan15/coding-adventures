@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-118-ANIMAIS118",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "PT-EXT-118-ANIMAIS118"
+  ],
+  "after": []
+}

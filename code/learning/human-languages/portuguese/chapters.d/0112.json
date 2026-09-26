@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Customer, Boss, Class, Lesson, Exam",
+  "label": "ch:pt-customer-boss-class-lesson-exam",
+  "canDo": "I can say a customer, a boss, a class, a lesson and an exam.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C112-exame",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say a customer, a boss, a class, a lesson and an exam.",
+    "assesses": [
+      "PT-LEX-C112-ESCOLA112-03",
+      "PT-LEX-C112-ESCOLA112-04",
+      "PT-LEX-C112-ESCOLA112-05"
+    ]
+  }
+}

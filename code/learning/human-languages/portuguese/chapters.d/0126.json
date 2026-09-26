@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Cool, Soft, Hard, Round, Wide",
+  "label": "ch:pt-cool-soft-hard-round-wide",
+  "canDo": "I can say cool, soft, hard, round and wide.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C126-largo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say cool, soft, hard, round and wide.",
+    "assesses": [
+      "PT-LEX-C126-QUALIDADES126-03",
+      "PT-LEX-C126-QUALIDADES126-04",
+      "PT-LEX-C126-QUALIDADES126-05"
+    ]
+  }
+}

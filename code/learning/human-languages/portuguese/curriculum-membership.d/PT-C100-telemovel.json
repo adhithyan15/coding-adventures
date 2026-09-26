@@ -1,0 +1,11 @@
+{
+  "id": "PT-C100-telemovel",
+  "pathSegment": "PT-PATH-100-COISAS100",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-100-COISAS100",
+      "order": 1
+    }
+  ]
+}

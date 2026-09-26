@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C105-legumes",
+    "language": "portuguese",
+    "chapter": 105,
+    "sequence": 5060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49c55d3b3d920b30"
+  },
+  "findings": []
+}

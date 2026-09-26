@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Jumper, Tie, Gloves, Scarf, Boots",
+  "label": "ch:pt-jumper-tie-gloves-scarf-boots",
+  "canDo": "I can say a jumper, a tie, gloves, a scarf and boots.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R103-second-pass-clothes-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say a jumper, a tie, gloves, a scarf and boots.",
+    "assesses": [
+      "PT-LEX-C103-ROUPA103-03",
+      "PT-LEX-C103-ROUPA103-04",
+      "PT-LEX-C103-ROUPA103-05"
+    ]
+  }
+}

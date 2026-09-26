@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:09eca930afe013de",
+  "lessonIds": [
+    "PT-C119-esquilo",
+    "PT-C119-coruja",
+    "PT-C119-baleia",
+    "PT-C119-golfinho",
+    "PT-C119-cotovelo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch119.txt",
+  "json": "portuguese/narration/ch119.json",
+  "textHash": "fnv1a64:6d9f30120d8bb3aa",
+  "jsonHash": "fnv1a64:a129a8d67bd41338",
+  "findings": []
+}

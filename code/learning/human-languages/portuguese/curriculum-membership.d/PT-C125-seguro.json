@@ -1,0 +1,11 @@
+{
+  "id": "PT-C125-seguro",
+  "pathSegment": "PT-PATH-125-QUALIDADES125",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-125-QUALIDADES125",
+      "order": 1
+    }
+  ]
+}

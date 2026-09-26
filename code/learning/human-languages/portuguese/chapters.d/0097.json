@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Pot, Frying pan, Bucket, Rope, Nail",
+  "label": "ch:pt-pot-frying-pan-bucket-rope-nail",
+  "canDo": "I can say a pot, a frying pan, a bucket, a rope and a nail.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C97-prego",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say a pot, a frying pan, a bucket, a rope and a nail.",
+    "assesses": [
+      "PT-LEX-C97-CASA97-03",
+      "PT-LEX-C97-CASA97-04",
+      "PT-LEX-C97-CASA97-05"
+    ]
+  }
+}

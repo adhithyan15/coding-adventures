@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Blouse, Suit, Shark, Thunder, Lightning",
+  "label": "ch:pt-blouse-suit-shark-thunder-lightning",
+  "canDo": "I can say a blouse, a suit, a shark, thunder and lightning.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C104-relampago",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say a blouse, a suit, a shark, thunder and lightning.",
+    "assesses": [
+      "PT-LEX-C104-ROUPA104-03",
+      "PT-LEX-C104-ROUPA104-04",
+      "PT-LEX-C104-ROUPA104-05"
+    ]
+  }
+}

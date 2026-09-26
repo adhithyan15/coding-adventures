@@ -1,0 +1,11 @@
+{
+  "id": "PT-C133-reparar",
+  "pathSegment": "PT-PATH-133-VERBOS133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-133-VERBOS133",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-R113-second-pass-free-time-and-nature",
+  "pathSegment": "PT-PATH-113-ESCOLA113",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PT-EXT-113-ESCOLA113",
+      "order": 6
+    }
+  ]
+}

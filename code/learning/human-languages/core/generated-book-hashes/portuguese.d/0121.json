@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:4c4b3f2dd3ec4ad1",
+  "lessonIds": [
+    "PT-C121-lilas",
+    "PT-C121-roxo",
+    "PT-C121-castanho",
+    "PT-C121-ocupado",
+    "PT-C121-livre"
+  ],
+  "tex": "portuguese/book/chapters/ch121-lilac-purple-brown-busy-free.tex"
+}

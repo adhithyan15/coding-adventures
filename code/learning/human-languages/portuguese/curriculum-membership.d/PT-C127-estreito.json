@@ -1,0 +1,11 @@
+{
+  "id": "PT-C127-estreito",
+  "pathSegment": "PT-PATH-127-QUALIDADES127",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-127-QUALIDADES127",
+      "order": 0
+    }
+  ]
+}

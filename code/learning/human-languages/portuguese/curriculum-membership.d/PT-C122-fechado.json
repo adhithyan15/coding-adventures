@@ -1,0 +1,11 @@
+{
+  "id": "PT-C122-fechado",
+  "pathSegment": "PT-PATH-122-QUALIDADES122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-122-QUALIDADES122",
+      "order": 1
+    }
+  ]
+}

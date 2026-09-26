@@ -1,0 +1,11 @@
+{
+  "id": "PT-C85-paragem",
+  "pathSegment": "PT-PATH-85-LUGARES85",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-85-LUGARES85",
+      "order": 1
+    }
+  ]
+}

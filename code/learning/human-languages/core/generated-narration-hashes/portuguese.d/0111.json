@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:9c3ff736a4b79e71",
+  "lessonIds": [
+    "PT-C111-motorista",
+    "PT-C111-advogado",
+    "PT-C111-engenheiro",
+    "PT-C111-bombeiro",
+    "PT-C111-carteiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch111.txt",
+  "json": "portuguese/narration/ch111.json",
+  "textHash": "fnv1a64:63e78b1adc34c502",
+  "jsonHash": "fnv1a64:3e76a84b3bfe896a",
+  "findings": []
+}

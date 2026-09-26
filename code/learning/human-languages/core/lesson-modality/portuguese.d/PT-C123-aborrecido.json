@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C123-aborrecido",
+    "language": "portuguese",
+    "chapter": 123,
+    "sequence": 6080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:244be385f186962a"
+  },
+  "findings": []
+}

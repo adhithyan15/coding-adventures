@@ -1,0 +1,11 @@
+{
+  "id": "PT-C119-baleia",
+  "pathSegment": "PT-PATH-119-ANIMAIS119",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-119-ANIMAIS119",
+      "order": 2
+    }
+  ]
+}

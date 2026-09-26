@@ -1,0 +1,11 @@
+{
+  "id": "PT-C132-cair",
+  "pathSegment": "PT-PATH-132-VERBOS132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-132-VERBOS132",
+      "order": 3
+    }
+  ]
+}

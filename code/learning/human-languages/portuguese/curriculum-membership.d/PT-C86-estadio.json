@@ -1,0 +1,11 @@
+{
+  "id": "PT-C86-estadio",
+  "pathSegment": "PT-PATH-86-LUGARES86",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-86-LUGARES86",
+      "order": 3
+    }
+  ]
+}

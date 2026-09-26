@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Heavy, Thin, Pleased, Weekend, Date",
+  "label": "ch:pt-heavy-thin-pleased-weekend-date",
+  "canDo": "I can say heavy, thin, pleased, the weekend and a date.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C128-data",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say heavy, thin, pleased, the weekend and a date.",
+    "assesses": [
+      "PT-LEX-C128-QUALIDADES128-03",
+      "PT-LEX-C128-QUALIDADES128-04",
+      "PT-LEX-C128-QUALIDADES128-05"
+    ]
+  }
+}

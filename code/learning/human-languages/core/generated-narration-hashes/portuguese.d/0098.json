@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:0bb121c7790ab08b",
+  "lessonIds": [
+    "PT-C98-martelo",
+    "PT-C98-cola",
+    "PT-C98-tesoura",
+    "PT-C98-candeeiro",
+    "PT-C98-casa-de-banho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch98.txt",
+  "json": "portuguese/narration/ch98.json",
+  "textHash": "fnv1a64:56c135315c97f410",
+  "jsonHash": "fnv1a64:206694668b5752f6",
+  "findings": []
+}

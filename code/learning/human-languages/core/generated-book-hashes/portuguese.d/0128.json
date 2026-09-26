@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:10bc9873a3b0e66a",
+  "lessonIds": [
+    "PT-C128-pesado",
+    "PT-C128-magro",
+    "PT-C128-contente",
+    "PT-C128-fim-de-semana",
+    "PT-C128-data"
+  ],
+  "tex": "portuguese/book/chapters/ch128-heavy-thin-pleased-weekend-date.tex"
+}

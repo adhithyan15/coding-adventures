@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Straight ahead, Behind, Next to, Between, Neighbourhood",
+  "label": "ch:pt-straight-ahead-behind-next-to-between-neighbourhood",
+  "canDo": "I can say straight ahead, behind, next to, between and a neighbourhood.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-C89-bairro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say straight ahead, behind, next to, between and a neighbourhood.",
+    "assesses": [
+      "PT-LEX-C89-LUGARES89-03",
+      "PT-LEX-C89-LUGARES89-04",
+      "PT-LEX-C89-LUGARES89-05"
+    ]
+  }
+}

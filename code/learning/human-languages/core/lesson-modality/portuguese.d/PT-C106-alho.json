@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C106-alho",
+    "language": "portuguese",
+    "chapter": 106,
+    "sequence": 5120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0462d3a7836c1fb1"
+  },
+  "findings": []
+}

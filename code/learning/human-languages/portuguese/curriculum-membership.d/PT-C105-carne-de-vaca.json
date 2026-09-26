@@ -1,0 +1,11 @@
+{
+  "id": "PT-C105-carne-de-vaca",
+  "pathSegment": "PT-PATH-105-COMIDA105",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-105-COMIDA105",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C123-aborrecido",
+  "pathSegment": "PT-PATH-123-QUALIDADES123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-123-QUALIDADES123",
+      "order": 3
+    }
+  ]
+}

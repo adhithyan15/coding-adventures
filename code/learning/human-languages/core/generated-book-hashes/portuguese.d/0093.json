@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:eb2f583db7c9b0cb",
+  "lessonIds": [
+    "PT-C93-tapete",
+    "PT-C93-televisao",
+    "PT-C93-computador",
+    "PT-C93-frigorifico",
+    "PT-C93-forno"
+  ],
+  "tex": "portuguese/book/chapters/ch93-rug-television-computer-fridge-oven.tex"
+}

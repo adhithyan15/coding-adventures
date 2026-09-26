@@ -1,0 +1,11 @@
+{
+  "id": "PT-C89-bairro",
+  "pathSegment": "PT-PATH-89-LUGARES89",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-89-LUGARES89",
+      "order": 4
+    }
+  ]
+}

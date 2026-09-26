@@ -1,0 +1,11 @@
+{
+  "id": "PT-C118-tartaruga",
+  "pathSegment": "PT-PATH-118-ANIMAIS118",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-118-ANIMAIS118",
+      "order": 4
+    }
+  ]
+}

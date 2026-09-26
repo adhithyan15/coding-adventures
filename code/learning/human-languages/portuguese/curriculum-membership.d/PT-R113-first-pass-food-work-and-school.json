@@ -1,0 +1,11 @@
+{
+  "id": "PT-R113-first-pass-food-work-and-school",
+  "pathSegment": "PT-PATH-113-ESCOLA113",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PT-EXT-113-ESCOLA113",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:412b6c9872d3a7f7",
+  "lessonIds": [
+    "PT-C132-lavar-se",
+    "PT-C132-levantar-se",
+    "PT-C132-sentar-se",
+    "PT-C132-cair",
+    "PT-C132-subir"
+  ],
+  "tex": "portuguese/book/chapters/ch132-to-wash-to-get-up-to-sit-down-to-fall-to-go-up.tex"
+}

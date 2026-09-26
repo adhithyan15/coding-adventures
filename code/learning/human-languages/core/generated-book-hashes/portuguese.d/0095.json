@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:84c07960ba23d3ce",
+  "lessonIds": [
+    "PT-C95-toalha",
+    "PT-C95-sabonete",
+    "PT-C95-escova-de-dentes",
+    "PT-C95-pasta-de-dentes",
+    "PT-C95-pente"
+  ],
+  "tex": "portuguese/book/chapters/ch95-towel-bar-of-soap-toothbrush-toothpaste-comb.tex"
+}

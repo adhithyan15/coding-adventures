@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C94-prateleira",
+    "language": "portuguese",
+    "chapter": 94,
+    "sequence": 4470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8d110bd46711c38"
+  },
+  "findings": []
+}

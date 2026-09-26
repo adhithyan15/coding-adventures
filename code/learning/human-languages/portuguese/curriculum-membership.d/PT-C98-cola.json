@@ -1,0 +1,11 @@
+{
+  "id": "PT-C98-cola",
+  "pathSegment": "PT-PATH-98-CASA98",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-98-CASA98",
+      "order": 1
+    }
+  ]
+}

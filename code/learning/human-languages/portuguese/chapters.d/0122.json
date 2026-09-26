@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Open, Closed, Calm, Noisy, Last",
+  "label": "ch:pt-open-closed-calm-noisy-last",
+  "canDo": "I can say open, closed, calm, noisy and last.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C122-ultimo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say open, closed, calm, noisy and last.",
+    "assesses": [
+      "PT-LEX-C122-QUALIDADES122-03",
+      "PT-LEX-C122-QUALIDADES122-04",
+      "PT-LEX-C122-QUALIDADES122-05"
+    ]
+  }
+}

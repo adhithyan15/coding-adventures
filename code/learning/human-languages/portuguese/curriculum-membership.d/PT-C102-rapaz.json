@@ -1,0 +1,11 @@
+{
+  "id": "PT-C102-rapaz",
+  "pathSegment": "PT-PATH-102-COISAS102",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-102-COISAS102",
+      "order": 3
+    }
+  ]
+}

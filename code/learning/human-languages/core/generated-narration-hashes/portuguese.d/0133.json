@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:b67e7b8e3d60bc09",
+  "lessonIds": [
+    "PT-C133-descer",
+    "PT-C133-alugar",
+    "PT-C133-reparar",
+    "PT-C133-contar",
+    "PT-C133-caminhar",
+    "PT-R133-first-pass-more-describing-words-and-time",
+    "PT-R133-second-pass-numbers-and-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch133.txt",
+  "json": "portuguese/narration/ch133.json",
+  "textHash": "fnv1a64:9d182849b276be94",
+  "jsonHash": "fnv1a64:c468f2346a576ddc",
+  "findings": []
+}

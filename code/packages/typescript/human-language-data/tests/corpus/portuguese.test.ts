@@ -24,7 +24,10 @@ it("pins Portuguese lesson-content budgets", () =>
     // 120 -> 384: the pre-A1 vocabulary tranche, chapters 30-81. 260 word
     // lessons (thirty-five verbs) and four reviews; each word lesson introduces
     // one lexical atom and no idiom, sense or culture claim. Re-measured.
-    lessons: 384,
+    // 384 -> 654: the A1 vocabulary tranche, chapters 82-133. 260 word lessons
+    // (twenty-four verbs) in five runs of ten or eleven chapters, each closing on
+    // two reviews. No idiom, sense or culture claim.
+    lessons: 654,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,

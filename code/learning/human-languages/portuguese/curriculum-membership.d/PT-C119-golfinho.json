@@ -1,0 +1,11 @@
+{
+  "id": "PT-C119-golfinho",
+  "pathSegment": "PT-PATH-119-ANIMAIS119",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-119-ANIMAIS119",
+      "order": 3
+    }
+  ]
+}

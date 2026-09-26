@@ -1,0 +1,11 @@
+{
+  "id": "PT-C111-carteiro",
+  "pathSegment": "PT-PATH-111-TRABALHO111",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-111-TRABALHO111",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "To visit, To put, To believe, To drive, To get dressed",
+  "label": "ch:pt-to-visit-to-put-to-believe-to-drive-to-get-dressed",
+  "canDo": "I can say to visit, to put, to believe, to drive and to get dressed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PT-C131-vestir-se",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say to visit, to put, to believe, to drive and to get dressed.",
+    "assesses": [
+      "PT-LEX-C131-VERBOS131-03",
+      "PT-LEX-C131-VERBOS131-04",
+      "PT-LEX-C131-VERBOS131-05"
+    ]
+  }
+}

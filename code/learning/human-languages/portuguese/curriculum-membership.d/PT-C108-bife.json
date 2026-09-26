@@ -1,0 +1,11 @@
+{
+  "id": "PT-C108-bife",
+  "pathSegment": "PT-PATH-108-COMIDA108",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-108-COMIDA108",
+      "order": 2
+    }
+  ]
+}

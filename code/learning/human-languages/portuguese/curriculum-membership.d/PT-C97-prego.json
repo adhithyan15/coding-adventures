@@ -1,0 +1,11 @@
+{
+  "id": "PT-C97-prego",
+  "pathSegment": "PT-PATH-97-CASA97",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-97-CASA97",
+      "order": 4
+    }
+  ]
+}

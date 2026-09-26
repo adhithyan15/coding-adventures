@@ -1,0 +1,11 @@
+{
+  "id": "PT-C107-sobremesa",
+  "pathSegment": "PT-PATH-107-COMIDA107",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-107-COMIDA107",
+      "order": 3
+    }
+  ]
+}

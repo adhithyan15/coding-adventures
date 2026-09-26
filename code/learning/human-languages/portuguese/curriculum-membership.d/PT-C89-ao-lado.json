@@ -1,0 +1,11 @@
+{
+  "id": "PT-C89-ao-lado",
+  "pathSegment": "PT-PATH-89-LUGARES89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-89-LUGARES89",
+      "order": 2
+    }
+  ]
+}

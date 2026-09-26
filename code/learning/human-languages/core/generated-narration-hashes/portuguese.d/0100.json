@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:41219564b3df5f5e",
+  "lessonIds": [
+    "PT-C100-despertador",
+    "PT-C100-telemovel",
+    "PT-C100-selo",
+    "PT-C100-carteira",
+    "PT-C100-anel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch100.txt",
+  "json": "portuguese/narration/ch100.json",
+  "textHash": "fnv1a64:8f73059ec9cf4ad2",
+  "jsonHash": "fnv1a64:24564d2a0c818078",
+  "findings": []
+}

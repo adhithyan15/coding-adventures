@@ -1,0 +1,11 @@
+{
+  "id": "PT-C106-chocolate",
+  "pathSegment": "PT-PATH-106-COMIDA106",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-106-COMIDA106",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C83-preferir",
+  "pathSegment": "PT-PATH-83-QUERER83",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-83-QUERER83",
+      "order": 2
+    }
+  ]
+}

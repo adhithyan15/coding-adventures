@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:9397bdad8f7064fc",
+  "lessonIds": [
+    "PT-C130-sessenta",
+    "PT-C130-setenta",
+    "PT-C130-oitenta",
+    "PT-C130-noventa",
+    "PT-C130-comecar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch130.txt",
+  "json": "portuguese/narration/ch130.json",
+  "textHash": "fnv1a64:279c6aafb9fb2784",
+  "jsonHash": "fnv1a64:6d1352b194df8899",
+  "findings": []
+}

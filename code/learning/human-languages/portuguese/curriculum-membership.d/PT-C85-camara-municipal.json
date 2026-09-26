@@ -1,0 +1,11 @@
+{
+  "id": "PT-C85-camara-municipal",
+  "pathSegment": "PT-PATH-85-LUGARES85",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-85-LUGARES85",
+      "order": 4
+    }
+  ]
+}

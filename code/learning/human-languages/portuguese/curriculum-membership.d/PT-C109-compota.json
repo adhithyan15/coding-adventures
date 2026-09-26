@@ -1,0 +1,11 @@
+{
+  "id": "PT-C109-compota",
+  "pathSegment": "PT-PATH-109-COMIDA109",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-109-COMIDA109",
+      "order": 1
+    }
+  ]
+}
