@@ -1,0 +1,11 @@
+{
+  "id": "IT-C86-desiderare",
+  "pathSegment": "IT-PATH-86-VOLERE86",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-86-VOLERE86",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C89-kharij",
+    "language": "arabic",
+    "chapter": 89,
+    "sequence": 3410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b14d0b809c99ca0"
+  },
+  "findings": []
+}

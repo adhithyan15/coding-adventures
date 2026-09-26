@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:637e02d3cc323b1f",
+  "lessonIds": [
+    "UR-W99-ze",
+    "UR-W99-toe",
+    "UR-R99-letters-first-pass",
+    "UR-R99-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch99.txt",
+  "json": "urdu/narration/ch99.json",
+  "textHash": "fnv1a64:345d6d2385ffc97a",
+  "jsonHash": "fnv1a64:a999207df6b1ccc1",
+  "findings": []
+}

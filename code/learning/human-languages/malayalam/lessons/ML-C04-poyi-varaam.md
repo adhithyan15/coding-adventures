@@ -9,17 +9,17 @@ headword: പോയി വരാം
 gloss: goodbye (lit. "I'll go and come back")
 romanization: "pōyi varāṁ"
 concept_tag: FAREWELL
-prerequisites: [ML-C04-pokuka, ML-C03-njaan]
+prerequisites: [ML-C04-pokuka, ML-C03-njaan, ML-C04-koodu]
 sounds: [poyi-participle, aam-ending]
 roots: [po-go-dravidian, va-come-dravidian]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ML-LEX-POKUKA-VARIKA-01]
+  knowledge: [ML-LEX-POKUKA-VARIKA-01, ML-LEX-ANCHOR-KOODU]
 introduces:
-  knowledge: [ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01]
+  knowledge: [ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C08-DAYAVAYI-04]
 practises:
-  knowledge: [ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01]
+  knowledge: [ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C08-DAYAVAYI-04, ML-LEX-ANCHOR-KOODU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,16 +31,21 @@ reviews_of: [ML-C04-pokuka]
 # പോയി വരാം (pōyi varāṁ) — "I'll go and come back"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-KOODU] -->
 
 [PAUSE 2s] The everyday Malayalam goodbye — a promise, not a parting.
 
 ## The letters in this word
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ML-CONCEPT-C08-DAYAVAYI-04]; assesses=[] -->
 
 **പോയി** (*pōyi*, "having gone") is *pō* + the "-yi" that means "having …d."
 **വരാം** (*varāṁ*, "[I] will come") is *va* + the **-ആം** (*-āṁ*) ending, "I/we
 will / let me."
+
+Two vowel signs do the work here. In **യി**, *ya* takes the *i* sign **ി**. In
+**രാ**, *ra* takes the long **ാ** (*-ā*), simply a tall stroke after the
+consonant. Malayalam's rounded letters hang these signs to the right; the long
+**ാ** is the same *ā* you would meet across the Dravidian scripts.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-PHRASE-C04-POYI-VARAAM-01]; assesses=[] -->
@@ -65,12 +70,13 @@ lesson), *ceyyāṁ* ("I'll do it"). It is Malayalam's gentle way of promising a
 action.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C08-DAYAVAYI-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: the goodbye — *pōyi varāṁ*]
 - [YOU SAY: its literal meaning ("having gone, I'll come" → "I'll come back")]
 - [YOU SAY: the warm reply — *pōyi varū*]
+- [YOU LOOK: at വരാം and find the tall ാ stroke after ര]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01] -->

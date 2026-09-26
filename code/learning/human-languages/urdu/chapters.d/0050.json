@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "To sing, To dance, To meet, To live, To learn",
+  "label": "ch:ur-to-sing-to-dance-to-meet-to-live-to-learn",
+  "canDo": "I can say to sing, to dance, to meet, to live, to stay and to learn.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C50-sikhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can say to sing, to dance, to meet, to live, to stay and to learn.",
+    "assesses": [
+      "UR-LEX-C50-VERBS50-03",
+      "UR-LEX-C50-VERBS50-04",
+      "UR-LEX-C50-VERBS50-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C30-tab",
+  "pathSegment": "FA-PATH-30-BODY30",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-30-BODY30",
+      "order": 2
+    }
+  ]
+}

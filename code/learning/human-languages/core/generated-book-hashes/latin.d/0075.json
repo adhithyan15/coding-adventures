@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:ae0a3eda60ad794f",
+  "lessonIds": [
+    "LA-C75-laboro",
+    "LA-C75-cano",
+    "LA-C75-salto",
+    "LA-C75-rideo",
+    "LA-C75-fleo"
+  ],
+  "tex": "latin/book/chapters/ch75-work-sing-dance-laugh-weep.tex"
+}

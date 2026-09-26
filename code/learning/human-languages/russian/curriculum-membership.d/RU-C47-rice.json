@@ -1,0 +1,11 @@
+{
+  "id": "RU-C47-rice",
+  "pathSegment": "RU-PATH-47-PANTRY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-47-PANTRY",
+      "order": 2
+    }
+  ]
+}

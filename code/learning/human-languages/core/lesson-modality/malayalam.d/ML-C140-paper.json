@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C140-paper",
+    "language": "malayalam",
+    "chapter": 140,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee210b47e607af4d"
+  },
+  "findings": []
+}

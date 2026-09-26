@@ -1,0 +1,11 @@
+{
+  "id": "PT-C103-luvas",
+  "pathSegment": "PT-PATH-103-ROUPA103",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-103-ROUPA103",
+      "order": 2
+    }
+  ]
+}

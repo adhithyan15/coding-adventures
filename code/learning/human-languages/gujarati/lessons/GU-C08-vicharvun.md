@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C08-vicharvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 440
+sequence: 453
 chapter: 14
 type: word
 headword: વિચારવું

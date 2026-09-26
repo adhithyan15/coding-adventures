@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-84-PLACES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a temple, a hospital and a field, a farmer and a merchant.",
+  "prerequisites": []
+}

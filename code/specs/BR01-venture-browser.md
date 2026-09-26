@@ -710,6 +710,14 @@ image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
 
 ## Scope
 
+> **Status note (2026-09-25).** The lists below are Venture v0.1's original
+> scope and are kept as that record. Several "future" items have since been
+> built: HTML forms, find in page, printing, the macOS host (Metal), and Linux
+> hosts through Cairo (Qt, Flutter, Compose). Still not built: JavaScript,
+> HTTPS/TLS, CSS beyond the bounded profile, the HTTP cache, tabs and multiple
+> windows. What comes next, in order, is
+> [BR02 — Venture completion roadmap](BR02-venture-completion-roadmap.md).
+
 ### In Scope (Venture v0.1)
 
 - URL bar navigation with Enter key

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:0a2a2d1b495caa10",
+  "lessonIds": [
+    "KA-C91-address",
+    "KA-C91-birthday",
+    "KA-C91-wedding",
+    "KA-C91-hometown",
+    "KA-C91-language"
+  ],
+  "tex": "kannada/book/chapters/ch91-about-you.tex"
+}

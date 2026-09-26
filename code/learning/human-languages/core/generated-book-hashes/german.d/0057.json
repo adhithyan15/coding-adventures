@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:48dc2b1f859120a6",
+  "lessonIds": [
+    "GE-C57-gesicht",
+    "GE-C57-blut",
+    "GE-C57-haut",
+    "GE-C57-haar",
+    "GE-C57-bauch"
+  ],
+  "tex": "german/book/chapters/ch57-face-blood-skin-hair-belly.tex"
+}

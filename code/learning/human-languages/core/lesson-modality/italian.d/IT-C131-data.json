@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C131-data",
+    "language": "italian",
+    "chapter": 131,
+    "sequence": 6510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50d7fbd8ee2dd9c2"
+  },
+  "findings": []
+}

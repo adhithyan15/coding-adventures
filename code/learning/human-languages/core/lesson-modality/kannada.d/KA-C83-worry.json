@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C83-worry",
+    "language": "kannada",
+    "chapter": 83,
+    "sequence": 3050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4ecafd740d67dd1"
+  },
+  "findings": []
+}

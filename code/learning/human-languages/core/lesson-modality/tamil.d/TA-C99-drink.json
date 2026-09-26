@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C99-drink",
+    "language": "tamil",
+    "chapter": 99,
+    "sequence": 4160,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:966c5b5dacef2720"
+  },
+  "findings": []
+}

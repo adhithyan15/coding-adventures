@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Door, Kitchen, Room, Book, Pen",
+  "label": "ch:mw-door-kitchen-room-book-pen",
+  "canDo": "I can say a door, a kitchen, a room, a book and a pen.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MW-C65-kalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say a door, a kitchen, a room, a book and a pen.",
+    "assesses": [
+      "MW-LEX-C65-HOME65-03",
+      "MW-LEX-C65-HOME65-04",
+      "MW-LEX-C65-HOME65-05"
+    ]
+  }
+}

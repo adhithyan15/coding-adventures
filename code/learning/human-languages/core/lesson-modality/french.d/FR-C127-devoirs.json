@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C127-devoirs",
+    "language": "french",
+    "chapter": 127,
+    "sequence": 5810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70c85578f4d07df9"
+  },
+  "findings": []
+}

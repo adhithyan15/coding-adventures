@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:89d4353268f99267",
+  "lessonIds": [
+    "ML-C139-time",
+    "ML-C139-minute",
+    "ML-C139-hour",
+    "ML-C139-month",
+    "ML-C139-year"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch139.txt",
+  "json": "malayalam/narration/ch139.json",
+  "textHash": "fnv1a64:d8979c3e6f6b2992",
+  "jsonHash": "fnv1a64:7dbbc15183a0580d",
+  "findings": []
+}

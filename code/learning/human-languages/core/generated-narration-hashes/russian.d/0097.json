@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:5f62da71eb5c438a",
+  "lessonIds": [
+    "RU-C97-broom",
+    "RU-C97-washing-machine",
+    "RU-C97-sofa",
+    "RU-C97-wardrobe",
+    "RU-C97-saucepan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch97.txt",
+  "json": "russian/narration/ch97.json",
+  "textHash": "fnv1a64:62890b83a683a3f9",
+  "jsonHash": "fnv1a64:d13fe49aeed3993b",
+  "findings": []
+}

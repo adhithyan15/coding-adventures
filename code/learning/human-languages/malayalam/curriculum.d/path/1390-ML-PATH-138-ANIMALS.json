@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-138-ANIMALS",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ML-EXT-138-ANIMALS"
+  ],
+  "after": []
+}

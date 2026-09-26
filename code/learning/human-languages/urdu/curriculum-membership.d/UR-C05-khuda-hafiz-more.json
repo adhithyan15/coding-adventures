@@ -1,0 +1,11 @@
+{
+  "id": "UR-C05-khuda-hafiz-more",
+  "pathSegment": "UR-PATH-006",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-015-FAREWELL-SPACING-REGISTER",
+      "order": 1
+    }
+  ]
+}

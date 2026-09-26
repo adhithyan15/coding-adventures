@@ -1,0 +1,11 @@
+{
+  "id": "FR-C137-visiter",
+  "pathSegment": "FR-PATH-137-VERBES89",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-137-VERBES89",
+      "order": 1
+    }
+  ]
+}

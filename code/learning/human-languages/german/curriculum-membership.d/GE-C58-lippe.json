@@ -1,0 +1,11 @@
+{
+  "id": "GE-C58-lippe",
+  "pathSegment": "GE-PATH-58-KOERPER3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-58-KOERPER3",
+      "order": 2
+    }
+  ]
+}

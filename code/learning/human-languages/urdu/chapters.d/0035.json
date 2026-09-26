@@ -1,0 +1,19 @@
+{
+  "chapter": 35,
+  "title": "The Hook Family",
+  "label": "ch:ur-letters-hook-family",
+  "canDo": "I can write jim, bari he, khe and che, and tell the four apart by their dots.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-W35-che",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 35: i can write jim, bari he, khe and che, and tell the four apart by their dots.",
+    "assesses": [
+      "UR-SCRIPT-C35-BARI-HE-01",
+      "UR-SCRIPT-C35-KHE-01",
+      "UR-SCRIPT-C35-CHE-01"
+    ]
+  }
+}

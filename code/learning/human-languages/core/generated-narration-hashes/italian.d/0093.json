@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:eef9750de696b4e0",
+  "lessonIds": [
+    "IT-C93-vacanze",
+    "IT-C93-bicicletta",
+    "IT-C93-moto",
+    "IT-C93-nave",
+    "IT-C93-barca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch93.txt",
+  "json": "italian/narration/ch93.json",
+  "textHash": "fnv1a64:d9c7b165309a9f75",
+  "jsonHash": "fnv1a64:458612d1e9a7c716",
+  "findings": []
+}

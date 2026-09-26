@@ -12,17 +12,17 @@ type: writing
 headword: "घ"
 gloss: the single character घ — one of the last two letters in this book that arrive before the words that need them
 romanization: "gha"
-prerequisites: [HI-S118-sign-candrabindu]
+prerequisites: [HI-S118-sign-candrabindu, HI-C14-ghee]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [HI-SCRIPT-RECOG-118]
+  knowledge: [HI-SCRIPT-RECOG-118, HI-LEX-ANCHOR-GHEE]
 introduces:
   knowledge: [HI-SCRIPT-RECOG-136]
 practises:
-  knowledge: [HI-SCRIPT-RECOG-118, HI-SCRIPT-RECOG-136]
+  knowledge: [HI-SCRIPT-RECOG-118, HI-SCRIPT-RECOG-136, HI-LEX-ANCHOR-GHEE]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [HI-S118-sign-candrabindu]
 # घ — a letter arriving before its words
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-118] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-118, HI-LEX-ANCHOR-GHEE] -->
 
 [PAUSE 1s] Before the new one: **ँ** — what does it do to the vowel it sits
 over?

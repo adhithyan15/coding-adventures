@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:fd323b94f0073e5a",
+  "lessonIds": [
+    "LA-C116-aedificium",
+    "LA-C116-carcer",
+    "LA-C116-atrium",
+    "LA-C116-angulus",
+    "LA-C116-vicus"
+  ],
+  "tex": "latin/book/chapters/ch116-building-prison-main-hall-of-a-house-corner-street.tex"
+}

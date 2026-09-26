@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C85-corona",
+    "language": "latin",
+    "chapter": 85,
+    "sequence": 2870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2a16d9fc5c5d036"
+  },
+  "findings": []
+}

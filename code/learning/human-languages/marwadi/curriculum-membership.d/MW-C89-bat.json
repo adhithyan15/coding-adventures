@@ -1,0 +1,11 @@
+{
+  "id": "MW-C89-bat",
+  "pathSegment": "MW-PATH-89-WORLD89",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-89-WORLD89",
+      "order": 3
+    }
+  ]
+}

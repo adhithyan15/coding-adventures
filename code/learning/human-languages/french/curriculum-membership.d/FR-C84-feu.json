@@ -1,0 +1,11 @@
+{
+  "id": "FR-C84-feu",
+  "pathSegment": "FR-PATH-84-NATURE36",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-84-NATURE36",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C48-heart",
+  "pathSegment": "GU-PATH-48-BODY3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-48-BODY3",
+      "order": 1
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R26-madad-gamvun-paani-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1450
+sequence: 1463
 chapter: 30
 type: practice
 headword: મદદ કરવી — ગમવું — પાણી

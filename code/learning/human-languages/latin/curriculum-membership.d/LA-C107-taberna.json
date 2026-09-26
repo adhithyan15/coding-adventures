@@ -1,0 +1,11 @@
+{
+  "id": "LA-C107-taberna",
+  "pathSegment": "LA-PATH-107-URBS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-107-URBS",
+      "order": 4
+    }
+  ]
+}

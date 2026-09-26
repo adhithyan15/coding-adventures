@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "When You Are Lost",
+  "label": "ch:ta-when-you-are-lost",
+  "canDo": "I can say I do not understand, ask someone to write it down, ask for one more time, and ask what they said.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C94-whatsaid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can say I do not understand, ask someone to write it down, ask for one more time, and ask what they said.",
+    "assesses": [
+      "TA-LEX-C94-LOST-02",
+      "TA-LEX-C94-LOST-03",
+      "TA-LEX-C94-LOST-04"
+    ]
+  }
+}

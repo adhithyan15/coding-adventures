@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C64-sefid",
+    "language": "persian",
+    "chapter": 64,
+    "sequence": 3100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15bd2f1e0c032471"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C77-mitho",
+  "pathSegment": "MW-PATH-77-ADJ77",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-77-ADJ77",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:2452d3fbbfe2afb6",
+  "lessonIds": [
+    "LA-C66-pectus",
+    "LA-C66-crus",
+    "LA-C66-gena",
+    "LA-C66-unguis",
+    "LA-C66-sanus"
+  ],
+  "tex": "latin/book/chapters/ch66-chest-leg-cheek-nail-healthy.tex"
+}

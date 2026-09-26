@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R112-letters-second-pass",
+    "language": "tamil",
+    "chapter": 112,
+    "sequence": 4820,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9bd90279ce9956a8"
+  },
+  "findings": []
+}

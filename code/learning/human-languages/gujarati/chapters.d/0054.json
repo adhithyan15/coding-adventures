@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Sit, Walk, Get Up, Sleep, Play",
+  "label": "ch:gu-sit-walk-get-up-sleep-play",
+  "canDo": "I can say to sit, to walk, to get up, to sleep and to play.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C54-ramvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can say to sit, to walk, to get up, to sleep and to play.",
+    "assesses": [
+      "GU-LEX-C54-MOVE-03",
+      "GU-LEX-C54-MOVE-04",
+      "GU-LEX-C54-MOVE-05"
+    ]
+  }
+}

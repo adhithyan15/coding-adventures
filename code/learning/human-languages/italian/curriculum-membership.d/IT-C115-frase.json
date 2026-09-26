@@ -1,0 +1,11 @@
+{
+  "id": "IT-C115-frase",
+  "pathSegment": "IT-PATH-115-SCUOLA115",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-115-SCUOLA115",
+      "order": 3
+    }
+  ]
+}

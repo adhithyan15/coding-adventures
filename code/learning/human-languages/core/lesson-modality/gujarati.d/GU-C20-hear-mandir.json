@@ -3,7 +3,7 @@
     "id": "GU-C20-hear-mandir",
     "language": "gujarati",
     "chapter": 24,
-    "sequence": 920,
+    "sequence": 933,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7dbdd8c62c61cb10"
+    "sourceHash": "fnv1a64:c0e7879d1b827780"
   },
   "findings": []
 }

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:0eadc1d555d4f5d6",
+  "lessonIds": [
+    "PT-C98-martelo",
+    "PT-C98-cola",
+    "PT-C98-tesoura",
+    "PT-C98-candeeiro",
+    "PT-C98-casa-de-banho"
+  ],
+  "tex": "portuguese/book/chapters/ch98-hammer-glue-scissors-lamp-bathroom.tex"
+}

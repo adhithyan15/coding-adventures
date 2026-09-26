@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C54-dal",
+    "language": "urdu",
+    "chapter": 54,
+    "sequence": 2740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f59fa76cd328ebac"
+  },
+  "findings": []
+}

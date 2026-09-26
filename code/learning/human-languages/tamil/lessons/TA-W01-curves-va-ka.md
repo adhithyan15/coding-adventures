@@ -18,9 +18,9 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [TA-SCRIPT-CURVES-VA-KA-01]
+  knowledge: [TA-SCRIPT-CURVES-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-01]
 practises:
-  knowledge: [TA-SCRIPT-CURVES-VA-KA-01]
+  knowledge: [TA-SCRIPT-CURVES-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,10 +65,21 @@ It is still worth carrying, because it makes the right general point: **the tool
 leaves fingerprints on the letters.** Latin's straight strokes suit a wax tablet
 and a chisel; Tamil's curves suit a stylus and a leaf.
 
+## Script you'll notice: The vowel you get for free
+<!-- hl-knowledge: introduces=[TA-SCRIPT-ABUGIDA-VA-KA-01]; assesses=[] -->
+
+Tamil is an **abugida**, like Devanagari: a consonant already contains a vowel.
+
+> **க is not "k". க is "ka".**
+
+Every consonant carries a built-in **a** until a later mark removes or replaces
+it.
+
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-CURVES-VA-KA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-CURVES-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-01] -->
 
 [PAUSE 1s]
+- [YOU SAY: "a consonant carries a built-in **a**"]
 - [YOU TRACE: a curve crossing the imagined grain of a palm leaf]
 - [YOU CONTRAST: angular Tamil-Brahmi · later rounded Vaṭṭeḻuttu]
 - [YOU SAY: the usual reason for the curves — "a straight line can **split the leaf**"]

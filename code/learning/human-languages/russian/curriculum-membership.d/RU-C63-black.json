@@ -1,0 +1,11 @@
+{
+  "id": "RU-C63-black",
+  "pathSegment": "RU-PATH-63-COLOUR1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-63-COLOUR1",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C118-coldweather",
+    "language": "malayalam",
+    "chapter": 118,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bf483a166aeeca0"
+  },
+  "findings": []
+}

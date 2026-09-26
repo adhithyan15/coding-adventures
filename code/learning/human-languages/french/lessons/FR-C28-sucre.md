@@ -8,7 +8,7 @@ type: word
 headword: le sucre
 gloss: sugar — masculine, closing a chapter where every drink-word is; the fourth and longest road of the four
 concept_tag: FR-DRINK-SUCRE
-prerequisites: [FR-C28-lait, FR-C18-oui]
+prerequisites: [FR-C28-lait, FR-C18-oui, FR-C18-oui-more]
 sounds: [silent-final]
 roots: [sanskrit-sarkara]
 etymology_hook: "sucre ← Old French çucre ← Arabic sukkar ← Persian shakar ← Sanskrit śárkarā 'grit, gravel' (crystallized sugar looked like gravel); a DIFFERENT Arabic word from café's qahwa, so the two share a language of transmission, not a root"

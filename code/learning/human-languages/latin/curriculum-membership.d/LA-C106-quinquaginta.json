@@ -1,0 +1,11 @@
+{
+  "id": "LA-C106-quinquaginta",
+  "pathSegment": "LA-PATH-106-NUMERI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-106-NUMERI",
+      "order": 2
+    }
+  ]
+}

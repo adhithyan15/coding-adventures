@@ -1,0 +1,11 @@
+{
+  "id": "PT-C98-candeeiro",
+  "pathSegment": "PT-PATH-98-CASA98",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-98-CASA98",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:df4b53697e773a5c",
+  "lessonIds": [
+    "IT-C78-settimana",
+    "IT-C78-mese",
+    "IT-C78-anno",
+    "IT-C78-mattina",
+    "IT-C78-minuto"
+  ],
+  "tex": "italian/book/chapters/ch78-week-month-year-morning-minute.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C132-freundlich",
+  "pathSegment": "GE-PATH-132-EIGEN132",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-132-EIGEN132",
+      "order": 4
+    }
+  ]
+}

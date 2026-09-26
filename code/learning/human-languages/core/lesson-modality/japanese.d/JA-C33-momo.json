@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C33-momo",
+    "language": "japanese",
+    "chapter": 33,
+    "sequence": 2290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58b5963545473d63"
+  },
+  "findings": []
+}

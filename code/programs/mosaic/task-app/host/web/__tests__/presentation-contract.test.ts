@@ -50,7 +50,11 @@ function canonicalSlots(props: any) {
           ? "calendar"
           : props.notesMode
             ? "notes"
-            : "list";
+            : // Mirrors the Rust contract's mapping (C3a). The web host does
+              // not offer Checklists until C3b, so this arm is not reached here.
+              props.checklistsMode
+              ? "checklists"
+              : "list";
   return {
     view,
     summary: props.summary,

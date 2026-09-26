@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C121-jamne",
+    "language": "marathi",
+    "chapter": 121,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:597ddd95b11d81b8"
+  },
+  "findings": []
+}

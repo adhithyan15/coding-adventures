@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C122-ohno",
+    "language": "malayalam",
+    "chapter": 122,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af6d88c6b4f27ada"
+  },
+  "findings": []
+}

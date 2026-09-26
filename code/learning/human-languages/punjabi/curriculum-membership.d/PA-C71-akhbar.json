@@ -1,0 +1,11 @@
+{
+  "id": "PA-C71-akhbar",
+  "pathSegment": "PA-PATH-71-HOME71",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-71-HOME71",
+      "order": 3
+    }
+  ]
+}

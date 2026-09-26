@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C128-pericoloso",
+    "language": "italian",
+    "chapter": 128,
+    "sequence": 6350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fa7a3afb8c6d938"
+  },
+  "findings": []
+}

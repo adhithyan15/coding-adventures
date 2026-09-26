@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:e447a0cd7b7f5699",
+  "lessonIds": [
+    "UR-C56-mirch",
+    "UR-C56-makkhan",
+    "UR-C56-panir",
+    "UR-C56-shahd",
+    "UR-C56-angur"
+  ],
+  "tex": "urdu/book/chapters/ch56-chilli-butter-cheese-honey-grapes.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:7a3957486a1e88a1",
+  "lessonIds": [
+    "PA-C77-kutta",
+    "PA-C77-billi",
+    "PA-C77-gam",
+    "PA-C77-bakkri",
+    "PA-C77-bhed"
+  ],
+  "tex": "punjabi/book/chapters/ch77-dog-cat-cow-goat-sheep.tex"
+}

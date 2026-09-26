@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R45-letters-first-pass",
+    "language": "gujarati",
+    "chapter": 45,
+    "sequence": 2333,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f991add6430054b1"
+  },
+  "findings": []
+}

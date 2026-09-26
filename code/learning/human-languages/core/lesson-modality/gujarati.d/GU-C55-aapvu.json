@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C55-aapvu",
+    "language": "gujarati",
+    "chapter": 55,
+    "sequence": 2823,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6cbb0b52e2158f4"
+  },
+  "findings": []
+}

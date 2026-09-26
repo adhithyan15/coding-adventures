@@ -40,7 +40,14 @@ it("pins Gujarati lesson-content budgets", () =>
     // reinforcement debt -- the words readable unaided, set against the repair
     // kit for the ones that are not. No new atoms and no new headwords.
     //
-    lessons: 281,
+    // 281 -> 285: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
+    // 285 -> 519: the pre-A1 vocabulary tranche, chapters 46-91. 230 word
+    // lessons (nineteen verbs) and four reviews; each word lesson introduces one
+    // lexical atom and no idiom, sense or culture claim. Re-measured.
+    // 519 -> 532: HL-C443, thirteen anchor words opening the runway chapters
+    // (1 and 3-7). Each introduces one lexical atom and no idiom, sense or
+    // culture claim.
+    lessons: 532,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,

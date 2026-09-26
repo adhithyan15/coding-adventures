@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Rice, Fruit, Apple, Bananas, Potatoes",
+  "label": "ch:ar-rice-fruit-apple-bananas-potatoes",
+  "canDo": "I can say rice, fruit, an apple, bananas and potatoes.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "AR-C66-batatis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say rice, fruit, an apple, bananas and potatoes.",
+    "assesses": [
+      "AR-LEX-C66-FOOD66-03",
+      "AR-LEX-C66-FOOD66-04",
+      "AR-LEX-C66-FOOD66-05"
+    ]
+  }
+}

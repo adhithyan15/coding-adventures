@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C127-achhaji",
+    "language": "hindi",
+    "chapter": 127,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd0f1620e108f19b"
+  },
+  "findings": []
+}

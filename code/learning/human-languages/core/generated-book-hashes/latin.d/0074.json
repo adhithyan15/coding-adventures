@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:6d74cb136a006a8a",
+  "lessonIds": [
+    "LA-C74-civis",
+    "LA-C74-coquus",
+    "LA-C74-mercator",
+    "LA-C74-agricola",
+    "LA-C74-ager"
+  ],
+  "tex": "latin/book/chapters/ch74-citizen-cook-merchant-farmer.tex"
+}

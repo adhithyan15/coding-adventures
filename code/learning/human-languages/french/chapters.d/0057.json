@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Husband, Woman, Uncle, Aunt, Cousin",
+  "label": "ch:fr-husband-woman-uncle-aunt-cousin",
+  "canDo": "I can name a husband, a woman, an uncle, an aunt, a cousin (female).",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FR-C57-cousine",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can name a husband, a woman, an uncle, an aunt, a cousin (female).",
+    "assesses": [
+      "FR-LEX-C57-FAMILLE9-03",
+      "FR-LEX-C57-FAMILLE9-04",
+      "FR-LEX-C57-FAMILLE9-05"
+    ]
+  }
+}

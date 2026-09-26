@@ -1,0 +1,19 @@
+{
+  "chapter": 33,
+  "title": "Fever, Cough, Rest, Hunger, Thirst",
+  "label": "ch:ru-fever-cough-rest-hunger-thirst",
+  "canDo": "I can name a temperature, a cough, rest, hunger and thirst.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C33-thirst",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 33: i can name a temperature, a cough, rest, hunger and thirst.",
+    "assesses": [
+      "RU-LEX-C33-HEALTH2-03",
+      "RU-LEX-C33-HEALTH2-04",
+      "RU-LEX-C33-HEALTH2-05"
+    ]
+  }
+}

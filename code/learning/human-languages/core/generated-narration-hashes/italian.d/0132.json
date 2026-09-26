@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:772c37733d193d34",
+  "lessonIds": [
+    "IT-C132-zero",
+    "IT-C132-sessanta",
+    "IT-C132-settanta",
+    "IT-C132-ottanta",
+    "IT-C132-novanta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch132.txt",
+  "json": "italian/narration/ch132.json",
+  "textHash": "fnv1a64:f0359a3cb3bd8221",
+  "jsonHash": "fnv1a64:301cf041613c29ea",
+  "findings": []
+}

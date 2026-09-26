@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:ffeeb61f95089a27",
+  "lessonIds": [
+    "GU-C85-bus",
+    "GU-C85-train",
+    "GU-C85-station",
+    "GU-C85-plane",
+    "GU-C85-port"
+  ],
+  "tex": "gujarati/book/chapters/ch85-bus-train-and-plane.tex"
+}

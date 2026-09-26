@@ -1,0 +1,11 @@
+{
+  "id": "LA-C111-opto",
+  "pathSegment": "LA-PATH-111-WANT111",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-111-WANT111",
+      "order": 2
+    }
+  ]
+}

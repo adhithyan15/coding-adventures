@@ -1,0 +1,11 @@
+{
+  "id": "PT-C104-tubarao",
+  "pathSegment": "PT-PATH-104-ROUPA104",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-104-ROUPA104",
+      "order": 2
+    }
+  ]
+}

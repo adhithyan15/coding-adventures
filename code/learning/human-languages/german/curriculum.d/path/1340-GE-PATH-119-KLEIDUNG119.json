@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-119-KLEIDUNG119",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "GE-EXT-119-KLEIDUNG119"
+  ],
+  "after": []
+}

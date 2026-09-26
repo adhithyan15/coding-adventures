@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-128-THINGS128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a deer, a pigeon, a parrot, a bear and the waist.",
+  "prerequisites": []
+}

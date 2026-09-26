@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R123-first-pass-clothes-food-and-work",
+    "language": "german",
+    "chapter": 123,
+    "sequence": 5050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be33ce29869d1150"
+  },
+  "findings": []
+}

@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [UR-LEX-WELLBEING-QUESTION, UR-GRAMMAR-AAP-HAIN]
 introduces:
-  knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-SCRIPT-MAIN-HUN]
+  knowledge: [UR-LEX-MAIN, UR-LEX-HUN, UR-SCRIPT-MAIN-HUN]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-LEX-WELLBEING-QUESTION, UR-GRAMMAR-AAP-HAIN, UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-SCRIPT-MAIN-HUN]
+  knowledge: [UR-LEX-WELLBEING-QUESTION, UR-GRAMMAR-AAP-HAIN, UR-LEX-MAIN, UR-LEX-HUN, UR-SCRIPT-MAIN-HUN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,27 +49,16 @@ reviews_of: [UR-C04-aap-kaise-hain, UR-C02-mera-naam]
 “am” and carries long *ū* with **و**, followed again by nasal **ں**. Leave a
 space for the state word that comes next.
 
-## Grammar Lens: the verb closes the frame
-<!-- hl-knowledge: introduces=[UR-GRAMMAR-MAIN-HUN-FRAME]; assesses=[] -->
-
-Urdu puts the copula at the end:
-
-> **maiṅ + [state] + hūṅ** — I + [state] + am
-
-Learn only this first-person frame. You do not need the full copula chart to
-answer one wellbeing question. Notice the useful contrast: respectful **āp ...
-haiṅ**, but first-person **maiṅ ... hūṅ**.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-SCRIPT-MAIN-HUN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MAIN, UR-LEX-HUN, UR-SCRIPT-MAIN-HUN] -->
 
 - [YOU SAY: **maiṅ** — I]
 - [YOU SAY: **hūṅ** — am]
 - [YOU FRAME: **maiṅ ... hūṅ**, leaving the middle open]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MAIN, UR-LEX-HUN, UR-GRAMMAR-MAIN-HUN-FRAME, UR-SCRIPT-MAIN-HUN] -->
-<!-- hl-activity: {"id":"UR-C04-main-hun-frame","kind":"text","assesses":["UR-GRAMMAR-MAIN-HUN-FRAME"],"prompt":"Type the Urdu frame 'I am ...', leaving three dots for the state word.","answer":"میں ... ہوں","accepted":["میں ۔۔۔ ہوں","main ... hun","maiṅ ... hūṅ"],"feedback":{"correct":"Right: میں opens the answer and ہوں closes it.","incorrect":"Use میں ... ہوں — maiṅ ... hūṅ."},"response_seconds":10} -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MAIN, UR-LEX-HUN, UR-SCRIPT-MAIN-HUN] -->
+<!-- hl-activity: {"id":"UR-C04-main-hun-i","kind":"text","assesses":["UR-LEX-MAIN"],"prompt":"Type the Urdu word for 'I'.","answer":"میں","accepted":["main","maiṅ"],"feedback":{"correct":"Right: میں maiṅ opens the answer.","incorrect":"Use میں — maiṅ."},"response_seconds":8} -->
 
 Which word opens the answer? (**Maiṅ**.) Which copula closes it? (**Hūṅ**.)
 

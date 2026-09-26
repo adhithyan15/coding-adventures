@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-82-NUM2",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GU-EXT-82-NUM2"
+  ],
+  "after": []
+}

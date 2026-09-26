@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-124-WELCOME",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "ML-EXT-124-WELCOME"
+  ],
+  "after": []
+}

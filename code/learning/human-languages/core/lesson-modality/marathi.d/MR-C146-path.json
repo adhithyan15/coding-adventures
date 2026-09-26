@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C146-path",
+    "language": "marathi",
+    "chapter": 146,
+    "sequence": 6870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcc378f99cd40aaf"
+  },
+  "findings": []
+}

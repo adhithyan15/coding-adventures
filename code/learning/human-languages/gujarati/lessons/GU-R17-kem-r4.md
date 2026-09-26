@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R17-kem-r4
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 810
+sequence: 823
 chapter: 21
 type: practice
 headword: શું / કેમ

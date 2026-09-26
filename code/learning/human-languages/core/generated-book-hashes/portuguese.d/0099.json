@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:255b697557c29a8f",
+  "lessonIds": [
+    "PT-C99-chavena",
+    "PT-C99-garrafa",
+    "PT-C99-caixa-de-correio",
+    "PT-C99-massa",
+    "PT-C99-pera"
+  ],
+  "tex": "portuguese/book/chapters/ch99-cup-bottle-letterbox-pasta-pear.tex"
+}

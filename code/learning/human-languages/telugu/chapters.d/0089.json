@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "About Yourself",
+  "label": "ch:te-about-yourself",
+  "canDo": "I can ask and answer about a job, the languages someone speaks, whether they are married, and an address.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C89-address",
+    "kind": "production",
+    "summary": "Complete TE-C89-address: the questions that come after a name.",
+    "assesses": [
+      "TE-LEX-C89-ABOUT-03",
+      "TE-LEX-C89-ABOUT-04",
+      "TE-LEX-C89-ABOUT-05"
+    ]
+  }
+}

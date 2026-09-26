@@ -1,0 +1,11 @@
+{
+  "id": "JA-C28-motsu",
+  "pathSegment": "JA-PATH-28-VERBS28",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-28-VERBS28",
+      "order": 4
+    }
+  ]
+}

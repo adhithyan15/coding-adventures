@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:91ec768891e34dae",
+  "lessonIds": [
+    "UR-C68-bakri",
+    "UR-C68-bher",
+    "UR-C68-parinda",
+    "UR-C68-chuha",
+    "UR-C68-sher"
+  ],
+  "tex": "urdu/book/chapters/ch68-goat-sheep-bird-mouse-lion.tex"
+}

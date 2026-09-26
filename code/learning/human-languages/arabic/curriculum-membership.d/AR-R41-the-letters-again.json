@@ -1,0 +1,11 @@
+{
+  "id": "AR-R41-the-letters-again",
+  "pathSegment": "AR-PATH-038",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-038-CALL-AND-REPAIR",
+      "order": 3
+    }
+  ]
+}

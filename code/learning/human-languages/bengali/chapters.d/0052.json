@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "To hold, To cut, To stop, To look for, To lose",
+  "label": "ch:bn-to-hold-to-cut-to-stop-to-look-for-to-lose",
+  "canDo": "I can say to hold, to catch, to cut, to stop, to look for and to lose.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C52-harano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can say to hold, to catch, to cut, to stop, to look for and to lose.",
+    "assesses": [
+      "BN-LEX-C52-VERBS52-03",
+      "BN-LEX-C52-VERBS52-04",
+      "BN-LEX-C52-VERBS52-05"
+    ]
+  }
+}

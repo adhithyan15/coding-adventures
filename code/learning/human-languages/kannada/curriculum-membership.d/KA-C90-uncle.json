@@ -1,0 +1,11 @@
+{
+  "id": "KA-C90-uncle",
+  "pathSegment": "KA-PATH-90-KIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-90-KIN",
+      "order": 4
+    }
+  ]
+}

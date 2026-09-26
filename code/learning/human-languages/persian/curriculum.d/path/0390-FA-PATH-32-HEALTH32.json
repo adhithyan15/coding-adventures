@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-32-HEALTH32",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "FA-EXT-32-HEALTH32"
+  ],
+  "after": []
+}

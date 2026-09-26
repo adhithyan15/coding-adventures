@@ -2,6 +2,64 @@
 
 ## Unreleased
 
+### Added — the Compose host knows Android (UI89 §3.4)
+
+`mosaicPlatform()` reports `android` on Android's runtime, and
+`MosaicRuntimeHost.stateDirectory` lets the platform say where state lives
+(the Android activity sets its `filesDir`); without it, Android keeps no
+state rather than guessing a path. Desktop is unchanged.
+
+### Added — a statically linked runtime for iOS and iPadOS (UI89 §2.1)
+
+- `CMosaicRuntime.c` gains a `MOSAIC_RUNTIME_STATIC` path: the runtime's C
+  ABI functions are named directly, so a static library linked from an
+  `.xcframework` is kept by the linker and called without `dlopen`/`dlsym`
+  (which iOS does not allow for an app's own dylib). A path is ignored; close
+  never `dlclose`s the static marker. The default dynamic path is unchanged.
+- `swift_package_with_static_runtime` adds the `MosaicAppRuntime` binary
+  target (`Runtime/MosaicAppRuntime.xcframework`, `SWIFT_STATIC_RUNTIME_PATH`)
+  as a dependency of the loader and defines the macro.
+
+### Added — the Compose platform library (UI87 §7)
+
+`compose_platform_effects()` returns `MosaicPlatformEffects.kt`, which the
+artifact builder writes into every Compose project beside the runtime binding.
+It answers the standard effect kinds for every app, so no app carries its own
+file-dialog code:
+
+- `files.open` and `files.save` (UI59, UI87 §3.1) through `java.awt.FileDialog`,
+  the platform's own panel. A name is returned, never a path. Opening reads at
+  most 50 MiB, bounded while reading; saving takes at most 16 MiB, refuses a
+  suggested name that is a path, and writes a temporary file beside the
+  target before moving it into place.
+- `MosaicPlatformRouter` routes each effect by kind: kinds the app claims go to
+  its handler, standard kinds to this library, anything else to the app when it
+  claimed nothing (the original meaning) or to nobody (the host fails an
+  unanswered Await). One file operation at a time. Each standard effect is
+  deferred and answered from the AWT event thread; installing twice is a no-op.
+- Hardened after security review: a suggested name also may not contain `:`
+  (a Windows drive or alternate data stream), control or format characters (a
+  right-to-left override can disguise `.exe` as `.pdf`), or end in a dot or
+  space, and it must end in an extension of an accepted type. The temporary
+  file is created owner-only and given the replaced file's POSIX permissions,
+  so saving over a private file never leaves it readable by others.
+- `conformance/compose/MosaicPlatformEffectsTest.kt`: 9 tests with fake dialogs
+  (routing, save, cancel, path- and disguise-shaped names, mismatched type,
+  kept permissions, bad and oversized bytes, open, non-file). CI runs them in
+  the Journal Compose lane.
+
+### Added — every native host sends its UTC offset (UI38 "Local time")
+
+The SwiftUI, Compose, Qt, Flutter and XAML host templates add
+`utcOffsetMinutes` to the start context, read from the platform's time zone
+API in minutes east of UTC. Apps such as Journal can then file work under the
+user's local day. A value outside the runtime's −840..=840 is **left out**, as
+the wasm loader does, and the app falls back to UTC. On Unix a custom POSIX
+`TZ` string can say anything (`TZ=XYZ-15`), and the runtime would refuse it,
+so the app would not start.
+The bindings test pins the line for each backend, and all five
+effect-completion drivers still build and run.
+
 ### Added -- the XAML host answers effects (UI47 §5.4 step 4, last of five)
 
 The fifth and final host template. `MosaicRuntimeHost` gains `EffectHandler`,

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:c43953264f4becf1",
+  "lessonIds": [
+    "FR-C78-stylo",
+    "FR-C78-papier",
+    "FR-C78-cahier",
+    "FR-C78-crayon",
+    "FR-C78-sac"
+  ],
+  "tex": "french/book/chapters/ch78-pen-paper-notebook-pencil-bag.tex"
+}

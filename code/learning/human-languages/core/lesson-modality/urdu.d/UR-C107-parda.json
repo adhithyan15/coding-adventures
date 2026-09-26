@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C107-parda",
+    "language": "urdu",
+    "chapter": 107,
+    "sequence": 5560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75f6c541f5d641fc"
+  },
+  "findings": []
+}

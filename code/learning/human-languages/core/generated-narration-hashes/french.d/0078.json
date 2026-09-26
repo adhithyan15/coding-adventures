@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:6e5f2b39acd0ba8a",
+  "lessonIds": [
+    "FR-C78-stylo",
+    "FR-C78-papier",
+    "FR-C78-cahier",
+    "FR-C78-crayon",
+    "FR-C78-sac"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch78.txt",
+  "json": "french/narration/ch78.json",
+  "textHash": "fnv1a64:16a29e898e90c068",
+  "jsonHash": "fnv1a64:68955e59ff0e9693",
+  "findings": []
+}

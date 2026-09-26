@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C89-fawqa",
+    "language": "arabic",
+    "chapter": 89,
+    "sequence": 3420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25f6e89482d9fe76"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C57-giardino",
+  "pathSegment": "IT-PATH-57-CASA2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-57-CASA2",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C45-baba",
+  "pathSegment": "BN-PATH-45-HEALTH45",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-45-HEALTH45",
+      "order": 2
+    }
+  ]
+}

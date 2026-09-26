@@ -1,0 +1,11 @@
+{
+  "id": "PT-C47-mel",
+  "pathSegment": "PT-PATH-47-REFEICOES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-47-REFEICOES",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:2d66145887279eee",
+  "lessonIds": [
+    "MR-C152-suraksit",
+    "MR-C152-dhokadayak",
+    "MR-C152-khote",
+    "MR-C152-jambhala",
+    "MR-C152-naringi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch152.txt",
+  "json": "marathi/narration/ch152.json",
+  "textHash": "fnv1a64:40f2eb6c888dd73c",
+  "jsonHash": "fnv1a64:8388e2b6b78933a5",
+  "findings": []
+}

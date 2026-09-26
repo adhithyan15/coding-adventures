@@ -1,0 +1,11 @@
+{
+  "id": "HI-W128-vowel-sign-i",
+  "pathSegment": "HI-PATH-128-LETTERS-LAST",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-128-LETTERS-LAST",
+      "order": 0
+    }
+  ]
+}

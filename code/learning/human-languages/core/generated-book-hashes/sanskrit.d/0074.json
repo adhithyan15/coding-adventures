@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:afe0dacce73124c8",
+  "lessonIds": [
+    "SA-C74-buys",
+    "SA-C74-money",
+    "SA-C74-price",
+    "SA-C74-shop",
+    "SA-C74-market"
+  ],
+  "tex": "sanskrit/book/chapters/ch74-at-the-market.tex"
+}

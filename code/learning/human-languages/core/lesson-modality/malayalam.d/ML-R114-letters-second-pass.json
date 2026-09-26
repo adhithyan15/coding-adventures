@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R114-letters-second-pass",
+    "language": "malayalam",
+    "chapter": 114,
+    "sequence": 4280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b63609c6beaff054"
+  },
+  "findings": []
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C29-hear-aakaash
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1640
+sequence: 1653
 chapter: 33
 type: word
 headword: આકાશ

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:8232f54ba3a6246f",
+  "lessonIds": [
+    "FA-C70-bank",
+    "FA-C70-istgah",
+    "FA-C70-mashin",
+    "FA-C70-otobus",
+    "FA-C70-ghatar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch70.txt",
+  "json": "persian/narration/ch70.json",
+  "textHash": "fnv1a64:3ff8d328ff9876c5",
+  "jsonHash": "fnv1a64:47e3082dc002ab9c",
+  "findings": []
+}

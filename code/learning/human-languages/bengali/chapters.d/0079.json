@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Year, Minute, Today, Now, Always",
+  "label": "ch:bn-year-minute-today-now-always",
+  "canDo": "I can say a year, a minute, today, now and always.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "BN-C79-sobsomoy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say a year, a minute, today, now and always.",
+    "assesses": [
+      "BN-LEX-C79-TIME79-03",
+      "BN-LEX-C79-TIME79-04",
+      "BN-LEX-C79-TIME79-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C38-futon",
+    "language": "japanese",
+    "chapter": 38,
+    "sequence": 2550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55d6b60d4fb41a47"
+  },
+  "findings": []
+}

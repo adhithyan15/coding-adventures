@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:99a90b24623e4e91",
+  "lessonIds": [
+    "RU-C61-bird",
+    "RU-C61-mouse",
+    "RU-C61-wolf",
+    "RU-C61-bear",
+    "RU-C61-fox"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch61.txt",
+  "json": "russian/narration/ch61.json",
+  "textHash": "fnv1a64:8dbf48b8094f47e3",
+  "jsonHash": "fnv1a64:601a606e9ce49207",
+  "findings": []
+}

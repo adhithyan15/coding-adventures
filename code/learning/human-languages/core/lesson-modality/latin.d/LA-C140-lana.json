@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C140-lana",
+    "language": "latin",
+    "chapter": 140,
+    "sequence": 5790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9f24d8913e9afa1"
+  },
+  "findings": []
+}

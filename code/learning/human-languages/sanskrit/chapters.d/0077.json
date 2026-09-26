@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Rooms of the House",
+  "label": "ch:sa-rooms-of-the-house",
+  "canDo": "I can name a room, the kitchen, the bathroom, the roof and a key.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-R77-second-pass-doing-and-going",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can name a room, the kitchen, the bathroom, the roof and a key.",
+    "assesses": [
+      "SA-LEX-C77-HOME-03",
+      "SA-LEX-C77-HOME-04",
+      "SA-LEX-C77-HOME-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C78-khabar",
+  "pathSegment": "FA-PATH-78-WORLD78",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-78-WORLD78",
+      "order": 2
+    }
+  ]
+}

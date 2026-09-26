@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:1003db3332b0937a",
+  "lessonIds": [
+    "GU-C55-randhvu",
+    "GU-C55-dhovu",
+    "GU-C55-aapvu",
+    "GU-C55-laavvu",
+    "GU-C55-pivu"
+  ],
+  "tex": "gujarati/book/chapters/ch55-cook-wash-give-bring-drink.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C46-hair",
+    "language": "gujarati",
+    "chapter": 46,
+    "sequence": 2393,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bde572d688d75e49"
+  },
+  "findings": []
+}

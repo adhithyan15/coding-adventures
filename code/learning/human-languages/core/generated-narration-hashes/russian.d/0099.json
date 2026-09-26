@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:c4e28eb5324d0fd4",
+  "lessonIds": [
+    "RU-C99-glue",
+    "RU-C99-scissors",
+    "RU-C99-alarm-clock",
+    "RU-C99-camera",
+    "RU-C99-purse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch99.txt",
+  "json": "russian/narration/ch99.json",
+  "textHash": "fnv1a64:a51317d8f0235db7",
+  "jsonHash": "fnv1a64:7e124f063df62d89",
+  "findings": []
+}

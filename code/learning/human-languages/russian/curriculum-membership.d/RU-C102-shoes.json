@@ -1,0 +1,11 @@
+{
+  "id": "RU-C102-shoes",
+  "pathSegment": "RU-PATH-102-THINGS102",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-102-THINGS102",
+      "order": 3
+    }
+  ]
+}

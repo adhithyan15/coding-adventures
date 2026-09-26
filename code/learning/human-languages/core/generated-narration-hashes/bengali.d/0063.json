@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:3b779376139677a9",
+  "lessonIds": [
+    "BN-C63-chhuri",
+    "BN-C63-botol",
+    "BN-C63-dorja",
+    "BN-C63-boi",
+    "BN-C63-khata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch63.txt",
+  "json": "bengali/narration/ch63.json",
+  "textHash": "fnv1a64:fe4b6e670e51a263",
+  "jsonHash": "fnv1a64:0f417f156e79ad96",
+  "findings": []
+}

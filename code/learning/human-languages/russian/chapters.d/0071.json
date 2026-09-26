@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Sunday and the Four Seasons",
+  "label": "ch:ru-sunday-and-the-four-seasons",
+  "canDo": "I can name Sunday, winter, spring, summer and autumn.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "RU-C71-autumn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can name Sunday, winter, spring, summer and autumn.",
+    "assesses": [
+      "RU-LEX-C71-SEASONS-03",
+      "RU-LEX-C71-SEASONS-04",
+      "RU-LEX-C71-SEASONS-05"
+    ]
+  }
+}

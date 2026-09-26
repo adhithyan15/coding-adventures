@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-92-AGAIN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask someone to speak slowly, say it again, speak louder, and wait a minute.",
+  "prerequisites": []
+}

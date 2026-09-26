@@ -1,0 +1,11 @@
+{
+  "id": "JA-C43-taiyou",
+  "pathSegment": "JA-PATH-43-NATURE43",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-43-NATURE43",
+      "order": 4
+    }
+  ]
+}

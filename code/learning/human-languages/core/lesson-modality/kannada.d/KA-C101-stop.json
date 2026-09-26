@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C101-stop",
+    "language": "kannada",
+    "chapter": 101,
+    "sequence": 4000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19f49bcdcfa1e06a"
+  },
+  "findings": []
+}

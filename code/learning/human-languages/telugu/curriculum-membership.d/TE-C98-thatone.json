@@ -1,0 +1,11 @@
+{
+  "id": "TE-C98-thatone",
+  "pathSegment": "TE-PATH-98-REPLY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-98-REPLY",
+      "order": 4
+    }
+  ]
+}

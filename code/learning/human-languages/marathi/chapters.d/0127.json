@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Winter, Monsoon, Straight, Turn, Corner",
+  "label": "ch:mr-winter-monsoon-straight-turn-corner",
+  "canDo": "I can say winter, the monsoon, straight, a turn and a corner.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-C127-kopra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say winter, the monsoon, straight, a turn and a corner.",
+    "assesses": [
+      "MR-LEX-C127-TIME127-03",
+      "MR-LEX-C127-TIME127-04",
+      "MR-LEX-C127-TIME127-05"
+    ]
+  }
+}

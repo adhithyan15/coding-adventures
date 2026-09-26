@@ -1,0 +1,11 @@
+{
+  "id": "ML-C118-heat",
+  "pathSegment": "ML-PATH-118-WEATHER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-118-WEATHER",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:adb47745239cacdb",
+  "lessonIds": [
+    "PT-C78-chapeu",
+    "PT-C78-casaco",
+    "PT-C78-saia",
+    "PT-C78-meias",
+    "PT-C78-cinto"
+  ],
+  "tex": "portuguese/book/chapters/ch78-hat-coat-skirt-socks-belt.tex"
+}

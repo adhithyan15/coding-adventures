@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C116-aedificium",
+    "language": "latin",
+    "chapter": 116,
+    "sequence": 4450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6088ec69c1813b83"
+  },
+  "findings": []
+}

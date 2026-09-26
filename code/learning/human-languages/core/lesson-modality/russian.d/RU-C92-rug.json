@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C92-rug",
+    "language": "russian",
+    "chapter": 92,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b54e83f62c702bb"
+  },
+  "findings": []
+}

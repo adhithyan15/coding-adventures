@@ -1,0 +1,11 @@
+{
+  "id": "GU-C76-alot",
+  "pathSegment": "GU-PATH-76-HOWMUCH",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-76-HOWMUCH",
+      "order": 0
+    }
+  ]
+}

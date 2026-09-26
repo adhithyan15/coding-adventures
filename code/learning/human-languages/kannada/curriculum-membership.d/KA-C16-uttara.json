@@ -1,0 +1,11 @@
+{
+  "id": "KA-C16-uttara",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 26,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 26
+    }
+  ]
+}

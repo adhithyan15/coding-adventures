@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:7e55828fe13f7494",
+  "lessonIds": [
+    "ML-C134-glass",
+    "ML-C134-bottle",
+    "ML-C134-cup",
+    "ML-C134-spoon",
+    "ML-C134-plate"
+  ],
+  "tex": "malayalam/book/chapters/ch134-laying-the-table.tex"
+}

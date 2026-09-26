@@ -8,7 +8,7 @@ type: word
 headword: rispondere
 gloss: to answer — literally "to pledge back", the other half of Chapter 19's asking
 concept_tag: VERB-ANSWER
-prerequisites: [IT-C21-ottenere, IT-C21-giocare, IT-C20-aspettare, IT-C19-chiedere, IT-C15-passato-remoto]
+prerequisites: [IT-C21-ottenere, IT-C21-giocare, IT-C20-aspettare, IT-C19-chiedere, IT-C15-passato-remoto, IT-C15-passato-europa]
 sounds: [s-voiceless, open-o]
 roots: [spondere-latin]
 etymology_hook: "rispondere ← Latin respondēre (re- 'back' + spondēre 'to pledge solemnly') → English respond, response, responsible, correspond, despond, and the two personal ones — sponsor, from spōnsor, the person who pledges for you, and spouse, from spōnsus and spōnsa, 'the promised one'"

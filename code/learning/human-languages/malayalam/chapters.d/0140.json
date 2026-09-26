@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "In Class",
+  "label": "ch:ml-in-class",
+  "canDo": "I can name a pen, a pencil, paper, a class and an answer.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C140-answer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can name a pen, a pencil, paper, a class and an answer.",
+    "assesses": [
+      "ML-LEX-C140-SCHOOL-03",
+      "ML-LEX-C140-SCHOOL-04",
+      "ML-LEX-C140-SCHOOL-05"
+    ]
+  }
+}

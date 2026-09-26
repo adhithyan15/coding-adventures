@@ -1,0 +1,11 @@
+{
+  "id": "IT-C113-classe",
+  "pathSegment": "IT-PATH-113-LAVORO113",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-113-LAVORO113",
+      "order": 4
+    }
+  ]
+}

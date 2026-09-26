@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:547a7c1a46ac79af",
+  "lessonIds": [
+    "KA-C90-grandson",
+    "KA-C90-granddaughter",
+    "KA-C90-relative",
+    "KA-C90-neighbours",
+    "KA-C90-uncle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch90.txt",
+  "json": "kannada/narration/ch90.json",
+  "textHash": "fnv1a64:b976e37adb5631d3",
+  "jsonHash": "fnv1a64:13be107ffc61da82",
+  "findings": []
+}

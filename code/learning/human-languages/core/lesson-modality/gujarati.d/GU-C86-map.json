@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C86-map",
+    "language": "gujarati",
+    "chapter": 86,
+    "sequence": 4393,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce1db208dbebf9a7"
+  },
+  "findings": []
+}

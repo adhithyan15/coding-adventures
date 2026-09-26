@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-70-HOME70",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "AR-EXT-70-HOME70"
+  ],
+  "after": []
+}

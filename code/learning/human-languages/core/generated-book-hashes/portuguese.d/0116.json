@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:c2b552c46933f468",
+  "lessonIds": [
+    "PT-C116-nevoeiro",
+    "PT-C116-tempestade",
+    "PT-C116-gelo",
+    "PT-C116-rocha",
+    "PT-C116-onda"
+  ],
+  "tex": "portuguese/book/chapters/ch116-fog-storm-ice-rock-wave.tex"
+}

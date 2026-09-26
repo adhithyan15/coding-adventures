@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:f7ee84f88e7d1a13",
+  "lessonIds": [
+    "FR-C135-seconde",
+    "FR-C135-monnaie",
+    "FR-C135-date",
+    "FR-C135-siecle",
+    "FR-C135-courriel"
+  ],
+  "tex": "french/book/chapters/ch135-second-change-coins-date-century-email.tex"
+}

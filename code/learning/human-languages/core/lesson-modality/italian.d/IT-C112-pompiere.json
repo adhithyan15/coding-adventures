@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C112-pompiere",
+    "language": "italian",
+    "chapter": 112,
+    "sequence": 5390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9548ac8e131dd022"
+  },
+  "findings": []
+}

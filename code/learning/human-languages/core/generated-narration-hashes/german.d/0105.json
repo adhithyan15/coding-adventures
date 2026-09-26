@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:90825f6d1dbf50f9",
+  "lessonIds": [
+    "GE-C105-restaurant",
+    "GE-C105-baeckerei",
+    "GE-C105-kino",
+    "GE-C105-theater",
+    "GE-C105-rathaus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch105.txt",
+  "json": "german/narration/ch105.json",
+  "textHash": "fnv1a64:5115e6a2bd242191",
+  "jsonHash": "fnv1a64:3810b99c7a9e3be4",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:1a73c972014abe4c",
+  "lessonIds": [
+    "UR-C46-ustad",
+    "UR-C46-khana",
+    "UR-C46-pina",
+    "UR-C46-dekhna",
+    "UR-C46-sunna"
+  ],
+  "tex": "urdu/book/chapters/ch46-teacher-to-eat-to-drink-to-see-to-hear.tex"
+}

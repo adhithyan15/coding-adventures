@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:c30830616d2246f0",
+  "lessonIds": [
+    "HI-C112-sahi",
+    "HI-C112-galat",
+    "HI-C112-pakka",
+    "HI-C112-sachme",
+    "HI-C112-are"
+  ],
+  "tex": "hindi/book/chapters/ch112-right-wrong-sure.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:52f423c8e32995f6",
+  "lessonIds": [
+    "GE-C86-schwein",
+    "GE-C86-vogel",
+    "GE-C86-maus",
+    "GE-C86-fuchs",
+    "GE-C86-schlange"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch86.txt",
+  "json": "german/narration/ch86.json",
+  "textHash": "fnv1a64:d730202ade8c03e7",
+  "jsonHash": "fnv1a64:e0045ab129231a75",
+  "findings": []
+}

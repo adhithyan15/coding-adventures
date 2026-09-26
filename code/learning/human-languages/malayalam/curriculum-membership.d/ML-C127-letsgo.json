@@ -1,0 +1,11 @@
+{
+  "id": "ML-C127-letsgo",
+  "pathSegment": "ML-PATH-127-CARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-127-CARE",
+      "order": 2
+    }
+  ]
+}

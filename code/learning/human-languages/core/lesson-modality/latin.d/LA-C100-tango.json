@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C100-tango",
+    "language": "latin",
+    "chapter": 100,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99443e0f805e4c87"
+  },
+  "findings": []
+}

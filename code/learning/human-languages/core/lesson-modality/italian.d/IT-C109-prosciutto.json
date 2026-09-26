@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C109-prosciutto",
+    "language": "italian",
+    "chapter": 109,
+    "sequence": 5240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:475a6782e9ce9306"
+  },
+  "findings": []
+}

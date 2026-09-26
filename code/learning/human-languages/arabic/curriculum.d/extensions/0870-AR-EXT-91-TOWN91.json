@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-91-TOWN91",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a road, a bank, a station, a car and a bus.",
+  "prerequisites": []
+}

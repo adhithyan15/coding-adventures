@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C94-garmiyan",
+    "language": "urdu",
+    "chapter": 94,
+    "sequence": 4830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e556a93e453398da"
+  },
+  "findings": []
+}

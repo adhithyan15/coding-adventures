@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C98-rasta",
+    "language": "punjabi",
+    "chapter": 98,
+    "sequence": 5190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc25fce21a399daf"
+  },
+  "findings": []
+}

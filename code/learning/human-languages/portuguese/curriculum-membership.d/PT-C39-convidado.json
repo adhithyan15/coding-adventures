@@ -1,0 +1,11 @@
+{
+  "id": "PT-C39-convidado",
+  "pathSegment": "PT-PATH-39-PESSOAS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-39-PESSOAS",
+      "order": 2
+    }
+  ]
+}

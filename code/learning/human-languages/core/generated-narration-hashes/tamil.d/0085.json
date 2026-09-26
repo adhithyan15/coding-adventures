@@ -1,18 +1,21 @@
 {
   "language": "tamil",
   "chapter": 85,
-  "sourceHash": "fnv1a64:f23cc1dcdcba55ec",
+  "sourceHash": "fnv1a64:2e0824ad7b105a1a",
   "lessonIds": [
     "TA-C85-avan-aval",
     "TA-C85-avargal",
     "TA-C85-naam-naangal",
-    "TA-R85-avarkal-recall"
+    "TA-R85-avarkal-recall",
+    "TA-R85-the-opening-courtesies",
+    "TA-R85-the-name-exchange",
+    "TA-R85-going-and-doing"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 3,
   "drivablePrefix": 1,
   "text": "tamil/narration/ch85.txt",
   "json": "tamil/narration/ch85.json",
-  "textHash": "fnv1a64:e6c03e22020b4261",
-  "jsonHash": "fnv1a64:91851562fc45aae3",
+  "textHash": "fnv1a64:d9aa9a0b136cc80e",
+  "jsonHash": "fnv1a64:c3f1b4f52f24c1dd",
   "findings": []
 }

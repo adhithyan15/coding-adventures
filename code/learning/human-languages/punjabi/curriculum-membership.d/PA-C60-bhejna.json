@@ -1,0 +1,11 @@
+{
+  "id": "PA-C60-bhejna",
+  "pathSegment": "PA-PATH-60-VERBS60",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-60-VERBS60",
+      "order": 4
+    }
+  ]
+}

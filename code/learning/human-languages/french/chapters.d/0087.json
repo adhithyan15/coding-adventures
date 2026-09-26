@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Sheep, Goat, Lion, Monkey, Bee",
+  "label": "ch:fr-sheep-goat-lion-monkey-bee",
+  "canDo": "I can name a sheep, a goat, a lion, a monkey, a bee.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C87-abeille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can name a sheep, a goat, a lion, a monkey, a bee.",
+    "assesses": [
+      "FR-LEX-C87-ANIMAUX39-03",
+      "FR-LEX-C87-ANIMAUX39-04",
+      "FR-LEX-C87-ANIMAUX39-05"
+    ]
+  }
+}

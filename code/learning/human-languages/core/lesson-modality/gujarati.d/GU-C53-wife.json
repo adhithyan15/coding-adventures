@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C53-wife",
+    "language": "gujarati",
+    "chapter": 53,
+    "sequence": 2703,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:262aa04bb1038837"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:cf637a797fc941a6",
+  "lessonIds": [
+    "IT-C67-stella",
+    "IT-C67-nuvola",
+    "IT-C67-pioggia",
+    "IT-C67-vento",
+    "IT-C67-fuoco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch67.txt",
+  "json": "italian/narration/ch67.json",
+  "textHash": "fnv1a64:19a3348971c1f2c9",
+  "jsonHash": "fnv1a64:9b7508e5db394c8d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Ankle, Wrist, Cheek, Lips, Chest",
+  "label": "ch:ru-ankle-wrist-cheek-lips-chest",
+  "canDo": "I can say an ankle, a wrist, a cheek, lips and the chest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C119-chest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say an ankle, a wrist, a cheek, lips and the chest.",
+    "assesses": [
+      "RU-LEX-C119-THINGS119-03",
+      "RU-LEX-C119-THINGS119-04",
+      "RU-LEX-C119-THINGS119-05"
+    ]
+  }
+}

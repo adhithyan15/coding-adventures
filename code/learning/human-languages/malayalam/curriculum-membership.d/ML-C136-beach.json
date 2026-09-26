@@ -1,0 +1,11 @@
+{
+  "id": "ML-C136-beach",
+  "pathSegment": "ML-PATH-136-WATER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-136-WATER",
+      "order": 1
+    }
+  ]
+}

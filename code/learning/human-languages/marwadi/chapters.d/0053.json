@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "To play, To sell, To give, To take, To keep",
+  "label": "ch:mw-to-play-to-sell-to-give-to-take-to-keep",
+  "canDo": "I can say to play, to sell, to give, to take and to keep, to put.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C53-rakhno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can say to play, to sell, to give, to take and to keep, to put.",
+    "assesses": [
+      "MW-LEX-C53-VERBS53-03",
+      "MW-LEX-C53-VERBS53-04",
+      "MW-LEX-C53-VERBS53-05"
+    ]
+  }
+}

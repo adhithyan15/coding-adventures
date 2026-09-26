@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:1814600ed29657c8",
+  "lessonIds": [
+    "SA-C70-nail",
+    "SA-C70-knee",
+    "SA-C70-back",
+    "SA-C70-shoulder",
+    "SA-C70-lip"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch70.txt",
+  "json": "sanskrit/narration/ch70.json",
+  "textHash": "fnv1a64:217affc54fc53fa8",
+  "jsonHash": "fnv1a64:502c3ece01f0adbe",
+  "findings": []
+}

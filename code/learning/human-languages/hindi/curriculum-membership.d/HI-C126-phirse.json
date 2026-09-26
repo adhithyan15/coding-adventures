@@ -1,0 +1,11 @@
+{
+  "id": "HI-C126-phirse",
+  "pathSegment": "HI-PATH-126-WHAT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-126-WHAT",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C66-nimbu",
+  "pathSegment": "PA-PATH-66-FOOD66",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-66-FOOD66",
+      "order": 4
+    }
+  ]
+}

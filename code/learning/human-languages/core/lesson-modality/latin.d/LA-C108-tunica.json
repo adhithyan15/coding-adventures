@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C108-tunica",
+    "language": "latin",
+    "chapter": 108,
+    "sequence": 4040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:672e56bcacb4c1e1"
+  },
+  "findings": []
+}

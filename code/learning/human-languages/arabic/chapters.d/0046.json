@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Letters From Your First Greetings",
+  "label": "ch:ar-letters-from-greetings",
+  "canDo": "I can write shin, sad and dal, and find each one in a greeting or thanks I have said since the first chapters.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "AR-W46-dal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can write shin, sad and dal, and find each one in a greeting or thanks I have said since the first chapters.",
+    "assesses": [
+      "AR-SCRIPT-C46-SHIN-01",
+      "AR-SCRIPT-C46-SAD-01",
+      "AR-SCRIPT-C46-DAL-01"
+    ]
+  }
+}

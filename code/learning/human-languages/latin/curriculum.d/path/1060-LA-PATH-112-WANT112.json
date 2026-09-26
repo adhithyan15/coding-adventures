@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-112-WANT112",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "LA-EXT-112-WANT112"
+  ],
+  "after": []
+}

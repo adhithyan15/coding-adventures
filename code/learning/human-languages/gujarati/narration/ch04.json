@@ -4,11 +4,241 @@
   "chapter": 4,
   "title": "Four Forms Before Your Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:32753e1bf80d1c53",
+  "sourceHash": "fnv1a64:9b1b9d306367fd3e",
   "lessons": [
     {
+      "id": "GU-C04-athaanun",
+      "sequence": 75,
+      "title": "અથાણું (athāṇũ) — pickle",
+      "headword": "અથાણું",
+      "romanization": "athāṇũ",
+      "gloss": "pickle",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2968949121f44ff1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From memory, write ર, દ and છ once each. Then say chīp and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અથાણું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અથાણું — athāṇũ — \"pickle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: athāṇũ. Look at its shape as you say it: the lessons that follow take pieces of it, અ and થ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "athāṇũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *athāṇũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "athāṇũ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *athāṇũ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"pickle\"? (અથાણું, athāṇũ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C04-divaali",
+      "sequence": 76,
+      "title": "દિવાળી (divāḷī) — Diwali, the festival of lights",
+      "headword": "દિવાળી",
+      "romanization": "divāḷī",
+      "gloss": "Diwali, the festival of lights",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c8c0540bfa3078aa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From memory, write વ, ય and ક once each. Then say kaṇ and śak, and what each means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દિવાળી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દિવાળી — divāḷī — \"Diwali, the festival of lights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: divāḷī. Look at its shape as you say it: the lessons that follow take pieces of it, ળ (ḷa) and િ (-i), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divāḷī, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *divāḷī*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"Diwali, the festival of lights\"? (દિવાળી, divāḷī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GU-W04-lla",
-      "sequence": 71,
+      "sequence": 77,
       "title": "ળ (ḷa) — one new shape, retroflex lla",
       "headword": "ળ",
       "romanization": "ḷa",
@@ -21,7 +251,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a49c9774489abc73",
+      "sourceHash": "fnv1a64:c2475ccfdd4ceb5a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -131,7 +361,7 @@
     },
     {
       "id": "GU-W04-tha",
-      "sequence": 72,
+      "sequence": 78,
       "title": "થ — the consonant tha",
       "headword": "થ",
       "romanization": "tha",
@@ -144,7 +374,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c0aaa4b7d032a20f",
+      "sourceHash": "fnv1a64:ec8a3f307933fd76",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -254,7 +484,7 @@
     },
     {
       "id": "GU-W04-independent-a",
-      "sequence": 73,
+      "sequence": 79,
       "title": "અ — short a standing alone",
       "headword": "અ",
       "romanization": "a",
@@ -267,7 +497,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b4f38eda816e122b",
+      "sourceHash": "fnv1a64:f7589e217585dfec",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -377,7 +607,7 @@
     },
     {
       "id": "GU-W04-i-matra",
-      "sequence": 74,
+      "sequence": 80,
       "title": "િ (-i) — short i sits before, sounds after",
       "headword": "િ",
       "romanization": "-i",
@@ -390,7 +620,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:39de4a65142de78b",
+      "sourceHash": "fnv1a64:0b98becb601b598d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -500,7 +730,7 @@
     },
     {
       "id": "GU-R04-first-four-r1",
-      "sequence": 75,
+      "sequence": 81,
       "title": "ળ (ḷa) — થ — અ — િ (-i) (retroflex lla — tha — independent a — attached i): four forms return",
       "headword": "ળ — થ — અ — િ",
       "romanization": "retroflex lla — tha — independent a — attached i",
@@ -513,7 +743,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:603836ffe26a5b17",
+      "sourceHash": "fnv1a64:8505f5db23dd6840",
       "notice": {
         "modality": "pen",
         "needs": [

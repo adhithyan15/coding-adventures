@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C80-minute",
+    "language": "gujarati",
+    "chapter": 80,
+    "sequence": 4083,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef0e84ceb8ef7cb0"
+  },
+  "findings": []
+}

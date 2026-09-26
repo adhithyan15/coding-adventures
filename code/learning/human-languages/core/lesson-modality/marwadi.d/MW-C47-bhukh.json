@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C47-bhukh",
+    "language": "marwadi",
+    "chapter": 47,
+    "sequence": 3690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13be4309b3f5b469"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Sandwich, Sauce, Vinegar, Dessert, Meal",
+  "label": "ch:pt-sandwich-sauce-vinegar-dessert-meal",
+  "canDo": "I can say a sandwich, a sauce, vinegar, a dessert and a meal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C107-refeicao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say a sandwich, a sauce, vinegar, a dessert and a meal.",
+    "assesses": [
+      "PT-LEX-C107-COMIDA107-03",
+      "PT-LEX-C107-COMIDA107-04",
+      "PT-LEX-C107-COMIDA107-05"
+    ]
+  }
+}

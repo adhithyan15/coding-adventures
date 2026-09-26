@@ -1,0 +1,11 @@
+{
+  "id": "LA-C108-vestis",
+  "pathSegment": "LA-PATH-108-VESTIS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-108-VESTIS",
+      "order": 2
+    }
+  ]
+}

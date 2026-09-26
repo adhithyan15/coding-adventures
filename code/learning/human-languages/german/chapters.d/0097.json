@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Bridge, Church, Pharmacy, Village, Police",
+  "label": "ch:ge-bridge-church-pharmacy-village-police",
+  "canDo": "I can say a bridge, a church, a pharmacy, a village and the police.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GE-C97-polizei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say a bridge, a church, a pharmacy, a village and the police.",
+    "assesses": [
+      "GE-LEX-C97-STADT2-03",
+      "GE-LEX-C97-STADT2-04",
+      "GE-LEX-C97-STADT2-05"
+    ]
+  }
+}

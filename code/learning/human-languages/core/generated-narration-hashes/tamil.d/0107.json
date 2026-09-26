@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:84938f7a76df7849",
+  "lessonIds": [
+    "TA-C107-takeleave",
+    "TA-C107-shallwego",
+    "TA-C107-seeyoulater",
+    "TA-C107-goodjourney",
+    "TA-C107-comeagain"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch107.txt",
+  "json": "tamil/narration/ch107.json",
+  "textHash": "fnv1a64:248ceea9c2501bd6",
+  "jsonHash": "fnv1a64:1aa0f3f83a8df829",
+  "findings": []
+}

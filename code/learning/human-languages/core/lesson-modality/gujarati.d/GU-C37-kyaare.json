@@ -3,7 +3,7 @@
     "id": "GU-C37-kyaare",
     "language": "gujarati",
     "chapter": 41,
-    "sequence": 2110,
+    "sequence": 2123,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8ebc92becb7639b0"
+    "sourceHash": "fnv1a64:1b0ac173435365c2"
   },
   "findings": []
 }

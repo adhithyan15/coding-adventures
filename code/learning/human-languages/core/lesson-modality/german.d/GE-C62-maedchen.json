@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C62-maedchen",
+    "language": "german",
+    "chapter": 62,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38daeaf3234fa15d"
+  },
+  "findings": []
+}

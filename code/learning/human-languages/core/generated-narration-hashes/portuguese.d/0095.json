@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:955fc50786f0d9d7",
+  "lessonIds": [
+    "PT-C95-toalha",
+    "PT-C95-sabonete",
+    "PT-C95-escova-de-dentes",
+    "PT-C95-pasta-de-dentes",
+    "PT-C95-pente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch95.txt",
+  "json": "portuguese/narration/ch95.json",
+  "textHash": "fnv1a64:ed191ada60628e4e",
+  "jsonHash": "fnv1a64:a769f2468350571e",
+  "findings": []
+}

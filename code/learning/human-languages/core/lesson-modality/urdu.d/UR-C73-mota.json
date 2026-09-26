@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C73-mota",
+    "language": "urdu",
+    "chapter": 73,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9572eb7f1bd0ca91"
+  },
+  "findings": []
+}

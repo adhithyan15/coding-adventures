@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:9e283bc5b186823d",
+  "lessonIds": [
+    "LA-C76-lavo",
+    "LA-C76-coquo",
+    "LA-C76-vendo",
+    "LA-C76-nato",
+    "LA-C76-voco"
+  ],
+  "tex": "latin/book/chapters/ch76-wash-cook-sell-swim-call.tex"
+}

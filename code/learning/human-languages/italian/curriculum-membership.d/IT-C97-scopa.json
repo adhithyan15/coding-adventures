@@ -1,0 +1,11 @@
+{
+  "id": "IT-C97-scopa",
+  "pathSegment": "IT-PATH-97-CASA97",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-97-CASA97",
+      "order": 2
+    }
+  ]
+}

@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02]
 introduces:
-  knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
+  knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
+  knowledge: [LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,7 +57,7 @@ doce, trece, catorce, quince* — fused down over the centuries into single
 words.
 
 ## You'll want to know: sēdecim, septendecim — still additive
-<!-- hl-knowledge: introduces=[LA-LEX-UNDECIM-VIGINTI-02]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01] -->
 
 **sēdecim** (16, "six-ten") and **septendecim** (17, "seven-ten") keep the
 same additive pattern.
@@ -84,7 +84,7 @@ something genuinely odd in Latin's own counting.
 **vīgintī** ("twenty") — the direct, unchanged source of Spanish's *veinte*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ūndecim, duodecim, tredecim, quattuordecim, quīndecim" — the
@@ -94,7 +94,7 @@ something genuinely odd in Latin's own counting.
 - [YOU SAY: "vīgintī" — twenty]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-GRAMMAR-WEATHER-VERBS-01, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
 
 [PAUSE 3s]
 - What pattern do *ūndecim* through *quīndecim* follow? (**Additive** — number

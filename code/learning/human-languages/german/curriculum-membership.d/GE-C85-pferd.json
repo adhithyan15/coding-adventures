@@ -1,0 +1,11 @@
+{
+  "id": "GE-C85-pferd",
+  "pathSegment": "GE-PATH-85-NATUR4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-85-NATUR4",
+      "order": 3
+    }
+  ]
+}

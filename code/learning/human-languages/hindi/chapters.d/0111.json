@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "How Do You Say It?",
+  "label": "ch:hi-how-do-you-say-it",
+  "canDo": "I can ask how to say something in Hindi, ask to be shown or to have it written down, and say I could not hear.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C111-likhdijie",
+    "kind": "production",
+    "summary": "Complete HI-C111-likh-dijie: a learner's toolkit of questions.",
+    "assesses": [
+      "HI-LEX-C111-ASK-03",
+      "HI-LEX-C111-ASK-04",
+      "HI-LEX-C111-ASK-05"
+    ]
+  }
+}

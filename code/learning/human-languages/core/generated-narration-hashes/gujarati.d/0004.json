@@ -1,8 +1,10 @@
 {
   "language": "gujarati",
   "chapter": 4,
-  "sourceHash": "fnv1a64:32753e1bf80d1c53",
+  "sourceHash": "fnv1a64:9b1b9d306367fd3e",
   "lessonIds": [
+    "GU-C04-athaanun",
+    "GU-C04-divaali",
     "GU-W04-lla",
     "GU-W04-tha",
     "GU-W04-independent-a",
@@ -13,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "gujarati/narration/ch04.txt",
   "json": "gujarati/narration/ch04.json",
-  "textHash": "fnv1a64:9d07b5437d7e52b2",
-  "jsonHash": "fnv1a64:afb9ee42b710af62",
+  "textHash": "fnv1a64:b28aa65deb0d6477",
+  "jsonHash": "fnv1a64:a594452b283daa37",
   "findings": []
 }

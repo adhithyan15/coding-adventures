@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C32-ane-clauses
 spine_node: SPINE-DESCRIBE-QUALITIES
-sequence: 1840
+sequence: 1853
 chapter: 36
 type: phrase
 headword: અને (બે વાક્ય)

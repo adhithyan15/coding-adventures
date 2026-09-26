@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:3cce9961cdae8269",
+  "lessonIds": [
+    "AR-C51-shar",
+    "AR-C51-qadam",
+    "AR-C51-isba",
+    "AR-C51-katif",
+    "AR-C51-raqaba"
+  ],
+  "tex": "arabic/book/chapters/ch51-hair-foot-finger-shoulder-neck.tex"
+}

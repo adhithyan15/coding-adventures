@@ -1,5 +1,12 @@
 # V8C02 — `v8-binding`: LangBinding impl + JS value representation
 
+> **Pending revision (2026-09-25).** The `Rc<RefCell<…>>` object cells below
+> are superseded by [V8C01's 2026-09-25 revision](V8C01-overview.md): values
+> are NaN-boxed and objects live on `gc-core`, because JavaScript object graphs
+> are cyclic and DOM wrappers must be traced. This spec is rewritten before
+> `v8-binding` is built (V8C01 phase P1); until then, read its value and object
+> model as the design intent, not the representation.
+
 ## What this is
 
 `v8-binding` is the JavaScript implementation of

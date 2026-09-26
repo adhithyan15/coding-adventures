@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:ad52d1f60942ef06",
+  "lessonIds": [
+    "RU-C117-rabbit",
+    "RU-C117-tiger",
+    "RU-C117-butterfly",
+    "RU-C117-frog",
+    "RU-C117-tortoise"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch117.txt",
+  "json": "russian/narration/ch117.json",
+  "textHash": "fnv1a64:9fd4237aa4c1336d",
+  "jsonHash": "fnv1a64:1d4a4c5cc0a17608",
+  "findings": []
+}

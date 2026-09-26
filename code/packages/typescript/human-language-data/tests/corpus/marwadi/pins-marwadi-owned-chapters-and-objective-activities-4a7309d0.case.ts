@@ -11,14 +11,27 @@ import {
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(347);
+  // 347 -> 350, chapters 42 -> 43: HL-C443's chapter 43 writes म, the letter that
+  // ends राम, with two reviews. Each of the three carries one objective activity.
+  // 350 -> 584, chapters 43 -> 89: the pre-A1 vocabulary tranche, 230 word
+  // lessons and four reviews. Each carries one objective activity, a typed
+  // recall of its word (`<lesson>-type`); those are counted apart below so the
+  // hand-authored list stays readable.
+  expect(lessons).toHaveLength(584);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set(Array.from({ length: 42 }, (unused, index) => index + 1)),
+    new Set(Array.from({ length: 89 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(347);
+  expect(activities).toHaveLength(584);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
-  expect(activities.map((activity) => activity.id).sort()).toEqual([
+  const vocabularyTranche = /^MW-(C(4[4-9]|[5-8][0-9])|R66|R89)-.+-type$/;
+  expect(activities.filter((activity) => vocabularyTranche.test(activity.id))).toHaveLength(234);
+  expect(
+    activities
+      .map((activity) => activity.id)
+      .filter((id) => !vocabularyTranche.test(id))
+      .sort(),
+  ).toEqual([
     "MW-C01-practice-answer",
     "MW-C01-raam-raam-saa-greeting-cue",
     "MW-C02-aabhaar-build",
@@ -314,6 +327,8 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-R39-refusal-second-pass-close",
     "MW-R39-refuse-price-turn",
     "MW-R39-script-close-four",
+    "MW-R43-letters-first-pass-letters",
+    "MW-R43-letters-second-pass-letters",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -365,13 +380,14 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W37-i-recall",
     "MW-W38-a-recall",
     "MW-W38-lla-recall",
-    "MW-W38-u-recall"
+    "MW-W38-u-recall",
+    "MW-W43-ma-recall",
   ]);
 
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 347,
+    lessonCount: 584,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

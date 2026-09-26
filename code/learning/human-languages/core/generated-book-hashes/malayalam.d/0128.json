@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:4020275e0005e4dd",
+  "lessonIds": [
+    "ML-C128-house",
+    "ML-C128-room",
+    "ML-C128-kitchen",
+    "ML-C128-bathroom",
+    "ML-C128-yard"
+  ],
+  "tex": "malayalam/book/chapters/ch128-come-in-this-is-home.tex"
+}

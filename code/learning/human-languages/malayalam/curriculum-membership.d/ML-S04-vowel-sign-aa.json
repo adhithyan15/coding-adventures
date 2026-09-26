@@ -1,11 +1,11 @@
 {
   "id": "ML-S04-vowel-sign-aa",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 30,
+  "pathOrder": 38,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 30
+      "order": 38
     }
   ]
 }

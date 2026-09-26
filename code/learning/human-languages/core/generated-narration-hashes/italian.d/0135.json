@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:c87716ea89417cad",
+  "lessonIds": [
+    "IT-C135-salire",
+    "IT-C135-scendere",
+    "IT-C135-restare",
+    "IT-C135-affittare",
+    "IT-C135-riparare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch135.txt",
+  "json": "italian/narration/ch135.json",
+  "textHash": "fnv1a64:ea069e342d125e28",
+  "jsonHash": "fnv1a64:6f48f85a8c010353",
+  "findings": []
+}

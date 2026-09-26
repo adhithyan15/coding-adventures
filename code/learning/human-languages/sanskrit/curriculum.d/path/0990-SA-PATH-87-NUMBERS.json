@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-87-NUMBERS",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "SA-EXT-87-NUMBERS"
+  ],
+  "after": []
+}

@@ -5,6 +5,22 @@ this file.
 
 ## [Unreleased]
 
+- **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
+  - The index form reuses `HostButton`'s event args, replacing the old `(v ?? false) ? 1 : 0` flag a `number` parameter used to receive. `checked` reads a loop binding or row expression through `_mosaicTruthy`; `label` takes the same forms as a `HostButton` label.
+
+### Fixed — nested `collapse: auto` navigation splits are bounded (#15851)
+
+A `HostNavigationSplit` with `collapse: auto` (the default) emits its children
+twice: once for the regular-width `Row` and once for the compact `Drawer`.
+Nesting therefore multiplied the output as 2^depth. The layout parser's
+`MAX_RULE_DEPTH = 100` bounds recursion, not output: 30 nested splits parse in
+about 60 lines and would ask for 2^30 copies of the innermost pane.
+
+`TableCtx` now counts enclosing duplicating splits (`duplicating_split_depth`).
+Past `MAX_DUPLICATING_SPLIT_DEPTH` = 6, which is 64 copies, emission fails with
+a clear error that suggests `collapse: never` for inner splits. `never` splits
+emit once and are not counted. Real apps nest none or one.
+
 ### Fixed — `multiline: true` draws a text area (J3b-pre, #14416)
 
 Flutter never read `multiline`, so `Input [ … ] ( multiline: true )` rendered

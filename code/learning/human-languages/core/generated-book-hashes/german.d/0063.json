@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:5cf514d28e37ffd1",
+  "lessonIds": [
+    "GE-C63-nachbar",
+    "GE-C63-gast",
+    "GE-C63-enkel",
+    "GE-C63-schueler",
+    "GE-C63-schuelerin"
+  ],
+  "tex": "german/book/chapters/ch63-neighbour-guest-grandson-pupil-pupil.tex"
+}

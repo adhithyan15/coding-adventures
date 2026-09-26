@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:7f039f7507aec10f",
+  "lessonIds": [
+    "GE-C87-ente",
+    "GE-C87-schaf",
+    "GE-C87-ziege",
+    "GE-C87-loewe",
+    "GE-C87-affe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch87.txt",
+  "json": "german/narration/ch87.json",
+  "textHash": "fnv1a64:b51bf25d1452e063",
+  "jsonHash": "fnv1a64:0d49818e3c427a2f",
+  "findings": []
+}

@@ -1,5 +1,92 @@
 # Changelog — Russian track
 
+## Chapters 82-135: 265 headwords, the letters э and щ, and Russian attains A1
+
+Russian had four A1 gaps. It was 261 headwords short and 11 verbs short. Four A1
+spine nodes had no segment: TIME-OF-DAY, ASK-LOCATION, DEFINITE-REFERENCE and
+NAME-EVERYDAY-THINGS. And four atoms were revisited fewer than twice.
+
+**The words.** 265 headwords, each with a stressed romanization:
+
+- **this and that:** *этот*, *эта*, *тот*, *та*, *такой* (DEFINITE-REFERENCE)
+- **time:** *утром*, *днём*, *вечером*, *ночью*, *полдень*, *полночь*, *рано*,
+  *поздно*, and more (TIME-OF-DAY)
+- **places and directions:** *куда*, *откуда*, *направо*, *налево*, *прямо*,
+  and the town (ASK-LOCATION)
+- **things:** 150 of them, covering the house, things you carry, clothes, food,
+  work, school, free time, nature, animals and the body (NAME-EVERYDAY-THINGS)
+- **qualities:** thirty-six describing words
+- **verbs:** twenty-five
+
+Every candidate was checked against every earlier headword and every lesson's
+text. Forward references stay at 11.
+
+**The letters э and щ.** These words bring two letters the book had never
+written: **э** (in *этот*, *эта* and *экзамен*) and **щ** (in *площадь*,
+*овощи*, *щека* and others). Chapter 93 writes both, each from the word it was
+first read in: **э** from **этот** and **щ** from **площадь**. Each letter is
+anchored in a word the reader already says. The chapter comes before any
+review prints either letter in Cyrillic. To make that possible, the first run
+of words (chapters 82-92) carries no reviews of its own. Its chain continues
+straight into chapter 94, so every word still gets its two revisits.
+
+**The four revisits.**
+
+- The ordinals, *первый, второй, третий* and *1-й*, come back with *дата*.
+- The chapter-27 reading skills come back in the school chapter: a read-aloud
+  line and two signs (*лифт направо, метро налево*).
+
+    russian headwords at or below A1   339  ->  600+ (A1 target met)
+    russian verbs at or below A1        29  ->  40+
+    russian letters written             unwritten 0 (э, щ added)
+    russian lessons                    418  ->  695
+    level gate                         pre-A1 -> A1
+
+## Chapters 29-80: 260 headwords, twenty-three verbs, and Russian attains pre-A1
+
+Russian was 251 headwords and 5 verbs short of pre-A1 (HL09 §3.1). This adds
+fifty-two chapters of five words each, and four review lessons: two after
+chapter 54 and two after chapter 80. Every word is chained into the next two
+lessons, so each atom is revisited twice.
+
+- **29-54**:
+  - the body, health and feelings
+  - family and people
+  - five chapters of verbs (work, sing, dance, laugh, cry; wash, cook, buy,
+    sell, swim; sleep, sit, stand, run, play; listen, learn, answer, wait,
+    give; open, close, drink)
+  - food and meals
+  - the house and the table
+  - school things, and things you carry
+- **55-80**:
+  - nature, the sky and the weather
+  - animals
+  - colours and describing words
+  - time, days and seasons
+  - where and when
+  - numbers
+  - the town and travel
+
+Every headword is written in letters the track already teaches. That means no
+э, щ or ъ yet: овощи and ещё wait. A few entries add a note on how the word is
+built, such as медведь, "honey-knower", and четверг, "the fourth" day. Ten
+candidates were dropped because they already appear as whole words in earlier
+lessons, among them есть, ночь, утро, письмо, вторник and тридцать.
+
+Ten of the new headwords read **ё** (ребёнок, мёд, чёрный and others), and no
+lesson wrote it, so chapter 81 now does. It takes ё from ребёнок, a word the
+reader already knows, in one letter lesson with its filmstrip and two reviews.
+
+    russian pre-A1 blockers   vocabulary 251 + verb-vocabulary 5  ->  none (attained)
+
+## Chapter 28: the small я (HL-C443)
+
+HL-C443's rule for gentle writing: teach each letter from a word the reader already knows, and keep going until the reader has written every letter. `measureLetterAnchoring` listed the letters below as read in words but never written on their own; each now has one lesson that names its word, and two reviews close the chapter.
+
+The word for "I", **я**, is written with the small letter inside a sentence. Until now only the capital **Я** had a lesson. The small one now has its own lesson, with a cited stroke order and a filmstrip.
+
+    russian unwritten letters   1 -> 0
+
 ## Three second-pass lessons: four letters, the question family, and ли from cold
 
 Thirteen atoms had been revisited once or not at all.

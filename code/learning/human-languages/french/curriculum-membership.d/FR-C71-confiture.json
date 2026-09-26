@@ -1,0 +1,11 @@
+{
+  "id": "FR-C71-confiture",
+  "pathSegment": "FR-PATH-71-CUISINE23",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-71-CUISINE23",
+      "order": 2
+    }
+  ]
+}

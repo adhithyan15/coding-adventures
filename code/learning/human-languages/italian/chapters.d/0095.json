@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Shower, Bathtub, Shelf, Curtain, Cushion",
+  "label": "ch:it-shower-bathtub-shelf-curtain-cushion",
+  "canDo": "I can say a shower, a bathtub, a shelf, a curtain and a cushion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R95-second-pass-getting-around-and-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say a shower, a bathtub, a shelf, a curtain and a cushion.",
+    "assesses": [
+      "IT-LEX-C95-CASA95-03",
+      "IT-LEX-C95-CASA95-04",
+      "IT-LEX-C95-CASA95-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C50-pavno",
+  "pathSegment": "MW-PATH-50-FAMILY50",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-50-FAMILY50",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:5745bb4e0d59b7ca",
+  "lessonIds": [
+    "GE-C128-hausaufgabe",
+    "GE-C128-idee",
+    "GE-C128-satz",
+    "GE-C128-seite",
+    "GE-C128-zeichnung"
+  ],
+  "tex": "german/book/chapters/ch128-homework-idea-sentence-page-drawing.tex"
+}

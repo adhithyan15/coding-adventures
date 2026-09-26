@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C99-present",
+    "language": "tamil",
+    "chapter": 99,
+    "sequence": 4170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38e3a268d4483d46"
+  },
+  "findings": []
+}

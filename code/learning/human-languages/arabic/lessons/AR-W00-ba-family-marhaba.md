@@ -8,20 +8,20 @@ type: writing
 headword: "ب ت ث — مرحبا"
 gloss: one shared bowl, three dot patterns, then guided-copy marḥaban
 romanization: bāʾ, tāʾ, thāʾ — marḥaban
-prerequisites: [AR-W00-ra-ha]
+prerequisites: [AR-W00-ra-ha, AR-C01-thabit]
 sounds: [arabic-ba, arabic-ta, arabic-tha]
 roots: [phoenician-bet, semitic-r-h-b]
 duration:
   max_seconds: 299
 requires:
-  knowledge: [AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06]
+  knowledge: [AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06, AR-LEX-ANCHOR-THABIT]
 introduces:
   knowledge: [AR-SCRIPT-BA-FAMILY-07]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07]
+  knowledge: [AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-LEX-ANCHOR-THABIT]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W00-ra-ha, AR-C01-marhaba, AR-W00-alif-mim-salam]
 # ب ت ث — one bowl, three dot choices
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-05, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-RA-HA-06, AR-LEX-ANCHOR-THABIT] -->
 
 [PAUSE 2s] You know **ر** and **ح**. Today introduces one shared bowl and three
 dot patterns — exactly three new shapes — before you copy *marḥaban*.

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R112-letters-first-pass",
+    "language": "tamil",
+    "chapter": 112,
+    "sequence": 4810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c54f81ce497b148a"
+  },
+  "findings": []
+}

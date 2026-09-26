@@ -11,6 +11,8 @@ import {
   FILMSTRIP_LEDGER_PATH,
   type FilmstripLedger,
 } from "./figure-filmstrip.js";
+import { filmstripCandidates, withDerivedFilmstrips } from "./figure-targets.js";
+import type { ParsedLesson } from "./parse.js";
 
 interface FigureGenerationConfig {
   version: 1;
@@ -106,22 +108,45 @@ function figureSources(root: string, targets: FigureTarget[]): FigureSources {
   return sources;
 }
 
-export function generatedFigureOutputs(
-  root = defaultCurriculumRoot(),
-): Map<string, string> {
+/**
+ * Every figure the book prints: the targets declared in `figure-generation.json`
+ * plus, for switched-on tracks, a filmstrip for each single-letter writing
+ * lesson whose letter has a cited ductus (HL-C443, `figure-targets.ts`). The
+ * generated filmstrip ledger is the record of which letters are cited, so a
+ * derived target can never outrun the stroke data.
+ */
+export function resolvedFigureTargets(
+  root: string,
+  lessons: readonly ParsedLesson[],
+): FigureTarget[] {
   const config = loadConfig(root);
   if (config.version !== 1 || !Array.isArray(config.targets) || config.targets.length === 0) {
     throw new Error("figure-generation.json must declare version 1 and at least one target");
   }
-  const lessons = new Map(loadLessons(root).map((lesson) => [lesson.realization.lessonId, lesson]));
-  const sources = figureSources(root, config.targets);
+  const candidates = filmstripCandidates(lessons);
+  if (candidates.length === 0) return config.targets;
+  const cited = indexFilmstripLedger(
+    readLedgerFile<FilmstripLedger>(join(root, FILMSTRIP_LEDGER_PATH)),
+  );
+  return withDerivedFilmstrips(config.targets, candidates, (script, glyph) =>
+    cited.has(`${script}:${glyph}`),
+  );
+}
+
+export function generatedFigureOutputs(
+  root = defaultCurriculumRoot(),
+): Map<string, string> {
+  const loaded = loadLessons(root);
+  const targets = resolvedFigureTargets(root, loaded);
+  const lessons = new Map(loaded.map((lesson) => [lesson.realization.lessonId, lesson]));
+  const sources = figureSources(root, targets);
   const outputs = new Map<string, string>();
   const manifest: GeneratedFigureHashManifest = {
     version: 1,
     algorithm: "fnv1a64",
     figures: [],
   };
-  for (const target of config.targets) {
+  for (const target of targets) {
     assertKnownFigureTarget(target);
     safeFigureOutput(root, target.output);
     if (outputs.has(target.output)) throw new Error(`${target.output}: duplicate figure output`);

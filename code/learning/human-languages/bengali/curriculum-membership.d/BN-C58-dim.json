@@ -1,0 +1,11 @@
+{
+  "id": "BN-C58-dim",
+  "pathSegment": "BN-PATH-58-FOOD58",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-58-FOOD58",
+      "order": 2
+    }
+  ]
+}

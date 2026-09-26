@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C64-ecouter",
+    "language": "french",
+    "chapter": 64,
+    "sequence": 2570,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e7695de37d998212"
+  },
+  "findings": []
+}

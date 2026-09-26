@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "It's Getting Late",
+  "label": "ch:hi-getting-late",
+  "canDo": "I can say it has got late and I have to go, ask leave politely, and talk about a holiday.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C122-janahai",
+    "kind": "production",
+    "summary": "Complete HI-C122-jana-hai: excuse yourself politely.",
+    "assesses": [
+      "HI-LEX-C122-LATE-03",
+      "HI-LEX-C122-LATE-04",
+      "HI-LEX-C122-LATE-05"
+    ]
+  }
+}

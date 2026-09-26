@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C04-practice
 spine_node: SPINE-TAKE-LEAVE
-sequence: 280
+sequence: 293
 chapter: 10
 type: practice
 headword: (dialogue)

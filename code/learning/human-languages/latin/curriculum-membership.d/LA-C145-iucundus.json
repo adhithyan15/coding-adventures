@@ -1,0 +1,11 @@
+{
+  "id": "LA-C145-iucundus",
+  "pathSegment": "LA-PATH-145-QUAL145",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-145-QUAL145",
+      "order": 4
+    }
+  ]
+}

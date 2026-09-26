@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:4e2614ec6c9740af",
+  "lessonIds": [
+    "LA-C82-mensa",
+    "LA-C82-sella",
+    "LA-C82-lectus",
+    "LA-C82-fenestra",
+    "LA-C82-cubiculum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch82.txt",
+  "json": "latin/narration/ch82.json",
+  "textHash": "fnv1a64:3afe6ebe659e593c",
+  "jsonHash": "fnv1a64:a8f73ee29bceaf40",
+  "findings": []
+}

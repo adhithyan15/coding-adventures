@@ -1,0 +1,11 @@
+{
+  "id": "AR-R74-second-pass-food-the-home-and-school",
+  "pathSegment": "AR-PATH-74-SCHOOL74",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "AR-EXT-74-SCHOOL74",
+      "order": 6
+    }
+  ]
+}

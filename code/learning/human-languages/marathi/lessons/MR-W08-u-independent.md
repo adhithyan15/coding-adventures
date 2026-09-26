@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W08-u-independent
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 93
+sequence: 123
 delivery: script
 chapter: 8
 type: writing
 headword: उ
 romanization: "u"
 gloss: independent short u — the vowel written whole when nothing carries it
-prerequisites: [MR-W08-ssa]
+prerequisites: [MR-W08-ssa, MR-C08-ulat]
 sounds: [standalone-vowel-u]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-SSA-01, MR-SCRIPT-U-MATRA-01]
+  knowledge: [MR-SCRIPT-SSA-01, MR-SCRIPT-U-MATRA-01, MR-LEX-ANCHOR-ULAT]
 introduces:
   knowledge: [MR-SCRIPT-U-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-MATRA-01]
+  knowledge: [MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-MATRA-01, MR-LEX-ANCHOR-ULAT]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W08-ssa, MR-W05-u-matra]
 # उ — short *u* standing on its own
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-ULAT] -->
 
 You already hang a short *u* under a consonant. What happens when there is no consonant to hang it on?
 

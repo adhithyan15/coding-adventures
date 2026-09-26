@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C131-onion",
+    "language": "malayalam",
+    "chapter": 131,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2f5f0c1b6548a7b"
+  },
+  "findings": []
+}

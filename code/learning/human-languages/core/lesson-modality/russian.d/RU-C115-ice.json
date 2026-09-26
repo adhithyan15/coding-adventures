@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C115-ice",
+    "language": "russian",
+    "chapter": 115,
+    "sequence": 5910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a26e2baf4c7b877"
+  },
+  "findings": []
+}

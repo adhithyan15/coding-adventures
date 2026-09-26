@@ -1,0 +1,11 @@
+{
+  "id": "TE-C89-english",
+  "pathSegment": "TE-PATH-89-ABOUT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-89-ABOUT",
+      "order": 2
+    }
+  ]
+}

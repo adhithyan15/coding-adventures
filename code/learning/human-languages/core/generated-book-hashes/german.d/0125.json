@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:866ebd0d930f3dd0",
+  "lessonIds": [
+    "GE-C125-bauer",
+    "GE-C125-baecker",
+    "GE-C125-fahrer",
+    "GE-C125-anwalt",
+    "GE-C125-ingenieur"
+  ],
+  "tex": "german/book/chapters/ch125-farmer-baker-driver-lawyer-engineer.tex"
+}

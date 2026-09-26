@@ -1,11 +1,13 @@
 {
   "language": "hindi",
   "chapter": 85,
-  "sourceHash": "fnv1a64:99c386de09ff07c9",
+  "sourceHash": "fnv1a64:35c5d4962ca1c0c7",
   "lessonIds": [
     "HI-C78-signs",
     "HI-C78-notices",
-    "HI-C78-pehla-paath"
+    "HI-C78-pehla-paath",
+    "HI-R85-devanagari-recall-a",
+    "HI-R85-devanagari-recall-b"
   ],
   "tex": "hindi/book/chapters/ch85-reading-signs-and-notices.tex"
 }

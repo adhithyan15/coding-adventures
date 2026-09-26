@@ -1,10 +1,11 @@
 {
   "language": "arabic",
   "chapter": 11,
-  "sourceHash": "fnv1a64:3811cc7c13520f1b",
+  "sourceHash": "fnv1a64:87dc58cc438c7883",
   "lessonIds": [
     "AR-C11-ras",
-    "AR-C11-yad"
+    "AR-C11-yad",
+    "AR-R11-how-are-you-cold"
   ],
   "tex": "arabic/book/chapters/ch11-head-and-hand.tex"
 }

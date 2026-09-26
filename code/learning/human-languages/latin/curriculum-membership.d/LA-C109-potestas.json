@@ -1,0 +1,11 @@
+{
+  "id": "LA-C109-potestas",
+  "pathSegment": "LA-PATH-109-CAN109",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-109-CAN109",
+      "order": 4
+    }
+  ]
+}

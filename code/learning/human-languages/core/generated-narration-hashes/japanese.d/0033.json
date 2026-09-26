@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:e1b2c4a002399868",
+  "lessonIds": [
+    "JA-C33-ringo",
+    "JA-C33-mikan",
+    "JA-C33-ichigo",
+    "JA-C33-momo",
+    "JA-C33-nashi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch33.txt",
+  "json": "japanese/narration/ch33.json",
+  "textHash": "fnv1a64:ac5f2d4a1d2a5799",
+  "jsonHash": "fnv1a64:6fd23df6804396e6",
+  "findings": []
+}

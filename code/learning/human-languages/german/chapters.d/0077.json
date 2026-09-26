@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Garden, Lamp, Bath, Room, Bed",
+  "label": "ch:ge-garden-lamp-bath-room-bed",
+  "canDo": "I can say a garden, a lamp, a bath, a room and a bed.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GE-C77-bett",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say a garden, a lamp, a bath, a room and a bed.",
+    "assesses": [
+      "GE-LEX-C77-HAUS2-03",
+      "GE-LEX-C77-HAUS2-04",
+      "GE-LEX-C77-HAUS2-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C37-braccio",
+  "pathSegment": "IT-PATH-37-CORPO1",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-37-CORPO1",
+      "order": 0
+    }
+  ]
+}

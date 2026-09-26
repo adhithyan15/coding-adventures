@@ -1,0 +1,11 @@
+{
+  "id": "RU-C88-swimming-pool",
+  "pathSegment": "RU-PATH-88-LOC88",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-88-LOC88",
+      "order": 3
+    }
+  ]
+}

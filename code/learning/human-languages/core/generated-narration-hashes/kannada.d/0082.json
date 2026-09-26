@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:f52966de0f656874",
+  "lessonIds": [
+    "KA-C82-tiredness",
+    "KA-C82-cold",
+    "KA-C82-cough",
+    "KA-C82-headache",
+    "KA-C82-rest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch82.txt",
+  "json": "kannada/narration/ch82.json",
+  "textHash": "fnv1a64:770c2733f180e475",
+  "jsonHash": "fnv1a64:7056b19b3d01a468",
+  "findings": []
+}

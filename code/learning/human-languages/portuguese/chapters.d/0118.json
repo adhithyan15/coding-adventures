@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Rabbit, Tiger, Butterfly, Frog, Tortoise",
+  "label": "ch:pt-rabbit-tiger-butterfly-frog-tortoise",
+  "canDo": "I can say a rabbit, a tiger, a butterfly, a frog and a tortoise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C118-tartaruga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a rabbit, a tiger, a butterfly, a frog and a tortoise.",
+    "assesses": [
+      "PT-LEX-C118-ANIMAIS118-03",
+      "PT-LEX-C118-ANIMAIS118-04",
+      "PT-LEX-C118-ANIMAIS118-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:f29f48955675a16d",
+  "lessonIds": [
+    "TA-C89-sadness",
+    "TA-C89-worry",
+    "TA-C89-nervousness",
+    "TA-C89-calm",
+    "TA-C89-shivering"
+  ],
+  "tex": "tamil/book/chapters/ch89-sad-worried-calm.tex"
+}

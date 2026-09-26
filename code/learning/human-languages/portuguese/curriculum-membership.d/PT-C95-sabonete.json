@@ -1,0 +1,11 @@
+{
+  "id": "PT-C95-sabonete",
+  "pathSegment": "PT-PATH-95-CASA95",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-95-CASA95",
+      "order": 1
+    }
+  ]
+}

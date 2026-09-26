@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:e113ef7ade05d243",
+  "lessonIds": [
+    "IT-C131-fine-settimana",
+    "IT-C131-data",
+    "IT-C131-secolo",
+    "IT-C131-spesso",
+    "IT-C131-qualche-volta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch131.txt",
+  "json": "italian/narration/ch131.json",
+  "textHash": "fnv1a64:2124a7c2494f6885",
+  "jsonHash": "fnv1a64:abe27d58af652556",
+  "findings": []
+}

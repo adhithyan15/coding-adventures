@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:2a8a3061237fd5f7",
+  "lessonIds": [
+    "ML-C118-coldweather",
+    "ML-C118-heat",
+    "ML-C118-sleep",
+    "ML-C118-mist",
+    "ML-C118-thunder"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch118.txt",
+  "json": "malayalam/narration/ch118.json",
+  "textHash": "fnv1a64:4c89172dd4fa82bc",
+  "jsonHash": "fnv1a64:453ff96860826e2d",
+  "findings": []
+}

@@ -1,11 +1,11 @@
 {
   "id": "TE-S153-vowel-sign-oo",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 55,
+  "pathOrder": 58,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 55
+      "order": 58
     }
   ]
 }

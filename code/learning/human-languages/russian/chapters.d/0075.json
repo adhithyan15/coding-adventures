@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Already, Quickly, Eleven, Twelve, Zero",
+  "label": "ch:ru-already-quickly-eleven-twelve-zero",
+  "canDo": "I can say already and quickly, and count eleven, twelve and zero.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C75-zero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say already and quickly, and count eleven, twelve and zero.",
+    "assesses": [
+      "RU-LEX-C75-NUM1-03",
+      "RU-LEX-C75-NUM1-04",
+      "RU-LEX-C75-NUM1-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C116-angulus",
+    "language": "latin",
+    "chapter": 116,
+    "sequence": 4480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:232fddc95a8129cc"
+  },
+  "findings": []
+}

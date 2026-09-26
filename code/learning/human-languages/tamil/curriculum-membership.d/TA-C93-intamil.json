@@ -1,0 +1,11 @@
+{
+  "id": "TA-C93-intamil",
+  "pathSegment": "TA-PATH-93-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-93-ASK",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C55-colazione",
+  "pathSegment": "IT-PATH-55-DISPENSA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-55-DISPENSA",
+      "order": 0
+    }
+  ]
+}

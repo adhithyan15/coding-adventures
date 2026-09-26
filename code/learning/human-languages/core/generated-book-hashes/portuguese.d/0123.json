@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:6e8b1c04c257508b",
+  "lessonIds": [
+    "PT-C123-famoso",
+    "PT-C123-importante",
+    "PT-C123-interessante",
+    "PT-C123-aborrecido",
+    "PT-C123-divertido",
+    "PT-R123-first-pass-animals-the-body-and-colours",
+    "PT-R123-second-pass-describing-words"
+  ],
+  "tex": "portuguese/book/chapters/ch123-famous-important-interesting-boring-fun.tex"
+}

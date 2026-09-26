@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 71,
+  "output": "sanskrit/book/chapters/ch71-run-walk-sit-stand.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

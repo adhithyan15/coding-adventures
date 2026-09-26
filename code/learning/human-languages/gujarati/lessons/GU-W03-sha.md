@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W03-sha
 spine_node: SPINE-MEET-GREET
-sequence: 69
+sequence: 73
 delivery: script
 chapter: 3
 type: writing
 headword: શ
 romanization: "sha"
 gloss: "the consonant sha"
-prerequisites: [GU-W03-nna]
+prerequisites: [GU-W03-nna, GU-C03-shak]
 sounds: []
 roots: []
 etymology_hook: "Gujarati keeps the related Devanagari sound system while dropping the continuous headline."
 duration:
   max_seconds: 299
 requires:
-  knowledge: [GU-SCRIPT-NNA-01]
+  knowledge: [GU-SCRIPT-NNA-01, GU-LEX-ANCHOR-SHAK]
 introduces:
   knowledge: [GU-SCRIPT-SHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-JA-01, GU-SCRIPT-O-MATRA-01, GU-SCRIPT-ANUSVARA-01, GU-SCRIPT-II-MATRA-01, GU-SCRIPT-U-MATRA-01, GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01]
+  knowledge: [GU-SCRIPT-JA-01, GU-SCRIPT-O-MATRA-01, GU-SCRIPT-ANUSVARA-01, GU-SCRIPT-II-MATRA-01, GU-SCRIPT-U-MATRA-01, GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-LEX-ANCHOR-SHAK]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W03-nna]
 # શ — the consonant sha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-NNA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-NNA-01, GU-LEX-ANCHOR-SHAK] -->
 
 Write retroflex nna once from memory. Check the left hook, middle bowl, and right spine.
 

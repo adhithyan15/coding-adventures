@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R77-second-pass-the-house-the-table-and-things",
+    "language": "french",
+    "chapter": 77,
+    "sequence": 3270,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f5c012a9bbde037d"
+  },
+  "findings": []
+}

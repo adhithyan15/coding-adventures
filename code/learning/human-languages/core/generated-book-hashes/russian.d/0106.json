@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:eaee5476fe72c4dd",
+  "lessonIds": [
+    "RU-C106-dessert",
+    "RU-C106-yoghurt",
+    "RU-C106-ice-cream",
+    "RU-C106-sausage",
+    "RU-C106-peach"
+  ],
+  "tex": "russian/book/chapters/ch106-dessert-yoghurt-ice-cream-sausage-peach.tex"
+}

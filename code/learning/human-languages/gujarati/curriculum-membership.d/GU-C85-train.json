@@ -1,0 +1,11 @@
+{
+  "id": "GU-C85-train",
+  "pathSegment": "GU-PATH-85-TRAVEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-85-TRAVEL",
+      "order": 1
+    }
+  ]
+}

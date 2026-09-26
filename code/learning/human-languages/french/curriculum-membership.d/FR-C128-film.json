@@ -1,0 +1,11 @@
+{
+  "id": "FR-C128-film",
+  "pathSegment": "FR-PATH-128-LOISIRS80",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-128-LOISIRS80",
+      "order": 3
+    }
+  ]
+}

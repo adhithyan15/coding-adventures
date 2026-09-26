@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:4fc17a257e08d0d9",
+  "lessonIds": [
+    "FR-C86-ours",
+    "FR-C86-renard",
+    "FR-C86-serpent",
+    "FR-C86-poule",
+    "FR-C86-canard"
+  ],
+  "tex": "french/book/chapters/ch86-bear-fox-snake-hen-duck.tex"
+}

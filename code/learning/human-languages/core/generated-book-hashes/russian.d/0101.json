@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:90034a2b9924e6b1",
+  "lessonIds": [
+    "RU-C101-people",
+    "RU-C101-jumper",
+    "RU-C101-tie",
+    "RU-C101-gloves",
+    "RU-C101-scarf"
+  ],
+  "tex": "russian/book/chapters/ch101-people-jumper-tie-gloves-scarf.tex"
+}

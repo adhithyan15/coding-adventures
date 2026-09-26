@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C35-udon",
+    "language": "japanese",
+    "chapter": 35,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3532d72b940b95ff"
+  },
+  "findings": []
+}

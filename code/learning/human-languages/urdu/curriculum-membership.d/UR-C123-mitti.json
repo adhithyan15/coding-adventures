@@ -1,0 +1,11 @@
+{
+  "id": "UR-C123-mitti",
+  "pathSegment": "UR-PATH-123-THINGS123",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-123-THINGS123",
+      "order": 1
+    }
+  ]
+}

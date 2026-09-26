@@ -4,11 +4,11 @@
   "chapter": 9,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:47f68170d0a95a35",
+  "sourceHash": "fnv1a64:bf462c3f4701478a",
   "lessons": [
     {
       "id": "GU-C03-hun",
-      "sequence": 180,
+      "sequence": 193,
       "title": "હું (hũ) — \"I\"",
       "headword": "હું",
       "romanization": "hũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b3dbe95d11a1f24f",
+      "sourceHash": "fnv1a64:7a95e743b29ba3df",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -171,7 +171,7 @@
     },
     {
       "id": "GU-C03-kem",
-      "sequence": 190,
+      "sequence": 203,
       "title": "કેમ (kem) — \"how,\" a proper k- question",
       "headword": "કેમ",
       "romanization": "kem",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:368c6f4cc087f0f7",
+      "sourceHash": "fnv1a64:c7a24784da2cb9ec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -314,7 +314,7 @@
     },
     {
       "id": "GU-C03-tame-kem-chho",
-      "sequence": 200,
+      "sequence": 213,
       "title": "તમે કેમ છો? (tame kem chho?) — \"how are you?\"",
       "headword": "તમે કેમ છો?",
       "romanization": "tame kem chho?",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc7d903aa7d17d98",
+      "sourceHash": "fnv1a64:42a9808faa170b44",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -473,7 +473,7 @@
     },
     {
       "id": "GU-C03-majaa",
-      "sequence": 210,
+      "sequence": 223,
       "title": "મજા (majā) — \"enjoyment,\" and how to answer",
       "headword": "મજા",
       "romanization": "majā",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a8f1b5a7a965ad6e",
+      "sourceHash": "fnv1a64:5be1512679d2a1c0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -636,7 +636,7 @@
     },
     {
       "id": "GU-C03-vandho-nahi",
-      "sequence": 220,
+      "sequence": 233,
       "title": "વાંધો નહીં (vāndho nahĩ) — \"no problem\"",
       "headword": "વાંધો નહીં",
       "romanization": "vāndho nahĩ",
@@ -647,7 +647,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9c1855cd68b6dd6e",
+      "sourceHash": "fnv1a64:3570a5eff018a51e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -759,7 +759,7 @@
     },
     {
       "id": "GU-C03-practice",
-      "sequence": 230,
+      "sequence": 243,
       "title": "Chapter 5 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -770,7 +770,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0898ae04697d0bc0",
+      "sourceHash": "fnv1a64:81a9c5be9b5ed7ba",
       "notice": null,
       "blocks": [
         {

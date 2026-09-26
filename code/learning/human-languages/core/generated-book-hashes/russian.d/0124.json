@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:47223d878f99d593",
+  "lessonIds": [
+    "RU-C124-purple",
+    "RU-C124-brown",
+    "RU-C124-grey",
+    "RU-C124-orange",
+    "RU-C124-busy"
+  ],
+  "tex": "russian/book/chapters/ch124-purple-brown-grey-orange-busy.tex"
+}

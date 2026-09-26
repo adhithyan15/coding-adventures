@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:e368dc0c2eb60186",
+  "lessonIds": [
+    "JA-C42-kawa",
+    "JA-C42-umi",
+    "JA-C42-kusa",
+    "JA-C42-mori",
+    "JA-C42-ishi"
+  ],
+  "tex": "japanese/book/chapters/ch42-river-sea-grass-forest-stone.tex"
+}

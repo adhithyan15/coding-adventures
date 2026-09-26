@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C112-computer",
+    "language": "german",
+    "chapter": 112,
+    "sequence": 4420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eb013b068058306"
+  },
+  "findings": []
+}

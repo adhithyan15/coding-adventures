@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R21-travel-five
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1000
+sequence: 1013
 delivery: script
 modality: pen
 modality_reason: Mixed retrieval includes required model-free writing, so the complete lesson needs a pen even though its oral core is drivable.

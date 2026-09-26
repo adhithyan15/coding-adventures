@@ -1,0 +1,21 @@
+{
+  "chapter": 87,
+  "title": "Right, Wrong, Maybe",
+  "label": "ch:te-right-wrong-maybe",
+  "canDo": "I can say that something is wrong or exactly right, answer with maybe, and react with really? and I see.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TE-R87-second-pass-replies",
+    "kind": "production",
+    "summary": "Complete TE-R87-second-pass-replies: the chapter replies and the requests that keep a conversation going, from cold.",
+    "assesses": [
+      "TE-LEX-C87-ANSWER-01",
+      "TE-LEX-C87-ANSWER-02",
+      "TE-LEX-C87-ANSWER-03",
+      "TE-LEX-C87-ANSWER-04",
+      "TE-LEX-C87-ANSWER-05"
+    ]
+  }
+}

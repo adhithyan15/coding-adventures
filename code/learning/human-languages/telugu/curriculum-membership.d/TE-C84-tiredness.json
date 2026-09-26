@@ -1,0 +1,11 @@
+{
+  "id": "TE-C84-tiredness",
+  "pathSegment": "TE-PATH-84-UNWELL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-84-UNWELL",
+      "order": 2
+    }
+  ]
+}

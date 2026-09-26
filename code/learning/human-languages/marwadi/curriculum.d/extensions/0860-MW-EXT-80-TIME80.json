@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-80-TIME80",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say always, sometimes, ever, quickly, a delay and before.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:7566f279b1530c90",
+  "lessonIds": [
+    "PT-C120-tornozelo",
+    "PT-C120-pulso",
+    "PT-C120-bochecha",
+    "PT-C120-labios",
+    "PT-C120-peito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch120.txt",
+  "json": "portuguese/narration/ch120.json",
+  "textHash": "fnv1a64:b392fd1824188c93",
+  "jsonHash": "fnv1a64:b4de7c67d3d88e23",
+  "findings": []
+}

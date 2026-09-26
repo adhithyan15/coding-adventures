@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C81-ficus",
+    "language": "latin",
+    "chapter": 81,
+    "sequence": 2670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1da362e64efb7c6"
+  },
+  "findings": []
+}

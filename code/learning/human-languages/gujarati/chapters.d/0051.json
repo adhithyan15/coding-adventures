@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Father, Mother, Grandparents",
+  "label": "ch:gu-father-mother-grandparents",
+  "canDo": "I can name a father, a mother, a grandfather, a grandmother and a child.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GU-C51-child",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can name a father, a mother, a grandfather, a grandmother and a child.",
+    "assesses": [
+      "GU-LEX-C51-FAMILY1-03",
+      "GU-LEX-C51-FAMILY1-04",
+      "GU-LEX-C51-FAMILY1-05"
+    ]
+  }
+}

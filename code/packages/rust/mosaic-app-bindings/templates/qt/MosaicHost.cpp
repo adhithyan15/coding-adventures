@@ -2,6 +2,7 @@
 #include "MosaicHost.h"
 
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -70,7 +71,7 @@ MosaicHost::MosaicHost(QObject *parent)
 
     const auto restoredSnapshot = loadPersistedSnapshot();
     const auto createApplication = [this](const QVariant &snapshot) {
-        const QVariantMap context{
+        QVariantMap context{
             {QStringLiteral("protocolVersion"), ProtocolVersion},
             {QStringLiteral("locale"), QLocale::system().name().replace('_', '-')},
             {QStringLiteral("colorScheme"), QStringLiteral("system")},
@@ -78,6 +79,10 @@ MosaicHost::MosaicHost(QObject *parent)
             {QStringLiteral("platform"), platformName()},
             {QStringLiteral("restoredSnapshot"), snapshot},
         };
+        // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
+        const int utcOffsetMinutes = QDateTime::currentDateTime().offsetFromUtc() / 60;
+        if (utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840)
+            context.insert(QStringLiteral("utcOffsetMinutes"), utcOffsetMinutes);
         const auto encoded = QJsonDocument::fromVariant(context).toJson(QJsonDocument::Compact);
         Bytes input{reinterpret_cast<const unsigned char *>(encoded.constData()),
                     static_cast<size_t>(encoded.size())};

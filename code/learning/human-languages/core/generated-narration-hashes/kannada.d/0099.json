@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:2e3a1ddb7aa10015",
+  "lessonIds": [
+    "KA-C99-breath",
+    "KA-C99-skin",
+    "KA-C99-blood",
+    "KA-C99-stomachache",
+    "KA-C99-weight"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch99.txt",
+  "json": "kannada/narration/ch99.json",
+  "textHash": "fnv1a64:8c853c6ff0e8071d",
+  "jsonHash": "fnv1a64:edad74dc7fefc660",
+  "findings": []
+}

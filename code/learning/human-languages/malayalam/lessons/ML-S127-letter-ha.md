@@ -9,17 +9,17 @@ type: writing
 headword: "ഹ"
 gloss: the single character ഹ — recognised inside words you already say
 romanization: "ha"
-prerequisites: [ML-S144-chillu-l]
+prerequisites: [ML-S144-chillu-l, ML-C05-hamsam]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-144]
+  knowledge: [ML-SCRIPT-RECOG-144, ML-LEX-ANCHOR-HAMSAM]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-127]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-144, ML-SCRIPT-RECOG-127]
+  knowledge: [ML-SCRIPT-RECOG-144, ML-SCRIPT-RECOG-127, ML-LEX-ANCHOR-HAMSAM]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S144-chillu-l]
 # ഹ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-144] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-144, ML-LEX-ANCHOR-HAMSAM] -->
 
 [PAUSE 1s] Before the new one: ൽ — what does it do?
 

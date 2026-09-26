@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:9b69cad35b637272",
+  "lessonIds": [
+    "ML-C130-breakfast",
+    "ML-C130-lunch",
+    "ML-C130-dinner",
+    "ML-C130-feast",
+    "ML-C130-payasam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch130.txt",
+  "json": "malayalam/narration/ch130.json",
+  "textHash": "fnv1a64:7425a54112e6b245",
+  "jsonHash": "fnv1a64:0fce2eef81f09fd7",
+  "findings": []
+}

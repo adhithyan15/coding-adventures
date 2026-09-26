@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:556ec0a10b508a79",
+  "lessonIds": [
+    "PT-C106-cereja",
+    "PT-C106-melao",
+    "PT-C106-alho",
+    "PT-C106-chocolate",
+    "PT-C106-bolacha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch106.txt",
+  "json": "portuguese/narration/ch106.json",
+  "textHash": "fnv1a64:21f69970bba9fe30",
+  "jsonHash": "fnv1a64:0680d363c42c1c3b",
+  "findings": []
+}

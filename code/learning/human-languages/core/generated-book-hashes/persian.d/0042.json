@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:81b5a424defc8ee5",
+  "lessonIds": [
+    "FA-C42-shekar",
+    "FA-C42-namak",
+    "FA-C42-kare",
+    "FA-C42-angur",
+    "FA-C42-porteghal"
+  ],
+  "tex": "persian/book/chapters/ch42-sugar-salt-butter-grapes-orange.tex"
+}

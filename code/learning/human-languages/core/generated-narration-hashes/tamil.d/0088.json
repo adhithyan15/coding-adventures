@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:f91c843077554a83",
+  "lessonIds": [
+    "TA-C88-hospital",
+    "TA-C88-vomiting",
+    "TA-C88-headache",
+    "TA-C88-health",
+    "TA-C88-sweat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch88.txt",
+  "json": "tamil/narration/ch88.json",
+  "textHash": "fnv1a64:e6d5c6bb71525568",
+  "jsonHash": "fnv1a64:c7d134a69794f79a",
+  "findings": []
+}

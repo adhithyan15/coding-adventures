@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C91-schwach",
+    "language": "german",
+    "chapter": 91,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a717ca96eb7fa69"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C86-batata",
+  "pathSegment": "MR-PATH-86-FOOD86",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-86-FOOD86",
+      "order": 1
+    }
+  ]
+}

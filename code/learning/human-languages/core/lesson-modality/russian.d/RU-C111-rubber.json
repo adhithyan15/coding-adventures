@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C111-rubber",
+    "language": "russian",
+    "chapter": 111,
+    "sequence": 5720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bd2f58f3e13ee59"
+  },
+  "findings": []
+}

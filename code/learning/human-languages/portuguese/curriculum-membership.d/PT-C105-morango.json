@@ -1,0 +1,11 @@
+{
+  "id": "PT-C105-morango",
+  "pathSegment": "PT-PATH-105-COMIDA105",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-105-COMIDA105",
+      "order": 4
+    }
+  ]
+}

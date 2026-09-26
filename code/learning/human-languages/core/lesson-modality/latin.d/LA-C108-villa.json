@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C108-villa",
+    "language": "latin",
+    "chapter": 108,
+    "sequence": 4020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2510c5ebc2cc0ccd"
+  },
+  "findings": []
+}

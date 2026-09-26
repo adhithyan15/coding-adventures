@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C127-gomme",
+    "language": "french",
+    "chapter": 127,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b633370e8a3bb3b8"
+  },
+  "findings": []
+}

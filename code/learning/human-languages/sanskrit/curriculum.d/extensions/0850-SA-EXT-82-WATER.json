@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-82-WATER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a lake, a well, a pond, an island and a shore.",
+  "prerequisites": []
+}

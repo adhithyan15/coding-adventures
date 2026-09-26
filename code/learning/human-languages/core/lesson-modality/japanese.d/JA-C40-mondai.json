@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C40-mondai",
+    "language": "japanese",
+    "chapter": 40,
+    "sequence": 2660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1308207a60c5cc31"
+  },
+  "findings": []
+}

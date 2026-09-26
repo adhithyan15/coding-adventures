@@ -3,7 +3,7 @@
     "id": "GU-R15-u-matra-r4",
     "language": "gujarati",
     "chapter": 19,
-    "sequence": 640,
+    "sequence": 653,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:67db36cc5f0782cd",
+    "sourceHash": "fnv1a64:53383f7bc03438bd",
     "detachableSegments": [
       "Writing — from sound"
     ],

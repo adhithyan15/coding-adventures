@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Underground, Tram, Journey, Holidays, Bicycle",
+  "label": "ch:pt-underground-tram-journey-holidays-bicycle",
+  "canDo": "I can say the underground, a tram, a journey, holidays and a bicycle.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-C91-bicicleta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say the underground, a tram, a journey, holidays and a bicycle.",
+    "assesses": [
+      "PT-LEX-C91-VIAGEM91-03",
+      "PT-LEX-C91-VIAGEM91-04",
+      "PT-LEX-C91-VIAGEM91-05"
+    ]
+  }
+}

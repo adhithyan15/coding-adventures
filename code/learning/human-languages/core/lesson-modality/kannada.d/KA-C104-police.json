@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C104-police",
+    "language": "kannada",
+    "chapter": 104,
+    "sequence": 4150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7545e68baff8ba50"
+  },
+  "findings": []
+}

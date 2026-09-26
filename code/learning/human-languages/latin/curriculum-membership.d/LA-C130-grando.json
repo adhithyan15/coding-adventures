@@ -1,0 +1,11 @@
+{
+  "id": "LA-C130-grando",
+  "pathSegment": "LA-PATH-130-THINGS130",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-130-THINGS130",
+      "order": 2
+    }
+  ]
+}

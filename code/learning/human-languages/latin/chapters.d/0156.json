@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "To break, To throw, To carry, To carry, To untie",
+  "label": "ch:la-to-break-to-throw-to-carry-to-carry-to-untie",
+  "canDo": "I can say to break, to throw, to carry, to carry and to untie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C156-solvo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: i can say to break, to throw, to carry, to carry and to untie.",
+    "assesses": [
+      "LA-LEX-C156-ACT156-03",
+      "LA-LEX-C156-ACT156-04",
+      "LA-LEX-C156-ACT156-05"
+    ]
+  }
+}

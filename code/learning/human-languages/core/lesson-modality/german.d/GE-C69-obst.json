@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C69-obst",
+    "language": "german",
+    "chapter": 69,
+    "sequence": 2220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fa8501f86b8aa06"
+  },
+  "findings": []
+}

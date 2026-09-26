@@ -1,0 +1,11 @@
+{
+  "id": "GE-C129-fest",
+  "pathSegment": "GE-PATH-129-FREIZEIT129",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-129-FREIZEIT129",
+      "order": 4
+    }
+  ]
+}

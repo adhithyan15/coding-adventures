@@ -99,7 +99,7 @@ CASES = [
         "description": "EOF inside end-tag attributes drops the partial token",
         "input": "</section class=x",
         "tokens": ["EOF"],
-        "diagnostics": ["end-tag-with-attributes", "eof-in-end-tag-name-state"],
+        "diagnostics": ["end-tag-with-attributes", "eof-in-tag"],
     },
     {
         "id": "attribute-named-reference",

@@ -1,0 +1,11 @@
+{
+  "id": "KA-R89-first-pass-unwell-feelings",
+  "pathSegment": "KA-PATH-89-CARE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-89-CARE",
+      "order": 5
+    }
+  ]
+}

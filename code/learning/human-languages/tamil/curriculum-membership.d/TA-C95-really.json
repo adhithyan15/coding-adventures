@@ -1,0 +1,11 @@
+{
+  "id": "TA-C95-really",
+  "pathSegment": "TA-PATH-95-RIGHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-95-RIGHT",
+      "order": 1
+    }
+  ]
+}

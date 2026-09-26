@@ -1,0 +1,11 @@
+{
+  "id": "KA-C86-show",
+  "pathSegment": "KA-PATH-86-WAIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-86-WAIT",
+      "order": 2
+    }
+  ]
+}

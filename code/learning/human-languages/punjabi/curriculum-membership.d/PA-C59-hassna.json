@@ -1,0 +1,11 @@
+{
+  "id": "PA-C59-hassna",
+  "pathSegment": "PA-PATH-59-VERBS59",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-59-VERBS59",
+      "order": 1
+    }
+  ]
+}

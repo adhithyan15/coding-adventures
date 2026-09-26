@@ -16,14 +16,14 @@ etymology_hook: "लिहिणे is Sanskrit लिखति likhati, whose r
 duration:
   max_seconds: 285
 requires:
-  knowledge: [MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE, MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL]
+  knowledge: [MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE, MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N]
 introduces:
   knowledge: [MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE, MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH]
+  knowledge: [MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE, MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN, MR-GRAMMAR-PRESENT-GENDER, MR-GRAMMAR-NE-NEUTER-NOUN, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -70,7 +70,7 @@ Latin *scrībere* also meant **to scratch**, and stands behind **scribe** and
 **script**; English **write** began as Germanic "to tear, to score."
 
 ## Grammar Lens: what Marathi writes that Hindi does not
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-GRAMMAR-NE-NEUTER-NOUN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-GRAMMAR-NE-NEUTER-NOUN] -->
 
 A lesson about writing is the place for two things Marathi writes its own way.
 Count to five: *ek, don, tīn, tsār, pāch*. **दोन** ends in a **न** that Hindi's
@@ -88,7 +88,7 @@ every *-णे* infinitive is, and every one of them is **neuter**.
 - [YOU SAY: their four roots — "to turn, to wake, to speak, to scratch"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH, MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE, MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-LIHINE, MR-ETYMON-LIKH-SCRATCH, MR-LEX-VACHNE, MR-ETYMON-VACH-VOICE, MR-LEX-SAMAJNE, MR-ETYMON-BUDH-AWAKE, MR-LEX-VICHAR-KARNE, MR-ETYMON-VICHAR-TURN, MR-SCRIPT-DON-FINAL-N] -->
 
 [PAUSE 3s] What did *likh-* mean first, and which two families named writing the
 same way? (**To scratch** — Latin *scrībere*, English *write*.) Give the four

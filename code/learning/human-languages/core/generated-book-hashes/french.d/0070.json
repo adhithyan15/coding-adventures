@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:42bf1109b0e71425",
+  "lessonIds": [
+    "FR-C70-dejeuner",
+    "FR-C70-diner",
+    "FR-C70-petit-dejeuner",
+    "FR-C70-riz",
+    "FR-C70-poire"
+  ],
+  "tex": "french/book/chapters/ch70-lunch-dinner-breakfast-rice-pear.tex"
+}

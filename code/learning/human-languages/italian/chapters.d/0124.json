@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Busy, Free, Open, Closed, Quiet",
+  "label": "ch:it-busy-free-open-closed-quiet",
+  "canDo": "I can say busy, free, open, closed and quiet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C124-tranquillo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say busy, free, open, closed and quiet.",
+    "assesses": [
+      "IT-LEX-C124-QUALITA124-03",
+      "IT-LEX-C124-QUALITA124-04",
+      "IT-LEX-C124-QUALITA124-05"
+    ]
+  }
+}

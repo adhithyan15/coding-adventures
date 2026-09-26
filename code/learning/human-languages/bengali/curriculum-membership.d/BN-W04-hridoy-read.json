@@ -1,11 +1,11 @@
 {
   "id": "BN-W04-hridoy-read",
   "pathSegment": "BN-PATH-001",
-  "pathOrder": 57,
+  "pathOrder": 62,
   "extensions": [
     {
       "id": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS",
-      "order": 14
+      "order": 16
     }
   ]
 }

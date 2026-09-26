@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:056674bcd98cae32",
+  "lessonIds": [
+    "LA-C144-humilis",
+    "LA-C144-crassus",
+    "LA-C144-tenuis",
+    "LA-C144-caecus",
+    "LA-C144-acutus"
+  ],
+  "tex": "latin/book/chapters/ch144-low-thick-thin-blind-sharp.tex"
+}

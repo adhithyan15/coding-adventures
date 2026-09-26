@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C77-holud",
+    "language": "bengali",
+    "chapter": 77,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56ccbdd6b8104805"
+  },
+  "findings": []
+}

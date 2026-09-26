@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C67-badly",
+    "language": "russian",
+    "chapter": 67,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7296906a84613e6d"
+  },
+  "findings": []
+}

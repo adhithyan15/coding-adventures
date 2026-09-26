@@ -1,0 +1,11 @@
+{
+  "id": "HI-C119-shadi",
+  "pathSegment": "HI-PATH-119-ABOUT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-119-ABOUT",
+      "order": 2
+    }
+  ]
+}

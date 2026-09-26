@@ -53,6 +53,75 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
                     )
                 )
 
+    def test_journal_requires_acceptance(self) -> None:
+        # J5b: this lane emits and compiles Journal, so its engine, its app
+        # and its package all have to trigger it.
+        for package in (
+            "rust/journal-core",
+            "rust/journal-mosaic-app",
+            "mosaic/programs/journal-app",
+        ):
+            with self.subTest(package=package):
+                self.assertTrue(
+                    MODULE.requires_mosaic_swift_runtime(
+                        {"affected_packages": [package]}
+                    )
+                )
+
+    def test_journal_block_emits_strictly_and_builds(self) -> None:
+        """Journal's block (J5b): the strict binding, pinned-empty reports,
+        and the build gate, all inside the block itself."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("# ---- Journal: emit and BUILD on SwiftUI", workflow)
+        start = workflow.index("# ---- Journal: emit and BUILD on SwiftUI")
+        journal_block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app",
+            journal_block,
+        )
+        self.assertIn("libjournal_mosaic_app.dylib", journal_block)
+        self.assertIn("--backend swiftui", journal_block)
+        self.assertIn("--profile native-complete", journal_block)
+        self.assertIn('--runtime-library "$journal_swift_runtime"', journal_block)
+        self.assertIn("'.replacedGeneratedFiles == []'", journal_block)
+        self.assertIn('.degradations | type == "array" and length == 0', journal_block)
+        self.assertIn('swift build --package-path "$journal_swift_output/swiftui"', journal_block)
+
+    def test_ios_links_the_real_runtime_statically(self) -> None:
+        """UI89 §2.1: Trestle is built for the iOS Simulator and devices with
+        its Rust engine linked from an .xcframework, and nm proves the engine
+        is in both binaries."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# iOS and iPadOS with the REAL runtime linked in (UI89")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn("rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios", block)
+        self.assertIn("bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app", block)
+        self.assertIn('--runtime-library "$ios_runtime"', block)
+        self.assertIn("MOSAIC_RUNTIME_STATIC", block)
+        self.assertIn("-destination 'generic/platform=iOS Simulator'", block)
+        self.assertIn("-destination 'generic/platform=iOS'", block)
+        self.assertIn("nm -gU", block)
+
+    def test_ios_app_target_builds_installs_and_launches(self) -> None:
+        """UI89 §2.2: the generated Xcode project builds an .app with the
+        package's identity and the engine, and it keeps running on a
+        simulator."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# An installable iOS / iPadOS APP (UI89")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn("xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator", block)
+        self.assertIn("nm -gU \"$ios_app/App\"", block)
+        self.assertIn("= dev.codingadventures.trestle", block)
+        self.assertIn("xcrun simctl install", block)
+        self.assertIn("xcrun simctl launch", block)
+        self.assertIn("launchctl list | grep -q 'dev.codingadventures.trestle'", block)
+
+    def test_ios_project_generator_requires_acceptance(self) -> None:
+        self.assertIn("rust/mosaic-ios-project", MODULE.ACCEPTANCE_PACKAGES)
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_swift_runtime(
@@ -136,7 +205,9 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "Round-trip Rust engine through standard SwiftUI binding", workflow
         )
-        self.assertIn("timeout-minutes: 15", swift_runtime_step)
+        # 30, not 15: since UI89 §2.2 the step also boots an iOS simulator
+        # and launches the generated app.
+        self.assertIn("timeout-minutes: 30", swift_runtime_step)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,

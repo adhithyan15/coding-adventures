@@ -1,0 +1,11 @@
+{
+  "id": "IT-C59-piatto",
+  "pathSegment": "IT-PATH-59-TAVOLA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-59-TAVOLA",
+      "order": 1
+    }
+  ]
+}

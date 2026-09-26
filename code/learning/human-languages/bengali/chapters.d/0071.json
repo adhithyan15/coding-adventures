@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Bear, Donkey, Butterfly, Ant, Hen",
+  "label": "ch:bn-bear-donkey-butterfly-ant-hen",
+  "canDo": "I can say a bear, a donkey, a butterfly, an ant and a hen.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C71-murgi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say a bear, a donkey, a butterfly, an ant and a hen.",
+    "assesses": [
+      "BN-LEX-C71-ANIMALS71-03",
+      "BN-LEX-C71-ANIMALS71-04",
+      "BN-LEX-C71-ANIMALS71-05"
+    ]
+  }
+}

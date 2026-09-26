@@ -1,10 +1,12 @@
 {
   "language": "german",
   "chapter": 31,
-  "sourceHash": "fnv1a64:88dd7fbb0bb28d8b",
+  "sourceHash": "fnv1a64:88819430c3fa1e61",
   "lessonIds": [
     "GE-C18-ja",
-    "GE-C18-nein"
+    "GE-C18-ja-more",
+    "GE-C18-nein",
+    "GE-C18-nein-more"
   ],
   "tex": "german/book/chapters/ch31-yes-and-no.tex"
 }

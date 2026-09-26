@@ -1,0 +1,11 @@
+{
+  "id": "UR-C125-jazira",
+  "pathSegment": "UR-PATH-125-THINGS125",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-125-THINGS125",
+      "order": 3
+    }
+  ]
+}

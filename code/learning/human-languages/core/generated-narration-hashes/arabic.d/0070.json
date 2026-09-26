@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:4076d05711dc4c55",
+  "lessonIds": [
+    "AR-C70-kursi",
+    "AR-C70-tawila",
+    "AR-C70-jidar",
+    "AR-C70-sarir",
+    "AR-C70-ard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch70.txt",
+  "json": "arabic/narration/ch70.json",
+  "textHash": "fnv1a64:d842bbaee39e0e4e",
+  "jsonHash": "fnv1a64:7e58318fb24d5c78",
+  "findings": []
+}

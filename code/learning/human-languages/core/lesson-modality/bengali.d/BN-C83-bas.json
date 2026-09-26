@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C83-bas",
+    "language": "bengali",
+    "chapter": 83,
+    "sequence": 4310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52d1a4e49028fd47"
+  },
+  "findings": []
+}

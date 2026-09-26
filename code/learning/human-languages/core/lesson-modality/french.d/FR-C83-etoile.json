@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C83-etoile",
+    "language": "french",
+    "chapter": 83,
+    "sequence": 3540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9d569193c080fd7"
+  },
+  "findings": []
+}

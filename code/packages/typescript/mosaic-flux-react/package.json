@@ -13,9 +13,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^19.2.15",
-    "@vitest/coverage-v8": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.11",
     "typescript": "^5.0.0",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "react": "^19.2.6"

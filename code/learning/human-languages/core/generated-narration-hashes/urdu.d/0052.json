@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:7df9991ae5417866",
+  "lessonIds": [
+    "UR-C52-pakarna",
+    "UR-C52-katna",
+    "UR-C52-rokna",
+    "UR-C52-batana",
+    "UR-C52-khona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch52.txt",
+  "json": "urdu/narration/ch52.json",
+  "textHash": "fnv1a64:a6711cfb81177ad0",
+  "jsonHash": "fnv1a64:7ba5d7ba5d5672a5",
+  "findings": []
+}

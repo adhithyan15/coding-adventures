@@ -1,11 +1,11 @@
 {
   "id": "MR-W07-nna",
   "pathSegment": "MR-PATH-030",
-  "pathOrder": 3,
+  "pathOrder": 6,
   "extensions": [
     {
       "id": "MR-EXT-033-RETROFLEX-RUNWAY",
-      "order": 3
+      "order": 6
     }
   ]
 }

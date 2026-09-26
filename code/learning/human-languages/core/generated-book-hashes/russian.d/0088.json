@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:c8705fb74a33d832",
+  "lessonIds": [
+    "RU-C88-post-office",
+    "RU-C88-cinema",
+    "RU-C88-supermarket",
+    "RU-C88-swimming-pool",
+    "RU-C88-stadium"
+  ],
+  "tex": "russian/book/chapters/ch88-post-office-cinema-supermarket-swimming-pool-stadium.tex"
+}

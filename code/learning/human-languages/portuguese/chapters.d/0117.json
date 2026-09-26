@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Volcano, Cave, Waterfall, Wood, Donkey",
+  "label": "ch:pt-volcano-cave-waterfall-wood-donkey",
+  "canDo": "I can say a volcano, a cave, a waterfall, a wood and a donkey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C117-burro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a volcano, a cave, a waterfall, a wood and a donkey.",
+    "assesses": [
+      "PT-LEX-C117-NATUREZA117-03",
+      "PT-LEX-C117-NATUREZA117-04",
+      "PT-LEX-C117-NATUREZA117-05"
+    ]
+  }
+}

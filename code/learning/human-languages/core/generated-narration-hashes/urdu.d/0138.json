@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:291f93cdbb3ac8fd",
+  "lessonIds": [
+    "UR-C138-girna",
+    "UR-C138-urna",
+    "UR-C138-tairna",
+    "UR-C138-bajana",
+    "UR-C138-chhuna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch138.txt",
+  "json": "urdu/narration/ch138.json",
+  "textHash": "fnv1a64:2e87f1d45faec679",
+  "jsonHash": "fnv1a64:75045bfe72640e26",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Welcome and Good Wishes",
+  "label": "ch:ml-welcome-good-wishes",
+  "canDo": "I can congratulate someone, speak of an invitation and a gift, welcome a guest, and give good wishes.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ML-C124-wishes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can congratulate someone, speak of an invitation and a gift, welcome a guest, and give good wishes.",
+    "assesses": [
+      "ML-LEX-C124-WELCOME-03",
+      "ML-LEX-C124-WELCOME-04",
+      "ML-LEX-C124-WELCOME-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C67-pioggia",
+    "language": "italian",
+    "chapter": 67,
+    "sequence": 2950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c488331334666865"
+  },
+  "findings": []
+}

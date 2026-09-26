@@ -12,6 +12,19 @@ Qt/QML uses Qt Core's `QLibrary`, JSON, and variant APIs. All five own the opaqu
 runtime handle and returned buffers, supply the native startup context, sequence
 semantic events, and return decoded updates to the generated view.
 
+## Platform libraries (UI87 §7)
+
+Beside each runtime binding, this crate ships the operating-system
+capabilities every generated app gets, so no app carries its own copy. The
+first is Compose's `MosaicPlatformEffects.kt` (`compose_platform_effects()`):
+`files.open` and `files.save` through the native file dialog, and a router that
+sends each effect to the app's own `[host_effects]` handler or to this library
+by kind. Its behaviour is tested with fake dialogs by
+`conformance/compose/MosaicPlatformEffectsTest.kt`. The other backends follow
+(UI87 §7.3).
+
+## Persistence
+
 Emitted applications also persist the runtime's opaque snapshot after every
 successful dispatch and supply it as `restoredSnapshot` before the first visible
 render. Writes use a same-directory temporary file plus the platform's atomic

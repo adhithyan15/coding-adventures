@@ -1,0 +1,11 @@
+{
+  "id": "IT-C55-uovo",
+  "pathSegment": "IT-PATH-55-DISPENSA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-55-DISPENSA",
+      "order": 4
+    }
+  ]
+}

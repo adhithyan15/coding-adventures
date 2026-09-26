@@ -1,0 +1,384 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 81,
+  "title": "The Letter Yo",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:dbb91e5407b98490",
+  "lessons": [
+    {
+      "id": "RU-W81-yo",
+      "sequence": 4040,
+      "title": "ё (yo) — the yo inside ребёнок",
+      "headword": "ё",
+      "romanization": "yo",
+      "gloss": "yo — the yo inside ребёнок",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:267c5e0e8efbcf4b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ё",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ё and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write я and ю once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ребёнок (rebyónok), \"a child\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ё",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ё — yo."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inside ребёнок (rebyónok), \"a child\", and in мёд, чёрный and тёплый. It is е with two dots above it, and the syllable that carries it takes the stress. Many printed texts leave the dots off; this book keeps them, so you can see how the word is said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ё",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ё and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ребёнок and point at ё (yo) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ребёнок** and point at ё inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ё three times, saying yo as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ё three times, saying *yo* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ю, then ё (yo), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ю, then ё, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ребёнок aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ребёнок** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ё? (yo, yo.) Which word did it come from? (ребёнок, rebyónok, \"a child\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R81-letters-first-pass",
+      "sequence": 4050,
+      "title": "(one letter) (odna bukva) — From the letter to the word — a first pass",
+      "headword": "(one letter)",
+      "romanization": "odna bukva",
+      "gloss": "first pass over the one letter taken from words you already say",
+      "script": "cyrillic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:300747cf744db3d8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ребёнок (rebyónok), then write the letter it gave you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "name",
+                "the word it came from"
+              ],
+              "columns": 3,
+              "rowCount": 1,
+              "utterances": [
+                "letter: ё. name: yo. the word it came from: ребёнок rebyónok."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each letter in the table from memory, then check it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each letter in the table from memory, then check it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word each one came from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word each one came from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word in the table aloud, and point at its letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word in the table aloud, and point at its letter]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word did each letter come from? (ё (yo) from ребёнок.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R81-letters-second-pass",
+      "sequence": 4060,
+      "title": "(one letter) (odna bukva) — From the word back to the letter — a second pass",
+      "headword": "(one letter)",
+      "romanization": "odna bukva",
+      "gloss": "second pass: the same one letter, from the word back to the letter",
+      "script": "cyrillic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a457ff896e240c47",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ё (yo) without looking, then say the word it came from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "name",
+                "the word it came from"
+              ],
+              "columns": 3,
+              "rowCount": 1,
+              "utterances": [
+                "letter: ё. name: yo. the word it came from: ребёнок rebyónok."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each word in the table, then write the letter it gave you without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each word in the table, then write the letter it gave you without looking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each letter once more, slowly, larger than it is printed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each letter once more, slowly, larger than it is printed]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say each word in the table once more, and name the letter you took from it."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

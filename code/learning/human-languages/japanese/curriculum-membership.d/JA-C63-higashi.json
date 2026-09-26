@@ -1,0 +1,11 @@
+{
+  "id": "JA-C63-higashi",
+  "pathSegment": "JA-PATH-63-WORLD63",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-63-WORLD63",
+      "order": 3
+    }
+  ]
+}

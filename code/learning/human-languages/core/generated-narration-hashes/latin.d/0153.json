@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:3770a9fe31dc3460",
+  "lessonIds": [
+    "LA-C153-nubilus",
+    "LA-C153-ventosus",
+    "LA-C153-aedifico",
+    "LA-C153-ascendo",
+    "LA-C153-descendo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch153.txt",
+  "json": "latin/narration/ch153.json",
+  "textHash": "fnv1a64:2f287a2a7260ead6",
+  "jsonHash": "fnv1a64:bbaa3fb83346995f",
+  "findings": []
+}

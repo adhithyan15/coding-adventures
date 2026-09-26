@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C45-mudo",
+    "language": "marwadi",
+    "chapter": 45,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d66a9840905f10d3"
+  },
+  "findings": []
+}

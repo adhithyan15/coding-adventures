@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C32-ane-write
 spine_node: SPINE-DESCRIBE-QUALITIES
-sequence: 1850
+sequence: 1863
 delivery: script
 chapter: 36
 type: writing

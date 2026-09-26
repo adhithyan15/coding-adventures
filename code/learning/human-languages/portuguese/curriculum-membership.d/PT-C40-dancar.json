@@ -1,0 +1,11 @@
+{
+  "id": "PT-C40-dancar",
+  "pathSegment": "PT-PATH-40-VERBOS1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-40-VERBOS1",
+      "order": 1
+    }
+  ]
+}

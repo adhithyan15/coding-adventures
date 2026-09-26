@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:eeca35d153807072",
+  "lessonIds": [
+    "PA-C73-khed",
+    "PA-C73-chitthi",
+    "PA-C73-rukkh",
+    "PA-C73-phull",
+    "PA-C73-patta",
+    "PA-R73-first-pass-the-body-family-verbs-and-food",
+    "PA-R73-second-pass-home-school-and-nature"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch73.txt",
+  "json": "punjabi/narration/ch73.json",
+  "textHash": "fnv1a64:e78b108db65face3",
+  "jsonHash": "fnv1a64:420a1fe67da1ab41",
+  "findings": []
+}

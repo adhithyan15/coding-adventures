@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:ef356d10a4d984e3",
+  "lessonIds": [
+    "GU-C62-bed",
+    "GU-C62-cot",
+    "GU-C62-table",
+    "GU-C62-fan",
+    "GU-C62-lock"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch62.txt",
+  "json": "gujarati/narration/ch62.json",
+  "textHash": "fnv1a64:dbf1b8956280d0dd",
+  "jsonHash": "fnv1a64:a0c35719cd538924",
+  "findings": []
+}

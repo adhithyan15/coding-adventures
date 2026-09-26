@@ -1,0 +1,11 @@
+{
+  "id": "RU-C105-biscuits",
+  "pathSegment": "RU-PATH-105-THINGS105",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-105-THINGS105",
+      "order": 2
+    }
+  ]
+}

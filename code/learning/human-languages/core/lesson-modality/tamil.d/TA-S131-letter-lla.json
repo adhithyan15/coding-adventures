@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S131-letter-lla",
+    "language": "tamil",
+    "chapter": 110,
+    "sequence": 4710,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f9083f6c6b3a11c5",
+    "detachableSegments": [
+      "Script you'll notice: ள",
+      "Writing: ள"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

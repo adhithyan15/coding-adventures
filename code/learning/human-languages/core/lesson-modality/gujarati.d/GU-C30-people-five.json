@@ -3,7 +3,7 @@
     "id": "GU-C30-people-five",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1750,
+    "sequence": 1763,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ac4f64ad554e3d64"
+    "sourceHash": "fnv1a64:b5d92c7143e5f846"
   },
   "findings": []
 }

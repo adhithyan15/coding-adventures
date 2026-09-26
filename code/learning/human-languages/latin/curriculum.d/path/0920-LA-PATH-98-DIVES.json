@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-98-DIVES",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-98-DIVES"
+  ],
+  "after": []
+}

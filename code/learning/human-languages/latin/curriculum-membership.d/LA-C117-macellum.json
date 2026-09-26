@@ -1,0 +1,11 @@
+{
+  "id": "LA-C117-macellum",
+  "pathSegment": "LA-PATH-117-LOC117",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-117-LOC117",
+      "order": 2
+    }
+  ]
+}

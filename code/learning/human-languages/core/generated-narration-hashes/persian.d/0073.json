@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:102f8005f740951a",
+  "lessonIds": [
+    "FA-C73-forudgah",
+    "FA-C73-resturan",
+    "FA-C73-lebas",
+    "FA-C73-pirahan",
+    "FA-C73-shalvar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch73.txt",
+  "json": "persian/narration/ch73.json",
+  "textHash": "fnv1a64:c16f81d6ba1b10af",
+  "jsonHash": "fnv1a64:55af6ecbe8c9f381",
+  "findings": []
+}

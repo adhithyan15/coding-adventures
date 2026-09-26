@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:502579ac7839bdcc",
+  "lessonIds": [
+    "PA-C53-udas",
+    "PA-C53-pita",
+    "PA-C53-mata",
+    "PA-C53-puttar",
+    "PA-C53-dhi"
+  ],
+  "tex": "punjabi/book/chapters/ch53-sad-father-mother-son-daughter.tex"
+}

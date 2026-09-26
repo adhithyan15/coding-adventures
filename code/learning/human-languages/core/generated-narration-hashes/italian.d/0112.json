@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:d30f4dc7b38e894c",
+  "lessonIds": [
+    "IT-C112-fornaio",
+    "IT-C112-autista",
+    "IT-C112-avvocato",
+    "IT-C112-ingegnere",
+    "IT-C112-pompiere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch112.txt",
+  "json": "italian/narration/ch112.json",
+  "textHash": "fnv1a64:9e425545c28e2718",
+  "jsonHash": "fnv1a64:dc34b7516716c18d",
+  "findings": []
+}

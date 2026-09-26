@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-namaste-read
 spine_node: SPINE-MEET-GREET
-sequence: 11
+sequence: 12
 delivery: script
 chapter: 1
 type: writing

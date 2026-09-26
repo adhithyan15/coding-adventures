@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C66-zud",
+    "language": "persian",
+    "chapter": 66,
+    "sequence": 3200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74657bb6d9ced977"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C111-advogado",
+  "pathSegment": "PT-PATH-111-TRABALHO111",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-111-TRABALHO111",
+      "order": 1
+    }
+  ]
+}

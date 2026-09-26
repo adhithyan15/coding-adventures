@@ -3,7 +3,7 @@
     "id": "GU-C31-samajto-nathi",
     "language": "gujarati",
     "chapter": 35,
-    "sequence": 1790,
+    "sequence": 1803,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3b3e33d34d8481b9"
+    "sourceHash": "fnv1a64:f642ceb0b90e2d5e"
   },
   "findings": []
 }

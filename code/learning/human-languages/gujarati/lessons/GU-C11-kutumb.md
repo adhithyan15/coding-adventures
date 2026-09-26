@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C11-kutumb
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 570
+sequence: 583
 chapter: 17
 type: word
 headword: કુટુંબ

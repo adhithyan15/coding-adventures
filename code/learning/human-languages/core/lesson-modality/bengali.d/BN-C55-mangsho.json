@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C55-mangsho",
+    "language": "bengali",
+    "chapter": 55,
+    "sequence": 2910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57f7ec8b522032e7"
+  },
+  "findings": []
+}

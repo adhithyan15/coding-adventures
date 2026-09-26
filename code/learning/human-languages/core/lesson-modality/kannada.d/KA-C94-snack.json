@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C94-snack",
+    "language": "kannada",
+    "chapter": 94,
+    "sequence": 3610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feb4a57beb7fd238"
+  },
+  "findings": []
+}

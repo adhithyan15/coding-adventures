@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C99-colla",
+    "language": "italian",
+    "chapter": 99,
+    "sequence": 4690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e9611a70b9ce5a0"
+  },
+  "findings": []
+}

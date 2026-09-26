@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:5202db695abe1492",
+  "lessonIds": [
+    "UR-C119-jus",
+    "UR-C119-sup",
+    "UR-C119-nan",
+    "UR-C119-paratha",
+    "UR-C119-samosa"
+  ],
+  "tex": "urdu/book/chapters/ch119-juice-soup-naan-bread-paratha-samosa.tex"
+}

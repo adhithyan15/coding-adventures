@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:9d02c50849237188",
+  "lessonIds": [
+    "FR-C122-sandwich",
+    "FR-C122-sauce",
+    "FR-C122-vinaigre",
+    "FR-C122-dessert",
+    "FR-C122-repas"
+  ],
+  "tex": "french/book/chapters/ch122-sandwich-sauce-vinegar-dessert-meal.tex"
+}

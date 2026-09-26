@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R29-sky-five-r1
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1690
+sequence: 1703
 chapter: 33
 type: practice
 headword: સૂરજ — ચંદ્ર — આકાશ — વરસાદ — નદી

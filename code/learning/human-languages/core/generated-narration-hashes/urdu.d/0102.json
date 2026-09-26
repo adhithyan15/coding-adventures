@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:2e58ee9cd0b68826",
+  "lessonIds": [
+    "UR-C102-bavarchikhana",
+    "UR-C102-bathrum",
+    "UR-C102-tikat",
+    "UR-C102-daftar",
+    "UR-C102-kutubkhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch102.txt",
+  "json": "urdu/narration/ch102.json",
+  "textHash": "fnv1a64:bc0f2f16f7d438f9",
+  "jsonHash": "fnv1a64:15ec3813c251738d",
+  "findings": []
+}

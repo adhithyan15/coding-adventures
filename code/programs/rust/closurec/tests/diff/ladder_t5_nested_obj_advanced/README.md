@@ -27,16 +27,5 @@ java -Duser.language=en -Duser.country=US -Duser.timezone=UTC -Dfile.encoding=UT
 
 ## Status
 
-**Known divergence** — see `tests/ladder/divergences.json`.
+Matches upstream byte for byte.
 
-## Divergence
-
-`closurec` currently emits:
-
-```js
-var o={a:{b:{c:1}}};console.log(o.a.b.c);
-```
-
-closurec does not propagate a single-use nested object literal through a property chain to its use site (CCR-068).
-
-Tracked in https://github.com/adhithyan15/coding-adventures/issues/15837. The divergence is pinned in `tests/ladder/divergences.json`, so closing the gap fails this fixture's harness assertion — that failure is the signal to delete the ledger entry.

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C52-paper",
+  "pathSegment": "RU-PATH-52-SCHOOL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-52-SCHOOL",
+      "order": 2
+    }
+  ]
+}

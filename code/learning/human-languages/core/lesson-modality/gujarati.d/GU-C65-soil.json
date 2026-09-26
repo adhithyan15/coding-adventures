@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C65-soil",
+    "language": "gujarati",
+    "chapter": 65,
+    "sequence": 3343,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:226fa653b6d26d43"
+  },
+  "findings": []
+}

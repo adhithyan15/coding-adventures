@@ -1,0 +1,11 @@
+{
+  "id": "GE-C92-schmutzig",
+  "pathSegment": "GE-PATH-92-ADJ4",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-92-ADJ4",
+      "order": 1
+    }
+  ]
+}

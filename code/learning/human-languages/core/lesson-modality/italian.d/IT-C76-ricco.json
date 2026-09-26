@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C76-ricco",
+    "language": "italian",
+    "chapter": 76,
+    "sequence": 3400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d22f91c08d42af5c"
+  },
+  "findings": []
+}

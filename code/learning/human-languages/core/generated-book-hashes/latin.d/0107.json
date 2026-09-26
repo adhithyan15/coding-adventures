@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:42606b05d8c8dcf5",
+  "lessonIds": [
+    "LA-C107-urbs",
+    "LA-C107-oppidum",
+    "LA-C107-forum",
+    "LA-C107-templum",
+    "LA-C107-taberna"
+  ],
+  "tex": "latin/book/chapters/ch107-city-town-forum-temple-shop.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C54-said",
+    "language": "arabic",
+    "chapter": 54,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d21505881d3b5650"
+  },
+  "findings": []
+}

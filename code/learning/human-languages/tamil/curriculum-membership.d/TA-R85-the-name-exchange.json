@@ -1,0 +1,11 @@
+{
+  "id": "TA-R85-the-name-exchange",
+  "pathSegment": "TA-PATH-85-THIRD-PERSON",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-85-THIRD-PERSON",
+      "order": 5
+    }
+  ]
+}

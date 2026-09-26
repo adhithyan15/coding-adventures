@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C56-gaavu",
+    "language": "gujarati",
+    "chapter": 56,
+    "sequence": 2853,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20799f2a3ff217f2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C101-people",
+    "language": "russian",
+    "chapter": 101,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:964ed2955d824977"
+  },
+  "findings": []
+}

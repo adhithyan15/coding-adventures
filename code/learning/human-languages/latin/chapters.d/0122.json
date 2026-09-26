@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Nail, Hammer, Saw, Axe, Ladder",
+  "label": "ch:la-nail-hammer-saw-axe-ladder",
+  "canDo": "I can say a nail, a hammer, a saw, an axe and a ladder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C122-scalae",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a nail, a hammer, a saw, an axe and a ladder.",
+    "assesses": [
+      "LA-LEX-C122-THINGS122-03",
+      "LA-LEX-C122-THINGS122-04",
+      "LA-LEX-C122-THINGS122-05"
+    ]
+  }
+}

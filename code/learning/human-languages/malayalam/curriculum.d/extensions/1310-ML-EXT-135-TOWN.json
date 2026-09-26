@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-135-TOWN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the market, a temple, a church or mosque, a bridge and a village.",
+  "prerequisites": []
+}

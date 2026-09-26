@@ -1,0 +1,11 @@
+{
+  "id": "GE-C110-neben",
+  "pathSegment": "GE-PATH-110-RICHTUNG110",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-110-RICHTUNG110",
+      "order": 0
+    }
+  ]
+}

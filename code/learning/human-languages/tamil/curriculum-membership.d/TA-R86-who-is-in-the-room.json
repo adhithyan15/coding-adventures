@@ -1,0 +1,11 @@
+{
+  "id": "TA-R86-who-is-in-the-room",
+  "pathSegment": "TA-PATH-86-ACCUSATIVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-86-ACCUSATIVE",
+      "order": 4
+    }
+  ]
+}

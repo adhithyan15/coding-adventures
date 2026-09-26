@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "To lie, To get dressed, To tell, To feel, To fall",
+  "label": "ch:ge-to-lie-to-get-dressed-to-tell-to-feel-to-fall",
+  "canDo": "I can say to lie, to get dressed, to tell, to feel and to fall.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C140-fallen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say to lie, to get dressed, to tell, to feel and to fall.",
+    "assesses": [
+      "GE-LEX-C140-VERB140-03",
+      "GE-LEX-C140-VERB140-04",
+      "GE-LEX-C140-VERB140-05"
+    ]
+  }
+}

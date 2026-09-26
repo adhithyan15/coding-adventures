@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Wall, Bed, Cupboard, Ground, Mirror",
+  "label": "ch:fa-wall-bed-cupboard-ground-mirror",
+  "canDo": "I can say a wall, a bed, a cupboard, the ground and a mirror.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FA-C46-ayene",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can say a wall, a bed, a cupboard, the ground and a mirror.",
+    "assesses": [
+      "FA-LEX-C46-HOME46-03",
+      "FA-LEX-C46-HOME46-04",
+      "FA-LEX-C46-HOME46-05"
+    ]
+  }
+}

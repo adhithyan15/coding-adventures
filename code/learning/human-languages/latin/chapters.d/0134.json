@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Cow, Mule, Camel, Monkey, Dolphin",
+  "label": "ch:la-cow-mule-camel-monkey-dolphin",
+  "canDo": "I can say a cow, a mule, a camel, a monkey and a dolphin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C134-delphinus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say a cow, a mule, a camel, a monkey and a dolphin.",
+    "assesses": [
+      "LA-LEX-C134-THINGS134-03",
+      "LA-LEX-C134-THINGS134-04",
+      "LA-LEX-C134-THINGS134-05"
+    ]
+  }
+}

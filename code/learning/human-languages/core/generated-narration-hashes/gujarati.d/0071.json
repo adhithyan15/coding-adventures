@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:8bd270d03a80329f",
+  "lessonIds": [
+    "GU-C71-white",
+    "GU-C71-brown",
+    "GU-C71-pink",
+    "GU-C71-beautiful",
+    "GU-C71-bad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch71.txt",
+  "json": "gujarati/narration/ch71.json",
+  "textHash": "fnv1a64:052f80b83dac2910",
+  "jsonHash": "fnv1a64:aaa81e92f2b65d4d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C78-gaudeo",
+    "language": "latin",
+    "chapter": 78,
+    "sequence": 2530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b754c241c00db3c"
+  },
+  "findings": []
+}

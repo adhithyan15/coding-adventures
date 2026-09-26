@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:ff866bb214844830",
+  "lessonIds": [
+    "ML-C140-pen",
+    "ML-C140-pencil",
+    "ML-C140-paper",
+    "ML-C140-class",
+    "ML-C140-answer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch140.txt",
+  "json": "malayalam/narration/ch140.json",
+  "textHash": "fnv1a64:c96b5974e0d49299",
+  "jsonHash": "fnv1a64:6f35ae6a37bd2fd3",
+  "findings": []
+}

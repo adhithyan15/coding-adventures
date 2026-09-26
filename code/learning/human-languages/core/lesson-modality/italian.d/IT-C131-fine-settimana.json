@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C131-fine-settimana",
+    "language": "italian",
+    "chapter": 131,
+    "sequence": 6500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73ba9bb78945ee48"
+  },
+  "findings": []
+}

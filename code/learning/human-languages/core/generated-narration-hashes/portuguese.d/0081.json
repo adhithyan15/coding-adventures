@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:8f03dac612cb03d2",
+  "lessonIds": [
+    "PT-C81-lembrar",
+    "PT-C81-esquecer",
+    "PT-C81-procurar",
+    "PT-C81-perder",
+    "PT-C81-chegar",
+    "PT-R81-first-pass-nature-animals-and-describing-words",
+    "PT-R81-second-pass-time-the-town-clothes-and-more-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch81.txt",
+  "json": "portuguese/narration/ch81.json",
+  "textHash": "fnv1a64:c8ae6c02ca738ca1",
+  "jsonHash": "fnv1a64:242247af9e46d560",
+  "findings": []
+}

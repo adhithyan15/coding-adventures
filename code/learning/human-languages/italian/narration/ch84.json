@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 84,
+  "title": "Hotel, Pharmacy, Post Office, Police, Library",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:a8229c1453dfca62",
+  "lessons": [
+    {
+      "id": "IT-C84-albergo",
+      "sequence": 3780,
+      "title": "l'albergo — a hotel",
+      "headword": "l'albergo",
+      "romanization": "l'albergo",
+      "gloss": "a hotel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48397ab2e0561244",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a museum, then the Italian for a restaurant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: l'albergo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "l'albergo — \"a hotel\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'albergo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'albergo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "l'albergo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *l'albergo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say l'albergo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *l'albergo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a museum, then the Italian for a restaurant, then say l'albergo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a museum, then the Italian for a restaurant, then say *l'albergo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does l'albergo mean? (\"A hotel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C84-farmacia",
+      "sequence": 3790,
+      "title": "la farmacia — a pharmacy",
+      "headword": "la farmacia",
+      "romanization": "la farmacia",
+      "gloss": "a pharmacy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b0d7b9a5fb2646c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a restaurant, then the Italian for a hotel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la farmacia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la farmacia — \"a pharmacy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la farmacia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la farmacia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la farmacia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la farmacia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la farmacia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la farmacia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a restaurant, then the Italian for a hotel, then say la farmacia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a restaurant, then the Italian for a hotel, then say *la farmacia* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la farmacia mean? (\"A pharmacy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C84-posta",
+      "sequence": 3800,
+      "title": "la posta — the post office; the post",
+      "headword": "la posta",
+      "romanization": "la posta",
+      "gloss": "the post office; the post",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80ddbb51e1bddfca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a hotel, then the Italian for a pharmacy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la posta",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la posta — \"the post office; the post\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la posta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la posta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la posta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la posta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la posta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la posta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a hotel, then the Italian for a pharmacy, then say la posta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a hotel, then the Italian for a pharmacy, then say *la posta* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la posta mean? (\"The post office; the post\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C84-polizia",
+      "sequence": 3810,
+      "title": "la polizia — the police",
+      "headword": "la polizia",
+      "romanization": "la polizia",
+      "gloss": "the police",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da3b83cddf0d7498",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a pharmacy, then the Italian for the post office; the post."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la polizia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la polizia — \"the police\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la polizia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la polizia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la polizia, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la polizia*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la polizia",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la polizia*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a pharmacy, then the Italian for the post office; the post, then say la polizia again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a pharmacy, then the Italian for the post office; the post, then say *la polizia* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la polizia mean? (\"The police\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C84-biblioteca",
+      "sequence": 3820,
+      "title": "la biblioteca — a library",
+      "headword": "la biblioteca",
+      "romanization": "la biblioteca",
+      "gloss": "a library",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62ef20e74ea5c23b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for the post office; the post, then the Italian for the police."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la biblioteca",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la biblioteca — \"a library\". A false friend: a bookshop is la libreria."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la biblioteca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la biblioteca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la biblioteca, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la biblioteca*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la biblioteca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la biblioteca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for the post office; the post, then the Italian for the police, then say la biblioteca again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for the post office; the post, then the Italian for the police, then say *la biblioteca* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la biblioteca mean? (\"A library\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R84-first-pass-things-nature-and-animals",
+      "sequence": 3830,
+      "title": "Things, nature and animals — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 61-72",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ffb46ab85a2a143",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for the police and a library."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bottle, a pen, paper, a notebook, a pencil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bottle, a pen, paper, a notebook, a pencil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bag, a phone, an umbrella, money, a present",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bag, a phone, an umbrella, money, a present]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a watch, glasses, a box, a suitcase, a ticket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a watch, glasses, a box, a suitcase, a ticket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tree, a flower, a leaf, a mountain, a wood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tree, a flower, a leaf, a mountain, a wood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a river, a lake, the sea, a stone, sand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a river, a lake, the sea, a stone, sand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a beach, an island, a field, the sun, the moon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a beach, an island, a field, the sun, the moon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a star, a cloud, rain, the wind, fire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a star, a cloud, rain, the wind, fire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dog, a cat, a horse, a cow, a pig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dog, a cat, a horse, a cow, a pig]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bird, a mouse, a wolf, a bear, a fox",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bird, a mouse, a wolf, a bear, a fox]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a snake, a hen, a duck, a sheep, a goat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a snake, a hen, a duck, a sheep, a goat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lion, a monkey, a bee, an ant, an elephant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lion, a monkey, a bee, an ant, an elephant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "big, small, new, old, beautiful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: big, small, new, old, beautiful]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bottle? (la bottiglia.) A pen? (la penna.) Paper? (la carta.) A notebook? (il quaderno.) A pencil? (la matita.) A bag? (la borsa.) A phone? (il telefono.) An umbrella? (l'ombrello.) Money? (i soldi.) A present? (il regalo.) A watch? (l'orologio.) Glasses? (gli occhiali.) A box? (la scatola.) A suitcase? (la valigia.) A ticket? (il biglietto.) A tree? (l'albero.) A flower? (il fiore.) A leaf? (la foglia.) A mountain? (la montagna.) A wood? (il bosco.) A river? (il fiume.) A lake? (il lago.) The sea? (il mare.) A stone? (la pietra.) Sand? (la sabbia.) A beach? (la spiaggia.) An island? (l'isola.) A field? (il campo.) The sun? (il sole.) The moon? (la luna.) A star? (la stella.) A cloud? (la nuvola.) Rain? (la pioggia.) The wind? (il vento.) Fire? (il fuoco.) A dog? (il cane.) A cat? (il gatto.) A horse? (il cavallo.) A cow? (la mucca.) A pig? (il maiale.) A bird? (l'uccello.) A mouse? (il topo.) A wolf? (il lupo.) A bear? (l'orso.) A fox? (la volpe.) A snake? (il serpente.) A hen? (la gallina.) A duck? (l'anatra.) A sheep? (la pecora.) A goat? (la capra.) A lion? (il leone.) A monkey? (la scimmia.) A bee? (l'ape.) An ant? (la formica.) An elephant? (l'elefante.) Big? (grande.) Small? (piccolo.) New? (nuovo.) Old? (vecchio.) Beautiful? (bello.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R84-second-pass-describing-time-place-and-the-town",
+      "sequence": 3840,
+      "title": "Describing, time, place and the town — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 73-84",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:491b5bff5a5b3034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for ugly and long."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugly, long, short, hot, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ugly, long, short, hot, cold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fast, slow, easy, difficult, dear; expensive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fast, slow, easy, difficult, dear; expensive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cheap, tall, short, full, empty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cheap, tall, short, full, empty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strong, weak, rich, poor, yellow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strong, weak, rich, poor, yellow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "green, grey, clean, dirty, pleased",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: green, grey, clean, dirty, pleased]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a week, a month, a year, the morning, a minute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a week, a month, a year, the morning, a minute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "always, never; ever, now, far, above",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: always, never; ever, now, far, above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "under, inside, outside, a square, a street",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: under, inside, outside, a square, a street]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a city, a shop, a market, a school, a bank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a city, a shop, a market, a school, a bank]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a station, a bus, a train, an aeroplane, a car",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a station, a bus, a train, an aeroplane, a car]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bridge, a park, a church, a museum, a restaurant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bridge, a park, a church, a museum, a restaurant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hotel, a pharmacy, the post office; the post, the police, a library",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hotel, a pharmacy, the post office; the post, the police, a library]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ugly? (brutto.) Long? (lungo.) Short? (corto.) Hot? (caldo.) Cold? (freddo.) Fast? (veloce.) Slow? (lento.) Easy? (facile.) Difficult? (difficile.) Dear; expensive? (caro.) Cheap? (economico.) Tall? (alto.) Short? (basso.) Full? (pieno.) Empty? (vuoto.) Strong? (forte.) Weak? (debole.) Rich? (ricco.) Poor? (povero.) Yellow? (giallo.) Green? (verde.) Grey? (grigio.) Clean? (pulito.) Dirty? (sporco.) Pleased? (contento.) A week? (la settimana.) A month? (il mese.) A year? (l'anno.) The morning? (la mattina.) A minute? (il minuto.) Always? (sempre.) Never; ever? (mai.) Now? (adesso.) Far? (lontano.) Above? (sopra.) Under? (sotto.) Inside? (dentro.) Outside? (fuori.) A square? (la piazza.) A street? (la strada.) A city? (la città.) A shop? (il negozio.) A market? (il mercato.) A school? (la scuola.) A bank? (la banca.) A station? (la stazione.) A bus? (l'autobus.) A train? (il treno.) An aeroplane? (l'aereo.) A car? (la macchina.) A bridge? (il ponte.) A park? (il parco.) A church? (la chiesa.) A museum? (il museo.) A restaurant? (il ristorante.) A hotel? (l'albergo.) A pharmacy? (la farmacia.) The post office; the post? (la posta.) The police? (la polizia.) A library? (la biblioteca.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,8 +1,8 @@
 Arabic, chapter 38: Two at Once.
-5 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 و (wa-) — and.
 
 Warm-up.
@@ -35,7 +35,7 @@ Is و (wa-) written with a space after it? (No — it is joined to the word it i
 Source: Unicode Arabic chart.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 أو (aw) — or.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -71,7 +71,7 @@ Which joiner is written joined to the next word, and which stands apart? (و (wa
 Source: Unicode Arabic chart.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 لكن (lākin) — but.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -110,7 +110,7 @@ Which word is hiding at the front of لكن (lākin)? (لا, the negator from ch
 Source: Unicode Arabic chart.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 حسنًا (ḥasanan) — all right.
 
 Warm-up.
@@ -146,7 +146,7 @@ What does the ـًا ending do to an Arabic adjective? (Turns it into an adverb.
 Source: Unicode Arabic chart.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 Two at once — adding, choosing, turning — and the whole food and drink inventory of chapters thirty-three to thirty-six becoming combinable.
 
 Warm-up.
@@ -181,3 +181,37 @@ This is what the chapter actually bought. Chapters thirty-three to thirty-six ta
 Wrap-up Recall.
 [pause 3 seconds]
 Which of this chapter's joiners has a negator inside it? (لكن (lākin).) Which one is a single letter with no space after it? (و (wa-).) And which word accepts what somebody said without answering a question? (حسنًا (ḥasanan).)
+
+
+Lesson 6 of 6.
+How are you, joined up — the wellbeing exchange for the second time, now joinable — the joining words of this chapter let the answer say two things at once, or one thing with a reservation.
+
+Warm-up.
+[pause 4 seconds]
+Ask after a woman and answer as yourself, both parts. Then answer again using one of the joining words this chapter gave you.
+
+The exchange.
+[your turn — say: ask a man, then a woman — kayfa ḥāluka? … kayfa ḥāluki?]
+[pause 8 seconds for the answer]
+[your turn — say: answer with both replies joined — bi-khayr wa-l-ḥamdu lillāh]
+[pause 8 seconds for the answer]
+[your turn — say: answer with a reservation — bi-khayr, lākin …]
+[pause 8 seconds for the answer]
+[your turn — say: accept what you hear — ḥasanan]
+[pause 8 seconds for the answer]
+For a long stretch this exchange could only be said one way, because there was nothing to join it with. This chapter is the first time the answer can carry two clauses.
+
+Grammar Lens: what the question actually asks.
+English asks after you. Arabic asks after your حال — your state.
+حال ḥāl is ḥāʾ, alif, lām, with the deep throat ḥ, and its root ḥ–w–l means to turn, to change. So the question is not are you well but how stands the thing about you that shifts.
+كيف is the question word, partner to ما, and the phrase bolts three owned pieces together: how + state + your. There is no verb in it at all, exactly as there is none in the name sentence.
+
+How to answer: two replies, both literal.
+[a table of 2 rows, read aloud]
+reply: بخير bi-khayr. literally: in goodness — بـ (in) plus خير (good).
+reply: الحمد لله al-ḥamdu lillāh. literally: the praise is to God — root ḥ–m–d, to praise.
+خير was hiding in the morning greeting long before it was named, and al-ḥamdu lillāh comes back more often in real speech than bi-khayr does. Neither is a polite noise: both say something, and both say it with a preposition glued to the front.
+
+Wrap-up Recall.
+[pause 4 seconds]
+Give the root behind حال and its sense. (ḥ–w–l, to turn or change.) Give the literal reading of بخير. (In goodness.) Give the literal reading of الحمد لله. (The praise is to God.) And name the question word that partners كيف. (ما.)

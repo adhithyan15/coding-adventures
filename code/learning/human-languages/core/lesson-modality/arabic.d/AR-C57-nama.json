@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C57-nama",
+    "language": "arabic",
+    "chapter": 57,
+    "sequence": 1830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c07865e2bd585c09"
+  },
+  "findings": []
+}

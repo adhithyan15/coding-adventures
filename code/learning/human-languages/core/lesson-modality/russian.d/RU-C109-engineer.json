@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C109-engineer",
+    "language": "russian",
+    "chapter": 109,
+    "sequence": 5610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6e66dff6610b221"
+  },
+  "findings": []
+}

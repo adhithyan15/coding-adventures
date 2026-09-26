@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:146b8dec3a62c917",
+  "lessonIds": [
+    "MW-C62-khirki",
+    "MW-C62-kursi",
+    "MW-C62-mej",
+    "MW-C62-bhit",
+    "MW-C62-chhat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch62.txt",
+  "json": "marwadi/narration/ch62.json",
+  "textHash": "fnv1a64:e57234eec5ef454e",
+  "jsonHash": "fnv1a64:b03ace648d1b6a68",
+  "findings": []
+}

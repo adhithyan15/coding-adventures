@@ -9,18 +9,18 @@ type: writing
 headword: ়
 romanization: "(the dot below)"
 gloss: "the dot that takes a consonant's job away and gives it another"
-prerequisites: [BN-W02-ya, BN-W02-chandrabindu, BN-W02-hyan-read, BN-W04-o-indep]
+prerequisites: [BN-W02-ya, BN-W02-chandrabindu, BN-W02-hyan-read, BN-W04-o-indep, BN-C10-para]
 sounds: []
 roots: []
 etymology_hook: "A borrowed piece of machinery: the same subscript dot Persian scribes used to bend Arabic letters to new sounds, put to work on letters Sanskrit had no need to bend."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [BN-SCRIPT-YA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-HA-01, BN-SCRIPT-AA-MATRA-01]
+  knowledge: [BN-SCRIPT-YA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-HA-01, BN-SCRIPT-AA-MATRA-01, BN-LEX-ANCHOR-PARA]
 introduces:
   knowledge: [BN-SCRIPT-NUKTA-01]
 practises:
-  knowledge: [BN-SCRIPT-NUKTA-01, BN-SCRIPT-YA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-HA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-HYAN-READ-01, BN-SCRIPT-CHANDRABINDU-01]
+  knowledge: [BN-SCRIPT-NUKTA-01, BN-SCRIPT-YA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-HA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-HYAN-READ-01, BN-SCRIPT-CHANDRABINDU-01, BN-LEX-ANCHOR-PARA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [BN-W04-o-indep, BN-W02-ya, BN-W02-hyan-read]
 # ় — the dot below
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-YA-01, BN-SCRIPT-HYAN-READ-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-YA-01, BN-SCRIPT-HYAN-READ-01, BN-LEX-ANCHOR-PARA] -->
 
 [PAUSE 2s] Write **য** and say what it sounds like standing alone. Then read
 **হ্যাঁ**.

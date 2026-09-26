@@ -1,0 +1,11 @@
+{
+  "id": "GU-C62-table",
+  "pathSegment": "GU-PATH-62-FURNITURE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-62-FURNITURE",
+      "order": 2
+    }
+  ]
+}

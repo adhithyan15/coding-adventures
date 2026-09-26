@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Ant, Duck, New, Old, Bad",
+  "label": "ch:mr-ant-duck-new-old-bad",
+  "canDo": "I can say an ant, a duck, new, old and bad.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-R103-second-pass-nature-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say an ant, a duck, new, old and bad.",
+    "assesses": [
+      "MR-LEX-C103-ANIMALS103-03",
+      "MR-LEX-C103-ANIMALS103-04",
+      "MR-LEX-C103-ANIMALS103-05"
+    ]
+  }
+}

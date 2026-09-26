@@ -1,0 +1,11 @@
+{
+  "id": "GU-C53-relative",
+  "pathSegment": "GU-PATH-53-FAMILY3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-53-FAMILY3",
+      "order": 3
+    }
+  ]
+}

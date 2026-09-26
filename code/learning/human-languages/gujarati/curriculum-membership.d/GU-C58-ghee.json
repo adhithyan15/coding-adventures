@@ -1,0 +1,11 @@
+{
+  "id": "GU-C58-ghee",
+  "pathSegment": "GU-PATH-58-PANTRY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-58-PANTRY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C64-flower",
+    "language": "gujarati",
+    "chapter": 64,
+    "sequence": 3253,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20eabd34ce67209c"
+  },
+  "findings": []
+}

@@ -8,17 +8,17 @@ type: review
 headword: (dialogue)
 gloss: second pass over how-are-you — the question, its answer, and the word that answers an apology
 concept_tag: REVIEW
-prerequisites: [TE-C03-elaa, TE-C03-miiru-elaa-unnaaru, TE-C03-nenu, TE-C03-baagaa, TE-C03-paravaaledu, TE-S157-letter-ba, TE-C09-kshaminchandi]
+prerequisites: [TE-C03-elaa, TE-C03-miiru-elaa-unnaaru, TE-C03-nenu, TE-C03-baagaa, TE-C03-paravaaledu, TE-S157-letter-ba, TE-C09-kshaminchandi, TE-C09-itika]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157]
+  knowledge: [TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157, TE-LEX-ANCHOR-ITIKA]
 introduces:
   knowledge: []
 practises:
-  knowledge: [TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157]
+  knowledge: [TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-GRAMMAR-C03-MIIRU-ELAA-UNNAARU-03, TE-LEX-C03-NENU-01, TE-GRAMMAR-C03-NENU-03, TE-LEX-C03-BAAGAA-01, TE-LEX-C03-PARAVAALEDU-01, TE-GRAMMAR-C03-PARAVAALEDU-03, TE-SCRIPT-RECOG-157, TE-LEX-ANCHOR-ITIKA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,7 +30,7 @@ reviews_of: [TE-C03-elaa, TE-C03-miiru-elaa-unnaaru, TE-C03-nenu, TE-C03-baagaa,
 # How are you, again — and the word that answers క్షమించండి
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-PARAVAALEDU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-PARAVAALEDU-01, TE-LEX-ANCHOR-ITIKA] -->
 
 [PAUSE 3s] Someone has said **క్షమించండి** to you. One word back — the one
 that tells them it does not matter. You have had it since the greetings.

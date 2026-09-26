@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C59-apple",
+    "language": "gujarati",
+    "chapter": 59,
+    "sequence": 3023,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0f261e41e5f9481"
+  },
+  "findings": []
+}

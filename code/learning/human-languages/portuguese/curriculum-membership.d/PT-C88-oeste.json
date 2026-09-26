@@ -1,0 +1,11 @@
+{
+  "id": "PT-C88-oeste",
+  "pathSegment": "PT-PATH-88-LUGARES88",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-88-LUGARES88",
+      "order": 4
+    }
+  ]
+}

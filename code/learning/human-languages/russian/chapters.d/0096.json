@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Towel, Soap, Toothbrush, Comb, Rubbish",
+  "label": "ch:ru-towel-soap-toothbrush-comb-rubbish",
+  "canDo": "I can say a towel, soap, a toothbrush, a comb and rubbish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C96-rubbish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say a towel, soap, a toothbrush, a comb and rubbish.",
+    "assesses": [
+      "RU-LEX-C96-THINGS96-03",
+      "RU-LEX-C96-THINGS96-04",
+      "RU-LEX-C96-THINGS96-05"
+    ]
+  }
+}

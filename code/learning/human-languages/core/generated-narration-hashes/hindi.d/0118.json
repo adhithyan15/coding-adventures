@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:22b8c6db8f23b253",
+  "lessonIds": [
+    "HI-C118-larka",
+    "HI-C118-larki",
+    "HI-C118-pati",
+    "HI-C118-patni",
+    "HI-C118-rishtedar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch118.txt",
+  "json": "hindi/narration/ch118.json",
+  "textHash": "fnv1a64:e485023796a6f76f",
+  "jsonHash": "fnv1a64:36c587bb5038f70e",
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 23,
+  "output": "persian/book/chapters/ch23-fa-letters-of-the-hook-family.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

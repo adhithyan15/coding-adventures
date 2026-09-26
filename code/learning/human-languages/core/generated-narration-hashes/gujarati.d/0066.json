@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:16e15673fb8b900f",
+  "lessonIds": [
+    "GU-C66-wind",
+    "GU-C66-cloud",
+    "GU-C66-heat",
+    "GU-C66-ice",
+    "GU-C66-fog"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch66.txt",
+  "json": "gujarati/narration/ch66.json",
+  "textHash": "fnv1a64:9efcb9445143bc7e",
+  "jsonHash": "fnv1a64:04c5eac74de802ef",
+  "findings": []
+}

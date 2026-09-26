@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C111-tokri",
+    "language": "urdu",
+    "chapter": 111,
+    "sequence": 5830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87fdf3710ec2f4d6"
+  },
+  "findings": []
+}

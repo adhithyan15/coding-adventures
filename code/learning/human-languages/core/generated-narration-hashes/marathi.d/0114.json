@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:b681da3f311e8a78",
+  "lessonIds": [
+    "MR-C114-bas",
+    "MR-C114-pul",
+    "MR-C114-mandir",
+    "MR-C114-karyalay",
+    "MR-C114-polis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch114.txt",
+  "json": "marathi/narration/ch114.json",
+  "textHash": "fnv1a64:a93b4aaf2bccf618",
+  "jsonHash": "fnv1a64:761a30ca723c2a37",
+  "findings": []
+}

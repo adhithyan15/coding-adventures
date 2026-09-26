@@ -1,0 +1,11 @@
+{
+  "id": "GE-C56-schulter",
+  "pathSegment": "GE-PATH-56-KOERPER1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-56-KOERPER1",
+      "order": 3
+    }
+  ]
+}

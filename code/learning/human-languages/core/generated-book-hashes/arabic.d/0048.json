@@ -1,0 +1,12 @@
+{
+  "language": "arabic",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:b99e705cd3c0214f",
+  "lessonIds": [
+    "AR-W48-dad",
+    "AR-W48-alif-madda",
+    "AR-W48-zay",
+    "AR-W48-ghayn"
+  ],
+  "tex": "arabic/book/chapters/ch48-ar-letters-from-please-and-sorry.tex"
+}

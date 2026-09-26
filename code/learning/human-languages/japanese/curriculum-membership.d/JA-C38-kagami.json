@@ -1,0 +1,11 @@
+{
+  "id": "JA-C38-kagami",
+  "pathSegment": "JA-PATH-38-HOME38",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-38-HOME38",
+      "order": 1
+    }
+  ]
+}

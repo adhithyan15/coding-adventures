@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C82-gali",
+    "language": "marwadi",
+    "chapter": 82,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f422cb94b5c39e29"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:d008db7621326aa8",
+  "lessonIds": [
+    "PT-C76-aldeia",
+    "PT-C76-correio",
+    "PT-C76-policia",
+    "PT-C76-teatro",
+    "PT-C76-biblioteca"
+  ],
+  "tex": "portuguese/book/chapters/ch76-village-post-office-police-theatre-library.tex"
+}

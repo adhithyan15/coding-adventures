@@ -1,0 +1,11 @@
+{
+  "id": "LA-C108-calceus",
+  "pathSegment": "LA-PATH-108-VESTIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-108-VESTIS",
+      "order": 4
+    }
+  ]
+}

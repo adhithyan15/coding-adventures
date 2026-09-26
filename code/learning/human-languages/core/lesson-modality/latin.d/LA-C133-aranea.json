@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C133-aranea",
+    "language": "latin",
+    "chapter": 133,
+    "sequence": 5400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57565e3ca44f0572"
+  },
+  "findings": []
+}

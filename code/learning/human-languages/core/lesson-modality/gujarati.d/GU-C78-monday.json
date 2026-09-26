@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C78-monday",
+    "language": "gujarati",
+    "chapter": 78,
+    "sequence": 3973,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c94e80a3b8d8dc89"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:ddfee263d5480f51",
+  "lessonIds": [
+    "MR-C106-svachchha",
+    "MR-C106-god",
+    "MR-C106-jad",
+    "MR-C106-barik",
+    "MR-C106-halka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch106.txt",
+  "json": "marathi/narration/ch106.json",
+  "textHash": "fnv1a64:b3323791ae09d2a5",
+  "jsonHash": "fnv1a64:2c0f54e8aad220e5",
+  "findings": []
+}

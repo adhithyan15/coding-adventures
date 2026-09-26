@@ -24,7 +24,15 @@ it("pins Persian lesson-content budgets", () =>
     // 102 -> 104: HL-C428, two `review` lessons giving mamnun, zan and dust their
     // second revisit. No new atoms.
     //
-    lessons: 104,
+    // 104 -> 124: HL-C443 chapters 22-26 add eighteen letter lessons (one per
+    // letter the reader had read in words and never written) and two reviews.
+    // RE-MEASURED against the tree. A letter lesson introduces one script atom
+    // and no idiom, sense or culture claim.
+    //
+    // 124 -> 392: two `-more` continuations split off the lessons that
+    // introduced four atoms, then chapters 27-78 (260 word lessons) and six
+    // reviews. None introduces an idiom, a sense or a culture claim.
+    lessons: 392,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,

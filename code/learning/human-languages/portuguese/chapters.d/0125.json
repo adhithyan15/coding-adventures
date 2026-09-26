@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Ready, Safe, Dangerous, Wet, Dry",
+  "label": "ch:pt-ready-safe-dangerous-wet-dry",
+  "canDo": "I can say ready, safe, dangerous, wet and dry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C125-seco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say ready, safe, dangerous, wet and dry.",
+    "assesses": [
+      "PT-LEX-C125-QUALIDADES125-03",
+      "PT-LEX-C125-QUALIDADES125-04",
+      "PT-LEX-C125-QUALIDADES125-05"
+    ]
+  }
+}

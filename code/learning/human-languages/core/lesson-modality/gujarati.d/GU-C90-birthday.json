@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C90-birthday",
+    "language": "gujarati",
+    "chapter": 90,
+    "sequence": 4583,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f19c240ea432ca36"
+  },
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C32-ane-clauses",
     "language": "gujarati",
     "chapter": 36,
-    "sequence": 1840,
+    "sequence": 1853,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4056ac244876241c"
+    "sourceHash": "fnv1a64:519c5d991645ca4c"
   },
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Reading — Signs, Notices, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:871fbb318e97e487",
+  "sourceHash": "fnv1a64:ca796eb6c13697a6",
   "lessons": [
     {
       "id": "HI-C78-signs",
@@ -665,6 +665,288 @@
             {
               "kind": "speech",
               "text": "And what made it readable? (Everything in it had already been paid for, one chapter at a time.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R85-devanagari-recall-a",
+      "sequence": 3301,
+      "title": "(म र न अ प ह य त ् ा ी) (pahlī gyārah) — eleven, and three kinds of thing",
+      "headword": "(म र न अ प ह य त ् ा ी)",
+      "romanization": "pahlī gyārah",
+      "gloss": "cold retrieval of the first eleven Devanagari pieces — eight letters, the vowel killer, and two hangers",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:60c459bca38fe4cd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: eight letters, one killer, two hangers"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: eight letters, one killer, two hangers until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters from the book's first script pages. Read म, then न, and name each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: eight letters, one killer, two hangers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "They arrived one or two per chapter and no page has gathered them. Sorted by what kind of thing each one is:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "kind",
+                "pieces"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "kind: consonants — each carries a built-in a. pieces: म ma, र ra, न na, प pa, ह ha, य ya, त ta.",
+                "kind: a standing vowel. pieces: अ a — the full-size letter, for when a word opens on the vowel.",
+                "kind: the killer. pieces: ् — removes the built-in a.",
+                "kind: hangers. pieces: ा ā, ी ī — replace the built-in a."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "अ is the one worth pausing on, because it is the same sound the consonants already carry. A consonant has a inside it; अ is what you write when there is no consonant to put it in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The three marks, cold, and what each does to the letter it touches."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "् — say what it takes away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **्** — say what it takes away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ा — say what it replaces, and with what",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ा** — say what it replaces, and with what]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ी — the same, and say how it differs from the one above",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ी** — the same, and say how it differs from the one above]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three depend on one fact: a bare consonant is not silent. It already has a vowel, and these either remove it or swap it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What vowel is inside a bare Devanagari consonant? (A short a.) What does ् do? (Removes it.) And when do you need अ rather than relying on that built-in vowel? (When the word opens on the vowel.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R85-devanagari-recall-b",
+      "sequence": 3302,
+      "title": "(स ष ल ठ ण ऋ ो ौ औ ज़) (dūsrī gyārah) — the thin eleven",
+      "headword": "(स ष ल ठ ण ऋ ो ौ औ ज़)",
+      "romanization": "dūsrī gyārah",
+      "gloss": "cold retrieval of the eleven pieces that arrived late and thinly, including the vowel that is written like a letter and the dot that makes a borrowed sound",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ff02ed5a36633010",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: five consonants, and the retroflex row they belong to",
+          "Guided Practice: a vowel written like a letter, and a dot"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: five consonants, and the retroflex row they belong to and Guided Practice: a vowel written like a letter, and a dot until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read स, then ल. Two consonants you have been reading for a long time without being asked for them by name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: five consonants, and the retroflex row they belong to",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "sound",
+                "what marks it"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "letter: स. sound: sa. what marks it: the plain sibilant.",
+                "letter: ल. sound: la. what marks it: the plain lateral.",
+                "letter: ष. sound: ṣa. what marks it: retroflex — tongue curled back.",
+                "letter: ठ. sound: ṭha. what marks it: retroflex, with breath behind it.",
+                "letter: ण. sound: ṇa. what marks it: retroflex nasal."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the five are retroflex, and that is the group worth seeing together: Hindi distinguishes a whole row of consonants made with the tongue curled back against the roof of the mouth from the dental row made against the teeth. The difference is inaudible to most English speakers at first and load-bearing in Hindi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: a vowel written like a letter, and a dot",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ऋ — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it ri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ऋ** — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it *ri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ऋ once, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ऋ** once, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "औ and ौ — the same vowel standing alone, then hanging off a consonant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **औ** and **ौ** — the same vowel standing alone, then hanging off a consonant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ो — the hanger for o",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ो** — the hanger for *o*]"
+            },
+            {
+              "kind": "speech",
+              "text": "औ against ौ is the pairing the whole system runs on: a vowel gets a full-size letter when nothing precedes it and a hanging sign when a consonant does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the dot under ज़, फ़, ख़, क़ tell you? (The sound is borrowed — Persian or Arabic, and not native to Devanagari.) Which of the eleven is a vowel that behaves like a consonant? (ऋ.) Name the retroflex nasal. (ण.)"
             }
           ]
         }

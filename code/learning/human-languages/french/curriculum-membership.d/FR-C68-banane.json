@@ -1,0 +1,11 @@
+{
+  "id": "FR-C68-banane",
+  "pathSegment": "FR-PATH-68-CUISINE20",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-68-CUISINE20",
+      "order": 0
+    }
+  ]
+}

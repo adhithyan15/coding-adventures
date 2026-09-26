@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:3b877a0f0c65b0f6",
+  "lessonIds": [
+    "RU-C133-to-go-up",
+    "RU-C133-to-go-down",
+    "RU-C133-to-stay",
+    "RU-C133-to-rent",
+    "RU-C133-to-repair"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch133.txt",
+  "json": "russian/narration/ch133.json",
+  "textHash": "fnv1a64:d1f9fb39770c6dee",
+  "jsonHash": "fnv1a64:63c08607db9a6f5c",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C120-farine",
+  "pathSegment": "FR-PATH-120-REPAS72",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-120-REPAS72",
+      "order": 4
+    }
+  ]
+}

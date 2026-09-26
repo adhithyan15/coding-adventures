@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:09809a08398d5c91",
+  "lessonIds": [
+    "GE-C114-decke",
+    "GE-C114-handtuch",
+    "GE-C114-seife",
+    "GE-C114-zahnbuerste",
+    "GE-C114-zahnpasta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch114.txt",
+  "json": "german/narration/ch114.json",
+  "textHash": "fnv1a64:dfade4d7a9064479",
+  "jsonHash": "fnv1a64:a9e97631843749b6",
+  "findings": []
+}

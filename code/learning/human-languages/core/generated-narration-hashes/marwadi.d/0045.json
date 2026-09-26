@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:f74299782d73dc11",
+  "lessonIds": [
+    "MW-C45-pet",
+    "MW-C45-angli",
+    "MW-C45-hoth",
+    "MW-C45-mudo",
+    "MW-C45-godo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch45.txt",
+  "json": "marwadi/narration/ch45.json",
+  "textHash": "fnv1a64:97694dd2edd40f0c",
+  "jsonHash": "fnv1a64:1a63a38f04e814ec",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-104-VESTITI104",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a skirt, a coat, shoes, socks and a blouse.",
+  "prerequisites": []
+}

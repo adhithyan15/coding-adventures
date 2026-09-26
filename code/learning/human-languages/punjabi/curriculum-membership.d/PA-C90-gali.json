@@ -1,0 +1,11 @@
+{
+  "id": "PA-C90-gali",
+  "pathSegment": "PA-PATH-90-TOWN90",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-90-TOWN90",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Woman, Neighbour, Guest, Teacher, To eat",
+  "label": "ch:mw-woman-neighbour-guest-teacher-to-eat",
+  "canDo": "I can say a woman, a neighbour, a guest, a teacher and to eat.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MW-C50-khano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can say a woman, a neighbour, a guest, a teacher and to eat.",
+    "assesses": [
+      "MW-LEX-C50-FAMILY50-03",
+      "MW-LEX-C50-FAMILY50-04",
+      "MW-LEX-C50-FAMILY50-05"
+    ]
+  }
+}

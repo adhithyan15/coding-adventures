@@ -8,7 +8,7 @@ type: word
 headword: schreiben
 gloss: to write — the one verb in this chapter German did not inherit but borrowed, from Latin scribere
 concept_tag: VERB-WRITE
-prerequisites: [GE-C24-lesen, GE-C17-hand]
+prerequisites: [GE-C24-lesen, GE-C17-hand, GE-C17-hand-more]
 sounds: [sch-sh, diphthong-ei]
 roots: [scribere-latin, germanic-writana]
 etymology_hook: "schreiben is borrowed Latin scribere, 'to scratch'; English kept its own native word write, also 'to scratch' — the one place here where German took the loan and English did not"

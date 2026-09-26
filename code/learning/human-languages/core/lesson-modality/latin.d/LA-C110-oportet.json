@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C110-oportet",
+    "language": "latin",
+    "chapter": 110,
+    "sequence": 4170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b85ea9193ea4c8f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C126-cepa",
+    "language": "latin",
+    "chapter": 126,
+    "sequence": 5030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c415c278e22a091"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C55-jadda",
+    "language": "arabic",
+    "chapter": 55,
+    "sequence": 1690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23db650ca2d581a5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Nothing, Not Yet, That Will Do",
+  "label": "ch:te-nothing-not-yet",
+  "canDo": "I can answer with nothing, not yet, that will do, that's true, and that's the one.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TE-C98-thatone",
+    "kind": "production",
+    "summary": "Complete TE-C98-thatone: five short answers that close a question.",
+    "assesses": [
+      "TE-LEX-C98-REPLY-03",
+      "TE-LEX-C98-REPLY-04",
+      "TE-LEX-C98-REPLY-05"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "GU-W45-gha",
+    "language": "gujarati",
+    "chapter": 45,
+    "sequence": 2313,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6c21582f44320e76",
+    "detachableSegments": [
+      "Script you'll notice: ઘ",
+      "Writing: ઘ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

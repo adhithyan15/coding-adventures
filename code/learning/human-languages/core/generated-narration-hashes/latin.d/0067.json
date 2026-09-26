@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:c5d9b165e1a4036b",
+  "lessonIds": [
+    "LA-C67-febris",
+    "LA-C67-tussis",
+    "LA-C67-dolor",
+    "LA-C67-medicina",
+    "LA-C67-morbus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch67.txt",
+  "json": "latin/narration/ch67.json",
+  "textHash": "fnv1a64:8624dce0d44b3b1a",
+  "jsonHash": "fnv1a64:b0ca5a4b122060a0",
+  "findings": []
+}

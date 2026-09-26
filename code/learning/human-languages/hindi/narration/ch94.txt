@@ -1,8 +1,8 @@
 Hindi, chapter 94: The Pronouns, And The Article Hindi Does Not Have.
-7 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+8 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 7.
+Lesson 1 of 8.
 हम — the word that was already inside hamārā.
 
 Warm-up.
@@ -37,7 +37,7 @@ Wrap-up Recall.
 What possessive is built on हम? (Hamārā.) What else can ham mean besides "we"? (I, said modestly or as part of a household.)
 
 
-Lesson 2 of 7.
+Lesson 2 of 8.
 वे (ve) — they, and the respect that looks like a plural.
 
 Warm-up.
@@ -72,7 +72,7 @@ Wrap-up Recall.
 What is वे the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)
 
 
-Lesson 3 of 7.
+Lesson 3 of 8.
 हमें / तुम्हें (hamẽ / tumhẽ) — what mujhe was all along.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -109,7 +109,7 @@ Wrap-up Recall.
 What is mujhe the oblique of? (मैं.) What ending do these oblique pronouns take? (The nasal -ें.) How would you say "we like it"? (Hamẽ … pasand hai.)
 
 
-Lesson 4 of 7.
+Lesson 4 of 8.
 āpko / use — the paradigm closes.
 
 Warm-up.
@@ -149,7 +149,7 @@ Wrap-up Recall.
 What postposition is inside āpko? (को, to.) Which two of the five wore down until their parts stopped showing? (Mujhe and use.)
 
 
-Lesson 5 of 7.
+Lesson 5 of 8.
 binā ārṭikal — the word Hindi does not have.
 
 Warm-up.
@@ -190,7 +190,7 @@ Wrap-up Recall.
 How many articles does Hindi have? (None.) What was ek before it marked indefiniteness? (The numeral one.) What is the commonest correct translation of English the? (Nothing at all.)
 
 
-Lesson 6 of 7.
+Lesson 6 of 8.
 sarvanām kī tālikā — subject and oblique, side by side.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -233,7 +233,7 @@ Wrap-up Recall.
 Which postposition is hiding inside every oblique pronoun? (को.) How many systems does the level decision now settle? (Four.) What translates English the? (Nothing.)
 
 
-Lesson 7 of 7.
+Lesson 7 of 8.
 हम स्टेशन पर मिलेंगे (ham sṭeśan par milẽge) — the sentence the paper actually prints.
 
 Warm-up.
@@ -265,3 +265,56 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What word for the appears before sṭeśan? (None — Hindi has no article.) Which oblique would you use asking a stranger? (Āpko.)
+
+
+Lesson 8 of 8.
+(पेट, औरत, सीढ़ी, चादर) (peṭ, aurat, sīṛhī, chādar) — five pockets nobody returned to.
+
+Warm-up.
+[pause 3 seconds]
+Two words from the chapter that furnished a house: the one you climb, and the one you spread on a bed.
+
+You'll want to know: why these five.
+Most of this book circles back on itself, so a word meets you five times over and you end up owning it. Five things escaped that. दोपहर का खाना and रात का खाना are the clearest — say both now.
+
+The word, taken apart: पेट.
+पेट goes back to Prakrit पेट्ट, and there the clean line ends. The mainstream account takes it as Dravidian; Turner declines that and offers no Sanskrit source either. So: unsettled, Dravidian leading — and the retroflex ट is itself the feature most credited to that contact.
+
+Grammar Lens: औरत — three things to hold.
+[a table of 4 rows, read aloud]
+what you need: its gender. the answer: feminine, though the ending does not say so.
+what you need: its source. the answer: Arabic عورة (ʿawra), root ʿ-w-r, senses near a gap.
+what you need: the sense woman. the answer: from Persian, handed on around 1420.
+what you need: which to say. the answer: औरत spoken, महिला public, स्त्री literary.
+The middle rows belong together: the harsh root sense is the earlier life of a word Persian repurposed, not a claim Arabic makes about women. And मेरी औरत means my wife, in a register most avoid.
+
+You'll want to know: सीढ़ी and चादर.
+सीढ़ी (sīṛhī) is a staircase and also a ladder — you go up both in steps. चादर (chādar) is a sheet, from Persian chādar, a broad piece of cloth; English took it as chuddar.
+
+You'll want to know: the नाम field, twice over.
+The A1 form ladder gave you one field under two conditions, and the difference is the point.
+[a table of 2 rows, read aloud]
+condition: supported. beside the line: the bank A मीरा, B अरुण, visible. what it proves: you read the label and copy its value.
+condition: delayed. beside the line: nothing; the bank is covered. what it proves: the spelling came from memory.
+An exam form gives you the second.
+
+Guided Practice.
+[pause 1 second]
+Cover everything above.
+[your turn — say: the two named meals, and what each is built from]
+[pause 8 seconds for the answer]
+[your turn — say: the word for a staircase, and its second sense]
+[pause 8 seconds for the answer]
+[your turn — say: the word for a sheet]
+[pause 8 seconds for the answer]
+[your turn — say: which of औरत, महिला, स्त्री goes on a public sign]
+[pause 8 seconds for the answer]
+[your turn — say: the gender of औरत, and whether its ending told you]
+[pause 8 seconds for the answer]
+[your turn — say: where the trail behind पेट stops]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: नाम: अरुण, nothing to copy]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which language gave औरत the sense woman, the one it came from or the one it travelled through? (Persian.) Which meal is रात का खाना?

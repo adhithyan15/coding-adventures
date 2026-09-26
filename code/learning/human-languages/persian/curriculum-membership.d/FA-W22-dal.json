@@ -1,0 +1,11 @@
+{
+  "id": "FA-W22-dal",
+  "pathSegment": "FA-PATH-022-LETTERS-NOJOIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-022-LETTERS-NOJOIN",
+      "order": 2
+    }
+  ]
+}

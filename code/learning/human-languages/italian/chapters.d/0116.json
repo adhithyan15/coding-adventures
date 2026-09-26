@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Music, Film, Song, Drawing, Life",
+  "label": "ch:it-music-film-song-drawing-life",
+  "canDo": "I can say music, a film, a song, a drawing and life.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R116-second-pass-nature-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say music, a film, a song, a drawing and life.",
+    "assesses": [
+      "IT-LEX-C116-TEMPOLIBERO116-03",
+      "IT-LEX-C116-TEMPOLIBERO116-04",
+      "IT-LEX-C116-TEMPOLIBERO116-05"
+    ]
+  }
+}

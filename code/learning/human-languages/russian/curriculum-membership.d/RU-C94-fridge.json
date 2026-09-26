@@ -1,0 +1,11 @@
+{
+  "id": "RU-C94-fridge",
+  "pathSegment": "RU-PATH-94-THINGS94",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-94-THINGS94",
+      "order": 2
+    }
+  ]
+}

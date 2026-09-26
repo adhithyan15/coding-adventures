@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:76623f755f4cb6da",
+  "lessonIds": [
+    "FA-C38-raghsidan",
+    "FA-C38-khastan",
+    "FA-C38-avardan",
+    "FA-C38-ferestadan",
+    "FA-C38-shemordan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch38.txt",
+  "json": "persian/narration/ch38.json",
+  "textHash": "fnv1a64:77665703cb18032a",
+  "jsonHash": "fnv1a64:e3cd9f72b2a7c87c",
+  "findings": []
+}

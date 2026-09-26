@@ -1,0 +1,11 @@
+{
+  "id": "MR-C143-sasa",
+  "pathSegment": "MR-PATH-143-THINGS143",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-143-THINGS143",
+      "order": 3
+    }
+  ]
+}

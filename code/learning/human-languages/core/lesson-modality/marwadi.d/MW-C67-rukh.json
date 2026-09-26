@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C67-rukh",
+    "language": "marwadi",
+    "chapter": 67,
+    "sequence": 4690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3ed2d79ed479bb7"
+  },
+  "findings": []
+}

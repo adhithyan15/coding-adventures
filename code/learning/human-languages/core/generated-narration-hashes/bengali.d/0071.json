@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:234bc12c6b12c0a4",
+  "lessonIds": [
+    "BN-C71-bhaluk",
+    "BN-C71-gadha",
+    "BN-C71-projapoti",
+    "BN-C71-pipre",
+    "BN-C71-murgi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch71.txt",
+  "json": "bengali/narration/ch71.json",
+  "textHash": "fnv1a64:d0d305f85eeaf6a3",
+  "jsonHash": "fnv1a64:a6417a3c56937075",
+  "findings": []
+}

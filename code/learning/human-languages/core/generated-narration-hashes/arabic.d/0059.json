@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:3433fa7db6db03e3",
+  "lessonIds": [
+    "AR-C59-baa",
+    "AR-C59-ata",
+    "AR-C59-wadaa",
+    "AR-C59-fataha",
+    "AR-C59-aghlaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch59.txt",
+  "json": "arabic/narration/ch59.json",
+  "textHash": "fnv1a64:804445c7c161df12",
+  "jsonHash": "fnv1a64:2eb812862400a893",
+  "findings": []
+}

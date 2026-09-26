@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Open space, Milestone, Around, Next to, Opposite",
+  "label": "ch:la-open-space-milestone-around-next-to-opposite",
+  "canDo": "I can say an open space, a milestone, around, next to and opposite.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-R119-second-pass-places",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say an open space, a milestone, around, next to and opposite.",
+    "assesses": [
+      "LA-LEX-C119-LOC119-03",
+      "LA-LEX-C119-LOC119-04",
+      "LA-LEX-C119-LOC119-05"
+    ]
+  }
+}

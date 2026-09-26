@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S138-letter-uu",
+    "language": "tamil",
+    "chapter": 112,
+    "sequence": 4780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ee7b0bd92864405b",
+    "detachableSegments": [
+      "Script you'll notice: ஊ",
+      "Writing: ஊ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -8,20 +8,20 @@ type: writing
 headword: "السلام عليكم"
 gloss: hear the full greeting, write it without a model, then repair
 romanization: as-salāmu ʿalaykum
-prerequisites: [AR-W00-kaf-waw-alaykum]
+prerequisites: [AR-W00-kaf-waw-alaykum, AR-C01-kukh]
 sounds: [arabic-greeting-dictation]
 roots: [semitic-s-l-m]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13, AR-LEX-ANCHOR-KUKH]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-WRITE-FULL-GREETING-13]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-WRITE-FULL-GREETING-13, AR-LEX-ANCHOR-KUKH]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W00-kaf-waw-alaykum, AR-C01-as-salamu-alaykum]
 # *as-salāmu ʿalaykum* — hear, write, repair
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-LEX-ANCHOR-KUKH] -->
 
 [PAUSE 2s] Say *as-salāmu ʿalaykum* once. Then turn the page or cover every
 Arabic model. This lesson adds no shape and no new phrase.

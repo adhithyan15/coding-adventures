@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:c8280162978000de",
+  "lessonIds": [
+    "PT-C109-pessego",
+    "PT-C109-compota",
+    "PT-C109-noz",
+    "PT-C109-pimenta",
+    "PT-C109-planeta"
+  ],
+  "tex": "portuguese/book/chapters/ch109-peach-jam-walnut-pepper-planet.tex"
+}

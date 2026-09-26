@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-107-LEAVE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take my leave, ask if we should go, say see you later, wish a good journey and ask someone to come again.",
+  "prerequisites": []
+}

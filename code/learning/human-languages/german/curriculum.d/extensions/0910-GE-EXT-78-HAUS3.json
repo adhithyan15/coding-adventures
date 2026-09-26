@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-78-HAUS3",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a cupboard, the floor, the stairs, a mirror and a flat, an apartment.",
+  "prerequisites": []
+}

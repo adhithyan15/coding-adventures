@@ -1,0 +1,11 @@
+{
+  "id": "UR-C110-kampyutar",
+  "pathSegment": "UR-PATH-110-THINGS110",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-110-THINGS110",
+      "order": 1
+    }
+  ]
+}

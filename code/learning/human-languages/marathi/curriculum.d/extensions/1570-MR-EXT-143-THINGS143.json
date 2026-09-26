@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-143-THINGS143",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tortoise, a crocodile, a deer, a rabbit and a wolf.",
+  "prerequisites": []
+}

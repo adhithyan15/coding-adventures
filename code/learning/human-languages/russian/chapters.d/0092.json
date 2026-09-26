@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Bicycle, Suitcase, Journey, Holidays, Rug",
+  "label": "ch:ru-bicycle-suitcase-journey-holidays-rug",
+  "canDo": "I can say a bicycle, a suitcase, a journey, holidays and a rug.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C92-rug",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say a bicycle, a suitcase, a journey, holidays and a rug.",
+    "assesses": [
+      "RU-LEX-C92-LOC92-03",
+      "RU-LEX-C92-LOC92-04",
+      "RU-LEX-C92-LOC92-05"
+    ]
+  }
+}

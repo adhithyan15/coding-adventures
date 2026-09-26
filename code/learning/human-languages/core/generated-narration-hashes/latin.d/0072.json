@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:b18fc532335624b3",
+  "lessonIds": [
+    "LA-C72-amita",
+    "LA-C72-vicinus",
+    "LA-C72-hospes",
+    "LA-C72-vir",
+    "LA-C72-femina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch72.txt",
+  "json": "latin/narration/ch72.json",
+  "textHash": "fnv1a64:b60549b551fe6662",
+  "jsonHash": "fnv1a64:c154fdeb1cb0b5c7",
+  "findings": []
+}

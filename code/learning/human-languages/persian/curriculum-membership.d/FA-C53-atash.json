@@ -1,0 +1,11 @@
+{
+  "id": "FA-C53-atash",
+  "pathSegment": "FA-PATH-53-NATURE53",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-53-NATURE53",
+      "order": 3
+    }
+  ]
+}

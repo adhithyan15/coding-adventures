@@ -4,11 +4,11 @@
   "chapter": 33,
   "title": "Sun, Sky, and River",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:39965ab17570e72d",
+  "sourceHash": "fnv1a64:dc1a2f8999e0677f",
   "lessons": [
     {
       "id": "GU-C29-hear-sooraj",
-      "sequence": 1620,
+      "sequence": 1633,
       "title": "સૂરજ (sūraj) — hear sun",
       "headword": "સૂરજ",
       "romanization": "sūraj",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cea643f5b0c3e8e",
+      "sourceHash": "fnv1a64:f0e4adf18494e872",
       "notice": null,
       "blocks": [
         {
@@ -116,7 +116,7 @@
     },
     {
       "id": "GU-C29-hear-chandra",
-      "sequence": 1630,
+      "sequence": 1643,
       "title": "ચંદ્ર (chandra) — hear moon",
       "headword": "ચંદ્ર",
       "romanization": "chandra",
@@ -127,7 +127,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eb26d6470393ea1",
+      "sourceHash": "fnv1a64:85c38f200e195a07",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
     },
     {
       "id": "GU-C29-hear-aakaash",
-      "sequence": 1640,
+      "sequence": 1653,
       "title": "આકાશ (ākāsh) — hear sky",
       "headword": "આકાશ",
       "romanization": "ākāsh",
@@ -234,7 +234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ed7a2701c4b7ba9",
+      "sourceHash": "fnv1a64:7dc5ff263398f719",
       "notice": null,
       "blocks": [
         {
@@ -330,7 +330,7 @@
     },
     {
       "id": "GU-C29-hear-varsaad",
-      "sequence": 1650,
+      "sequence": 1663,
       "title": "વરસાદ (varsād) — hear rain",
       "headword": "વરસાદ",
       "romanization": "varsād",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5838f6277301f540",
+      "sourceHash": "fnv1a64:9be529d2c2074426",
       "notice": null,
       "blocks": [
         {
@@ -437,7 +437,7 @@
     },
     {
       "id": "GU-C29-hear-nadi",
-      "sequence": 1660,
+      "sequence": 1673,
       "title": "નદી (nadī) — hear river",
       "headword": "નદી",
       "romanization": "nadī",
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e344a78a2b63de72",
+      "sourceHash": "fnv1a64:107f3e83a668bdb6",
       "notice": null,
       "blocks": [
         {
@@ -545,7 +545,7 @@
     },
     {
       "id": "GU-C29-sky-five",
-      "sequence": 1670,
+      "sequence": 1683,
       "title": "Five things outdoors, by ear",
       "headword": "સૂરજ — ચંદ્ર — આકાશ — વરસાદ — નદી",
       "romanization": "sūraj — chandra — ākāsh — varsād — nadī",
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87436d7f4125a6bd",
+      "sourceHash": "fnv1a64:ed68589653a3ddb7",
       "notice": null,
       "blocks": [
         {
@@ -680,7 +680,7 @@
     },
     {
       "id": "GU-C29-nadi",
-      "sequence": 1680,
+      "sequence": 1693,
       "title": "Nadī reaches the page",
       "headword": "નદી",
       "romanization": "nadī",
@@ -691,7 +691,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c5dfa92d86fb47fb",
+      "sourceHash": "fnv1a64:7617b02464747e2f",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -799,7 +799,7 @@
     },
     {
       "id": "GU-R29-sky-five-r1",
-      "sequence": 1690,
+      "sequence": 1703,
       "title": "The sky returns at R1, and the face at R4",
       "headword": "સૂરજ — ચંદ્ર — આકાશ — વરસાદ — નદી",
       "romanization": "sūraj — chandra — ākāsh — varsād — nadī",
@@ -811,7 +811,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8bb59e5084b2d45b",
+      "sourceHash": "fnv1a64:fcb7d95225d44568",
       "notice": {
         "modality": "pen",
         "needs": [

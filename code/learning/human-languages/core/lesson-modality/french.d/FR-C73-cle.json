@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C73-cle",
+    "language": "french",
+    "chapter": 73,
+    "sequence": 3040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b43c083e512e7030"
+  },
+  "findings": []
+}

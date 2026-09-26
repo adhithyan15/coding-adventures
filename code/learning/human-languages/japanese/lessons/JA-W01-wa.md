@@ -9,18 +9,18 @@ type: writing
 headword: わ
 romanization: wa
 gloss: the hiragana sign for the mora wa — and the sign the greeting does NOT end with, though it sounds like it
-prerequisites: [JA-W01-chi]
+prerequisites: [JA-W01-chi, JA-C02-wani]
 sounds: [mora]
 roots: []
 etymology_hook: わ is the sign for the sound wa; the greeting ends in a different sign that is nonetheless pronounced wa, and the reason is grammatical rather than phonetic.
 duration:
   max_seconds: 200
 requires:
-  knowledge: [JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01]
+  knowledge: [JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-LEX-ANCHOR-WANI]
 introduces:
   knowledge: [JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING]
 practises:
-  knowledge: [JA-SCRIPT-WA-01, JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING, JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH]
+  knowledge: [JA-SCRIPT-WA-01, JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING, JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH, JA-LEX-ANCHOR-WANI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [JA-W01-chi, JA-W01-ha]
 # わ — the sign for *wa*, and the trap beside it
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01, JA-LEX-ANCHOR-WANI] -->
 
 [PAUSE 2s] Write the three-stroke sign read *ha*: vertical, crossbar, loop.
 

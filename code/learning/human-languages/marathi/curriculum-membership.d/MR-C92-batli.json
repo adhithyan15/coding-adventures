@@ -1,0 +1,11 @@
+{
+  "id": "MR-C92-batli",
+  "pathSegment": "MR-PATH-92-HOME92",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-92-HOME92",
+      "order": 4
+    }
+  ]
+}

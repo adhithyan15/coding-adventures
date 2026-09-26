@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:862f93c1fbff065e",
+  "sourceHash": "fnv1a64:c73d7b29a64ae99d",
   "lessons": [
     {
       "id": "KA-C18-gante",
@@ -149,6 +149,111 @@
       ]
     },
     {
+      "id": "KA-C18-uurugoolu",
+      "sequence": 464,
+      "title": "ಊರುಗೋಲು (ūrugōlu) — a walking stick",
+      "headword": "ಊರುಗೋಲು",
+      "romanization": "ūrugōlu",
+      "gloss": "a walking stick",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5af16d751088fd75",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಊರುಗೋಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಊರುಗೋಲು — ūrugōlu — \"a walking stick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ūrugōlu. Look at its shape as you say it: the next lesson takes one piece of it, ಊ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrugōlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrugōlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrugōlu, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrugōlu*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a walking stick\"? (ಊರುಗೋಲು, ūrugōlu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S127-letter-uu",
       "sequence": 465,
       "title": "ಊ (ū) — one character, the long partner of one you already have",
@@ -164,7 +269,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ce19b23cf0d30146",
+      "sourceHash": "fnv1a64:f70d4557c7660117",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -351,7 +456,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a0dc7b8f4d0956bc",
+      "sourceHash": "fnv1a64:97b2e0d0e8b60a3f",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,11 +1,11 @@
 {
   "id": "GU-R06-first-four-r1",
   "pathSegment": "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
-  "pathOrder": 4,
+  "pathOrder": 6,
   "extensions": [
     {
       "id": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A",
-      "order": 4
+      "order": 6
     }
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C93-vomiting",
+  "pathSegment": "KA-PATH-93-WEATHER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-93-WEATHER",
+      "order": 4
+    }
+  ]
+}

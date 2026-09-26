@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 50,
-  "sourceHash": "fnv1a64:cac8e3ae08de0c1d",
+  "sourceHash": "fnv1a64:a3af7c643e5a506f",
   "lessonIds": [
     "GE-C37-dich",
     "GE-C37-ihn",
@@ -15,6 +15,6 @@
   "text": "german/narration/ch50.txt",
   "json": "german/narration/ch50.json",
   "textHash": "fnv1a64:454464fdd8110f57",
-  "jsonHash": "fnv1a64:1293eaa93595c780",
+  "jsonHash": "fnv1a64:8d63cf2ef3d8de10",
   "findings": []
 }

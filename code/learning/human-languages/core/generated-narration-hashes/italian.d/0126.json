@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:a4ffe2fdb3d897cd",
+  "lessonIds": [
+    "IT-C126-noioso",
+    "IT-C126-divertente",
+    "IT-C126-simpatico",
+    "IT-C126-cattivo",
+    "IT-C126-gentile",
+    "IT-R126-first-pass-the-body-and-describing-words",
+    "IT-R126-second-pass-more-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch126.txt",
+  "json": "italian/narration/ch126.json",
+  "textHash": "fnv1a64:d581a216f84568a4",
+  "jsonHash": "fnv1a64:6118085f41a559e2",
+  "findings": []
+}

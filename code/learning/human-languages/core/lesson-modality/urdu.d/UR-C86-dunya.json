@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C86-dunya",
+    "language": "urdu",
+    "chapter": 86,
+    "sequence": 4380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d34566b5b6eac91f"
+  },
+  "findings": []
+}

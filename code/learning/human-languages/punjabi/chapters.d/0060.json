@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "To learn, To forget, To want, To bring, To send",
+  "label": "ch:pa-to-learn-to-forget-to-want-to-bring-to-send",
+  "canDo": "I can say to learn, to forget, to want, to bring and to send.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C60-bhejna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say to learn, to forget, to want, to bring and to send.",
+    "assesses": [
+      "PA-LEX-C60-VERBS60-03",
+      "PA-LEX-C60-VERBS60-04",
+      "PA-LEX-C60-VERBS60-05"
+    ]
+  }
+}

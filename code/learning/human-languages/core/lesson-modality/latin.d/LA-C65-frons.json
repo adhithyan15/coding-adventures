@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C65-frons",
+    "language": "latin",
+    "chapter": 65,
+    "sequence": 1870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08156627638f84c3"
+  },
+  "findings": []
+}

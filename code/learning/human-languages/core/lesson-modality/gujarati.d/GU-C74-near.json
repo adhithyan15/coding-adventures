@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C74-near",
+    "language": "gujarati",
+    "chapter": 74,
+    "sequence": 3783,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10f15b7c634ac37e"
+  },
+  "findings": []
+}

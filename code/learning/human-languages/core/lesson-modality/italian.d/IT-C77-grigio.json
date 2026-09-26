@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C77-grigio",
+    "language": "italian",
+    "chapter": 77,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9261b542e39e5de1"
+  },
+  "findings": []
+}

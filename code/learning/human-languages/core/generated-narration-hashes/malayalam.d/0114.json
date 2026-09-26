@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:11f8d571634d1c29",
+  "lessonIds": [
+    "ML-W114-dha",
+    "ML-W114-ba",
+    "ML-W114-chillu-rr",
+    "ML-W114-chha",
+    "ML-W114-ai-sign",
+    "ML-R114-letters-first-pass",
+    "ML-R114-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch114.txt",
+  "json": "malayalam/narration/ch114.json",
+  "textHash": "fnv1a64:54d4b84b42247dbe",
+  "jsonHash": "fnv1a64:2260538e2da6be54",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C97-alone",
+  "pathSegment": "TE-PATH-97-MOOD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-97-MOOD",
+      "order": 4
+    }
+  ]
+}

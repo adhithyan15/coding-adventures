@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:df62ff33fa677ec7",
+  "lessonIds": [
+    "RU-C55-tree",
+    "RU-C55-flower",
+    "RU-C55-leaf",
+    "RU-C55-grass",
+    "RU-C55-village"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch55.txt",
+  "json": "russian/narration/ch55.json",
+  "textHash": "fnv1a64:39d2c086e8d4e7ee",
+  "jsonHash": "fnv1a64:487a26f73279f9c4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C138-servus",
+  "pathSegment": "LA-PATH-138-THINGS138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-138-THINGS138",
+      "order": 1
+    }
+  ]
+}

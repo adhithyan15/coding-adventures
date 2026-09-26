@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C79-cibus",
+    "language": "latin",
+    "chapter": 79,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f53ab3c4bb448b9"
+  },
+  "findings": []
+}

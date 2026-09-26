@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "A Lot, All, Slowly, Quickly, Again",
+  "label": "ch:gu-a-lot-all-slowly-quickly-again",
+  "canDo": "I can say a lot, all, slowly, quickly and again.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C76-again",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say a lot, all, slowly, quickly and again.",
+    "assesses": [
+      "GU-LEX-C76-HOWMUCH-03",
+      "GU-LEX-C76-HOWMUCH-04",
+      "GU-LEX-C76-HOWMUCH-05"
+    ]
+  }
+}

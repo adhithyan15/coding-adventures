@@ -1,0 +1,11 @@
+{
+  "id": "LA-C109-debeo",
+  "pathSegment": "LA-PATH-109-CAN109",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-109-CAN109",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:0f8d993418bd0c3e",
+  "lessonIds": [
+    "GU-C49-pain",
+    "GU-C49-medicine",
+    "GU-C49-rest",
+    "GU-C49-hunger",
+    "GU-C49-thirst"
+  ],
+  "tex": "gujarati/book/chapters/ch49-pain-medicine-and-rest.tex"
+}

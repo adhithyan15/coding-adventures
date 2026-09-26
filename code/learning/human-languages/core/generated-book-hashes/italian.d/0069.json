@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:b4f0b312b925c19a",
+  "lessonIds": [
+    "IT-C69-uccello",
+    "IT-C69-topo",
+    "IT-C69-lupo",
+    "IT-C69-orso",
+    "IT-C69-volpe"
+  ],
+  "tex": "italian/book/chapters/ch69-bird-mouse-wolf-bear-fox.tex"
+}

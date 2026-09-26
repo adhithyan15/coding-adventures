@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Four Colors",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5f4e839d920a8b5e",
+  "sourceHash": "fnv1a64:34405b422a7b6dd8",
   "lessons": [
     {
       "id": "UR-C13-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b5e6939ae2a421b",
+      "sourceHash": "fnv1a64:faca4706778e5020",
       "notice": null,
       "blocks": [
         {
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c21f0cbf6aedfa5",
+      "sourceHash": "fnv1a64:8fb59786b596d8d4",
       "notice": null,
       "blocks": [
         {
@@ -428,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:149338884f971851",
+      "sourceHash": "fnv1a64:5bf8009f99a33c0a",
       "notice": null,
       "blocks": [
         {

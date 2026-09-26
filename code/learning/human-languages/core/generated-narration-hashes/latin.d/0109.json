@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:adc0efbc9f63a5d7",
+  "lessonIds": [
+    "LA-C109-queo",
+    "LA-C109-audeo",
+    "LA-C109-debeo",
+    "LA-C109-soleo",
+    "LA-C109-potestas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch109.txt",
+  "json": "latin/narration/ch109.json",
+  "textHash": "fnv1a64:5b7a2acc7d53e9ab",
+  "jsonHash": "fnv1a64:ac2c59579408a910",
+  "findings": []
+}

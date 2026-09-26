@@ -4,8 +4,113 @@
   "chapter": 65,
   "title": "Standing Vowels",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:33820603cce68498",
+  "sourceHash": "fnv1a64:51e11d4abf09a718",
   "lessons": [
+    {
+      "id": "MR-C65-iishvar",
+      "sequence": 2639,
+      "title": "ईश्वर (īśvar) — God",
+      "headword": "ईश्वर",
+      "romanization": "īśvar",
+      "gloss": "God",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:57bfe386950aedab",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ईश्वर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ईश्वर — īśvar — \"God\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: īśvar. Look at its shape as you say it: the next lesson takes one piece of it, ई (ii), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īśvar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īśvar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īśvar, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īśvar*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"God\"? (ईश्वर, īśvar.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "MR-W65-ii-independent",
       "sequence": 2640,
@@ -21,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f38bcf2fde0dbf6",
+      "sourceHash": "fnv1a64:365424de413326c5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -151,6 +256,111 @@
       ]
     },
     {
+      "id": "MR-C65-ola",
+      "sequence": 2649,
+      "title": "ओला (olā) — wet",
+      "headword": "ओला",
+      "romanization": "olā",
+      "gloss": "wet",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:895bab88455f9ae6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओला — olā — \"wet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: olā. Look at its shape as you say it: the next lesson takes one piece of it, ओ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "olā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *olā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "olā, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *olā*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"wet\"? (ओला, olā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "MR-W65-o-independent",
       "sequence": 2650,
       "title": "ओ — the same trade, a second time",
@@ -166,7 +376,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:095d1760b5268bd5",
+      "sourceHash": "fnv1a64:f2ecf743a375384b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -297,6 +507,111 @@
       ]
     },
     {
+      "id": "MR-C65-aivaj",
+      "sequence": 2659,
+      "title": "ऐवज (aivaj) — valuables",
+      "headword": "ऐवज",
+      "romanization": "aivaj",
+      "gloss": "valuables",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5c77bf431d7220da",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऐवज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऐवज — aivaj — \"valuables\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: aivaj. Look at its shape as you say it: the next lesson takes one piece of it, ऐ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aivaj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aivaj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aivaj, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aivaj*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"valuables\"? (ऐवज, aivaj.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "MR-W65-ai-independent",
       "sequence": 2660,
       "title": "ऐ — the letter a number was waiting on",
@@ -311,7 +626,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8c9c6f1919560853",
+      "sourceHash": "fnv1a64:2cb729ca477238ee",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -454,7 +769,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:31da6b78ef048741",
+      "sourceHash": "fnv1a64:3763665a502061ff",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:29ac3293e8770230",
+  "lessonIds": [
+    "TA-C94-dontunderstand",
+    "TA-C94-write",
+    "TA-C94-onemoretime",
+    "TA-C94-whatsaid"
+  ],
+  "tex": "tamil/book/chapters/ch94-when-you-are-lost.tex"
+}

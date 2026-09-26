@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:eb65dd2ac5640f3d",
+  "lessonIds": [
+    "LA-C89-nubes",
+    "LA-C89-pluvia",
+    "LA-C89-nix",
+    "LA-C89-campus",
+    "LA-C89-litus"
+  ],
+  "tex": "latin/book/chapters/ch89-cloud-rain-snow-plain-shore.tex"
+}

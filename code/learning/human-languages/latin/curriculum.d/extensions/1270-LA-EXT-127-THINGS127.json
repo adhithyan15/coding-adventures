@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-127-THINGS127",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bean, a pea, a cucumber, a chicken and pepper.",
+  "prerequisites": []
+}

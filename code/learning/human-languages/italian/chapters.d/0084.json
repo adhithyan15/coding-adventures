@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Hotel, Pharmacy, Post Office, Police, Library",
+  "label": "ch:it-hotel-pharmacy-post-office-police-library",
+  "canDo": "I can name a hotel, a pharmacy, the post office, the police, a library.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "IT-R84-second-pass-describing-time-place-and-the-town",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can name a hotel, a pharmacy, the post office, the police, a library.",
+    "assesses": [
+      "IT-LEX-C84-CITTA4-03",
+      "IT-LEX-C84-CITTA4-04",
+      "IT-LEX-C84-CITTA4-05"
+    ]
+  }
+}

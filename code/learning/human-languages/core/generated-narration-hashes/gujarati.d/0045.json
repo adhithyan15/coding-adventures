@@ -1,0 +1,18 @@
+{
+  "language": "gujarati",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:f4d3bb7bfe929aee",
+  "lessonIds": [
+    "GU-W45-gha",
+    "GU-W45-ai-sign",
+    "GU-R45-letters-first-pass",
+    "GU-R45-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "gujarati/narration/ch45.txt",
+  "json": "gujarati/narration/ch45.json",
+  "textHash": "fnv1a64:e13a2dc7ab68828e",
+  "jsonHash": "fnv1a64:9540cfff59277aea",
+  "findings": []
+}

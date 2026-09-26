@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C74-garam",
+    "language": "marwadi",
+    "chapter": 74,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c06308458e1d9bb"
+  },
+  "findings": []
+}

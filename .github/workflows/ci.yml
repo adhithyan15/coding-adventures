@@ -1277,6 +1277,31 @@ jobs:
         with:
           persist-credentials: false
 
+      # The conformance check below requires exactly Swift 6.3.3. It used to
+      # rely on the Swift that GitHub preinstalls on ubuntu-24.04, so every
+      # runner-image update could swap the toolchain underneath it: image
+      # 20260920.314.1 did, and the job failed on every PR that ran it. Install
+      # the pinned release instead. The SHA-256 is of the official swift.org
+      # tarball, whose signature was checked against the Swift 6.x Release
+      # Signing Key (EF80A866B47A981F) when the pin was recorded; bump both
+      # together.
+      - name: Install Swift 6.3.3 (pinned)
+        shell: bash
+        env:
+          SWIFT_URL: https://download.swift.org/swift-6.3.3-release/ubuntu2404/swift-6.3.3-RELEASE/swift-6.3.3-RELEASE-ubuntu24.04.tar.gz
+          SWIFT_SHA256: da8272a5fddccd65b1529ed0e52e04526e2eadd4237d58d6220efeb973c6cd19
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/swift-6.3.3.tar.gz"
+          curl --fail --silent --show-error --location --retry 3 --output "$archive" "$SWIFT_URL"
+          echo "$SWIFT_SHA256  $archive" | sha256sum --check --strict
+          toolchain="$RUNNER_TEMP/swift-6.3.3"
+          mkdir -p "$toolchain"
+          tar -xzf "$archive" -C "$toolchain" --strip-components=1
+          rm -f "$archive"
+          # GITHUB_PATH prepends, so later steps resolve this swift first.
+          echo "$toolchain/usr/bin" >> "$GITHUB_PATH"
+
       - name: Verify generated Swift against every official Unicode 17 vector
         shell: bash
         run: |
@@ -2166,7 +2191,7 @@ jobs:
       - name: Round-trip Rust engine through standard SwiftUI binding
         if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
         shell: bash
-        timeout-minutes: 15
+        timeout-minutes: 30
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
@@ -2335,6 +2360,19 @@ jobs:
           # The gate: it builds.
           swift build --package-path "$engram_swift_output/swiftui"
 
+          # ---- Journal: emit and BUILD on SwiftUI (J5b, #14416). -------------
+          # The strict standard binding (native-complete + runtime library), no
+          # replaced generated files, zero degradations, and the package builds.
+          # Journal raises no effects, so there is no handler to grep for.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_swift_runtime="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.dylib"
+          test -f "$journal_swift_runtime"
+          journal_swift_output="$RUNNER_TEMP/mosaic-swiftui-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_swift_output" --emit-project --profile native-complete --runtime-library "$journal_swift_runtime"
+          jq -e '.replacedGeneratedFiles == []' "$journal_swift_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_swift_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$journal_swift_output/swiftui"
+
           ios_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-source"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_output" --emit-project
           jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$ios_output/swiftui/mosaic-degradations.json"
@@ -2342,6 +2380,55 @@ jobs:
             cd "$ios_output/swiftui"
             xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-taskapp-ios" CODE_SIGNING_ALLOWED=NO build
           )
+
+          # iOS and iPadOS with the REAL runtime linked in (UI89 §2.1): the
+          # Rust engine is built as an .xcframework of static libraries (device
+          # + a fat simulator slice), because iOS does not allow loading an
+          # app's own dylib. The loader then calls it directly
+          # (MOSAIC_RUNTIME_STATIC); nm confirms the engine is in the binary,
+          # not merely that the link succeeded.
+          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+          ios_runtime="$RUNNER_TEMP/TaskAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app "$ios_runtime"
+          ios_linked_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$ios_linked_output/swiftui/mosaic-degradations.json"
+          grep -q 'cSettings: \[.define("MOSAIC_RUNTIME_STATIC")\]' "$ios_linked_output/swiftui/Package.swift"
+          ios_linked_data="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked-dd"
+          (
+            cd "$ios_linked_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
+          )
+          for binary in "$ios_linked_data/Build/Products/Debug-iphonesimulator/App" "$ios_linked_data/Build/Products/Debug-iphoneos/App"; do
+            nm -gU "$binary" | grep -q ' _mosaic_app_create$'
+          done
+
+          # An installable iOS / iPadOS APP (UI89 §2.2): the same build wrote
+          # iOS/App.xcodeproj, generated by mosaic-ios-project for any package with
+          # a static runtime. It builds an .app carrying the package's identity
+          # and the engine, which installs and keeps running on a simulator.
+          test -f "$ios_linked_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          ios_app_build="$RUNNER_TEMP/mosaic-taskapp-ios-app"
+          (
+            cd "$ios_linked_output/swiftui/iOS"
+            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$ios_app_build" build
+          )
+          ios_app="$ios_app_build/Debug-iphonesimulator/App.app"
+          nm -gU "$ios_app/App" | grep -q ' _mosaic_app_create$'
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$ios_app/Info.plist")" = dev.codingadventures.trestle
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$ios_app/Info.plist")" = Trestle
+          simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
+          test -n "$simulator" && test "$simulator" != null
+          xcrun simctl boot "$simulator" || true
+          xcrun simctl bootstatus "$simulator" -b
+          xcrun simctl install "$simulator" "$ios_app"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          # Still running ten seconds later: it started, loaded the engine and
+          # did not crash rendering the first frame.
+          xcrun simctl spawn "$simulator" launchctl list | grep -q 'dev.codingadventures.trestle'
+          xcrun simctl shutdown "$simulator"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project
@@ -2470,6 +2557,52 @@ jobs:
             "$task_ui_binary"
           env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
             MOSAIC_EXPECT_RESTORED=1 "$task_ui_binary"
+
+          # ---- Journal: build, install and LAUNCH (J5a, #14416). --------------
+          #
+          # The first native host Journal runs in. Same shape as TaskApp above:
+          # the strict standard binding (native-complete + runtime library), the
+          # built runtime is the one installed, and the installed app must stay
+          # up for five seconds without the runtime or a required prop missing.
+          # It launches twice against one state file, so the second start
+          # restores whatever the first saved. Journal raises no effects and
+          # ships no host assets, so no harness files are needed.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
+          test -f "$journal_runtime_library"
+
+          journal_output="$RUNNER_TEMP/mosaic-qt-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend qt --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
+          jq -e '.replacedGeneratedFiles == []' "$journal_output/qt/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/qt/mosaic-degradations.json"
+          cmake -S "$journal_output/qt" -B "$journal_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$journal_output/install"
+          cmake --build "$journal_output/qt/build" --config Release --parallel
+          cmake --install "$journal_output/qt/build" --config Release
+          installed_journal_runtime="$(find "$journal_output/install" -type f -name libmosaic_app.so -print -quit)"
+          test -n "$installed_journal_runtime"
+          cmp "$journal_runtime_library" "$installed_journal_runtime"
+          installed_journal="$(dirname "$installed_journal_runtime")/JournalApp"
+          test -x "$installed_journal"
+          journal_state_path="$RUNNER_TEMP/mosaic-qt-journal-state.json"
+          rm -f "$journal_state_path" "$journal_state_path.corrupt" "$journal_state_path.tmp"
+          for journal_launch in first restored; do
+            journal_log="$RUNNER_TEMP/mosaic-qt-journal-launch-$journal_launch.log"
+            set +e
+            env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$journal_state_path" \
+              timeout 5s "$installed_journal" >"$journal_log" 2>&1
+            journal_status=$?
+            set -e
+            cat "$journal_log"
+            test "$journal_status" -eq 124
+            # Explicit exits, not `! grep`: bash's `set -e` ignores a command
+            # whose status is inverted with `!`, so a bare `! grep` that
+            # matches would not fail this step.
+            if grep -F "Mosaic Rust runtime unavailable" "$journal_log"; then exit 1; fi
+            if grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"; then exit 1; fi
+          done
+
+          # Journal's own suite (the package opts out of the workspace).
+          cargo test --manifest-path code/programs/mosaic/journal-app/Cargo.toml
 
           # ---- Engram: prove the Qt emission COMPILES. ------------------------
           #
@@ -2973,6 +3106,47 @@ jobs:
           # exercises `createDistributable` on task-app, and what is new here is
           # the handler source, not the packaging.
           gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin
+
+          # ---- Journal: emit and COMPILE on Compose (J5b, #14416). -----------
+          # Same gate as Engram above, minus the effects handler Journal does
+          # not have.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
+          test -f "$journal_runtime_library"
+          journal_output="$RUNNER_TEMP/mosaic-compose-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
+          jq -e '.replacedGeneratedFiles == []' "$journal_output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -Pcompose.desktop.packaging.checkJdkVendor=false -p "$journal_output/compose" compileKotlin createDistributable
+          installed_journal_runtime="$(find "$journal_output/compose/build/compose/binaries/main/app" -path '*/resources/libmosaic_app.so' -print -quit)"
+          test -n "$installed_journal_runtime"
+          cmp "$journal_runtime_library" "$installed_journal_runtime"
+
+          # Drive the generated app, not just compile it (J5, #14416):
+          # JournalUiTest writes and saves entries through the generated
+          # editor, then a second launch on the same state file must find the
+          # survivor. Same two-launch shape as TaskAppUiTest above.
+          mkdir -p "$journal_output/compose/src/test/kotlin"
+          cp code/packages/rust/journal-mosaic-app/conformance/compose/JournalUiTest.kt \
+            "$journal_output/compose/src/test/kotlin/JournalUiTest.kt"
+          journal_ui_state="$RUNNER_TEMP/mosaic-compose-journal-ui-state.json"
+          rm -f "$journal_ui_state" "$journal_ui_state.corrupt" "$journal_ui_state.tmp"
+          MOSAIC_APP_STATE_PATH="$journal_ui_state" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
+            xvfb-run -a gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+              test --tests JournalUiTest
+          MOSAIC_APP_STATE_PATH="$journal_ui_state" MOSAIC_EXPECT_RESTORED=1 \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
+            xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
+              test --tests JournalUiTest
+
+          # The platform library's own behaviour (UI87 §7): every Compose app
+          # gets MosaicPlatformEffects.kt, and this drives its open/save logic,
+          # limits and routing with fake dialogs -- no display needed.
+          cp code/packages/rust/mosaic-app-bindings/conformance/compose/MosaicPlatformEffectsTest.kt \
+            "$journal_output/compose/src/test/kotlin/MosaicPlatformEffectsTest.kt"
+          gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+            test --tests MosaicPlatformEffectsTest
 
           toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project

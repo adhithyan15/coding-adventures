@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:125fdb8e87ec5434",
+  "lessonIds": [
+    "TE-C89-job",
+    "TE-C89-language",
+    "TE-C89-english",
+    "TE-C89-wedding",
+    "TE-C89-address"
+  ],
+  "tex": "telugu/book/chapters/ch89-about-yourself.tex"
+}

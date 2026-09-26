@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C70-avia",
+    "language": "latin",
+    "chapter": 70,
+    "sequence": 2120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b959339c020c3d94"
+  },
+  "findings": []
+}

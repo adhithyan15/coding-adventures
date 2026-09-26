@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-70-ESSEN2",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "GE-EXT-70-ESSEN2"
+  ],
+  "after": []
+}

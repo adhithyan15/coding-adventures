@@ -1,0 +1,11 @@
+{
+  "id": "RU-C119-lips",
+  "pathSegment": "RU-PATH-119-THINGS119",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-119-THINGS119",
+      "order": 3
+    }
+  ]
+}

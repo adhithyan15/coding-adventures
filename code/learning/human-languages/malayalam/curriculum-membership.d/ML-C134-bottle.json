@@ -1,0 +1,11 @@
+{
+  "id": "ML-C134-bottle",
+  "pathSegment": "ML-PATH-134-TABLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-134-TABLE",
+      "order": 1
+    }
+  ]
+}

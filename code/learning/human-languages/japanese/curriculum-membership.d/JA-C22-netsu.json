@@ -1,0 +1,11 @@
+{
+  "id": "JA-C22-netsu",
+  "pathSegment": "JA-PATH-22-BODY22",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-22-BODY22",
+      "order": 3
+    }
+  ]
+}

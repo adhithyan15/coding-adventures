@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:e01f7ce4b542ce54",
+  "lessonIds": [
+    "MR-C136-kot",
+    "MR-C136-svetar",
+    "MR-C136-poli",
+    "MR-C136-bhaji",
+    "MR-C136-varan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch136.txt",
+  "json": "marathi/narration/ch136.json",
+  "textHash": "fnv1a64:f2e0886427c64781",
+  "jsonHash": "fnv1a64:aea62de199bfa05c",
+  "findings": []
+}

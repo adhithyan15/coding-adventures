@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:2b37d2e36954ba08",
+  "lessonIds": [
+    "UR-C113-daraz",
+    "UR-C113-chitthi",
+    "UR-C113-khat",
+    "UR-C113-pensil",
+    "UR-C113-kapi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch113.txt",
+  "json": "urdu/narration/ch113.json",
+  "textHash": "fnv1a64:4917d7af7bc8908c",
+  "jsonHash": "fnv1a64:1ac876a77d4f5eb9",
+  "findings": []
+}

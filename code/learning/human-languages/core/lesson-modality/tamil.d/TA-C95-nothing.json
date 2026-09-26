@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C95-nothing",
+    "language": "tamil",
+    "chapter": 95,
+    "sequence": 4000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b7b06bba1ff2949"
+  },
+  "findings": []
+}

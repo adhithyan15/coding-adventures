@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Small, New, Good, Bad, Long",
+  "label": "ch:ur-small-new-good-bad-long",
+  "canDo": "I can say small, new, good, bad and long, tall.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C70-lamba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can say small, new, good, bad and long, tall.",
+    "assesses": [
+      "UR-LEX-C70-ADJ70-03",
+      "UR-LEX-C70-ADJ70-04",
+      "UR-LEX-C70-ADJ70-05"
+    ]
+  }
+}

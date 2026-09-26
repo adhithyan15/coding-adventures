@@ -3,7 +3,7 @@
     "id": "GU-C22-rasto",
     "language": "gujarati",
     "chapter": 26,
-    "sequence": 1070,
+    "sequence": 1083,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f37060ff64a8845a",
+    "sourceHash": "fnv1a64:5bdcdb16399b2b18",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."

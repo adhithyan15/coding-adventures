@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-72-SIZE",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GU-EXT-72-SIZE"
+  ],
+  "after": []
+}

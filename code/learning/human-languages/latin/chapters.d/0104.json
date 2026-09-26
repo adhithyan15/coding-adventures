@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Often, Always, Never, Now, Soon",
+  "label": "ch:la-often-always-never-now-soon",
+  "canDo": "I can say often, always, never, now and soon.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C104-mox",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say often, always, never, now and soon.",
+    "assesses": [
+      "LA-LEX-C104-SEMPER-03",
+      "LA-LEX-C104-SEMPER-04",
+      "LA-LEX-C104-SEMPER-05"
+    ]
+  }
+}

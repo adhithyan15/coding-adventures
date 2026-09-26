@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "To lift, To pull, To push, To hide, To win",
+  "label": "ch:mr-to-lift-to-pull-to-push-to-hide-to-win",
+  "canDo": "I can say to lift, to pull, to push, to hide and to win.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C83-jinkne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say to lift, to pull, to push, to hide and to win.",
+    "assesses": [
+      "MR-LEX-C83-VERBS83-03",
+      "MR-LEX-C83-VERBS83-04",
+      "MR-LEX-C83-VERBS83-05"
+    ]
+  }
+}

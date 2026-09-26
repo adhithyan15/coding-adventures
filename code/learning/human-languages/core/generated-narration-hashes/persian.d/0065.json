@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:fdca8ed71522e180",
+  "lessonIds": [
+    "FA-C65-daghighe",
+    "FA-C65-emruz",
+    "FA-C65-diruz",
+    "FA-C65-farda",
+    "FA-C65-hala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch65.txt",
+  "json": "persian/narration/ch65.json",
+  "textHash": "fnv1a64:1442046bc620bc8b",
+  "jsonHash": "fnv1a64:638619086af6af33",
+  "findings": []
+}

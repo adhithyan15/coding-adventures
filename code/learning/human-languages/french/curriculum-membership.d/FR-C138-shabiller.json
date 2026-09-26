@@ -1,0 +1,11 @@
+{
+  "id": "FR-C138-shabiller",
+  "pathSegment": "FR-PATH-138-VERBES90",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-138-VERBES90",
+      "order": 4
+    }
+  ]
+}

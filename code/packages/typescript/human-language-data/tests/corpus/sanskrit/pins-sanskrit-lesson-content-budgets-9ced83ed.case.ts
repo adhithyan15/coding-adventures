@@ -76,7 +76,14 @@ it("pins Sanskrit lesson-content budgets", () =>
     // retrieval slots, and 45 slots at the observed ~10-per-lesson ceiling is
     // six lessons rather than three. None of them introduces an atom or carries
     // a headword, so every other number in this object is unchanged.
-    lessons: 359,
+    // 359 -> 362: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
+    // 362 -> 486: chapters 66-89, the pre-A1 vocabulary tranche. 120 word
+    // lessons (seventeen of them verbs) and four reviews. Each word lesson
+    // introduces one lexical atom and no idiom, sense or culture claim, so the
+    // three content totals stay at 11 / 12 / 13. Re-measured against the tree.
+    // 486 -> 487: HL-C443 anchor word मौन, placed before the ौ letter lesson so
+    // the sign is taken from a word the reader already says.
+    lessons: 487,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:d06374b9df25fdd8",
+  "lessonIds": [
+    "PT-C60-cao",
+    "PT-C60-gato",
+    "PT-C60-cavalo",
+    "PT-C60-vaca",
+    "PT-C60-porco"
+  ],
+  "tex": "portuguese/book/chapters/ch60-dog-cat-horse-cow-pig.tex"
+}

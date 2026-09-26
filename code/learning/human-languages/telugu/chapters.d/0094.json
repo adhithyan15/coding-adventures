@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "Offers, Apologies, Introductions",
+  "label": "ch:te-offers-apologies",
+  "canDo": "I can beg pardon, apologise, offer something, decline politely, and say I am glad of an introduction.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TE-C94-introduction",
+    "kind": "production",
+    "summary": "Complete TE-C94-introduction: the courtesies around a first visit.",
+    "assesses": [
+      "TE-LEX-C94-POLITE-03",
+      "TE-LEX-C94-POLITE-04",
+      "TE-LEX-C94-POLITE-05"
+    ]
+  }
+}

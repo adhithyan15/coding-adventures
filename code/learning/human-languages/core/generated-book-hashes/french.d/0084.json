@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:9c2de1470db82f45",
+  "lessonIds": [
+    "FR-C84-vent",
+    "FR-C84-feu",
+    "FR-C84-colline",
+    "FR-C84-desert",
+    "FR-C84-vague"
+  ],
+  "tex": "french/book/chapters/ch84-wind-fire-hill-desert-wave.tex"
+}

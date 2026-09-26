@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:5fd7eb9753335c5a",
+  "lessonIds": [
+    "GU-C47-finger",
+    "GU-C47-throat",
+    "GU-C47-shoulder",
+    "GU-C47-lip",
+    "GU-C47-tongue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch47.txt",
+  "json": "gujarati/narration/ch47.json",
+  "textHash": "fnv1a64:be7431e3f50e26b2",
+  "jsonHash": "fnv1a64:8aa87f40dd177478",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C67-dolor",
+  "pathSegment": "LA-PATH-67-MORBUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-67-MORBUS",
+      "order": 2
+    }
+  ]
+}

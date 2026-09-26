@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C98-hammer",
+    "language": "russian",
+    "chapter": 98,
+    "sequence": 5040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ad03eea2b3f40f1"
+  },
+  "findings": []
+}

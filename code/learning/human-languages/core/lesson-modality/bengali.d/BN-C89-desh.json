@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C89-desh",
+    "language": "bengali",
+    "chapter": 89,
+    "sequence": 4620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ddb39f5de088f54"
+  },
+  "findings": []
+}

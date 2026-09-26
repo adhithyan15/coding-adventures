@@ -1,0 +1,11 @@
+{
+  "id": "TA-C106-safely",
+  "pathSegment": "TA-PATH-106-CARE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-106-CARE",
+      "order": 1
+    }
+  ]
+}

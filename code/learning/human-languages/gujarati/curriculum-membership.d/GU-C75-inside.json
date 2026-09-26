@@ -1,0 +1,11 @@
+{
+  "id": "GU-C75-inside",
+  "pathSegment": "GU-PATH-75-WHERE2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-75-WHERE2",
+      "order": 2
+    }
+  ]
+}

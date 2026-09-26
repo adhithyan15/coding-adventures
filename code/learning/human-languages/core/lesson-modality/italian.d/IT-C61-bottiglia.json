@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C61-bottiglia",
+    "language": "italian",
+    "chapter": 61,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4556b095f8312b64"
+  },
+  "findings": []
+}

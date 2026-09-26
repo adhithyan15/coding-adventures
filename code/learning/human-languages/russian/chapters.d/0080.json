@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Hotel, Pharmacy, Church, Park, Taxi",
+  "label": "ch:ru-hotel-pharmacy-church-park-taxi",
+  "canDo": "I can name a hotel, a pharmacy, a church, a park and a taxi.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "RU-R80-second-pass-time-place-numbers-and-the-town",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can name a hotel, a pharmacy, a church, a park and a taxi.",
+    "assesses": [
+      "RU-LEX-C80-PLACES-03",
+      "RU-LEX-C80-PLACES-04",
+      "RU-LEX-C80-PLACES-05"
+    ]
+  }
+}

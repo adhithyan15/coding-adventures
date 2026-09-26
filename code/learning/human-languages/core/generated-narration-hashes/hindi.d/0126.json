@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:1b8a14e82d983500",
+  "lessonIds": [
+    "HI-C126-phirse",
+    "HI-C126-samajhnahin",
+    "HI-C126-kyakaha",
+    "HI-C126-nahinpata",
+    "HI-C126-ekbaraur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch126.txt",
+  "json": "hindi/narration/ch126.json",
+  "textHash": "fnv1a64:e34bdb0d50ed5bc4",
+  "jsonHash": "fnv1a64:0598c46720158974",
+  "findings": []
+}

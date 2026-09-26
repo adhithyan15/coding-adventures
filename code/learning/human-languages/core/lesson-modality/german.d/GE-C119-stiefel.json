@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C119-stiefel",
+    "language": "german",
+    "chapter": 119,
+    "sequence": 4810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c881d8505f313f51"
+  },
+  "findings": []
+}

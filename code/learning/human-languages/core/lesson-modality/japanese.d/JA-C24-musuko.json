@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C24-musuko",
+    "language": "japanese",
+    "chapter": 24,
+    "sequence": 1840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd1927389c797559"
+  },
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C32-ane-write",
     "language": "gujarati",
     "chapter": 36,
-    "sequence": 1850,
+    "sequence": 1863,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:434c74bf65862bb7",
+    "sourceHash": "fnv1a64:c215c8bc43c33b3d",
     "detachableSegments": [
       "Script — three signs, none of them new",
       "Writing — guided copy, model in view"

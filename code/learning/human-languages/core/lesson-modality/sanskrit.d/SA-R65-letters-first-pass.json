@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R65-letters-first-pass",
+    "language": "sanskrit",
+    "chapter": 65,
+    "sequence": 3000,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3f64314d92bdddd1"
+  },
+  "findings": []
+}

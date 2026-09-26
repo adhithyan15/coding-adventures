@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:63ea974535011b29",
+  "lessonIds": [
+    "LA-C64-collum",
+    "LA-C64-umerus",
+    "LA-C64-genu",
+    "LA-C64-cor",
+    "LA-C64-sanguis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch64.txt",
+  "json": "latin/narration/ch64.json",
+  "textHash": "fnv1a64:2342115cf1ce35bd",
+  "jsonHash": "fnv1a64:0abd5be974b510a4",
+  "findings": []
+}

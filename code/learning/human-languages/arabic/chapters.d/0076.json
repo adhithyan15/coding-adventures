@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Forest, River, Stone, Sand, Field",
+  "label": "ch:ar-forest-river-stone-sand-field",
+  "canDo": "I can say a forest, a river, a stone, sand and a field.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C76-haql",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say a forest, a river, a stone, sand and a field.",
+    "assesses": [
+      "AR-LEX-C76-NATURE76-03",
+      "AR-LEX-C76-NATURE76-04",
+      "AR-LEX-C76-NATURE76-05"
+    ]
+  }
+}

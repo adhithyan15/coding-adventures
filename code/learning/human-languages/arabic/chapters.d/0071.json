@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Mirror, Lamp, Key, Plate, Knife",
+  "label": "ch:ar-mirror-lamp-key-plate-knife",
+  "canDo": "I can say a mirror, a lamp, a key, a plate and a knife.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "AR-C71-sikkin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say a mirror, a lamp, a key, a plate and a knife.",
+    "assesses": [
+      "AR-LEX-C71-HOME71-03",
+      "AR-LEX-C71-HOME71-04",
+      "AR-LEX-C71-HOME71-05"
+    ]
+  }
+}

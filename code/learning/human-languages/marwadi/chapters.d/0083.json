@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Bridge, Hotel, Police, Boat, Bicycle",
+  "label": "ch:mw-bridge-hotel-police-boat-bicycle",
+  "canDo": "I can say a bridge, a hotel, the police, a boat and a bicycle.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MW-C83-saikal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say a bridge, a hotel, the police, a boat and a bicycle.",
+    "assesses": [
+      "MW-LEX-C83-TOWN83-03",
+      "MW-LEX-C83-TOWN83-04",
+      "MW-LEX-C83-TOWN83-05"
+    ]
+  }
+}

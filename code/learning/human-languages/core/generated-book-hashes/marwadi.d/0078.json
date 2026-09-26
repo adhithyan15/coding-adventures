@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:8fd6a7df051b9366",
+  "lessonIds": [
+    "MW-C78-din",
+    "MW-C78-rat",
+    "MW-C78-savero",
+    "MW-C78-mahino",
+    "MW-C78-baras"
+  ],
+  "tex": "marwadi/book/chapters/ch78-day-night-morning-month-year.tex"
+}

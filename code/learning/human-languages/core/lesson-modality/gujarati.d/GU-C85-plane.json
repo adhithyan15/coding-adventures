@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C85-plane",
+    "language": "gujarati",
+    "chapter": 85,
+    "sequence": 4353,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:484933487af9047a"
+  },
+  "findings": []
+}

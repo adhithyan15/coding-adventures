@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C121-dhyanrakhie",
+    "language": "hindi",
+    "chapter": 121,
+    "sequence": 5370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9f3cec6e7e3a283"
+  },
+  "findings": []
+}

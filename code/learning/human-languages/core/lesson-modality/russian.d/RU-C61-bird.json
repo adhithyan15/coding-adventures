@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C61-bird",
+    "language": "russian",
+    "chapter": 61,
+    "sequence": 3020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff3bc80db68c4209"
+  },
+  "findings": []
+}

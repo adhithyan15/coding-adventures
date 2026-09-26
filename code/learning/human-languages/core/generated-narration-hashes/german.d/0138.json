@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:e3263b23247fdba8",
+  "lessonIds": [
+    "GE-C138-sechzig",
+    "GE-C138-siebzig",
+    "GE-C138-achtzig",
+    "GE-C138-neunzig",
+    "GE-C138-million"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch138.txt",
+  "json": "german/narration/ch138.json",
+  "textHash": "fnv1a64:4a90658df8c46384",
+  "jsonHash": "fnv1a64:d21451d2ade6e053",
+  "findings": []
+}

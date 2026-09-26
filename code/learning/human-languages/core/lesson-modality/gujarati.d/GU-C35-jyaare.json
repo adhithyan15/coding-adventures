@@ -3,7 +3,7 @@
     "id": "GU-C35-jyaare",
     "language": "gujarati",
     "chapter": 39,
-    "sequence": 2010,
+    "sequence": 2023,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4d0d3c87bce1118e"
+    "sourceHash": "fnv1a64:185eee35e3baa164"
   },
   "findings": []
 }

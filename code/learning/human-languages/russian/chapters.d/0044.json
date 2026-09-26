@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Fruit, Apple, Pear, Cherry, Berry",
+  "label": "ch:ru-fruit-apple-pear-cherry-berry",
+  "canDo": "I can name fruit, an apple, a pear, a cherry and a berry.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "RU-C44-berry",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can name fruit, an apple, a pear, a cherry and a berry.",
+    "assesses": [
+      "RU-LEX-C44-FRUIT-03",
+      "RU-LEX-C44-FRUIT-04",
+      "RU-LEX-C44-FRUIT-05"
+    ]
+  }
+}

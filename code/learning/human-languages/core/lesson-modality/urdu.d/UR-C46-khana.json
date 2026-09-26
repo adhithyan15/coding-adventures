@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C46-khana",
+    "language": "urdu",
+    "chapter": 46,
+    "sequence": 2340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23793aa569c7b0f6"
+  },
+  "findings": []
+}

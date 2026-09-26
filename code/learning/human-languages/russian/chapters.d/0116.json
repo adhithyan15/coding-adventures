@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Desert, Volcano, Cave, Waterfall, Donkey",
+  "label": "ch:ru-desert-volcano-cave-waterfall-donkey",
+  "canDo": "I can say a desert, a volcano, a cave, a waterfall and a donkey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C116-donkey",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a desert, a volcano, a cave, a waterfall and a donkey.",
+    "assesses": [
+      "RU-LEX-C116-THINGS116-03",
+      "RU-LEX-C116-THINGS116-04",
+      "RU-LEX-C116-THINGS116-05"
+    ]
+  }
+}

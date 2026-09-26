@@ -1,0 +1,11 @@
+{
+  "id": "FR-C86-canard",
+  "pathSegment": "FR-PATH-86-ANIMAUX38",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-86-ANIMAUX38",
+      "order": 4
+    }
+  ]
+}

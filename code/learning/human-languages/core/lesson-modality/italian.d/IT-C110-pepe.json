@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C110-pepe",
+    "language": "italian",
+    "chapter": 110,
+    "sequence": 5290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cb7ccc18b85e12b"
+  },
+  "findings": []
+}

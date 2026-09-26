@@ -1,0 +1,873 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 127,
+  "title": "Take Care, See You",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:fa395196717b697c",
+  "lessons": [
+    {
+      "id": "ML-C127-takecare",
+      "sequence": 4890,
+      "title": "സൂക്ഷിക്കണേ (sūkṣikkaṇē) — take care",
+      "headword": "സൂക്ഷിക്കണേ",
+      "romanization": "sūkṣikkaṇē",
+      "gloss": "take care",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ded99c0e9c279513",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for English, then the Malayalam for office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സൂക്ഷിക്കണേ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സൂക്ഷിക്കണേ (sūkṣikkaṇē) — \"take care\", a warm word at the door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A caring goodbye."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūkṣikkaṇē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūkṣikkaṇē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūkṣikkaṇē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūkṣikkaṇē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sūkṣikkaṇē!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sūkṣikkaṇē!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for English, then the Malayalam for office, then say sūkṣikkaṇē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for English, then the Malayalam for office, then say *sūkṣikkaṇē* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സൂക്ഷിക്കണേ (sūkṣikkaṇē) mean? (\"Take care\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C127-late",
+      "sequence": 4900,
+      "title": "വൈകി (vaiki) — it's late, I'm late",
+      "headword": "വൈകി",
+      "romanization": "vaiki",
+      "gloss": "it's late, I'm late",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7de10672aefe4d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for office, then the Malayalam for take care."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വൈകി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വൈകി (vaiki) — \"(it got) late\". നേരം വൈകി (nēraṁ vaiki) — \"it's getting late\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reason people stand up to leave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vaiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vaiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for office, then the Malayalam for take care, then say vaiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for office, then the Malayalam for take care, then say *vaiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വൈകി (vaiki) mean? (\"It's late, I'm late\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C127-letsgo",
+      "sequence": 4910,
+      "title": "പോകാം (pōkāṁ) — let's go",
+      "headword": "പോകാം",
+      "romanization": "pōkāṁ",
+      "gloss": "let's go",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f2fc5a30b27a886",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for take care, then the Malayalam for it's late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പോകാം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോകാം (pōkāṁ) — \"let's go\", with the ‑ആം ending of പോയി വരാം and കാണാം: \"let's\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A known ending on go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōkāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōkāṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōkāṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōkāṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vaiki, pōkāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vaiki, pōkāṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for take care, then the Malayalam for it's late, then say pōkāṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for take care, then the Malayalam for it's late, then say *pōkāṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പോകാം (pōkāṁ) mean? (\"Let's go\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C127-holiday",
+      "sequence": 4920,
+      "title": "അവധി (avadhi) — a holiday, leave",
+      "headword": "അവധി",
+      "romanization": "avadhi",
+      "gloss": "a holiday, leave",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a53bb16224019fca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for it's late, then the Malayalam for let's go."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അവധി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവധി (avadhi) — \"a holiday, time off\". നാളെ അവധിയാണ് — \"tomorrow is a holiday\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A cheerful reason for goodbye."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avadhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avadhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avadhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avadhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nāḷe avadhiyāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nāḷe avadhiyāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for it's late, then the Malayalam for let's go, then say avadhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for it's late, then the Malayalam for let's go, then say *avadhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അവധി (avadhi) mean? (\"A holiday, leave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C127-illcall",
+      "sequence": 4930,
+      "title": "വിളിക്കാം (viḷikkāṁ) — I'll call",
+      "headword": "വിളിക്കാം",
+      "romanization": "viḷikkāṁ",
+      "gloss": "I'll call",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a322cc482b7d86f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for let's go, then the Malayalam for a holiday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിളിക്കാം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിളിക്കാം (viḷikkāṁ) — \"I'll call (you)\", the ‑ആം ending on വിളിക്കൂ's verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A promise to stay in touch."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḷikkāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḷikkāṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viḷikkāṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viḷikkāṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say viḷikkāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *viḷikkāṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for let's go, then the Malayalam for a holiday, then say viḷikkāṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for let's go, then the Malayalam for a holiday, then say *viḷikkāṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിളിക്കാം (viḷikkāṁ) mean? (\"I'll call\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R127-first-pass-body-feelings-repair",
+      "sequence": 4940,
+      "title": "How are you, really? — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over feeling unwell, feelings, weather and repair",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe70fd053ef5bb4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tomorrow is a holiday. Say so, and promise to call."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you have a cold, a headache and dizziness; you are not well; tell a friend to rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you have a cold, a headache and dizziness; you are not well; tell a friend to rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name sadness, fear, anger, laughter and worry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name sadness, fear, anger, laughter and worry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you are thirsty; name sweat, a tablet, vomiting and a wound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you are thirsty; name sweat, a tablet, vomiting and a wound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it's cold; it's hot; you're sleepy; name mist, and thunder and lightning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it's cold; it's hot; you're sleepy; name mist, and thunder and lightning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "slowly; once more; louder; the meaning; please wait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: slowly; once more; louder; the meaning; please wait]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "please show me; I didn't hear; I didn't understand; please help; please stop here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: please show me; I didn't hear; I didn't understand; please help; please stop here]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A cold? (ജലദോഷം.) Headache? (തലവേദന.) Rest? (വിശ്രമം.) Dizziness? (തലകറക്കം.) Not well? (സുഖമില്ല.) Sadness, fear, anger, laughter, worry? (സങ്കടം, പേടി, ദേഷ്യം, ചിരി, ആശങ്ക.) Thirst? (ദാഹം.) Sweat? (വിയർപ്പ്.) Tablet? (ഗുളിക.) Vomiting? (ഛർദ്ദി.) Wound? (മുറിവ്.) Cold, heat, sleep, mist, thunder? (തണുപ്പ്, ചൂട്, ഉറക്കം, മഞ്ഞ്, ഇടിമിന്നൽ.) Slowly? (പതുക്കെ.) Once more? (ഒന്നുകൂടി.) Loudly? (ഉറക്കെ.) Meaning? (അർത്ഥം.) Wait? (കാത്തിരിക്കൂ.) Show? (കാണിക്കൂ.) Didn't hear? (കേട്ടില്ല.) Didn't understand? (മനസ്സിലായില്ല.) Help? (സഹായിക്കൂ.) Stop? (നിർത്തൂ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R127-second-pass-travel-replies-people",
+      "sequence": 4950,
+      "title": "Out, about and home again — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over travel, replies, welcome, family and parting",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e1f79a7abd3b0f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask someone to call a taxi, and ask for one ticket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name a bus, a station and a map",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name a bus, a station and a map]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "really?; nothing; oh no!; that very one; oh, I see",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: really?; nothing; oh no!; that very one; oh, I see]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "not possible; not like that; maybe; a different one; wrong",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: not possible; not like that; maybe; a different one; wrong]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "congratulations; an invitation; a gift; welcome; good wishes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: congratulations; an invitation; a gift; welcome; good wishes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name a grandchild, a relative, the neighbours, an uncle and a nephew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name a grandchild, a relative, the neighbours, an uncle and a nephew]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask an address; name a wedding, a language, English and an office",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask an address; name a wedding, a language, English and an office]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "take care; it's late; let's go; a holiday; I'll call",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: take care; it's late; let's go; a holiday; I'll call]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Call? (വിളിക്കൂ.) Ticket, bus, station, map? (ടിക്കറ്റ്, ബസ്, സ്റ്റേഷൻ, ഭൂപടം.) Really? (ശരിക്കും.) Nothing? (ഒന്നുമില്ല.) Oh no? (അയ്യോ.) The same? (അതുതന്നെ.) Oh, I see? (ഓഹോ.) Not possible? (പറ്റില്ല.) Not like that? (അങ്ങനെയല്ല.) Maybe? (ആയിരിക്കാം.) Other? (വേറെ.) Wrong? (തെറ്റ്.) Congratulations? (അഭിനന്ദനങ്ങൾ.) Invitation? (ക്ഷണം.) Gift? (സമ്മാനം.) Welcome? (സ്വാഗതം.) Wishes? (ആശംസകൾ.) Grandchild? (പേരക്കുട്ടി.) Relative? (ബന്ധു.) Neighbours? (അയൽക്കാർ.) Uncle? (അമ്മാവൻ.) Nephew? (മരുമകൻ.) Address? (വിലാസം.) Wedding? (കല്യാണം.) Language? (ഭാഷ.) English? (ഇംഗ്ലീഷ്.) Office? (ഓഫീസ്.) Take care? (സൂക്ഷിക്കണേ (sūkṣikkaṇē).) Late? (വൈകി (vaiki).) Let's go? (പോകാം (pōkāṁ).) Holiday? (അവധി (avadhi).) I'll call? (വിളിക്കാം (viḷikkāṁ).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

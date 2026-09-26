@@ -9,18 +9,18 @@ type: writing
 headword: ো
 romanization: "-o"
 gloss: "the o-sign — one sound, wrapped around the letter in two pieces you already own"
-prerequisites: [BN-W04-e-indep]
+prerequisites: [BN-W04-e-indep, BN-C06-eka]
 sounds: []
 roots: []
 etymology_hook: "The o-sign is not a new shape at all: it is the e-sign in front and the a-sign behind, written around one consonant, which is why a script with fifty letters needs far fewer than fifty strokes."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01]
+  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01, BN-LEX-ANCHOR-EKA]
 introduces:
   knowledge: [BN-SCRIPT-O-MATRA-01]
 practises:
-  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-O-MATRA-01]
+  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-O-MATRA-01, BN-LEX-ANCHOR-EKA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [BN-W04-e-indep]
 # ো — the o-sign, wrapped around its letter
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-E-INDEP-01, BN-SCRIPT-E-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-E-INDEP-01, BN-SCRIPT-E-MATRA-01, BN-LEX-ANCHOR-EKA] -->
 
 [PAUSE 2s] Read **আমি**, then write **ে** and **এ** and say which is the sign.
 

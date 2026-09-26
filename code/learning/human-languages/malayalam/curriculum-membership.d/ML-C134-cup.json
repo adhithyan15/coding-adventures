@@ -1,0 +1,11 @@
+{
+  "id": "ML-C134-cup",
+  "pathSegment": "ML-PATH-134-TABLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-134-TABLE",
+      "order": 2
+    }
+  ]
+}

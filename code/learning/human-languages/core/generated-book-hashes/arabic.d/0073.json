@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:533961362a942ec6",
+  "lessonIds": [
+    "AR-C73-kitab",
+    "AR-C73-daftar",
+    "AR-C73-qalam",
+    "AR-C73-waraqa",
+    "AR-C73-madrasa"
+  ],
+  "tex": "arabic/book/chapters/ch73-book-notebook-pen-sheet-of-paper-school.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C92-mota",
+  "pathSegment": "PT-PATH-92-VIAGEM92",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-92-VIAGEM92",
+      "order": 0
+    }
+  ]
+}

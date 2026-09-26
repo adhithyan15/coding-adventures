@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:b53692b5bf42f2dd",
+  "lessonIds": [
+    "PT-C42-correr",
+    "PT-C42-ouvir",
+    "PT-C42-ensinar",
+    "PT-C42-aprender",
+    "PT-C42-abrir"
+  ],
+  "tex": "portuguese/book/chapters/ch42-run-hear-teach-learn-open.tex"
+}

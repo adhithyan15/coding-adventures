@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W46-sad",
+    "language": "arabic",
+    "chapter": 46,
+    "sequence": 1290,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3104801edd3b8567",
+    "detachableSegments": [
+      "Script you'll notice: ص",
+      "Writing: ص"
+    ]
+  },
+  "findings": []
+}

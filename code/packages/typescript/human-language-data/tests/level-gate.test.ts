@@ -105,26 +105,102 @@ describe("the gate that would have caught the A2 claim", () => {
     // criteria, and has since closed A1 as well. The finding this test names is
     // unaffected — overstating is a track touching HIGHER than it has attained, not a
     // track having attained nothing — so the 23 stands and the zero does not.
-    expect(gate.summary.tracksWithAnyLevel).toBe(1);
-    // Which rung, and only that rung. Checking every level is the point: pinning one
+    // 1 -> 2: Telugu closed its last pre-A1 criterion (vocabulary, 300 headwords)
+    // with chapters 92-99, the second track to attain any level. 2 -> 3: Hindi
+    // closed the same criterion with chapters 106-127. 3 -> 4: Tamil, with chapters
+    // 87-108 and the split of its one over-budget script lesson. 4 -> 5: Kannada,
+    // with chapters 82-106 (125 headwords) after its one over-budget please-lesson
+    // moved a script atom to ombattu. 5 -> 6: Malayalam, with chapters 115-141
+    // (135 headwords), its budget already cleared by the same kind of move.
+    // 6 -> 7: Sanskrit, with chapters 66-89 (120 headwords, seventeen verbs).
+    // 7 -> 8: Gujarati, with chapters 46-91 (230 headwords, nineteen verbs).
+    // 8 -> 9: Latin, with chapters 63-108 (230 headwords, thirty-three verbs).
+    // 9 -> 10: Russian, with chapters 29-80 (260 headwords, twenty-three verbs).
+    // 10 -> 11: Portuguese, with chapters 30-81 (260 headwords, thirty-five
+    // verbs), which also give SPINE-RESPOND-BASIC its first Portuguese segments.
+    // 11 -> 12: Italian, with chapters 37-84 (240 headwords, twenty-five verbs)
+    // after its three over-budget lessons were split.
+    // 12 -> 13: French, with chapters 49-105 (285 headwords, thirty-seven verbs)
+    // after its six over-budget lessons were split.
+    // 13 -> 14: German, with chapters 56-103 (240 headwords, twenty-eight verbs)
+    // after its eight over-budget lessons were split.
+    // 14 -> 15: Urdu, with chapters 38-87 (250 headwords, thirty-seven verbs)
+    // after its three over-budget lessons were split.
+    // 15 -> 16: Punjabi, with chapters 49-98 (250 headwords, thirty-six verbs).
+    // 16 -> 17: Marathi, with chapters 70-120 (255 headwords, thirty-six verbs).
+    // 17 -> 18: Marwadi, with chapters 44-89 (230 headwords, thirty-eight verbs).
+    // 18 -> 19: Bengali, with chapters 42-89 (240 headwords, thirty-six verbs).
+    // 19 -> 20: Arabic, with chapters 50-99 (250 headwords, forty-three verbs).
+    // 20 -> 21: Persian, with chapters 27-78 (260 headwords, twenty-seven verbs)
+    // after its two over-budget lessons were split.
+    // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
+    // only with glyphs the script lessons have taught).
+    expect(gate.summary.tracksWithAnyLevel).toBe(22);
+    // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
-    // C2. What changed is WHICH rung is the exception — pre-A1, then A1 — so the
-    // exception is now read off `spanish.attained` rather than hard-coded. That keeps
-    // the anti-spurious sweep intact without conscripting the next tranche to climb
-    // a rung into editing this loop.
-    const held = gate.tracks.find((t) => t.language === "spanish")!.attained!;
-    for (const [level, count] of Object.entries(gate.summary.attainedByLevel)) {
-      expect(count).toBe(level === held ? 1 : 0);
+    // C2. The tracks that hold a rung are pinned by name, and the per-level counts
+    // are derived from that map, so a track climbing a rung edits one entry here
+    // and the anti-spurious sweep stays intact.
+    const HELD: Readonly<Record<string, string>> = {
+      spanish: "A1",
+      telugu: "pre-A1",
+      hindi: "pre-A1",
+      tamil: "pre-A1",
+      kannada: "pre-A1",
+      malayalam: "pre-A1",
+      sanskrit: "pre-A1",
+      gujarati: "pre-A1",
+      // Chapters 109-160 (260 words): can, want, why, place, things and qualities
+      // chapters realize their nodes; eleven thin atoms revisited; chapter 16's
+      // 16-17 atom folded into 11-15, which brings it inside the atom budget.
+      latin: "A1",
+      // Chapters 82-135 (265 words): this/that, time, place and things chapters
+      // realize their nodes; chapter 93 writes э and щ; four thin atoms revisited.
+      russian: "A1",
+      // Chapters 82-133 (260 words): can, want and why chapters realize their
+      // nodes; fourteen thin atoms revisited.
+      portuguese: "A1",
+      // Chapters 85-136 (260 words): the can/want chapters realize
+      // SAY-WHAT-I-HAVE-AND-CAN-DO and SAY-WHAT-I-WANT; three reading skills revisited.
+      italian: "A1",
+      // HL-C443 loop: chapters 106-138 (165 words), the numbers chapter filed on
+      // SPINE-COUNT-ONE-TO-FIVE, and fifteen thin atoms revisited.
+      french: "A1",
+      // Chapters 104-141 (190 words), the numbers chapter filed on
+      // SPINE-COUNT-ONE-TO-FIVE, and twenty thin atoms revisited.
+      german: "A1",
+      // Chapters 88-142 (270 words): this/that, time, can and want chapters
+      // realize their nodes; chapter 99 writes ز and ط; six thin atoms revisited.
+      urdu: "A1",
+      punjabi: "pre-A1",
+      // Chapters 121-158 (190 words): the can and want chapters realize their
+      // nodes; eleven thin atoms revisited; chapter 13's two spelling-tell atoms
+      // folded into one, which brings the numbers lesson inside the atom budget.
+      marathi: "A1",
+      marwadi: "pre-A1",
+      bengali: "pre-A1",
+      arabic: "pre-A1",
+      persian: "pre-A1",
+      japanese: "pre-A1",
+    };
+    const expectedByLevel = new Map<string, number>();
+    for (const level of Object.values(HELD)) {
+      expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }
-    // Anti-vacuity: the loop above is only meaningful if `held` names a real rung that
-    // the summary actually counts. A `held` of some level absent from `attainedByLevel`
-    // would make every arm of the ternary read 0 and the sweep would check nothing.
-    expect(Object.keys(gate.summary.attainedByLevel)).toContain(held);
-    // And the count agrees with the tracks it is a count OF — the summary is derived
-    // from `tracks`, so a summary that drifts from it is the bug this would catch.
-    expect(gate.tracks.filter((t) => t.attained !== null).map((t) => t.language)).toEqual([
-      "spanish",
-    ]);
+    for (const [level, count] of Object.entries(gate.summary.attainedByLevel)) {
+      expect(count, level).toBe(expectedByLevel.get(level) ?? 0);
+    }
+    // Anti-vacuity: every pinned rung must be one the summary actually counts, or
+    // the sweep above would read 0 for it and check nothing.
+    for (const level of Object.values(HELD)) {
+      expect(Object.keys(gate.summary.attainedByLevel)).toContain(level);
+    }
+    // And the summary agrees with the tracks it is a count OF — it is derived from
+    // `tracks`, so a summary that drifts from it is the bug this would catch.
+    const attained = Object.fromEntries(
+      gate.tracks.filter((t) => t.attained !== null).map((t) => [t.language, t.attained]),
+    );
+    expect(attained).toEqual(HELD);
   });
 
   it("names which criterion failed and by how much, not just that one did", () => {
@@ -181,10 +257,15 @@ describe("the gate that would have caught the A2 claim", () => {
     // Hindi has one over-budget lesson, and it sits ABOVE pre-A1. Before the criteria
     // were level-scoped it blocked pre-A1 anyway, which made criterion 3 unfalsifiable
     // at the bottom of the ladder for every track.
+    //
+    // Hindi now shows it end to end: with chapters 106-127 it ATTAINS pre-A1 while
+    // that one over-budget lesson is still in the track, and the lesson surfaces as
+    // an atom-budget blocker only on the rung it actually sits on, A1.
     const gate = realReport().levelGate!;
     const hindi = gate.tracks.find((t) => t.language === "hindi")!;
-    expect(hindi.inProgressAt).toBe("pre-A1");
-    expect(hindi.blockers.map((b) => b.criterion)).not.toContain("atom-budget");
+    expect(hindi.attained).toBe("pre-A1");
+    expect(hindi.inProgressAt).toBe("A1");
+    expect(hindi.blockers.map((b) => b.criterion)).toContain("atom-budget");
   });
 
   it("fails an authored-but-unrealized level on a COUNT, not on absence", () => {
@@ -295,13 +376,17 @@ describe("the first rung anybody actually climbed", () => {
     // The rung comes from the gate rather than from a literal, so this reads the
     // renderer against the data it renders — which is the actual claim — instead of
     // against a constant that has now had to be edited twice.
-    expect(line).toContain(`1 track at ${held} (spanish)`);
+    // French, German, Italian, Latin, Marathi, Portuguese, Russian and Urdu joined
+    // Spanish at A1, so the line names all nine, in the order the renderer sorts them.
+    expect(line).toContain(`9 tracks at ${held} (french, german, italian, latin, marathi, portuguese, russian, spanish, urdu)`);
     // And it must really be a rung that was climbed, not `null` stringified into the
     // sentence. Without this the line above would pass on "1 track at null (spanish)".
     expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));
     // And the plural agrees with the count, which nothing could have caught while the
     // populated branch of this line had never once run.
-    expect(line).not.toContain("1 tracks");
+    // Guarded by a no-digit lookbehind: "11 tracks" is correct English and
+    // contains the substring "1 tracks", which a plain toContain would flag.
+    expect(line).not.toMatch(/(?<!\d)1 tracks/);
   });
 
   it("prints EVERY blocker of every track, because §3.1 is a conjunction", () => {

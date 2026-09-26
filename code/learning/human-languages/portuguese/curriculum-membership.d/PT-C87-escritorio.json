@@ -1,0 +1,11 @@
+{
+  "id": "PT-C87-escritorio",
+  "pathSegment": "PT-PATH-87-LUGARES87",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-87-LUGARES87",
+      "order": 0
+    }
+  ]
+}

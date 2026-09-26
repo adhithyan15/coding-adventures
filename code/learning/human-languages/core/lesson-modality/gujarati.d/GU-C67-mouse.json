@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C67-mouse",
+    "language": "gujarati",
+    "chapter": 67,
+    "sequence": 3443,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dae042883d16511"
+  },
+  "findings": []
+}

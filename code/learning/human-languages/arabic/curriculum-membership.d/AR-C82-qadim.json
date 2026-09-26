@@ -1,0 +1,11 @@
+{
+  "id": "AR-C82-qadim",
+  "pathSegment": "AR-PATH-82-ADJ82",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-82-ADJ82",
+      "order": 1
+    }
+  ]
+}

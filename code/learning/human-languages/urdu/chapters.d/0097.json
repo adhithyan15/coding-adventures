@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Straight, In front, Behind, Middle, Edge",
+  "label": "ch:ur-straight-in-front-behind-middle-edge",
+  "canDo": "I can say straight, in front, behind, the middle and an edge.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C97-kinara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say straight, in front, behind, the middle and an edge.",
+    "assesses": [
+      "UR-LEX-C97-LOC97-03",
+      "UR-LEX-C97-LOC97-04",
+      "UR-LEX-C97-LOC97-05"
+    ]
+  }
+}

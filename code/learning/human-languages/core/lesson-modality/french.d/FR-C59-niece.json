@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C59-niece",
+    "language": "french",
+    "chapter": 59,
+    "sequence": 2320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67ff5e8e03bbef25"
+  },
+  "findings": []
+}

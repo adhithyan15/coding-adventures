@@ -1,0 +1,11 @@
+{
+  "id": "LA-R119-second-pass-places",
+  "pathSegment": "LA-PATH-119-LOC119",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "LA-EXT-119-LOC119",
+      "order": 6
+    }
+  ]
+}

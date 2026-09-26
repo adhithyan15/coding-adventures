@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C87-assi",
+    "language": "marwadi",
+    "chapter": 87,
+    "sequence": 5670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a88e2171e83e4a7e"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-49-CARE",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "GU-EXT-49-CARE"
+  ],
+  "after": []
+}

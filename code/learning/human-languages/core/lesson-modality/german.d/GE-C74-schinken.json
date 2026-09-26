@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C74-schinken",
+    "language": "german",
+    "chapter": 74,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21af2f3c9ef41a3b"
+  },
+  "findings": []
+}

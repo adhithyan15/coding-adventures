@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:2a2661bd2e6507bf",
+  "lessonIds": [
+    "RU-C117-rabbit",
+    "RU-C117-tiger",
+    "RU-C117-butterfly",
+    "RU-C117-frog",
+    "RU-C117-tortoise"
+  ],
+  "tex": "russian/book/chapters/ch117-rabbit-tiger-butterfly-frog-tortoise.tex"
+}

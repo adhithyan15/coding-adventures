@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C35-husband",
+    "language": "russian",
+    "chapter": 35,
+    "sequence": 1730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14895d35c49c018b"
+  },
+  "findings": []
+}

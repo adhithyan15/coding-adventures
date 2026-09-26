@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Kitchen, Bathroom, Ticket, Office, Library",
+  "label": "ch:ur-kitchen-bathroom-ticket-office-library",
+  "canDo": "I can say a kitchen, a bathroom, a ticket, an office and a library.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C102-kutubkhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say a kitchen, a bathroom, a ticket, an office and a library.",
+    "assesses": [
+      "UR-LEX-C102-LOC102-03",
+      "UR-LEX-C102-LOC102-04",
+      "UR-LEX-C102-LOC102-05"
+    ]
+  }
+}

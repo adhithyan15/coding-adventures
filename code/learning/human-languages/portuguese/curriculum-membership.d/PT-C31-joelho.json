@@ -1,0 +1,11 @@
+{
+  "id": "PT-C31-joelho",
+  "pathSegment": "PT-PATH-31-CORPO2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-31-CORPO2",
+      "order": 4
+    }
+  ]
+}

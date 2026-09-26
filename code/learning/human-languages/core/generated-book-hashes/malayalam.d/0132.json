@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:cfc64229921f0db7",
+  "lessonIds": [
+    "ML-C132-dosa",
+    "ML-C132-sambar",
+    "ML-C132-appam",
+    "ML-C132-puttu",
+    "ML-C132-curry"
+  ],
+  "tex": "malayalam/book/chapters/ch132-kerala-on-a-plate.tex"
+}

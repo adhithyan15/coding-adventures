@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Orange, Lemon, Egg, Yoghurt, Onion",
+  "label": "ch:bn-orange-lemon-egg-yoghurt-onion",
+  "canDo": "I can say an orange, a lemon, an egg, yoghurt and an onion.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "BN-C58-peyaj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can say an orange, a lemon, an egg, yoghurt and an onion.",
+    "assesses": [
+      "BN-LEX-C58-FOOD58-03",
+      "BN-LEX-C58-FOOD58-04",
+      "BN-LEX-C58-FOOD58-05"
+    ]
+  }
+}

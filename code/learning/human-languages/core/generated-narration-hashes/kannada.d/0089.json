@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:5ed5c5bfef6d8049",
+  "lessonIds": [
+    "KA-C89-takecare",
+    "KA-C89-safely",
+    "KA-C89-late",
+    "KA-C89-letsgo",
+    "KA-C89-holiday",
+    "KA-R89-first-pass-unwell-feelings",
+    "KA-R89-second-pass-repair-replies-welcome"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch89.txt",
+  "json": "kannada/narration/ch89.json",
+  "textHash": "fnv1a64:2856e212e1240c83",
+  "jsonHash": "fnv1a64:472f91eab9034b64",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C56-schulter",
+    "language": "german",
+    "chapter": 56,
+    "sequence": 1570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:936ec4be2f0adaf4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C149-prudens",
+    "language": "latin",
+    "chapter": 149,
+    "sequence": 6290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc8b9a58551ff4f0"
+  },
+  "findings": []
+}

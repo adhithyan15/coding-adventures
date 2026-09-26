@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-065-LETTERS-LAST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the letter nga, and find it in the word for number.",
+  "prerequisites": []
+}

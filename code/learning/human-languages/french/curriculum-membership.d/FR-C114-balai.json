@@ -1,0 +1,11 @@
+{
+  "id": "FR-C114-balai",
+  "pathSegment": "FR-PATH-114-MAISON66",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-114-MAISON66",
+      "order": 4
+    }
+  ]
+}

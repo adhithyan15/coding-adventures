@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:d80a9cf6d676262b",
+  "lessonIds": [
+    "PA-C52-darad",
+    "PA-C52-davai",
+    "PA-C52-pias",
+    "PA-C52-bhukkh",
+    "PA-C52-khush"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch52.txt",
+  "json": "punjabi/narration/ch52.json",
+  "textHash": "fnv1a64:2082b1185b3a8491",
+  "jsonHash": "fnv1a64:79984f4baf68c219",
+  "findings": []
+}

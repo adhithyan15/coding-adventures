@@ -1,0 +1,11 @@
+{
+  "id": "FR-C88-grenouille",
+  "pathSegment": "FR-PATH-88-ANIMAUX40",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-88-ANIMAUX40",
+      "order": 3
+    }
+  ]
+}

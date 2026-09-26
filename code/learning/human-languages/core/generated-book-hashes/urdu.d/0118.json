@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:8795f4cf3a54b3d7",
+  "lessonIds": [
+    "UR-C118-biskut",
+    "UR-C118-chaklet",
+    "UR-C118-qahva",
+    "UR-C118-sharbat",
+    "UR-C118-lassi"
+  ],
+  "tex": "urdu/book/chapters/ch118-biscuit-chocolate-green-tea-sweet-drink-lassi.tex"
+}

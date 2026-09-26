@@ -3,8 +3,8 @@
   "language": "arabic",
   "chapter": 10,
   "title": "Family",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7275327a382c2588",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:3fc9485da09c05ac",
   "lessons": [
     {
       "id": "AR-C10-ab-umm",
@@ -234,6 +234,184 @@
             {
               "kind": "speech",
               "text": "What are Arabic's words for brother and sister? (أخ akh, أخت ukht.) How is ukht built from akh? (The same root, plus a plain feminine ‑ت ending — the simple pattern, not the colors' elaborate template.) What are their Hebrew cousins? (ach, achot.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R10-the-name-exchange-cold",
+      "sequence": 531,
+      "title": "The name exchange, cold",
+      "headword": "ما اسمك؟ · اسمي …",
+      "romanization": "mā ismuka? · ismī …",
+      "gloss": "the introduction exchange run cold, eight lessons after it was taught and never asked for since — four suffixes, one missing verb, and a root that means honour",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:362ca9b57a2e0473",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Eight lessons ago this book taught you to give your name and ask for somebody else's, and has not asked since. Say the whole exchange from memory before you read another line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "letters, right to left",
+                "what it is"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: اسم ism. letters, right to left: alif, sīn, mīm. what it is: name — root s–m–w, cousin of Hebrew shem.",
+                "word: ما mā. letters, right to left: mīm, alif. what it is: what, standing before a noun."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Neither needed a new letter. اسم has no tie to English name or Latin nōmen — the resemblance is an accident, and the real cousin is Hebrew."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: four suffixes and no verb",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "glued on",
+                "means",
+                "gives"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "glued on: ـي -ī. means: my. gives: اسمي ismī.",
+                "glued on: ـك -ka. means: your, to a man. gives: اسمك ismuka.",
+                "glued on: ـك -ki. means: your, to a woman. gives: اسمك ismuki."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic has no separate word for my. It fastens ي, the yāʾ, onto the end of the noun — the habit that also fastens الـ for the. The suffixes are the grammar of the exchange, and the two written forms of your name are identical on the page."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no word for is either. Ismī Arun is literally my-name Arun — the zero copula, shared with the Dravidian languages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The two words: أنت, split by the listener",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنت is alif with a hamza seat, then nūn, then tāʾ — one skeleton for both genders. What splits them is a vowel mark that everyday text leaves off: أنتَ anta to a man, أنتِ anti to a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "The European and Dravidian tracks split you by register. Arabic splits it by the listener's gender instead — and the Semitic -ta / -ti ending is the same t that marks you in Hebrew atta / att."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تشرفنا tasharrafnā closes it — letters tāʾ, shīn, rāʾ, fāʾ, root sh–r–f, honour: sharaf (honour), sharīf (noble, the title behind English sheriff). The polite close is not pleased to meet you but we have been honoured."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a man for his name — mā ismuka?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a man for his name — *mā ismuka?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a woman — mā ismuki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a woman — *mā ismuki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer with your own — ismī …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer with your own — *ismī …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "close the exchange — tasharrafnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: close the exchange — *tasharrafnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the verb Arabic left out of every line above",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the verb Arabic left out of every line above]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the Hebrew cousin of اسم. (Shem.) Say which axis Arabic uses to split أنت, where register would be the obvious choice. (The listener's gender.) Give the literal sense of تشرفنا. (We have been honoured.) And say where the gender of the question sits. (In the suffix — -ka to a man, -ki to a woman.)"
             }
           ]
         }

@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 41,
+  "output": "bengali/book/chapters/ch41-letters-you-have-read-all-along.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

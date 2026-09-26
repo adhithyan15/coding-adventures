@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:44eae5be38010d2a",
+  "lessonIds": [
+    "ML-C120-show",
+    "ML-C120-didnthear",
+    "ML-C120-didntunderstand",
+    "ML-C120-help",
+    "ML-C120-stop"
+  ],
+  "tex": "malayalam/book/chapters/ch120-show-me-help-me.tex"
+}

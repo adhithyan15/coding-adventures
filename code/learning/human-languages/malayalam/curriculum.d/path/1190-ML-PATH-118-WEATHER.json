@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-118-WEATHER",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "ML-EXT-118-WEATHER"
+  ],
+  "after": []
+}

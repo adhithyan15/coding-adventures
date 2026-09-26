@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:feaa4cfb1114abc1",
+  "lessonIds": [
+    "FA-C34-hamsaye",
+    "FA-C34-mehman",
+    "FA-C34-daneshju",
+    "FA-C34-agha",
+    "FA-C34-khanom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch34.txt",
+  "json": "persian/narration/ch34.json",
+  "textHash": "fnv1a64:0bc7d7c4f952085f",
+  "jsonHash": "fnv1a64:4ec9c3156c399655",
+  "findings": []
+}

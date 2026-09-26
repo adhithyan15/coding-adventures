@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C32-ane
 spine_node: SPINE-DESCRIBE-QUALITIES
-sequence: 1830
+sequence: 1843
 chapter: 36
 type: word
 headword: અને

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-69-AFFECTUS",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "LA-EXT-69-AFFECTUS"
+  ],
+  "after": []
+}

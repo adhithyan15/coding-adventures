@@ -1,0 +1,11 @@
+{
+  "id": "HI-C124-pasina",
+  "pathSegment": "HI-PATH-124-BODY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-124-BODY",
+      "order": 3
+    }
+  ]
+}

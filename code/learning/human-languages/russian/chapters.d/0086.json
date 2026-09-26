@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Where, Where to, Where from, To the right, To the left",
+  "label": "ch:ru-where-where-to-where-from-to-the-right-to-the-left",
+  "canDo": "I can say where, where to, where from, to the right and to the left.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C86-to-the-left",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say where, where to, where from, to the right and to the left.",
+    "assesses": [
+      "RU-LEX-C86-LOC86-03",
+      "RU-LEX-C86-LOC86-04",
+      "RU-LEX-C86-LOC86-05"
+    ]
+  }
+}

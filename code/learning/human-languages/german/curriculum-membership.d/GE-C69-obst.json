@@ -1,0 +1,11 @@
+{
+  "id": "GE-C69-obst",
+  "pathSegment": "GE-PATH-69-ESSEN1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-69-ESSEN1",
+      "order": 3
+    }
+  ]
+}

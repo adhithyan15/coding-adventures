@@ -1,0 +1,11 @@
+{
+  "id": "GU-C67-buffalo",
+  "pathSegment": "GU-PATH-67-ANIMALS1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-67-ANIMALS1",
+      "order": 1
+    }
+  ]
+}

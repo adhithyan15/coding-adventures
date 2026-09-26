@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "To make, To break, To burn, To run away, To call",
+  "label": "ch:ur-to-make-to-break-to-burn-to-run-away-to-call",
+  "canDo": "I can say to make, to break, to burn, to run away and to call.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C139-bulana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say to make, to break, to burn, to run away and to call.",
+    "assesses": [
+      "UR-LEX-C139-ACT139-03",
+      "UR-LEX-C139-ACT139-04",
+      "UR-LEX-C139-ACT139-05"
+    ]
+  }
+}

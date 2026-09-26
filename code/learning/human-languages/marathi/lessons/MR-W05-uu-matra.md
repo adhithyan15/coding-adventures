@@ -9,20 +9,20 @@ type: writing
 headword: ू
 romanization: "ū"
 gloss: long uu mark — the deeper hook below the letter
-prerequisites: [MR-W05-u-matra]
+prerequisites: [MR-W05-u-matra, MR-C05-tup]
 sounds: [matra-oo]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-U-MATRA-01, MR-SCRIPT-I-MATRA-01]
+  knowledge: [MR-SCRIPT-U-MATRA-01, MR-SCRIPT-I-MATRA-01, MR-LEX-ANCHOR-TUP]
 introduces:
   knowledge: [MR-SCRIPT-UU-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-U-MATRA-01, MR-SCRIPT-I-MATRA-01]
+  knowledge: [MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-U-MATRA-01, MR-SCRIPT-I-MATRA-01, MR-LEX-ANCHOR-TUP]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W05-u-matra, MR-W05-i-matra]
 # ू — long *ū*, the deeper hook below
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-TUP] -->
 
 You have the short hook. The long one is the same gesture, carried further.
 

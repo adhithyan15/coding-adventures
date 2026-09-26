@@ -1,0 +1,11 @@
+{
+  "id": "SA-C73-bows",
+  "pathSegment": "SA-PATH-73-VOICE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-73-VOICE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:cb3ebe3d4224cdd6",
+  "lessonIds": [
+    "GE-C108-norden",
+    "GE-C108-sueden",
+    "GE-C108-osten",
+    "GE-C108-westen",
+    "GE-C108-geradeaus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch108.txt",
+  "json": "german/narration/ch108.json",
+  "textHash": "fnv1a64:6fd357797575c57b",
+  "jsonHash": "fnv1a64:6b60c6ba41fe9a0b",
+  "findings": []
+}

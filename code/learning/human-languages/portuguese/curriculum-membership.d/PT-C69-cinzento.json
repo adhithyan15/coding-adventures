@@ -1,0 +1,11 @@
+{
+  "id": "PT-C69-cinzento",
+  "pathSegment": "PT-PATH-69-ADJ6",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-69-ADJ6",
+      "order": 1
+    }
+  ]
+}

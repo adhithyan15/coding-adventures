@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:361f3ac54ea00559",
+  "lessonIds": [
+    "LA-C142-furca",
+    "LA-C142-aratrum",
+    "LA-C142-tintinnabulum",
+    "LA-C142-tibia",
+    "LA-C142-lyra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch142.txt",
+  "json": "latin/narration/ch142.json",
+  "textHash": "fnv1a64:10587bfd2dec0e9d",
+  "jsonHash": "fnv1a64:8384a30d048fdd9d",
+  "findings": []
+}

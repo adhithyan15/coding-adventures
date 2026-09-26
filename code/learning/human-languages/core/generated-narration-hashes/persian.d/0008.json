@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 8,
-  "sourceHash": "fnv1a64:12bc5d02963fddc3",
+  "sourceHash": "fnv1a64:ba1e7b0dcce9d868",
   "lessonIds": [
     "FA-C08-gereftan",
     "FA-C08-porsidan",
@@ -13,6 +13,6 @@
   "text": "persian/narration/ch08.txt",
   "json": "persian/narration/ch08.json",
   "textHash": "fnv1a64:2b882a065a605eb5",
-  "jsonHash": "fnv1a64:7a3349e95d55047b",
+  "jsonHash": "fnv1a64:6d84a76a5e4b1da3",
   "findings": []
 }

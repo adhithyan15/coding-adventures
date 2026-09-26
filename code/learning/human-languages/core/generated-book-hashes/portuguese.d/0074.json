@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:65b9613dcd51c18d",
+  "lessonIds": [
+    "PT-C74-estacao",
+    "PT-C74-aviao",
+    "PT-C74-carro",
+    "PT-C74-ponte",
+    "PT-C74-parque"
+  ],
+  "tex": "portuguese/book/chapters/ch74-station-plane-car-bridge-park.tex"
+}

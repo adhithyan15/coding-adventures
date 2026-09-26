@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:5767e8b923e71639",
+  "lessonIds": [
+    "PT-C36-medo",
+    "PT-C36-raiva",
+    "PT-C36-tristeza",
+    "PT-C36-feliz",
+    "PT-C36-triste"
+  ],
+  "tex": "portuguese/book/chapters/ch36-fear-anger-sadness-happy-sad.tex"
+}

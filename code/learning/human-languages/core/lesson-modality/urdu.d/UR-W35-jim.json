@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W35-jim",
+    "language": "urdu",
+    "chapter": 35,
+    "sequence": 1780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c2265bb9cf26f75a",
+    "detachableSegments": [
+      "Script you'll notice: ج",
+      "Writing: ج"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

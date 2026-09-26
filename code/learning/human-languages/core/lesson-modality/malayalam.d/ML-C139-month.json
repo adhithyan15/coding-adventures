@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C139-month",
+    "language": "malayalam",
+    "chapter": 139,
+    "sequence": 5540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa703eea50d030fb"
+  },
+  "findings": []
+}

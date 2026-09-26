@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Hospital, Illness, Thirst, Tiredness, Ill",
+  "label": "ch:fr-hospital-illness-thirst-tiredness-ill",
+  "canDo": "I can name a hospital, an illness, thirst, tiredness, ill.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C54-malade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can name a hospital, an illness, thirst, tiredness, ill.",
+    "assesses": [
+      "FR-LEX-C54-SANTE6-03",
+      "FR-LEX-C54-SANTE6-04",
+      "FR-LEX-C54-SANTE6-05"
+    ]
+  }
+}

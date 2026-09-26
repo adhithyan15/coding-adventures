@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:73f636e168dd1114",
+  "lessonIds": [
+    "IT-C52-frutta",
+    "IT-C52-mela",
+    "IT-C52-banana",
+    "IT-C52-arancia",
+    "IT-C52-uva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch52.txt",
+  "json": "italian/narration/ch52.json",
+  "textHash": "fnv1a64:243ed5ccb3d47837",
+  "jsonHash": "fnv1a64:2d6f343b07c4809f",
+  "findings": []
+}

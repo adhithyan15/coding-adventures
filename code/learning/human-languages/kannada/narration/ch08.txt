@@ -67,7 +67,7 @@ Why it's said this way: about how it's used.
 The honest note: a standalone please-word is a little formal / emphatic. Everyday Kannada politeness leans on the respectful command — the verb ending ‑ಿ (-i): ಕುಳಿತುಕೊಳ್ಳಿ (kuḷitukoḷḷi) "please sit," ಹೇಳಿ (hēḷi) "please tell me." That ending already means "please" do this. Add ದಯವಿಟ್ಟು (dayaviṭṭu) in front when you want to underline the courtesy.
 
 Sounds you'll need: Sound and structure.
-Look at ಟ್ಟು — a doubled ṭ. The first ಟ್ is ṭa silenced by the virama (its vowel cut), and it tucks under the next letter as an ottu (a subscript form) before ಟು ṭu. Kannada writes a double consonant by stacking, not repeating side by side — a neat contrast with how the Roman alphabet just writes "tt."
+Look at ಟ್ಟು — a doubled ṭ, stacked exactly the way ತ್ತು was in ಒಂಬತ್ತು. The first ಟ್ is ṭa silenced by the virama, tucked under ಟು ṭu as an ottu. Same rule, a new letter.
 
 Guided Practice.
 [pause 1 second]

@@ -1,0 +1,11 @@
+{
+  "id": "FA-R78-second-pass-places-the-town-clothes-and-numbers",
+  "pathSegment": "FA-PATH-78-WORLD78",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FA-EXT-78-WORLD78",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Forest, River, Stone, Sand, Field",
+  "label": "ch:mw-forest-river-stone-sand-field",
+  "canDo": "I can say a forest, a river, a stone, sand and a field.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C68-khet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say a forest, a river, a stone, sand and a field.",
+    "assesses": [
+      "MW-LEX-C68-NATURE68-03",
+      "MW-LEX-C68-NATURE68-04",
+      "MW-LEX-C68-NATURE68-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C112-computer",
+  "pathSegment": "GE-PATH-112-HAUS112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-112-HAUS112",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Train, Bridge, Mosque, Hotel, Office",
+  "label": "ch:ar-train-bridge-mosque-hotel-office",
+  "canDo": "I can say a train, a bridge, a mosque, a hotel and an office.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "AR-C92-maktab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say a train, a bridge, a mosque, a hotel and an office.",
+    "assesses": [
+      "AR-LEX-C92-TOWN92-03",
+      "AR-LEX-C92-TOWN92-04",
+      "AR-LEX-C92-TOWN92-05"
+    ]
+  }
+}

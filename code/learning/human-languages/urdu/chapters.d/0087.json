@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Song, Journey, Holiday, Love, Music",
+  "label": "ch:ur-song-journey-holiday-love-music",
+  "canDo": "I can say a song, a journey, a holiday, time off, love and music.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "UR-R87-second-pass-places-the-town-clothes-and-numbers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say a song, a journey, a holiday, time off, love and music.",
+    "assesses": [
+      "UR-LEX-C87-WORLD87-03",
+      "UR-LEX-C87-WORLD87-04",
+      "UR-LEX-C87-WORLD87-05"
+    ]
+  }
+}

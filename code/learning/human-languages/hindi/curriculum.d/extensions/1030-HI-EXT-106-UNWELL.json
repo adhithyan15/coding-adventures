@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-106-UNWELL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am tired, have a cold or a cough, or am ill, and ask how someone is feeling.",
+  "prerequisites": []
+}

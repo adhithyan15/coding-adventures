@@ -1,0 +1,11 @@
+{
+  "id": "MW-C68-khet",
+  "pathSegment": "MW-PATH-68-NATURE68",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-68-NATURE68",
+      "order": 4
+    }
+  ]
+}

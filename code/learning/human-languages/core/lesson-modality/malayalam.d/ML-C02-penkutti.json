@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C02-penkutti",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 143,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c520b74b54d76d27"
+  },
+  "findings": []
+}

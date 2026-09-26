@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-028-LETTERS-LAST",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "RU-EXT-028-LETTERS-LAST"
+  ],
+  "after": []
+}

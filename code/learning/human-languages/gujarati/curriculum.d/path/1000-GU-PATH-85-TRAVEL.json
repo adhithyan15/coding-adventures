@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-85-TRAVEL",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "GU-EXT-85-TRAVEL"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C69-minute",
+  "pathSegment": "RU-PATH-69-TIME2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-69-TIME2",
+      "order": 3
+    }
+  ]
+}

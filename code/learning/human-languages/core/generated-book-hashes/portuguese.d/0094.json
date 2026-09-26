@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:6ebe5483d158c53b",
+  "lessonIds": [
+    "PT-C94-duche",
+    "PT-C94-banheira",
+    "PT-C94-prateleira",
+    "PT-C94-cortina",
+    "PT-C94-cobertor"
+  ],
+  "tex": "portuguese/book/chapters/ch94-shower-bathtub-shelf-curtain-blanket.tex"
+}

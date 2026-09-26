@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C107-kamzori",
+    "language": "hindi",
+    "chapter": 107,
+    "sequence": 4680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22ae63adc962bf4c"
+  },
+  "findings": []
+}

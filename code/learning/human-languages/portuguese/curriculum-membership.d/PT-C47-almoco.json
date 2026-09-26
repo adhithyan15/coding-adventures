@@ -1,0 +1,11 @@
+{
+  "id": "PT-C47-almoco",
+  "pathSegment": "PT-PATH-47-REFEICOES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-47-REFEICOES",
+      "order": 2
+    }
+  ]
+}

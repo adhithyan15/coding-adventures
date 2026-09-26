@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:9fec21499143b0f1",
+  "lessonIds": [
+    "MR-C140-mul",
+    "MR-C140-bi",
+    "MR-C140-mati",
+    "MR-C140-khadak",
+    "MR-C140-lat",
+    "MR-R140-first-pass-places-and-the-house",
+    "MR-R140-second-pass-things-you-use"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch140.txt",
+  "json": "marathi/narration/ch140.json",
+  "textHash": "fnv1a64:56c7bead2b947b9f",
+  "jsonHash": "fnv1a64:ccc1beb1377f0bb7",
+  "findings": []
+}

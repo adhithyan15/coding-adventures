@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C67-cow",
+    "language": "gujarati",
+    "chapter": 67,
+    "sequence": 3403,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f235b9eb7ff5242c"
+  },
+  "findings": []
+}

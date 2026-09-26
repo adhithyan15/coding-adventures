@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "More of the Family",
+  "label": "ch:ml-more-of-the-family",
+  "canDo": "I can name a grandchild, a relative, the neighbours, an uncle, and a nephew.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C125-nephew",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can name a grandchild, a relative, the neighbours, an uncle, and a nephew.",
+    "assesses": [
+      "ML-LEX-C125-KIN-03",
+      "ML-LEX-C125-KIN-04",
+      "ML-LEX-C125-KIN-05"
+    ]
+  }
+}

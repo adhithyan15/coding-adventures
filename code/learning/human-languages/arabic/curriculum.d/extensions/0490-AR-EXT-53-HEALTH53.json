@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-53-HEALTH53",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fever, a hospital, ill, sick, pain and medicine.",
+  "prerequisites": []
+}

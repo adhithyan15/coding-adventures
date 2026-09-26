@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-133-VERBOS133",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "PT-EXT-133-VERBOS133"
+  ],
+  "after": []
+}

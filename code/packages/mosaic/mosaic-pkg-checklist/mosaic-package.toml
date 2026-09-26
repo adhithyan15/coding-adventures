@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-checklist"
+version = "0.1.0"
+description = "Working through one run of a checklist: ticks, yes/no questions, progress, finish — Trestle's checklists surface (C2 of #14018)"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["ChecklistRun"]
+
+[kernel]
+version = "1"

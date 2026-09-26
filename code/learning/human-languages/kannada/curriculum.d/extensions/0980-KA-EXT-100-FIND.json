@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-100-FIND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for a map, a ticket, a bus and a station, and say it is near.",
+  "prerequisites": []
+}

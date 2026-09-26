@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-25 (checkbox row index)
+
+- **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
+  - The index form dispatches through `HostButton`'s event builder (`onChange={() => dispatch({ type, index: i })}`). `checked` accepts a loop binding or row expression, read with `Boolean(...)`; `label` takes the same forms as a `HostButton` label.
+
 ## 2026-09-23
 
 - The legacy `Input` path (including its `<textarea>` form for `multiline: true`) now carries the authored `a11y-label` as `aria-label`. It used to drop the name while `HostInput` kept it. Both paths share `push_text_field_aria_label` (J3b-pre, #14416).

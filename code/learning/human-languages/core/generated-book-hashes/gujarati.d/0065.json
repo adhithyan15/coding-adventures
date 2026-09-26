@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:e914c49ce6370c54",
+  "lessonIds": [
+    "GU-C65-sea",
+    "GU-C65-lake",
+    "GU-C65-well",
+    "GU-C65-sand",
+    "GU-C65-soil"
+  ],
+  "tex": "gujarati/book/chapters/ch65-sea-lake-and-well.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:1df46ee81ac8eff5",
+  "lessonIds": [
+    "UR-C88-yihi",
+    "UR-C88-vahi",
+    "UR-C88-aisa",
+    "UR-C88-vaisa",
+    "UR-C88-itna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch88.txt",
+  "json": "urdu/narration/ch88.json",
+  "textHash": "fnv1a64:f1d0f1fdfcfb15d2",
+  "jsonHash": "fnv1a64:475b9a589812f529",
+  "findings": []
+}

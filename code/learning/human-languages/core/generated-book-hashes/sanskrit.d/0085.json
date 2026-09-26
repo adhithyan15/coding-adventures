@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:474ffa24df6fd8f5",
+  "lessonIds": [
+    "SA-C85-week",
+    "SA-C85-monday",
+    "SA-C85-tuesday",
+    "SA-C85-wednesday",
+    "SA-C85-thursday"
+  ],
+  "tex": "sanskrit/book/chapters/ch85-days-of-the-week.tex"
+}

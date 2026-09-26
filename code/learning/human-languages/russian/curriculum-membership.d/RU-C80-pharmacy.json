@@ -1,0 +1,11 @@
+{
+  "id": "RU-C80-pharmacy",
+  "pathSegment": "RU-PATH-80-PLACES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-80-PLACES",
+      "order": 1
+    }
+  ]
+}

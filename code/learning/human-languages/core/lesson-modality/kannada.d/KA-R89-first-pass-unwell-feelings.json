@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R89-first-pass-unwell-feelings",
+    "language": "kannada",
+    "chapter": 89,
+    "sequence": 3390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5059cacb72b915b"
+  },
+  "findings": []
+}

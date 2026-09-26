@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 36,
   "title": "Green and Yellow",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3111a50852ffb011",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:97db795e05abe522",
   "lessons": [
     {
       "id": "GE-C23-gruen-gelb",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40d17f5198fdf886",
+      "sourceHash": "fnv1a64:a434dfc1f9c3e89d",
       "notice": null,
       "blocks": [
         {
@@ -52,17 +52,6 @@
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: gelb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "gelb (\"yellow\") is native too, from Proto-Germanic gelwaz — and the same word as English's yellow. Trace it back far enough, to Proto-Indo-European ghel- (\"to shine,\" with derivatives covering yellow, green, and gold), and it is usually said to land on the same ancient root behind Latin's galbus/galbinus — the source of French's jaune. Honesty check, though: that particular link is less secure than it looks — some modern Latin scholarship treats galbus's origin as genuinely unknown rather than confirming the ghel- connection. So gelb and jaune are probably PIE-level cousins, despite belonging to completely different language families and reaching German and French by entirely separate paths — just don't treat the link as airtight."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +91,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -115,6 +104,91 @@
             {
               "kind": "speech",
               "text": "Is grün related to Latin's viridis? (No — a completely different root, though both independently mean \"grow\" becomes \"green\"; grün IS a direct cousin of English's own \"green.\") What French word is gelb's probable PIE cousin, and how solid is that link? (Jaune — both usually traced to PIE ghel-, \"to shine,\" though modern Latin scholarship treats galbus's origin as genuinely unknown, so the connection is probable, not certain.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C23-gruen-gelb-more",
+      "sequence": 755,
+      "title": "(grün, gelb, continued) — gelb",
+      "headword": "(grün, gelb, continued)",
+      "romanization": "(grün, gelb, continued)",
+      "gloss": "gelb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccc365be64a3abbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say grün, gelb again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: gelb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gelb (\"yellow\") is native too, from Proto-Germanic gelwaz — and the same word as English's yellow. Trace it back far enough, to Proto-Indo-European ghel- (\"to shine,\" with derivatives covering yellow, green, and gold), and it is usually said to land on the same ancient root behind Latin's galbus/galbinus — the source of French's jaune. Honesty check, though: that particular link is less secure than it looks — some modern Latin scholarship treats galbus's origin as genuinely unknown rather than confirming the ghel- connection. So gelb and jaune are probably PIE-level cousins, despite belonging to completely different language families and reaching German and French by entirely separate paths — just don't treat the link as airtight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to grün, gelb, in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **grün, gelb**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to grün, gelb? Say it once more, without looking."
             }
           ]
         }

@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Stone, Sand, Hill, Valley, Cave",
+  "label": "ch:la-stone-sand-hill-valley-cave",
+  "canDo": "I can name a stone, sand, a hill, a valley and a cave.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C88-spelunca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can name a stone, sand, a hill, a valley and a cave.",
+    "assesses": [
+      "LA-LEX-C88-TERRA-03",
+      "LA-LEX-C88-TERRA-04",
+      "LA-LEX-C88-TERRA-05"
+    ]
+  }
+}

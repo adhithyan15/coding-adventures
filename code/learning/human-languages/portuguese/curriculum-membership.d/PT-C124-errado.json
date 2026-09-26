@@ -1,0 +1,11 @@
+{
+  "id": "PT-C124-errado",
+  "pathSegment": "PT-PATH-124-QUALIDADES124",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-124-QUALIDADES124",
+      "order": 4
+    }
+  ]
+}

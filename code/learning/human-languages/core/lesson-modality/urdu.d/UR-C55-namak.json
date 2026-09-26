@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C55-namak",
+    "language": "urdu",
+    "chapter": 55,
+    "sequence": 2820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3372b1d018fb3044"
+  },
+  "findings": []
+}

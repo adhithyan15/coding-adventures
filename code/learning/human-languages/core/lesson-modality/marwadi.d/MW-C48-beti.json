@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C48-beti",
+    "language": "marwadi",
+    "chapter": 48,
+    "sequence": 3740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57a4e45422bd42f8"
+  },
+  "findings": []
+}

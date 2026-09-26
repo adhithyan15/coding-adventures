@@ -1,0 +1,11 @@
+{
+  "id": "PT-C102-arco-iris",
+  "pathSegment": "PT-PATH-102-COISAS102",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-102-COISAS102",
+      "order": 4
+    }
+  ]
+}

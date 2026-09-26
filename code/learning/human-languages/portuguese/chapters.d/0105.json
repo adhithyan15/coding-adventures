@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Beef, Vegetables, Mushroom, Cucumber, Strawberry",
+  "label": "ch:pt-beef-vegetables-mushroom-cucumber-strawberry",
+  "canDo": "I can say beef, vegetables, a mushroom, a cucumber and a strawberry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C105-morango",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say beef, vegetables, a mushroom, a cucumber and a strawberry.",
+    "assesses": [
+      "PT-LEX-C105-COMIDA105-03",
+      "PT-LEX-C105-COMIDA105-04",
+      "PT-LEX-C105-COMIDA105-05"
+    ]
+  }
+}

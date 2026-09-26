@@ -1,0 +1,11 @@
+{
+  "id": "KA-C100-ticket",
+  "pathSegment": "KA-PATH-100-FIND",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-FIND",
+      "order": 1
+    }
+  ]
+}

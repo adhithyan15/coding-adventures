@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C59-almari",
+    "language": "urdu",
+    "chapter": 59,
+    "sequence": 2980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47176e1574f8f7e6"
+  },
+  "findings": []
+}

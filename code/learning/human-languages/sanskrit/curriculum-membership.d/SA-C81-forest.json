@@ -1,0 +1,11 @@
+{
+  "id": "SA-C81-forest",
+  "pathSegment": "SA-PATH-81-PLANTS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-81-PLANTS",
+      "order": 4
+    }
+  ]
+}

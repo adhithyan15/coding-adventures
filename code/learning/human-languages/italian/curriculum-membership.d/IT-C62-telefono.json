@@ -1,0 +1,11 @@
+{
+  "id": "IT-C62-telefono",
+  "pathSegment": "IT-PATH-62-COSE2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-62-COSE2",
+      "order": 1
+    }
+  ]
+}

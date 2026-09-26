@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C22-hear-shaalaa
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1040
+sequence: 1053
 chapter: 26
 type: word
 headword: શાળા

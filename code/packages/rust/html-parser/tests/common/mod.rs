@@ -5,12 +5,47 @@ use coding_adventures_html_parser::{
     parse_html_with_options, HtmlParseOptions,
 };
 use dom_core::{Document, DocumentType, Element, Node};
+use std::collections::BTreeMap;
+
+/// Tree-construction cases this parser is known not to pass, as
+/// `source -> reason` (`fixtures/tree-construction-expected-failures.txt`).
+/// BR02 §3: a case we cannot pass is listed, visibly, and never special-cased
+/// in the parser. Every test that runs corpus cases consults this one list.
+const EXPECTED_FAILURES: &str = include_str!("../fixtures/tree-construction-expected-failures.txt");
+
+#[allow(dead_code)]
+pub fn expected_failures() -> BTreeMap<&'static str, &'static str> {
+    EXPECTED_FAILURES
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty() && !line.starts_with('#'))
+        .map(|line| {
+            let (source, reason) = line
+                .split_once(" — ")
+                .unwrap_or_else(|| panic!("expected-failure line needs `<source> — <reason>`: {line:?}"));
+            assert!(!reason.trim().is_empty(), "expected failure {source} has no reason");
+            (source.trim(), reason.trim())
+        })
+        .collect()
+}
+
+/// Whether `source` (e.g. `scripted/webkit01.dat:1`) is a declared expected
+/// failure. Callers assert such a case still fails, so the list cannot go stale.
+#[allow(dead_code)]
+pub fn is_expected_failure(source: &str) -> bool {
+    expected_failures().contains_key(source)
+}
 
 #[derive(Debug)]
 pub struct TreeConstructionCase {
     pub source: String,
     pub data: String,
     pub scripting: HtmlScriptingMode,
+    /// Whether the case named its scripting mode (`#script-on` /
+    /// `#script-off`). An unflagged case must produce the same tree with
+    /// scripting on and off (BR02 P1.2).
+    #[allow(dead_code)]
+    pub scripting_flagged: bool,
     pub fragment_context: Option<String>,
     #[allow(dead_code)]
     pub expected_errors: Vec<String>,
@@ -43,6 +78,7 @@ pub fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
 
         let mut expected_errors = Vec::new();
         let mut scripting = HtmlScriptingMode::Enabled;
+        let mut scripting_flagged = false;
         let mut fragment_context = None;
         while let Some(line) = lines.next() {
             if line == "#document" {
@@ -59,8 +95,10 @@ pub fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
             }
             if line == "#script-off" {
                 scripting = HtmlScriptingMode::Disabled;
+                scripting_flagged = true;
             } else if line == "#script-on" {
                 scripting = HtmlScriptingMode::Enabled;
+                scripting_flagged = true;
             } else if !line.is_empty() {
                 expected_errors.push(line.to_string());
             }
@@ -81,6 +119,7 @@ pub fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
             source: std::mem::take(&mut source),
             data: data.join("\n"),
             scripting,
+            scripting_flagged,
             fragment_context,
             expected_errors,
             document,
@@ -126,8 +165,17 @@ pub fn actual_diagnostic_codes_for_tree_case(
 }
 
 pub fn actual_dom_dump_for_tree_case(case: &TreeConstructionCase) -> Result<Vec<String>, String> {
+    actual_dom_dump_with_scripting(case, case.scripting)
+}
+
+/// The tree for a case parsed with an explicit scripting mode, whatever the
+/// case's own flag says.
+pub fn actual_dom_dump_with_scripting(
+    case: &TreeConstructionCase,
+    scripting: HtmlScriptingMode,
+) -> Result<Vec<String>, String> {
     let options = HtmlParseOptions {
-        scripting: case.scripting,
+        scripting,
         ..HtmlParseOptions::default()
     };
 

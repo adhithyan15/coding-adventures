@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:cdecdf6dffd2d404",
+  "lessonIds": [
+    "IT-C45-moglie",
+    "IT-C45-zia",
+    "IT-C45-cugino",
+    "IT-C45-cugina",
+    "IT-C45-bambino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch45.txt",
+  "json": "italian/narration/ch45.json",
+  "textHash": "fnv1a64:8503a83f6379fc46",
+  "jsonHash": "fnv1a64:f3f11ea46037b75e",
+  "findings": []
+}

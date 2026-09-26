@@ -3,7 +3,7 @@
     "id": "GU-C04-pachha",
     "language": "gujarati",
     "chapter": 10,
-    "sequence": 260,
+    "sequence": 273,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:45c27dc44d9d57a3",
+    "sourceHash": "fnv1a64:7a5295160f332973",
     "detachableSegments": [
       "The letters in this word"
     ]

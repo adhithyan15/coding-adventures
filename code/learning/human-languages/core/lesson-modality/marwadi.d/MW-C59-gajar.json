@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C59-gajar",
+    "language": "marwadi",
+    "chapter": 59,
+    "sequence": 4290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d01be095f732ae24"
+  },
+  "findings": []
+}

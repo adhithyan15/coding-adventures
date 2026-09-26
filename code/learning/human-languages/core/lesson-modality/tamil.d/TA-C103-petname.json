@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C103-petname",
+    "language": "tamil",
+    "chapter": 103,
+    "sequence": 4400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32ae9cab7bb3f848"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:263f0689a20f4e3e",
+  "lessonIds": [
+    "HI-C125-shant",
+    "HI-C125-ghabrahat",
+    "HI-C125-bechain",
+    "HI-C125-mannahin",
+    "HI-C125-maza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch125.txt",
+  "json": "hindi/narration/ch125.json",
+  "textHash": "fnv1a64:f8403908fa2b7401",
+  "jsonHash": "fnv1a64:e1d7b847a7120c07",
+  "findings": []
+}

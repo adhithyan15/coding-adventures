@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C87-rest",
+    "language": "tamil",
+    "chapter": 87,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8f45669a468b61c"
+  },
+  "findings": []
+}

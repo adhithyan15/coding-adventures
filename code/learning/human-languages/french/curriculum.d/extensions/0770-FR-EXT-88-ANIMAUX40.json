@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-88-ANIMAUX40",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name an ant, an elephant, a rabbit, a frog, a tiger.",
+  "prerequisites": []
+}

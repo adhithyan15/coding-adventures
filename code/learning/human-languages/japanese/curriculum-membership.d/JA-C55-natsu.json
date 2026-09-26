@@ -1,0 +1,11 @@
+{
+  "id": "JA-C55-natsu",
+  "pathSegment": "JA-PATH-55-TIME55",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-55-TIME55",
+      "order": 1
+    }
+  ]
+}

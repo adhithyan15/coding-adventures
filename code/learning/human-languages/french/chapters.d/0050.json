@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Neck, Shoulder, Knee, Face, Blood",
+  "label": "ch:fr-neck-shoulder-knee-face-blood",
+  "canDo": "I can name the neck, a shoulder, a knee, the face, blood.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C50-sang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can name the neck, a shoulder, a knee, the face, blood.",
+    "assesses": [
+      "FR-LEX-C50-CORPS2-03",
+      "FR-LEX-C50-CORPS2-04",
+      "FR-LEX-C50-CORPS2-05"
+    ]
+  }
+}

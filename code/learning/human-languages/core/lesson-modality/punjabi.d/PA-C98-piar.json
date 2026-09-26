@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C98-piar",
+    "language": "punjabi",
+    "chapter": 98,
+    "sequence": 5170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0284980d44354e1d"
+  },
+  "findings": []
+}

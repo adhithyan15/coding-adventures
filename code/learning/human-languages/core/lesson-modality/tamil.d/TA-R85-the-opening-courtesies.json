@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R85-the-opening-courtesies",
+    "language": "tamil",
+    "chapter": 85,
+    "sequence": 3551,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3125fa97f878e27"
+  },
+  "findings": []
+}

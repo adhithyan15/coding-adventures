@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:48e7b6b874734554",
+  "lessonIds": [
+    "PA-C98-chhutti",
+    "PA-C98-piar",
+    "PA-C98-sangit",
+    "PA-C98-rasta",
+    "PA-C98-desh",
+    "PA-R98-first-pass-animals-describing-words-and-time",
+    "PA-R98-second-pass-places-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch98.txt",
+  "json": "punjabi/narration/ch98.json",
+  "textHash": "fnv1a64:66a7f19ad6eb466d",
+  "jsonHash": "fnv1a64:f062582a18f5ded3",
+  "findings": []
+}

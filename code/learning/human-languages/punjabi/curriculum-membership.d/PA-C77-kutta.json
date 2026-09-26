@@ -1,0 +1,11 @@
+{
+  "id": "PA-C77-kutta",
+  "pathSegment": "PA-PATH-77-ANIMALS77",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-77-ANIMALS77",
+      "order": 0
+    }
+  ]
+}

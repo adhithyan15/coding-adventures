@@ -1,0 +1,11 @@
+{
+  "id": "LA-C88-collis",
+  "pathSegment": "LA-PATH-88-TERRA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-88-TERRA",
+      "order": 2
+    }
+  ]
+}

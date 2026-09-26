@@ -1,0 +1,11 @@
+{
+  "id": "PT-C101-calendario",
+  "pathSegment": "PT-PATH-101-COISAS101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-101-COISAS101",
+      "order": 3
+    }
+  ]
+}

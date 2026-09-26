@@ -1,11 +1,12 @@
 {
   "language": "bengali",
   "chapter": 6,
-  "sourceHash": "fnv1a64:c3d841e3e45ae650",
+  "sourceHash": "fnv1a64:6ca62e28720459a8",
   "lessonIds": [
     "BN-W02-ami-read",
     "BN-W02-la",
     "BN-W02-e-matra",
+    "BN-C06-eka",
     "BN-W04-e-indep",
     "BN-W03-o-matra",
     "BN-W02-kemon-read"
@@ -14,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch06.txt",
   "json": "bengali/narration/ch06.json",
-  "textHash": "fnv1a64:023e248fab1dc483",
-  "jsonHash": "fnv1a64:f5eceb8ddaa52b43",
+  "textHash": "fnv1a64:b6e7bd236f2f5f5e",
+  "jsonHash": "fnv1a64:bc9dd9b7160daf43",
   "findings": []
 }

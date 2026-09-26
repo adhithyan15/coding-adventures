@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Apple, Banana, Potato, Tomato, Carrot",
+  "label": "ch:mw-apple-banana-potato-tomato-carrot",
+  "canDo": "I can say an apple, a banana, a potato, a tomato and a carrot.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C59-gajar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say an apple, a banana, a potato, a tomato and a carrot.",
+    "assesses": [
+      "MW-LEX-C59-VERBS59-03",
+      "MW-LEX-C59-VERBS59-04",
+      "MW-LEX-C59-VERBS59-05"
+    ]
+  }
+}

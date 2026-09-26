@@ -1,0 +1,116 @@
+// JournalApp.mil — the Journal app's interface (J3c-2 of #14416).
+//
+// This is the contract every generated host is built against, and it mirrors
+// `journal-mosaic-app`'s props and events exactly (a test in this package pins
+// that the adapter's start props are these slots, and that every emit below
+// reaches the adapter). See code/specs/journal-mosaic-app.md.
+//
+//   ┌ Journal ─────────────┬──────────────────────────────────┐
+//   │ [ New entry ]        │ Title                            │
+//   │ Thursday, 24 Sep     │ ┌──────────────────────────────┐ │
+//   │ ┌ First light  ★ ┐   │ │ First light                  │ │
+//   │ └ Walked to the… ┘   │ └──────────────────────────────┘ │
+//   │ Wednesday, 23 Sep    │ Entry                            │
+//   │ ┌ Rain ──────────┐   │ ┌──────────────────────────────┐ │
+//   │ └────────────────┘   │ │ Walked to the lighthouse …   │ │
+//   │                      │ └──────────────────────────────┘ │
+//   │                      │ [ Save ] [ Delete ] [ Cancel ]   │
+//   └──────────────────────┴──────────────────────────────────┘
+//     RecordList (toolkit)          DraftEditor
+
+component JournalApp {
+  // RecordList rows [key, heading, title, subtitle, meta, badge], newest first;
+  // the day heading only on each day's first row.
+  slot timeline-rows : list<list<text>> ;
+  // Key of the entry being edited; "" while writing a new one.
+  slot selected-key : text ;
+  // No entries yet: show the empty state instead of the list.
+  slot timeline-empty : bool ;
+  // The editor's draft (host-owned; typing only changes the draft).
+  slot draft-title : text ;
+  slot draft-body : text ;
+  // "Delete" for an existing entry, "" for a new one (DraftEditor hides it).
+  slot delete-label : text ;
+  // Search (J4a). While `searching`, timeline-rows holds the ranked hits
+  // (no day headings; the day is in each row's meta) instead of the days.
+  slot search-query : text ;
+  slot searching : bool ;
+  // Searching, and nothing matches (the journal itself is not empty).
+  slot no-matches : bool ;
+  // Stars (J4b). "Star" / "Unstar" for the entry in the editor, "" for a new
+  // one (the button is hidden). `starred-only` is the pane's filter;
+  // `no-starred` is the filtered, unsearched timeline coming up empty.
+  slot star-label : text ;
+  slot starred-only : bool ;
+  slot no-starred : bool ;
+  // On this day (J4c): entries from today's date in earlier years, as
+  // RecordList rows headed "N years ago · date"; shown when set and not
+  // searching.
+  slot on-this-day-rows : list<list<text>> ;
+  slot has-on-this-day : bool ;
+  // Tags (J4d). The editor's tags as typed ("travel, family"); the journal's
+  // tags as "#travel (3)" options, most used first; the selected option (-1
+  // for none); whether any entry has a tag.
+  slot draft-tags : text ;
+  slot tag-options : list<text> ;
+  slot selected-tag-index : number ;
+  slot has-tags : bool ;
+  // An entry's day (J4e): YYYY-MM-DD as typed, blank for today. And why the
+  // last Save refused the draft ("" when there is nothing to fix).
+  slot draft-date : text ;
+  slot draft-error : text ;
+  // Journals (J4f): "All journals", then each journal by name in the order
+  // it was created; the selected one (0 for All) filters every list and is
+  // where new entries are filed. The New journal field, and why the engine
+  // refused its last name ("" when there is nothing to fix).
+  slot journal-options : list<text> ;
+  slot selected-journal-index : number ;
+  slot new-journal-name : text ;
+  slot journal-error : text ;
+  // An entry's journal (J4g): the editor's picker lists the journals (no
+  // "All journals"), the draft's selected; shown when there are several.
+  slot draft-journal-options : list<text> ;
+  slot draft-journal-index : number ;
+  slot has-journals : bool ;
+  // An empty journal (J4h): a journal is selected, it has no entries, and
+  // there is no search. Shown before no-starred, the lesser reason.
+  slot journal-empty : bool ;
+  // Renaming and deleting a journal (J4i): offered while one is selected;
+  // Personal can be renamed but not deleted (a restore requires it).
+  slot can-rename-journal : bool ;
+  slot can-delete-journal : bool ;
+  // Export (J6a): what the last Export did ("" for nothing), and whether one
+  // is outstanding (the button is disabled meanwhile).
+  slot export-status : text ;
+  slot exporting : bool ;
+
+  emit onSelectEntry ( index : number ) ;
+  emit onNewEntry ;
+  emit onTitleChange ( value : text ) ;
+  emit onBodyChange ( value : text ) ;
+  emit onSaveEntry ;
+  emit onDeleteEntry ;
+  emit onCancelEdit ;
+  emit onSearchChange ( value : text ) ;
+  emit onClearSearch ;
+  emit onToggleStar ;
+  emit onToggleStarredFilter ;
+  // A row of on-this-day-rows (each RecordList indexes its own rows).
+  emit onSelectOnThisDay ( index : number ) ;
+  emit onDateChange ( value : text ) ;
+  emit onTagsChange ( value : text ) ;
+  // An option of tag-options; the selected one clears the filter.
+  emit onSelectTag ( index : number ) ;
+  // An option of journal-options (0 is All journals).
+  emit onSelectJournal ( index : number ) ;
+  emit onNewJournalNameChange ( value : text ) ;
+  emit onAddJournal ;
+  // An option of draft-journal-options; Save files or moves the entry there.
+  emit onDraftJournalChange ( index : number ) ;
+  // Rename the selected journal to the New journal field's name; delete it,
+  // moving its entries to Personal.
+  emit onRenameJournal ;
+  emit onDeleteJournal ;
+  // Save the whole journal to a file, through the standard files.save effect.
+  emit onExportJournal ;
+}

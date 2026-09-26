@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:88edab67227435e4",
+  "lessonIds": [
+    "GE-C141-zahlen",
+    "GE-C141-mieten",
+    "GE-C141-packen",
+    "GE-C141-reparieren",
+    "GE-C141-anfangen",
+    "GE-R141-first-pass-wanting-time-and-numbers",
+    "GE-R141-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch141.txt",
+  "json": "german/narration/ch141.json",
+  "textHash": "fnv1a64:bb24302ce81c44c8",
+  "jsonHash": "fnv1a64:0a989dc62d96169b",
+  "findings": []
+}

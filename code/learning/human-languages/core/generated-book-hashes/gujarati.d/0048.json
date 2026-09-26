@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:4ef9ea969ac4ebfb",
+  "lessonIds": [
+    "GU-C48-knee",
+    "GU-C48-heart",
+    "GU-C48-blood",
+    "GU-C48-fever",
+    "GU-C48-cough"
+  ],
+  "tex": "gujarati/book/chapters/ch48-knee-heart-and-a-fever.tex"
+}

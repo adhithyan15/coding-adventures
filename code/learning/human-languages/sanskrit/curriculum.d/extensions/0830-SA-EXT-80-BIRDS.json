@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-80-BIRDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a crow, a parrot, a peacock, a tortoise and a frog.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:774058d4a73b99a6",
+  "lessonIds": [
+    "GU-C46-head",
+    "GU-C46-leg",
+    "GU-C46-belly",
+    "GU-C46-tooth",
+    "GU-C46-hair"
+  ],
+  "tex": "gujarati/book/chapters/ch46-head-to-foot.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R91-second-pass-people",
+    "language": "telugu",
+    "chapter": 91,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d16b8b9ec31b941"
+  },
+  "findings": []
+}

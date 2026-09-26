@@ -4,8 +4,113 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f10e4a448a2a9a7a",
+  "sourceHash": "fnv1a64:5dea0c110535830e",
   "lessons": [
+    {
+      "id": "AR-C03-haajj",
+      "sequence": 269,
+      "title": "حاج (ḥājj) — a pilgrim",
+      "headword": "حاج",
+      "romanization": "ḥājj",
+      "gloss": "a pilgrim",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:046ef017657d11e9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حاج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حاج — ḥājj — \"a pilgrim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ḥājj. Look at its shape as you say it: the next lesson takes one piece of it, ح، خ، ج (ḥāʾ, khāʾ, jīm), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥājj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥājj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥājj, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥājj*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a pilgrim\"? (حاج, ḥājj.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "AR-W07-hook-family-ha-kha",
       "sequence": 270,
@@ -20,7 +125,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:033b3143ac074409",
+      "sourceHash": "fnv1a64:0bfea617e92b3fe4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -209,7 +314,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6dfa0b338337ecd5",
+      "sourceHash": "fnv1a64:1d10e47babd2a51c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -515,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73038833f9bf8888",
+      "sourceHash": "fnv1a64:6a272073b1c14a56",
       "notice": null,
       "blocks": [
         {
@@ -532,6 +637,16 @@
             {
               "kind": "speech",
               "text": "Chapter 2 gave you ما (mā, \"what\"). Here is its partner: كيف (kayfa, \"how\"). Two question words, and you can already build with both."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words from the marks lessons: say mudarris and ahlan, and what each means."
             }
           ]
         },

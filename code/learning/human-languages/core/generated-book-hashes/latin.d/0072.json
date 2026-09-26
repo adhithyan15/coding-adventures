@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:b693e248856ccafa",
+  "lessonIds": [
+    "LA-C72-amita",
+    "LA-C72-vicinus",
+    "LA-C72-hospes",
+    "LA-C72-vir",
+    "LA-C72-femina"
+  ],
+  "tex": "latin/book/chapters/ch72-aunt-neighbour-guest-man-woman.tex"
+}

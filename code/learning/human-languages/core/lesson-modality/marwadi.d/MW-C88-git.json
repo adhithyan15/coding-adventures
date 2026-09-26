@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C88-git",
+    "language": "marwadi",
+    "chapter": 88,
+    "sequence": 5730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0abd3fbcdef3b9d8"
+  },
+  "findings": []
+}

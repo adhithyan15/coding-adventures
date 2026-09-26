@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-50-SCHOOL50",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "FA-EXT-50-SCHOOL50"
+  ],
+  "after": []
+}

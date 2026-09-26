@@ -1,6 +1,7 @@
 mod common;
 
 use common::{actual_dom_dump_for_tree_case, parse_tree_construction_cases};
+use common::is_expected_failure;
 use serde::Deserialize;
 use std::collections::{BTreeMap, HashMap};
 
@@ -165,8 +166,6 @@ const TEXT_CONTROL_CROSS_AXIS_CASES: &[TextControlCrossAxisCase] = &[
     },
 ];
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
-    ("scripted-ark-dat-1", "script-rawtext"),
-    ("scripted-webkit01-dat-2", "script-rawtext"),
 ];
 
 #[derive(Debug, Deserialize)]
@@ -240,6 +239,15 @@ fn whatwg_text_control_audit_cases_match_parser_dom_dump() {
             panic!("case `{}` ({}) parse failed: {error}", case.id, case.axis)
         });
 
+        // A declared expected failure (BR02 §3) must still fail.
+        if is_expected_failure(&case.source) {
+            assert_ne!(
+                actual, source_case.document,
+                "case `{}` now passes; remove it from tree-construction-expected-failures.txt",
+                case.source
+            );
+            continue;
+        }
         assert_eq!(
             actual, source_case.document,
             "case `{}` ({}) failed for input {:?}",

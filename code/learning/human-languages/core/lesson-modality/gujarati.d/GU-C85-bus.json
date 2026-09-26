@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C85-bus",
+    "language": "gujarati",
+    "chapter": 85,
+    "sequence": 4323,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c84b82931409c797"
+  },
+  "findings": []
+}

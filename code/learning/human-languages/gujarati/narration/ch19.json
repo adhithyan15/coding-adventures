@@ -4,11 +4,11 @@
   "chapter": 19,
   "title": "Fourth Return: Script and Names",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:76b1031138cb68e1",
+  "sourceHash": "fnv1a64:94810eea113cb1e0",
   "lessons": [
     {
       "id": "GU-R15-u-matra-r4",
-      "sequence": 640,
+      "sequence": 653,
       "title": "The short-u hook returns at R4",
       "headword": "ુ ી",
       "romanization": "short-u sign — long-ii sign",
@@ -21,7 +21,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:67db36cc5f0782cd",
+      "sourceHash": "fnv1a64:53383f7bc03438bd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -128,7 +128,7 @@
     },
     {
       "id": "GU-R15-chha-r4",
-      "sequence": 650,
+      "sequence": 663,
       "title": "Chha returns beside sha",
       "headword": "છ શ",
       "romanization": "chha — sha",
@@ -140,7 +140,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:09617d7b306ac3ab",
+      "sourceHash": "fnv1a64:d17ef29a8bc29a55",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -246,7 +246,7 @@
     },
     {
       "id": "GU-R15-ka-r4",
-      "sequence": 660,
+      "sequence": 673,
       "title": "Ka returns beside ja",
       "headword": "ક જ",
       "romanization": "ka — ja",
@@ -258,7 +258,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:eddc0b6cc8272a6c",
+      "sourceHash": "fnv1a64:0614ae3709299a90",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -364,7 +364,7 @@
     },
     {
       "id": "GU-R15-nna-r4",
-      "sequence": 670,
+      "sequence": 683,
       "title": "Retroflex nna returns beside na",
       "headword": "ણ ન",
       "romanization": "retroflex nna — na",
@@ -376,7 +376,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b7821cdf2cc8f5e6",
+      "sourceHash": "fnv1a64:5527b7423a33a724",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -482,7 +482,7 @@
     },
     {
       "id": "GU-R15-sha-r4",
-      "sequence": 680,
+      "sequence": 693,
       "title": "Sha returns beside sa",
       "headword": "શ સ",
       "romanization": "sha — sa",
@@ -494,7 +494,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:9252f0c3b8b90477",
+      "sourceHash": "fnv1a64:ea1cdef290e2bd27",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -600,7 +600,7 @@
     },
     {
       "id": "GU-R15-name-exchange-r3",
-      "sequence": 690,
+      "sequence": 703,
       "title": "The name exchange returns after a long interval",
       "headword": "મારું નામ … છે। તમારું નામ શું છે?",
       "romanization": "mārũ nām … chhe. tamārũ nām shũ chhe?",
@@ -611,7 +611,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:99a0244bce608269",
+      "sourceHash": "fnv1a64:fd6cfda134d4666e",
       "notice": {
         "modality": "pen",
         "needs": [],

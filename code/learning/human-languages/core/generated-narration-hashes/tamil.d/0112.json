@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:0ed8bc5c91001c4d",
+  "lessonIds": [
+    "TA-S137-letter-nya",
+    "TA-S138-letter-uu",
+    "TA-S139-letter-o",
+    "TA-S140-letter-ssa",
+    "TA-R112-letters-first-pass",
+    "TA-R112-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch112.txt",
+  "json": "tamil/narration/ch112.json",
+  "textHash": "fnv1a64:96cc07b060a45516",
+  "jsonHash": "fnv1a64:d34b014149b32455",
+  "findings": []
+}

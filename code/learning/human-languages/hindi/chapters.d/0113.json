@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Nothing, Not Yet, Maybe",
+  "label": "ch:hi-nothing-not-yet",
+  "canDo": "I can answer with nothing, not yet, that's enough, that's the one, and maybe.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "HI-C113-hosakta",
+    "kind": "production",
+    "summary": "Complete HI-C113-ho-sakta-hai: five short answers that close a question.",
+    "assesses": [
+      "HI-LEX-C113-NOTHING-03",
+      "HI-LEX-C113-NOTHING-04",
+      "HI-LEX-C113-NOTHING-05"
+    ]
+  }
+}

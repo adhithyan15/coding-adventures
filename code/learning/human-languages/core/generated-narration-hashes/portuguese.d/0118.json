@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:c413f6be2b8504cd",
+  "lessonIds": [
+    "PT-C118-coelho",
+    "PT-C118-tigre",
+    "PT-C118-borboleta",
+    "PT-C118-ra",
+    "PT-C118-tartaruga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch118.txt",
+  "json": "portuguese/narration/ch118.json",
+  "textHash": "fnv1a64:bb9e0f3d609c42b0",
+  "jsonHash": "fnv1a64:c56c3277eb39940e",
+  "findings": []
+}

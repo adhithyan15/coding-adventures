@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:ef31ab9e87c037c0",
+  "lessonIds": [
+    "GE-C100-guertel",
+    "GE-C100-jacke",
+    "GE-C100-grenze",
+    "GE-C100-welt",
+    "GE-C100-sprache"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch100.txt",
+  "json": "german/narration/ch100.json",
+  "textHash": "fnv1a64:ffcdb4c38bd77e19",
+  "jsonHash": "fnv1a64:890e560cdcb00a93",
+  "findings": []
+}

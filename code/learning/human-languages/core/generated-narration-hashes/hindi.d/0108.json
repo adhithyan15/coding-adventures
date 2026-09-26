@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:a0afa2b4f15597e6",
+  "lessonIds": [
+    "HI-C108-dar",
+    "HI-C108-gussa",
+    "HI-C108-udas",
+    "HI-C108-pareshan",
+    "HI-C108-chinta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch108.txt",
+  "json": "hindi/narration/ch108.json",
+  "textHash": "fnv1a64:62aef680f551f214",
+  "jsonHash": "fnv1a64:c1a7aeafecc9a653",
+  "findings": []
+}

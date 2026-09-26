@@ -1,0 +1,11 @@
+{
+  "id": "LA-C77-cado",
+  "pathSegment": "LA-PATH-77-VERBA3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-77-VERBA3",
+      "order": 2
+    }
+  ]
+}

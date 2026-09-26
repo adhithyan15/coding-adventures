@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:0c48a493aa3e3f8e",
+  "lessonIds": [
+    "JA-C44-shima",
+    "JA-C44-nami",
+    "JA-C44-tsuchi",
+    "JA-C44-tane",
+    "JA-C44-ame"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch44.txt",
+  "json": "japanese/narration/ch44.json",
+  "textHash": "fnv1a64:edd43dacfe200060",
+  "jsonHash": "fnv1a64:6ca232b1feb88711",
+  "findings": []
+}

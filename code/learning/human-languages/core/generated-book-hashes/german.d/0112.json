@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:ebd3d7ac2e6872dc",
+  "lessonIds": [
+    "GE-C112-teppich",
+    "GE-C112-fernseher",
+    "GE-C112-computer",
+    "GE-C112-kuehlschrank",
+    "GE-C112-herd"
+  ],
+  "tex": "german/book/chapters/ch112-rug-television-computer-fridge-cooker.tex"
+}

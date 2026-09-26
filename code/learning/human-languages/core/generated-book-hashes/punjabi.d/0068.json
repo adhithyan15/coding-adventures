@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:f73f550d15dea041",
+  "lessonIds": [
+    "PA-C68-mez",
+    "PA-C68-kandh",
+    "PA-C68-chhatt",
+    "PA-C68-almari",
+    "PA-C68-farsh"
+  ],
+  "tex": "punjabi/book/chapters/ch68-table-wall-roof-cupboard-floor.tex"
+}

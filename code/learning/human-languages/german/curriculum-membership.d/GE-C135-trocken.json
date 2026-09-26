@@ -1,0 +1,11 @@
+{
+  "id": "GE-C135-trocken",
+  "pathSegment": "GE-PATH-135-EIGEN135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-135-EIGEN135",
+      "order": 2
+    }
+  ]
+}

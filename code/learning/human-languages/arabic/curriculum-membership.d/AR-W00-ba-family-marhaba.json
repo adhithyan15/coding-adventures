@@ -1,11 +1,11 @@
 {
   "id": "AR-W00-ba-family-marhaba",
   "pathSegment": "AR-PATH-003",
-  "pathOrder": 2,
+  "pathOrder": 3,
   "extensions": [
     {
       "id": "AR-EXT-003-SCRIPT",
-      "order": 1
+      "order": 2
     }
   ]
 }

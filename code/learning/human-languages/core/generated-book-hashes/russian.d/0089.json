@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:d6dcdea79196c1ff",
+  "lessonIds": [
+    "RU-C89-factory",
+    "RU-C89-office",
+    "RU-C89-corner",
+    "RU-C89-crossroads",
+    "RU-C89-traffic-lights"
+  ],
+  "tex": "russian/book/chapters/ch89-factory-office-corner-crossroads-traffic-lights.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C139-beginnen",
+    "language": "german",
+    "chapter": 139,
+    "sequence": 5900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9abb673652143a31"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Station, Car, Bus, Bridge, Mosque",
+  "label": "ch:ur-station-car-bus-bridge-mosque",
+  "canDo": "I can say a station, a car, a bus, a bridge and a mosque.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "UR-C80-masjid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say a station, a car, a bus, a bridge and a mosque.",
+    "assesses": [
+      "UR-LEX-C80-TOWN80-03",
+      "UR-LEX-C80-TOWN80-04",
+      "UR-LEX-C80-TOWN80-05"
+    ]
+  }
+}

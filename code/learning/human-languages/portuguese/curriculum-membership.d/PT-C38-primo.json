@@ -1,0 +1,11 @@
+{
+  "id": "PT-C38-primo",
+  "pathSegment": "PT-PATH-38-FAMILIA2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-38-FAMILIA2",
+      "order": 2
+    }
+  ]
+}

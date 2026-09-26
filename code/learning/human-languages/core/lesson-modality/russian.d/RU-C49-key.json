@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C49-key",
+    "language": "russian",
+    "chapter": 49,
+    "sequence": 2440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:846e96af56b42e11"
+  },
+  "findings": []
+}

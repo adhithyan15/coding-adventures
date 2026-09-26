@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:f1481298ad610ac3",
+  "lessonIds": [
+    "AR-C54-ju",
+    "AR-C54-said",
+    "AR-C54-hazin",
+    "AR-C54-tabib",
+    "AR-C54-jadd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch54.txt",
+  "json": "arabic/narration/ch54.json",
+  "textHash": "fnv1a64:7abafaf2857042ab",
+  "jsonHash": "fnv1a64:bd6ac6395bfd85be",
+  "findings": []
+}

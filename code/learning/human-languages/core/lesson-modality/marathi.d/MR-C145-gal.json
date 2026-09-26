@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C145-gal",
+    "language": "marathi",
+    "chapter": 145,
+    "sequence": 6800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60a8aec2a7a36a6e"
+  },
+  "findings": []
+}

@@ -27,7 +27,14 @@ it("pins Latin lesson-content budgets", () =>
     // debt -- the social phrases sorted by what Latin attests, and the three
     // words that closed three chapters. No new atoms.
     //
-    lessons: 173,
+    // 173 -> 407: the pre-A1 vocabulary tranche, chapters 63-108. 230 word
+    // lessons (thirty-three verbs) and four reviews; each word lesson introduces
+    // one lexical atom and no idiom, sense or culture claim. Re-measured.
+    //
+    // 407 -> 677: the A1 tranche, chapters 109-160. 260 word lessons
+    // (forty-seven verbs) in five runs of ten or eleven chapters, each closing on
+    // two reviews. No idiom, sense or culture claim.
+    lessons: 677,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

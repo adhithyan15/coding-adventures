@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C106-dessert",
+    "language": "russian",
+    "chapter": 106,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80b2886ac53820b4"
+  },
+  "findings": []
+}

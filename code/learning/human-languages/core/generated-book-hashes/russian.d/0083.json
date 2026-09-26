@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:bb34f5e6d043e200",
+  "lessonIds": [
+    "RU-C83-midday",
+    "RU-C83-midnight",
+    "RU-C83-early",
+    "RU-C83-late",
+    "RU-C83-in-the-morning"
+  ],
+  "tex": "russian/book/chapters/ch83-midday-midnight-early-late-in-the-morning.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:c9822873f26b2913",
+  "lessonIds": [
+    "RU-C133-to-go-up",
+    "RU-C133-to-go-down",
+    "RU-C133-to-stay",
+    "RU-C133-to-rent",
+    "RU-C133-to-repair"
+  ],
+  "tex": "russian/book/chapters/ch133-to-go-up-to-go-down-to-stay-to-rent-to-repair.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C127-reponse",
+    "language": "french",
+    "chapter": 127,
+    "sequence": 5820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ab894c99b1e6eef"
+  },
+  "findings": []
+}

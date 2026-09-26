@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C134-to-find",
+    "language": "russian",
+    "chapter": 134,
+    "sequence": 7030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37ca3d8c322e8ee5"
+  },
+  "findings": []
+}

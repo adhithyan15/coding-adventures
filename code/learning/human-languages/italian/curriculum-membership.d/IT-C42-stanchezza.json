@@ -1,0 +1,11 @@
+{
+  "id": "IT-C42-stanchezza",
+  "pathSegment": "IT-PATH-42-STARE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-42-STARE",
+      "order": 1
+    }
+  ]
+}

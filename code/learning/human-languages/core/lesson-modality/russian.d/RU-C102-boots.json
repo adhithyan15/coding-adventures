@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C102-boots",
+    "language": "russian",
+    "chapter": 102,
+    "sequence": 5200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db0633fafe6e4ba2"
+  },
+  "findings": []
+}

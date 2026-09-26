@@ -1,0 +1,11 @@
+{
+  "id": "HI-C127-chalega",
+  "pathSegment": "HI-PATH-127-NOTATALL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-127-NOTATALL",
+      "order": 4
+    }
+  ]
+}

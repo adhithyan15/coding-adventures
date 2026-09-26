@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Cheap, Empty, Rich, Poor, Dirt",
+  "label": "ch:mr-cheap-empty-rich-poor-dirt",
+  "canDo": "I can say cheap, empty, rich, poor and dirt.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C105-ghan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say cheap, empty, rich, poor and dirt.",
+    "assesses": [
+      "MR-LEX-C105-ADJ105-03",
+      "MR-LEX-C105-ADJ105-04",
+      "MR-LEX-C105-ADJ105-05"
+    ]
+  }
+}

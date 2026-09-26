@@ -1,0 +1,11 @@
+{
+  "id": "IT-C53-carota",
+  "pathSegment": "IT-PATH-53-VERDURA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-53-VERDURA",
+      "order": 3
+    }
+  ]
+}

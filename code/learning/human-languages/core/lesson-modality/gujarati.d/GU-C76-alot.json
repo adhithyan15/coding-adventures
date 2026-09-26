@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C76-alot",
+    "language": "gujarati",
+    "chapter": 76,
+    "sequence": 3873,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56ca6de5e900cec5"
+  },
+  "findings": []
+}

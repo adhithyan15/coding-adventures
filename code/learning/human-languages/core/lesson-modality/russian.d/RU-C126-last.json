@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C126-last",
+    "language": "russian",
+    "chapter": 126,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:363c4589af3e5251"
+  },
+  "findings": []
+}

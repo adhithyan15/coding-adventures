@@ -1,0 +1,11 @@
+{
+  "id": "UR-C58-kursi",
+  "pathSegment": "UR-PATH-58-HOME58",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-58-HOME58",
+      "order": 1
+    }
+  ]
+}

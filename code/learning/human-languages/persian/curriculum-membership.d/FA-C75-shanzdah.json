@@ -1,0 +1,11 @@
+{
+  "id": "FA-C75-shanzdah",
+  "pathSegment": "FA-PATH-75-CLOTHES75",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-75-CLOTHES75",
+      "order": 4
+    }
+  ]
+}

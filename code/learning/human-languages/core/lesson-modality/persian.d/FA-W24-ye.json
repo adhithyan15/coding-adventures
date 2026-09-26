@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W24-ye",
+    "language": "persian",
+    "chapter": 24,
+    "sequence": 1070,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8b7673946dd1de26",
+    "detachableSegments": [
+      "Script you'll notice: ی",
+      "Writing: ی"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

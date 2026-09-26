@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:3ce04b77ee50314b",
+  "lessonIds": [
+    "GU-C79-saturday",
+    "GU-C79-sunday",
+    "GU-C79-tomorrow",
+    "GU-C79-yesterday",
+    "GU-C79-time"
+  ],
+  "tex": "gujarati/book/chapters/ch79-the-weekend-tomorrow-and-yesterday.tex"
+}

@@ -9,20 +9,20 @@ type: writing
 headword: ढ
 romanization: "ddha"
 gloss: aspirated retroflex da — the fifth of a row you finished four-fifths of in chapter seven
-prerequisites: [MR-W07-dda, MR-W07-ttha, MR-W03-dha]
+prerequisites: [MR-W07-dda, MR-W07-ttha, MR-W03-dha, MR-C64-dhol]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-DDA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-DHA-01]
+  knowledge: [MR-SCRIPT-DDA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-DHA-01, MR-LEX-ANCHOR-DHOL]
 introduces:
   knowledge: [MR-SCRIPT-DDHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-DDHA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-TTHA-01]
+  knowledge: [MR-SCRIPT-DDHA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-DHA-01, MR-SCRIPT-TTHA-01, MR-LEX-ANCHOR-DHOL]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W07-dda, MR-W07-ttha, MR-W03-dha]
 # ढ — the fifth of the curled row
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-DDA-01, MR-SCRIPT-TTHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-DDA-01, MR-SCRIPT-TTHA-01, MR-LEX-ANCHOR-DHOL] -->
 
 [PAUSE 2s] Chapter seven gave you **ट**, **ठ**, **ड** and **ण**. Four of a row of
 five. Say the two of those four that belong to the *d* half of the row.

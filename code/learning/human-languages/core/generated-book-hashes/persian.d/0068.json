@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:748b447d3ac0f51a",
+  "lessonIds": [
+    "FA-C68-dakhel",
+    "FA-C68-birun",
+    "FA-C68-bala",
+    "FA-C68-payin",
+    "FA-C68-jolow"
+  ],
+  "tex": "persian/book/chapters/ch68-inside-outside-up-down-in-front.tex"
+}

@@ -4,11 +4,11 @@
   "chapter": 3,
   "title": "Six More Signs Make Thank You Readable",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:052368e01db672aa",
+  "sourceHash": "fnv1a64:68e9b68a4348c902",
   "lessons": [
     {
       "id": "MR-W03-da",
-      "sequence": 27,
+      "sequence": 31,
       "title": "द — dental da",
       "headword": "द",
       "romanization": "da",
@@ -22,7 +22,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ad3c79f4b8986d7d",
+      "sourceHash": "fnv1a64:65b07dd1dbb20014",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -108,7 +108,7 @@
     },
     {
       "id": "MR-W03-dha",
-      "sequence": 28,
+      "sequence": 32,
       "title": "ध — dha, voiced and breathy",
       "headword": "ध",
       "romanization": "dha",
@@ -121,7 +121,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f432233c1b6292ac",
+      "sourceHash": "fnv1a64:d02c9ea636c18b5b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -206,7 +206,7 @@
     },
     {
       "id": "MR-W03-ba",
-      "sequence": 29,
+      "sequence": 33,
       "title": "ब — ba without the puff",
       "headword": "ब",
       "romanization": "ba",
@@ -219,7 +219,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e57366cc62444376",
+      "sourceHash": "fnv1a64:36d12fcb0f3722b4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -314,7 +314,7 @@
     },
     {
       "id": "MR-W03-ya",
-      "sequence": 30,
+      "sequence": 34,
       "title": "य — ya",
       "headword": "य",
       "romanization": "ya",
@@ -327,7 +327,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a7ad48959583049f",
+      "sourceHash": "fnv1a64:510ca3164a0c50fb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -425,7 +425,7 @@
     },
     {
       "id": "MR-W03-lla",
-      "sequence": 31,
+      "sequence": 35,
       "title": "ळ (ḷa) — Marathi's curled-back lla",
       "headword": "ळ",
       "romanization": "ḷa",
@@ -438,7 +438,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:91218d39f391400a",
+      "sourceHash": "fnv1a64:abeb2d4dea2a16ae",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -536,7 +536,7 @@
     },
     {
       "id": "MR-W03-va",
-      "sequence": 32,
+      "sequence": 36,
       "title": "व (va) — between English v and w",
       "headword": "व",
       "romanization": "va",
@@ -549,7 +549,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:352175ea2c51a1b7",
+      "sourceHash": "fnv1a64:c7553df9e939d083",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -644,7 +644,7 @@
     },
     {
       "id": "MR-W03-dhanyavad-write",
-      "sequence": 33,
+      "sequence": 37,
       "title": "धन्यवाद (dhanyavād) — now read what you already mean",
       "headword": "धन्यवाद",
       "romanization": "dhanyavād",
@@ -655,7 +655,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:33103e656144a8b8",
+      "sourceHash": "fnv1a64:15e51514e1ef409c",
       "notice": {
         "modality": "pen",
         "needs": [

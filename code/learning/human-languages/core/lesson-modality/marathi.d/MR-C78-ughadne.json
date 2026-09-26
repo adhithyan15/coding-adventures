@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C78-ughadne",
+    "language": "marathi",
+    "chapter": 78,
+    "sequence": 3290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdc4a28ec00a59a3"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:9b25d33555768391",
+  "lessonIds": [
+    "SA-C89-beautiful",
+    "SA-C89-far",
+    "SA-C89-near",
+    "SA-C89-hard",
+    "SA-C89-sweet",
+    "SA-R89-first-pass-food-animals-nature",
+    "SA-R89-second-pass-places-days-people"
+  ],
+  "tex": "sanskrit/book/chapters/ch89-beautiful-far-near.tex"
+}

@@ -8,20 +8,20 @@ type: writing
 headword: "ن، ت، ث"
 gloss: the bowl skeleton finished — nūn, tāʾ, thāʾ, where only the dots differ
 romanization: "nūn, tāʾ, thāʾ"
-prerequisites: [AR-W00-full-greeting-recall]
+prerequisites: [AR-W00-full-greeting-recall, AR-C02-thaman]
 sounds: [arabic-nun, arabic-ta, arabic-tha]
 roots: [phoenician-nun, phoenician-taw]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-THAMAN]
 introduces:
   knowledge: [AR-CONCEPT-W04-DOTS-FAMILY-01, AR-CONCEPT-W04-DOTS-FAMILY-02, AR-CONCEPT-W04-DOTS-FAMILY-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-W04-DOTS-FAMILY-01, AR-CONCEPT-W04-DOTS-FAMILY-02, AR-CONCEPT-W04-DOTS-FAMILY-03]
+  knowledge: [AR-CONCEPT-W04-DOTS-FAMILY-01, AR-CONCEPT-W04-DOTS-FAMILY-02, AR-CONCEPT-W04-DOTS-FAMILY-03, AR-LEX-ANCHOR-THAMAN]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W00-alif-mim-salam, AR-W00-ba-family-marhaba, AR-C02-anta-anti, 
 # ن، ت، ث — one bowl, four dot-patterns
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-THAMAN] -->
 
 [PAUSE 2s] In Lesson 3 you drew **ب** (*bāʾ*) — a boat-bowl with **one dot
 below** — and met the idea that the **dots make the letter**. Now the promised

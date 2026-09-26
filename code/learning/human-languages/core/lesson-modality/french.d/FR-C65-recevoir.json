@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C65-recevoir",
+    "language": "french",
+    "chapter": 65,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7d1944eca2fbcda"
+  },
+  "findings": []
+}

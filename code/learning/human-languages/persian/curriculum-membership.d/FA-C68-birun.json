@@ -1,0 +1,11 @@
+{
+  "id": "FA-C68-birun",
+  "pathSegment": "FA-PATH-68-PLACE68",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-68-PLACE68",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "How's It Going?",
+  "label": "ch:hi-hows-it-going",
+  "canDo": "I can greet someone the everyday way: how's it going, all well, long time, what's up, have you eaten.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-C123-khanakhaya",
+    "kind": "production",
+    "summary": "Complete HI-C123-khana-khaya: everyday greetings.",
+    "assesses": [
+      "HI-LEX-C123-HAAL-03",
+      "HI-LEX-C123-HAAL-04",
+      "HI-LEX-C123-HAAL-05"
+    ]
+  }
+}

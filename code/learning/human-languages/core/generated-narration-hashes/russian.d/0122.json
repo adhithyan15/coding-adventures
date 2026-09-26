@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:feb2415a95858742",
+  "lessonIds": [
+    "RU-C122-chin",
+    "RU-C122-rainbow",
+    "RU-C122-lightning",
+    "RU-C122-thunder",
+    "RU-C122-planet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch122.txt",
+  "json": "russian/narration/ch122.json",
+  "textHash": "fnv1a64:84172c542ab04fdd",
+  "jsonHash": "fnv1a64:02b2fd8baa1d2814",
+  "findings": []
+}

@@ -1,0 +1,53 @@
+// ChecklistRun.mil — interface (C2 of #14018; spec
+// code/specs/mosaic-pkg-checklist.md).
+//
+// What someone sees while working through one run of a checklist:
+//
+//   Pre-flight                                   title (heading)
+//   3 of 5 done                                  progress
+//   ☑ Fuel checked
+//   Passengers?          [ Yes ] [ No ]          a question, Yes chosen
+//     ☐ Brief them                               its revealed branch
+//   ☐ Doors closed
+//   [ Complete ] [ Abandon ]                     each only if labelled
+//
+// The rows are exactly task-core's `checklist_run(..).rows` — the VISIBLE items
+// (an unanswered question shows no branch) — so this component never needs to
+// know about branches. See the spec for the row fields.
+//
+// A check item is a real checkbox
+// -------------------------------
+// Each item is a native HostCheckbox labelled with its name. Inside a For, a
+// checkbox whose onToggle targets `( index : number )` reports its row index,
+// as a HostButton's click does (UI29-2 §2.1.1), so `onToggle` says WHICH item
+// changed; the app flips that item's stored state.
+
+component ChecklistRun {
+  // The run's name, announced as a heading.
+  slot title : text ;
+
+  // Progress in words, formatted by the host ("3 of 5 done").
+  slot progress-label : text ;
+
+  // [key, indent, name, decision-marker, ticked-or-yes, no] — truthy markers
+  // only ("1" or ""), so the layout needs no string comparison.
+  slot rows : list<list<text>> ;
+
+  // Answer labels, localisable.
+  slot yes-label : text ;
+  slot no-label : text ;
+
+  // Finishing actions; "" = not offered. The host offers Complete only when
+  // the run is complete (task-core refuses otherwise).
+  slot complete-label : text ;
+  slot abandon-label : text ;
+
+  // Tick or untick the check item at `index` in `rows`.
+  emit onToggle ( index : number ) ;
+  // Answer the question at `index`.
+  emit onAnswerYes ( index : number ) ;
+  emit onAnswerNo ( index : number ) ;
+  // Finish the run.
+  emit onComplete ;
+  emit onAbandon ;
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:8d0ba26ca86e9570",
+  "lessonIds": [
+    "AR-C62-waqafa",
+    "AR-C62-bahatha",
+    "AR-C62-wajada",
+    "AR-C62-labisa",
+    "AR-C62-taraka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch62.txt",
+  "json": "arabic/narration/ch62.json",
+  "textHash": "fnv1a64:6749d08d9ae2f8eb",
+  "jsonHash": "fnv1a64:f27a1070e66bf02b",
+  "findings": []
+}

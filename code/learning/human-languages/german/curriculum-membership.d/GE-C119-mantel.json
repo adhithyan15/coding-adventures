@@ -1,0 +1,11 @@
+{
+  "id": "GE-C119-mantel",
+  "pathSegment": "GE-PATH-119-KLEIDUNG119",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-119-KLEIDUNG119",
+      "order": 3
+    }
+  ]
+}

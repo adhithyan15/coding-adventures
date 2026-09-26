@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Car, Bridge, Park, Church, Museum",
+  "label": "ch:fr-car-bridge-park-church-museum",
+  "canDo": "I can name a car, a bridge, a park, a church, a museum.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FR-C100-musee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can name a car, a bridge, a park, a church, a museum.",
+    "assesses": [
+      "FR-LEX-C100-VILLE52-03",
+      "FR-LEX-C100-VILLE52-04",
+      "FR-LEX-C100-VILLE52-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:91502c0bf6068d70",
+  "lessonIds": [
+    "BN-C47-pishi",
+    "BN-C47-shbami",
+    "BN-C47-stri",
+    "BN-C47-shishu",
+    "BN-C47-lok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch47.txt",
+  "json": "bengali/narration/ch47.json",
+  "textHash": "fnv1a64:d0ddec9f5a9888b5",
+  "jsonHash": "fnv1a64:710448855ec01bfe",
+  "findings": []
+}

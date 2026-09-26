@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W26-fe",
+    "language": "persian",
+    "chapter": 26,
+    "sequence": 1140,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c42c29e7bc9be6cd",
+    "detachableSegments": [
+      "Script you'll notice: ف",
+      "Writing: ف"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

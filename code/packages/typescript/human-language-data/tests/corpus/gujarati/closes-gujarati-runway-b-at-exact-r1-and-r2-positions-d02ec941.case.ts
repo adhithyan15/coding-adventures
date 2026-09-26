@@ -16,28 +16,30 @@ it("closes Gujarati runway B at exact R1 and R2 positions", () => {
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
+  // HL-C443: every index +13, from the thirteen runway anchor words in
+  // chapters 1-7. The distances are unchanged.
   expect([
-    ordered[153]?.realization.lessonId,
-    ordered[158]?.realization.lessonId,
-    ordered[164]?.realization.lessonId,
+    ordered[166]?.realization.lessonId,
+    ordered[171]?.realization.lessonId,
+    ordered[177]?.realization.lessonId,
   ]).toEqual([
     "GU-C22-shaalaa",
     "GU-R23-route-three-r1",
     "GU-R23-shaalaa-rasto-r2",
   ]);
   expect(
-    [ordered[158], ordered[164]].every(
+    [ordered[171], ordered[177]].every(
       (lesson) => ((lesson?.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
     ),
   ).toBe(true);
 
   const exactReturns = [
-    ["GU-SCRIPT-SHAHAR-01", 153, 2],
-    ["GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01", 158, 2],
-    ["GU-LEX-SHAALAA-01", 164, 12],
-    ["GU-SCRIPT-SHAALAA-01", 164, 11],
-    ["GU-LEX-RASTO-01", 164, 10],
-    ["GU-SCRIPT-RASTO-01", 164, 9],
+    ["GU-SCRIPT-SHAHAR-01", 166, 2],
+    ["GU-PERFORMANCE-ROUTE-THREE-FOUR-SKILL-01", 171, 2],
+    ["GU-LEX-SHAALAA-01", 177, 12],
+    ["GU-SCRIPT-SHAALAA-01", 177, 11],
+    ["GU-LEX-RASTO-01", 177, 10],
+    ["GU-SCRIPT-RASTO-01", 177, 9],
   ] as const;
   expect(
     exactReturns.map(([atom, returnAt]) => {

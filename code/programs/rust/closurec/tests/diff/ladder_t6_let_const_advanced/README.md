@@ -27,16 +27,5 @@ java -Duser.language=en -Duser.country=US -Duser.timezone=UTC -Dfile.encoding=UT
 
 ## Status
 
-**Known divergence** — see `tests/ladder/divergences.json`.
+Matches upstream byte for byte.
 
-## Divergence
-
-`closurec` currently emits:
-
-```js
-let a=1;console.log(a+2);
-```
-
-At SIMPLE this runs the OPPOSITE way to every other rung: closurec propagates the const into its use site and upstream does not, so we optimize MORE than the oracle. That may be a win or an unsound propagation — tracked as CCR-078. At ADVANCED the ordinary CCR-068 gap applies.
-
-Tracked in https://github.com/adhithyan15/coding-adventures/issues/15863. The divergence is pinned in `tests/ladder/divergences.json`, so closing the gap fails this fixture's harness assertion — that failure is the signal to delete the ledger entry.

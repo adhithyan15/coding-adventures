@@ -1,11 +1,11 @@
 {
   "id": "TA-W08-sollungal-delayed-copy",
   "pathSegment": "TA-PATH-015",
-  "pathOrder": 4,
+  "pathOrder": 5,
   "extensions": [
     {
       "id": "TA-EXT-015-REGISTER",
-      "order": 3
+      "order": 4
     }
   ]
 }

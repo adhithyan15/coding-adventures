@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:53a85d1fe8a27ae2",
+  "lessonIds": [
+    "SA-C83-school",
+    "SA-C83-student",
+    "SA-C83-teacher",
+    "SA-C83-lesson",
+    "SA-C83-exam"
+  ],
+  "tex": "sanskrit/book/chapters/ch83-at-school.tex"
+}

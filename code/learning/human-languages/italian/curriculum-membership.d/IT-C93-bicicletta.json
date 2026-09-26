@@ -1,0 +1,11 @@
+{
+  "id": "IT-C93-bicicletta",
+  "pathSegment": "IT-PATH-93-VIAGGIO93",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-93-VIAGGIO93",
+      "order": 1
+    }
+  ]
+}

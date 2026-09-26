@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C137-vehicle",
+    "language": "malayalam",
+    "chapter": 137,
+    "sequence": 5410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:593366e466b0e95c"
+  },
+  "findings": []
+}

@@ -1077,7 +1077,14 @@ fn emit_jsx_tree(
     // primitive flow because the general flow can't express the controlled-
     // input invariant or the optional `<label>` wrapping.
     if node.tag == "HostCheckbox" {
-        return emit_host_checkbox_jsx(node, indent, part_styles, indeterminate_checkbox_nodes);
+        return emit_host_checkbox_jsx(
+            node,
+            indent,
+            part_styles,
+            indeterminate_checkbox_nodes,
+            emits,
+            for_payload,
+        );
     }
 
     // UI29-2 — `HostRadio` lowers to `<input type="radio" />` with
@@ -3326,6 +3333,8 @@ fn emit_host_checkbox_jsx(
     indent: usize,
     part_styles: &HashMap<String, String>,
     indeterminate_checkbox_nodes: &[*const LayoutNode],
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
@@ -3359,11 +3368,28 @@ fn emit_host_checkbox_jsx(
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
 
-    // `checked={slot}` — drives the controlled-input behavior.
-    if let Some(slot) = find_slot_ref_prop(node, "checked") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        attrs.push_str(&format!(" checked={{{camel}}}"));
+    // `checked={slot}` — drives the controlled-input behavior. Inside a `For`
+    // the state is usually a row expression such as `row[4]`, a "1"/"" text
+    // marker, so it is read by truthiness (UI29-2 §2.1).
+    if let Some(prop) = node.props.iter().find(|p| p.name == "checked") {
+        match &prop.value {
+            LayoutPropValue::SlotRef(slot) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" checked={{{camel}}}"));
+            }
+            LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
+                attrs.push_str(&format!(" checked={{{k}}}"));
+            }
+            LayoutPropValue::Keyword(binding) => {
+                validate_slot_or_field_name(binding).map_err(PipelineEmitError::UnsafeSlotName)?;
+                attrs.push_str(&format!(" checked={{Boolean({binding})}}"));
+            }
+            LayoutPropValue::Expr(text) if !text.trim().is_empty() => {
+                attrs.push_str(&format!(" checked={{Boolean({text})}}"));
+            }
+            _ => {}
+        }
     }
 
     // `disabled={slot}` OR `disabled={true|false}` literal.
@@ -3382,12 +3408,24 @@ fn emit_host_checkbox_jsx(
     // kernel-canonical event carries a `checked: bool` payload (per UI29-2
     // §2). React's `<input>` exposes the new state via `e.target.checked`,
     // so we destructure that into the dispatch payload directly.
+    //
+    // An `( index : number )` emit inside a `For` gets the row index instead
+    // (UI29-2 §2.1.1), exactly as a `HostButton` would: the toggle alone
+    // cannot say which row of a list changed.
     if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_emit_name(&type_field)?;
-        attrs.push_str(&format!(
-            " onChange={{e => dispatch({{ type: \"{type_field}\", checked: e.target.checked }})}}"
-        ));
+        let wants_index = emits.iter().find(|e| e.name == emit_name).is_some_and(|e| {
+            matches!(e.params.as_slice(), [param] if param.r#type == EmitPayloadType::Number)
+        });
+        if wants_index {
+            let event = host_button_event_expr(emit_name, emits, for_payload)?;
+            attrs.push_str(&format!(" onChange={{() => dispatch({event})}}"));
+        } else {
+            attrs.push_str(&format!(
+                " onChange={{e => dispatch({{ type: \"{type_field}\", checked: e.target.checked }})}}"
+            ));
+        }
     }
 
     // Optional `<label>` wrapping. When `label:` is present we render
@@ -3395,12 +3433,10 @@ fn emit_host_checkbox_jsx(
     // `<input id="…" />` + sibling `<label for="…">`) sidesteps the need
     // to generate stable unique IDs and is the idiomatic React shape for
     // a single-line checkbox-with-text.
-    let label_body: Option<String> = if let Some(s) = find_string_prop(node, "label") {
-        Some(jsx_string_expr(s))
-    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        Some(format!("{{{camel}}}"))
+    // Same label forms as `HostButton` (string, slot, loop binding or a row
+    // expression), so a checkbox in a `For` can name its row.
+    let label_body: Option<String> = if node.props.iter().any(|p| p.name == "label") {
+        Some(host_button_label_body(node)?).filter(|body| !body.is_empty())
     } else {
         None
     };
@@ -8833,6 +8869,64 @@ mod tests {
                 "<button onClick={() => dispatch({ type: \"select\", index: i })}>{item}</button>"
             ),
             "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` gets the
+    /// row index, and a row expression drives `checked` by truthiness.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Checklist",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onToggle",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.to_string(),
+            value,
+        };
+        let l = LayoutDef {
+            component_name: "Checklist".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        prop("each", LayoutPropValue::SlotRef("items".to_string())),
+                        prop("as", LayoutPropValue::Keyword("item".to_string())),
+                        prop("index", LayoutPropValue::Keyword("i".to_string())),
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostCheckbox".to_string(),
+                        part_name: None,
+                        props: vec![
+                            prop("checked", LayoutPropValue::Expr("item".to_string())),
+                            prop("label", LayoutPropValue::Expr("item".to_string())),
+                            prop("onToggle", LayoutPropValue::EmitRef("onToggle".to_string())),
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Checklist"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains(
+                "<label><input type=\"checkbox\" checked={Boolean(item)} onChange={() => dispatch({ type: \"toggle\", index: i })} /> {item}</label>"
+            ),
+            "expected an index-dispatching checkbox labelled by the row, got:\n{out}"
         );
     }
 

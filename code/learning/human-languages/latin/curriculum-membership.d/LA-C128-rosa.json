@@ -1,0 +1,11 @@
+{
+  "id": "LA-C128-rosa",
+  "pathSegment": "LA-PATH-128-THINGS128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-128-THINGS128",
+      "order": 3
+    }
+  ]
+}

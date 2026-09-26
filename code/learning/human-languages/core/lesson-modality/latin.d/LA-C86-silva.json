@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C86-silva",
+    "language": "latin",
+    "chapter": 86,
+    "sequence": 2940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93fcb4fe32075e90"
+  },
+  "findings": []
+}

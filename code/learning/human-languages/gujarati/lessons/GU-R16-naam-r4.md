@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R16-naam-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 700
+sequence: 713
 chapter: 20
 type: practice
 headword: નામ

@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "About You",
+  "label": "ch:ml-about-you",
+  "canDo": "I can talk about my address, a wedding, a language, English and an office.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ML-C126-office",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can talk about my address, a wedding, a language, English and an office.",
+    "assesses": [
+      "ML-LEX-C126-ABOUTYOU-03",
+      "ML-LEX-C126-ABOUTYOU-04",
+      "ML-LEX-C126-ABOUTYOU-05"
+    ]
+  }
+}

@@ -1,8 +1,8 @@
 Italian, chapter 14: Having and Telling Your Age.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 avere — "to have".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -48,7 +48,7 @@ Wrap-up Recall.
 Give the six forms. (Ho, hai, ha, abbiamo, avete, hanno.) Which carry an h? (Ho, hai, ha, hanno.) Is it pronounced? (No — never.) Then why is it there? (To keep them apart from o, ai, a, anno in writing.) What root is avere from? (Latin habēre becomes habit/inhabit/exhibit.) Next: anno takes centre stage.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 ho venti anni — having your years.
 
 Warm-up.
@@ -70,16 +70,6 @@ Hanno venti anni. means "They have twenty years."
 anno means "year".
 Hanno and anno sound exactly the same. Only the silent h tells them apart — and in a sentence about years, both words show up at once. That is precisely why Italian kept a letter it never pronounces.
 
-Grammar Lens: who has and who is.
-[a table of 6 rows, read aloud]
-language: Italian, ho venti anni — have.
-language: French, j'ai vingt ans — have.
-language: Spanish, tengo veinte años — have.
-language: Portuguese, tenho vinte anos — have.
-language: German, ich bin zwanzig Jahre alt — be.
-language: English, I am twenty — be.
-Romance has its years; Germanic is its years.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "Quanti anni hai?"]
@@ -93,4 +83,35 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which verb does Italian use for age? (Avere, never essere.) What does ho venti anni literally say? ("I have twenty years.") Where does anno come from? (Latin annus becomes annual/anniversary.) What separates hanno from anno? (Only the silent h — they sound identical.) Which two languages say "I am" instead? (German and English.)
+Which verb does Italian use for age? (Avere, never essere.) What does ho venti anni literally say? ("I have twenty years.") Where does anno come from? (Latin annus becomes annual/anniversary.) What separates hanno from anno? (Only the silent h — they sound identical.)
+
+
+Lesson 3 of 3.
+Have or be — age in six languages.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say how old you are in Italian: Ho … anni. Which verb did you use?
+
+Grammar Lens: who has and who is.
+[a table of 6 rows, read aloud]
+language: Italian, ho venti anni — have.
+language: French, j'ai vingt ans — have.
+language: Spanish, tengo veinte años — have.
+language: Portuguese, tenho vinte anos — have.
+language: German, ich bin zwanzig Jahre alt — be.
+language: English, I am twenty — be.
+Romance has its years; Germanic is its years.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Ho venti anni" — and notice the have]
+[pause 8 seconds for the answer]
+[your turn — say: the English "I am twenty" beside it — and notice the be]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which two languages in the table say "I am" instead? (German and English.)

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:1565a7680762d1cb",
+  "lessonIds": [
+    "RU-C106-dessert",
+    "RU-C106-yoghurt",
+    "RU-C106-ice-cream",
+    "RU-C106-sausage",
+    "RU-C106-peach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch106.txt",
+  "json": "russian/narration/ch106.json",
+  "textHash": "fnv1a64:dc03a3796a5a67bb",
+  "jsonHash": "fnv1a64:d321dc206e5a43e4",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:c07fcbf3883cdbe0",
+  "lessonIds": [
+    "TE-C86-slowly",
+    "TE-C86-oncemore",
+    "TE-C86-loudly",
+    "TE-C86-oneminute",
+    "TE-C86-wait"
+  ],
+  "tex": "telugu/book/chapters/ch86-slower-please.tex"
+}

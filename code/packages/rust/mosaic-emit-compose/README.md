@@ -61,12 +61,12 @@ wants the strict-Flux store/dispatcher contract.
 |--------------|-------------------------------------------|
 | Box          | `Box { ... }`                             |
 | Stack        | `Box { ... }` (Compose's `Box` already layers children; static `position`/`top`/`left` on a child aren't lowered to `Modifier.offset` yet — see the code comment at the match arm) |
-| Row          | `Row { ... }`                             |
+| Row          | `Row { ... }`; a child's `width: N%` is its share, `weight(N/100f)` (`flex-wrap` → `FlowRow`, whose children take a floored `_mosaicFillFraction(N/100f)`) |
 | Column       | `Column { ... }`                          |
-| Text         | `Text(text = ...)`                        |
+| Text         | `Text(text = ...)`; with its part's `color` / `font-size` / `font-weight` / monospace (or a container's, threaded down): `Text(..., color = ..., fontSize = ...)`; its part's box (padding, background, corners, size, border) is its modifier chain; its part's `text-align` adds `textAlign = TextAlign.*` (and, outside a Row, `fillMaxWidth()` for `center`/`end` when the part sets no width) |
 | Icon         | native font glyph / progress indicator    |
 | Spacer       | `Spacer(modifier = Modifier.weight(1f))`  |
-| HostInput    | `BasicTextField(value, onValueChange...)` |
+| HostInput    | `BasicTextField(value, onValueChange...)`; `width: 100%` outside a Row adds `Modifier.fillMaxWidth()`, and in a Row a percentage width adds `Modifier.weight(N/100f)` (also HostButton) |
 | Input        | multiline-capable `BasicTextField`        |
 | HostButton   | `Button(onClick) { Text(label) }`         |
 | HostSlider   | native adjustable `Slider`                |

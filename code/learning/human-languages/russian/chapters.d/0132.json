@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "To get dressed, To wash, To get up, To sit down, To fall",
+  "label": "ch:ru-to-get-dressed-to-wash-to-get-up-to-sit-down-to-fall",
+  "canDo": "I can say to get dressed, to wash, to get up, to sit down and to fall.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C132-to-fall",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say to get dressed, to wash, to get up, to sit down and to fall.",
+    "assesses": [
+      "RU-LEX-C132-ACT132-03",
+      "RU-LEX-C132-ACT132-04",
+      "RU-LEX-C132-ACT132-05"
+    ]
+  }
+}

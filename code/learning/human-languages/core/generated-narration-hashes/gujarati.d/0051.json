@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:2b7cf463b8ad9f26",
+  "lessonIds": [
+    "GU-C51-father",
+    "GU-C51-mother",
+    "GU-C51-grandfather",
+    "GU-C51-grandmother",
+    "GU-C51-child"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch51.txt",
+  "json": "gujarati/narration/ch51.json",
+  "textHash": "fnv1a64:363ae8ff41fc28c2",
+  "jsonHash": "fnv1a64:77521dbc77db15dd",
+  "findings": []
+}

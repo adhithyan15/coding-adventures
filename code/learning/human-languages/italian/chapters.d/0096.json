@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Blanket, Towel, Soap, Toothbrush, Toothpaste",
+  "label": "ch:it-blanket-towel-soap-toothbrush-toothpaste",
+  "canDo": "I can say a blanket, a towel, soap, a toothbrush and toothpaste.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C96-dentifricio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say a blanket, a towel, soap, a toothbrush and toothpaste.",
+    "assesses": [
+      "IT-LEX-C96-CASA96-03",
+      "IT-LEX-C96-CASA96-04",
+      "IT-LEX-C96-CASA96-05"
+    ]
+  }
+}

@@ -3,7 +3,7 @@
     "id": "GU-C05-kaam-karvun",
     "language": "gujarati",
     "chapter": 11,
-    "sequence": 310,
+    "sequence": 323,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:cfb85864c46a1bb7",
+    "sourceHash": "fnv1a64:1a2f7599c6899391",
     "detachableSegments": [
       "The letters in this word"
     ]

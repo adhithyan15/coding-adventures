@@ -1,0 +1,19 @@
+{
+  "chapter": 38,
+  "title": "Floor, Mirror, Futon, Chopsticks, Kitchen",
+  "label": "ch:ja-floor-mirror-futon-chopsticks-kitchen",
+  "canDo": "I can say the floor, a mirror, a futon, chopsticks and a kitchen.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C38-daidokoro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 38: i can say the floor, a mirror, a futon, chopsticks and a kitchen.",
+    "assesses": [
+      "JA-LEX-C38-HOME38-03",
+      "JA-LEX-C38-HOME38-04",
+      "JA-LEX-C38-HOME38-05"
+    ]
+  }
+}

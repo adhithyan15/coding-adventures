@@ -1,0 +1,17 @@
+{
+  "chapter": 65,
+  "title": "The Last Letter You Read",
+  "label": "ch:sa-last-letter-read",
+  "canDo": "I can write the letter nga, and find it in the word for number.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-R65-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can write the letter nga, and find it in the word for number.",
+    "assesses": [
+      "SA-SCRIPT-C65-NGA-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Hours, Minutes and Holidays",
+  "label": "ch:gu-hours-minutes-and-holidays",
+  "canDo": "I can say an hour, a minute, a holiday, a festival and Holi.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GU-C80-holi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say an hour, a minute, a holiday, a festival and Holi.",
+    "assesses": [
+      "GU-LEX-C80-TIME-03",
+      "GU-LEX-C80-TIME-04",
+      "GU-LEX-C80-TIME-05"
+    ]
+  }
+}

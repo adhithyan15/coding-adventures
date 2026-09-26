@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "To prefer, To desire, To wish for, To miss, Wish",
+  "label": "ch:la-to-prefer-to-desire-to-wish-for-to-miss-wish",
+  "canDo": "I can say to prefer, to desire, to wish for, to miss and a wish.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "LA-C111-voluntas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say to prefer, to desire, to wish for, to miss and a wish.",
+    "assesses": [
+      "LA-LEX-C111-WANT111-03",
+      "LA-LEX-C111-WANT111-04",
+      "LA-LEX-C111-WANT111-05"
+    ]
+  }
+}

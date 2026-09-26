@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:12509a83679b1dc5",
+  "lessonIds": [
+    "UR-C96-lamha",
+    "UR-C96-jab",
+    "UR-C96-kidhar",
+    "UR-C96-daen",
+    "UR-C96-baen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch96.txt",
+  "json": "urdu/narration/ch96.json",
+  "textHash": "fnv1a64:4fb3a2532ec0f388",
+  "jsonHash": "fnv1a64:9db5880a33992b24",
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 83,
+  "output": "sanskrit/book/chapters/ch83-at-school.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

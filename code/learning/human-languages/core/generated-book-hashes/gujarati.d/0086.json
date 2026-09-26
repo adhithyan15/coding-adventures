@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:b5fd9de89025af90",
+  "lessonIds": [
+    "GU-C86-journey",
+    "GU-C86-ticket",
+    "GU-C86-map",
+    "GU-C86-phone",
+    "GU-C86-post"
+  ],
+  "tex": "gujarati/book/chapters/ch86-on-a-journey.tex"
+}

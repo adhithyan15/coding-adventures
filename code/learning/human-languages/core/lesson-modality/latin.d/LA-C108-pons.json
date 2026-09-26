@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C108-pons",
+    "language": "latin",
+    "chapter": 108,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7590187150f8248"
+  },
+  "findings": []
+}

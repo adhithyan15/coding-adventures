@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:16a0b08647921ae5",
+  "lessonIds": [
+    "GU-C51-father",
+    "GU-C51-mother",
+    "GU-C51-grandfather",
+    "GU-C51-grandmother",
+    "GU-C51-child"
+  ],
+  "tex": "gujarati/book/chapters/ch51-father-mother-grandparents.tex"
+}

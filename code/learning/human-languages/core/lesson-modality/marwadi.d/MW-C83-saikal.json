@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C83-saikal",
+    "language": "marwadi",
+    "chapter": 83,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c6f2d93b1dbee19"
+  },
+  "findings": []
+}

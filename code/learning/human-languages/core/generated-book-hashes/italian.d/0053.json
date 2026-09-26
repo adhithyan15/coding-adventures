@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:f5b8c6f4dc046749",
+  "lessonIds": [
+    "IT-C53-patata",
+    "IT-C53-pomodoro",
+    "IT-C53-cipolla",
+    "IT-C53-carota",
+    "IT-C53-limone"
+  ],
+  "tex": "italian/book/chapters/ch53-potato-tomato-onion-carrot-lemon.tex"
+}

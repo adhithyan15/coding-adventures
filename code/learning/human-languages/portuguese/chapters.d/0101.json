@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Necklace, Photograph, Candle, Calendar, Message",
+  "label": "ch:pt-necklace-photograph-candle-calendar-message",
+  "canDo": "I can say a necklace, a photograph, a candle, a calendar and a message.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C101-mensagem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say a necklace, a photograph, a candle, a calendar and a message.",
+    "assesses": [
+      "PT-LEX-C101-COISAS101-03",
+      "PT-LEX-C101-COISAS101-04",
+      "PT-LEX-C101-COISAS101-05"
+    ]
+  }
+}

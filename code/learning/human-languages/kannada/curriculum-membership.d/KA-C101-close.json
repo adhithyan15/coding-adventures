@@ -1,0 +1,11 @@
+{
+  "id": "KA-C101-close",
+  "pathSegment": "KA-PATH-101-OPEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-101-OPEN",
+      "order": 1
+    }
+  ]
+}

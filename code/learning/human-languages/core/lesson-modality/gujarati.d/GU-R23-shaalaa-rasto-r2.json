@@ -3,7 +3,7 @@
     "id": "GU-R23-shaalaa-rasto-r2",
     "language": "gujarati",
     "chapter": 27,
-    "sequence": 1150,
+    "sequence": 1163,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:b44900025a03a964",
+    "sourceHash": "fnv1a64:29537d9883a692da",
     "detachableSegments": [
       "Writing — from meaning, with every model covered"
     ],

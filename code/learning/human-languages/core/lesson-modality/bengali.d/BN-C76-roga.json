@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C76-roga",
+    "language": "bengali",
+    "chapter": 76,
+    "sequence": 3960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:728329962369b9a1"
+  },
+  "findings": []
+}

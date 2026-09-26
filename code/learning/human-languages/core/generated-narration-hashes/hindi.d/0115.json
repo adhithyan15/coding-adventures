@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:d99b3ca1b3a7ac6c",
+  "lessonIds": [
+    "HI-C115-aie",
+    "HI-C115-padharie",
+    "HI-C115-lijie",
+    "HI-C115-shauqse",
+    "HI-C115-jinahin",
+    "HI-R115-second-pass-courtesy",
+    "HI-R115-second-pass-reactions"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch115.txt",
+  "json": "hindi/narration/ch115.json",
+  "textHash": "fnv1a64:129af6d8b35169ec",
+  "jsonHash": "fnv1a64:ac7628e6f4683f84",
+  "findings": []
+}

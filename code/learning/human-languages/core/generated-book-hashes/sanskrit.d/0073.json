@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:9b7ffa564ca8f956",
+  "lessonIds": [
+    "SA-C73-sings",
+    "SA-C73-tells",
+    "SA-C73-cries",
+    "SA-C73-calls",
+    "SA-C73-bows"
+  ],
+  "tex": "sanskrit/book/chapters/ch73-sing-tell-cry-call.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C75-quickly",
+    "language": "russian",
+    "chapter": 75,
+    "sequence": 3730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f80ded03db8740bd"
+  },
+  "findings": []
+}

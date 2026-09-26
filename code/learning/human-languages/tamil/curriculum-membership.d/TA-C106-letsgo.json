@@ -1,0 +1,11 @@
+{
+  "id": "TA-C106-letsgo",
+  "pathSegment": "TA-PATH-106-CARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-106-CARE",
+      "order": 3
+    }
+  ]
+}

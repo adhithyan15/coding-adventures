@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:31c44932beca61b2",
+  "lessonIds": [
+    "FA-W26-fe",
+    "FA-W26-ghaf",
+    "FA-W26-alef-madd",
+    "FA-R26-letters-first-pass",
+    "FA-R26-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch26.txt",
+  "json": "persian/narration/ch26.json",
+  "textHash": "fnv1a64:d40c1159dfcfcdc1",
+  "jsonHash": "fnv1a64:37f8eccce8f469ad",
+  "findings": []
+}

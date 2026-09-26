@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:4f45f058ad8e260d",
+  "lessonIds": [
+    "RU-W81-yo",
+    "RU-R81-letters-first-pass",
+    "RU-R81-letters-second-pass"
+  ],
+  "tex": "russian/book/chapters/ch81-the-letter-yo.tex"
+}

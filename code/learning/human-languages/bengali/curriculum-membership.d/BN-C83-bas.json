@@ -1,0 +1,11 @@
+{
+  "id": "BN-C83-bas",
+  "pathSegment": "BN-PATH-83-TOWN83",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-83-TOWN83",
+      "order": 1
+    }
+  ]
+}

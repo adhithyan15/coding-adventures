@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:1fd2fc544336069c",
+  "lessonIds": [
+    "IT-C97-pettine",
+    "IT-C97-spazzatura",
+    "IT-C97-scopa",
+    "IT-C97-lavatrice",
+    "IT-C97-poltrona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch97.txt",
+  "json": "italian/narration/ch97.json",
+  "textHash": "fnv1a64:03cf8dc2498248d1",
+  "jsonHash": "fnv1a64:a5ec4249d5730865",
+  "findings": []
+}

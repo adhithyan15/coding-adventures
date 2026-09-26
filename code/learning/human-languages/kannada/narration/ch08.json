@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c870ba9c02618053",
+  "sourceHash": "fnv1a64:a6ff4fdeaa0291ea",
   "lessons": [
     {
       "id": "KA-S08-vowel-sign-aa",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9ebdf595536d73d7",
+      "sourceHash": "fnv1a64:62ed47fa1e8e22f5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -287,7 +287,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look at ಟ್ಟು — a doubled ṭ. The first ಟ್ is ṭa silenced by the virama (its vowel cut), and it tucks under the next letter as an ottu (a subscript form) before ಟು ṭu. Kannada writes a double consonant by stacking, not repeating side by side — a neat contrast with how the Roman alphabet just writes \"tt.\""
+              "text": "Look at ಟ್ಟು — a doubled ṭ, stacked exactly the way ತ್ತು was in ಒಂಬತ್ತು. The first ಟ್ is ṭa silenced by the virama, tucked under ಟು ṭu as an ottu. Same rule, a new letter."
             }
           ]
         },

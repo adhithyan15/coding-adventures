@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:db9f57629a29798e",
+  "lessonIds": [
+    "LA-C111-malo",
+    "LA-C111-cupio",
+    "LA-C111-opto",
+    "LA-C111-desidero",
+    "LA-C111-voluntas"
+  ],
+  "tex": "latin/book/chapters/ch111-to-prefer-to-desire-to-wish-for-to-miss-wish.tex"
+}

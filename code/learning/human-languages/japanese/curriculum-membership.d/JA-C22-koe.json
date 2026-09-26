@@ -1,0 +1,11 @@
+{
+  "id": "JA-C22-koe",
+  "pathSegment": "JA-PATH-22-BODY22",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-22-BODY22",
+      "order": 2
+    }
+  ]
+}

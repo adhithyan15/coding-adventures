@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C48-raji",
+    "language": "marwadi",
+    "chapter": 48,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:696c844d4ee31a33"
+  },
+  "findings": []
+}

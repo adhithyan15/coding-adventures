@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C133-lemon",
+    "language": "malayalam",
+    "chapter": 133,
+    "sequence": 5230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f663a5addad6c7c8"
+  },
+  "findings": []
+}

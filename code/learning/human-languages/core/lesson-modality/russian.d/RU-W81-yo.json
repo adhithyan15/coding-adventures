@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "RU-W81-yo",
+    "language": "russian",
+    "chapter": 81,
+    "sequence": 4040,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:267c5e0e8efbcf4b",
+    "detachableSegments": [
+      "Script you'll notice: ё",
+      "Writing: ё"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

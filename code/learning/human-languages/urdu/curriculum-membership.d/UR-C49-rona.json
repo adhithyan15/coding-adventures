@@ -1,0 +1,11 @@
+{
+  "id": "UR-C49-rona",
+  "pathSegment": "UR-PATH-49-VERBS49",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-49-VERBS49",
+      "order": 4
+    }
+  ]
+}

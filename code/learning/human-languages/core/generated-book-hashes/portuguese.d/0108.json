@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:2babf980d4381308",
+  "lessonIds": [
+    "PT-C108-iogurte",
+    "PT-C108-gelado",
+    "PT-C108-bife",
+    "PT-C108-fiambre",
+    "PT-C108-sumo"
+  ],
+  "tex": "portuguese/book/chapters/ch108-yoghurt-ice-cream-steak-ham-juice.tex"
+}

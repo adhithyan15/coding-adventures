@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:ab6a058257922f1b",
+  "lessonIds": [
+    "GE-C80-loeffel",
+    "GE-C80-flasche",
+    "GE-C80-heft",
+    "GE-C80-stift",
+    "GE-C80-papier"
+  ],
+  "tex": "german/book/chapters/ch80-spoon-bottle-exercise-book-pen-paper.tex"
+}

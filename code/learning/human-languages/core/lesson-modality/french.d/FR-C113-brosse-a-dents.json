@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C113-brosse-a-dents",
+    "language": "french",
+    "chapter": 113,
+    "sequence": 5090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13310a340afd8ed7"
+  },
+  "findings": []
+}

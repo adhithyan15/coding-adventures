@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C121-scoiattolo",
+    "language": "italian",
+    "chapter": 121,
+    "sequence": 5910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a31c66883b9a2b0"
+  },
+  "findings": []
+}

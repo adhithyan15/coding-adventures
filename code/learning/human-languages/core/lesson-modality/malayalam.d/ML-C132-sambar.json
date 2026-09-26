@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C132-sambar",
+    "language": "malayalam",
+    "chapter": 132,
+    "sequence": 5170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17ce7ce8c12fa0ed"
+  },
+  "findings": []
+}

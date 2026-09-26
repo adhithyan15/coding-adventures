@@ -3,7 +3,7 @@
     "id": "GU-C30-hear-pustak",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1730,
+    "sequence": 1743,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0d80654f77c3b0cf"
+    "sourceHash": "fnv1a64:cf0ab3c6f155d3c5"
   },
   "findings": []
 }

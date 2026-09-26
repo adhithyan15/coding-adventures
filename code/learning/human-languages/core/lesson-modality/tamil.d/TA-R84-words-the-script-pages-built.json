@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-R84-words-the-script-pages-built",
+    "language": "tamil",
+    "chapter": 84,
+    "sequence": 3503,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cdba41492d900b28",
+    "detachableSegments": [
+      "Script: the signs that sit on the wrong side",
+      "Script: த and ழ"
+    ]
+  },
+  "findings": []
+}

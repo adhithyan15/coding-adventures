@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:c48115dbc16e1c0f",
+  "lessonIds": [
+    "AR-C66-aruzz",
+    "AR-C66-fakiha",
+    "AR-C66-tuffaha",
+    "AR-C66-mawz",
+    "AR-C66-batatis"
+  ],
+  "tex": "arabic/book/chapters/ch66-rice-fruit-apple-bananas-potatoes.tex"
+}

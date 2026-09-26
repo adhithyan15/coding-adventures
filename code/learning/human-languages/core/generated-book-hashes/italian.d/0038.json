@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:366c36a9b301f58c",
+  "lessonIds": [
+    "IT-C38-lingua",
+    "IT-C38-collo",
+    "IT-C38-spalla",
+    "IT-C38-schiena",
+    "IT-C38-capelli"
+  ],
+  "tex": "italian/book/chapters/ch38-tongue-neck-shoulder-back-hair.tex"
+}

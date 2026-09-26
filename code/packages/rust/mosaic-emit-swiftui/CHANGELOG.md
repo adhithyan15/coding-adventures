@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-09-25 (layout variants in one app, UI48 ENV2/ENV3)
+
+- `from_pipeline_variant` emits a layout variant as `<Component><Variant>View`
+  (`variant_view_type`: `touch` → `EngramAppTouchView`) without the
+  component's event enum or extension, which the default layout declares once.
+  Two variants used to declare the same `View` and event type, so an app could
+  hold only one. New error `UnsafeVariantName`.
+- `EmitOptions::layout_variants` (`LayoutChoice`s, in rule order) makes the
+  project shell observe its environment and switch views:
+  `MosaicEnvironmentReader` measures the window (size class by UI48's default
+  thresholds, the same on iPhone, iPad split view and macOS), reads pointer and
+  hover from the platform, orientation from the aspect, and color scheme and
+  reduced motion from SwiftUI; `MosaicLayoutSelector` holds the rules. With no
+  variants the shell is byte-for-byte unchanged. Variant and condition text is
+  re-checked before it is written into Swift.
+
+## 2026-09-25 (checkbox row index)
+
+- **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
+  - `checkbox_toggle_dispatch` serves both the `Toggle` binding (its setter parameter is `_` when unused) and the mixed-state `Button`. `checked` reads a loop binding or row expression through `_mosaicTruthy` with the loop index rewritten; `label` accepts a binding or row expression.
+
+## 2026-09-24
+
+- `tests/task_app_press_compiles_to_swiftui.rs` expects six pressed surfaces, not two, and names the four new ones: Trestle's Checklists controls clone `add-btn`'s pressed state (C3c, #14018). The test reads the app by path, so #15962 never ran it and main was red.
+
+- **`If` branches are local functions** (`func _mosaicBranch()`), as ordinary nodes already use `func _mosaicNode()`. Swift type-checks a multi-statement closure together with the expression that contains it, so a long `If`/`Else` view chain compounded the constraint solver's work at every level. Adding Trestle's seventh view (Checklists, C3a of #14018) made its SwiftUI release build fail with "unable to type-check this expression in reasonable time". A local function is checked on its own. New gate: `tests/nested_if_chain_typechecks.rs` typechecks a 10-deep chain with `swiftc`. It takes 0.3 s with the fix; without it, the solver gives up after about 18 s.
+
 ## 2026-09-23
 
 - The multiline `TextEditor` (legacy `Input`) now takes its accessible name from the authored `a11y-label`, with the placeholder only as a fallback. It also honours UI58 `disabled` before the `read-only` approximation, sharing `text_field_disabled_modifier` with `HostInput`. It used to use the placeholder unconditionally and read only `read-only` (J3b-pre, #14416).

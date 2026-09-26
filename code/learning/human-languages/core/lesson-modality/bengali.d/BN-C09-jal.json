@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C09-jal",
+    "language": "bengali",
+    "chapter": 9,
+    "sequence": 629,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e465c5e5ebc821b4"
+  },
+  "findings": []
+}

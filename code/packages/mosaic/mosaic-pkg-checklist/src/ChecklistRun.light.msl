@@ -1,0 +1,104 @@
+// ChecklistRun.light.msl — light-theme styling.
+//
+// Only properties every native backend lowers (the package's native gate pins
+// every drop). Text parts carry colour and size only (#15276); padding is one
+// uniform value (Qt fans a single value out, #15247).
+
+style ChecklistRun {
+  part checklist-run {
+    padding       : 16 ;
+    gap           : 8 ;
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+  }
+  part checklist-title {
+    color     : "#212529" ;
+    font-size : 18 ;
+  }
+  part checklist-progress {
+    color     : "#6c757d" ;
+    font-size : 13 ;
+  }
+  part checklist-row {
+    gap : 6 ;
+  }
+  part checklist-indent {
+    color     : "#6c757d" ;
+    font-size : 14 ;
+  }
+  part checklist-decision {
+    gap : 8 ;
+  }
+  part checklist-question {
+    color     : "#212529" ;
+    font-size : 14 ;
+  }
+  // A check item is a HostCheckbox; these colour its label (the platform's
+  // own size -- Qt's CheckBox does not lower font-size). A ticked item is
+  // muted.
+  part checklist-item {
+    color     : "#212529" ;
+  }
+  part checklist-item-done {
+    color     : "#6c757d" ;
+  }
+  part checklist-actions {
+    gap : 8 ;
+  }
+  part checklist-yes {
+    padding       : 6 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-yes-on {
+    padding       : 6 ;
+    background    : "#e7f1ff" ;
+    color         : "#084298" ;
+    border-width  : 1 ;
+    border-color  : "#9ec5fe" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-no {
+    padding       : 6 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-no-on {
+    padding       : 6 ;
+    background    : "#e7f1ff" ;
+    color         : "#084298" ;
+    border-width  : 1 ;
+    border-color  : "#9ec5fe" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-complete {
+    padding       : 6 ;
+    background    : "#198754" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#198754" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-abandon {
+    padding       : 6 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+}

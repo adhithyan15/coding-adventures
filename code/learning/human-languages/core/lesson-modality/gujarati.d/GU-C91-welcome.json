@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C91-welcome",
+    "language": "gujarati",
+    "chapter": 91,
+    "sequence": 4623,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdc9e3b29d1d7df1"
+  },
+  "findings": []
+}

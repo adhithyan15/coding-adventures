@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:aa4200ed0246a476",
+  "lessonIds": [
+    "LA-C150-cautus",
+    "LA-C150-piger",
+    "LA-C150-diligens",
+    "LA-C150-timidus",
+    "LA-C150-audax",
+    "LA-R150-first-pass-people-and-describing-words",
+    "LA-R150-second-pass-describing-words"
+  ],
+  "tex": "latin/book/chapters/ch150-careful-lazy-hard-working-timid-bold.tex"
+}

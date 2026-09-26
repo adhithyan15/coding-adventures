@@ -1,0 +1,11 @@
+[package]
+name = "mosaic-pkg-draft-editor"
+version = "0.1.0"
+description = "One plain editing surface — an optional title, a multi-line body, and labelled actions — shared by Journal, Trestle notes and Engram"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["DraftEditor"]
+
+[kernel]
+version = "1"

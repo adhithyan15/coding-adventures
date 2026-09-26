@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C143-antiquus",
+    "language": "latin",
+    "chapter": 143,
+    "sequence": 5980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6593f078ebb88a2a"
+  },
+  "findings": []
+}

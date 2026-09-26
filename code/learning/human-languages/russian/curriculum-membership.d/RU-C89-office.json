@@ -1,0 +1,11 @@
+{
+  "id": "RU-C89-office",
+  "pathSegment": "RU-PATH-89-LOC89",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-89-LOC89",
+      "order": 1
+    }
+  ]
+}

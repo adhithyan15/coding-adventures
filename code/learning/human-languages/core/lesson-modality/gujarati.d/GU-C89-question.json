@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C89-question",
+    "language": "gujarati",
+    "chapter": 89,
+    "sequence": 4533,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ec4884ad12da891"
+  },
+  "findings": []
+}

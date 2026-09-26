@@ -2,6 +2,30 @@
 
 ## [Unreleased]
 
+### Added — app identity in `[app]` (UI32, UI89 §2.2)
+
+`display-name` (1 to 64 characters, no control characters) and
+`bundle-identifier` (reverse DNS: two or more dot-separated parts of letters,
+digits and `-`, at most 155 characters), both optional, for installed apps.
+New errors `InvalidDisplayName` and `InvalidBundleIdentifier`.
+
+### Added — `[[app.layouts]]` and the layout selector (UI48 ENV3)
+
+The `layouts` module: `select_variant` (first rule whose axes all hold, or the
+default), `effective_layout_rules` (the conventional `compact` / `expanded` /
+`touch` rules when a package declares none), and validation of
+`[[app.layouts]]` in the order written. New error `InvalidLayoutRule`.
+
+### Added — a handler may claim the effect kinds it answers (UI87 §7.2)
+
+`[host_effects].handlers` entries take an optional `kinds` list
+(`kinds = ["importAnki", "files.save"]`). The generated entry point routes a
+claimed kind to the package's handler and a standard kind to Mosaic's platform
+library; without `kinds` a handler keeps the original meaning. Each kind must be
+a dotted name (`files.save`, `importAnki`) listed once, and the list may not be
+empty, because kinds are written into generated source as string literals
+(`InvalidHostEffectKind` otherwise).
+
 ### Added — author-declared desktop window size (#14789)
 
 Optional `[app]` metadata may now declare paired portable-range

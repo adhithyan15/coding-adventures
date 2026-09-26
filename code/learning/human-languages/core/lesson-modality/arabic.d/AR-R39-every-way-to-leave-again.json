@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R39-every-way-to-leave-again",
+    "language": "arabic",
+    "chapter": 39,
+    "sequence": 1131,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b23ac41cdc9dc2db"
+  },
+  "findings": []
+}

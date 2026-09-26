@@ -1,9 +1,10 @@
 {
   "language": "arabic",
   "chapter": 24,
-  "sourceHash": "fnv1a64:6b94f4ef18972f6c",
+  "sourceHash": "fnv1a64:4a391f76df10e16f",
   "lessonIds": [
-    "AR-C24-ila-al-ghad"
+    "AR-C24-ila-al-ghad",
+    "AR-R24-every-way-to-leave"
   ],
   "tex": "arabic/book/chapters/ch24-see-you-tomorrow.tex"
 }

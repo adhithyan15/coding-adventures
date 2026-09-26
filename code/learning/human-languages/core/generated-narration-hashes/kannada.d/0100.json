@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:2315e3e0cc48475d",
+  "lessonIds": [
+    "KA-C100-map",
+    "KA-C100-ticket",
+    "KA-C100-bus",
+    "KA-C100-station",
+    "KA-C100-near"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch100.txt",
+  "json": "kannada/narration/ch100.json",
+  "textHash": "fnv1a64:a3446a426a53822e",
+  "jsonHash": "fnv1a64:483cf4f65d4dd1a5",
+  "findings": []
+}

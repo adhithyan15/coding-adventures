@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C122-chappal",
+    "language": "urdu",
+    "chapter": 122,
+    "sequence": 6400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc28a7ed9d766922"
+  },
+  "findings": []
+}

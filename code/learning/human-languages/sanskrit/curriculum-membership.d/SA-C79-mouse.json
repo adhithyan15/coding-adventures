@@ -1,0 +1,11 @@
+{
+  "id": "SA-C79-mouse",
+  "pathSegment": "SA-PATH-79-ANIMALS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-79-ANIMALS",
+      "order": 3
+    }
+  ]
+}

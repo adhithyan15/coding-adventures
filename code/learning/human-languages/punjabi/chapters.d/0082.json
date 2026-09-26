@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Full, Empty, Clean, Sweet, Fat",
+  "label": "ch:pa-full-empty-clean-sweet-fat",
+  "canDo": "I can say full, empty, clean, sweet and fat, thick.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C82-mota",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say full, empty, clean, sweet and fat, thick.",
+    "assesses": [
+      "PA-LEX-C82-ADJ82-03",
+      "PA-LEX-C82-ADJ82-04",
+      "PA-LEX-C82-ADJ82-05"
+    ]
+  }
+}

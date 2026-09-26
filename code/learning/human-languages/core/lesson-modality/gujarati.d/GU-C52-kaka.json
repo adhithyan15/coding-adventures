@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C52-kaka",
+    "language": "gujarati",
+    "chapter": 52,
+    "sequence": 2653,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d996e04fe34034c5"
+  },
+  "findings": []
+}

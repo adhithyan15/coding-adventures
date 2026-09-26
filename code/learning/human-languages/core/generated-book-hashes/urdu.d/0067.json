@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:5c8e36b2b8a7e703",
+  "lessonIds": [
+    "UR-C67-registan",
+    "UR-C67-kutta",
+    "UR-C67-billi",
+    "UR-C67-ghora",
+    "UR-C67-gae"
+  ],
+  "tex": "urdu/book/chapters/ch67-desert-dog-cat-horse-cow.tex"
+}

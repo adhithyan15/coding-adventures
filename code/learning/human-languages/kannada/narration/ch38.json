@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "The Heart",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ea67d666012e31c9",
+  "sourceHash": "fnv1a64:c61b5e4f8050eba0",
   "lessons": [
     {
       "id": "KA-C38-hrudaya",
@@ -163,6 +163,111 @@
       ]
     },
     {
+      "id": "KA-C38-namah",
+      "sequence": 844,
+      "title": "ನಮಃ (namaḥ) — a salutation, bowing",
+      "headword": "ನಮಃ",
+      "romanization": "namaḥ",
+      "gloss": "a salutation, bowing",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5c01b6a34e6360c0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಮಃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಮಃ — namaḥ — \"a salutation, bowing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: namaḥ. Look at its shape as you say it: the next lesson takes one piece of it, ಃ (visarga), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namaḥ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namaḥ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a salutation, bowing\"? (ನಮಃ, namaḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S132-sign-visarga",
       "sequence": 845,
       "title": "◌ಃ (visarga) — one character, two dots, a breath at the end",
@@ -177,7 +282,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f0d7a6991f07a4c9",
+      "sourceHash": "fnv1a64:0671d782153f2510",
       "notice": {
         "modality": "pen",
         "needs": [

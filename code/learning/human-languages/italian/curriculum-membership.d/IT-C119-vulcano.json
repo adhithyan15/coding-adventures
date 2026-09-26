@@ -1,0 +1,11 @@
+{
+  "id": "IT-C119-vulcano",
+  "pathSegment": "IT-PATH-119-NATURA119",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-119-NATURA119",
+      "order": 2
+    }
+  ]
+}

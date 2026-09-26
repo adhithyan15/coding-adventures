@@ -1,0 +1,11 @@
+{
+  "id": "IT-C133-guidare",
+  "pathSegment": "IT-PATH-133-VERBI133",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-133-VERBI133",
+      "order": 4
+    }
+  ]
+}

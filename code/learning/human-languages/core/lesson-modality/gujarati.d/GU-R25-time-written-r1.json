@@ -3,7 +3,7 @@
     "id": "GU-R25-time-written-r1",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1370,
+    "sequence": 1383,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:240c7818889c0857",
+    "sourceHash": "fnv1a64:37f22f1a07efcb3d",
     "detachableSegments": [
       "Writing — from sound, every model covered"
     ]

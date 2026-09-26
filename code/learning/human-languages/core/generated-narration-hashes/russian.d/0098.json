@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:9df3fae303246d0e",
+  "lessonIds": [
+    "RU-C98-frying-pan",
+    "RU-C98-bucket",
+    "RU-C98-rope",
+    "RU-C98-nail",
+    "RU-C98-hammer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch98.txt",
+  "json": "russian/narration/ch98.json",
+  "textHash": "fnv1a64:e9c264bb8788750f",
+  "jsonHash": "fnv1a64:a3a69aabf46e36f9",
+  "findings": []
+}

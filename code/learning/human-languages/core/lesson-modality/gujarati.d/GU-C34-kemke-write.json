@@ -3,7 +3,7 @@
     "id": "GU-C34-kemke-write",
     "language": "gujarati",
     "chapter": 38,
-    "sequence": 1950,
+    "sequence": 1963,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:95b2f3dc8c75a15f",
+    "sourceHash": "fnv1a64:ab568738e03b413d",
     "detachableSegments": [
       "Script — the word is its own pattern",
       "Writing — guided copy, model in view"

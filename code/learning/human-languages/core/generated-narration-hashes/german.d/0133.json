@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:6038999880f80bf0",
+  "lessonIds": [
+    "GE-C133-boese",
+    "GE-C133-lustig",
+    "GE-C133-ernst",
+    "GE-C133-beruehmt",
+    "GE-C133-interessant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch133.txt",
+  "json": "german/narration/ch133.json",
+  "textHash": "fnv1a64:5839f1b775979bc4",
+  "jsonHash": "fnv1a64:abcb00c17ca9daab",
+  "findings": []
+}

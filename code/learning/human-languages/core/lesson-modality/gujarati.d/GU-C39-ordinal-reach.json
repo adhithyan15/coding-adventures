@@ -3,7 +3,7 @@
     "id": "GU-C39-ordinal-reach",
     "language": "gujarati",
     "chapter": 43,
-    "sequence": 2250,
+    "sequence": 2263,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:202f8b44cedd1ccb"
+    "sourceHash": "fnv1a64:1d4ea66e3db208dd"
   },
   "findings": []
 }

@@ -1,11 +1,11 @@
 {
   "id": "MR-W06-ja",
   "pathSegment": "MR-PATH-029",
-  "pathOrder": 5,
+  "pathOrder": 10,
   "extensions": [
     {
       "id": "MR-EXT-032-TWO-ROWS-RUNWAY",
-      "order": 5
+      "order": 10
     }
   ]
 }

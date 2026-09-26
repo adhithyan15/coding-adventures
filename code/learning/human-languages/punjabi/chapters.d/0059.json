@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "To wash, To laugh, To cry, To sing, To dance",
+  "label": "ch:pa-to-wash-to-laugh-to-cry-to-sing-to-dance",
+  "canDo": "I can say to wash, to laugh, to cry, to sing and to dance.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C59-nachchna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say to wash, to laugh, to cry, to sing and to dance.",
+    "assesses": [
+      "PA-LEX-C59-VERBS59-03",
+      "PA-LEX-C59-VERBS59-04",
+      "PA-LEX-C59-VERBS59-05"
+    ]
+  }
+}

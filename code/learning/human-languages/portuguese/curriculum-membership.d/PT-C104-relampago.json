@@ -1,0 +1,11 @@
+{
+  "id": "PT-C104-relampago",
+  "pathSegment": "PT-PATH-104-ROUPA104",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-104-ROUPA104",
+      "order": 4
+    }
+  ]
+}

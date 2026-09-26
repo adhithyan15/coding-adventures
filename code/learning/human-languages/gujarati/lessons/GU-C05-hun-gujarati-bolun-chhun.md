@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C05-hun-gujarati-bolun-chhun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 300
+sequence: 313
 chapter: 11
 type: phrase
 headword: હું ગુજરાતી બોલું છું

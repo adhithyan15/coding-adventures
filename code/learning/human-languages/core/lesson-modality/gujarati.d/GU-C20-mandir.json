@@ -3,7 +3,7 @@
     "id": "GU-C20-mandir",
     "language": "gujarati",
     "chapter": 24,
-    "sequence": 930,
+    "sequence": 943,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:96aa6f5c15516c6e",
+    "sourceHash": "fnv1a64:8d86eaf6bd9e775c",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."

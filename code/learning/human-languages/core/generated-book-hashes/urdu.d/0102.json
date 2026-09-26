@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:93deb0beb4db809a",
+  "lessonIds": [
+    "UR-C102-bavarchikhana",
+    "UR-C102-bathrum",
+    "UR-C102-tikat",
+    "UR-C102-daftar",
+    "UR-C102-kutubkhana"
+  ],
+  "tex": "urdu/book/chapters/ch102-kitchen-bathroom-ticket-office-library.tex"
+}

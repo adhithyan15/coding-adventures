@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C01-aabhaar
 spine_node: SPINE-COURTESY-THANK
-sequence: 20
+sequence: 21
 chapter: 2
 type: word
 headword: આભાર

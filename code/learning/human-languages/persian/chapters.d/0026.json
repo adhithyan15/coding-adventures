@@ -1,0 +1,19 @@
+{
+  "chapter": 26,
+  "title": "Letters From Thinking and Coming",
+  "label": "ch:fa-letters-thinking-coming",
+  "canDo": "I can write fe, ghaf and alef with madd, and I have now written every letter the words of this book use.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FA-R26-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 26: i can write fe, ghaf and alef with madd, and I have now written every letter the words of this book use.",
+    "assesses": [
+      "FA-SCRIPT-C26-FE-01",
+      "FA-SCRIPT-C26-GHAF-01",
+      "FA-SCRIPT-C26-ALEF-MADD-01"
+    ]
+  }
+}

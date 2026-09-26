@@ -1,11 +1,13 @@
 {
   "language": "malayalam",
   "chapter": 4,
-  "sourceHash": "fnv1a64:fd907db9945a6f70",
+  "sourceHash": "fnv1a64:922f61829ed16632",
   "lessonIds": [
     "ML-S110-letter-va",
+    "ML-C04-uduppu",
     "ML-S116-letter-u",
     "ML-C04-pokuka",
+    "ML-C04-koodu",
     "ML-S141-vowel-sign-uu",
     "ML-C04-poyi-varaam",
     "ML-C04-naale-kaanaam",

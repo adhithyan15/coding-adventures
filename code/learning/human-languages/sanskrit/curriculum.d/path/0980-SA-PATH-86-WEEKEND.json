@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-86-WEEKEND",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "SA-EXT-86-WEEKEND"
+  ],
+  "after": []
+}

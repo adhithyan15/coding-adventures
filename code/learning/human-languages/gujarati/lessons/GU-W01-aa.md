@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W01-aa
 spine_node: SPINE-MEET-GREET
-sequence: 4
+sequence: 5
 delivery: script
 chapter: 1
 type: writing
 headword: આ
 romanization: "ā"
 gloss: "the SAME vowel standing alone — and why a script needs two shapes for one sound"
-prerequisites: [GU-W01-aa-matra]
+prerequisites: [GU-W01-aa-matra, GU-C01-aahaar]
 sounds: []
 roots: []
 etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01]
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-LEX-ANCHOR-AAHAAR]
 introduces:
   knowledge: [GU-SCRIPT-AA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01]
+  knowledge: [GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-LEX-ANCHOR-AAHAAR]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [GU-W01-aa-matra]
 # આ — the SAME vowel standing alone
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-LEX-ANCHOR-AAHAAR] -->
 
 [PAUSE 2s] Write the piece from the previous lesson before adding another.
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C70-blue",
+    "language": "gujarati",
+    "chapter": 70,
+    "sequence": 3603,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26f72b6ebfe8f89e"
+  },
+  "findings": []
+}

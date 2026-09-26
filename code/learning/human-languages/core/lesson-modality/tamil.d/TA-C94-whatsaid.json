@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C94-whatsaid",
+    "language": "tamil",
+    "chapter": 94,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11c033a27a489810"
+  },
+  "findings": []
+}

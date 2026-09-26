@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:cf1a5e9df535a806",
+  "lessonIds": [
+    "BN-C62-pakha",
+    "BN-C62-chabi",
+    "BN-C62-tala",
+    "BN-C62-thala",
+    "BN-C62-chamoch"
+  ],
+  "tex": "bengali/book/chapters/ch62-fan-key-lock-plate-spoon.tex"
+}

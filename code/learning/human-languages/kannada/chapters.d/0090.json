@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "More of the Family",
+  "label": "ch:ka-more-of-the-family",
+  "canDo": "I can name a grandson, a granddaughter, a relative, the neighbours and an uncle.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C90-uncle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can name a grandson, a granddaughter, a relative, the neighbours and an uncle.",
+    "assesses": [
+      "KA-LEX-C90-KIN-03",
+      "KA-LEX-C90-KIN-04",
+      "KA-LEX-C90-KIN-05"
+    ]
+  }
+}

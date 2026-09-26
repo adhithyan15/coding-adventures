@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:7878a8dc24748151",
+  "lessonIds": [
+    "TE-C84-fever",
+    "TE-C84-pain",
+    "TE-C84-tiredness",
+    "TE-C84-thirst",
+    "TE-C84-rest"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "telugu/narration/ch84.txt",
+  "json": "telugu/narration/ch84.json",
+  "textHash": "fnv1a64:0a38b197848800ab",
+  "jsonHash": "fnv1a64:6c2556f3b0efaf5c",
+  "findings": []
+}

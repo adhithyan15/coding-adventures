@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C18-ja-more",
+    "language": "german",
+    "chapter": 31,
+    "sequence": 695,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8874fd5901f827a"
+  },
+  "findings": []
+}

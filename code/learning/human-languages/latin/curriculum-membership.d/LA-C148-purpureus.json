@@ -1,0 +1,11 @@
+{
+  "id": "LA-C148-purpureus",
+  "pathSegment": "LA-PATH-148-QUAL148",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-148-QUAL148",
+      "order": 4
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C35-jyaare
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 2010
+sequence: 2023
 chapter: 39
 type: word
 headword: જ્યારે

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:376f52f8cad691e9",
+  "lessonIds": [
+    "LA-C86-arbor",
+    "LA-C86-flos",
+    "LA-C86-folium",
+    "LA-C86-silva",
+    "LA-C86-mons"
+  ],
+  "tex": "latin/book/chapters/ch86-tree-flower-leaf-forest-mountain.tex"
+}

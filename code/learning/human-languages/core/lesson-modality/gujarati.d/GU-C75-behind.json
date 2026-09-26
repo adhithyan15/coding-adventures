@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C75-behind",
+    "language": "gujarati",
+    "chapter": 75,
+    "sequence": 3833,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96718d154373558d"
+  },
+  "findings": []
+}

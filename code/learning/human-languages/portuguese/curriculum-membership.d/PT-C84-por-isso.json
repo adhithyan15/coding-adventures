@@ -1,0 +1,11 @@
+{
+  "id": "PT-C84-por-isso",
+  "pathSegment": "PT-PATH-84-PORQUE84",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-84-PORQUE84",
+      "order": 3
+    }
+  ]
+}

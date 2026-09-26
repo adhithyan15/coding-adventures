@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:3c50bb440464dc1b",
+  "lessonIds": [
+    "ML-C137-vehicle",
+    "ML-C137-car",
+    "ML-C137-train",
+    "ML-C137-plane",
+    "ML-C137-auto"
+  ],
+  "tex": "malayalam/book/chapters/ch137-getting-there.tex"
+}

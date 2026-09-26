@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:688a186d76cd3ccf",
+  "lessonIds": [
+    "GE-C113-dusche",
+    "GE-C113-badewanne",
+    "GE-C113-regal",
+    "GE-C113-vorhang",
+    "GE-C113-kissen",
+    "GE-R113-first-pass-places-and-getting-around",
+    "GE-R113-second-pass-the-house-and-things-you-carry"
+  ],
+  "tex": "german/book/chapters/ch113-shower-bathtub-shelf-curtain-cushion.tex"
+}

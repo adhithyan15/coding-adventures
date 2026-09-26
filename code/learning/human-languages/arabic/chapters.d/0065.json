@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "To speak, To carry, To win, To go down, Fish",
+  "label": "ch:ar-to-speak-to-carry-to-win-to-go-down-fish",
+  "canDo": "I can say to speak, to carry, to win, to go down and fish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C65-samak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say to speak, to carry, to win, to go down and fish.",
+    "assesses": [
+      "AR-LEX-C65-VERBS65-03",
+      "AR-LEX-C65-VERBS65-04",
+      "AR-LEX-C65-VERBS65-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C34-hospital",
+  "pathSegment": "PT-PATH-34-SAUDE1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-34-SAUDE1",
+      "order": 4
+    }
+  ]
+}

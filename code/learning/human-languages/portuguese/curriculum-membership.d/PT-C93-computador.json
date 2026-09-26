@@ -1,0 +1,11 @@
+{
+  "id": "PT-C93-computador",
+  "pathSegment": "PT-PATH-93-CASA93",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-93-CASA93",
+      "order": 2
+    }
+  ]
+}

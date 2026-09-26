@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C83-dhakalne",
+    "language": "marathi",
+    "chapter": 83,
+    "sequence": 3530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:427bdac4379c4702"
+  },
+  "findings": []
+}

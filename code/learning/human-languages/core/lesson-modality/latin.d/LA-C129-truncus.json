@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C129-truncus",
+    "language": "latin",
+    "chapter": 129,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e2dfa4a5e1f6cb9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C59-janala",
+  "pathSegment": "BN-PATH-59-FOOD59",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-59-FOOD59",
+      "order": 4
+    }
+  ]
+}

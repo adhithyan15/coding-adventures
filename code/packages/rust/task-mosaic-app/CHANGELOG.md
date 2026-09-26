@@ -1,5 +1,95 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — Compose text wears its box
+
+- No code change here. On Compose a `Text` now wears its part's padding,
+  background, corners, size and border (`mosaic-emit-compose`). In the renders,
+  the "Up next" count and the due date are pills, labels have their padding,
+  and Calendar's today badge can be drawn. `TaskAppUiTest` still passes, and
+  the emitted-control contract's two error-text markers match the new call
+  shape.
+
+## [Unreleased] — Calendar day names centred on Compose
+
+- No code change here. On Compose a `Text`'s `text-align` is now lowered
+  (`mosaic-emit-compose`), so the Calendar view's Sun–Sat names are
+  centred over their columns as on the web. Only `03c-calendar` changes;
+  `TaskAppUiTest` still passes.
+
+## [Unreleased] — Compose rows share their width
+
+- No code change here. On Compose, a control's `width: 100%` in a Row is now
+  its share of the Row (`mosaic-emit-compose`). In the renders, the sidebar's
+  project buttons span the sidebar, *New project* takes what `+` leaves, and
+  a task row's name takes the row's slack, as on the web. `TaskAppUiTest`
+  still passes.
+
+## [Unreleased] — the screenshot harness visits every view
+
+- `conformance/compose/TaskAppScreenshots.kt` now also renders Board, Sheet,
+  Calendar and Notes with one task in them (`03a`–`03d`). It picks the view
+  tab by the SegmentedControl's `segmented-option` tag plus its label,
+  because "Board" is also the label of the top bar's complexity toggle,
+  which would switch the tier instead of the view. The Calendar render is
+  what showed Compose dropping percentage widths.
+
+## [Unreleased] — writing questions into a checklist template (C3c, #14018)
+
+- Selecting an outline item (`onSelectOutlineItem`; clicking it again clears
+  the selection) enables four actions:
+  - toggle it between a step and a question (`onToggleOutlineQuestion`). A
+    step's existing sub-items become the question's Yes branch.
+  - add the composer's text to the question's Yes or No branch
+    (`onAddChecklistItemYes`, `onAddChecklistItemNo`);
+  - delete it with everything under it, deepest first (`onDeleteOutlineItem`).
+    `delete_task` alone would strand a question's branch items.
+- Outline rows gain a question marker, a branch label ("Yes" or "No") and a
+  selected marker. New props: `selected-outline-key`, `outline-item-selected`,
+  `outline-question-selected` and `outline-toggle-label`.
+- The selection is serde-defaulted, cleared with the checklist selection, and
+  dropped by `repair()` when it no longer names an item.
+
+## [Unreleased] — the Compose startup-recovery test no longer races (#15788 follow-up)
+
+`generatedStartupFailureIsVisibleAndRetryRerunsInitialization` waited for
+`attempts == 2`, then asserted that "Recovered TaskApp" was displayed. But the
+counter reaches 2 when the second `loadHost` call *starts*, before the
+recovered host is returned and composed. The assertion therefore raced the
+recomposition and failed intermittently in CI (seen on #15947 and #15951). It
+now waits for the recovered content itself, then checks the attempt count.
+
+## [Unreleased] — the Checklists view (C3a, #14018)
+
+Spec: `code/specs/task-app-checklists-view-v1.md`.
+
+- A seventh view, **Checklists**, sits before Timeline in the switcher and is
+  offered at both tiers. It shows a library of the active project's templates
+  (by name) and runs (newest first) beside the selection:
+  - a template's outline, with an *Add item* composer, Start run and Delete;
+  - a run's rows, in `mosaic-pkg-checklist`'s `ChecklistRun` shape, with
+    Complete (offered only once the run is complete) and Abandon.
+- New slots `checklists-mode` … `checklist-abandon-label` and 13 new events.
+  Answering a question with its current answer clears it.
+- **Checklist items no longer appear as tasks.** List, Board, Sheet, Calendar,
+  Timeline and the summary counts skip template and run items, as task-core's
+  own views already do.
+- `TaskMosaicApp::with_clock` injects the clock that stamps runs. The default
+  is the system clock; the clock is not part of the snapshot.
+- Bounds:
+  - composers refuse input over 512 characters;
+  - *Add item* stops at the engine's `MAX_CHECKLIST_ITEMS`;
+  - new items take the next sibling order;
+  - **every** minted id (task, project, label, note, checklist, run) uses a
+    checked counter, so it fails rather than wraps or panics;
+  - row indents are capped at 16 levels, because depth in a restored
+    snapshot is unbounded;
+  - library item counts come from `ChecklistSummary.items` (one pass), not
+    from one outline per template on every event;
+  - Board and Calendar drops refuse checklist items' keys.
+- The selection and composers are `#[serde(default)]` in snapshot v1, so every
+  earlier snapshot still restores. `repair()` drops a dangling selection and an
+  oversized draft.
+
 ## [Unreleased] — acceptance uses TaskApp's declared window (#14789)
 
 The 1280 x 900 Compose acceptance viewport is now pinned to TaskApp's `[app]`

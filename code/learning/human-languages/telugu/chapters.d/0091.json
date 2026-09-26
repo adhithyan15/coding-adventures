@@ -1,0 +1,21 @@
+{
+  "chapter": 91,
+  "title": "Greetings People Actually Say",
+  "label": "ch:te-greetings-people-say",
+  "canDo": "I can greet someone the way Telugu speakers greet each other day to day: are you well, long time, what's new, where to, have you eaten.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TE-R91-second-pass-greetings",
+    "kind": "production",
+    "summary": "Complete TE-R91-second-pass-greetings: everyday greetings and partings, from cold.",
+    "assesses": [
+      "TE-LEX-C91-GREET-01",
+      "TE-LEX-C91-GREET-02",
+      "TE-LEX-C91-GREET-03",
+      "TE-LEX-C91-GREET-04",
+      "TE-LEX-C91-GREET-05"
+    ]
+  }
+}

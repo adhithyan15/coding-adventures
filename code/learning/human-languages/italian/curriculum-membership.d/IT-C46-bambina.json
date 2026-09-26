@@ -1,0 +1,11 @@
+{
+  "id": "IT-C46-bambina",
+  "pathSegment": "IT-PATH-46-PERSONE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-46-PERSONE",
+      "order": 0
+    }
+  ]
+}

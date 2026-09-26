@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:4e071fe4e2478287",
+  "lessonIds": [
+    "UR-C69-hathi",
+    "UR-C69-bandar",
+    "UR-C69-sap",
+    "UR-C69-richh",
+    "UR-C69-bara"
+  ],
+  "tex": "urdu/book/chapters/ch69-elephant-monkey-snake-bear-big.tex"
+}

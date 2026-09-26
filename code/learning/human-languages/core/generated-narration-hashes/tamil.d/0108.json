@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:d2144aa40e71a4a7",
+  "lessonIds": [
+    "TA-C108-eaten",
+    "TA-C108-longtime",
+    "TA-C108-whatsnew",
+    "TA-C108-areyouwell",
+    "TA-C108-howareyou",
+    "TA-R108-second-pass-leave-greet",
+    "TA-R108-second-pass-care"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch108.txt",
+  "json": "tamil/narration/ch108.json",
+  "textHash": "fnv1a64:1e76eca9de7cbbd3",
+  "jsonHash": "fnv1a64:a3e32a4b74341399",
+  "findings": []
+}

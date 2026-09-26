@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "To give back, To show, To shine, To lose, To win",
+  "label": "ch:la-to-give-back-to-show-to-shine-to-lose-to-win",
+  "canDo": "I can say to give back, to show, to shine, to lose and to win.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C157-vinco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: i can say to give back, to show, to shine, to lose and to win.",
+    "assesses": [
+      "LA-LEX-C157-ACT157-03",
+      "LA-LEX-C157-ACT157-04",
+      "LA-LEX-C157-ACT157-05"
+    ]
+  }
+}

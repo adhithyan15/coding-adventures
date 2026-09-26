@@ -1,0 +1,11 @@
+{
+  "id": "LA-C90-capra",
+  "pathSegment": "LA-PATH-90-ANIMALIA1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-90-ANIMALIA1",
+      "order": 3
+    }
+  ]
+}

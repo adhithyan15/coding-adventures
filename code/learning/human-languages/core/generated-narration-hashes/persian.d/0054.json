@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:029c20cd9f857fcc",
+  "lessonIds": [
+    "FA-C54-khak",
+    "FA-C54-bad",
+    "FA-C54-biyaban",
+    "FA-C54-sag",
+    "FA-C54-gorbe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch54.txt",
+  "json": "persian/narration/ch54.json",
+  "textHash": "fnv1a64:a8827ef3539cb549",
+  "jsonHash": "fnv1a64:0cc2e9208c342adc",
+  "findings": []
+}

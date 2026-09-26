@@ -3,7 +3,7 @@
     "id": "MR-W08-uu-independent",
     "language": "marathi",
     "chapter": 8,
-    "sequence": 94,
+    "sequence": 124,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:ab5db34280a85abe",
+    "sourceHash": "fnv1a64:48733ade7ee79f56",
     "detachableSegments": [
       "Script",
       "Writing — delayed copy"

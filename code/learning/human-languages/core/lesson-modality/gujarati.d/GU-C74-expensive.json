@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C74-expensive",
+    "language": "gujarati",
+    "chapter": 74,
+    "sequence": 3773,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72f373868a49e9a5"
+  },
+  "findings": []
+}

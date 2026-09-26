@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:e3276b4c91a62a3f",
+  "lessonIds": [
+    "FA-C59-boland",
+    "FA-C59-kutah",
+    "FA-C59-garm",
+    "FA-C59-sard",
+    "FA-C59-aheste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch59.txt",
+  "json": "persian/narration/ch59.json",
+  "textHash": "fnv1a64:81de7044e686b1a2",
+  "jsonHash": "fnv1a64:70ad523b82b500d2",
+  "findings": []
+}

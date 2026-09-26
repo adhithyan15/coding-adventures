@@ -251,6 +251,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "mosaic-ios-project"
+version = "0.1.0"
+
+[[package]]
 name = "mosaic-lexer"
 version = "0.1.0"
 dependencies = [
@@ -272,6 +276,7 @@ dependencies = [
  "mosaic-emit-swiftui",
  "mosaic-emit-webcomponent",
  "mosaic-emit-xaml",
+ "mosaic-ios-project",
  "mosaic-package-manifest",
  "mosaic-package-resolver",
  "moslayout-compiler",

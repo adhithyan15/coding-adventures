@@ -1,0 +1,11 @@
+{
+  "id": "GU-C66-ice",
+  "pathSegment": "GU-PATH-66-WEATHER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-66-WEATHER",
+      "order": 3
+    }
+  ]
+}

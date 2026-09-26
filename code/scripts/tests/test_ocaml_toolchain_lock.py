@@ -133,6 +133,49 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
     def test_checked_in_generic_ci_bootstrap_is_valid(self) -> None:
         toolchain.validate_generic_ci_workflow_text(self.manifest, self.workflow)
 
+    def test_rejects_ci_yml_dropping_or_gating_its_own_lock_tests(self) -> None:
+        """build-ocaml.yml no longer runs on ci.yml edits (OCAML03 "Triggers"),
+        so ci.yml's contracts job must keep running this test, unconditionally."""
+
+        command = toolchain.GENERIC_CI_LOCK_TEST_COMMAND
+        step = "      - name: Verify repo-wide metadata contracts\n"
+        cases = (
+            # The line removed.
+            self.workflow.replace(f"          {command}\n", "", 1),
+            # The line commented out.
+            self.workflow.replace(f"          {command}\n", f"          # {command}\n", 1),
+            # The step made conditional.
+            self.workflow.replace(step, step + "        if: false\n", 1),
+            # The job made conditional.
+            self.workflow.replace(
+                "  contracts:\n    name: Repo-wide metadata contracts\n",
+                "  contracts:\n    name: Repo-wide metadata contracts\n    if: false\n",
+                1,
+            ),
+            # The job made conditional after its steps (key order is free): a
+            # four-space key after the step's run block is a job key.
+            self.workflow.replace(
+                f"          {command}\n",
+                f"          {command}\n    if: false\n",
+                1,
+            ),
+            # The job's failure tolerated.
+            self.workflow.replace(
+                "  contracts:\n    name: Repo-wide metadata contracts\n",
+                "  contracts:\n    name: Repo-wide metadata contracts\n    continue-on-error: true\n",
+                1,
+            ),
+            # The step's failure tolerated.
+            self.workflow.replace(step, step + "        continue-on-error: true\n", 1),
+            # A shell without -e, so a failing test no longer fails the step.
+            self.workflow.replace(step, step + "        shell: bash {0}\n", 1),
+        )
+        for index, workflow in enumerate(cases):
+            with self.subTest(case=index):
+                self.assertNotEqual(workflow, self.workflow, "mutation must apply")
+                with self.assertRaises(toolchain.ContractError):
+                    toolchain.validate_generic_ci_workflow_text(self.manifest, workflow)
+
     def test_rejects_mutable_or_weakened_bootstrap_identity(self) -> None:
         cases = (
             self.mutate_last(
@@ -640,7 +683,15 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
                 "        timeout-minutes: 1",
                 1,
             ),
-            self.workflow.replace("branches: ['**']", "branches: [main]", 1),
+            # Widening the push trigger back to every branch is refused.
+            self.workflow.replace("branches: [main]", "branches: ['**']", 1),
+            # And so is watching ci.yml again.
+            self.workflow.replace(
+                "      - '.github/workflows/build-ocaml.yml'\n",
+                "      - '.github/workflows/build-ocaml.yml'\n"
+                "      - '.github/workflows/ci.yml'\n",
+                1,
+            ),
             self.workflow.replace(
                 "workflow_dispatch:", "workflow_dispatch:\n    x: y", 1
             ),

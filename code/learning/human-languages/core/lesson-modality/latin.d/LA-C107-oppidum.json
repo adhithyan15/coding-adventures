@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C107-oppidum",
+    "language": "latin",
+    "chapter": 107,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bd56c1f5fd97b5e"
+  },
+  "findings": []
+}

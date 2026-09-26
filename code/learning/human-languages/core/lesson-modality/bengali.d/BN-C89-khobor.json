@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C89-khobor",
+    "language": "bengali",
+    "chapter": 89,
+    "sequence": 4610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c3a975e3bd46ad6"
+  },
+  "findings": []
+}

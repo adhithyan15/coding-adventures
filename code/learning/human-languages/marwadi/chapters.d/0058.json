@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "To ask, To do, Meat, Fish, Rice",
+  "label": "ch:mw-to-ask-to-do-meat-fish-rice",
+  "canDo": "I can say to ask, to do, meat, a fish and rice.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C58-chaval",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can say to ask, to do, meat, a fish and rice.",
+    "assesses": [
+      "MW-LEX-C58-VERBS58-03",
+      "MW-LEX-C58-VERBS58-04",
+      "MW-LEX-C58-VERBS58-05"
+    ]
+  }
+}

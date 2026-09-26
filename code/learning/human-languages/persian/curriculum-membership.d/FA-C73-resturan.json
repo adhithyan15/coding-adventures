@@ -1,0 +1,11 @@
+{
+  "id": "FA-C73-resturan",
+  "pathSegment": "FA-PATH-73-TOWN73",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-73-TOWN73",
+      "order": 1
+    }
+  ]
+}

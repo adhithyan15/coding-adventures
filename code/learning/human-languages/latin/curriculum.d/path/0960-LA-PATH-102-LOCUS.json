@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-102-LOCUS",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "LA-EXT-102-LOCUS"
+  ],
+  "after": []
+}

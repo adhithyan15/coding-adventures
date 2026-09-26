@@ -1,0 +1,11 @@
+{
+  "id": "GE-C81-karte",
+  "pathSegment": "GE-PATH-81-SCHULE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-81-SCHULE",
+      "order": 1
+    }
+  ]
+}

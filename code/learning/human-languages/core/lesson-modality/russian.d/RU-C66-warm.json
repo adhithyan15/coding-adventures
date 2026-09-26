@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C66-warm",
+    "language": "russian",
+    "chapter": 66,
+    "sequence": 3290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a9aead93eb18c62"
+  },
+  "findings": []
+}

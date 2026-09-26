@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:0608073791af716a",
+  "lessonIds": [
+    "PA-C74-pahar",
+    "PA-C74-jangal",
+    "PA-C74-daria",
+    "PA-C74-jhil",
+    "PA-C74-patthar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch74.txt",
+  "json": "punjabi/narration/ch74.json",
+  "textHash": "fnv1a64:b535389a0afa6b51",
+  "jsonHash": "fnv1a64:12a0dff43148f603",
+  "findings": []
+}

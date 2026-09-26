@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S135-vowel-sign-uu",
+    "language": "tamil",
+    "chapter": 111,
+    "sequence": 4750,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1d05d6602d0c1acc",
+    "detachableSegments": [
+      "Script you'll notice: ◌ூ",
+      "Writing: ◌ூ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

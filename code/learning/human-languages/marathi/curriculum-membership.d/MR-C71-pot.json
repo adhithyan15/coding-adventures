@@ -1,0 +1,11 @@
+{
+  "id": "MR-C71-pot",
+  "pathSegment": "MR-PATH-71-BODY71",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-71-BODY71",
+      "order": 0
+    }
+  ]
+}

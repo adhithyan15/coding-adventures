@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Back, Forehead, Cheek, Chin, Wrist",
+  "label": "ch:ur-back-forehead-cheek-chin-wrist",
+  "canDo": "I can say the back, the forehead, a cheek, the chin and a wrist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C129-kalai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say the back, the forehead, a cheek, the chin and a wrist.",
+    "assesses": [
+      "UR-LEX-C129-THINGS129-03",
+      "UR-LEX-C129-THINGS129-04",
+      "UR-LEX-C129-THINGS129-05"
+    ]
+  }
+}

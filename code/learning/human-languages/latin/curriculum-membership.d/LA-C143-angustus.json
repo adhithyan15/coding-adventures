@@ -1,0 +1,11 @@
+{
+  "id": "LA-C143-angustus",
+  "pathSegment": "LA-PATH-143-QUAL143",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-143-QUAL143",
+      "order": 4
+    }
+  ]
+}

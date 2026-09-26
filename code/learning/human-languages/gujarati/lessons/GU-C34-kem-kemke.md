@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C34-kem-kemke
 spine_node: SPINE-SAY-WHY
-sequence: 1940
+sequence: 1953
 chapter: 38
 type: phrase
 headword: કેમ? … કેમકે …

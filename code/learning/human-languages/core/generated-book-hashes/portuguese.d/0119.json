@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:307e79913c7a5c2a",
+  "lessonIds": [
+    "PT-C119-esquilo",
+    "PT-C119-coruja",
+    "PT-C119-baleia",
+    "PT-C119-golfinho",
+    "PT-C119-cotovelo"
+  ],
+  "tex": "portuguese/book/chapters/ch119-squirrel-owl-whale-dolphin-elbow.tex"
+}

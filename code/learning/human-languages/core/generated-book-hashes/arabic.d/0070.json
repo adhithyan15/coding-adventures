@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:7488e1d09f6700cf",
+  "lessonIds": [
+    "AR-C70-kursi",
+    "AR-C70-tawila",
+    "AR-C70-jidar",
+    "AR-C70-sarir",
+    "AR-C70-ard"
+  ],
+  "tex": "arabic/book/chapters/ch70-chair-table-wall-bed-floor.tex"
+}

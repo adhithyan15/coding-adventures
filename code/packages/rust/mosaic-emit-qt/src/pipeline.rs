@@ -2685,7 +2685,8 @@ fn from_pipeline_with_runtime_policy(
 
     let name = &interface.component;
     let native_table_count = count_native_table_models(&layout.root);
-    let signal_names = allocate_qml_signal_names(interface)?;
+    let signal_names =
+        allocate_qml_signal_names(interface, &emit_call_scopes(&layout.root))?;
     let mut out = String::new();
 
     // 2. File header — banner + imports. Both QtQuick and
@@ -5372,9 +5373,21 @@ fn emit_host_checkbox_qml(
     // `x()`; a `emit onToggle ( value : bool )` (or any arity ≥ 1)
     // gets `x(checked)` since `checked` is the natural payload Qt
     // makes available in the signal-handler scope.
+    //
+    // The exception is an `( index : number )` signal inside a `For`
+    // (UI29-2 §2.1.1): it gets the row index, exactly as a HostButton
+    // would, because the toggle alone cannot say which row changed.
     if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
         let camel = qml_signal_name(emit_name, ctx.signal_names)?;
-        let arg = pick_signal_arg_with(emit_name, ctx.emits, "checked");
+        let wants_index = ctx.emits.iter().find(|e| e.name == emit_name).is_some_and(|e| {
+            matches!(e.params.as_slice(), [param] if param.r#type == EmitPayloadType::Number)
+        });
+        let arg = if wants_index {
+            host_button_signal_args(emit_name, ctx)
+                .unwrap_or_else(|| "/* TODO: payload */".to_string())
+        } else {
+            pick_signal_arg_with(emit_name, ctx.emits, "checked").to_string()
+        };
         writeln!(out, "{inner_pad}onToggled: {camel}({arg})").unwrap();
     }
 
@@ -6311,6 +6324,20 @@ fn build_checked_attribute(node: &LayoutNode) -> Option<String> {
         }
         LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
             format!("checked: {k}")
+        }
+        // Inside a `For` the state is usually a loop binding or a row
+        // expression such as `row[4]`, a "1"/"" text marker, read by
+        // truthiness like HostButton's `selected:` (UI29-2 §2.1).
+        LayoutPropValue::Keyword(binding) => {
+            let camel = to_camel_case_first_lower(binding);
+            if is_safe_identifier(&camel) {
+                format!("checked: Boolean({camel})")
+            } else {
+                "checked: false".to_string()
+            }
+        }
+        LayoutPropValue::Expr(expr) if !expr.trim().is_empty() => {
+            format!("checked: Boolean({})", expr.trim())
         }
         _ => "checked: false".to_string(),
     })
@@ -7957,7 +7984,14 @@ fn emit_payload_to_qml(t: &EmitPayloadType) -> &'static str {
 /// a deterministic numeric suffix rather than stealing it.
 fn allocate_qml_signal_names(
     interface: &MosmodelComponent,
+    call_scopes: &HashMap<String, HashSet<ControlScope>>,
 ) -> Result<HashMap<String, String>, PipelineEmitError> {
+    // Does `name` collide with a member of a control that calls `emit`?
+    let shadowed = |emit: &str, name: &str| {
+        call_scopes
+            .get(emit)
+            .is_some_and(|scopes| scopes.iter().any(|scope| scope.has_member(name)))
+    };
     let mut lowered = Vec::with_capacity(interface.emits.len());
     let mut frequencies: HashMap<String, usize> = HashMap::new();
 
@@ -7994,6 +8028,7 @@ fn allocate_qml_signal_names(
         if frequencies.get(base) == Some(&1)
             && !is_qml_reserved_identifier(base)
             && !is_qml_item_member(base)
+            && !shadowed(source, base)
             && !occupied.contains(base)
         {
             occupied.insert(base.clone());
@@ -8012,6 +8047,7 @@ fn allocate_qml_signal_names(
         while occupied.contains(&candidate)
             || is_qml_reserved_identifier(&candidate)
             || is_qml_item_member(&candidate)
+            || shadowed(&source, &candidate)
         {
             candidate = format!("{stem}{suffix}");
             suffix += 1;
@@ -8112,6 +8148,96 @@ fn is_qml_reserved_identifier(name: &str) -> bool {
             | "with"
             | "yield"
     )
+}
+
+/// The kind of Qt Quick control a signal call is written *inside*.
+///
+/// A handler such as `onClicked: toggle(i)` sits inside the Button, and QML
+/// resolves an unqualified name against that control's own members before the
+/// root's signals. So an emit lowering to `toggle`, called from a Button, called
+/// `Button.toggle()` and the component's signal never fired — the toolkit's
+/// Accordion, Select and DropdownMenu, and `ChecklistRun`'s `onToggle` (C2 of
+/// #14018), were inert on Qt; `onClicked: click()` re-fired `clicked`, and
+/// `onToggled: toggle()` flipped the box it came from.
+///
+/// Scoped per control rather than one global list, so only a *real* clash is
+/// renamed: `select` fired from a Button keeps its name (a Button has no
+/// `select`), and hosts that connect to such signals by name are unaffected.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+enum ControlScope {
+    /// `Button`, `CheckBox`, `RadioButton` (AbstractButton + Control).
+    Button,
+    /// `TextField` / `TextArea` (TextInput / TextEdit + Control).
+    TextInput,
+    /// A `Text` carrying a link (`HostLink`).
+    LinkText,
+    /// `Popup` (`HostDialog`).
+    Popup,
+    /// `Slider` / `SpinBox`.
+    Range,
+}
+
+impl ControlScope {
+    /// The control a layout tag lowers to, if its handlers run inside one.
+    fn of_tag(tag: &str) -> Option<ControlScope> {
+        match tag {
+            "HostButton" | "HostCheckbox" | "HostRadio" => Some(Self::Button),
+            // HostNumberInput lowers to a TextField, not a SpinBox.
+            "HostInput" | "Input" | "HostNumberInput" => Some(Self::TextInput),
+            "HostLink" => Some(Self::LinkText),
+            "HostDialog" => Some(Self::Popup),
+            "HostSlider" => Some(Self::Range),
+            _ => None,
+        }
+    }
+
+    /// Whether `name` is a member this control adds over `Item` (those are
+    /// [`is_qml_item_member`]'s job).
+    fn has_member(self, name: &str) -> bool {
+        const CONTROL: &[&str] = &[
+            "background", "contentItem", "font", "hoverEnabled", "hovered", "locale",
+            "mirrored", "padding", "palette", "spacing", "visualFocus",
+        ];
+        let own: &[&str] = match self {
+            Self::Button => &[
+                "action", "animateClick", "autoExclusive", "autoRepeat", "canceled",
+                "checkState", "checkable", "checked", "click", "clicked", "display",
+                "doubleClicked", "down", "icon", "indicator", "nextCheckState",
+                "pressAndHold", "pressed", "released", "text", "toggle", "toggled",
+                "tristate",
+            ],
+            Self::TextInput => &[
+                "accepted", "clear", "copy", "cut", "deselect", "editingFinished",
+                "ensureVisible", "getText", "insert", "length", "paste", "placeholderText",
+                "pressAndHold", "pressed", "readOnly", "redo", "released", "remove", "select",
+                "selectAll", "selectWord", "text", "textEdited", "undo",
+            ],
+            Self::LinkText => &["font", "linkActivated", "linkHovered", "text"],
+            Self::Popup => &[
+                "aboutToHide", "aboutToShow", "close", "closePolicy", "closed", "dim", "modal",
+                "open", "opened",
+            ],
+            Self::Range => &["decrease", "increase", "moved", "value", "valueModified"],
+        };
+        own.contains(&name) || (self != Self::LinkText && CONTROL.contains(&name))
+    }
+}
+
+/// For each emit, the controls whose handlers call it (walks the whole layout).
+fn emit_call_scopes(root: &LayoutNode) -> HashMap<String, HashSet<ControlScope>> {
+    let mut scopes: HashMap<String, HashSet<ControlScope>> = HashMap::new();
+    let mut stack = vec![root];
+    while let Some(node) = stack.pop() {
+        if let Some(scope) = ControlScope::of_tag(&node.tag) {
+            for prop in &node.props {
+                if let LayoutPropValue::EmitRef(emit) = &prop.value {
+                    scopes.entry(emit.clone()).or_default().insert(scope);
+                }
+            }
+        }
+        stack.extend(node.children.iter());
+    }
+    scopes
 }
 
 /// Root `Item` members that a generated component signal must not redeclare.
@@ -10156,8 +10282,57 @@ mod tests {
         assert!(!r.output.contains("onClicked: tap(text)"));
     }
 
-    /// HostCheckbox's `onToggle` invocation must follow the
-    /// signal's declared arity.  Parameterless → `onToggled: x()`.
+    /// A signal whose name is a member of the control it is called from would
+    /// resolve to that member, not the root's signal: `onClicked: toggle(i)` in a
+    /// Button calls `Button.toggle()`. Such names get the `mosaicEmit…` spelling
+    /// (the toolkit's Accordion/Select/DropdownMenu and ChecklistRun hit this).
+    #[test]
+    fn signals_named_like_control_members_are_renamed() {
+        let interface = component(
+            "X",
+            vec![],
+            vec![
+                emit_decl("onToggle", vec![]),
+                emit_decl("onClick", vec![]),
+                emit_decl("onUndo", vec![]),
+                emit_decl("onClear", vec![]),
+                emit_decl("onToggleTask", vec![]),
+            ],
+        );
+        let button = |emit: &str| LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: None,
+            props: vec![lp("onClick", LayoutPropValue::EmitRef(emit.to_string()))],
+            children: vec![],
+        };
+        let input = |emit: &str| LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![lp("onCommit", LayoutPropValue::EmitRef(emit.to_string()))],
+            children: vec![],
+        };
+        let root = LayoutNode {
+            tag: "Column".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![
+                button("onToggle"),
+                button("onClick"),
+                button("onUndo"),
+                input("onClear"),
+                button("onToggleTask"),
+            ],
+        };
+        let names = allocate_qml_signal_names(&interface, &emit_call_scopes(&root)).unwrap();
+        assert_eq!(names["onToggle"], "mosaicEmitToggle", "Button.toggle()");
+        assert_eq!(names["onClick"], "mosaicEmitClick", "Button.click()");
+        assert_eq!(names["onClear"], "mosaicEmitClear", "TextField.clear()");
+        // Only real clashes are renamed: a Button has no undo(), and hosts
+        // connect to such signals by name (Engram's `undo`).
+        assert_eq!(names["onUndo"], "undo");
+        assert_eq!(names["onToggleTask"], "toggleTask");
+    }
+
     #[test]
     fn host_button_on_click_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onClick", vec![])]);
@@ -10174,8 +10349,64 @@ mod tests {
             },
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        assert!(r.output.contains("onClicked: click()"));
-        assert!(!r.output.contains("onClicked: click(text)"));
+        assert!(r.output.contains("onClicked: mosaicEmitClick()"));
+        assert!(!r.output.contains("onClicked: mosaicEmitClick(text)"));
+    }
+
+    /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` gets the
+    /// row index, and a row expression drives `checked` by truthiness.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Checklist",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onToggle",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "Checklist".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        lp("each", LayoutPropValue::SlotRef("items".to_string())),
+                        lp("as", LayoutPropValue::Keyword("item".to_string())),
+                        lp("index", LayoutPropValue::Keyword("i".to_string())),
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostCheckbox".to_string(),
+                        part_name: None,
+                        props: vec![
+                            lp("checked", LayoutPropValue::Expr("item".to_string())),
+                            lp("label", LayoutPropValue::Expr("item".to_string())),
+                            lp("onToggle", LayoutPropValue::EmitRef("onToggle".to_string())),
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("Checklist")).unwrap();
+        assert!(
+            r.output.contains("checked: Boolean(item)"),
+            "expected the row expression to drive the box, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("onToggled: mosaicEmitToggle(i)"),
+            "expected the checkbox to dispatch the row index, got:\n{}",
+            r.output
+        );
     }
 
     #[test]
@@ -10357,6 +10588,8 @@ mod tests {
         );
     }
 
+    /// HostCheckbox's `onToggle` invocation must follow the
+    /// signal's declared arity.  Parameterless → `onToggled: x()`.
     #[test]
     fn host_checkbox_on_toggle_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onToggle", vec![])]);
@@ -10374,11 +10607,11 @@ mod tests {
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output.contains("onToggled: toggle()"),
-            "missing onToggled: toggle() in:\n{}",
+            r.output.contains("onToggled: mosaicEmitToggle()"),
+            "missing onToggled: mosaicEmitToggle() in:\n{}",
             r.output
         );
-        assert!(!r.output.contains("onToggled: toggle(checked)"));
+        assert!(!r.output.contains("onToggled: mosaicEmitToggle(checked)"));
     }
 
     /// HostCheckbox with a one-param signal still emits the
@@ -10407,7 +10640,7 @@ mod tests {
             },
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        assert!(r.output.contains("onToggled: toggle(checked)"));
+        assert!(r.output.contains("onToggled: mosaicEmitToggle(checked)"));
     }
 
     /// HostRadio with a parameterless `onSelect` must NOT pass the

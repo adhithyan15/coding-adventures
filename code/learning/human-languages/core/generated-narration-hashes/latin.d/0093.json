@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:74aaa1ab8b0b8901",
+  "lessonIds": [
+    "LA-C93-magnus",
+    "LA-C93-parvus",
+    "LA-C93-longus",
+    "LA-C93-brevis",
+    "LA-C93-altus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch93.txt",
+  "json": "latin/narration/ch93.json",
+  "textHash": "fnv1a64:d0f6724f336323ba",
+  "jsonHash": "fnv1a64:5fb4e108f5a2eac7",
+  "findings": []
+}

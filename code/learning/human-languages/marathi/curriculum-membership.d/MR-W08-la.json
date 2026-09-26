@@ -1,11 +1,11 @@
 {
   "id": "MR-W08-la",
   "pathSegment": "MR-PATH-031",
-  "pathOrder": 0,
+  "pathOrder": 4,
   "extensions": [
     {
       "id": "MR-EXT-034-SIBILANT-RUNWAY",
-      "order": 0
+      "order": 4
     }
   ]
 }

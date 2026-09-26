@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C83-hundred",
+    "language": "gujarati",
+    "chapter": 83,
+    "sequence": 4233,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d70413bd299db70"
+  },
+  "findings": []
+}

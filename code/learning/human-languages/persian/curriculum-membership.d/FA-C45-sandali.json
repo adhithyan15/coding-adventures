@@ -1,0 +1,11 @@
+{
+  "id": "FA-C45-sandali",
+  "pathSegment": "FA-PATH-45-HOME45",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-45-HOME45",
+      "order": 3
+    }
+  ]
+}

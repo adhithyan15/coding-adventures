@@ -3,7 +3,7 @@
     "id": "GU-C08-samajvun",
     "language": "gujarati",
     "chapter": 14,
-    "sequence": 450,
+    "sequence": 463,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b837ed49bf9af038",
+    "sourceHash": "fnv1a64:b4ff8dd8fcafcc42",
     "detachableSegments": [
       "The letters in this word"
     ]

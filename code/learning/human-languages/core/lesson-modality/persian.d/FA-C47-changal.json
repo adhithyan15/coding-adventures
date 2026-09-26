@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C47-changal",
+    "language": "persian",
+    "chapter": 47,
+    "sequence": 2240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7123a8465c311414"
+  },
+  "findings": []
+}

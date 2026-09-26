@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C96-rotundus",
+    "language": "latin",
+    "chapter": 96,
+    "sequence": 3420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c88e62b9604ce25f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C121-ksamata",
+  "pathSegment": "MR-PATH-121-CAN121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-121-CAN121",
+      "order": 3
+    }
+  ]
+}

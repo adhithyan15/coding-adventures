@@ -1,0 +1,11 @@
+{
+  "id": "AR-C62-wajada",
+  "pathSegment": "AR-PATH-62-VERBS62",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-62-VERBS62",
+      "order": 2
+    }
+  ]
+}

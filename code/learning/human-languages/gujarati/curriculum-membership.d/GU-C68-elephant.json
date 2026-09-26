@@ -1,0 +1,11 @@
+{
+  "id": "GU-C68-elephant",
+  "pathSegment": "GU-PATH-68-ANIMALS2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-68-ANIMALS2",
+      "order": 2
+    }
+  ]
+}

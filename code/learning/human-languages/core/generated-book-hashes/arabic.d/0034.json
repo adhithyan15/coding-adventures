@@ -1,12 +1,13 @@
 {
   "language": "arabic",
   "chapter": 34,
-  "sourceHash": "fnv1a64:7686a9ba811d62c6",
+  "sourceHash": "fnv1a64:a229bdaa799395ed",
   "lessonIds": [
     "AR-C34-milh",
     "AR-C34-lahm",
     "AR-C34-jubn",
-    "AR-C34-taam"
+    "AR-C34-taam",
+    "AR-R34-pardon-and-until-tomorrow"
   ],
   "tex": "arabic/book/chapters/ch34-asking-for-food.tex"
 }

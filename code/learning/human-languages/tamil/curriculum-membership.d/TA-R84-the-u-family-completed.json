@@ -1,0 +1,11 @@
+{
+  "id": "TA-R84-the-u-family-completed",
+  "pathSegment": "TA-PATH-84-READING",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TA-EXT-84-READING",
+      "order": 6
+    }
+  ]
+}

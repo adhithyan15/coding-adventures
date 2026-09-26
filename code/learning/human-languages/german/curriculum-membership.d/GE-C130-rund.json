@@ -1,0 +1,11 @@
+{
+  "id": "GE-C130-rund",
+  "pathSegment": "GE-PATH-130-FARBE130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-130-FARBE130",
+      "order": 3
+    }
+  ]
+}

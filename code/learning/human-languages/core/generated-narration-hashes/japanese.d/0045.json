@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:8d77c63ea337f2a9",
+  "lessonIds": [
+    "JA-C45-neko",
+    "JA-C45-uma",
+    "JA-C45-ushi",
+    "JA-C45-tori",
+    "JA-C45-kuma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch45.txt",
+  "json": "japanese/narration/ch45.json",
+  "textHash": "fnv1a64:2d2b7877baf020bb",
+  "jsonHash": "fnv1a64:d0a4576b3b32eaa6",
+  "findings": []
+}

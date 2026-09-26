@@ -1,11 +1,11 @@
 {
   "id": "ML-S128-vowel-sign-r",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 43,
+  "pathOrder": 52,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 43
+      "order": 52
     }
   ]
 }

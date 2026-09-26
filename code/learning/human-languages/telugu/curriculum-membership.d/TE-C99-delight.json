@@ -1,0 +1,11 @@
+{
+  "id": "TE-C99-delight",
+  "pathSegment": "TE-PATH-99-WELCOME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-99-WELCOME",
+      "order": 1
+    }
+  ]
+}

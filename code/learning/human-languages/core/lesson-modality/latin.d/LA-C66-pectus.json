@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C66-pectus",
+    "language": "latin",
+    "chapter": 66,
+    "sequence": 1890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6766ce08b6a4f26"
+  },
+  "findings": []
+}

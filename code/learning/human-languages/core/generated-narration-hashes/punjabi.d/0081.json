@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:2a5c0c4cc8b0472e",
+  "lessonIds": [
+    "PA-C81-saukha",
+    "PA-C81-mahinga",
+    "PA-C81-sasta",
+    "PA-C81-uchcha",
+    "PA-C81-nivam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch81.txt",
+  "json": "punjabi/narration/ch81.json",
+  "textHash": "fnv1a64:6c1061a74aabe77d",
+  "jsonHash": "fnv1a64:7050502198fac94a",
+  "findings": []
+}

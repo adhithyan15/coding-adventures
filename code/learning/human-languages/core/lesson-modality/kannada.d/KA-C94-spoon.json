@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C94-spoon",
+    "language": "kannada",
+    "chapter": 94,
+    "sequence": 3620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14ebd3f148e28194"
+  },
+  "findings": []
+}

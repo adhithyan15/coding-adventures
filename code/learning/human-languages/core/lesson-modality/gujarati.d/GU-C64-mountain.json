@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C64-mountain",
+    "language": "gujarati",
+    "chapter": 64,
+    "sequence": 3273,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6c86db7c4a736f6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C45-pet",
+  "pathSegment": "MW-PATH-45-BODY45",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-45-BODY45",
+      "order": 0
+    }
+  ]
+}

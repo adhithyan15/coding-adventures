@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Keeping Well",
+  "label": "ch:te-keeping-well",
+  "canDo": "I can ask whether someone is keeping well, say I am comfortable and happy, and name aches in the body.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C93-body",
+    "kind": "production",
+    "summary": "Complete TE-C93-body: good news and bad news about how you are.",
+    "assesses": [
+      "TE-LEX-C93-FINE-03",
+      "TE-LEX-C93-FINE-04",
+      "TE-LEX-C93-FINE-05"
+    ]
+  }
+}

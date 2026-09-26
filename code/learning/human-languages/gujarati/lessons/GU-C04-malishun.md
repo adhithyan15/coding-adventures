@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C04-malishun
 spine_node: SPINE-TAKE-LEAVE
-sequence: 240
+sequence: 253
 chapter: 10
 type: word
 headword: મળીશું

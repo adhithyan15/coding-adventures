@@ -1,0 +1,11 @@
+{
+  "id": "TE-C92-medicine",
+  "pathSegment": "TE-PATH-92-DOCTOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-92-DOCTOR",
+      "order": 1
+    }
+  ]
+}

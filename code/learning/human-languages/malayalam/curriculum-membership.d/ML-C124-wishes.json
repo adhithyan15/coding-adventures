@@ -1,0 +1,11 @@
+{
+  "id": "ML-C124-wishes",
+  "pathSegment": "ML-PATH-124-WELCOME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-124-WELCOME",
+      "order": 4
+    }
+  ]
+}

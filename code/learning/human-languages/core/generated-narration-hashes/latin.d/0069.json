@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:ea225f0c330335b8",
+  "lessonIds": [
+    "LA-C69-gaudium",
+    "LA-C69-ira",
+    "LA-C69-timor",
+    "LA-C69-laetus",
+    "LA-C69-tristis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch69.txt",
+  "json": "latin/narration/ch69.json",
+  "textHash": "fnv1a64:8bf5f7949285042b",
+  "jsonHash": "fnv1a64:3f3bd816a58877fc",
+  "findings": []
+}

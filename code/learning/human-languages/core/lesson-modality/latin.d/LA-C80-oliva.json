@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C80-oliva",
+    "language": "latin",
+    "chapter": 80,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:466f941652e8c409"
+  },
+  "findings": []
+}

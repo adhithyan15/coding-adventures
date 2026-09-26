@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:a94b97d881dd1fdf",
+  "lessonIds": [
+    "BN-C76-mota",
+    "BN-C76-roga",
+    "BN-C76-halka",
+    "BN-C76-bhari",
+    "BN-C76-sotti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch76.txt",
+  "json": "bengali/narration/ch76.json",
+  "textHash": "fnv1a64:41978c48d11df01a",
+  "jsonHash": "fnv1a64:fcda5b0e2efa4752",
+  "findings": []
+}

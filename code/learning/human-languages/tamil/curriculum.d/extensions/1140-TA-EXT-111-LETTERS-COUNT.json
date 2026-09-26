@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-111-LETTERS-COUNT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the letters ai and ee and the vowel sign uu, and find each one in the numbers I count with.",
+  "prerequisites": []
+}

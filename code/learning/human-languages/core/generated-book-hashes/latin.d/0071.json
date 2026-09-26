@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:33df407b466573c7",
+  "lessonIds": [
+    "LA-C71-maritus",
+    "LA-C71-uxor",
+    "LA-C71-liberi",
+    "LA-C71-infans",
+    "LA-C71-patruus"
+  ],
+  "tex": "latin/book/chapters/ch71-husband-wife-children.tex"
+}

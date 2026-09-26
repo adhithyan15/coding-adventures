@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:72f3f8af2bc1d981",
+  "lessonIds": [
+    "PA-C96-baram",
+    "PA-C96-vih",
+    "PA-C96-tih",
+    "PA-C96-panjah",
+    "PA-C96-sau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch96.txt",
+  "json": "punjabi/narration/ch96.json",
+  "textHash": "fnv1a64:471d69958ce09f30",
+  "jsonHash": "fnv1a64:e21a7b605f9305d5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Stream, Earth, Grass, Seed, Root",
+  "label": "ch:ur-stream-earth-grass-seed-root",
+  "canDo": "I can say a stream, earth, grass, a seed and a root.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C123-jar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say a stream, earth, grass, a seed and a root.",
+    "assesses": [
+      "UR-LEX-C123-THINGS123-03",
+      "UR-LEX-C123-THINGS123-04",
+      "UR-LEX-C123-THINGS123-05"
+    ]
+  }
+}

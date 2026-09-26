@@ -1,0 +1,18 @@
+{
+  "chapter": 45,
+  "title": "Letters From Home and Money",
+  "label": "ch:gu-letters-home-money",
+  "canDo": "I can write the letter gha and the ai sign, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GU-R45-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can write the letter gha and the ai sign, and find each one in a word I already say.",
+    "assesses": [
+      "GU-SCRIPT-C45-GHA-01",
+      "GU-SCRIPT-C45-AI-SIGN-01"
+    ]
+  }
+}

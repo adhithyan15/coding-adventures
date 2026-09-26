@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Jacket, Belt, Twelve, Fourteen, Sixteen",
+  "label": "ch:fa-jacket-belt-twelve-fourteen-sixteen",
+  "canDo": "I can say a jacket, a belt, twelve, fourteen and sixteen.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FA-C75-shanzdah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say a jacket, a belt, twelve, fourteen and sixteen.",
+    "assesses": [
+      "FA-LEX-C75-CLOTHES75-03",
+      "FA-LEX-C75-CLOTHES75-04",
+      "FA-LEX-C75-CLOTHES75-05"
+    ]
+  }
+}

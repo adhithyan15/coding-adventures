@@ -9,18 +9,18 @@ type: writing
 headword: এ
 romanization: "e"
 gloss: "the independent e — the third vowel to show both of its bodies"
-prerequisites: [BN-W02-e-matra]
+prerequisites: [BN-W02-e-matra, BN-C06-eka]
 sounds: []
 roots: []
 etymology_hook: "The third vowel pair, and the one that finally makes the arrangement predictable rather than a fact to be learned three separate times."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-KA-01]
+  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-KA-01, BN-LEX-ANCHOR-EKA]
 introduces:
   knowledge: [BN-SCRIPT-E-INDEP-01]
 practises:
-  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01]
+  knowledge: [BN-SCRIPT-E-MATRA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-KA-01, BN-SCRIPT-E-INDEP-01, BN-LEX-ANCHOR-EKA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [BN-W02-e-matra, BN-W04-i-indep]
 # এ — the independent e
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-I-INDEP-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-I-INDEP-01, BN-LEX-ANCHOR-EKA] -->
 
 [PAUSE 2s] Write **ই** and **ি**, and say which one a vowel uses when it has nothing
 to lean on.

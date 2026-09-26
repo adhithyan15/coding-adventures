@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:6721eced043e6ddb",
+  "lessonIds": [
+    "GU-C59-fruit",
+    "GU-C59-banana",
+    "GU-C59-apple",
+    "GU-C59-potatoes",
+    "GU-C59-tomato"
+  ],
+  "tex": "gujarati/book/chapters/ch59-fruit-and-vegetables.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Quarter to, Half, Now, Then, When?",
+  "label": "ch:ur-quarter-to-half-now-then-when",
+  "canDo": "I can say a quarter to, half, now, then and when?.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C93-kab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say a quarter to, half, now, then and when?.",
+    "assesses": [
+      "UR-LEX-C93-TIME93-03",
+      "UR-LEX-C93-TIME93-04",
+      "UR-LEX-C93-TIME93-05"
+    ]
+  }
+}

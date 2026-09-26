@@ -1,0 +1,11 @@
+{
+  "id": "GU-C64-forest",
+  "pathSegment": "GU-PATH-64-LAND",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-64-LAND",
+      "order": 3
+    }
+  ]
+}

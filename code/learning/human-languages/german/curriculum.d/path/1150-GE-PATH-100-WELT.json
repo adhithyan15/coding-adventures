@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-100-WELT",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "GE-EXT-100-WELT"
+  ],
+  "after": []
+}

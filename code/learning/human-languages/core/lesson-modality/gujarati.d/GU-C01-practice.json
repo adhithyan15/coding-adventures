@@ -3,7 +3,7 @@
     "id": "GU-C01-practice",
     "language": "gujarati",
     "chapter": 2,
-    "sequence": 60,
+    "sequence": 61,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5bbc5a5146f9ed28",
+    "sourceHash": "fnv1a64:c25afc0c755b3a85",
     "detachableSegments": [
       "Script — the script and the language",
       "Writing — three gentle retrievals"

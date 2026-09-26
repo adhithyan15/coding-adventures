@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C78-sama",
+    "language": "arabic",
+    "chapter": 78,
+    "sequence": 2890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8677ed1bc3734db4"
+  },
+  "findings": []
+}

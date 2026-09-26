@@ -1,0 +1,11 @@
+{
+  "id": "MW-R66-first-pass-the-body-family-and-verbs",
+  "pathSegment": "MW-PATH-66-SCHOOL66",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-66-SCHOOL66",
+      "order": 5
+    }
+  ]
+}

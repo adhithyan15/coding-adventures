@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C58-buttermilk",
+    "language": "gujarati",
+    "chapter": 58,
+    "sequence": 2993,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c13c06ed8b6286f0"
+  },
+  "findings": []
+}

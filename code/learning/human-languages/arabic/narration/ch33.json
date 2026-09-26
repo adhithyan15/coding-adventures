@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Asking for a Drink",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:77bc08ced4c5f9b7",
+  "sourceHash": "fnv1a64:e2597034dca3d4e9",
   "lessons": [
     {
       "id": "AR-C33-shay",
@@ -734,6 +734,182 @@
             {
               "kind": "speech",
               "text": "Which of this chapter's words is feminine, and how can you tell? (Qahwa — it ends in ة.) Name two earlier words with that ending. (Maktaba and as-salāma.) Ask for each drink politely. (Shāy, qahwa, ḥalīb, sukkar — each with min faḍlik, \"from your grace.\") What do you answer when someone thanks you? (ʿAfwan.) Which word here was built from a verb? (Ḥalīb, from ḥalaba — the others travelled in.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R33-the-courtesies-again",
+      "sequence": 891,
+      "title": "The courtesies, doing real work",
+      "headword": "من فضلك · شكرا · نعم",
+      "romanization": "min faḍlik · shukran · naʿam",
+      "gloss": "the courtesy kit's second outing, now doing real work — ordering a drink politely, accepting, apologising, and thanking, with the age question along for the ride",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d2b20f338edd86a5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: shapes inside the words above"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: shapes inside the words above until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Order tea politely, accept when it is offered, and thank them. Three words you have met and one you met in this chapter. No reading first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tea, please — shāy, min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tea, please — *shāy, min faḍlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coffee with milk and sugar, please — qahwa maʿa ḥalīb wa-sukkar, min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: coffee with milk and sugar, please — *qahwa maʿa ḥalīb wa-sukkar, min faḍlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "accept — naʿam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: accept — *naʿam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thank them, and hear the reply — shukran … ʿafwan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thank them, and hear the reply — *shukran* … *ʿafwan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a man apologises, then a woman — āsif … āsifa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a man apologises, then a woman — *āsif* … *āsifa*]"
+            },
+            {
+              "kind": "speech",
+              "text": "The courtesy kit was four separate single-word lessons long ago. This is the first time it has had to carry a real transaction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "How to answer: the reply that erases the debt",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say شكرا and what comes back is عفوا — it is nothing, from a root about forgiving and waiving. English accepts thanks; Arabic waves them away. The exchange has two halves and you now own both."
+            },
+            {
+              "kind": "speech",
+              "text": "آسف is a gendered adjective, so it changes with the speaker. When you want a quick, ungendered excuse me — squeezing past somebody in a café — the word is معذرة maʿdhira."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "You'll want to know: the invisible bend",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "من فضلك changes with whom you address and the page does not show it: only the unwritten short vowel moves, faḍlak to a man and faḍlik to a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "كم عمرك؟ hides the same suffix, and hides a verb too — literally how much is your lifetime. Arabic neither has its years nor is them; it owns them, as a noun, with nothing in between."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script: shapes inside the words above",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "شكرا — shīn with its three dots, then kāf, rāʾ, alif",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **شكرا** — *shīn* with its three dots, then *kāf*, *rāʾ*, *alif*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "شاي (shāy) — the same shīn, then alif, then yāʾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **شاي** — the same *shīn*, then *alif*, then *yāʾ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "ش is س carrying three dots, and ك is kāf. Both words start with the same letter, and in both the letter keeps its skeleton while the connectors at its edges change to suit its neighbours."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the reply to thanks and its literal force. (عفوا — it is nothing.) Say what a woman says for sorry. (آسفة.) Say why من فضلك looks identical for both genders. (Only the unwritten vowel moves.) And say what stays constant when a letter joins its neighbours. (Its skeleton.)"
             }
           ]
         }

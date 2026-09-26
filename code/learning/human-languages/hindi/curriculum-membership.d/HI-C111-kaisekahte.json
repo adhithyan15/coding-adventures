@@ -1,0 +1,11 @@
+{
+  "id": "HI-C111-kaisekahte",
+  "pathSegment": "HI-PATH-111-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-111-ASK",
+      "order": 1
+    }
+  ]
+}

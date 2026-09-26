@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-119-SLOWLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask someone to speak slowly, say it once more, speak louder, give the meaning, and wait.",
+  "prerequisites": []
+}

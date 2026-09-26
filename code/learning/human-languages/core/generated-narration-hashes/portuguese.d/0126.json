@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:5ad69c12aba9f673",
+  "lessonIds": [
+    "PT-C126-fresco",
+    "PT-C126-macio",
+    "PT-C126-duro",
+    "PT-C126-redondo",
+    "PT-C126-largo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch126.txt",
+  "json": "portuguese/narration/ch126.json",
+  "textHash": "fnv1a64:9efdfcc396e9f83c",
+  "jsonHash": "fnv1a64:0cb25ebe700e2774",
+  "findings": []
+}

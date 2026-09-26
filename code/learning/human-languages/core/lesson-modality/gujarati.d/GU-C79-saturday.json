@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C79-saturday",
+    "language": "gujarati",
+    "chapter": 79,
+    "sequence": 4023,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bc6b651e8648125"
+  },
+  "findings": []
+}

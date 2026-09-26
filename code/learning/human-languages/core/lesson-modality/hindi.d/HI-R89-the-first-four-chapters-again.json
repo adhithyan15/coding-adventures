@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R89-the-first-four-chapters-again",
+    "language": "hindi",
+    "chapter": 89,
+    "sequence": 3381,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:789c40e26b79abe6"
+  },
+  "findings": []
+}

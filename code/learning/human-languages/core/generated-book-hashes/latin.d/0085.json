@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:6b69c03483a53525",
+  "lessonIds": [
+    "LA-C85-pila",
+    "LA-C85-rota",
+    "LA-C85-gladius",
+    "LA-C85-corona",
+    "LA-C85-anulus",
+    "LA-R85-first-pass-the-body-health-and-people",
+    "LA-R85-second-pass-verbs-food-the-house-and-things"
+  ],
+  "tex": "latin/book/chapters/ch85-ball-wheel-sword-crown-ring.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C59-ata",
+  "pathSegment": "AR-PATH-59-VERBS59",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-59-VERBS59",
+      "order": 1
+    }
+  ]
+}

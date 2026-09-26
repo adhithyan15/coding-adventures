@@ -1,0 +1,11 @@
+{
+  "id": "PT-C54-caixa",
+  "pathSegment": "PT-PATH-54-COISAS3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-54-COISAS3",
+      "order": 1
+    }
+  ]
+}

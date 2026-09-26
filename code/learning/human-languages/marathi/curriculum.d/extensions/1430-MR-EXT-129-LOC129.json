@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-129-LOC129",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a library, a restaurant, the post, a building and a bathroom.",
+  "prerequisites": []
+}

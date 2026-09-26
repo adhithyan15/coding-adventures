@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:6d9634991e765af2",
+  "lessonIds": [
+    "PA-C84-pila",
+    "PA-C84-lal",
+    "PA-C84-nila",
+    "PA-C84-kala",
+    "PA-C84-chitta"
+  ],
+  "tex": "punjabi/book/chapters/ch84-yellow-red-blue-black-white.tex"
+}

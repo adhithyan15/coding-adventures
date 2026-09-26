@@ -1,0 +1,11 @@
+{
+  "id": "TE-C91-longtime",
+  "pathSegment": "TE-PATH-91-GREET",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-91-GREET",
+      "order": 1
+    }
+  ]
+}

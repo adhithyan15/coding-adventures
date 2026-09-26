@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Red, Yellow, Green",
+  "label": "ch:gu-red-yellow-green",
+  "canDo": "I can name red, yellow, green, blue and black.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C70-black",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can name red, yellow, green, blue and black.",
+    "assesses": [
+      "GU-LEX-C70-COLOUR1-03",
+      "GU-LEX-C70-COLOUR1-04",
+      "GU-LEX-C70-COLOUR1-05"
+    ]
+  }
+}

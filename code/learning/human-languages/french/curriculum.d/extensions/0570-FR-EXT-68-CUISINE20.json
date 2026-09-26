@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-68-CUISINE20",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a banana, an orange, a potato, a tomato, an onion.",
+  "prerequisites": []
+}

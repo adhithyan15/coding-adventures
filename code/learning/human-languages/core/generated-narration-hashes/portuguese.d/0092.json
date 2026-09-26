@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:127a3f2d18c3bb25",
+  "lessonIds": [
+    "PT-C92-mota",
+    "PT-C92-navio",
+    "PT-C92-barco",
+    "PT-C92-autocarro",
+    "PT-C92-comboio",
+    "PT-R92-first-pass-can-want-why-and-places",
+    "PT-R92-second-pass-getting-around-and-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch92.txt",
+  "json": "portuguese/narration/ch92.json",
+  "textHash": "fnv1a64:66ceae33f107ed96",
+  "jsonHash": "fnv1a64:de0aac1ada7414a9",
+  "findings": []
+}

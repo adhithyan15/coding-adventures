@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:1ddde72887b92135",
+  "lessonIds": [
+    "UR-C81-mandir",
+    "UR-C81-hotal",
+    "UR-C81-polis",
+    "UR-C81-kashti",
+    "UR-C81-saikil"
+  ],
+  "tex": "urdu/book/chapters/ch81-temple-hotel-police-boat-bicycle.tex"
+}

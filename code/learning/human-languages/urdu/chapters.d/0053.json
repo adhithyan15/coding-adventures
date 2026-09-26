@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "To wear, To bathe, To leave, Meat, Fish",
+  "label": "ch:ur-to-wear-to-bathe-to-leave-meat-fish",
+  "canDo": "I can say to wear, to bathe, to leave, to let go, meat and a fish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C53-machhli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can say to wear, to bathe, to leave, to let go, meat and a fish.",
+    "assesses": [
+      "UR-LEX-C53-VERBS53-03",
+      "UR-LEX-C53-VERBS53-04",
+      "UR-LEX-C53-VERBS53-05"
+    ]
+  }
+}

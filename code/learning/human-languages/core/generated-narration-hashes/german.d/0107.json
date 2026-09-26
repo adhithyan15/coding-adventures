@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:79a41120fe9332c7",
+  "lessonIds": [
+    "GE-C107-buero",
+    "GE-C107-ecke",
+    "GE-C107-kreuzung",
+    "GE-C107-ampel",
+    "GE-C107-parkplatz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch107.txt",
+  "json": "german/narration/ch107.json",
+  "textHash": "fnv1a64:fa266cc3aa7b5f87",
+  "jsonHash": "fnv1a64:d18c4db17ff2302a",
+  "findings": []
+}

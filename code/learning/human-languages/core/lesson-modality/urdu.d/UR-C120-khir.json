@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C120-khir",
+    "language": "urdu",
+    "chapter": 120,
+    "sequence": 6260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c624d957c306f3d"
+  },
+  "findings": []
+}

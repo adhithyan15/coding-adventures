@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:0665e6ef8d3a79ff",
+  "lessonIds": [
+    "IT-C110-succo",
+    "IT-C110-pesca",
+    "IT-C110-marmellata",
+    "IT-C110-noce",
+    "IT-C110-pepe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch110.txt",
+  "json": "italian/narration/ch110.json",
+  "textHash": "fnv1a64:0c83634d95b88705",
+  "jsonHash": "fnv1a64:eb3e27061d41bd21",
+  "findings": []
+}

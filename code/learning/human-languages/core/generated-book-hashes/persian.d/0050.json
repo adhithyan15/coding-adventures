@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:759743563f8d35c5",
+  "lessonIds": [
+    "FA-C50-naghshe",
+    "FA-C50-dars",
+    "FA-C50-javab",
+    "FA-C50-kalame",
+    "FA-C50-bazi"
+  ],
+  "tex": "persian/book/chapters/ch50-map-lesson-answer-word-game.tex"
+}

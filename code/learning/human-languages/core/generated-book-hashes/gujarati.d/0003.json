@@ -1,8 +1,11 @@
 {
   "language": "gujarati",
   "chapter": 3,
-  "sourceHash": "fnv1a64:a7db22a61ee1827d",
+  "sourceHash": "fnv1a64:1f0444def4d25ba7",
   "lessonIds": [
+    "GU-C03-chhip",
+    "GU-C03-kan",
+    "GU-C03-shak",
     "GU-W03-ja",
     "GU-W03-o-matra",
     "GU-W03-anusvara",

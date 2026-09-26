@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:41bed4329f336ca9",
+  "lessonIds": [
+    "JA-C48-niwatori",
+    "JA-C48-chiisai",
+    "JA-C48-ii",
+    "JA-C48-nagai",
+    "JA-C48-mijikai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch48.txt",
+  "json": "japanese/narration/ch48.json",
+  "textHash": "fnv1a64:fa5d502aa2076860",
+  "jsonHash": "fnv1a64:9bb51bf1e321597d",
+  "findings": []
+}

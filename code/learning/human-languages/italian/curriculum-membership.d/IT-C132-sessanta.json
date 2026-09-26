@@ -1,0 +1,11 @@
+{
+  "id": "IT-C132-sessanta",
+  "pathSegment": "IT-PATH-132-NUMERI132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-132-NUMERI132",
+      "order": 1
+    }
+  ]
+}

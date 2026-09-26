@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:d96c2376287d636b",
+  "lessonIds": [
+    "MR-C140-mul",
+    "MR-C140-bi",
+    "MR-C140-mati",
+    "MR-C140-khadak",
+    "MR-C140-lat",
+    "MR-R140-first-pass-places-and-the-house",
+    "MR-R140-second-pass-things-you-use"
+  ],
+  "tex": "marathi/book/chapters/ch140-root-seed-soil-rock-wave.tex"
+}

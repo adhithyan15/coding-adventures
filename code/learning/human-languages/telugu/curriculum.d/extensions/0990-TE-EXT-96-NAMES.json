@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-96-NAMES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give a surname and a nickname, ask an age, talk about a birthday, and sign my name.",
+  "prerequisites": []
+}

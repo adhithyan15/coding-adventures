@@ -1,0 +1,11 @@
+{
+  "id": "AR-C71-misbah",
+  "pathSegment": "AR-PATH-71-HOME71",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-71-HOME71",
+      "order": 1
+    }
+  ]
+}

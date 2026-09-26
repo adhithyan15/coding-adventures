@@ -4,6 +4,46 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — writing questions into a checklist template (C3c, #14018)
+
+The web host serves the same authoring as `task-mosaic-app`: selecting outline
+items, question/step toggling, Add to Yes/No and subtree delete, with the same
+rows and props. "Add to Yes/No" deletes the item it created if extending the
+branch fails, because this controller has no engine-level rollback. Tested in
+`__tests__/checklists.test.ts`.
+
+### Added — the Checklists view (C3b, #14018)
+
+The web host now serves Checklists to the same contract as `task-mosaic-app`
+(spec `task-app-checklists-view-v1.md`):
+
+- It appears in the switcher before Timeline, at both tiers.
+- **Library:** templates by name, then runs newest first, with progress
+  subtitles and ✓/✗ badges.
+- **A selected template:** its outline, with *Add item* (numbered with the new
+  `setOrder`), Start run and Delete.
+- **A selected run:** tick, answer Yes/No (answering again clears it),
+  Complete (offered only once complete) and Abandon.
+- **Bounds:** 512-character composers, the engine's item cap, and indents
+  capped at 16 levels.
+- **Guards and runs:** switching project clears the selection, and a calendar
+  drop now refuses a key the views do not show. Runs are stamped with an
+  injectable `now` (`ControllerInit.now`).
+- `__tests__/checklists.test.ts` walks the same scenarios as the Rust tests.
+- **The id counter is checked everywhere** (tasks, notes, labels, checklists,
+  runs). A stored counter that isn't a safe non-negative integer (NaN, or at
+  2^53, where `++` stops advancing) is recovered from the highest id already
+  in use. It is never reset to 0, which would reuse ids. Minting fails
+  rather than looping once the counter can't advance.
+
+### Added — inert Checklists slots (C3a, #14018)
+
+`TaskApp.mil` gained the Checklists view's slots, and the generated component
+types them as required, so the host passes inert values. The view is not
+offered on the web until C3b (web parity); its events fall through `apply`
+unhandled. The presentation-contract test mirrors the Rust contract's
+`checklists` view mapping.
+
 ### Changed — `navOptions` is a list of labels (UI86, #15420)
 
 `switcherViews().map(([, label]) => label)`: the toolkit's SegmentedControl

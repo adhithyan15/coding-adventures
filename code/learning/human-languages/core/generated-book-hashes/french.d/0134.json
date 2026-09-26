@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:11f77365928abac1",
+  "lessonIds": [
+    "FR-C134-herbe",
+    "FR-C134-oreille",
+    "FR-C134-levre",
+    "FR-C134-numero",
+    "FR-C134-adresse"
+  ],
+  "tex": "french/book/chapters/ch134-grass-ear-lip-number-on-a-door-address.tex"
+}

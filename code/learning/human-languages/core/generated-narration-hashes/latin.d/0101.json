@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:5bec22d2372e5b5e",
+  "lessonIds": [
+    "LA-C101-surgo",
+    "LA-C101-erro",
+    "LA-C101-fugio",
+    "LA-C101-statim",
+    "LA-C101-deinde"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch101.txt",
+  "json": "latin/narration/ch101.json",
+  "textHash": "fnv1a64:5855975a5186e47f",
+  "jsonHash": "fnv1a64:b694d921538bd6c6",
+  "findings": []
+}

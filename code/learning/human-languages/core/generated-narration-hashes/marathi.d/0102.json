@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:601ffb8315641b32",
+  "lessonIds": [
+    "MR-C102-sap",
+    "MR-C102-mor",
+    "MR-C102-asval",
+    "MR-C102-unt",
+    "MR-C102-phulpakhru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch102.txt",
+  "json": "marathi/narration/ch102.json",
+  "textHash": "fnv1a64:1e429771a782e78b",
+  "jsonHash": "fnv1a64:99aa03afa5bcc6d4",
+  "findings": []
+}

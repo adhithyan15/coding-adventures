@@ -1,0 +1,11 @@
+{
+  "id": "KA-C89-late",
+  "pathSegment": "KA-PATH-89-CARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-89-CARE",
+      "order": 2
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C27-hear-tel
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1490
+sequence: 1503
 chapter: 31
 type: word
 headword: તેલ

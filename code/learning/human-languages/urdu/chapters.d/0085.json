@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Nineteen, Thirty, Forty, Fifty, Sixty",
+  "label": "ch:ur-nineteen-thirty-forty-fifty-sixty",
+  "canDo": "I can say nineteen, thirty, forty, fifty and sixty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C85-sath",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say nineteen, thirty, forty, fifty and sixty.",
+    "assesses": [
+      "UR-LEX-C85-NUMBERS85-03",
+      "UR-LEX-C85-NUMBERS85-04",
+      "UR-LEX-C85-NUMBERS85-05"
+    ]
+  }
+}

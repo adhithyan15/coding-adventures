@@ -1,0 +1,11 @@
+{
+  "id": "PA-C50-bullh",
+  "pathSegment": "PA-PATH-50-BODY50",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-50-BODY50",
+      "order": 1
+    }
+  ]
+}

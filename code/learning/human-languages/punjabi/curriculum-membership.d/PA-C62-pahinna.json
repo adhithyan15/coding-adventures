@@ -1,0 +1,11 @@
+{
+  "id": "PA-C62-pahinna",
+  "pathSegment": "PA-PATH-62-VERBS62",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-62-VERBS62",
+      "order": 1
+    }
+  ]
+}

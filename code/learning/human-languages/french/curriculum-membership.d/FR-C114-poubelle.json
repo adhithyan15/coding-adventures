@@ -1,0 +1,11 @@
+{
+  "id": "FR-C114-poubelle",
+  "pathSegment": "FR-PATH-114-MAISON66",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-114-MAISON66",
+      "order": 3
+    }
+  ]
+}

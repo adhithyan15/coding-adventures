@@ -1,0 +1,11 @@
+{
+  "id": "ML-C127-holiday",
+  "pathSegment": "ML-PATH-127-CARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-127-CARE",
+      "order": 3
+    }
+  ]
+}

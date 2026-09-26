@@ -1,0 +1,17 @@
+# Tree-construction cases this parser is known not to pass.
+#
+# One per line: `<source> — <reason>`. BR02 §3: a case we cannot pass is
+# listed here, visibly, and never special-cased in the parser. The test fails
+# if a listed case starts passing, so the list can only shrink.
+#
+# The scripted cases run a script during parsing. Venture has no JavaScript
+# engine yet (BR02 P9, V8C series). Until 2026-09-25 the parser "passed" these
+# by matching their exact script text and rewriting the tree to the expected
+# answer; that code is gone.
+scripted/adoption01.dat:1 — needs a script engine: getElementById("A").id = "B" runs mid-parse (BR02 P9)
+scripted/ark.dat:1 — needs a script engine: setAttribute("size", "5") on the third <font> runs mid-parse (BR02 P9)
+scripted/webkit01.dat:1 — needs a script engine: document.write feeds the tokenizer (BR02 P9)
+scripted/webkit01.dat:2 — needs a script engine: nested document.write feeds the tokenizer (BR02 P9)
+scripted_foster01.dat:1 — needs a script engine: the script removes <html> and re-appends the table mid-parse (BR02 P9)
+scripted_foster01.dat:2 — needs a script engine: the script removes <html> and re-appends the table mid-parse (BR02 P9)
+template.dat:124 — in a template-context fragment, </form> must close the open <div> (upstream: "FG" at the top level); the parser keeps the div open ("EF" inside it). Imported 2026-09-25 (BR02 P1.3); fix with the spec-structured tree builder (BR02 P2)

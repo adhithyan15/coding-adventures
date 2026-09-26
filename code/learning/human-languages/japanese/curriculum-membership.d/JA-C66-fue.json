@@ -1,0 +1,11 @@
+{
+  "id": "JA-C66-fue",
+  "pathSegment": "JA-PATH-66-THINGS66",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-66-THINGS66",
+      "order": 3
+    }
+  ]
+}

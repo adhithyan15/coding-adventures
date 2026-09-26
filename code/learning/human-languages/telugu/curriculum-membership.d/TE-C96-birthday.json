@@ -1,0 +1,11 @@
+{
+  "id": "TE-C96-birthday",
+  "pathSegment": "TE-PATH-96-NAMES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-96-NAMES",
+      "order": 3
+    }
+  ]
+}

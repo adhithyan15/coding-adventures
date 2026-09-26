@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:c33a252b055095e3",
+  "lessonIds": [
+    "TE-C97-laugh",
+    "TE-C97-crying",
+    "TE-C97-regret",
+    "TE-C97-anxiety",
+    "TE-C97-alone"
+  ],
+  "tex": "telugu/book/chapters/ch97-laughing-crying.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C96-signature",
+  "pathSegment": "TE-PATH-96-NAMES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-96-NAMES",
+      "order": 4
+    }
+  ]
+}

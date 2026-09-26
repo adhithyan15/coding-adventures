@@ -1,0 +1,11 @@
+{
+  "id": "UR-C75-hafta",
+  "pathSegment": "UR-PATH-75-TIME75",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-75-TIME75",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:fdc7dfc08ac71b67",
+  "lessonIds": [
+    "UR-C57-narangi",
+    "UR-C57-lemu",
+    "UR-C57-nashta",
+    "UR-C57-kafi",
+    "UR-C57-ghar"
+  ],
+  "tex": "urdu/book/chapters/ch57-orange-lemon-breakfast-coffee-house.tex"
+}

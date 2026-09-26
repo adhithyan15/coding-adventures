@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:d1db20e34ff44c84",
+  "lessonIds": [
+    "ML-C136-sea",
+    "ML-C136-beach",
+    "ML-C136-pond",
+    "ML-C136-well",
+    "ML-C136-harbour"
+  ],
+  "tex": "malayalam/book/chapters/ch136-by-the-water.tex"
+}

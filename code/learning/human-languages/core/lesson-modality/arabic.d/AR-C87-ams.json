@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C87-ams",
+    "language": "arabic",
+    "chapter": 87,
+    "sequence": 3310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:967c2a3f5000d0c5"
+  },
+  "findings": []
+}

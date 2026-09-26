@@ -1,0 +1,11 @@
+{
+  "id": "UR-C127-lomri",
+  "pathSegment": "UR-PATH-127-THINGS127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-127-THINGS127",
+      "order": 1
+    }
+  ]
+}

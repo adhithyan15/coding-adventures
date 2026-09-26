@@ -1,0 +1,19 @@
+{
+  "chapter": 41,
+  "title": "Letter, Time, Name, Money, Mountain",
+  "label": "ch:ja-letter-time-name-money-mountain",
+  "canDo": "I can say a letter, time, a name, money and a mountain.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "JA-C41-yama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 41: i can say a letter, time, a name, money and a mountain.",
+    "assesses": [
+      "JA-LEX-C41-SCHOOL41-03",
+      "JA-LEX-C41-SCHOOL41-04",
+      "JA-LEX-C41-SCHOOL41-05"
+    ]
+  }
+}

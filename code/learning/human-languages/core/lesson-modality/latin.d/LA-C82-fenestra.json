@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C82-fenestra",
+    "language": "latin",
+    "chapter": 82,
+    "sequence": 2720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a64f059e54a05110"
+  },
+  "findings": []
+}

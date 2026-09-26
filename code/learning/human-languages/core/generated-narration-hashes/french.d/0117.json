@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:17cd6fb039459f13",
+  "lessonIds": [
+    "FR-C117-bottes",
+    "FR-C117-casquette",
+    "FR-C117-maillot",
+    "FR-C117-taille",
+    "FR-C117-portefeuille"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch117.txt",
+  "json": "french/narration/ch117.json",
+  "textHash": "fnv1a64:de777cfc67a625ce",
+  "jsonHash": "fnv1a64:cbd63537ff7885fe",
+  "findings": []
+}

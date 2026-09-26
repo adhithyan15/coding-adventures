@@ -8,20 +8,20 @@ type: writing
 headword: "ْ ّ ً"
 gloss: no vowel, doubled consonant, and the -an ending — three marks in one gentle step
 romanization: "sukūn, shadda, fatḥatan"
-prerequisites: [AR-W06-harakat-and-hamza]
+prerequisites: [AR-W06-harakat-and-hamza, AR-C02-mudarris, AR-C02-ahlan]
 sounds: [arabic-harakat]
 roots: [abjad-vowels]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-MUDARRIS, AR-LEX-ANCHOR-AHLAN]
 introduces:
   knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03]
+  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03, AR-LEX-ANCHOR-MUDARRIS, AR-LEX-ANCHOR-AHLAN]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W06-harakat-and-hamza, AR-C01-shukran]
 # ْ ّ ً — stop, double, or add *-an*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-MUDARRIS, AR-LEX-ANCHOR-AHLAN] -->
 
 [PAUSE 2s] You already know the three short-vowel marks. Keep those shapes in
 mind. This lesson adds exactly three more marks, one job at a time.

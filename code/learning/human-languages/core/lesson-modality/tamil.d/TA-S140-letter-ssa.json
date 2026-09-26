@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S140-letter-ssa",
+    "language": "tamil",
+    "chapter": 112,
+    "sequence": 4800,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1f1f4b302c0fb31a",
+    "detachableSegments": [
+      "Script you'll notice: ஷ",
+      "Writing: ஷ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

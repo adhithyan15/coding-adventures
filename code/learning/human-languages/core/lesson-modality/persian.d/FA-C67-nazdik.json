@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C67-nazdik",
+    "language": "persian",
+    "chapter": 67,
+    "sequence": 3270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d64d82399f5a02cf"
+  },
+  "findings": []
+}

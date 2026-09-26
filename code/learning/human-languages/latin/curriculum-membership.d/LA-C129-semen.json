@@ -1,0 +1,11 @@
+{
+  "id": "LA-C129-semen",
+  "pathSegment": "LA-PATH-129-THINGS129",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-129-THINGS129",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:0efdfdeb87170c5b",
+  "lessonIds": [
+    "TE-C87-mistake",
+    "TE-C87-exactly",
+    "TE-C87-probably",
+    "TE-C87-isee",
+    "TE-C87-really",
+    "TE-R87-second-pass-replies",
+    "TE-R87-second-pass-feelings"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch87.txt",
+  "json": "telugu/narration/ch87.json",
+  "textHash": "fnv1a64:1a21c5dbd9ca0236",
+  "jsonHash": "fnv1a64:a3d27474037cf0f0",
+  "findings": []
+}

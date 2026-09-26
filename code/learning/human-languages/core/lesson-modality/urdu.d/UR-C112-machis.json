@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C112-machis",
+    "language": "urdu",
+    "chapter": 112,
+    "sequence": 5850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c19e645053fbb410"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:59aa3de60e4ce85d",
+  "lessonIds": [
+    "TE-C95-intelugu",
+    "TE-C95-howsay",
+    "TE-C95-gently",
+    "TE-C95-show",
+    "TE-C95-didnthear",
+    "TE-R95-second-pass-asking",
+    "TE-R95-second-pass-health"
+  ],
+  "tex": "telugu/book/chapters/ch95-how-do-you-say-it.tex"
+}

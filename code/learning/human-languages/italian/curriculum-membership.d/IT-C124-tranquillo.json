@@ -1,0 +1,11 @@
+{
+  "id": "IT-C124-tranquillo",
+  "pathSegment": "IT-PATH-124-QUALITA124",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-124-QUALITA124",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C42-kawa",
+    "language": "japanese",
+    "chapter": 42,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0c0f35db3cf3bb5"
+  },
+  "findings": []
+}

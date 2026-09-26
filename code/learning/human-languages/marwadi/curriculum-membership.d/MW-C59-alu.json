@@ -1,0 +1,11 @@
+{
+  "id": "MW-C59-alu",
+  "pathSegment": "MW-PATH-59-VERBS59",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-59-VERBS59",
+      "order": 2
+    }
+  ]
+}

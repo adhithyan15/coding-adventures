@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-103-FREIZEIT",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "GE-EXT-103-FREIZEIT"
+  ],
+  "after": []
+}

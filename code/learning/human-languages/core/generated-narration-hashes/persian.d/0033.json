@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:14e33ad0cbd82505",
+  "lessonIds": [
+    "FA-C33-khale",
+    "FA-C33-shohar",
+    "FA-C33-hamsar",
+    "FA-C33-bachche",
+    "FA-C33-khanevade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch33.txt",
+  "json": "persian/narration/ch33.json",
+  "textHash": "fnv1a64:dccee8bc6be6d8a1",
+  "jsonHash": "fnv1a64:2db930afed861187",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C67-cheio",
+  "pathSegment": "PT-PATH-67-ADJ4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-67-ADJ4",
+      "order": 3
+    }
+  ]
+}

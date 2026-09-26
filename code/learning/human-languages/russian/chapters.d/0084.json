@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "In the daytime, In the evening, At night, Day after tomorrow, Day before yesterday",
+  "label": "ch:ru-in-the-daytime-in-the-evening-at-night-day-after-tomorrow-day-before-yesterday",
+  "canDo": "I can say in the daytime, in the evening, at night, the day after tomorrow and the day before yesterday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-C84-day-before-yesterday",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say in the daytime, in the evening, at night, the day after tomorrow and the day before yesterday.",
+    "assesses": [
+      "RU-LEX-C84-TIME84-03",
+      "RU-LEX-C84-TIME84-04",
+      "RU-LEX-C84-TIME84-05"
+    ]
+  }
+}

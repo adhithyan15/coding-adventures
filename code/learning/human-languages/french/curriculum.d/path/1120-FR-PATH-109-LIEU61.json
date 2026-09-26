@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-109-LIEU61",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "FR-EXT-109-LIEU61"
+  ],
+  "after": []
+}

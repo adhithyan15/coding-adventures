@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Necklace, Candle, Calendar, Letter, Message",
+  "label": "ch:it-necklace-candle-calendar-letter-message",
+  "canDo": "I can say a necklace, a candle, a calendar, a letter and a message.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C101-messaggio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say a necklace, a candle, a calendar, a letter and a message.",
+    "assesses": [
+      "IT-LEX-C101-OGGETTI101-03",
+      "IT-LEX-C101-OGGETTI101-04",
+      "IT-LEX-C101-OGGETTI101-05"
+    ]
+  }
+}

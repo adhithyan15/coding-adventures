@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C68-amarelo",
+    "language": "portuguese",
+    "chapter": 68,
+    "sequence": 3070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1aa1a46e9a0778a6"
+  },
+  "findings": []
+}

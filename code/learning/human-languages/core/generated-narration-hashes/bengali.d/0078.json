@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:77dd862c5c10bec1",
+  "lessonIds": [
+    "BN-C78-rat",
+    "BN-C78-sondhya",
+    "BN-C78-sokal",
+    "BN-C78-soptaho",
+    "BN-C78-mash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch78.txt",
+  "json": "bengali/narration/ch78.json",
+  "textHash": "fnv1a64:3464a57a2ac1365e",
+  "jsonHash": "fnv1a64:9530a34ee1d0b5e9",
+  "findings": []
+}

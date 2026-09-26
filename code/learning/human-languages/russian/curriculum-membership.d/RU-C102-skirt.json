@@ -1,0 +1,11 @@
+{
+  "id": "RU-C102-skirt",
+  "pathSegment": "RU-PATH-102-THINGS102",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-102-THINGS102",
+      "order": 1
+    }
+  ]
+}

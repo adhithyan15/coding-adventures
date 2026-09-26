@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:262af00d44be12b2",
+  "lessonIds": [
+    "AR-C86-jamil",
+    "AR-C86-bunni",
+    "AR-C86-usbu",
+    "AR-C86-shahr",
+    "AR-C86-daqiqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch86.txt",
+  "json": "arabic/narration/ch86.json",
+  "textHash": "fnv1a64:ba9555e49b4ee8e9",
+  "jsonHash": "fnv1a64:213725d1e10a2350",
+  "findings": []
+}

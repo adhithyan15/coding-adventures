@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:693aa19d29fc8835",
+  "lessonIds": [
+    "LA-C88-lapis",
+    "LA-C88-harena",
+    "LA-C88-collis",
+    "LA-C88-vallis",
+    "LA-C88-spelunca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch88.txt",
+  "json": "latin/narration/ch88.json",
+  "textHash": "fnv1a64:82f20f00b872849d",
+  "jsonHash": "fnv1a64:9f07fcb18a148e9b",
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-R45-the-last-page",
+    "language": "arabic",
+    "chapter": 45,
+    "sequence": 1271,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a09ba75ea3455821",
+    "detachableSegments": [
+      "Writing: the hook family, and the word it builds",
+      "Script: the mark that is not a vowel"
+    ]
+  },
+  "findings": []
+}

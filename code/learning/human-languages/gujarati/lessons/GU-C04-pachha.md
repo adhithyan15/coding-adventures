@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C04-pachha
 spine_node: SPINE-TAKE-LEAVE
-sequence: 260
+sequence: 273
 chapter: 10
 type: word
 headword: પાછા

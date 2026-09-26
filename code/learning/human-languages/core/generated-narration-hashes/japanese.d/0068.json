@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:7ab5b865e4abc37d",
+  "lessonIds": [
+    "JA-C68-oka",
+    "JA-C68-tani",
+    "JA-C68-inaka",
+    "JA-C68-minato",
+    "JA-C68-yuuhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch68.txt",
+  "json": "japanese/narration/ch68.json",
+  "textHash": "fnv1a64:a04f7454e255fc97",
+  "jsonHash": "fnv1a64:1ed06318328eeb23",
+  "findings": []
+}

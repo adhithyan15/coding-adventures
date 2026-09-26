@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:1c991f246f8c5233",
+  "lessonIds": [
+    "JA-C62-nimotsu",
+    "JA-C62-fune",
+    "JA-C62-oto",
+    "JA-C62-iro",
+    "JA-C62-katachi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch62.txt",
+  "json": "japanese/narration/ch62.json",
+  "textHash": "fnv1a64:fe7cb0c86a7355c0",
+  "jsonHash": "fnv1a64:258c1728155019c1",
+  "findings": []
+}

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Changed -- the fixture names the environment axes (UI48 ENV1)
+
+The literal start context in the tests sets `environment` to the defaults.
+
+### Changed -- the fixture names the new start-context field
+
+- The fixture's full `StartContext` literal names the new optional
+  `utc_offset_minutes: None` (UI38 "Local time").
+
 ### Added -- an `Await` effect a host never completes is now visible in props
 
 The fixture reports `awaitedEffects`: how many awaited effects it has emitted

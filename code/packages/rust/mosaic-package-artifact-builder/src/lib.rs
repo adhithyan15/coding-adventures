@@ -764,7 +764,7 @@ fn compose_component_with_model_and_style_options(
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
-    resolve_layout_package_references(
+    let renames = resolve_layout_package_references(
         component,
         &mut layout,
         &model.descriptor_json,
@@ -779,6 +779,7 @@ fn compose_component_with_model_and_style_options(
     )
     .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let mut style = merge_dependency_styles(own_style.def, dependency_style_parts);
+    copy_styles_for_renamed_parts(&mut style, &renames);
 
     // #15169 -- resolve `currentColor` here, at the ONE place both entry
     // points build a `ComposedComponent`, so the answer cannot differ
@@ -1182,6 +1183,15 @@ fn compose_runtime_destination(path: &Path) -> Result<(&'static str, &'static st
     Ok((platform, file_name))
 }
 
+/// Whether a selected runtime is an `.xcframework` -- a directory holding a
+/// static library per platform, linked into a SwiftUI package for iOS and
+/// iPadOS (UI89 §2.1) -- rather than a single cdylib file.
+fn is_xcframework(path: &Path) -> bool {
+    path.extension()
+        .and_then(|value| value.to_str())
+        .is_some_and(|extension| extension.eq_ignore_ascii_case("xcframework"))
+}
+
 fn validate_runtime_library_selection(
     opts: &BuildOptions,
     runtime_library: Option<&Path>,
@@ -1189,6 +1199,33 @@ fn validate_runtime_library_selection(
     let Some(path) = runtime_library else {
         return Ok(());
     };
+    if is_xcframework(path) {
+        if opts.backend != Backend::SwiftUI {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "an .xcframework runtime is linked statically, which only the SwiftUI backend does"
+                    .to_string(),
+            });
+        }
+        if !opts.emit_project {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "--runtime-library requires --emit-project".to_string(),
+            });
+        }
+        // Checked without following a link: the directory itself, and its
+        // manifest, must be real.
+        let is_dir = fs::symlink_metadata(path).is_ok_and(|meta| meta.is_dir());
+        let has_manifest = fs::symlink_metadata(path.join("Info.plist")).is_ok_and(|meta| meta.is_file());
+        if !is_dir || !has_manifest {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "an .xcframework must be a directory with an Info.plist (xcodebuild -create-xcframework)"
+                    .to_string(),
+            });
+        }
+        return Ok(());
+    }
     if !matches!(
         opts.backend,
         Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI | Backend::Xaml
@@ -1581,6 +1618,51 @@ fn install_xaml_runtime_library(source: &Path, backend_dir: &Path) -> Result<Pat
     })?;
     write_file(&target, &bytes)?;
     Ok(target)
+}
+
+/// Copy a statically built runtime's `.xcframework` into the package, where
+/// its `Package.swift` links it (UI89 §2.1). Only directories and regular
+/// files are copied: a symbolic link inside the framework is refused rather
+/// than followed, so the copy cannot read outside the directory selected.
+fn install_swiftui_static_runtime(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
+    let target = backend_dir.join(mosaic_app_bindings::SWIFT_STATIC_RUNTIME_PATH);
+    if target.exists() {
+        fs::remove_dir_all(&target).map_err(|error| BuildError::InvalidRuntimeLibrary {
+            path: target.clone(),
+            reason: format!("cannot replace the previous runtime: {error}"),
+        })?;
+    }
+    copy_directory_without_links(source, &target)?;
+    Ok(target)
+}
+
+fn copy_directory_without_links(source: &Path, target: &Path) -> Result<(), BuildError> {
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason,
+    };
+    create_dir_all(target)?;
+    let entries = fs::read_dir(source).map_err(|error| refuse(format!("cannot read: {error}")))?;
+    for entry in entries {
+        let entry = entry.map_err(|error| refuse(format!("cannot read: {error}")))?;
+        let kind = entry
+            .file_type()
+            .map_err(|error| refuse(format!("cannot read: {error}")))?;
+        let destination = target.join(entry.file_name());
+        if kind.is_symlink() {
+            return Err(refuse(format!(
+                "{} is a symbolic link; an .xcframework runtime must contain only files and directories",
+                entry.path().display()
+            )));
+        } else if kind.is_dir() {
+            copy_directory_without_links(&entry.path(), &destination)?;
+        } else if kind.is_file() {
+            let bytes = fs::read(entry.path())
+                .map_err(|error| refuse(format!("cannot read {}: {error}", entry.path().display())))?;
+            write_file(&destination, &bytes)?;
+        }
+    }
+    Ok(())
 }
 
 fn install_swiftui_runtime_library(
@@ -2675,6 +2757,17 @@ fn build_package_inner(
     // written into `backend_dir` alongside the per-component
     // artifacts. The per-emitter banner contract (UI32 spec §3.5)
     // means a re-build overwrites them deterministically.
+    // Compose components call their platform's half of drag and drop
+    // (UI89 §3.4); the desktop one ships beside them in every Compose build.
+    if matches!(opts.backend, Backend::Compose) && !components_built.is_empty() {
+        let platform = backend_dir.join("MosaicPlatform.kt");
+        write_file(
+            &platform,
+            mosaic_emit_compose::pipeline::DESKTOP_PLATFORM_KT.as_bytes(),
+        )?;
+        artifacts.push(platform);
+    }
+
     if opts.emit_project {
         if let Some(first_component) = components_built.first() {
             let shell_artifacts = emit_project_shell(ProjectShellOptions {
@@ -2692,6 +2785,7 @@ fn build_package_inner(
                 host_asset_dependencies: &manifest.host_assets.dependencies,
                 host_effects: &manifest.host_effects,
                 initial_window_size: manifest.app.initial_window_size.as_ref(),
+                layouts: &manifest.app.layouts,
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -2744,6 +2838,9 @@ fn build_package_inner(
             Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
             Backend::Flutter => install_flutter_runtime_library(source, &backend_dir)?,
             Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
+            Backend::SwiftUI if is_xcframework(source) => {
+                install_swiftui_static_runtime(source, &backend_dir)?
+            }
             Backend::SwiftUI => install_swiftui_runtime_library(source, &backend_dir)?,
             Backend::Xaml => install_xaml_runtime_library(source, &backend_dir)?,
             _ => unreachable!("runtime library selection was validated before emission"),
@@ -2751,11 +2848,131 @@ fn build_package_inner(
         artifacts.push(target);
     }
 
+    // An .xcframework runtime means iOS / iPadOS: add the app target Xcode
+    // needs to produce an .app (UI89 §2.2). Last, so the project lists every
+    // source the installers above added, the way SwiftPM compiles whatever is
+    // under Sources/App.
+    if opts.emit_project && matches!(opts.backend, Backend::SwiftUI) {
+        if let (Some(root_component), true) = (
+            components_built.first(),
+            runtime_library.is_some_and(is_xcframework),
+        ) {
+            artifacts.extend(write_ios_app_project(&manifest, &backend_dir, root_component)?);
+        }
+    }
+
     Ok(BuildResult {
         artifacts,
         components_built,
         replaced_generated_files,
     })
+}
+
+/// Write `iOS/App.xcodeproj/project.pbxproj` for a SwiftUI package built with a
+/// static runtime, plus the module map that lets Swift import the C loader in
+/// both the Xcode project and the Swift package (UI89 §2.2).
+fn write_ios_app_project(
+    manifest: &MosaicPackage,
+    backend_dir: &Path,
+    root_component: &str,
+) -> Result<Vec<PathBuf>, BuildError> {
+    const LOADER_INCLUDE: &str = "Sources/CMosaicRuntime/include";
+    let mut written = Vec::new();
+
+    let module_map = backend_dir.join(LOADER_INCLUDE).join("module.modulemap");
+    write_file(
+        &module_map,
+        mosaic_ios_project::module_map("CMosaicRuntime", "CMosaicRuntime.h").as_bytes(),
+    )?;
+    written.push(module_map);
+
+    let app = mosaic_ios_project::IosApp {
+        product_name: "App".to_string(),
+        display_name: manifest
+            .app
+            .display_name
+            .clone()
+            .unwrap_or_else(|| root_component.to_string()),
+        bundle_identifier: manifest.app.bundle_identifier.clone().unwrap_or_else(|| {
+            mosaic_ios_project::default_bundle_identifier(&manifest.package.name)
+        }),
+        // Apple's marketing version is dot-separated integers; a pre-release
+        // suffix (`1.2.3-rc.4`) stays in the package, not the app.
+        marketing_version: manifest
+            .package
+            .version
+            .split(['-', '+'])
+            .next()
+            .unwrap_or("0.1.0")
+            .to_string(),
+        deployment_target: "16.0".to_string(),
+        swift_sources: project_files(backend_dir, "Sources/App", "swift")?,
+        c_sources: project_files(backend_dir, "Sources/CMosaicRuntime", "c")?,
+        headers: project_files(backend_dir, "Sources/CMosaicRuntime", "h")?,
+        header_search_paths: vec![LOADER_INCLUDE.to_string()],
+        swift_include_paths: vec![LOADER_INCLUDE.to_string()],
+        preprocessor_definitions: vec!["MOSAIC_RUNTIME_STATIC=1".to_string()],
+        xcframeworks: vec![mosaic_app_bindings::SWIFT_STATIC_RUNTIME_PATH.to_string()],
+        // The project lives in iOS/, so `xcodebuild` in the package directory
+        // still builds the Swift package rather than picking this project up.
+        source_root: "..".to_string(),
+    };
+    let project = mosaic_ios_project::project_pbxproj(&app)
+        .map_err(|error| BuildError::Io(format!("iOS app project: {error}")))?;
+    let project_path = backend_dir.join("iOS/App.xcodeproj/project.pbxproj");
+    if let Some(parent) = project_path.parent() {
+        create_dir_all(parent)?;
+    }
+    write_file(&project_path, project.as_bytes())?;
+    written.push(project_path);
+    Ok(written)
+}
+
+/// Every `.{extension}` file under `backend_dir/relative`, as sorted
+/// `/`-separated paths relative to `backend_dir`. Symbolic links are refused:
+/// the project compiles what it lists, and a link could name a file outside
+/// the package.
+fn project_files(
+    backend_dir: &Path,
+    relative: &str,
+    extension: &str,
+) -> Result<Vec<String>, BuildError> {
+    let mut found = Vec::new();
+    let mut pending = vec![backend_dir.join(relative)];
+    while let Some(directory) = pending.pop() {
+        if !directory.exists() {
+            continue;
+        }
+        for entry in std::fs::read_dir(&directory)
+            .map_err(|error| BuildError::Io(format!("{}: {error}", directory.display())))?
+        {
+            let path = entry
+                .map_err(|error| BuildError::Io(format!("{}: {error}", directory.display())))?
+                .path();
+            let metadata = std::fs::symlink_metadata(&path)
+                .map_err(|error| BuildError::Io(format!("{}: {error}", path.display())))?;
+            if metadata.file_type().is_symlink() {
+                return Err(BuildError::Io(format!(
+                    "{} is a symbolic link; the iOS app project lists only real files",
+                    path.display()
+                )));
+            }
+            if metadata.is_dir() {
+                pending.push(path);
+            } else if path.extension().is_some_and(|found| found == extension) {
+                let relative = path
+                    .strip_prefix(backend_dir)
+                    .map_err(|_| BuildError::Io(format!("{} left the project", path.display())))?;
+                let parts: Vec<String> = relative
+                    .components()
+                    .map(|part| part.as_os_str().to_string_lossy().into_owned())
+                    .collect();
+                found.push(parts.join("/"));
+            }
+        }
+    }
+    found.sort();
+    Ok(found)
 }
 
 /// Copy a package's `[host_effects]` files into the emitted project.
@@ -3431,6 +3648,8 @@ struct ProjectShellOptions<'a> {
     /// Optional application-owned initial desktop window dimensions. Browser
     /// and mobile shells deliberately ignore this project-shell metadata.
     initial_window_size: Option<&'a WindowSize>,
+    /// `[[app.layouts]]` (UI48 §7.2).
+    layouts: &'a [mosaic_package_manifest::layouts::LayoutRule],
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -3449,6 +3668,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         host_asset_dependencies,
         host_effects,
         initial_window_size,
+        layouts,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -3471,8 +3691,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
 
     let mil_src = read_to_string(&mil_path)?;
     let mll_src = read_to_string(&mll_path)?;
-    let msl_src = if let Some(msl_path) = msl_path {
-        read_to_string(&msl_path)?
+    let msl_src = if let Some(msl_path) = &msl_path {
+        read_to_string(msl_path)?
     } else {
         format!("style {component} {{ }}")
     };
@@ -3761,18 +3981,25 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 written.push(p);
             }
 
+            let sources = build_compose_main_kt(
+                component,
+                &mosmodel_out.component.slots,
+                require_runtime,
+                initial_window_size,
+            );
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
-            let main_kt = compose_main_with_host_effects(
-                &build_compose_main_kt(
-                    component,
-                    &mosmodel_out.component.slots,
-                    require_runtime,
-                    initial_window_size,
-                ),
-                host_effects,
-            )?;
+            let main_kt = compose_main_with_host_effects(&sources.main, host_effects)?;
             write_file(&main_nested, main_kt.as_bytes())?;
             written.push(main_nested);
+            let shell_nested = backend_dir.join("src/main/kotlin/MosaicAppShell.kt");
+            write_file(&shell_nested, sources.shell.as_bytes())?;
+            written.push(shell_nested);
+            let platform_nested = backend_dir.join("src/main/kotlin/MosaicPlatform.kt");
+            write_file(
+                &platform_nested,
+                mosaic_emit_compose::pipeline::DESKTOP_PLATFORM_KT.as_bytes(),
+            )?;
+            written.push(platform_nested);
 
             // A package shell is also the package's native compile boundary.
             // Keep every exported component in Gradle's source set, even
@@ -3793,6 +4020,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 mosaic_app_bindings::compose_jna_binding_for_application(package_name).as_bytes(),
             )?;
             written.push(host_nested);
+
+            // The platform library every Compose app gets (UI87 §7): the
+            // standard file effects, and the router Main.kt installs.
+            let platform_nested = backend_dir.join("src/main/kotlin/MosaicPlatformEffects.kt");
+            write_file(
+                &platform_nested,
+                mosaic_app_bindings::compose_platform_effects().as_bytes(),
+            )?;
+            written.push(platform_nested);
         }
         Backend::Qt => {
             let require_runtime = project_shell_requires_runtime(profile, runtime_library);
@@ -3885,9 +4121,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
         }
         Backend::SwiftUI => {
+            let layout_variants = swiftui_layout_choices(src_dir, component, layouts)?;
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
+                layout_variants: layout_variants.clone(),
                 ..Default::default()
             };
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
@@ -3898,25 +4136,39 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let bundle_runtime = runtime_library.is_some();
-                let package_swift = mosaic_app_bindings::swift_package_with_runtime_binding(
+                // A cdylib is bundled as a resource and dlopen'd (macOS); an
+                // .xcframework is linked statically (iOS/iPadOS, UI89 §2.1).
+                let static_runtime = runtime_library.is_some_and(is_xcframework);
+                let bundle_runtime = runtime_library.is_some() && !static_runtime;
+                let bound_package = mosaic_app_bindings::swift_package_with_runtime_binding(
                     &proj.package_swift,
                     bundle_runtime,
                 );
+                let package_swift = if static_runtime {
+                    mosaic_app_bindings::swift_package_with_static_runtime(&bound_package)
+                } else {
+                    bound_package
+                };
                 let app_swift = swift_app_with_initial_window_size(
-                    &swift_app_with_host_effects(
-                        &mosaic_app_bindings::swift_app_with_runtime_binding(
-                            &proj.app_swift,
-                            bundle_runtime,
-                        ),
-                        host_effects,
+                    &swift_app_with_color_scheme(
+                        &swift_app_with_host_effects(
+                            &mosaic_app_bindings::swift_app_with_runtime_binding(
+                                &proj.app_swift,
+                                bundle_runtime,
+                            ),
+                            host_effects,
+                        )?,
+                        compiled_color_scheme(msl_path.as_deref(), component),
+                        component,
                     )?,
                     initial_window_size,
                     component,
                 )?;
                 let runtime_binding =
                     mosaic_app_bindings::swift_runtime_binding_for_application(package_name);
-                let runtime_distribution = if bundle_runtime {
+                let runtime_distribution = if static_runtime {
+                    "The selected target Rust engine is an `.xcframework` of static libraries, linked into the package at `Runtime/MosaicAppRuntime.xcframework` (iOS and iPadOS do not allow loading an app's own dylib; UI89). The loader calls it directly; no environment variable applies."
+                } else if bundle_runtime {
                     "The selected target Rust engine is copied into SwiftPM's `Runtime` resource bundle and resolved through `Bundle.module`; no environment variable or global library install is required."
                 } else {
                     "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the target dylib path. Strict SwiftUI builds should be regenerated with `--runtime-library <target cdylib>`."
@@ -3963,6 +4215,14 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                         backend_dir.join(format!("Sources/App/{exported_component}.swift"));
                     write_file(&component_nested, component_source.as_bytes())?;
                     written.push(component_nested);
+                }
+                // And the root's layout variants the shell can switch to.
+                for choice in &layout_variants {
+                    let file = format!("{component}.{}.swift", choice.variant);
+                    let source = read_to_string(&backend_dir.join(&file))?;
+                    let nested = backend_dir.join("Sources/App").join(&file);
+                    write_file(&nested, source.as_bytes())?;
+                    written.push(nested);
                 }
             }
         }
@@ -4371,6 +4631,104 @@ fn xaml_main_with_initial_window_size(
         size.width, size.height
     );
     replace_unique_generated_statement(generated, initialize, &resized, component, Backend::Xaml)
+}
+
+/// The layout variants a SwiftUI shell switches between (UI48 §7.2): the
+/// package's `[[app.layouts]]` rules, or the conventional ones for the
+/// variants the root component has. A rule for a variant with no
+/// `<Component>.<variant>.mll` is an error, not a silently dead rule.
+fn swiftui_layout_choices(
+    src_dir: &Path,
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+) -> Result<Vec<mosaic_emit_swiftui::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = discover_variants(src_dir, component)?
+        .into_iter()
+        .flatten()
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            if !variants.contains(&rule.variant) {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            }
+            Ok(mosaic_emit_swiftui::pipeline::LayoutChoice {
+                variant: rule.variant,
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.key().to_string(), value))
+                    .collect(),
+            })
+        })
+        .collect()
+}
+
+/// The color scheme a stylesheet was written for, from its file name:
+/// `<Component>.dark.msl` is dark, `<Component>.light.msl` light, anything
+/// else (a theme-neutral `<Component>.msl`, another theme name) none (UI32).
+fn compiled_color_scheme(stylesheet: Option<&Path>, component: &str) -> Option<&'static str> {
+    let name = stylesheet?.file_name()?.to_str()?;
+    match name.strip_prefix(component)? {
+        ".dark.msl" => Some("dark"),
+        ".light.msl" => Some("light"),
+        _ => None,
+    }
+}
+
+/// Tell the platform which scheme the app was compiled for, so the status
+/// bar, window chrome and the background behind the root view match it
+/// (UI32, "The shell declares its compiled color scheme"). Inserted just
+/// before the generated `WindowGroup`'s close, chained onto the root view,
+/// using the same anchors [`swift_app_with_initial_window_size`] trusts.
+fn swift_app_with_color_scheme(
+    generated: &str,
+    scheme: Option<&str>,
+    component: &str,
+) -> Result<String, BuildError> {
+    let Some(scheme) = scheme else {
+        return Ok(generated.to_string());
+    };
+    let window_group = format!("WindowGroup(\"{component}\") {{");
+    let openings = find_all_anchored(generated, &window_group, |prefix| {
+        prefix
+            .chars()
+            .all(|character| character.is_ascii_whitespace())
+    });
+    let anchor_error = |detail: String| {
+        BuildError::Io(format!(
+            "SwiftUI shell for {component}: cannot declare its color scheme: {detail}"
+        ))
+    };
+    if openings.len() != 1 {
+        return Err(anchor_error(format!(
+            "expected one line-leading {window_group:?} anchor, found {}",
+            openings.len()
+        )));
+    }
+    let start = openings[0];
+    let end = generated[start..]
+        .find("class MosaicHostState")
+        .map(|relative| start + relative)
+        .unwrap_or(generated.len());
+    const TERMINATOR: &str = "\n    }\n  }\n";
+    let closes: Vec<usize> = generated[start..end]
+        .match_indices(TERMINATOR)
+        .map(|(relative, _)| start + relative)
+        .collect();
+    if closes.len() != 1 {
+        return Err(anchor_error(format!(
+            "expected one WindowGroup terminator before MosaicHostState, found {}",
+            closes.len()
+        )));
+    }
+    let mut out = generated.to_string();
+    out.insert_str(closes[0], &format!("\n      .preferredColorScheme(.{scheme})"));
+    Ok(out)
 }
 
 fn swift_app_with_initial_window_size(
@@ -4782,6 +5140,13 @@ fn swift_app_with_host_effects(
 /// the concrete `MosaicRuntimeHost`. `as?` also covers the non-`native-complete`
 /// shape, where the host falls back to `MosaicComposeHostBridge` and there is
 /// nothing to install onto.
+///
+/// Every Compose app also gets the platform library (UI87 §7): after the
+/// package's handler, if any, `Main.kt` installs `installMosaicPlatformEffects`,
+/// which wraps that handler and routes each effect by kind. The handler's
+/// `kinds` (validated in the manifest to a shape with no quote or backslash)
+/// become the set the router checks; without `kinds`, `null` keeps the original
+/// meaning.
 fn compose_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
@@ -4791,7 +5156,7 @@ fn compose_main_with_host_effects(
         .iter()
         .find(|handler| handler.backend == "compose")
     else {
-        return Ok(generated.to_string());
+        return Ok(compose_main_with_platform_effects(generated, None));
     };
 
     // Kotlin has no `#include`, so a declared one would be silently dropped --
@@ -4861,8 +5226,51 @@ fn compose_main_with_host_effects(
         handler.install
     )
     .expect("write Compose host-effect install");
+    writeln!(out, "{}", compose_platform_install_line(&indent, handler.kinds.as_deref()))
+        .expect("write Compose platform-effects install");
     out.push_str(&generated[line_end..]);
     Ok(out)
+}
+
+/// The `Main.kt` line that installs the platform library (UI87 §7.2).
+fn compose_platform_install_line(indent: &str, kinds: Option<&[String]>) -> String {
+    let claimed = match kinds {
+        None => "null".to_string(),
+        Some(kinds) => format!(
+            "setOf({})",
+            kinds
+                .iter()
+                .map(|kind| format!("\"{kind}\""))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+    };
+    format!(
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n\
+         {indent}(mosaicHost as? MosaicRuntimeHost)?.let {{ installMosaicPlatformEffects(it, {claimed}) }}"
+    )
+}
+
+/// `Main.kt` for a package that declares no Compose handler: the platform
+/// library alone. An entry point without the host anchor (not a shape the
+/// generator produces today) is left as it is -- nothing was declared, so
+/// there is nothing to refuse.
+fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>) -> String {
+    const ANCHOR: &str = "val mosaicHost =";
+    let Some(at) = line_anchored_find(generated, ANCHOR) else {
+        return generated.to_string();
+    };
+    let line_start = generated[..at].rfind('\n').map_or(0, |index| index + 1);
+    let indent: String = generated[line_start..at].to_string();
+    let line_end = generated[at..]
+        .find('\n')
+        .map_or(generated.len(), |index| at + index + 1);
+    let mut out = String::with_capacity(generated.len() + 192);
+    out.push_str(&generated[..line_end]);
+    out.push_str(&compose_platform_install_line(&indent, kinds));
+    out.push('\n');
+    out.push_str(&generated[line_end..]);
+    out
 }
 
 /// Install a package's effect handler in the generated Flutter entry point.
@@ -5217,12 +5625,20 @@ fn build_compose_build_gradle_kts(
     )
 }
 
+/// The Compose app's two Kotlin sources (UI89 §3.4): `Main.kt`, the desktop
+/// entry point (window and host loader), and `MosaicAppShell.kt`, the app
+/// shell every Compose platform shares.
+struct ComposeShellSources {
+    main: String,
+    shell: String,
+}
+
 fn build_compose_main_kt(
     component_name: &str,
     slots: &[SlotDecl],
     require_runtime: bool,
     initial_window_size: Option<&WindowSize>,
-) -> String {
+) -> ComposeShellSources {
     let root = build_compose_root_invocation(component_name, slots, require_runtime);
     let component_label = escape_kotlin_string(component_name);
     let host_loader = if require_runtime {
@@ -5253,14 +5669,9 @@ fn build_compose_main_kt(
     };
     let (window_imports, window_state_argument) = match initial_window_size {
         Some(size) => (
-            format!(
-                "import androidx.compose.ui.unit.DpSize\n{}import androidx.compose.ui.window.rememberWindowState\n",
-                if require_runtime {
-                    ""
-                } else {
-                    "import androidx.compose.ui.unit.dp\n"
-                }
-            ),
+            // Main.kt imports `dp` itself: since the split (UI89 §3.4) the
+            // startup imports that used to supply it are in MosaicAppShell.kt.
+            "import androidx.compose.ui.unit.DpSize\nimport androidx.compose.ui.unit.dp\nimport androidx.compose.ui.window.rememberWindowState\n".to_string(),
             format!(
                 ", state = rememberWindowState(size = DpSize({}.dp, {}.dp))",
                 size.width, size.height
@@ -5318,17 +5729,13 @@ fn build_compose_main_kt(
         "    val mosaicHost = remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }\n"
     };
     let window_body = if require_runtime {
-        "        MosaicStartup()\n"
+        "        MosaicStartup(::loadMosaicHost)\n"
     } else {
         "        MosaicApp(mosaicHost)\n"
     };
     let strict_startup = if require_runtime {
         format!(
             concat!(
-                "private fun loadMosaicHost(): MosaicComposeHost {{\n",
-                "    val mosaicHost = {host_loader}\n",
-                "    return mosaicHost\n",
-                "}}\n\n",
                 "private sealed interface MosaicStartupState {{\n",
                 "    data object Loading : MosaicStartupState\n",
                 "    data class Ready(\n",
@@ -5339,7 +5746,7 @@ fn build_compose_main_kt(
                 "}}\n\n",
                 "@Composable\n",
                 "fun MosaicStartup(\n",
-                "    loadHost: () -> MosaicComposeHost = ::loadMosaicHost,\n",
+                "    loadHost: () -> MosaicComposeHost,\n",
                 "    content: @Composable (MosaicComposeHost, Map<String, Any?>) -> Unit =\n",
                 "        {{ host, response -> MosaicApp(host, response) }},\n",
                 ") {{\n",
@@ -5394,8 +5801,22 @@ fn build_compose_main_kt(
                 "    }}\n",
                 "}}\n\n",
             ),
-            host_loader = host_loader,
             component_label = component_label,
+        )
+    } else {
+        String::new()
+    };
+    // The platform half of a strict app: load the host (package effect
+    // handlers are installed here, see `compose_main_with_host_effects`).
+    let load_host = if require_runtime {
+        format!(
+            concat!(
+                "private fun loadMosaicHost(): MosaicComposeHost {{\n",
+                "    val mosaicHost = {host_loader}\n",
+                "    return mosaicHost\n",
+                "}}\n",
+            ),
+            host_loader = host_loader,
         )
     } else {
         String::new()
@@ -5409,7 +5830,7 @@ fn build_compose_main_kt(
         ""
     } else {
         concat!(
-            "private class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {\n",
+            "internal class MosaicComposeHostBridge(private val instance: Any) : MosaicComposeHost {\n",
             "    override fun props(): Map<String, Any?>? = invokeMap(\"props\")\n",
             "    override fun handleEvent(event: Map<String, Any?>): Map<String, Any?>? = invokeMap(\"handleEvent\", event)\n\n",
             "    override fun setPropsChangedHandler(handler: (() -> Unit)?) { invoke(\"setPropsChangedHandler\", handler) }\n",
@@ -5436,18 +5857,12 @@ fn build_compose_main_kt(
     } else {
         ""
     };
-    format!(
+    let main = format!(
         concat!(
             "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
-            "import androidx.compose.material.MaterialTheme\n",
-            "{startup_import}",
-            "import androidx.compose.runtime.Composable\n",
-            "import androidx.compose.runtime.DisposableEffect\n",
-            "import androidx.compose.runtime.LaunchedEffect\n",
-            "import androidx.compose.runtime.getValue\n",
-            "import androidx.compose.runtime.mutableStateOf\n",
+            "// The desktop half of the app (UI89 §3.4): the window and the host\n",
+            "// loader. Everything shared with Android is in MosaicAppShell.kt.\n",
             "import androidx.compose.runtime.remember\n",
-            "import androidx.compose.runtime.setValue\n",
             "{window_imports}",
             "import androidx.compose.ui.window.Window\n",
             "import androidx.compose.ui.window.application\n\n",
@@ -5456,7 +5871,30 @@ fn build_compose_main_kt(
             "    Window(onCloseRequest = ::exitApplication, title = \"{}\"{window_state_argument}) {{\n",
             "{window_body}",
             "    }}\n",
-            "}}\n\n",
+            "}}\n",
+            "{load_host_separator}{load_host}",
+        ),
+        component_label,
+        window_imports = window_imports,
+        window_state_argument = window_state_argument,
+        main_host = main_host,
+        window_body = window_body,
+        load_host_separator = if load_host.is_empty() { "" } else { "\n" },
+        load_host = load_host,
+    );
+    let shell = format!(
+        concat!(
+            "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "// The app shell shared by every Compose platform (UI89 §3.4).\n",
+            "import androidx.compose.material.MaterialTheme\n",
+            "{startup_import}",
+            "import androidx.compose.runtime.Composable\n",
+            "import androidx.compose.runtime.DisposableEffect\n",
+            "import androidx.compose.runtime.LaunchedEffect\n",
+            "import androidx.compose.runtime.getValue\n",
+            "import androidx.compose.runtime.mutableStateOf\n",
+            "import androidx.compose.runtime.remember\n",
+            "import androidx.compose.runtime.setValue\n\n",
             "{strict_startup}",
             "interface MosaicComposeHost : AutoCloseable {{\n",
             "    fun props(): Map<String, Any?>?\n",
@@ -5536,12 +5974,7 @@ fn build_compose_main_kt(
             "): @Composable () -> Unit =\n",
             "    props[name] as? (@Composable () -> Unit) ?: fallback\n",
         ),
-        component_label,
         startup_import = startup_import,
-        window_imports = window_imports,
-        window_state_argument = window_state_argument,
-        main_host = main_host,
-        window_body = window_body,
         strict_startup = strict_startup,
         app_signature = app_signature,
         initial_props_decl = initial_props_decl,
@@ -5550,7 +5983,8 @@ fn build_compose_main_kt(
         root_body = root_body,
         legacy_bridge = legacy_bridge,
         required_helpers = required_helpers,
-    )
+    );
+    ComposeShellSources { main, shell }
 }
 
 fn build_compose_required_prop_helpers() -> &'static str {
@@ -6021,11 +6455,21 @@ fn compile_one_component(
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
-        Backend::SwiftUI => mosaic_emit_swiftui::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant names its own view and shares the default's event
+        // type, so one app can carry every variant (UI48 ENV2).
+        Backend::SwiftUI => match variant {
+            None => mosaic_emit_swiftui::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+            Some(variant) => mosaic_emit_swiftui::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::Qt => mosaic_emit_qt::pipeline::from_pipeline(
@@ -6207,11 +6651,11 @@ fn resolve_layout_package_references(
     layout_out: &mut moslayout_compiler::CompileOutput,
     descriptor_json: &str,
     package_search_paths: &[PathBuf],
-) -> Result<(), BuildError> {
+) -> Result<Vec<mosaic_package_resolver::PartRename>, BuildError> {
     let resolver =
         mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec());
-    resolver
-        .resolve(&mut layout_out.def)
+    let renames = resolver
+        .resolve_with_renames(&mut layout_out.def)
         .map_err(|e| BuildError::PackageReferenceError {
             component: component.to_string(),
             error: e.to_string(),
@@ -6229,7 +6673,53 @@ fn resolve_layout_package_references(
     layout_out.parts = resolved_parts;
     layout_out.part_map_json =
         moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
-    Ok(())
+    Ok(renames)
+}
+
+/// Give each part renamed for a second (third, …) mount a copy of the
+/// original part's style, every state included, so the n-th mount renders
+/// like the first (UI34 §5 step 4). A style the consumer wrote for the
+/// renamed part itself wins, and no copy is made. Each copy sits right after
+/// its source. With no renames (every component mounted once) the style is
+/// untouched.
+///
+/// One pass, linear in parts plus renames: a package can inline a component
+/// many times over, so this must not scan the style once per rename.
+fn copy_styles_for_renamed_parts(
+    style: &mut mosstyle_compiler::StyleDef,
+    renames: &[mosaic_package_resolver::PartRename],
+) {
+    if renames.is_empty() {
+        return;
+    }
+    let existing: HashSet<&str> = style.parts.iter().map(|part| part.name.as_str()).collect();
+    let mut copies: HashMap<&str, Vec<&str>> = HashMap::new();
+    let mut seen: HashSet<&str> = HashSet::new();
+    for rename in renames {
+        if existing.contains(rename.to.as_str()) || !seen.insert(rename.to.as_str()) {
+            continue;
+        }
+        copies
+            .entry(rename.from.as_str())
+            .or_default()
+            .push(rename.to.as_str());
+    }
+    let mut parts = Vec::with_capacity(style.parts.len() + seen.len());
+    let mut copied: HashSet<&str> = HashSet::new();
+    for part in &style.parts {
+        parts.push(part.clone());
+        // Only the first part of a name carries its copies.
+        if let Some(names) = copies.get(part.name.as_str()) {
+            if copied.insert(part.name.as_str()) {
+                for name in names {
+                    let mut copy = part.clone();
+                    copy.name = (*name).to_string();
+                    parts.push(copy);
+                }
+            }
+        }
+    }
+    style.parts = parts;
 }
 
 fn collect_dependency_style_parts(
@@ -9949,7 +10439,9 @@ layout NativeEvents {
         let report = fs::read_to_string(report_path).unwrap();
         assert!(report.contains("\"nativeComplete\": true"));
 
-        let main = fs::read_to_string(out.path().join("compose/src/main/kotlin/Main.kt")).unwrap();
+        let main = fs::read_to_string(out.path().join("compose/src/main/kotlin/Main.kt")).unwrap()
+            + &fs::read_to_string(out.path().join("compose/src/main/kotlin/MosaicAppShell.kt"))
+                .unwrap();
         assert!(main.contains(
             "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
         ));
@@ -10406,6 +10898,305 @@ layout NativeEvents {
         assert!(report.contains("runtime.library-not-bundled"));
         assert!(report.contains("--runtime-library <target cdylib>"));
         assert!(!out.path().join("swiftui/Package.swift").exists());
+    }
+
+    fn card_package() -> TempDir {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(pkg.path().join("src/Card.mil"), "component Card { slot label : text ; }\n").unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        pkg
+    }
+
+    fn fake_xcframework(root: &Path) -> PathBuf {
+        let framework = root.join("CardRuntime.xcframework");
+        fs::create_dir_all(framework.join("ios-arm64")).unwrap();
+        fs::write(framework.join("Info.plist"), b"<plist/>").unwrap();
+        fs::write(framework.join("ios-arm64/libcard.a"), b"static-runtime").unwrap();
+        framework
+    }
+
+    fn swiftui_options(pkg: &TempDir, out: &TempDir, backend: Backend) -> BuildOptions {
+        BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: true,
+            theme: None,
+        }
+    }
+
+    // UI48 ENV2/ENV3: every layout variant in one SwiftUI app, and a
+    // selector to switch between them.
+
+    fn card_package_with_touch_variant() -> TempDir {
+        let pkg = card_package();
+        fs::write(
+            pkg.path().join("src/Card.touch.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        pkg
+    }
+
+    #[test]
+    fn a_swiftui_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let variant =
+            fs::read_to_string(out.path().join("swiftui/Sources/App/Card.touch.swift")).unwrap();
+        assert!(variant.contains("struct CardTouchView: View {"), "{variant}");
+        assert!(!variant.contains("enum CardEvent"), "{variant}");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(app.contains("case \"touch\":"), "{app}");
+        assert!(
+            app.contains("if environment.value(\"pointer\") == \"coarse\" { return \"touch\" }"),
+            "{app}"
+        );
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_swiftui_selector() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(
+            app.contains("if environment.value(\"size-class\") == \"compact\" { return \"touch\" }"),
+            "{app}"
+        );
+        assert!(!app.contains("\"pointer\") == \"coarse\""), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_swiftui_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(!app.contains("MosaicLayoutSelector"), "{app}");
+    }
+
+    #[test]
+    fn compiled_color_scheme_reads_the_stylesheet_name() {
+        let scheme = |name: &str| compiled_color_scheme(Some(Path::new(name)), "Card");
+        assert_eq!(scheme("src/Card.dark.msl"), Some("dark"));
+        assert_eq!(scheme("src/Card.light.msl"), Some("light"));
+        assert_eq!(scheme("src/Card.msl"), None);
+        assert_eq!(scheme("src/Card.contrast.msl"), None);
+        assert_eq!(scheme("src/Other.dark.msl"), None);
+        assert_eq!(compiled_color_scheme(None, "Card"), None);
+    }
+
+    #[test]
+    fn swift_shell_declares_the_compiled_scheme_on_the_root_view() {
+        let generated = "struct App {\n  var body: some Scene {\n    WindowGroup(\"Card\") {\n      CardView()\n    }\n  }\n}\nclass MosaicHostState {}\n";
+        let dark = swift_app_with_color_scheme(generated, Some("dark"), "Card").unwrap();
+        assert!(dark.contains("      CardView()\n      .preferredColorScheme(.dark)\n    }\n  }\n"), "{dark}");
+        assert_eq!(swift_app_with_color_scheme(generated, None, "Card").unwrap(), generated);
+        // The window-size edit still finds its terminator afterwards.
+        let sized = swift_app_with_initial_window_size(
+            &dark,
+            Some(&WindowSize { width: 800, height: 600 }),
+            "Card",
+        )
+        .unwrap();
+        assert!(sized.contains(".preferredColorScheme(.dark)\n    }\n    #if os(macOS)"), "{sized}");
+        assert!(swift_app_with_color_scheme("no window group", Some("dark"), "Card").is_err());
+    }
+
+    #[test]
+    fn a_dark_stylesheet_makes_a_dark_swiftui_shell() {
+        let pkg = card_package();
+        // Only themed stylesheets: a bare Card.msl is theme-neutral and wins.
+        let _ = fs::remove_file(pkg.path().join("src/Card.msl"));
+        fs::write(pkg.path().join("src/Card.dark.msl"), "style Card { }\n").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(app.contains(".preferredColorScheme(.dark)"), "{app}");
+    }
+
+    /// UI89 §2.1: an .xcframework runtime is linked into the SwiftUI package,
+    /// not bundled as a resource, and the loader is told to call it directly.
+    #[test]
+    fn swiftui_links_a_selected_xcframework_runtime_statically() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("native-complete SwiftUI shell with a static runtime");
+
+        let installed = out.path().join("swiftui/Runtime/MosaicAppRuntime.xcframework");
+        assert!(result.artifacts.contains(&installed));
+        assert_eq!(fs::read(installed.join("ios-arm64/libcard.a")).unwrap(), b"static-runtime");
+        assert!(installed.join("Info.plist").is_file());
+
+        let package = fs::read_to_string(out.path().join("swiftui/Package.swift")).unwrap();
+        assert!(package.contains("path: \"Runtime/MosaicAppRuntime.xcframework\""), "{package}");
+        assert!(package.contains("cSettings: [.define(\"MOSAIC_RUNTIME_STATIC\")]"), "{package}");
+        assert!(!package.contains("resources:"), "{package}");
+
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(!app.contains("Bundle.module"), "a linked runtime has no bundled path");
+        let readme = fs::read_to_string(out.path().join("swiftui/README.md")).unwrap();
+        assert!(readme.contains("Runtime/MosaicAppRuntime.xcframework"));
+    }
+
+    /// UI89 §2.2: the same build also writes the Xcode app target, listing
+    /// every generated source, with the package's identity.
+    #[test]
+    fn swiftui_with_an_xcframework_writes_an_ios_app_project() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("SwiftUI shell with a static runtime");
+
+        let project_path = out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj");
+        assert!(result.artifacts.contains(&project_path));
+        let project = fs::read_to_string(&project_path).unwrap();
+        for source in [
+            "Sources/App/App.swift",
+            "Sources/App/Card.swift",
+            "Sources/App/MosaicRuntimeHost.swift",
+            "Sources/CMosaicRuntime/CMosaicRuntime.c",
+            "Sources/CMosaicRuntime/include/CMosaicRuntime.h",
+            "Runtime/MosaicAppRuntime.xcframework",
+        ] {
+            assert!(project.contains(&format!("path = \"{source}\";")), "{source} missing");
+        }
+        // Defaults: the root component names the app, the package names its
+        // identity.
+        assert!(project.contains("INFOPLIST_KEY_CFBundleDisplayName = \"Card\";"));
+        assert!(project.contains("PRODUCT_BUNDLE_IDENTIFIER = \"dev.codingadventures.mosaicpkgcard\";"));
+        let module_map = fs::read_to_string(
+            out.path().join("swiftui/Sources/CMosaicRuntime/include/module.modulemap"),
+        )
+        .unwrap();
+        assert!(module_map.contains("module CMosaicRuntime"));
+    }
+
+    #[test]
+    fn the_ios_app_project_takes_identity_from_the_manifest() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[app]\ndisplay-name = \"Card Studio\"\nbundle-identifier = \"com.example.cards\"\n");
+        fs::write(&manifest, text).unwrap();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("SwiftUI shell with a static runtime");
+        let project =
+            fs::read_to_string(out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj")).unwrap();
+        assert!(project.contains("INFOPLIST_KEY_CFBundleDisplayName = \"Card Studio\";"));
+        assert!(project.contains("PRODUCT_BUNDLE_IDENTIFIER = \"com.example.cards\";"));
+    }
+
+    #[test]
+    fn no_ios_app_project_without_a_static_runtime() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        assert!(!out.path().join("swiftui/iOS").exists());
+        assert!(!out
+            .path()
+            .join("swiftui/Sources/CMosaicRuntime/include/module.modulemap")
+            .exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn project_files_refuses_symbolic_links() {
+        let dir = TempDir::new().unwrap();
+        fs::create_dir_all(dir.path().join("Sources/App")).unwrap();
+        fs::write(dir.path().join("Sources/App/A.swift"), "").unwrap();
+        fs::write(dir.path().join("Sources/App/notes.txt"), "").unwrap();
+        fs::create_dir_all(dir.path().join("Sources/App/Nested")).unwrap();
+        fs::write(dir.path().join("Sources/App/Nested/B.swift"), "").unwrap();
+        assert_eq!(
+            project_files(dir.path(), "Sources/App", "swift").unwrap(),
+            vec!["Sources/App/A.swift", "Sources/App/Nested/B.swift"]
+        );
+        std::os::unix::fs::symlink("/etc/hosts", dir.path().join("Sources/App/Evil.swift")).unwrap();
+        assert!(project_files(dir.path(), "Sources/App", "swift").is_err());
+        assert!(project_files(dir.path(), "Sources/Missing", "swift").unwrap().is_empty());
+    }
+
+    #[test]
+    fn an_xcframework_is_refused_for_other_backends_and_when_malformed() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .unwrap_err();
+        assert!(matches!(error, BuildError::InvalidRuntimeLibrary { .. }), "{error:?}");
+
+        let not_a_framework = pkg.path().join("Empty.xcframework");
+        fs::create_dir_all(&not_a_framework).unwrap();
+        let error = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&not_a_framework),
+        )
+        .unwrap_err();
+        assert!(matches!(error, BuildError::InvalidRuntimeLibrary { .. }), "{error:?}");
+    }
+
+    /// A link inside the framework is refused rather than followed, so the
+    /// copy cannot read outside the directory the caller selected.
+    #[cfg(unix)]
+    #[test]
+    fn a_symbolic_link_inside_an_xcframework_is_refused() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        std::os::unix::fs::symlink("/etc/hosts", framework.join("ios-arm64/leak")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .unwrap_err();
+        assert!(matches!(error, BuildError::InvalidRuntimeLibrary { .. }), "{error:?}");
+        assert!(!out.path().join("swiftui/Runtime/MosaicAppRuntime.xcframework/ios-arm64/leak").exists());
     }
 
     #[test]
@@ -13293,6 +14084,7 @@ version = "1"
                     "settings.gradle.kts",
                     "build.gradle.kts",
                     "src/main/kotlin/Main.kt",
+                    "src/main/kotlin/MosaicAppShell.kt",
                     "src/main/kotlin/Grid.kt",
                     "README.md",
                 ],
@@ -13508,7 +14300,7 @@ version = "1"
                     ],
                 ),
                 Backend::Compose => (
-                    "src/main/kotlin/Main.kt",
+                    "src/main/kotlin/MosaicAppShell.kt",
                     &[
                         "contentSurface = mosaicNode(hostProps, \"content-surface\"",
                         "private fun mosaicNode(",
@@ -13815,7 +14607,10 @@ version = "1"
         assert!(gradle.contains("testImplementation(kotlin(\"test\"))"));
         assert!(gradle.contains("mainClass = \"MainKt\""));
         assert!(gradle.contains("packageName = \"mosaic_pkg_grid\""));
-        let main_kt = fs::read_to_string(dir.join("src/main/kotlin/Main.kt")).expect("Main.kt");
+        // Main.kt (desktop) and MosaicAppShell.kt (shared) together (UI89 §3.4).
+        let main_kt = fs::read_to_string(dir.join("src/main/kotlin/Main.kt")).expect("Main.kt")
+            + &fs::read_to_string(dir.join("src/main/kotlin/MosaicAppShell.kt"))
+                .expect("MosaicAppShell.kt");
         assert!(main_kt.contains("fun main() = application"));
         assert!(main_kt.contains("Window(onCloseRequest = ::exitApplication, title = \"Grid\")"));
         assert!(main_kt.contains("interface MosaicComposeHost"));
@@ -15974,13 +16769,35 @@ handlers = [
         "}\n",
     );
 
+    /// UI87 §7: with no package handler, the only change is the platform
+    /// library, installed right after the host with no claimed kinds.
     #[test]
-    fn a_package_with_no_compose_handler_is_untouched() {
+    fn a_package_with_no_compose_handler_gets_only_the_platform_library() {
         let empty = compose_handler("");
-        assert_eq!(
-            compose_main_with_host_effects(MAIN_KT, &empty).expect("wiring must succeed"),
-            MAIN_KT
+        let wired = compose_main_with_host_effects(MAIN_KT, &empty).expect("wiring must succeed");
+        let expected = MAIN_KT.replace(
+            "MosaicComposeHostBridge.load() }\n",
+            "MosaicComposeHostBridge.load() }\n    // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n    (mosaicHost as? MosaicRuntimeHost)?.let { installMosaicPlatformEffects(it, null) }\n",
         );
+        assert_eq!(wired, expected);
+    }
+
+    /// The package's handler is installed first; the platform library wraps it
+    /// with the kinds the package claimed.
+    #[test]
+    fn claimed_kinds_reach_the_platform_router_in_order() {
+        let effects = compose_handler(
+            r#"
+[host_effects]
+handlers = [ { backend = "compose", install = "installProbeEffects", kinds = ["importAnki", "files.save"] } ]
+"#,
+        );
+        let wired = compose_main_with_host_effects(MAIN_KT, &effects).expect("wiring");
+        let package = wired.find("installProbeEffects(it)").expect("package install");
+        let platform = wired
+            .find(r#"installMosaicPlatformEffects(it, setOf("importAnki", "files.save"))"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "the platform library must wrap the package handler:\n{wired}");
     }
 
     #[test]
@@ -16099,7 +16916,9 @@ handlers = [
             required: false,
             default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
         }];
-        let generated = build_compose_main_kt("AuthorComponentName", &slots, false, None);
+        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None);
+        // The anchor is in Main.kt, which is what the installer edits.
+        let generated = sources.main.clone();
 
         let anchor = generated
             .find("val mosaicHost =")
@@ -16120,8 +16939,9 @@ handlers = [
         }
         // And the fixture really did carry those strings into the file, or the
         // assertions above pass for the wrong reason.
+        let both = format!("{}{}", sources.main, sources.shell);
         for needle in ["AuthorComponentName", "authorSlotName"] {
-            assert!(generated.contains(needle), "fixture inert: {needle}");
+            assert!(both.contains(needle), "fixture inert: {needle}");
         }
     }
 
@@ -16135,7 +16955,7 @@ handlers = [
     #[test]
     fn the_anchor_matches_a_genuinely_emitted_compose_main() {
         for require_runtime in [false, true] {
-            let generated = build_compose_main_kt("Probe", &[], require_runtime, None);
+            let generated = build_compose_main_kt("Probe", &[], require_runtime, None).main;
             assert_eq!(
                 generated.contains("requireNotNull(MosaicRuntimeHost.load())"),
                 require_runtime,

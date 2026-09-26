@@ -1,0 +1,11 @@
+{
+  "id": "HI-C119-janmdin",
+  "pathSegment": "HI-PATH-119-ABOUT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-119-ABOUT",
+      "order": 4
+    }
+  ]
+}

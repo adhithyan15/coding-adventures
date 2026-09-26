@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C90-huna",
+    "language": "arabic",
+    "chapter": 90,
+    "sequence": 3460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c448de3682cbbc4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C151-crudelis",
+    "language": "latin",
+    "chapter": 151,
+    "sequence": 6420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b733eb0b0a1e417"
+  },
+  "findings": []
+}

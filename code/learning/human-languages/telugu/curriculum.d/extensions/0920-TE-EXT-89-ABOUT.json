@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-89-ABOUT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask and answer about a job, the languages someone speaks, whether they are married, and an address.",
+  "prerequisites": []
+}

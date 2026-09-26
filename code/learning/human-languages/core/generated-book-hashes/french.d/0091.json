@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:75722bcc34cf8798",
+  "lessonIds": [
+    "FR-C91-fort",
+    "FR-C91-faible",
+    "FR-C91-riche",
+    "FR-C91-pauvre",
+    "FR-C91-gris"
+  ],
+  "tex": "french/book/chapters/ch91-strong-weak-rich-poor-grey.tex"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "RU-W93-e",
+    "language": "russian",
+    "chapter": 93,
+    "sequence": 4700,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:717260e96f3c18e0",
+    "detachableSegments": [
+      "Script you'll notice: э",
+      "Writing: э"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 41,
+  "title": "Hospital, Ill, Pain, Medicine, Thirst",
+  "label": "ch:ur-hospital-ill-pain-medicine-thirst",
+  "canDo": "I can say a hospital, ill, sick, pain, medicine and thirst.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C41-pyas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 41: i can say a hospital, ill, sick, pain, medicine and thirst.",
+    "assesses": [
+      "UR-LEX-C41-HEALTH41-03",
+      "UR-LEX-C41-HEALTH41-04",
+      "UR-LEX-C41-HEALTH41-05"
+    ]
+  }
+}

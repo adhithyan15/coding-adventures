@@ -4484,7 +4484,7 @@
           "col": 11
         },
         {
-          "code": "eof-in-end-tag-name-state",
+          "code": "eof-in-tag",
           "line": 1,
           "col": 18
         }

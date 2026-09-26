@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C96-longtime",
+    "language": "kannada",
+    "chapter": 96,
+    "sequence": 3730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f20d6e9f5331f66e"
+  },
+  "findings": []
+}

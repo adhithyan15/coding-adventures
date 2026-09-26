@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:ddd80f29bd93cf7a",
+  "lessonIds": [
+    "GE-C92-sauber",
+    "GE-C92-schmutzig",
+    "GE-C92-dick",
+    "GE-C92-duenn",
+    "GE-C92-leise"
+  ],
+  "tex": "german/book/chapters/ch92-clean-dirty-thick-thin-quiet.tex"
+}

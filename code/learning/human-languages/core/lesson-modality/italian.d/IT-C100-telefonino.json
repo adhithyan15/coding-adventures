@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C100-telefonino",
+    "language": "italian",
+    "chapter": 100,
+    "sequence": 4720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e95a8f8903fb2814"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C81-farina",
+    "language": "latin",
+    "chapter": 81,
+    "sequence": 2650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14251587c04c3d1d"
+  },
+  "findings": []
+}

@@ -15,9 +15,12 @@ it("pins Gujarati's meaning-first opening script spine", () => {
   const ordered = loadTrackLessons("gujarati").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
-  const opening = ordered.slice(0, 11);
+  // HL-C443: આહાર (āhār, food) now follows namaste, so હ, ા and આ are written
+  // as pieces of a word the reader has already said.
+  const opening = ordered.slice(0, 12);
   expect(opening.map((lesson) => lesson.realization.lessonId)).toEqual([
     "GU-C01-namaste",
+    "GU-C01-aahaar",
     "GU-W01-ha",
     "GU-W01-aa-matra",
     "GU-W01-aa",
@@ -36,7 +39,7 @@ it("pins Gujarati's meaning-first opening script spine", () => {
   expect(meaningFirst.frontmatter.skills).toEqual(["listening", "speaking"]);
   expect(meaningFirst.body).not.toMatch(/\p{Script=Gujarati}/u);
 
-  const courtesy = ordered.slice(11, 26);
+  const courtesy = ordered.slice(12, 27);
   expect(courtesy.map((lesson) => lesson.realization.lessonId)).toEqual([
     "GU-W02-ra",
     "GU-W02-da",
@@ -64,13 +67,16 @@ it("pins Gujarati's meaning-first opening script spine", () => {
   // Chapters 35-41 are the joining tranche: seven chapters of exactly five,
   // one new item per lesson with the writing lesson third in every one.
   expect([...chapterSizes.entries()]).toEqual([
-    ["1", 11],
+    // HL-C443: the runway chapters open with anchor words -- one in chapter
+    // 1, three in 3, two each in 4-6 and three in 7. Chapter 2 is at its
+    // twelve-atom budget and gets none.
+    ["1", 12],
     ["2", 15],
-    ["3", 10],
-    ["4", 5],
-    ["5", 5],
-    ["6", 5],
-    ["7", 5],
+    ["3", 13],
+    ["4", 7],
+    ["5", 7],
+    ["6", 7],
+    ["7", 8],
     ["8", 10],
     ["9", 6],
     ["10", 5],
@@ -132,5 +138,55 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["43", 8],
     // chapter 44 -- the reading rung: words, lines, and a whole meeting
     ["44", 3],
+    // chapter 45 -- HL-C443: gha and the ai sign, each from its word, and two reviews
+    ["45", 4],
+    // Chapters 46-91: five word lessons each; 68 and 91 also close their
+    // half of the vocabulary tranche with two reviews.
+    ["46", 5],
+    ["47", 5],
+    ["48", 5],
+    ["49", 5],
+    ["50", 5],
+    ["51", 5],
+    ["52", 5],
+    ["53", 5],
+    ["54", 5],
+    ["55", 5],
+    ["56", 5],
+    ["57", 5],
+    ["58", 5],
+    ["59", 5],
+    ["60", 5],
+    ["61", 5],
+    ["62", 5],
+    ["63", 5],
+    ["64", 5],
+    ["65", 5],
+    ["66", 5],
+    ["67", 5],
+    ["68", 7],
+    ["69", 5],
+    ["70", 5],
+    ["71", 5],
+    ["72", 5],
+    ["73", 5],
+    ["74", 5],
+    ["75", 5],
+    ["76", 5],
+    ["77", 5],
+    ["78", 5],
+    ["79", 5],
+    ["80", 5],
+    ["81", 5],
+    ["82", 5],
+    ["83", 5],
+    ["84", 5],
+    ["85", 5],
+    ["86", 5],
+    ["87", 5],
+    ["88", 5],
+    ["89", 5],
+    ["90", 5],
+    ["91", 7],
   ]);
 });

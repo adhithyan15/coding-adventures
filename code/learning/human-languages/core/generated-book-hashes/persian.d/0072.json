@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:58eb521336a81e04",
+  "lessonIds": [
+    "FA-C72-ghayegh",
+    "FA-C72-docharkhe",
+    "FA-C72-bazar",
+    "FA-C72-rusta",
+    "FA-C72-shahr"
+  ],
+  "tex": "persian/book/chapters/ch72-boat-bicycle-bazaar-village-city.tex"
+}

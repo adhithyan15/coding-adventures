@@ -3,8 +3,8 @@
   "language": "urdu",
   "chapter": 3,
   "title": "Ask and Answer Names",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e7f5ea809abec376",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:2b2980ab35bf95ff",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:225a1b5b43282219",
+      "sourceHash": "fnv1a64:92c4c4c2456795c8",
       "notice": null,
       "blocks": [
         {
@@ -78,17 +78,6 @@
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Tum/tū belong to the old Indo-European familiar-“you” family: Sanskrit tvam, English thou, and Latin tū are relatives. Āp followed another route: a word connected with “self/oneself” became honorific address."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -122,7 +111,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -151,6 +140,109 @@
               "feedback": {
                 "correct": "Right: آپ āp is the respectful first-meeting choice.",
                 "incorrect": "Use آپ āp with an unfamiliar adult or anyone you wish to address respectfully."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C03-aap-tum-tu-more",
+      "sequence": 65,
+      "title": "(آپ / تم / تو, continued) ((āp / tum / tū, continued)) — The word, taken apart",
+      "headword": "(آپ / تم / تو, continued)",
+      "romanization": "(āp / tum / tū, continued)",
+      "gloss": "The word, taken apart",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7274fc45f2605b91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say آپ / تم / تو (āp / tum / tū) again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tum/tū belong to the old Indo-European familiar-“you” family: Sanskrit tvam, English thou, and Latin tū are relatives. Āp followed another route: a word connected with “self/oneself” became honorific address."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to آپ / تم / تو (āp / tum / tū), in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **آپ / تم / تو**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to آپ / تم / تو (āp / tum / tū)? Say it once more, without looking."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C03-aap-tum-tu-more-thou",
+              "prompt": "Which old English word for 'you' is a relative of Urdu tum and tū?",
+              "assesses": [
+                "UR-ETYMON-TUM-THOU"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "thou",
+                "thee"
+              ],
+              "feedback": {
+                "correct": "Right: tum/tū, Sanskrit tvam, Latin tū and English thou are one family.",
+                "incorrect": "The relative is English thou, beside Sanskrit tvam and Latin tū."
               }
             }
           ]

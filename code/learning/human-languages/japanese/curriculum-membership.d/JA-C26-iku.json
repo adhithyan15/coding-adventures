@@ -1,0 +1,11 @@
+{
+  "id": "JA-C26-iku",
+  "pathSegment": "JA-PATH-26-FAMILY26",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-26-FAMILY26",
+      "order": 2
+    }
+  ]
+}

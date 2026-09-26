@@ -1,0 +1,11 @@
+{
+  "id": "GE-C127-pruefung",
+  "pathSegment": "GE-PATH-127-SCHULE127",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-127-SCHULE127",
+      "order": 2
+    }
+  ]
+}

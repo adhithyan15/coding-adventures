@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:f616dd64b0065a8b",
+  "lessonIds": [
+    "FR-C110-droite",
+    "FR-C110-gauche",
+    "FR-C110-monde",
+    "FR-C110-voyage",
+    "FR-C110-vacances"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch110.txt",
+  "json": "french/narration/ch110.json",
+  "textHash": "fnv1a64:4a92d829eeabfa95",
+  "jsonHash": "fnv1a64:d508fb6cc08e23b1",
+  "findings": []
+}

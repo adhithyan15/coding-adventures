@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:f9b5881f0cc422b9",
+  "lessonIds": [
+    "JA-C20-tsume",
+    "JA-C20-hiji",
+    "JA-C20-hiza",
+    "JA-C20-nodo",
+    "JA-C20-mune"
+  ],
+  "tex": "japanese/book/chapters/ch20-nail-elbow-knee-throat-chest.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C49-medad",
+    "language": "persian",
+    "chapter": 49,
+    "sequence": 2310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71c32d946b9a6eb3"
+  },
+  "findings": []
+}

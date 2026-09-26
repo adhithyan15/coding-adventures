@@ -1,13 +1,14 @@
 {
   "language": "hindi",
   "chapter": 50,
-  "sourceHash": "fnv1a64:073f0a5281527551",
+  "sourceHash": "fnv1a64:3ce27998ea7238e4",
   "lessonIds": [
     "HI-C50-gratitude",
     "HI-C50-favour",
     "HI-C50-respect",
     "HI-C50-blessing",
-    "HI-C50-salutation"
+    "HI-C50-salutation",
+    "HI-S147-letter-na-retroflex"
   ],
   "tex": "hindi/book/chapters/ch50-courtesy-words.tex"
 }

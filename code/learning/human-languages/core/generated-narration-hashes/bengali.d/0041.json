@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:5104724f830f8beb",
+  "lessonIds": [
+    "BN-W41-anusvar",
+    "BN-W41-bisarga",
+    "BN-W41-jha",
+    "BN-W41-pha",
+    "BN-W41-sha",
+    "BN-R41-letters-first-pass",
+    "BN-R41-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "bengali/narration/ch41.txt",
+  "json": "bengali/narration/ch41.json",
+  "textHash": "fnv1a64:17b1a193b9d12b0a",
+  "jsonHash": "fnv1a64:02fb55b7929b5cc7",
+  "findings": []
+}

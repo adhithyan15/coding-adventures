@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-83-DOMUS2",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "LA-EXT-83-DOMUS2"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:90aea889e71e8675",
+  "lessonIds": [
+    "KA-C106-farewell",
+    "KA-C106-today",
+    "KA-C106-later",
+    "KA-C106-phone",
+    "KA-C106-seeyou",
+    "KA-R106-first-pass-moods-body-find",
+    "KA-R106-second-pass-home-work-wishes"
+  ],
+  "tex": "kannada/book/chapters/ch106-see-you-soon.tex"
+}

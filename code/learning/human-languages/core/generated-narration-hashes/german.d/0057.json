@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:9505c40d62352a18",
+  "lessonIds": [
+    "GE-C57-gesicht",
+    "GE-C57-blut",
+    "GE-C57-haut",
+    "GE-C57-haar",
+    "GE-C57-bauch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch57.txt",
+  "json": "german/narration/ch57.json",
+  "textHash": "fnv1a64:bb1cdaec9cc1d213",
+  "jsonHash": "fnv1a64:12937b015025b73d",
+  "findings": []
+}

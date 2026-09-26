@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:e82876153c256b48",
+  "lessonIds": [
+    "KA-C92-school",
+    "KA-C92-college",
+    "KA-C92-office",
+    "KA-C92-job",
+    "KA-C92-english"
+  ],
+  "tex": "kannada/book/chapters/ch92-school-and-work.tex"
+}

@@ -2,6 +2,86 @@
 
 ## Unreleased
 
+### Added — an installable iOS / iPadOS app target (UI89 §2.2)
+
+- A SwiftUI build whose `--runtime-library` is an `.xcframework` also writes
+  `iOS/App.xcodeproj/project.pbxproj` (from the new `mosaic-ios-project` crate),
+  so any Mosaic package with a static runtime becomes an `.app` that installs
+  on iPhone and iPad. It is written last, after host assets and host effects,
+  and lists every `.swift` under `Sources/App` the way SwiftPM compiles it;
+  symbolic links there are refused. The app's name and identity come from
+  `[app] display-name` / `bundle-identifier`, defaulting to the root component
+  and `dev.codingadventures.<package>`.
+- `Sources/CMosaicRuntime/include/module.modulemap` is written with it, so the
+  Xcode project and the Swift package import the loader as one module.
+
+### Changed — the Compose app splits along its platform seams (UI89 §3.4)
+
+Groundwork for Android, desktop behaviour unchanged:
+- `Main.kt` is now only the desktop half (the window and, for a strict app,
+  `loadMosaicHost`, where package effect handlers are installed);
+  `MosaicAppShell.kt` holds what every Compose platform shares (`MosaicApp`,
+  `MosaicStartup`, which now takes its host loader from the caller, the host
+  interface, the prop helpers). `MosaicComposeHostBridge` is `internal`.
+- `MosaicPlatform.kt`, the desktop half of drag and drop, ships beside the
+  components and in the Gradle source set.
+
+### Added — SwiftUI apps switch layout variants at run time (UI48 ENV2/ENV3)
+
+- A SwiftUI build emits each named layout variant with
+  `from_pipeline_variant` and compiles the root component's selected variants
+  into `Sources/App`, so one app carries them all.
+- The shell's selector uses the package's `[[app.layouts]]` rules, or the
+  conventional ones (`compact`, `expanded`, `touch`) for the variants the root
+  has. A rule for a variant with no `.mll` is an error. Engram's `touch`
+  layout is now selected on iOS; verified by building for macOS and the iOS
+  simulator.
+
+### Fixed — SwiftUI shells declare the color scheme they were compiled with (UI32)
+
+A dark-themed app on a light-mode device drew dark components on a white
+window, with a dark status bar over white and unreadable titles, because the
+platform draws its chrome in the system scheme. When the root component's
+stylesheet is `.dark.msl` or `.light.msl`, the generated `App.swift` now
+applies `.preferredColorScheme(.dark)` / `(.light)` to the root view. A
+theme-neutral stylesheet declares nothing. Verified on the iPhone simulator
+with Trestle.
+
+### Added — `--runtime-library` accepts an `.xcframework` for SwiftUI (UI89 §2.1)
+
+- A SwiftUI package can link its Rust runtime statically: the directory (with
+  its `Info.plist`) is copied to `Runtime/MosaicAppRuntime.xcframework`,
+  `Package.swift` links it, and the app passes no bundled path. Only
+  directories and regular files are copied; a symbolic link inside is refused.
+  Other backends refuse an `.xcframework`.
+- Proven end to end: Trestle built with `code/scripts/build-mosaic-xcframework.sh`
+  compiles and links for the iOS Simulator (arm64 + x86_64) and iOS devices,
+  and `nm` shows the engine in both binaries. CI does the same.
+
+### Added — every Compose app gets the platform library (UI87 §7)
+
+- `MosaicPlatformEffects.kt` is written into `src/main/kotlin/` of every Compose
+  project, beside `MosaicRuntimeHost.kt`.
+- `Main.kt` installs it after the package's own handler, if any:
+  `installMosaicPlatformEffects(it, setOf(...claimed kinds))`, or `null` when
+  the package declared no `kinds` or no handler at all. A package with no
+  Compose handler now gets exactly that one line.
+- Compiled on Journal (library only), Engram (with its own handler) and
+  photo-picker; Journal and Engram stay native-complete with no degradations.
+
+### Added — styles follow a component mounted more than once
+
+- Composition gives each part the resolver renamed for a second (third, …)
+  mount a copy of the original part's style, every state included, so the
+  n-th mount renders like the first.
+- A style the consumer wrote for the renamed part itself (for example
+  `part empty-state-m2 { … }`) wins, and no copy is made.
+- With every component mounted once, nothing is renamed and the output is
+  byte-identical to before.
+- `tests/multi_mount.rs` composes the toolkit's `EmptyState` twice, checks
+  the copied styles, and checks that a consumer override and a single mount
+  are unchanged.
+
 ### Fixed — a HostButton's dropped children are reported, not silent (#15921)
 
 A `HostButton` with a child block compiled cleanly, and the native-complete

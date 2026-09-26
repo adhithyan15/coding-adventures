@@ -788,6 +788,15 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
             return Ok(());
         }
     }
+    if action.starts_with("switch_to_if_appropriate_end_tag(") && action.ends_with(')') {
+        let arguments = action
+            .trim_start_matches("switch_to_if_appropriate_end_tag(")
+            .trim_end_matches(')');
+        let parts = arguments.split(',').map(str::trim).collect::<Vec<_>>();
+        if parts.len() == 2 && parts.iter().all(|part| !part.is_empty()) {
+            return Ok(());
+        }
+    }
     if action.starts_with("emit(") && action.ends_with(')') {
         let token = action
             .trim_start_matches("emit(")

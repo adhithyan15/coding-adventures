@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Holiday, Music, News, Country, Story",
+  "label": "ch:mr-holiday-music-news-country-story",
+  "canDo": "I can say a holiday, music, news, a country and a story.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MR-R120-second-pass-places-the-town-clothes-and-numbers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a holiday, music, news, a country and a story.",
+    "assesses": [
+      "MR-LEX-C120-WORLD120-03",
+      "MR-LEX-C120-WORLD120-04",
+      "MR-LEX-C120-WORLD120-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C112-desiderium",
+  "pathSegment": "LA-PATH-112-WANT112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-112-WANT112",
+      "order": 2
+    }
+  ]
+}

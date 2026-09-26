@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:6966944e4385cb3e",
+  "lessonIds": [
+    "GE-C79-tasse",
+    "GE-C79-teller",
+    "GE-C79-glas",
+    "GE-C79-gabel",
+    "GE-C79-messer",
+    "GE-R79-first-pass-the-body-people-and-food",
+    "GE-R79-second-pass-the-house-school-things-and-nature"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch79.txt",
+  "json": "german/narration/ch79.json",
+  "textHash": "fnv1a64:8cc6ffa216d8a42a",
+  "jsonHash": "fnv1a64:276bcd8316cb9cea",
+  "findings": []
+}

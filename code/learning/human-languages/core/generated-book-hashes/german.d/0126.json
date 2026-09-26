@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:2dda11c9f6a8068d",
+  "lessonIds": [
+    "GE-C126-brieftraeger",
+    "GE-C126-kellner",
+    "GE-C126-kunde",
+    "GE-C126-kasse",
+    "GE-C126-chef"
+  ],
+  "tex": "german/book/chapters/ch126-postman-waiter-customer-till-boss.tex"
+}

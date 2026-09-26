@@ -415,6 +415,200 @@ style TaskApp {
     font-size : 13 ;
     color : "#2b2723" ;
   }
+  // ── checklists (C3a) ───────────────────────────────────────────────────
+  // Spacing only: the library and the run are toolkit and checklist
+  // components that style themselves, and the headings inherit the app's
+  // text colour, so both themes read the same.
+  part cl-view {
+    gap : 24 ;
+  }
+  part cl-library {
+    gap : 12 ;
+    min-width : 260 ;
+  }
+  part cl-detail {
+    gap : 12 ;
+  }
+  part cl-composer {
+    gap : 8 ;
+  }
+  part cl-outline-row {
+    gap : 4 ;
+  }
+  part cl-item-composer {
+    gap : 8 ;
+  }
+  part cl-template-actions {
+    gap : 8 ;
+  }
+  part cl-outline-actions {
+    gap : 8 ;
+  }
+  part cl-branch-actions {
+    gap : 8 ;
+  }
+  // Checklists controls (C3a-C3c) wear Trestle's own styles rather than the
+  // backend default (Material purple on Compose): the bordered edit field for
+  // inputs, the add button for primary actions, the outline cancel button for
+  // secondary ones, and the chip for outline items, with the accent for the
+  // selected item. Cloned from those parts so the two stay in step.
+  part cl-name-input {
+    width : 220 ;
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 14 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-item-input {
+    width : 220 ;
+    background : "#fffdfa" ;
+    color : "#2b2723" ;
+    font-size : 14 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-create-btn {
+    background : "#e0942a" ;
+    color : "#ffffff" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#c67f1e" ;
+    }
+    state pressed {
+      background : "#a96816" ;
+    }
+  }
+  part cl-item-add-btn {
+    background : "#e0942a" ;
+    color : "#ffffff" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#c67f1e" ;
+    }
+    state pressed {
+      background : "#a96816" ;
+    }
+  }
+  part cl-start-btn {
+    background : "#e0942a" ;
+    color : "#ffffff" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#c67f1e" ;
+    }
+    state pressed {
+      background : "#a96816" ;
+    }
+  }
+  part cl-outline-item-selected {
+    background : "#e0942a" ;
+    color : "#ffffff" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#c67f1e" ;
+    }
+    state pressed {
+      background : "#a96816" ;
+    }
+  }
+  part cl-add-yes-btn {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-add-no-btn {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-toggle-question-btn {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-delete-item-btn {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-delete-btn {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-delete-run-btn {
+    background : "transparent" ;
+    color : "#6a625a" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#d7cec2" ;
+    border-radius : 8 ;
+  }
+  part cl-outline-item {
+    background : "#f7f2ea" ;
+    color : "#6a625a" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding-top : 3 ;
+    padding-right : 10 ;
+    padding-bottom : 3 ;
+    padding-left : 10 ;
+    border-width : 1 ;
+    border-color : "#e6ded3" ;
+    border-radius : 20 ;
+    state hover {
+      color : "#2b2723" ;
+      border-color : "#d8cdbd" ;
+    }
+  }
   // ── list ────────────────────────────────────────────────────────────────
   part list-wrap {
     max-width : 760 ;

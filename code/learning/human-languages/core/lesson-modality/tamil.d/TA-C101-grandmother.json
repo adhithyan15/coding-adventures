@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C101-grandmother",
+    "language": "tamil",
+    "chapter": 101,
+    "sequence": 4270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9d293aab12759b7"
+  },
+  "findings": []
+}

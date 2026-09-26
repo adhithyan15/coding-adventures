@@ -1,0 +1,11 @@
+{
+  "id": "TE-C97-regret",
+  "pathSegment": "TE-PATH-97-MOOD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-97-MOOD",
+      "order": 2
+    }
+  ]
+}

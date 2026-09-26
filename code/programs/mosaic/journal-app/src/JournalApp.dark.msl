@@ -1,0 +1,213 @@
+// JournalApp.dark.msl — dark-theme styling for the app's own parts. The
+// timeline and editor style themselves (RecordList, DraftEditor); only the
+// two columns and the New-entry button are styled here (the shell has no
+// style: Flutter does not lower a background on the split view), with
+// properties every native backend lowers.
+
+style JournalApp {
+  part timeline {
+    min-height : "100vh" ;
+    padding    : 12 ;
+    gap        : 8 ;
+    background : "#111827" ;
+  }
+  part new-entry {
+    padding       : 8 ;
+    background    : "#1d4ed8" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#1d4ed8" ;
+    border-radius : 4 ;
+  }
+  // Search (J4a): the field takes the bar's spare width (a Row child's
+  // `width: 100%` is its share of the Row), and wears the
+  // editor's own field style; Clear wears the editor's Cancel style.
+  part search-bar {
+    gap : 6 ;
+  }
+  part search-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part search-clear {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  // Stars (J4b): the filter off wears Clear's style; on, and the Star
+  // button, take the ★ badge's amber.
+  part starred-filter {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part starred-filter-on {
+    padding       : 8 ;
+    background    : "#3b2f14" ;
+    color         : "#fbbf24" ;
+    border-width  : 1 ;
+    border-color  : "#92651a" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part star-toggle {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#fbbf24" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  // On this day (J4c): the section's heading, in the stars' amber so the
+  // recall reads as set apart from the timeline below it.
+  part on-this-day-title {
+    color       : "#fbbf24" ;
+    font-size   : 14 ;
+  }
+  // Tags (J4d): the editor's tag field wears the search field's style;
+  // its label sits above it like DraftEditor's.
+  // An entry's day (J4e): the Date field mirrors the Tags field; the
+  // error is DraftEditor's Delete red.
+  part date-block {
+    gap : 4 ;
+    padding-bottom : 8 ;
+  }
+  part date-label {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  part date-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part draft-error {
+    color     : "#f87171" ;
+    font-size : 14 ;
+  }
+  part tags-block {
+    gap : 4 ;
+    padding-bottom : 8 ;
+  }
+  part tags-label {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  part tags-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part editor {
+    // Fills the window like the timeline pane (#15963); without it the dark
+    // editor stopped under its buttons and left the window's white below.
+    min-height : "100vh" ;
+    padding    : 16 ;
+    background : "#0b1220" ;
+  }
+  // Journals (J4f): the New journal field and Add wear the search bar's
+  // styles; a refused name, the draft error's red.
+  part journal-bar {
+    gap : 6 ;
+  }
+  part journal-name-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part add-journal {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part journal-error {
+    color     : "#f87171" ;
+    font-size : 14 ;
+  }
+
+  // Export (J6a).
+  part export-bar {
+    gap : 6 ;
+  }
+
+  part export-journal {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+
+  part export-status {
+    color     : "#9ca3af" ;
+    font-size : 14 ;
+  }
+  // An entry's journal (J4g): the picker's block mirrors the Date field's.
+  part journal-block {
+    gap : 4 ;
+    padding-bottom : 8 ;
+  }
+  part journal-label {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  // Renaming and deleting a journal (J4i): Rename wears Add's style;
+  // Delete journal the draft error's red, as DraftEditor's Delete.
+  part journal-actions {
+    gap : 6 ;
+  }
+  part rename-journal {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part delete-journal {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f87171" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:010601282cb9cac5",
+  "lessonIds": [
+    "MR-C120-sutti",
+    "MR-C120-sangit",
+    "MR-C120-batmi",
+    "MR-C120-desh",
+    "MR-C120-gosta",
+    "MR-R120-first-pass-describing-words-and-time",
+    "MR-R120-second-pass-places-the-town-clothes-and-numbers"
+  ],
+  "tex": "marathi/book/chapters/ch120-holiday-music-news-country-story.tex"
+}

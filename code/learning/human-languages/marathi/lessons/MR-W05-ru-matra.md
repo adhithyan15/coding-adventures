@@ -9,20 +9,20 @@ type: writing
 headword: ृ
 romanization: "ṛ"
 gloss: vocalic r mark — said ru in Marathi, written as a curl below
-prerequisites: [MR-W05-uu-matra]
+prerequisites: [MR-W05-uu-matra, MR-C05-amrut]
 sounds: [vocalic-r]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-U-MATRA-01]
+  knowledge: [MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-U-MATRA-01, MR-LEX-ANCHOR-AMRUT]
 introduces:
   knowledge: [MR-SCRIPT-RU-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-U-MATRA-01]
+  knowledge: [MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-U-MATRA-01, MR-LEX-ANCHOR-AMRUT]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W05-uu-matra, MR-W05-u-matra]
 # ृ — the vocalic *r* mark, said *ru*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-AMRUT] -->
 
 A third mark below the line. This one is not a vowel you have a letter for in English.
 

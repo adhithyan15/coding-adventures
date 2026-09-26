@@ -945,6 +945,9 @@ mod tests {
         assert_eq!(plans[5].os, OsFamily::Portable);
     }
 
+    // A Seatbelt profile is macOS policy over POSIX paths; on Windows the
+    // canonical temp path is a `\\?\` verbatim path no profile would hold.
+    #[cfg(unix)]
     #[test]
     fn macos_seatbelt_profile_limits_file_writes_to_manifest_targets() {
         let dir = unique_temp_dir("profile");
@@ -1049,7 +1052,11 @@ mod tests {
     }
 
     fn weather_manifest_for_path(path: &Path) -> String {
-        let path = path.to_string_lossy();
+        // A JSON string: a Windows path's backslashes must be escaped.
+        let path = path
+            .to_string_lossy()
+            .replace('\\', "\\\\")
+            .replace('"', "\\\"");
         format!(
             r#"{{
               "version": 1,

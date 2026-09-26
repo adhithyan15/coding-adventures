@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C86-journey",
+    "language": "gujarati",
+    "chapter": 86,
+    "sequence": 4373,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb4bc9f1e429544e"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:ea272e2aef683248",
+  "lessonIds": [
+    "IT-C60-tornare",
+    "IT-C60-studiare",
+    "IT-C60-viaggiare",
+    "IT-C60-pagare",
+    "IT-C60-usare",
+    "IT-R60-first-pass-the-body-family-and-doing",
+    "IT-R60-second-pass-food-the-house-and-the-table"
+  ],
+  "tex": "italian/book/chapters/ch60-come-back-study-travel-pay-use.tex"
+}

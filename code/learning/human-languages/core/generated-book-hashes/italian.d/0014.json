@@ -1,10 +1,11 @@
 {
   "language": "italian",
   "chapter": 14,
-  "sourceHash": "fnv1a64:63e49d78cf1db8b8",
+  "sourceHash": "fnv1a64:6bccab51cb6fc52a",
   "lessonIds": [
     "IT-C14-avere",
-    "IT-C14-eta"
+    "IT-C14-eta",
+    "IT-C14-avere-o-essere"
   ],
   "tex": "italian/book/chapters/ch14-having-and-age.tex"
 }

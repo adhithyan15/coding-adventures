@@ -4,11 +4,326 @@
   "chapter": 7,
   "title": "The Curled Row, and One Letter from the Lips",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:76dd92867a6ae0af",
+  "sourceHash": "fnv1a64:c7a85b4102881255",
   "lessons": [
     {
+      "id": "MR-C07-taali",
+      "sequence": 97,
+      "title": "टाळी (ṭāḷī) — a clap",
+      "headword": "टाळी",
+      "romanization": "ṭāḷī",
+      "gloss": "a clap",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f94b222003c59ae4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टाळी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टाळी — ṭāḷī — \"a clap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ṭāḷī. Look at its shape as you say it: the lessons that follow take pieces of it, ट (ṭa), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭāḷī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭāḷī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭāḷī, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭāḷī*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a clap\"? (टाळी, ṭāḷī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C07-thaam",
+      "sequence": 98,
+      "title": "ठाम (ṭhām) — firm, steady",
+      "headword": "ठाम",
+      "romanization": "ṭhām",
+      "gloss": "firm, steady",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:6db56909199c0ca4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठाम — ṭhām — \"firm, steady\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ṭhām. Look at its shape as you say it: the lessons that follow take pieces of it, ठ (ṭha), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhām, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhām*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"firm, steady\"? (ठाम, ṭhām.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C07-daba",
+      "sequence": 99,
+      "title": "डबा (ḍabā) — a lunch box",
+      "headword": "डबा",
+      "romanization": "ḍabā",
+      "gloss": "a lunch box",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:65feb3f36eea6c43",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डबा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डबा — ḍabā — \"a lunch box\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ḍabā. Look at its shape as you say it: the lessons that follow take pieces of it, ड, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍabā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍabā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍabā, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍabā*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a lunch box\"? (डबा, ḍabā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "MR-W07-tta",
-      "sequence": 80,
+      "sequence": 100,
       "title": "ट (ṭa) — the tongue curled back",
       "headword": "ट",
       "romanization": "ṭa",
@@ -21,7 +336,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a261a0ff2c2bd175",
+      "sourceHash": "fnv1a64:76a124daf7463dd2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -119,7 +434,7 @@
     },
     {
       "id": "MR-W07-ttha",
-      "sequence": 81,
+      "sequence": 101,
       "title": "ठ (ṭha) — the curl, with the breath let out",
       "headword": "ठ",
       "romanization": "ṭha",
@@ -132,7 +447,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d0604b7f4368a793",
+      "sourceHash": "fnv1a64:8f3098e276cb87ea",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -230,7 +545,7 @@
     },
     {
       "id": "MR-W07-dda",
-      "sequence": 82,
+      "sequence": 102,
       "title": "ड (ḍa) — the curl, with the voice on",
       "headword": "ड",
       "romanization": "ḍa",
@@ -244,7 +559,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d129cbf0a0fbd6f1",
+      "sourceHash": "fnv1a64:ae97d8b8e4e5bb4b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -343,7 +658,7 @@
     },
     {
       "id": "MR-W07-nna",
-      "sequence": 83,
+      "sequence": 103,
       "title": "ण (ṇa) — the nasal with the tongue curled back",
       "headword": "ण",
       "romanization": "ṇa",
@@ -356,7 +671,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8e9f48f0f3a14448",
+      "sourceHash": "fnv1a64:afaee20335dc3516",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -454,7 +769,7 @@
     },
     {
       "id": "MR-W07-pa",
-      "sequence": 84,
+      "sequence": 104,
       "title": "प (pa) — the lips, with the voice off",
       "headword": "प",
       "romanization": "pa",
@@ -468,7 +783,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:911541c846793e35",
+      "sourceHash": "fnv1a64:a0d152a390e09a86",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -567,7 +882,7 @@
     },
     {
       "id": "MR-R07-retroflex-recall",
-      "sequence": 85,
+      "sequence": 105,
       "title": "The curled row (vaḷlelī olī), and one letter from the lips",
       "headword": "curled row",
       "romanization": "vaḷlelī olī",
@@ -578,7 +893,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d57eb95a96cd105",
+      "sourceHash": "fnv1a64:a819ecc6bb038206",
       "notice": null,
       "blocks": [
         {

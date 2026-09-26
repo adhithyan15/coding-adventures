@@ -515,7 +515,6 @@ def normalize_case(
         tokens.append(f"Text(data={pending_text})")
 
     tokens.append("EOF")
-    tokens = normalize_token_summaries(tokens, test, initial_state)
     tokens = normalize_escaped_null_summaries(tokens, test)
 
     diagnostics = [
@@ -697,19 +696,6 @@ def normalize_current_processing_instruction_case(
     return tokens, diagnostics
 
 
-def normalize_token_summaries(
-    tokens: list[str], test: dict[str, Any], initial_state: str | None
-) -> list[str]:
-    last_start_tag = effective_last_start_tag(test, initial_state)
-    if (
-        initial_state in {"RCDATA state", "RAWTEXT state"}
-        and isinstance(last_start_tag, str)
-        and re.search(rf"</{re.escape(last_start_tag)}[\t\n\f\r /]$", test["input"])
-    ):
-        return [f"Text(data={normalize_token_data(test['input'])})", "EOF"]
-    return tokens
-
-
 def normalize_escaped_null_summaries(tokens: list[str], test: dict[str, Any]) -> list[str]:
     if "\\u0000" not in test["input"]:
         return tokens
@@ -774,12 +760,6 @@ def normalize_diagnostic_set(diagnostics: list[str], test: dict[str, Any]) -> li
         ]
     if "end-tag-with-attributes" in diagnostics:
         diagnostics = [diagnostic for diagnostic in diagnostics if diagnostic != "duplicate-attribute"]
-    last_start_tag = test.get("lastStartTag")
-    if (
-        isinstance(last_start_tag, str)
-        and re.search(rf"</{re.escape(last_start_tag)}[\t\n\f\r /]$", test["input"])
-    ):
-        diagnostics = [diagnostic for diagnostic in diagnostics if diagnostic != "eof-in-tag"]
     return diagnostics
 
 

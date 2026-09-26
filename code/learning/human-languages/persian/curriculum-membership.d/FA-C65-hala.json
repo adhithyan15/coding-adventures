@@ -1,0 +1,11 @@
+{
+  "id": "FA-C65-hala",
+  "pathSegment": "FA-PATH-65-TIME65",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-65-TIME65",
+      "order": 4
+    }
+  ]
+}

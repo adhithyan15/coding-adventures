@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:13075b3c03c6ee22",
+  "lessonIds": [
+    "GE-C120-socken",
+    "GE-C120-bluse",
+    "GE-C120-rindfleisch",
+    "GE-C120-gemuese",
+    "GE-C120-pilz"
+  ],
+  "tex": "german/book/chapters/ch120-socks-blouse-beef-vegetables-mushroom.tex"
+}

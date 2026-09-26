@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:e405ebe792a3fbfb",
+  "lessonIds": [
+    "ML-C141-onam",
+    "ML-C141-vishu",
+    "ML-C141-christmas",
+    "ML-C141-eid",
+    "ML-C141-utsavam",
+    "ML-R141-first-pass-home-food-table",
+    "ML-R141-second-pass-town-travel-time"
+  ],
+  "tex": "malayalam/book/chapters/ch141-festival-days.tex"
+}

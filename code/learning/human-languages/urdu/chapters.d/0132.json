@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Dirty, Rich, True, Strong, Weak",
+  "label": "ch:ur-dirty-rich-true-strong-weak",
+  "canDo": "I can say dirty, rich, true, strong and weak.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-R132-second-pass-the-body-and-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say dirty, rich, true, strong and weak.",
+    "assesses": [
+      "UR-LEX-C132-QUAL132-03",
+      "UR-LEX-C132-QUAL132-04",
+      "UR-LEX-C132-QUAL132-05"
+    ]
+  }
+}

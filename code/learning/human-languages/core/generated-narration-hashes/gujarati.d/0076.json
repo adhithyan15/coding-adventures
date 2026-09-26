@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:c172c60271535141",
+  "lessonIds": [
+    "GU-C76-alot",
+    "GU-C76-all",
+    "GU-C76-slowly",
+    "GU-C76-quickly",
+    "GU-C76-again"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch76.txt",
+  "json": "gujarati/narration/ch76.json",
+  "textHash": "fnv1a64:4a6886865fa30d8e",
+  "jsonHash": "fnv1a64:7226dd0e9a2fb705",
+  "findings": []
+}

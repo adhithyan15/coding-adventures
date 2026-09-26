@@ -1,0 +1,11 @@
+{
+  "id": "GU-C88-gift",
+  "pathSegment": "GU-PATH-88-CARRY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-88-CARRY",
+      "order": 4
+    }
+  ]
+}

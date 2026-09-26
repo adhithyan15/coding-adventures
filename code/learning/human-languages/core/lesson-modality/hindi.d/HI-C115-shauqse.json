@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C115-shauqse",
+    "language": "hindi",
+    "chapter": 115,
+    "sequence": 5080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40633abfe36b3058"
+  },
+  "findings": []
+}

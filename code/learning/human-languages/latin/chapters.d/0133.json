@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Spider, Frog, Hare, Fox, Bull",
+  "label": "ch:la-spider-frog-hare-fox-bull",
+  "canDo": "I can say a spider, a frog, a hare, a fox and a bull.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C133-taurus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say a spider, a frog, a hare, a fox and a bull.",
+    "assesses": [
+      "LA-LEX-C133-THINGS133-03",
+      "LA-LEX-C133-THINGS133-04",
+      "LA-LEX-C133-THINGS133-05"
+    ]
+  }
+}

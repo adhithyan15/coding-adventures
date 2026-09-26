@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C92-barco",
+    "language": "portuguese",
+    "chapter": 92,
+    "sequence": 4320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35bc578bf00eee0f"
+  },
+  "findings": []
+}

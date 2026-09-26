@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:43afd9a1fea8e007",
+  "lessonIds": [
+    "ML-C115-cold",
+    "ML-C115-headache",
+    "ML-C115-rest",
+    "ML-C115-dizzy",
+    "ML-C115-notwell"
+  ],
+  "tex": "malayalam/book/chapters/ch115-not-feeling-well.tex"
+}

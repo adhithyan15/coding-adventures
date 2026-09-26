@@ -1,0 +1,11 @@
+{
+  "id": "GE-C116-handy",
+  "pathSegment": "GE-PATH-116-DINGE116",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-116-DINGE116",
+      "order": 1
+    }
+  ]
+}

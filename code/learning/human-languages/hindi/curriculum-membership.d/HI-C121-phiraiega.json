@@ -1,0 +1,11 @@
+{
+  "id": "HI-C121-phiraiega",
+  "pathSegment": "HI-PATH-121-CARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-121-CARE",
+      "order": 3
+    }
+  ]
+}

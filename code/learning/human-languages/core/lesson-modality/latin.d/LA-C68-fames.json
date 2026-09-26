@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C68-fames",
+    "language": "latin",
+    "chapter": 68,
+    "sequence": 2010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1b13ed0154e1ebe"
+  },
+  "findings": []
+}

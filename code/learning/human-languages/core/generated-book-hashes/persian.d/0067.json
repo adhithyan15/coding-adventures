@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:e548a9d445d6b179",
+  "lessonIds": [
+    "FA-C67-sobh",
+    "FA-C67-shab",
+    "FA-C67-ruz",
+    "FA-C67-dur",
+    "FA-C67-nazdik"
+  ],
+  "tex": "persian/book/chapters/ch67-morning-night-day-far-near.tex"
+}

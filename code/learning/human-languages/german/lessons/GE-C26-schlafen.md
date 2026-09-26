@@ -8,7 +8,7 @@ type: word
 headword: schlafen
 gloss: to sleep — the same word as English sleep under two coats of German paint, and a second way for a strong verb to break
 concept_tag: VERB-SLEEP
-prerequisites: [GE-C26-stehen, GE-C26-sitzen, GE-C21-das-wetter]
+prerequisites: [GE-C26-stehen, GE-C26-sitzen, GE-C21-das-wetter, GE-C21-das-wetter-more, GE-C22-hund-katze-more]
 sounds: [sch-sh, vowel-ae]
 roots: [germanic-slepana, pie-sleb, high-german-shift]
 etymology_hook: "schlafen is sleep with two German changes stacked on it — p to f, and s to sch before l; and the older word for sleep, *swep-, walked off into Latin somnus and Greek hypnos while German and English replaced it together"

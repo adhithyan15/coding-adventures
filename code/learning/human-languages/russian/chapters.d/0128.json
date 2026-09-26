@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Wrong, Ready, Dangerous, Wet, Dry",
+  "label": "ch:ru-wrong-ready-dangerous-wet-dry",
+  "canDo": "I can say wrong, ready, dangerous, wet and dry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C128-dry",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say wrong, ready, dangerous, wet and dry.",
+    "assesses": [
+      "RU-LEX-C128-QUAL128-03",
+      "RU-LEX-C128-QUAL128-04",
+      "RU-LEX-C128-QUAL128-05"
+    ]
+  }
+}

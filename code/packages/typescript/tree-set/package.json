@@ -12,9 +12,9 @@
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.11",
     "typescript": "^5.0.0",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   }
 }
 

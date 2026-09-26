@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Thirty, Forty, Fifty, Sixty, Seventy",
+  "label": "ch:mw-thirty-forty-fifty-sixty-seventy",
+  "canDo": "I can say thirty, forty, fifty, sixty and seventy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C86-sittar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say thirty, forty, fifty, sixty and seventy.",
+    "assesses": [
+      "MW-LEX-C86-NUMBERS86-03",
+      "MW-LEX-C86-NUMBERS86-04",
+      "MW-LEX-C86-NUMBERS86-05"
+    ]
+  }
+}

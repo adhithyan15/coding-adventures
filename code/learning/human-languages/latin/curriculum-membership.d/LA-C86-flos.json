@@ -1,0 +1,11 @@
+{
+  "id": "LA-C86-flos",
+  "pathSegment": "LA-PATH-86-ARBOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-86-ARBOR",
+      "order": 1
+    }
+  ]
+}

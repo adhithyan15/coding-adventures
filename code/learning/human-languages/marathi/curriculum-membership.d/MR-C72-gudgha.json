@@ -1,0 +1,11 @@
+{
+  "id": "MR-C72-gudgha",
+  "pathSegment": "MR-PATH-72-BODY72",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-72-BODY72",
+      "order": 1
+    }
+  ]
+}

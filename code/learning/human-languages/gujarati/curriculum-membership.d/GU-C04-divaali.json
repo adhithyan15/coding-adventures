@@ -1,0 +1,11 @@
+{
+  "id": "GU-C04-divaali",
+  "pathSegment": "GU-PATH-FIRST-USE-SCRIPT-A",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-031-FIRST-USE-SCRIPT-A",
+      "order": 1
+    }
+  ]
+}

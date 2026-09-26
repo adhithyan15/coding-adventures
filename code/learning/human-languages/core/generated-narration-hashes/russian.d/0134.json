@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:5cc0dea777593fd5",
+  "lessonIds": [
+    "RU-C134-to-tell",
+    "RU-C134-to-go-for-a-walk",
+    "RU-C134-to-tidy-up",
+    "RU-C134-to-find",
+    "RU-C134-to-look-for"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch134.txt",
+  "json": "russian/narration/ch134.json",
+  "textHash": "fnv1a64:cbe765d50a4be125",
+  "jsonHash": "fnv1a64:9a90718bea3574c4",
+  "findings": []
+}

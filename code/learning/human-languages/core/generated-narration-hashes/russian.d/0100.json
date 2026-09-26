@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:cff97e04dfaa5be2",
+  "lessonIds": [
+    "RU-C100-ring",
+    "RU-C100-photograph",
+    "RU-C100-candle",
+    "RU-C100-calendar",
+    "RU-C100-rucksack"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch100.txt",
+  "json": "russian/narration/ch100.json",
+  "textHash": "fnv1a64:b255ebdf20aa68aa",
+  "jsonHash": "fnv1a64:f4469d1feb39c3de",
+  "findings": []
+}

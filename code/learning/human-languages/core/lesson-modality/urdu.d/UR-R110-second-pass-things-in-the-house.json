@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R110-second-pass-things-in-the-house",
+    "language": "urdu",
+    "chapter": 110,
+    "sequence": 5760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:294fc9a4998cc579"
+  },
+  "findings": []
+}

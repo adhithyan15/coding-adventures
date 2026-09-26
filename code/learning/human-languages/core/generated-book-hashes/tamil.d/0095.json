@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:7a193e71952ab582",
+  "lessonIds": [
+    "TA-C95-exactly",
+    "TA-C95-really",
+    "TA-C95-nothing",
+    "TA-C95-notyet",
+    "TA-C95-same"
+  ],
+  "tex": "tamil/book/chapters/ch95-exactly-really-nothing.tex"
+}

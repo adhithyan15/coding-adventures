@@ -1,0 +1,11 @@
+{
+  "id": "UR-C86-assi",
+  "pathSegment": "UR-PATH-86-NUMBERS86",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-86-NUMBERS86",
+      "order": 1
+    }
+  ]
+}

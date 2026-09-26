@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C44-panir",
+    "language": "persian",
+    "chapter": 44,
+    "sequence": 2070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dacd0f41bdcfcdc"
+  },
+  "findings": []
+}

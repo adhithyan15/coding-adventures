@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03, FR-LEX-IL-PLEUT-04, FR-ETYMON-PLEUVOIR-05]
+  knowledge: [FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03]
 introduces_idioms: []
 introduces_senses: [FR-SENSE-TEMPS-WEATHER-01]
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03, FR-LEX-IL-PLEUT-04, FR-ETYMON-PLEUVOIR-05]
+  knowledge: [FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -59,19 +59,8 @@ Spanish's *¿qué tiempo hace?*.
 Same *hacer*-style periphrasis as Spanish, just with French's own **faire**
 ("to make/do").
 
-## The word, taken apart: il pleut
-<!-- hl-knowledge: introduces=[FR-LEX-IL-PLEUT-04, FR-ETYMON-PLEUVOIR-05]; assesses=[] -->
-
-> **Il pleut.** — "It's raining." — from **pleuvoir** ← Latin **pluere**, "to
-  rain" — the **same** Latin verb behind Spanish's *llueve*. But here's the
-  honest difference: Spanish underwent the **pl- → ll-** shift (*pluere* →
-  *llover*), while French kept the **pl-** cluster fully intact — *pleuvoir*
-  still visibly starts with *pl-*, just like the Latin original. So the same
-  Latin verb took two different sound-change paths in its two daughters: one
-  eroded the cluster, one preserved it.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03, FR-LEX-IL-PLEUT-04, FR-ETYMON-PLEUVOIR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TEMPS-02, FR-GRAMMAR-IL-FAIT-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "le temps" — time, or weather, depending on context]
@@ -79,7 +68,7 @@ Same *hacer*-style periphrasis as Spanish, just with French's own **faire**
 - [YOU SAY: "il pleut" — it's raining, pl- kept intact from Latin]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TEMPS-02, FR-LEX-IL-PLEUT-04, FR-ETYMON-PLEUVOIR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TEMPS-02] -->
 
 [PAUSE 3s] What two things does **le temps** mean, and where does this
 polysemy come from? (**"Time"** and **"weather"** — from Latin *tempus*,

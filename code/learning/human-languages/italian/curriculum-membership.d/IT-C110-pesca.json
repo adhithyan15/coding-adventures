@@ -1,0 +1,11 @@
+{
+  "id": "IT-C110-pesca",
+  "pathSegment": "IT-PATH-110-CIBO110",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-110-CIBO110",
+      "order": 1
+    }
+  ]
+}

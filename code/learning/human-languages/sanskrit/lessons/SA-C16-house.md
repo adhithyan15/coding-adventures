@@ -12,17 +12,17 @@ headword: "गृहम्"
 gloss: "house, home"
 romanization: "gṛham"
 concept_tag: SA-NOUN-HOUSE
-prerequisites: [SA-C15-adjective-system]
+prerequisites: [SA-C15-adjective-system, SA-C15-mauna]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [SA-LEX-ANCHOR-MAUNA]
 introduces:
   knowledge: [SA-LEX-C16-PLACE-01]
 practises:
-  knowledge: [SA-LEX-C16-PLACE-01]
+  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-ANCHOR-MAUNA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [SA-C15-adjective-system]
 # गृहम् (gṛham) — house, home
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-ANCHOR-MAUNA] -->
 
 [PAUSE 2s] You can describe a thing now — big, small, new, old. This chapter gives you places to put those things.
 

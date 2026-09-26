@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-104-ROUPA104",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "PT-EXT-104-ROUPA104"
+  ],
+  "after": []
+}

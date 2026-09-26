@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:1a0badd30a005652",
+  "lessonIds": [
+    "MR-C80-visarne",
+    "MR-C80-pathavne",
+    "MR-C80-mojne",
+    "MR-C80-pakadne",
+    "MR-C80-kapne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch80.txt",
+  "json": "marathi/narration/ch80.json",
+  "textHash": "fnv1a64:58d9a1df36ff17e2",
+  "jsonHash": "fnv1a64:a8f188954e38aa51",
+  "findings": []
+}

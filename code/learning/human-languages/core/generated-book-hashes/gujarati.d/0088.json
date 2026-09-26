@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:6e36105cab947cd8",
+  "lessonIds": [
+    "GU-C88-glasses",
+    "GU-C88-bag",
+    "GU-C88-wallet",
+    "GU-C88-letter",
+    "GU-C88-gift"
+  ],
+  "tex": "gujarati/book/chapters/ch88-glasses-bag-wallet-letter-gift.tex"
+}

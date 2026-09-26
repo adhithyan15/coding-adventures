@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C42-correr",
+    "language": "portuguese",
+    "chapter": 42,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f12975be61ca30c9"
+  },
+  "findings": []
+}

@@ -1,0 +1,963 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 85,
+  "title": "Ball, Wheel, Sword, Crown, Ring",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:9effd696dfacc0f5",
+  "lessons": [
+    {
+      "id": "LA-C85-pila",
+      "sequence": 2840,
+      "title": "pila, pilae — a ball",
+      "headword": "pila, pilae",
+      "romanization": "pila, pilae",
+      "gloss": "a ball",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b114de6d02b37e81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a writing tablet, then the Latin for a mirror."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pila, pilae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pila, pilae — \"a ball\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pila, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pila*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a writing tablet, then the Latin for a mirror, then say pila again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a writing tablet, then the Latin for a mirror, then say *pila* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pila, pilae mean? (\"A ball\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C85-rota",
+      "sequence": 2850,
+      "title": "rota, rotae — a wheel",
+      "headword": "rota, rotae",
+      "romanization": "rota, rotae",
+      "gloss": "a wheel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d9fc53474560485",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a mirror, then the Latin for a ball."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rota, rotae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rota, rotae — \"a wheel\". English rotate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rota",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rota*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rota, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rota*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rota",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rota*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a mirror, then the Latin for a ball, then say rota again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a mirror, then the Latin for a ball, then say *rota* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rota, rotae mean? (\"A wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C85-gladius",
+      "sequence": 2860,
+      "title": "gladius, gladiī — a sword",
+      "headword": "gladius, gladiī",
+      "romanization": "gladius, gladiī",
+      "gloss": "a sword",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b9189930865119d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a ball, then the Latin for a wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gladius, gladiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gladius, gladiī — \"a sword\". A gladiator carried one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gladius",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gladius*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gladius, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gladius*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gladius",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gladius*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a ball, then the Latin for a wheel, then say gladius again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a ball, then the Latin for a wheel, then say *gladius* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gladius, gladiī mean? (\"A sword\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C85-corona",
+      "sequence": 2870,
+      "title": "corōna, corōnae — a crown, a garland",
+      "headword": "corōna, corōnae",
+      "romanization": "corōna, corōnae",
+      "gloss": "a crown, a garland",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2a16d9fc5c5d036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a wheel, then the Latin for a sword."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: corōna, corōnae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "corōna, corōnae — \"a crown, a garland\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corōna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corōna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corōna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *corōna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say corōna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *corōna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a wheel, then the Latin for a sword, then say corōna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a wheel, then the Latin for a sword, then say *corōna* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does corōna, corōnae mean? (\"A crown, a garland\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C85-anulus",
+      "sequence": 2880,
+      "title": "ānulus, ānulī — a ring",
+      "headword": "ānulus, ānulī",
+      "romanization": "ānulus, ānulī",
+      "gloss": "a ring",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b99c2d8f03accfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a sword, then the Latin for a crown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ānulus, ānulī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ānulus, ānulī — \"a ring\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānulus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānulus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānulus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānulus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ānulus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ānulus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a sword, then the Latin for a crown, then say ānulus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a sword, then the Latin for a crown, then say *ānulus* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ānulus, ānulī mean? (\"A ring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R85-first-pass-the-body-health-and-people",
+      "sequence": 2890,
+      "title": "The body, health and people — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 63-73",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0420b557556653bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a crown and a ring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an arm, a finger, a tooth, the tongue; a language, the nose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an arm, a finger, a tooth, the tongue; a language, the nose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the neck, the shoulder, a knee, the heart, blood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the neck, the shoulder, a knee, the heart, blood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hair, the belly, the back, the forehead, a beard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hair, the belly, the back, the forehead, a beard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chest, a leg, a cheek, a fingernail, healthy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chest, a leg, a cheek, a fingernail, healthy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fever, a cough, pain, medicine, an illness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fever, a cough, pain, medicine, an illness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sick, tired, hunger, thirst, care",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sick, tired, hunger, thirst, care]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joy, anger, fear, happy, sad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: joy, anger, fear, happy, sad]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a son, a daughter, a grandfather, a grandmother, a family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a son, a daughter, a grandfather, a grandmother, a family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a husband, a wife, children, a baby, an uncle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a husband, a wife, children, a baby, an uncle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an aunt, a neighbour, a guest; a host, a man, a woman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an aunt, a neighbour, a guest; a host, a man, a woman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a girl, an old man, a queen, a sailor, a poet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a girl, an old man, a queen, a sailor, a poet]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An arm? (bracchium, bracchiī.) A finger? (digitus, digitī.) A tooth? (dēns, dentis.) The tongue; a language? (lingua, linguae.) The nose? (nāsus, nāsī.) The neck? (collum, collī.) The shoulder? (umerus, umerī.) A knee? (genū, genūs.) The heart? (cor, cordis.) Blood? (sanguis, sanguinis.) A hair? (capillus, capillī.) The belly? (venter, ventris.) The back? (tergum, tergī.) The forehead? (frōns, frontis.) A beard? (barba, barbae.) The chest? (pectus, pectoris.) A leg? (crūs, crūris.) A cheek? (gena, genae.) A fingernail? (unguis, unguis.) Healthy? (sānus, sāna, sānum.) A fever? (febris, febris.) A cough? (tussis, tussis.) Pain? (dolor, dolōris.) Medicine? (medicīna, medicīnae.) An illness? (morbus, morbī.) Sick? (aeger, aegra, aegrum.) Tired? (fessus, fessa, fessum.) Hunger? (famēs, famis.) Thirst? (sitis, sitis.) Care? (cūra, cūrae.) Joy? (gaudium, gaudiī.) Anger? (īra, īrae.) Fear? (timor, timōris.) Happy? (laetus, laeta, laetum.) Sad? (trīstis, trīste.) A son? (fīlius, fīliī.) A daughter? (fīlia, fīliae.) A grandfather? (avus, avī.) A grandmother? (avia, aviae.) A family? (familia, familiae.) A husband? (marītus, marītī.) A wife? (uxor, uxōris.) Children? (līberī, līberōrum.) A baby? (īnfāns, īnfantis.) An uncle? (patruus, patruī.) An aunt? (amita, amitae.) A neighbour? (vīcīnus, vīcīnī.) A guest; a host? (hospes, hospitis.) A man? (vir, virī.) A woman? (fēmina, fēminae.) A girl? (puella, puellae.) An old man? (senex, senis.) A queen? (rēgīna, rēgīnae.) A sailor? (nauta, nautae.) A poet? (poēta, poētae.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R85-second-pass-verbs-food-the-house-and-things",
+      "sequence": 2900,
+      "title": "Verbs, food, the house and things — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 74-85",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d702f8a42bd90467",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a citizen and a cook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a citizen, a cook, a merchant, a farmer, a field",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a citizen, a cook, a merchant, a farmer, a field]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to work, to sing, to dance, to laugh, to weep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to work, to sing, to dance, to laugh, to weep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wash, to cook, to sell, to swim, to call",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wash, to cook, to sell, to swim, to call]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to send, to stay, to fall, to put, to find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to send, to stay, to fall, to put, to find]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to live, to enter, to go back, to fear, to rejoice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to live, to enter, to go back, to fear, to rejoice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "food, dinner, lunch, breakfast, meat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: food, dinner, lunch, breakfast, meat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cheese, oil, a grape, vegetables, an olive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cheese, oil, a grape, vegetables, an olive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grain, flour, a pear, a fig, a nut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grain, flour, a pear, a fig, a nut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a table, a chair, a bed, a window, a bedroom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a table, a chair, a bed, a window, a bedroom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kitchen, a roof, a lamp, a cup, a knife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kitchen, a roof, a lamp, a cup, a knife]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a chest, paper, a stylus, a writing tablet, a mirror",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a chest, paper, a stylus, a writing tablet, a mirror]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ball, a wheel, a sword, a crown, a ring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ball, a wheel, a sword, a crown, a ring]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A citizen? (cīvis, cīvis.) A cook? (coquus, coquī.) A merchant? (mercātor, mercātōris.) A farmer? (agricola, agricolae.) A field? (ager, agrī.) To work? (labōrō, labōrāre.) To sing? (canō, canere.) To dance? (saltō, saltāre.) To laugh? (rīdeō, rīdēre.) To weep? (fleō, flēre.) To wash? (lavō, lavāre.) To cook? (coquō, coquere.) To sell? (vendō, vendere.) To swim? (natō, natāre.) To call? (vocō, vocāre.) To send? (mittō, mittere.) To stay? (maneō, manēre.) To fall? (cadō, cadere.) To put? (pōnō, pōnere.) To find? (inveniō, invenīre.) To live? (vīvō, vīvere.) To enter? (intrō, intrāre.) To go back? (redeō, redīre.) To fear? (timeō, timēre.) To rejoice? (gaudeō, gaudēre.) Food? (cibus, cibī.) Dinner? (cēna, cēnae.) Lunch? (prandium, prandiī.) Breakfast? (ientāculum, ientāculī.) Meat? (carō, carnis.) Cheese? (cāseus, cāseī.) Oil? (oleum, oleī.) A grape? (ūva, ūvae.) Vegetables? (holus, holeris.) An olive? (olīva, olīvae.) Grain? (frūmentum, frūmentī.) Flour? (farīna, farīnae.) A pear? (pirum, pirī.) A fig? (fīcus, fīcī.) A nut? (nux, nucis.) A table? (mēnsa, mēnsae.) A chair? (sella, sellae.) A bed? (lectus, lectī.) A window? (fenestra, fenestrae.) A bedroom? (cubiculum, cubiculī.) A kitchen? (culīna, culīnae.) A roof? (tēctum, tēctī.) A lamp? (lucerna, lucernae.) A cup? (pōculum, pōculī.) A knife? (culter, cultrī.) A chest? (arca, arcae.) Paper? (charta, chartae.) A stylus? (stilus, stilī.) A writing tablet? (tabula, tabulae.) A mirror? (speculum, speculī.) A ball? (pila, pilae.) A wheel? (rota, rotae.) A sword? (gladius, gladiī.) A crown? (corōna, corōnae.) A ring? (ānulus, ānulī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

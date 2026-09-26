@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-74-ADJ74",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "UR-EXT-74-ADJ74"
+  ],
+  "after": []
+}

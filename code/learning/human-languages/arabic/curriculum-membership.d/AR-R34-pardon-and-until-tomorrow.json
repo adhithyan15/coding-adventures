@@ -1,0 +1,11 @@
+{
+  "id": "AR-R34-pardon-and-until-tomorrow",
+  "pathSegment": "AR-PATH-031",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-031-LANGUAGE-SPECIFIC",
+      "order": 4
+    }
+  ]
+}

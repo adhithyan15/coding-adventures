@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C83-sadness",
+    "language": "kannada",
+    "chapter": 83,
+    "sequence": 3040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0eab5a74b224183"
+  },
+  "findings": []
+}

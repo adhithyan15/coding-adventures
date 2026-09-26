@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:245124a3be296157",
+  "lessonIds": [
+    "RU-C97-broom",
+    "RU-C97-washing-machine",
+    "RU-C97-sofa",
+    "RU-C97-wardrobe",
+    "RU-C97-saucepan"
+  ],
+  "tex": "russian/book/chapters/ch97-broom-washing-machine-sofa-wardrobe-saucepan.tex"
+}

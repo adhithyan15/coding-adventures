@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C52-kuh",
+    "language": "persian",
+    "chapter": 52,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:142cb0d3507c5d07"
+  },
+  "findings": []
+}

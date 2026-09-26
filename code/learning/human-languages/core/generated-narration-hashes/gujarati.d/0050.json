@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:5990106842d7052b",
+  "lessonIds": [
+    "GU-C50-happiness",
+    "GU-C50-anger",
+    "GU-C50-fear",
+    "GU-C50-worry",
+    "GU-C50-tiredness"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch50.txt",
+  "json": "gujarati/narration/ch50.json",
+  "textHash": "fnv1a64:ad2251dcddf43609",
+  "jsonHash": "fnv1a64:467c51157d14ccc2",
+  "findings": []
+}

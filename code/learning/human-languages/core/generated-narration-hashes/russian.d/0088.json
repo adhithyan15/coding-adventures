@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:6b2967bef1f465e7",
+  "lessonIds": [
+    "RU-C88-post-office",
+    "RU-C88-cinema",
+    "RU-C88-supermarket",
+    "RU-C88-swimming-pool",
+    "RU-C88-stadium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch88.txt",
+  "json": "russian/narration/ch88.json",
+  "textHash": "fnv1a64:d0a0749e187a44ed",
+  "jsonHash": "fnv1a64:f537d717785508bb",
+  "findings": []
+}

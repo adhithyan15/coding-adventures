@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C120-asino",
+    "language": "italian",
+    "chapter": 120,
+    "sequence": 5850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2224c515717ef6bb"
+  },
+  "findings": []
+}

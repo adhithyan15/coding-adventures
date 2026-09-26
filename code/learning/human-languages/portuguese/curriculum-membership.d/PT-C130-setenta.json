@@ -1,0 +1,11 @@
+{
+  "id": "PT-C130-setenta",
+  "pathSegment": "PT-PATH-130-NUMEROS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-130-NUMEROS130",
+      "order": 1
+    }
+  ]
+}

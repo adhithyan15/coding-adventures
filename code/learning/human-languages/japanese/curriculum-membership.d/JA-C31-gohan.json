@@ -1,0 +1,11 @@
+{
+  "id": "JA-C31-gohan",
+  "pathSegment": "JA-PATH-31-VERBS31",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-31-VERBS31",
+      "order": 4
+    }
+  ]
+}

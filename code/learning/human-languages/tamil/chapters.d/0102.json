@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Elders and In-Laws",
+  "label": "ch:ta-elders-and-in-laws",
+  "canDo": "I can name my father's elder brother and his wife, a mother-in-law, and a daughter- or son-in-law.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C102-soninlaw",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can name my father's elder brother and his wife, a mother-in-law, and a daughter- or son-in-law.",
+    "assesses": [
+      "TA-LEX-C102-INLAWS-03",
+      "TA-LEX-C102-INLAWS-04",
+      "TA-LEX-C102-INLAWS-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C109-yogurt",
+    "language": "italian",
+    "chapter": 109,
+    "sequence": 5210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:846c0d245f41b2f3"
+  },
+  "findings": []
+}

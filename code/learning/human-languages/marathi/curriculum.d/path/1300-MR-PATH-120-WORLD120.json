@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-120-WORLD120",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "MR-EXT-120-WORLD120"
+  ],
+  "after": []
+}

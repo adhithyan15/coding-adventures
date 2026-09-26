@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 32,
-  "sourceHash": "fnv1a64:b6810ff2ad4f181c",
+  "sourceHash": "fnv1a64:770ac12c4bbb9523",
   "lessonIds": [
     "GU-C28-hear-baarnun",
     "GU-C28-hear-baari",
@@ -17,6 +17,6 @@
   "text": "gujarati/narration/ch32.txt",
   "json": "gujarati/narration/ch32.json",
   "textHash": "fnv1a64:f071733a5e41a03b",
-  "jsonHash": "fnv1a64:50275d7929f7432e",
+  "jsonHash": "fnv1a64:ce77881e99b8f459",
   "findings": []
 }

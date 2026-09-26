@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C99-narro",
+    "language": "latin",
+    "chapter": 99,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46f0a3df0b58a698"
+  },
+  "findings": []
+}

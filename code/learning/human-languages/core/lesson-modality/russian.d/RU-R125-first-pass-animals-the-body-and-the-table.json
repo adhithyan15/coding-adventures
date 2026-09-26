@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R125-first-pass-animals-the-body-and-the-table",
+    "language": "russian",
+    "chapter": 125,
+    "sequence": 6500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd2b30c60e2a15b7"
+  },
+  "findings": []
+}

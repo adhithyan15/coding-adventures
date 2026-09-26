@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Hammer, Glue, Scissors, Lamp, Bathroom",
+  "label": "ch:pt-hammer-glue-scissors-lamp-bathroom",
+  "canDo": "I can say a hammer, glue, scissors, a lamp and a bathroom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C98-casa-de-banho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say a hammer, glue, scissors, a lamp and a bathroom.",
+    "assesses": [
+      "PT-LEX-C98-CASA98-03",
+      "PT-LEX-C98-CASA98-04",
+      "PT-LEX-C98-CASA98-05"
+    ]
+  }
+}

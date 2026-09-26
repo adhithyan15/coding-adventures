@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C58-yogurt",
+    "language": "gujarati",
+    "chapter": 58,
+    "sequence": 2983,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfbb7b796161773d"
+  },
+  "findings": []
+}

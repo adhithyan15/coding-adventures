@@ -1,0 +1,11 @@
+{
+  "id": "HI-C123-kyachal",
+  "pathSegment": "HI-PATH-123-HAAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-123-HAAL",
+      "order": 3
+    }
+  ]
+}

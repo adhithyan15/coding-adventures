@@ -1,0 +1,11 @@
+{
+  "id": "MR-C76-bayko",
+  "pathSegment": "MR-PATH-76-FAMILY76",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-76-FAMILY76",
+      "order": 1
+    }
+  ]
+}

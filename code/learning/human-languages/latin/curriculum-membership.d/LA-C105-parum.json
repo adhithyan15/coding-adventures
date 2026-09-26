@@ -1,0 +1,11 @@
+{
+  "id": "LA-C105-parum",
+  "pathSegment": "LA-PATH-105-QUANTUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-105-QUANTUM",
+      "order": 4
+    }
+  ]
+}

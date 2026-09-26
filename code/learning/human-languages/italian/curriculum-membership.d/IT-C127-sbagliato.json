@@ -1,0 +1,11 @@
+{
+  "id": "IT-C127-sbagliato",
+  "pathSegment": "IT-PATH-127-QUALITA127",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-127-QUALITA127",
+      "order": 2
+    }
+  ]
+}

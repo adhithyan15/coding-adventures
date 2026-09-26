@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:ff9d01a737d2e878",
+  "lessonIds": [
+    "IT-C90-parcheggio",
+    "IT-C90-ascensore",
+    "IT-C90-nord",
+    "IT-C90-sud",
+    "IT-C90-ovest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch90.txt",
+  "json": "italian/narration/ch90.json",
+  "textHash": "fnv1a64:57ef9d5ab71201fb",
+  "jsonHash": "fnv1a64:af8e4d38b3e2bdd9",
+  "findings": []
+}

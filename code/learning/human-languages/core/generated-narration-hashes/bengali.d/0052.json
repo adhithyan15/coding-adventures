@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:3744370c1f5d46bf",
+  "lessonIds": [
+    "BN-C52-dhora",
+    "BN-C52-kata",
+    "BN-C52-thama",
+    "BN-C52-khoja",
+    "BN-C52-harano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch52.txt",
+  "json": "bengali/narration/ch52.json",
+  "textHash": "fnv1a64:05c8c4aceba20e8e",
+  "jsonHash": "fnv1a64:214dde998b69623a",
+  "findings": []
+}

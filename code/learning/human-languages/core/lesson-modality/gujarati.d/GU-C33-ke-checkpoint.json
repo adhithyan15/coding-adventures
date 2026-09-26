@@ -3,7 +3,7 @@
     "id": "GU-C33-ke-checkpoint",
     "language": "gujarati",
     "chapter": 37,
-    "sequence": 1920,
+    "sequence": 1933,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:024e912547abc1e2"
+    "sourceHash": "fnv1a64:8c3fe2036428ec66"
   },
   "findings": []
 }

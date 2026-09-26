@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C49-chhoro",
+    "language": "marwadi",
+    "chapter": 49,
+    "sequence": 3770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7c5b825034570ed"
+  },
+  "findings": []
+}

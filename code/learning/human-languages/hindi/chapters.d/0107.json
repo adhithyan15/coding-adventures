@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "At the Doctor",
+  "label": "ch:hi-at-the-doctor",
+  "canDo": "I can talk to a doctor, find a hospital, say I am hurt or feel weak, and talk about health.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C107-sehat",
+    "kind": "production",
+    "summary": "Complete HI-C107-sehat: a visit to the doctor, from injury to health.",
+    "assesses": [
+      "HI-LEX-C107-DOCTOR-03",
+      "HI-LEX-C107-DOCTOR-04",
+      "HI-LEX-C107-DOCTOR-05"
+    ]
+  }
+}

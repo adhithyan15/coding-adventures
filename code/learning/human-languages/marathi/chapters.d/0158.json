@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "To wipe, To sweep, To quarrel, To obtain, To save",
+  "label": "ch:mr-to-wipe-to-sweep-to-quarrel-to-obtain-to-save",
+  "canDo": "I can say to wipe, to sweep, to quarrel, to obtain and to save.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-R158-second-pass-describing-words-and-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: i can say to wipe, to sweep, to quarrel, to obtain and to save.",
+    "assesses": [
+      "MR-LEX-C158-ACT158-03",
+      "MR-LEX-C158-ACT158-04",
+      "MR-LEX-C158-ACT158-05"
+    ]
+  }
+}

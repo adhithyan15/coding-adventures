@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C98-rasta",
+    "language": "urdu",
+    "chapter": 98,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9016a4541d2b797"
+  },
+  "findings": []
+}

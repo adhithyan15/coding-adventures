@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-50-HOME3",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "RU-EXT-50-HOME3"
+  ],
+  "after": []
+}

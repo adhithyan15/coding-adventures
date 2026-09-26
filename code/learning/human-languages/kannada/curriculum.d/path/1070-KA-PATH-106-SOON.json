@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-106-SOON",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "KA-EXT-106-SOON"
+  ],
+  "after": []
+}

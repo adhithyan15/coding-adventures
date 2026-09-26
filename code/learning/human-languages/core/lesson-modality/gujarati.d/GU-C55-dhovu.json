@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C55-dhovu",
+    "language": "gujarati",
+    "chapter": 55,
+    "sequence": 2813,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c683d67217340b4a"
+  },
+  "findings": []
+}

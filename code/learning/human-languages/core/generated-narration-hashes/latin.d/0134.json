@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:a03ddef40a0855ee",
+  "lessonIds": [
+    "LA-C134-vacca",
+    "LA-C134-mulus",
+    "LA-C134-camelus",
+    "LA-C134-simia",
+    "LA-C134-delphinus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch134.txt",
+  "json": "latin/narration/ch134.json",
+  "textHash": "fnv1a64:223b9182fd4a6ebe",
+  "jsonHash": "fnv1a64:5e22b9fedbb5da01",
+  "findings": []
+}

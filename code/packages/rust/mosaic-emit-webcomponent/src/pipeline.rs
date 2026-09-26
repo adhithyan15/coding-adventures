@@ -1189,7 +1189,7 @@ fn emit_html_tree(
         // `onchange` handlers that route through `this.getRootNode().
         // host.dispatch(...)` (the shadow-DOM-aware form used by the
         // other host primitives).
-        "HostCheckbox" => return Ok(emit_host_checkbox(node, part_styles)),
+        "HostCheckbox" => return Ok(emit_host_checkbox(node, part_styles, ctx)),
         "HostRadio" => return Ok(emit_host_radio(node, part_styles)),
         "HostSlider" => return Ok(emit_host_slider(node, part_styles)),
 
@@ -2078,21 +2078,34 @@ fn template_identifier_body(name: &str) -> String {
 /// === "true"` imperatively. The literal `indeterminate: true` keyword
 /// case gets the hardcoded `data-indeterminate="true"` so the same
 /// hydration pass sets the property on mount.
-fn emit_host_checkbox(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
+fn emit_host_checkbox(node: &LayoutNode, part_styles: &HtmlStyles, ctx: &RenderCtx<'_>) -> String {
     let mut attrs = String::from(r#"<input type="checkbox""#);
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
     // checked — slot ref via template-literal conditional, keyword
-    // literal via bare attribute presence.
-    if let Some(slot) = find_slot_ref(node, "checked") {
-        let camel = to_camel_case_first_lower(slot);
-        if is_safe_identifier(&camel) {
-            attrs.push_str(&format!(r#"${{{camel} ? " checked" : ""}}"#));
+    // literal via bare attribute presence. Inside a `For` the state is
+    // usually a loop binding or a row expression such as `row[4]` (a "1"/""
+    // marker), read by truthiness like `If ( when: … )` (UI29-2 §2.1).
+    match node.props.iter().find(|p| p.name == "checked").map(|p| &p.value) {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            if is_safe_identifier(&camel) {
+                attrs.push_str(&format!(r#"${{{camel} ? " checked" : ""}}"#));
+            }
         }
-    } else if let Some(kw) = find_keyword(node, "checked") {
-        if kw == "true" {
-            attrs.push_str(" checked");
+        Some(LayoutPropValue::Keyword(kw)) if kw == "true" => attrs.push_str(" checked"),
+        Some(LayoutPropValue::Keyword(kw)) if kw == "false" => {}
+        Some(LayoutPropValue::Keyword(binding)) => {
+            let camel = to_camel_case_first_lower(binding);
+            if is_safe_identifier(&camel) {
+                attrs.push_str(&format!(r#"${{({camel}) ? " checked" : ""}}"#));
+            }
         }
+        Some(LayoutPropValue::Expr(expr)) if !strip_outer_parens(expr.trim()).is_empty() => {
+            let condition = strip_outer_parens(expr.trim());
+            attrs.push_str(&format!(r#"${{({condition}) ? " checked" : ""}}"#));
+        }
+        _ => {}
     }
 
     // disabled — same shape as HostButton/HostInput.
@@ -2121,9 +2134,22 @@ fn emit_host_checkbox(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     }
 
     // onchange — wraps `event.target.checked` into the dispatch payload.
+    // An `( index : number )` emit inside a `For` carries the row index
+    // instead, through the same `data-mosaic-index` a HostButton uses
+    // (UI29-2 §2.1.1): the toggle alone cannot say which row changed.
     if let Some(emit_name) = find_emit_ref(node, "onToggle") {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        if is_safe_identifier(&type_field) {
+        let wants_index = ctx.emits.iter().find(|e| e.name == emit_name).is_some_and(|e| {
+            matches!(e.params.as_slice(), [param] if param.r#type == EmitPayloadType::Number)
+        });
+        if wants_index {
+            if let Some((payload_attrs, event_expr)) = host_button_dispatch_bits(emit_name, ctx) {
+                attrs.push_str(&payload_attrs);
+                attrs.push_str(&format!(
+                    r#" onchange="this.getRootNode().host.dispatch({event_expr})""#
+                ));
+            }
+        } else if is_safe_identifier(&type_field) {
             attrs.push_str(&format!(
                 r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}',checked:event.target.checked}})""#
             ));
@@ -2131,6 +2157,20 @@ fn emit_host_checkbox(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     }
 
     attrs.push_str(" />");
+
+    // A loop binding or row expression names the row, the same forms a
+    // HostButton label takes.
+    if matches!(
+        node.props.iter().find(|p| p.name == "label").map(|p| &p.value),
+        Some(LayoutPropValue::Keyword(_)) | Some(LayoutPropValue::Expr(_))
+    ) {
+        let body = host_button_label_body(node);
+        return if body.is_empty() {
+            attrs
+        } else {
+            format!("<label>{attrs} {body}</label>")
+        };
+    }
 
     // Optional <label> wrap — string literal or slot ref.
     if let Some(s) = find_string(node, "label") {
@@ -5155,6 +5195,60 @@ mod tests {
             r.output
                 .contains("<button>${escapeHtml(displayName)}</button>"),
             "slot-label HostButton missing camelCase interpolation, got:\n{}",
+            r.output
+        );
+    }
+
+    /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` carries
+    /// the row index through `data-mosaic-index`, and a row expression drives
+    /// `checked` and the label.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Checklist",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onToggle",
+                vec![EmitParam {
+                    name: "index".to_string(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.to_string(),
+            value,
+        };
+        let l = root_layout(
+            "Checklist",
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props: vec![
+                    prop("each", LayoutPropValue::SlotRef("items".to_string())),
+                    prop("as", LayoutPropValue::Keyword("item".to_string())),
+                    prop("index", LayoutPropValue::Keyword("i".to_string())),
+                ],
+                children: vec![leaf_with_props(
+                    "HostCheckbox",
+                    vec![
+                        prop("checked", LayoutPropValue::Expr("item".to_string())),
+                        prop("label", LayoutPropValue::Expr("item".to_string())),
+                        prop("onToggle", LayoutPropValue::EmitRef("onToggle".to_string())),
+                    ],
+                )],
+            },
+        );
+        let r = from_pipeline(&m, &l, &empty_style("Checklist")).unwrap();
+        assert!(
+            r.output.contains(
+                r#"<label><input type="checkbox"${(item) ? " checked" : ""} data-mosaic-index="${i}" onchange="this.getRootNode().host.dispatch({type:'toggle',index:Number(this.dataset.mosaicIndex)})" /> ${escapeHtml(item)}</label>"#
+            ),
+            "expected an index-dispatching checkbox labelled by the row, got:\n{}",
             r.output
         );
     }

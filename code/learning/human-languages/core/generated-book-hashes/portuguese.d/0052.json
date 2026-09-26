@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:6c29d9fb7f766e84",
+  "lessonIds": [
+    "PT-C52-caneta",
+    "PT-C52-papel",
+    "PT-C52-caderno",
+    "PT-C52-lapis",
+    "PT-C52-bolsa"
+  ],
+  "tex": "portuguese/book/chapters/ch52-pen-paper-notebook-pencil-bag.tex"
+}

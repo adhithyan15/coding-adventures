@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:1f68fb1316b70c46",
+  "lessonIds": [
+    "IT-C69-uccello",
+    "IT-C69-topo",
+    "IT-C69-lupo",
+    "IT-C69-orso",
+    "IT-C69-volpe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch69.txt",
+  "json": "italian/narration/ch69.json",
+  "textHash": "fnv1a64:2cd69586a0e2366d",
+  "jsonHash": "fnv1a64:f196ba42b3ca7531",
+  "findings": []
+}

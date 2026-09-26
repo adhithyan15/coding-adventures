@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Son, Daughter, Grandparents, Husband",
+  "label": "ch:it-son-daughter-grandparents-husband",
+  "canDo": "I can name a son, a daughter, a grandfather, a grandmother, a husband.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C44-marito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can name a son, a daughter, a grandfather, a grandmother, a husband.",
+    "assesses": [
+      "IT-LEX-C44-FAMIGLIA1-03",
+      "IT-LEX-C44-FAMIGLIA1-04",
+      "IT-LEX-C44-FAMIGLIA1-05"
+    ]
+  }
+}

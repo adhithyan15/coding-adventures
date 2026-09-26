@@ -3,7 +3,7 @@
     "id": "GU-C02-tamarun-naam-shun-chhe",
     "language": "gujarati",
     "chapter": 8,
-    "sequence": 160,
+    "sequence": 173,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c83b02212c009d5a",
+    "sourceHash": "fnv1a64:0c361823529f151e",
     "detachableSegments": [
       "Script retrieval"
     ]

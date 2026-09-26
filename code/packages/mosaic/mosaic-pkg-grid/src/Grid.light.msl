@@ -1,0 +1,48 @@
+// Grid.light.msl — light theme style for the Grid component.
+//
+// The dark theme's parts and states, one for one, in the light palette of
+// VisiCalc's own Grid.light.msl, so a light-themed consumer (Trestle's Sheet
+// view) no longer embeds a dark grid. The design notes live in
+// Grid.dark.msl; this file differs from it only in colour.
+//
+// Colour palette (dark equivalent in brackets):
+//   #ffffff   — surface                         [#1e1e1e]
+//   #1f1f1f   — text                            [#cccccc]
+//   #c8c8c8   — cell borders                    [#3f3f46]
+//   #f1f3f5   — hovered row                     [#2a2d2e]
+//   #cce5ff   — selection                       [#094771 / #264f78]
+//   #ccf4d9   — active edit field               [#1f4f3f]
+//   #f3f3f3   — header band                     [#2d2d30]
+//   #555555   — header label                    [#9d9d9d]
+//   #007acc   — focus outline (unchanged)
+
+style Grid {
+  part sheet {
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #c8c8c8 ;
+    background:   #ffffff ;
+    // The table's text colour, inherited by every cell that sets none --
+    // the column headings above all. Without it a heading fell back to the
+    // backend's default black: on this surface, invisible (#14798).
+    color:        #1f1f1f ;
+  }
+
+  // A column heading: the header band a notch lighter than the body, and
+  // its label dimmer than a value, as in VisiCalc's own Grid.
+  part header-cell {
+    padding:    4px ;
+    background: #f3f3f3 ;
+    color:      #555555 ;
+  }
+  part data-row {
+    background: #ffffff ;
+
+    state hover {
+      background: #f1f3f5 ;
+    }
+    state selected {
+      background: #cce5ff ;
+    }
+  }
+}

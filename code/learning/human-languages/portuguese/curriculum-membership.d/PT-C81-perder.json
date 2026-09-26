@@ -1,0 +1,11 @@
+{
+  "id": "PT-C81-perder",
+  "pathSegment": "PT-PATH-81-VERBOS7",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-81-VERBOS7",
+      "order": 3
+    }
+  ]
+}

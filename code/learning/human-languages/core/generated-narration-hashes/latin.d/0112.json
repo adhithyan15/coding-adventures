@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:924f12a827ac94f4",
+  "lessonIds": [
+    "LA-C112-cupiditas",
+    "LA-C112-spes",
+    "LA-C112-desiderium",
+    "LA-C112-quare",
+    "LA-C112-quamobrem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch112.txt",
+  "json": "latin/narration/ch112.json",
+  "textHash": "fnv1a64:b8ffa8f50df720c9",
+  "jsonHash": "fnv1a64:c5734b11ba3d99e2",
+  "findings": []
+}

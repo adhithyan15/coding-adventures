@@ -1,0 +1,11 @@
+{
+  "id": "PT-C43-fechar",
+  "pathSegment": "PT-PATH-43-VERBOS4",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-43-VERBOS4",
+      "order": 0
+    }
+  ]
+}

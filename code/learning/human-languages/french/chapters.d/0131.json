@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Busy, Free, Open, Closed, Calm",
+  "label": "ch:fr-busy-free-open-closed-calm",
+  "canDo": "I can name busy, free, open, closed, calm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C131-calme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can name busy, free, open, closed, calm.",
+    "assesses": [
+      "FR-LEX-C131-QUALITES83-03",
+      "FR-LEX-C131-QUALITES83-04",
+      "FR-LEX-C131-QUALITES83-05"
+    ]
+  }
+}

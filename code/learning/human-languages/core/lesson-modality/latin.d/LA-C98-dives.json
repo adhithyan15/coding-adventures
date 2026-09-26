@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C98-dives",
+    "language": "latin",
+    "chapter": 98,
+    "sequence": 3510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6c1dadb8479cf50"
+  },
+  "findings": []
+}

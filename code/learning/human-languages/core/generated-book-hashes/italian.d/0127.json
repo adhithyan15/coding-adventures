@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:35864570022a2489",
+  "lessonIds": [
+    "IT-C127-serio",
+    "IT-C127-giusto",
+    "IT-C127-sbagliato",
+    "IT-C127-pronto",
+    "IT-C127-sicuro"
+  ],
+  "tex": "italian/book/chapters/ch127-serious-right-wrong-ready-safe.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C102-arbeit",
+  "pathSegment": "GE-PATH-102-DINGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-102-DINGE",
+      "order": 3
+    }
+  ]
+}

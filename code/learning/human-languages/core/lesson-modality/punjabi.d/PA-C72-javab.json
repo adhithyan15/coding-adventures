@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C72-javab",
+    "language": "punjabi",
+    "chapter": 72,
+    "sequence": 3870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:326c5e6142dbea15"
+  },
+  "findings": []
+}

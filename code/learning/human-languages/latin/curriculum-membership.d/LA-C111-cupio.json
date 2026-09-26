@@ -1,0 +1,11 @@
+{
+  "id": "LA-C111-cupio",
+  "pathSegment": "LA-PATH-111-WANT111",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-111-WANT111",
+      "order": 1
+    }
+  ]
+}

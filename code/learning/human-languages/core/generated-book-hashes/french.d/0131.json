@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:4522df92257600c0",
+  "lessonIds": [
+    "FR-C131-occupe",
+    "FR-C131-libre",
+    "FR-C131-ouvert",
+    "FR-C131-ferme",
+    "FR-C131-calme"
+  ],
+  "tex": "french/book/chapters/ch131-busy-free-open-closed-calm.tex"
+}

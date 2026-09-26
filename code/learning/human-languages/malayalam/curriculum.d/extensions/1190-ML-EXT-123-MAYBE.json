@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-123-MAYBE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say it is not possible, not like that, maybe, other, and wrong.",
+  "prerequisites": []
+}

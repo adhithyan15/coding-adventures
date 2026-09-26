@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C123-asa",
+    "language": "marathi",
+    "chapter": 123,
+    "sequence": 5610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bad2e6b7da97b16d"
+  },
+  "findings": []
+}

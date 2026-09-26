@@ -1,0 +1,11 @@
+{
+  "id": "JA-C34-daikon",
+  "pathSegment": "JA-PATH-34-FOOD34",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-34-FOOD34",
+      "order": 1
+    }
+  ]
+}

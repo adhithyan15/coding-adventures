@@ -1,0 +1,11 @@
+{
+  "id": "GE-C58-magen",
+  "pathSegment": "GE-PATH-58-KOERPER3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-58-KOERPER3",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C119-shadishuda",
+  "pathSegment": "HI-PATH-119-ABOUT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-119-ABOUT",
+      "order": 3
+    }
+  ]
+}

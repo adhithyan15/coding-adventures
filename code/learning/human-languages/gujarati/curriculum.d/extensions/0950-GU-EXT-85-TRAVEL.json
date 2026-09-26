@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-85-TRAVEL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a bus, a train, a station, a plane and a port.",
+  "prerequisites": []
+}

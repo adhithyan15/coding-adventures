@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:985f2ee8c79dbd68",
+  "lessonIds": [
+    "MW-C67-khel",
+    "MW-C67-chitthi",
+    "MW-C67-rukh",
+    "MW-C67-patto",
+    "MW-C67-dugar"
+  ],
+  "tex": "marwadi/book/chapters/ch67-game-letter-tree-leaf-hill.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:0306c5b82438634d",
+  "lessonIds": [
+    "GU-C47-finger",
+    "GU-C47-throat",
+    "GU-C47-shoulder",
+    "GU-C47-lip",
+    "GU-C47-tongue"
+  ],
+  "tex": "gujarati/book/chapters/ch47-finger-throat-and-tongue.tex"
+}

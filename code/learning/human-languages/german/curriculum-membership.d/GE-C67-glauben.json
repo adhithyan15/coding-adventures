@@ -1,0 +1,11 @@
+{
+  "id": "GE-C67-glauben",
+  "pathSegment": "GE-PATH-67-VERBEN4",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-67-VERBEN4",
+      "order": 1
+    }
+  ]
+}

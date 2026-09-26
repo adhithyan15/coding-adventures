@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C06-chatri",
+    "language": "marathi",
+    "chapter": 6,
+    "sequence": 77,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:47736cc0fc29045e"
+  },
+  "findings": []
+}

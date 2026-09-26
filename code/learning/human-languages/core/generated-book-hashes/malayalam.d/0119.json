@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:d5e55f0bc36ddc08",
+  "lessonIds": [
+    "ML-C119-slowly",
+    "ML-C119-oncemore",
+    "ML-C119-loudly",
+    "ML-C119-meaning",
+    "ML-C119-wait"
+  ],
+  "tex": "malayalam/book/chapters/ch119-slowly-once-more.tex"
+}

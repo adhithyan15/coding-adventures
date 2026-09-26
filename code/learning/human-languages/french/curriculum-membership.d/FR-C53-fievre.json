@@ -1,0 +1,11 @@
+{
+  "id": "FR-C53-fievre",
+  "pathSegment": "FR-PATH-53-SANTE5",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-53-SANTE5",
+      "order": 1
+    }
+  ]
+}

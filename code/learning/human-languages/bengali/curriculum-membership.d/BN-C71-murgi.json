@@ -1,0 +1,11 @@
+{
+  "id": "BN-C71-murgi",
+  "pathSegment": "BN-PATH-71-ANIMALS71",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-71-ANIMALS71",
+      "order": 4
+    }
+  ]
+}

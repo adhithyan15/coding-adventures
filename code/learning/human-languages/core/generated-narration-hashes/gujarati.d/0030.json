@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 30,
-  "sourceHash": "fnv1a64:59018154ec6e9cfa",
+  "sourceHash": "fnv1a64:b13e91622b36d3ae",
   "lessonIds": [
     "GU-R26-numbers-r4",
     "GU-R26-hovun-javun-r4",
@@ -18,6 +18,6 @@
   "text": "gujarati/narration/ch30.txt",
   "json": "gujarati/narration/ch30.json",
   "textHash": "fnv1a64:18a472f3ce2ab86f",
-  "jsonHash": "fnv1a64:8bb680a562c88212",
+  "jsonHash": "fnv1a64:b9bb654c370592d6",
   "findings": []
 }

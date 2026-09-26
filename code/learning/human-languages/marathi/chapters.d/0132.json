@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Hammer, Scissors, Needle, Thread, Comb",
+  "label": "ch:mr-hammer-scissors-needle-thread-comb",
+  "canDo": "I can say a hammer, scissors, a needle, a thread and a comb.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C132-kangva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say a hammer, scissors, a needle, a thread and a comb.",
+    "assesses": [
+      "MR-LEX-C132-THINGS132-03",
+      "MR-LEX-C132-THINGS132-04",
+      "MR-LEX-C132-THINGS132-05"
+    ]
+  }
+}

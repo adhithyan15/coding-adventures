@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-80-CIBUS2",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name cheese, oil, a grape, vegetables and an olive.",
+  "prerequisites": []
+}

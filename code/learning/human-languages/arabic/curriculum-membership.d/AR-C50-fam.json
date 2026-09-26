@@ -1,0 +1,11 @@
+{
+  "id": "AR-C50-fam",
+  "pathSegment": "AR-PATH-50-BODY50",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-50-BODY50",
+      "order": 3
+    }
+  ]
+}

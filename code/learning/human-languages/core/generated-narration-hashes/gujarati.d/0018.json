@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 18,
-  "sourceHash": "fnv1a64:9e2f256d341090d5",
+  "sourceHash": "fnv1a64:8706604a2c346c59",
   "lessonIds": [
     "GU-C12-aankh",
     "GU-C12-kaan",
@@ -13,6 +13,6 @@
   "text": "gujarati/narration/ch18.txt",
   "json": "gujarati/narration/ch18.json",
   "textHash": "fnv1a64:8a0fae7826ea2455",
-  "jsonHash": "fnv1a64:61e61215b4348b3f",
+  "jsonHash": "fnv1a64:a6fcc88d9390a1c7",
   "findings": []
 }

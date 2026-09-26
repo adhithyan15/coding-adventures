@@ -185,11 +185,27 @@ describe("UUID class", () => {
   });
 
   describe("bytes property", () => {
+    // This assertion used to read `expect(id.bytes[0]).not.toBe(0xFF)` after
+    // setting the copy's first byte to 0xFF. That conflates two different
+    // claims: "the original was not mutated" and "the original's first byte
+    // does not happen to be 0xFF". v4 fills byte 0 with random bits (the
+    // version and variant nibbles live in bytes 6 and 8), so roughly 1 run in
+    // 256 produced an id whose first byte really was 0xFF and the test failed
+    // on correct code. Measured over 200,000 generations: 788 hits, 1 in 253.8.
+    //
+    // Snapshotting the whole array before the mutation tests the actual claim
+    // and is independent of what the random bytes happen to be. It also
+    // compares all 16 bytes rather than one, so any collateral change to the
+    // original is caught, not just a change to byte 0. (Sharing that shows up
+    // only in a byte this test never writes would still go unnoticed; the
+    // byte-content assertions elsewhere in this file cover that.)
     it("returns a copy (mutation-safe)", () => {
       const id = v4();
+      const before = Uint8Array.from(id.bytes); // snapshot before mutating
       const b1 = id.bytes;
-      b1[0] = 0xFF; // mutate returned copy
-      expect(id.bytes[0]).not.toBe(0xFF); // original unchanged
+      b1[0] ^= 0xFF; // mutate the returned copy, whatever it held
+      expect(id.bytes).toEqual(before); // the original is untouched
+      expect(id.bytes).not.toBe(b1); // and every read is a fresh copy
     });
 
     it("returns 16 bytes", () => {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C01-saarun
 spine_node: SPINE-RESPOND-BASIC
-sequence: 50
+sequence: 51
 chapter: 2
 type: word
 headword: સારું

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C83-pulis",
+    "language": "marwadi",
+    "chapter": 83,
+    "sequence": 5490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ede7485d5bef77e6"
+  },
+  "findings": []
+}

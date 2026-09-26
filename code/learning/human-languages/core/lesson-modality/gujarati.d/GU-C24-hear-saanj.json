@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-saanj",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1180,
+    "sequence": 1193,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bf2df6a8a1ec599b"
+    "sourceHash": "fnv1a64:34c63d1d92e8f48f"
   },
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C115-rock",
+    "language": "russian",
+    "chapter": 115,
+    "sequence": 5930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3856ee5b7d088dba"
+  },
+  "findings": []
+}

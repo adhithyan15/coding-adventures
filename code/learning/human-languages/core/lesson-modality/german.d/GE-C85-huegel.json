@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C85-huegel",
+    "language": "german",
+    "chapter": 85,
+    "sequence": 3020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bef28297ca8f9dbf"
+  },
+  "findings": []
+}

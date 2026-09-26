@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:23c495e492a1366a",
+  "lessonIds": [
+    "GE-C130-rosa",
+    "GE-C130-orange",
+    "GE-C130-huebsch",
+    "GE-C130-rund",
+    "GE-C130-breit"
+  ],
+  "tex": "german/book/chapters/ch130-pink-orange-pretty-round-wide.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C89-kurz",
+  "pathSegment": "GE-PATH-89-ADJ1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-89-ADJ1",
+      "order": 1
+    }
+  ]
+}

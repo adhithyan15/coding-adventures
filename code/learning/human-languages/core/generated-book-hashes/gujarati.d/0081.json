@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:e543875139c8b5c3",
+  "lessonIds": [
+    "GU-C81-eleven",
+    "GU-C81-twelve",
+    "GU-C81-thirteen",
+    "GU-C81-fifteen",
+    "GU-C81-sixteen"
+  ],
+  "tex": "gujarati/book/chapters/ch81-eleven-to-sixteen.tex"
+}

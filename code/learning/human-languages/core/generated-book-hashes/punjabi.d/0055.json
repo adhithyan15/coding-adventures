@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:f5a0b160f4bc995a",
+  "lessonIds": [
+    "PA-C55-patni",
+    "PA-C55-bachcha",
+    "PA-C55-munda",
+    "PA-C55-kuri",
+    "PA-C55-admi"
+  ],
+  "tex": "punjabi/book/chapters/ch55-wife-child-boy-girl-man.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C102-daughterinlaw",
+  "pathSegment": "TA-PATH-102-INLAWS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-102-INLAWS",
+      "order": 3
+    }
+  ]
+}

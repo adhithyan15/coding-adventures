@@ -1,0 +1,11 @@
+{
+  "id": "BN-C45-daktar",
+  "pathSegment": "BN-PATH-45-HEALTH45",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-45-HEALTH45",
+      "order": 1
+    }
+  ]
+}

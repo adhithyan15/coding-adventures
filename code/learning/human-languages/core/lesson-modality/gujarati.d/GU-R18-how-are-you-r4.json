@@ -3,7 +3,7 @@
     "id": "GU-R18-how-are-you-r4",
     "language": "gujarati",
     "chapter": 22,
-    "sequence": 820,
+    "sequence": 833,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e7a7f1839b69fdb0",
+    "sourceHash": "fnv1a64:0cfe262ef63bff60",
     "detachableSegments": [
       "Writing — from sound"
     ]

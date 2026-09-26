@@ -1,0 +1,11 @@
+{
+  "id": "LA-C73-senex",
+  "pathSegment": "LA-PATH-73-HOMINES2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-73-HOMINES2",
+      "order": 1
+    }
+  ]
+}

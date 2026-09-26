@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-85-RES2",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "LA-EXT-85-RES2"
+  ],
+  "after": []
+}

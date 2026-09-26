@@ -1,0 +1,11 @@
+{
+  "id": "TA-C87-weariness",
+  "pathSegment": "TA-PATH-87-UNWELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-87-UNWELL",
+      "order": 3
+    }
+  ]
+}

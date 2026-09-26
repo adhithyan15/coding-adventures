@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C90-palang",
+    "language": "marathi",
+    "chapter": 90,
+    "sequence": 3900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5892fc48853dd97"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C103-stivali",
+  "pathSegment": "IT-PATH-103-VESTITI103",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-103-VESTITI103",
+      "order": 4
+    }
+  ]
+}

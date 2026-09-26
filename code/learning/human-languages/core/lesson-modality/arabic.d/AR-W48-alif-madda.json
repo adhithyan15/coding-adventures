@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W48-alif-madda",
+    "language": "arabic",
+    "chapter": 48,
+    "sequence": 1360,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9aafd3ff5917f7ec",
+    "detachableSegments": [
+      "Script you'll notice: آ",
+      "Writing: آ"
+    ]
+  },
+  "findings": []
+}

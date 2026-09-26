@@ -30,9 +30,18 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
   ]);
   expect(opening.every((lesson) => lesson.frontmatter.chapter === "1")).toBe(true);
 
-  const firstDoorway = ordered.slice(14, 21);
+  // HL-C443: each runway chapter after the first opens with short words the
+  // reader says before writing their letters, so a letter is a piece of a word
+  // already known rather than a shape on its own. Chapter 1 has no room: it is
+  // at the twelve-atom budget, and its cold letters are written from हो in the
+  // lesson itself.
+  const firstDoorway = ordered.slice(14, 25);
   expect(firstDoorway.map((lesson) => lesson.realization.lessonId)).toEqual([
     "MR-C01-dhanyavad",
+    "MR-C02-dukh",
+    "MR-C02-aabhaal",
+    "MR-C02-sant",
+    "MR-C02-bet",
     "MR-W02-visarga",
     "MR-W02-aa-independent",
     "MR-W02-bha",
@@ -42,7 +51,7 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
   ]);
   expect(firstDoorway.every((lesson) => lesson.frontmatter.chapter === "2")).toBe(true);
 
-  const secondDoorway = ordered.slice(21, 28);
+  const secondDoorway = ordered.slice(25, 32);
   expect(secondDoorway.map((lesson) => lesson.realization.lessonId)).toEqual([
     "MR-W03-da",
     "MR-W03-dha",
@@ -65,8 +74,11 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
   // Pinned as an ordered list, not a count, because the order is the argument:
   // marks first (they block the most lessons), then two consonant rows that
   // teach the voice/breath pattern, then the retroflex row, then the leftovers.
-  const secondRunway = ordered.slice(33, 61);
+  const secondRunway = ordered.slice(37, 80);
   expect(secondRunway.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "MR-C05-amrut",
+    "MR-C05-kiran",
+    "MR-C05-tup",
     "MR-W05-i-matra",
     "MR-W05-u-matra",
     "MR-W05-uu-matra",
@@ -74,6 +86,11 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     "MR-W05-candrabindu",
     "MR-W05-a-independent",
     "MR-R05-marks-recall",
+    "MR-C06-ghagar",
+    "MR-C06-chav",
+    "MR-C06-chatri",
+    "MR-C06-jahaj",
+    "MR-C06-jhoka",
     "MR-W06-kha",
     "MR-W06-ga",
     "MR-W06-gha",
@@ -82,12 +99,19 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     "MR-W06-ja",
     "MR-W06-jha",
     "MR-R06-two-rows-recall",
+    "MR-C07-taali",
+    "MR-C07-thaam",
+    "MR-C07-daba",
     "MR-W07-tta",
     "MR-W07-ttha",
     "MR-W07-dda",
     "MR-W07-nna",
     "MR-W07-pa",
     "MR-R07-retroflex-recall",
+    "MR-C08-ulat",
+    "MR-C08-shesh",
+    "MR-C08-uub",
+    "MR-C08-ekda",
     "MR-W08-la",
     "MR-W08-sha",
     "MR-W08-ssa",
@@ -103,6 +127,8 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
   // retrieval payoff that adds none.
   expect(secondRunway.filter((lesson) => lesson.realization.type === "writing")).toHaveLength(24);
   expect(secondRunway.filter((lesson) => lesson.realization.type === "review")).toHaveLength(4);
+  // Fifteen anchor words, one atom each: chapters 5-8 carry 9, 12, 8 and 10.
+  expect(secondRunway.filter((lesson) => lesson.realization.type === "word")).toHaveLength(15);
 
   const chapterSizes = new Map<string, number>();
   for (const lesson of ordered) {
@@ -111,7 +137,8 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
   }
   expect([...chapterSizes.entries()]).toEqual([
     ["1", 14],
-    ["2", 7],
+    // Chapter 2 gains four anchor words (7 -> 11), chapters 5-8 fifteen more.
+    ["2", 11],
     ["3", 7],
     ["4", 5],
     // Chapters 5-8 are the second script runway. Everything from here down used
@@ -119,10 +146,10 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // an existing one is what keeps every chapter under the twelve-atom budget
     // while still putting all twenty-four signs BEFORE the lessons that need
     // them. Length is never a cost in this corpus, so splitting was free.
-    ["5", 7],
-    ["6", 8],
-    ["7", 6],
-    ["8", 7],
+    ["5", 10],
+    ["6", 13],
+    ["7", 9],
+    ["8", 11],
     // Chapter 9 gains one ear-only reach-back and chapter 13 four more: the
     // twenty-four new atoms need R2 and R3 retrieval, and those windows fall
     // inside chapters that already existed.
@@ -223,7 +250,8 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Twenty comes before nineteen on purpose: ekoNiis is built as one LESS
     // than twenty, so the round number has to exist first.
     ["55", 5],
-    ["56", 5],
+    // +1: HL-C443 anchor word मौज, before the ौ letter lesson.
+    ["56", 6],
     ["57", 5],
     ["58", 5],
     ["59", 4],
@@ -245,10 +273,13 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["63", 1],
     // Chapter 64: ddha, pha, the danda, and the cold-retrieval review that
     // keeps the danda from being an atom nothing revisits.
-    ["64", 4],
+    // +2: HL-C443 anchor words ढोल and फणस, before the ढ and फ letter lessons.
+    ["64", 6],
     // Chapter 65: the four standing vowels plus the review that keeps the last
     // of them from being an atom nothing revisits.
-    ["65", 6],
+    // +3: HL-C443 anchor words ईश्वर, ओला and ऐवज, before the independent
+    // ई, ओ and ऐ letter lessons.
+    ["65", 9],
     // Chapter 66: the four parts of the day, the whole day, and the review that
     // keeps the last of them from being an atom nothing revisits.
     ["66", 6],
@@ -260,5 +291,21 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Chapter 69: the near row, the far row, the system lesson that makes them
     // pronouns, and the review.
     ["69", 4],
+    // Chapters 70-120: the pre-A1 vocabulary tranche, five word lessons each,
+    // cut into three runs of seventeen chapters. The last chapter of each run
+    // (86, 103, 120) also carries that run's two review lessons, which is why
+    // they hold seven. Three runs rather than two keeps each review under the
+    // 300-second lesson ceiling.
+    ...Array.from({ length: 51 }, (_, i): [string, number] => [
+      String(70 + i),
+      [86, 103, 120].includes(70 + i) ? 7 : 5,
+    ]),
+    // Chapters 121-158: the A1 tranche, five word lessons each, in four runs
+    // (121-130, 131-140, 141-149, 150-158). The last chapter of each run also
+    // carries that run's two reviews.
+    ...Array.from({ length: 38 }, (_, i): [string, number] => [
+      String(121 + i),
+      [130, 140, 149, 158].includes(121 + i) ? 7 : 5,
+    ]),
   ]);
 });

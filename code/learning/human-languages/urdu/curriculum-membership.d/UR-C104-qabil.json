@@ -1,0 +1,11 @@
+{
+  "id": "UR-C104-qabil",
+  "pathSegment": "UR-PATH-104-CAN104",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-104-CAN104",
+      "order": 1
+    }
+  ]
+}

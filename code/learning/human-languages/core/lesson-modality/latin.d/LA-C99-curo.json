@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C99-curo",
+    "language": "latin",
+    "chapter": 99,
+    "sequence": 3570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30e107aa3e2332d4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C109-audeo",
+    "language": "latin",
+    "chapter": 109,
+    "sequence": 4110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92e233da33e926e4"
+  },
+  "findings": []
+}

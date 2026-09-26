@@ -8,7 +8,7 @@ type: practice
 headword: kein · keine · keinen · nicht
 gloss: the whole chapter run cold — every noun this book owns, cancelled, and every verb it owns, refused
 concept_tag: GE-REVIEW-NEGATION
-prerequisites: [GE-C32-nicht-stellung]
+prerequisites: [GE-C32-nicht-stellung, GE-C22-hund-katze-more]
 sounds: []
 roots: []
 duration:

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:9e26259c7c4d009d",
+  "lessonIds": [
+    "BN-C43-kadh",
+    "BN-C43-rokto",
+    "BN-C43-hatu",
+    "BN-C43-jibh",
+    "BN-C43-matha"
+  ],
+  "tex": "bengali/book/chapters/ch43-shoulder-blood-knee-tongue-head.tex"
+}

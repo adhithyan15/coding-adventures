@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "italian",
+  "chapter": 60,
+  "title": "Come Back, Study, Travel, Pay, Use",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:71d07b16fd78e8e3",
+  "lessons": [
+    {
+      "id": "IT-C60-tornare",
+      "sequence": 2560,
+      "title": "tornare — to come back, to return",
+      "headword": "tornare",
+      "romanization": "tornare",
+      "gloss": "to come back, to return",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a18ccf0dc27f691",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a knife, then the Italian for a fork."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tornare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tornare — \"to come back, to return\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tornare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tornare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tornare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tornare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tornare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tornare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a knife, then the Italian for a fork, then say tornare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a knife, then the Italian for a fork, then say *tornare* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tornare mean? (\"To come back, to return\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C60-studiare",
+      "sequence": 2570,
+      "title": "studiare — to study",
+      "headword": "studiare",
+      "romanization": "studiare",
+      "gloss": "to study",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eef4bb7edf1b863b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for a fork, then the Italian for to come back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: studiare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "studiare — \"to study\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "studiare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *studiare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "studiare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *studiare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say studiare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *studiare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for a fork, then the Italian for to come back, then say studiare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for a fork, then the Italian for to come back, then say *studiare* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does studiare mean? (\"To study\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C60-viaggiare",
+      "sequence": 2580,
+      "title": "viaggiare — to travel",
+      "headword": "viaggiare",
+      "romanization": "viaggiare",
+      "gloss": "to travel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:647b3eef20ea2aa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to come back, then the Italian for to study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: viaggiare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "viaggiare — \"to travel\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viaggiare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viaggiare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viaggiare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viaggiare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say viaggiare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *viaggiare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to come back, then the Italian for to study, then say viaggiare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to come back, then the Italian for to study, then say *viaggiare* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does viaggiare mean? (\"To travel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C60-pagare",
+      "sequence": 2590,
+      "title": "pagare — to pay",
+      "headword": "pagare",
+      "romanization": "pagare",
+      "gloss": "to pay",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41d1abd820a2f08a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to study, then the Italian for to travel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pagare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pagare — \"to pay\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pagare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pagare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pagare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pagare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pagare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pagare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to study, then the Italian for to travel, then say pagare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to study, then the Italian for to travel, then say *pagare* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pagare mean? (\"To pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C60-usare",
+      "sequence": 2600,
+      "title": "usare — to use",
+      "headword": "usare",
+      "romanization": "usare",
+      "gloss": "to use",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c518c2417963905",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Italian for to travel, then the Italian for to pay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: usare",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "usare — \"to use\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say usare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *usare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Italian for to travel, then the Italian for to pay, then say usare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Italian for to travel, then the Italian for to pay, then say *usare* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does usare mean? (\"To use\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R60-first-pass-the-body-family-and-doing",
+      "sequence": 2610,
+      "title": "The body, family and doing — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 37-48",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b0cd4718aba590c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to pay and to use."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an arm, a leg, a foot, a finger, a tooth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an arm, a leg, a foot, a finger, a tooth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tongue; a language, the neck, a shoulder, the back, hair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tongue; a language, the neck, a shoulder, the back, hair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the belly, the face, blood, skin, a nail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the belly, the face, blood, skin, a nail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chin, the forehead, pain, a fever, a cough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chin, the forehead, pain, a fever, a cough]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medicine, a doctor, a hospital, an illness, hunger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: medicine, a doctor, a hospital, an illness, hunger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thirst, tiredness, tired, ill, joy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thirst, tiredness, tired, ill, joy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fear, anger, sadness, happy, sad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fear, anger, sadness, happy, sad]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a son, a daughter, a grandfather, a grandmother, a husband",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a son, a daughter, a grandfather, a grandmother, a husband]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wife, an aunt, a cousin, a cousin, a little boy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wife, an aunt, a cousin, a cousin, a little boy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a little girl, a neighbour, a guest; a host, a boy, a girl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a little girl, a neighbour, a guest; a host, a boy, a girl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sing, to dance, to laugh, to cry, to wash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sing, to dance, to laugh, to cry, to wash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cook, to sell, to swim, to call, to sleep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cook, to sell, to swim, to call, to sleep]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An arm? (il braccio.) A leg? (la gamba.) A foot? (il piede.) A finger? (il dito.) A tooth? (il dente.) The tongue; a language? (la lingua.) The neck? (il collo.) A shoulder? (la spalla.) The back? (la schiena.) Hair? (i capelli.) The belly? (la pancia.) The face? (il viso.) Blood? (il sangue.) Skin? (la pelle.) A nail? (l'unghia.) The chin? (il mento.) The forehead? (la fronte.) Pain? (il dolore.) A fever? (la febbre.) A cough? (la tosse.) Medicine? (la medicina.) A doctor? (il medico.) A hospital? (l'ospedale.) An illness? (la malattia.) Hunger? (la fame.) Thirst? (la sete.) Tiredness? (la stanchezza.) Tired? (stanco.) Ill? (malato.) Joy? (la gioia.) Fear? (la paura.) Anger? (la rabbia.) Sadness? (la tristezza.) Happy? (felice.) Sad? (triste.) A son? (il figlio.) A daughter? (la figlia.) A grandfather? (il nonno.) A grandmother? (la nonna.) A husband? (il marito.) A wife? (la moglie.) An aunt? (la zia.) A cousin? (il cugino.) A cousin? (la cugina.) A little boy? (il bambino.) A little girl? (la bambina.) A neighbour? (il vicino.) A guest; a host? (l'ospite.) A boy? (il ragazzo.) A girl? (la ragazza.) To sing? (cantare.) To dance? (ballare.) To laugh? (ridere.) To cry? (piangere.) To wash? (lavare.) To cook? (cucinare.) To sell? (vendere.) To swim? (nuotare.) To call? (chiamare.) To sleep? (dormire.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-R60-second-pass-food-the-house-and-the-table",
+      "sequence": 2620,
+      "title": "Food, the house and the table — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 49-60",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7abc0ab6d6c8fd31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to run and to hear; to feel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to run, to hear; to feel, to teach, to learn, to open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to run, to hear; to feel, to teach, to learn, to open]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to close, to drink, to live, to go in, to go out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to close, to drink, to live, to go in, to go out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meat, fish, butter, salt, chicken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: meat, fish, butter, salt, chicken]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fruit, an apple, a banana, an orange, grapes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fruit, an apple, a banana, an orange, grapes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a potato, a tomato, an onion, a carrot, a lemon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a potato, a tomato, an onion, a carrot, a lemon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cake, a soup, honey, oil, lunch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cake, a soup, honey, oil, lunch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "breakfast, a pear, rice, cheese, an egg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: breakfast, a pear, rice, cheese, an egg]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kitchen; cooking, a window, a table, a chair, a key",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kitchen; cooking, a window, a table, a chair, a key]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wall, a roof, a garden, a lamp, a bathroom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wall, a roof, a garden, a lamp, a bathroom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bedroom, the floor, stairs; a ladder, a mirror, a cup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bedroom, the floor, stairs; a ladder, a mirror, a cup]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a glass, a plate; a dish, a spoon, a knife, a fork",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a glass, a plate; a dish, a spoon, a knife, a fork]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to come back, to study, to travel, to pay, to use",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to come back, to study, to travel, to pay, to use]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To run? (correre.) To hear; to feel? (sentire.) To teach? (insegnare.) To learn? (imparare.) To open? (aprire.) To close? (chiudere.) To drink? (bere.) To live? (vivere.) To go in? (entrare.) To go out? (uscire.) Meat? (la carne.) Fish? (il pesce.) Butter? (il burro.) Salt? (il sale.) Chicken? (il pollo.) Fruit? (la frutta.) An apple? (la mela.) A banana? (la banana.) An orange? (l'arancia.) Grapes? (l'uva.) A potato? (la patata.) A tomato? (il pomodoro.) An onion? (la cipolla.) A carrot? (la carota.) A lemon? (il limone.) A cake? (la torta.) A soup? (la zuppa.) Honey? (il miele.) Oil? (l'olio.) Lunch? (il pranzo.) Breakfast? (la colazione.) A pear? (la pera.) Rice? (il riso.) Cheese? (il formaggio.) An egg? (l'uovo.) A kitchen; cooking? (la cucina.) A window? (la finestra.) A table? (il tavolo.) A chair? (la sedia.) A key? (la chiave.) A wall? (il muro.) A roof? (il tetto.) A garden? (il giardino.) A lamp? (la lampada.) A bathroom? (il bagno.) A bedroom? (la camera.) The floor? (il pavimento.) Stairs; a ladder? (la scala.) A mirror? (lo specchio.) A cup? (la tazza.) A glass? (il bicchiere.) A plate; a dish? (il piatto.) A spoon? (il cucchiaio.) A knife? (il coltello.) A fork? (la forchetta.) To come back? (tornare.) To study? (studiare.) To travel? (viaggiare.) To pay? (pagare.) To use? (usare.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C25-divas",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1330,
+    "sequence": 1343,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6aa644b1a0fced48",
+    "sourceHash": "fnv1a64:d7c5f55140c03d1e",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

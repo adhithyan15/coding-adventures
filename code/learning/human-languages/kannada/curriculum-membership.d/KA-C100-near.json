@@ -1,0 +1,11 @@
+{
+  "id": "KA-C100-near",
+  "pathSegment": "KA-PATH-100-FIND",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-FIND",
+      "order": 4
+    }
+  ]
+}

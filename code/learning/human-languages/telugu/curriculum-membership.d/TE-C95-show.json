@@ -1,0 +1,11 @@
+{
+  "id": "TE-C95-show",
+  "pathSegment": "TE-PATH-95-ASK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-95-ASK",
+      "order": 3
+    }
+  ]
+}

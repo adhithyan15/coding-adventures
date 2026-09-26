@@ -1,0 +1,11 @@
+{
+  "id": "AR-R23-please-sorry-thank-you",
+  "pathSegment": "AR-PATH-023",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-023-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

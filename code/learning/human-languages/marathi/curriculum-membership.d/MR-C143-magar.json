@@ -1,0 +1,11 @@
+{
+  "id": "MR-C143-magar",
+  "pathSegment": "MR-PATH-143-THINGS143",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-143-THINGS143",
+      "order": 1
+    }
+  ]
+}

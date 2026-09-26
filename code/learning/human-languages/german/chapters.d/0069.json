@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Fish, Meat, Chicken, Fruit, Apple",
+  "label": "ch:ge-fish-meat-chicken-fruit-apple",
+  "canDo": "I can say a fish, meat, a chicken, fruit and an apple.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C69-apfel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can say a fish, meat, a chicken, fruit and an apple.",
+    "assesses": [
+      "GE-LEX-C69-ESSEN1-03",
+      "GE-LEX-C69-ESSEN1-04",
+      "GE-LEX-C69-ESSEN1-05"
+    ]
+  }
+}

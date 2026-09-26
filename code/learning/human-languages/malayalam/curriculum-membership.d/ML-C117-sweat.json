@@ -1,0 +1,11 @@
+{
+  "id": "ML-C117-sweat",
+  "pathSegment": "ML-PATH-117-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-117-BODY",
+      "order": 1
+    }
+  ]
+}

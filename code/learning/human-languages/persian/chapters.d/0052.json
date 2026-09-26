@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Mountain, Forest, River, Lake, Stone",
+  "label": "ch:fa-mountain-forest-river-lake-stone",
+  "canDo": "I can say a mountain, a forest, a river, a lake and a stone.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C52-sang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can say a mountain, a forest, a river, a lake and a stone.",
+    "assesses": [
+      "FA-LEX-C52-NATURE52-03",
+      "FA-LEX-C52-NATURE52-04",
+      "FA-LEX-C52-NATURE52-05"
+    ]
+  }
+}

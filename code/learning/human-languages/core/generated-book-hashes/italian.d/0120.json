@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:881deba69a2505b6",
+  "lessonIds": [
+    "IT-C120-asino",
+    "IT-C120-coniglio",
+    "IT-C120-tigre",
+    "IT-C120-farfalla",
+    "IT-C120-rana"
+  ],
+  "tex": "italian/book/chapters/ch120-donkey-rabbit-tiger-butterfly-frog.tex"
+}

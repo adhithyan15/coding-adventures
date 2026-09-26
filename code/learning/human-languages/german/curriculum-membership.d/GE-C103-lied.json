@@ -1,0 +1,11 @@
+{
+  "id": "GE-C103-lied",
+  "pathSegment": "GE-PATH-103-FREIZEIT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-103-FREIZEIT",
+      "order": 0
+    }
+  ]
+}

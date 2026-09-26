@@ -1,0 +1,11 @@
+{
+  "id": "UR-C80-isteshan",
+  "pathSegment": "UR-PATH-80-TOWN80",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-80-TOWN80",
+      "order": 0
+    }
+  ]
+}

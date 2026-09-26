@@ -1,5 +1,14 @@
+// Stroke-order filmstrips (`*-filmstrip.svg`, HL-C443) are excluded. The book
+// places them from derived targets and no lesson's Markdown references one, so
+// the app never asks for them -- and there are several hundred, which pushed
+// this eager URL map over the 500 kB first-paint budget (`check:bundle`) the
+// day they were rolled out. Showing filmstrips in the app is a lazy-loading
+// feature of its own, tracked in HL-C443.
 const GENERATED_FIGURES = import.meta.glob(
-  "../../../../learning/human-languages/*/book/figures/*.svg",
+  [
+    "../../../../learning/human-languages/*/book/figures/*.svg",
+    "!../../../../learning/human-languages/*/book/figures/*-filmstrip.svg",
+  ],
   { eager: true, query: "?url", import: "default" },
 ) as Record<string, string>;
 

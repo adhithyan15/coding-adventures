@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C52-sovno",
+    "language": "marwadi",
+    "chapter": 52,
+    "sequence": 3910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1d8d9b747acbb42"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:eea64bba2e5392ed",
+  "lessonIds": [
+    "AR-C89-kharij",
+    "AR-C89-fawqa",
+    "AR-C89-tahta",
+    "AR-C89-amama",
+    "AR-C89-waraa"
+  ],
+  "tex": "arabic/book/chapters/ch89-outside-above-below-in-front-of-behind.tex"
+}

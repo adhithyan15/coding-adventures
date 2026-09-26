@@ -2,24 +2,24 @@
 schema_version: 2
 id: ML-S116-letter-u
 spine_node: SPINE-MEET-GREET
-sequence: 217
+sequence: 218
 delivery: script
 chapter: 4
 type: writing
 headword: "ഉ"
 gloss: the single character ഉ — recognised inside words you already say
 romanization: "u"
-prerequisites: [ML-S110-letter-va]
+prerequisites: [ML-S110-letter-va, ML-C04-uduppu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-110]
+  knowledge: [ML-SCRIPT-RECOG-110, ML-LEX-ANCHOR-UDUPPU]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-116]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-110, ML-SCRIPT-RECOG-116]
+  knowledge: [ML-SCRIPT-RECOG-110, ML-SCRIPT-RECOG-116, ML-LEX-ANCHOR-UDUPPU]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S110-letter-va]
 # ഉ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-110] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-110, ML-LEX-ANCHOR-UDUPPU] -->
 
 [PAUSE 1s] Before the new one: വ — what does it do?
 

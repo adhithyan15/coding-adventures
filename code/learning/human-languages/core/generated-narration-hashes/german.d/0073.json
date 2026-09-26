@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:2050da09b6ef4b38",
+  "lessonIds": [
+    "GE-C73-traube",
+    "GE-C73-marmelade",
+    "GE-C73-kaese",
+    "GE-C73-salz",
+    "GE-C73-zucker"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch73.txt",
+  "json": "german/narration/ch73.json",
+  "textHash": "fnv1a64:44ce30eaa4fd6e72",
+  "jsonHash": "fnv1a64:417d53cfd18cc86c",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:556595ef499a410a",
+  "lessonIds": [
+    "GU-C87-dhoti",
+    "GU-C87-shirt",
+    "GU-C87-sandals",
+    "GU-C87-cap",
+    "GU-C87-umbrella"
+  ],
+  "tex": "gujarati/book/chapters/ch87-what-we-wear.tex"
+}

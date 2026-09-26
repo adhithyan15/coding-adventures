@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:481b31472791a664",
+  "lessonIds": [
+    "PT-C32-costas",
+    "PT-C32-cabelo",
+    "PT-C32-barriga",
+    "PT-C32-rosto",
+    "PT-C32-sangue"
+  ],
+  "tex": "portuguese/book/chapters/ch32-back-hair-belly-face-blood.tex"
+}

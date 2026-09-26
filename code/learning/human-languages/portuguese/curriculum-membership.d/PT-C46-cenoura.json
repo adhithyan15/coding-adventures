@@ -1,0 +1,11 @@
+{
+  "id": "PT-C46-cenoura",
+  "pathSegment": "PT-PATH-46-LEGUMES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-46-LEGUMES",
+      "order": 3
+    }
+  ]
+}

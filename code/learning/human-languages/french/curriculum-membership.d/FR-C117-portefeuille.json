@@ -1,0 +1,11 @@
+{
+  "id": "FR-C117-portefeuille",
+  "pathSegment": "FR-PATH-117-HABITS69",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-117-HABITS69",
+      "order": 4
+    }
+  ]
+}

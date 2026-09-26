@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W22-ttha
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2210
+sequence: 2223
 delivery: script
 chapter: 43
 type: writing

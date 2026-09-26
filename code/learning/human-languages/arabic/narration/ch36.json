@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Cups, Plates, and More Than One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:20901df6d4de1002",
+  "sourceHash": "fnv1a64:cf5090eb4531bcc4",
   "lessons": [
     {
       "id": "AR-C36-zayt",
@@ -788,6 +788,177 @@
             {
               "kind": "speech",
               "text": "What separates مَـ from مِـ? (Ma- makes a place, mi- a tool — maktab and maṭʿam against mirʾāh and milʿaqa.) What does ل-ع-ق mean? (To lap.) Name this chapter's broken plurals, and a sound one. (Akwāb, aṭbāq, malāʿiq; qahawāt or ṣadīqāt.) What does the ة on milʿaqa tell you? (Feminine — and unusually for a ة word, it still breaks.) Ask for a spoon politely. (Milʿaqa, min faḍlik.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R36-the-family-and-the-body-again",
+      "sequence": 1001,
+      "title": "The hand that holds the spoon",
+      "headword": "يد · أب · أخت",
+      "romanization": "yad · ab · ukht",
+      "gloss": "the hand that holds the spoon, and the family words around it — five inherited Semitic roots on their second outing, with the two script pieces of the farewell",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d2e57051d63cf84b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the two halves of the farewell"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the two halves of the farewell until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick up the spoon this chapter gave you and name the part of the body doing it. Then name the one at the other end. Both words came once, a long way back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "cognates",
+          "title": "Across the family: the inherited stock",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Arabic",
+                "meaning",
+                "Hebrew cousin"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Arabic: يد yad. meaning: hand. Hebrew cousin: יד yad.",
+                "Arabic: رأس raʾs. meaning: head. Hebrew cousin: ראש rosh.",
+                "Arabic: أب ab. meaning: father. Hebrew cousin: אב av.",
+                "Arabic: أم umm. meaning: mother. Hebrew cousin: אם em.",
+                "Arabic: أخ / أخت akh / ukht. meaning: brother / sister. Hebrew cousin: אח ach."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Neither language borrowed these from the other; both inherited them. يد has barely moved at all — two letters, one syllable, and its Hebrew cousin is said almost the same way after several thousand years."
+            },
+            {
+              "kind": "speech",
+              "text": "أخت is أخ with one letter added. Set that beside the colour words, which needed a whole reshaped template to change gender, and the contrast is the point: the oldest words take the cheapest endings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: roots still at work",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رئيس raʾīs, president or chief, is built on head with nothing borrowed — Arabic reached for its own oldest word, the way English reached for Latin caput to make capital and captain."
+            },
+            {
+              "kind": "speech",
+              "text": "أم and أبو are still forming names today. Add a child's name and you have a kunya: mother of and father of, used as an honorific in ordinary speech."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: the two halves of the farewell",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "مع — mīm, round head, joining left into ʿayn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **مع** — *mīm*, round head, joining left into *ʿayn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "السلامة — الـ, then sīn, lām, alif, mīm, then the tied ة",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **السلامة** — **الـ**, then *sīn · lām · alif · mīm*, then the tied **ة**]"
+            },
+            {
+              "kind": "speech",
+              "text": "مع needed no new letters when you first wrote it. And السلامة is not a new word: it is الـ wrapped round the very first word you learned to draw, with a tied tāʾ closing it — the same ة that closes ملعقة (milʿaqa), the spoon in your hand."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand, head — yad, raʾs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand, head — *yad*, *raʾs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four relatives — ab, umm, akh, ukht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four relatives — *ab*, *umm*, *akh*, *ukht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the word for president, and the body part underneath it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the word for president, and the body part underneath it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the word in this set that has changed least from its Hebrew cousin. (يد.) Say what separates أخ from أخت. (One added letter.) Name the letter that closes both السلامة and ملعقة (milʿaqa). (ة, the tied tāʾ.) And give the chief built on the word for head. (رئيس.)"
             }
           ]
         }

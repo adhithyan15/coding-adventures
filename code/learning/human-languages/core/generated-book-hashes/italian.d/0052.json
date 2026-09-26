@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:49093ad18accc4d8",
+  "lessonIds": [
+    "IT-C52-frutta",
+    "IT-C52-mela",
+    "IT-C52-banana",
+    "IT-C52-arancia",
+    "IT-C52-uva"
+  ],
+  "tex": "italian/book/chapters/ch52-fruit-apple-banana-orange-grapes.tex"
+}

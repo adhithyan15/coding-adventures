@@ -1,0 +1,11 @@
+{
+  "id": "GU-C60-jalebi",
+  "pathSegment": "GU-PATH-60-SNACKS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-60-SNACKS",
+      "order": 3
+    }
+  ]
+}

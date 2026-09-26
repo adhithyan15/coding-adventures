@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-122-CAN122",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "MR-EXT-122-CAN122"
+  ],
+  "after": []
+}

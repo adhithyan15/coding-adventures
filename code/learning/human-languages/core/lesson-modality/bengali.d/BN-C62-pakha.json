@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C62-pakha",
+    "language": "bengali",
+    "chapter": 62,
+    "sequence": 3230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1722ed642b4b6497"
+  },
+  "findings": []
+}

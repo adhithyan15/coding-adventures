@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C97-laugh",
+    "language": "telugu",
+    "chapter": 97,
+    "sequence": 3730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee20da4d4e718313"
+  },
+  "findings": []
+}

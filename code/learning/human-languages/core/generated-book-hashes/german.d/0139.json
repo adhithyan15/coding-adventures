@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:74fe6cd23d1cd136",
+  "lessonIds": [
+    "GE-C139-beginnen",
+    "GE-C139-besuchen",
+    "GE-C139-antworten",
+    "GE-C139-legen",
+    "GE-C139-stellen"
+  ],
+  "tex": "german/book/chapters/ch139-to-begin-to-visit-to-answer-to-lay-to-put.tex"
+}

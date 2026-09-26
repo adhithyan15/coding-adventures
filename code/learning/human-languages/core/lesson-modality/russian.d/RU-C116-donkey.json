@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C116-donkey",
+    "language": "russian",
+    "chapter": 116,
+    "sequence": 6040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d122d5969a8c1a3"
+  },
+  "findings": []
+}

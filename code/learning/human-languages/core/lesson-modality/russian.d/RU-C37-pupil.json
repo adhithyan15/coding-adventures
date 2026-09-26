@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C37-pupil",
+    "language": "russian",
+    "chapter": 37,
+    "sequence": 1830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70f5c134ad8c6a83"
+  },
+  "findings": []
+}

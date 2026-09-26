@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C56-pina",
+    "language": "punjabi",
+    "chapter": 56,
+    "sequence": 3050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed2f9be9f7d08f00"
+  },
+  "findings": []
+}

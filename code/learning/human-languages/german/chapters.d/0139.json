@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "To begin, To visit, To answer, To lay, To put",
+  "label": "ch:ge-to-begin-to-visit-to-answer-to-lay-to-put",
+  "canDo": "I can say to begin, to visit, to answer, to lay and to put.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C139-stellen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say to begin, to visit, to answer, to lay and to put.",
+    "assesses": [
+      "GE-LEX-C139-VERB139-03",
+      "GE-LEX-C139-VERB139-04",
+      "GE-LEX-C139-VERB139-05"
+    ]
+  }
+}

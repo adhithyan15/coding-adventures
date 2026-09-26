@@ -1,0 +1,11 @@
+{
+  "id": "PA-C81-sasta",
+  "pathSegment": "PA-PATH-81-ADJ81",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-81-ADJ81",
+      "order": 2
+    }
+  ]
+}

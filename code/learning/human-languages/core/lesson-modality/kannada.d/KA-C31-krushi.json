@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C31-krushi",
+    "language": "kannada",
+    "chapter": 31,
+    "sequence": 604,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3d316d2031c19840"
+  },
+  "findings": []
+}

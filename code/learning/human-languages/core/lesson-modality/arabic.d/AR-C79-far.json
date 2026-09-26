@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C79-far",
+    "language": "arabic",
+    "chapter": 79,
+    "sequence": 2940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee6e009bb9b9bb28"
+  },
+  "findings": []
+}

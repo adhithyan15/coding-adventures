@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Famous, Important, Interesting, Boring, Fun",
+  "label": "ch:pt-famous-important-interesting-boring-fun",
+  "canDo": "I can say famous, important, interesting, boring and fun.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-R123-second-pass-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say famous, important, interesting, boring and fun.",
+    "assesses": [
+      "PT-LEX-C123-QUALIDADES123-03",
+      "PT-LEX-C123-QUALIDADES123-04",
+      "PT-LEX-C123-QUALIDADES123-05"
+    ]
+  }
+}

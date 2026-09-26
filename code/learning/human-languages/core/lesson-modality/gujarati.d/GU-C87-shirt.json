@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C87-shirt",
+    "language": "gujarati",
+    "chapter": 87,
+    "sequence": 4433,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b986539e335c9f32"
+  },
+  "findings": []
+}

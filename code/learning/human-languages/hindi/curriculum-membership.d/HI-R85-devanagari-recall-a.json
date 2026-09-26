@@ -1,0 +1,11 @@
+{
+  "id": "HI-R85-devanagari-recall-a",
+  "pathSegment": "HI-PATH-78-READING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-78-READING",
+      "order": 3
+    }
+  ]
+}

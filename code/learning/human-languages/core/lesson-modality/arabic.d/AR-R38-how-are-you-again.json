@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R38-how-are-you-again",
+    "language": "arabic",
+    "chapter": 38,
+    "sequence": 1081,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d60fa1b5748d045"
+  },
+  "findings": []
+}

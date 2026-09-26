@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Getting There",
+  "label": "ch:ml-getting-there",
+  "canDo": "I can name a vehicle, a car, a train, a plane and an autorickshaw.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C137-auto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can name a vehicle, a car, a train, a plane and an autorickshaw.",
+    "assesses": [
+      "ML-LEX-C137-RIDE-03",
+      "ML-LEX-C137-RIDE-04",
+      "ML-LEX-C137-RIDE-05"
+    ]
+  }
+}

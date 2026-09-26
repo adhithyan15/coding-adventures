@@ -1,11 +1,11 @@
 {
   "id": "AR-W00-full-greeting-recall",
   "pathSegment": "AR-PATH-003",
-  "pathOrder": 6,
+  "pathOrder": 9,
   "extensions": [
     {
       "id": "AR-EXT-003-SCRIPT",
-      "order": 4
+      "order": 7
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C77-maneo",
+    "language": "latin",
+    "chapter": 77,
+    "sequence": 2450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:375317f81e0d77aa"
+  },
+  "findings": []
+}

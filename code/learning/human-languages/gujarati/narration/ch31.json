@@ -4,11 +4,11 @@
   "chapter": 31,
   "title": "The Table Is Set",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:09fc23244d22f583",
+  "sourceHash": "fnv1a64:030954ae3449b666",
   "lessons": [
     {
       "id": "GU-C27-hear-bhaat",
-      "sequence": 1460,
+      "sequence": 1473,
       "title": "ભાત (bhāt) — hear rice",
       "headword": "ભાત",
       "romanization": "bhāt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e660297a738e747b",
+      "sourceHash": "fnv1a64:901fead84e68e4ab",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +115,7 @@
     },
     {
       "id": "GU-C27-hear-daal",
-      "sequence": 1470,
+      "sequence": 1483,
       "title": "દાળ (dāḷ) — hear lentils",
       "headword": "દાળ",
       "romanization": "dāḷ",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fffafdfe8134cbbb",
+      "sourceHash": "fnv1a64:07cc156e0863a7b5",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
     },
     {
       "id": "GU-C27-hear-shaak",
-      "sequence": 1480,
+      "sequence": 1493,
       "title": "શાક (shāk) — hear vegetable",
       "headword": "શાક",
       "romanization": "shāk",
@@ -234,7 +234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d23b05f29f0e302a",
+      "sourceHash": "fnv1a64:d6d08b1fd1977146",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
     },
     {
       "id": "GU-C27-hear-tel",
-      "sequence": 1490,
+      "sequence": 1503,
       "title": "તેલ (tel) — hear oil",
       "headword": "તેલ",
       "romanization": "tel",
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79ad1015c4ef99c0",
+      "sourceHash": "fnv1a64:e89a2299be6171d9",
       "notice": null,
       "blocks": [
         {
@@ -435,7 +435,7 @@
     },
     {
       "id": "GU-C27-hear-keri",
-      "sequence": 1500,
+      "sequence": 1513,
       "title": "કેરી (kerī) — hear mango",
       "headword": "કેરી",
       "romanization": "kerī",
@@ -446,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:983972ab7b3478da",
+      "sourceHash": "fnv1a64:67c2bb528bc4b11e",
       "notice": null,
       "blocks": [
         {
@@ -542,7 +542,7 @@
     },
     {
       "id": "GU-C27-plate-five",
-      "sequence": 1510,
+      "sequence": 1523,
       "title": "Five things on one plate, by ear",
       "headword": "ભાત — દાળ — શાક — તેલ — કેરી",
       "romanization": "bhāt — dāḷ — shāk — tel — kerī",
@@ -553,7 +553,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adb9aaa6a6ba83c6",
+      "sourceHash": "fnv1a64:3f293e669ddf0b74",
       "notice": null,
       "blocks": [
         {
@@ -681,7 +681,7 @@
     },
     {
       "id": "GU-C27-bhaat",
-      "sequence": 1520,
+      "sequence": 1533,
       "title": "Bhāt reaches the page",
       "headword": "ભાત",
       "romanization": "bhāt",
@@ -692,7 +692,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:9d1c5726d97e035d",
+      "sourceHash": "fnv1a64:f438295b953ac84d",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -800,7 +800,7 @@
     },
     {
       "id": "GU-R27-plate-five-r1",
-      "sequence": 1530,
+      "sequence": 1543,
       "title": "The plate returns at R1, and the drinks at R4",
       "headword": "ભાત — દાળ — શાક — તેલ — કેરી",
       "romanization": "bhāt — dāḷ — shāk — tel — kerī",
@@ -811,7 +811,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:814f0d02e62fb7f6",
+      "sourceHash": "fnv1a64:618af627d5a87424",
       "notice": {
         "modality": "pen",
         "needs": [],

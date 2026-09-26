@@ -1,0 +1,11 @@
+{
+  "id": "RU-C111-homework",
+  "pathSegment": "RU-PATH-111-THINGS111",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-111-THINGS111",
+      "order": 3
+    }
+  ]
+}

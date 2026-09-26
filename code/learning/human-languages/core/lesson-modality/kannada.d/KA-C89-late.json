@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C89-late",
+    "language": "kannada",
+    "chapter": 89,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0247c48e2113dee4"
+  },
+  "findings": []
+}

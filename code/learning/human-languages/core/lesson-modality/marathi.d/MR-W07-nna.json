@@ -3,7 +3,7 @@
     "id": "MR-W07-nna",
     "language": "marathi",
     "chapter": 7,
-    "sequence": 83,
+    "sequence": 103,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:8e9f48f0f3a14448",
+    "sourceHash": "fnv1a64:afaee20335dc3516",
     "detachableSegments": [
       "Script",
       "Writing — guided copy"

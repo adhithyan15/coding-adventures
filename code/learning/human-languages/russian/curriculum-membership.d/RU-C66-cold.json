@@ -1,0 +1,11 @@
+{
+  "id": "RU-C66-cold",
+  "pathSegment": "RU-PATH-66-TEMP",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-66-TEMP",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C67-ease",
+  "pathSegment": "SA-PATH-67-NEEDS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-67-NEEDS",
+      "order": 4
+    }
+  ]
+}

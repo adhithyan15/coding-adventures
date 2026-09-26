@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:591df908733f579c",
+  "lessonIds": [
+    "AR-C75-kalima",
+    "AR-C75-sura",
+    "AR-C75-shajara",
+    "AR-C75-zahra",
+    "AR-C75-jabal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch75.txt",
+  "json": "arabic/narration/ch75.json",
+  "textHash": "fnv1a64:b425cb7c7fd110d5",
+  "jsonHash": "fnv1a64:33dd2686d6ed0a6b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C92-oneminute",
+  "pathSegment": "TA-PATH-92-AGAIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-92-AGAIN",
+      "order": 3
+    }
+  ]
+}

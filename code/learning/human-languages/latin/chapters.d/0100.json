@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Fight, Sail, Prepare, Touch, Pull",
+  "label": "ch:la-fight-sail-prepare-touch-pull",
+  "canDo": "I can say to fight, to sail, to prepare, to touch and to pull.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C100-traho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say to fight, to sail, to prepare, to touch and to pull.",
+    "assesses": [
+      "LA-LEX-C100-VERBA6-03",
+      "LA-LEX-C100-VERBA6-04",
+      "LA-LEX-C100-VERBA6-05"
+    ]
+  }
+}

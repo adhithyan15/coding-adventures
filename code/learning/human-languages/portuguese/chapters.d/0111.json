@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Driver, Lawyer, Engineer, Firefighter, Postman",
+  "label": "ch:pt-driver-lawyer-engineer-firefighter-postman",
+  "canDo": "I can say a driver, a lawyer, an engineer, a firefighter and a postman.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C111-carteiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say a driver, a lawyer, an engineer, a firefighter and a postman.",
+    "assesses": [
+      "PT-LEX-C111-TRABALHO111-03",
+      "PT-LEX-C111-TRABALHO111-04",
+      "PT-LEX-C111-TRABALHO111-05"
+    ]
+  }
+}

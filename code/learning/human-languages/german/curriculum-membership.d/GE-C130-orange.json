@@ -1,0 +1,11 @@
+{
+  "id": "GE-C130-orange",
+  "pathSegment": "GE-PATH-130-FARBE130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-130-FARBE130",
+      "order": 1
+    }
+  ]
+}

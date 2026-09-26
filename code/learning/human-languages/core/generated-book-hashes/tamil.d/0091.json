@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:d339d87064ecfbf0",
+  "lessonIds": [
+    "TA-C91-sunshine",
+    "TA-C91-heat",
+    "TA-C91-sleepy",
+    "TA-C91-well"
+  ],
+  "tex": "tamil/book/chapters/ch91-sun-heat-sleep.tex"
+}

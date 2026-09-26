@@ -1,0 +1,19 @@
+{
+  "chapter": 25,
+  "title": "Letters That Share a Sound",
+  "label": "ch:fa-letters-share-a-sound",
+  "canDo": "I can write shin, sad, ta and za, and say which letter I already know sounds the same.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FA-W25-za",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 25: i can write shin, sad, ta and za, and say which letter I already know sounds the same.",
+    "assesses": [
+      "FA-SCRIPT-C25-SAD-01",
+      "FA-SCRIPT-C25-TA-01",
+      "FA-SCRIPT-C25-ZA-01"
+    ]
+  }
+}

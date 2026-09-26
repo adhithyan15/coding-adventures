@@ -88,6 +88,19 @@ pub trait MosaicApp {
     ) -> Result<AppUpdate, EffectCompletionError<Self::Error>> {
         Err(EffectCompletionError::Unsupported)
     }
+
+    /// React to a change in the host environment (UI48): a new size class,
+    /// orientation, pointer, color scheme or motion preference, delivered as
+    /// one coalesced value. Return `Some` to re-render, `None` to ignore it.
+    /// The default ignores it, so an app that never looks at its environment
+    /// keeps working when a host starts reporting one. As with dispatch, an
+    /// error must leave application state unchanged.
+    fn environment_changed(
+        &mut self,
+        _environment: Environment,
+    ) -> Result<Option<AppUpdate>, Self::Error> {
+        Ok(None)
+    }
 }
 
 /// Host information supplied at application startup.
@@ -100,7 +113,27 @@ pub struct StartContext {
     pub text_scale: f32,
     pub platform: Platform,
     pub restored_snapshot: Option<Snapshot>,
+    /// The host's UTC offset at startup, in minutes east of UTC (`-300` in
+    /// New York in winter, `330` in India). `None` when the host does not
+    /// say: optional on the wire, so earlier hosts decode unchanged, and an
+    /// app told nothing falls back to UTC. Validated at start to
+    /// [`MIN_UTC_OFFSET_MINUTES`]`..=`[`MAX_UTC_OFFSET_MINUTES`]. It is a
+    /// snapshot, not a clock: a daylight-saving change takes effect at the
+    /// next start (UI38 §4, "Local time").
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub utc_offset_minutes: Option<i32>,
+    /// The rest of the host environment (UI48 §4): size class, pointer,
+    /// hover, orientation and motion preference, flat on the wire beside
+    /// `colorScheme`. Every axis defaults, so earlier hosts decode unchanged.
+    #[serde(flatten)]
+    pub environment: EnvironmentAxes,
 }
+
+/// The westernmost UTC offset in use (UTC−14:00 bounds it with room to spare;
+/// the real minimum is UTC−12:00), in minutes east of UTC.
+pub const MIN_UTC_OFFSET_MINUTES: i32 = -840;
+/// The easternmost UTC offset in use: UTC+14:00 (Line Islands).
+pub const MAX_UTC_OFFSET_MINUTES: i32 = 840;
 
 impl StartContext {
     /// Build a startup context using system appearance and the standard text scale.
@@ -112,6 +145,17 @@ impl StartContext {
             text_scale: 1.0,
             platform,
             restored_snapshot: None,
+            utc_offset_minutes: None,
+            environment: EnvironmentAxes::default(),
+        }
+    }
+
+    /// The complete environment the app starts in: the color scheme and the
+    /// other axes together, the same shape `environmentChanged` delivers.
+    pub fn full_environment(&self) -> Environment {
+        Environment {
+            color_scheme: self.color_scheme,
+            axes: self.environment,
         }
     }
 }
@@ -134,6 +178,128 @@ pub enum Platform {
     Linux,
     Android,
     Web,
+}
+
+/// The reserved event a host dispatches when its environment changes
+/// (UI48 §5.2). The runtime intercepts it; the app sees
+/// [`MosaicApp::environment_changed`], never a `dispatch` of this name.
+pub const ENVIRONMENT_CHANGED: &str = "environmentChanged";
+
+/// Available width, as a bucket rather than pixels (UI48 §4). Each backend
+/// maps its native notion (SwiftUI `horizontalSizeClass`, Compose
+/// `WindowSizeClass`, a width observer on the web) onto these three.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum SizeClass {
+    Compact,
+    #[default]
+    Regular,
+    Expanded,
+}
+
+/// Precision of the primary pointing device.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Pointer {
+    Coarse,
+    #[default]
+    Fine,
+    None,
+}
+
+/// Whether hover affordances are reachable. Separate from [`Pointer`]: a
+/// stylus is fine but cannot hover, and a TV remote is neither.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Hover {
+    #[default]
+    Hover,
+    None,
+}
+
+/// The window's orientation (not the device's).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Orientation {
+    Portrait,
+    #[default]
+    Landscape,
+}
+
+/// The accessibility motion preference.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum ReducedMotion {
+    Reduce,
+    #[default]
+    NoPreference,
+}
+
+/// The UI48 axes other than the color scheme, which [`StartContext`] already
+/// carried. In a start context each is optional and defaults; in an
+/// [`Environment`] each is required.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EnvironmentAxes {
+    #[serde(default)]
+    pub size_class: SizeClass,
+    #[serde(default)]
+    pub pointer: Pointer,
+    #[serde(default)]
+    pub hover: Hover,
+    #[serde(default)]
+    pub orientation: Orientation,
+    #[serde(default)]
+    pub reduced_motion: ReducedMotion,
+}
+
+/// The whole host environment (UI48 §4), as `environmentChanged` delivers it:
+/// one coalesced value, because rotating a device changes orientation and
+/// size class together and an app should never see the state in between.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Environment {
+    pub color_scheme: ColorScheme,
+    #[serde(flatten)]
+    pub axes: EnvironmentAxes,
+}
+
+impl Environment {
+    /// Decode an `environmentChanged` payload. Every axis is required here —
+    /// a change event that leaves one out is a host bug, not a default — and
+    /// unknown keys are ignored, so a newer host may add an axis.
+    pub fn from_payload(payload: &Value) -> Result<Self, String> {
+        #[derive(Deserialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Wire {
+            color_scheme: ColorScheme,
+            size_class: SizeClass,
+            pointer: Pointer,
+            hover: Hover,
+            orientation: Orientation,
+            reduced_motion: ReducedMotion,
+        }
+        let wire = Wire::deserialize(payload).map_err(|error| error.to_string())?;
+        Ok(Self {
+            color_scheme: wire.color_scheme,
+            axes: EnvironmentAxes {
+                size_class: wire.size_class,
+                pointer: wire.pointer,
+                hover: wire.hover,
+                orientation: wire.orientation,
+                reduced_motion: wire.reduced_motion,
+            },
+        })
+    }
+
+    /// The event a host sends to report this environment.
+    pub fn into_event(self, sequence: u64) -> Event {
+        Event::new(
+            sequence,
+            ENVIRONMENT_CHANGED,
+            serde_json::to_value(self).expect("an environment always serializes"),
+        )
+    }
 }
 
 /// A semantic UI event. Awaited results use the dedicated completion method.
@@ -272,6 +438,7 @@ pub struct MosaicRuntime<A> {
     pending: BTreeSet<EffectId>,
     last_effect_id: EffectId,
     poisoned: bool,
+    environment: Environment,
 }
 
 impl<A: MosaicApp> MosaicRuntime<A> {
@@ -283,7 +450,14 @@ impl<A: MosaicApp> MosaicRuntime<A> {
             pending: BTreeSet::new(),
             last_effect_id: 0,
             poisoned: false,
+            environment: StartContext::new("", Platform::Web).full_environment(),
         }
+    }
+
+    /// The host environment as last reported: by the start context, then by
+    /// each `environmentChanged` (UI48).
+    pub fn environment(&self) -> Environment {
+        self.environment
     }
 
     fn healthy(&self) -> Result<(), RuntimeError<A::Error>> {
@@ -339,8 +513,15 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         if !context.text_scale.is_finite() || context.text_scale <= 0.0 {
             return Err(RuntimeError::InvalidTextScale);
         }
+        if let Some(offset) = context.utc_offset_minutes {
+            if !(MIN_UTC_OFFSET_MINUTES..=MAX_UTC_OFFSET_MINUTES).contains(&offset) {
+                return Err(RuntimeError::InvalidUtcOffset);
+            }
+        }
         let version = context.protocol_version;
+        let environment = context.full_environment();
         let app_update = self.app.start(context).map_err(RuntimeError::Application)?;
+        self.environment = environment;
         self.protocol_version = version;
         self.accept_effects(&app_update)?;
         self.state = RuntimeState::Running {
@@ -379,6 +560,9 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         let next_revision = revision
             .checked_add(1)
             .ok_or(RuntimeError::RevisionOverflow)?;
+        if event.name == ENVIRONMENT_CHANGED {
+            return self.environment_changed(&event.payload, expected, revision, next_revision);
+        }
         let app_update = self
             .app
             .dispatch(event)
@@ -393,6 +577,54 @@ impl<A: MosaicApp> MosaicRuntime<A> {
             next_revision,
             app_update,
         ))
+    }
+
+    /// The `environmentChanged` branch of [`Self::dispatch`] (UI48 ENV1). An
+    /// invalid payload is refused before the app sees it and consumes no
+    /// sequence. An app that does not react still consumes the sequence, but
+    /// the update keeps the current revision and carries no props: a host
+    /// renders nothing for an update that is not newer than the last.
+    fn environment_changed(
+        &mut self,
+        payload: &Value,
+        sequence: u64,
+        revision: u64,
+        next_revision: u64,
+    ) -> Result<Update, RuntimeError<A::Error>> {
+        let environment =
+            Environment::from_payload(payload).map_err(RuntimeError::InvalidEnvironment)?;
+        let reaction = self
+            .app
+            .environment_changed(environment)
+            .map_err(RuntimeError::Application)?;
+        // Committed with the sequence and revision, never before a fallible
+        // step: a reaction with invalid effects poisons the runtime without
+        // moving what it reports.
+        match reaction {
+            Some(app_update) => {
+                self.accept_effects(&app_update)?;
+                self.environment = environment;
+                self.state = RuntimeState::Running {
+                    last_sequence: sequence,
+                    revision: next_revision,
+                };
+                Ok(Update::from_app(self.protocol_version, next_revision, app_update))
+            }
+            None => {
+                self.environment = environment;
+                self.state = RuntimeState::Running {
+                    last_sequence: sequence,
+                    revision,
+                };
+                Ok(Update {
+                    protocol_version: self.protocol_version,
+                    revision,
+                    props: Value::Null,
+                    effects: Vec::new(),
+                    announcements: Vec::new(),
+                })
+            }
+        }
     }
 
     fn settled(&self) -> Result<(), RuntimeError<A::Error>> {
@@ -524,6 +756,7 @@ fn validate_protocol<E>(received: u32) -> Result<(), RuntimeError<E>> {
 pub enum RuntimeError<E> {
     ProtocolVersionMismatch { expected: u32, received: u32 },
     InvalidTextScale,
+    InvalidUtcOffset,
     AlreadyStarted,
     NotStarted,
     UnexpectedSequence { expected: u64, received: u64 },
@@ -536,6 +769,8 @@ pub enum RuntimeError<E> {
     EffectsRequireV2,
     CompletionUnsupported,
     Poisoned,
+    /// An `environmentChanged` payload that is not a whole environment.
+    InvalidEnvironment(String),
 }
 
 impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
@@ -548,6 +783,9 @@ impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
             Self::InvalidTextScale => {
                 f.write_str("Mosaic text scale must be finite and greater than zero")
             }
+            Self::InvalidUtcOffset => f.write_str(
+                "Mosaic UTC offset must be between -840 and 840 minutes (UTC-14:00 to UTC+14:00)",
+            ),
             Self::AlreadyStarted => f.write_str("Mosaic application has already started"),
             Self::NotStarted => f.write_str("Mosaic application has not started"),
             Self::UnexpectedSequence { expected, received } => write!(
@@ -565,6 +803,9 @@ impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
                 f.write_str("application does not implement effect completion")
             }
             Self::Poisoned => f.write_str("Mosaic instance produced invalid effects; recreate it"),
+            Self::InvalidEnvironment(detail) => {
+                write!(f, "invalid Mosaic environmentChanged payload: {detail}")
+            }
         }
     }
 }
@@ -652,6 +893,179 @@ mod tests {
 
     fn start_context() -> StartContext {
         StartContext::new("en-US", Platform::Linux)
+    }
+
+    // ------------------------------------------------------------------
+    // UI48 ENV1: the environment
+    // ------------------------------------------------------------------
+
+    /// An app that reacts to its environment, and remembers what it saw.
+    #[derive(Default)]
+    struct AdaptiveApp {
+        started_in: Option<Environment>,
+        seen: Vec<Environment>,
+        fail_next_change: bool,
+    }
+
+    impl MosaicApp for AdaptiveApp {
+        type Error = TestError;
+
+        fn start(&mut self, context: StartContext) -> Result<AppUpdate, Self::Error> {
+            self.started_in = Some(context.full_environment());
+            Ok(AppUpdate::new(json!({ "layout": "regular" })))
+        }
+
+        fn dispatch(&mut self, event: Event) -> Result<AppUpdate, Self::Error> {
+            Ok(AppUpdate::new(json!({ "event": event.name })))
+        }
+
+        fn snapshot(&self) -> Result<Option<Snapshot>, Self::Error> {
+            Ok(None)
+        }
+
+        fn restore(&mut self, _snapshot: Snapshot) -> Result<AppUpdate, Self::Error> {
+            Ok(AppUpdate::new(json!({})))
+        }
+
+        fn environment_changed(
+            &mut self,
+            environment: Environment,
+        ) -> Result<Option<AppUpdate>, Self::Error> {
+            if std::mem::take(&mut self.fail_next_change) {
+                return Err(TestError);
+            }
+            self.seen.push(environment);
+            let layout = match environment.axes.size_class {
+                SizeClass::Compact => "compact",
+                _ => "regular",
+            };
+            Ok(Some(AppUpdate::new(json!({ "layout": layout }))))
+        }
+    }
+
+    fn phone() -> Environment {
+        Environment {
+            color_scheme: ColorScheme::Dark,
+            axes: EnvironmentAxes {
+                size_class: SizeClass::Compact,
+                pointer: Pointer::Coarse,
+                hover: Hover::None,
+                orientation: Orientation::Portrait,
+                reduced_motion: ReducedMotion::Reduce,
+            },
+        }
+    }
+
+    #[test]
+    fn start_contexts_without_the_new_axes_decode_with_the_defaults() {
+        let context: StartContext = serde_json::from_value(json!({
+            "protocolVersion": PROTOCOL_VERSION,
+            "locale": "en-US",
+            "colorScheme": "light",
+            "textScale": 1.0,
+            "platform": "apple",
+            "restoredSnapshot": null
+        }))
+        .unwrap();
+        assert_eq!(context.environment, EnvironmentAxes::default());
+        let environment = context.full_environment();
+        assert_eq!(environment.color_scheme, ColorScheme::Light);
+        assert_eq!(environment.axes.size_class, SizeClass::Regular);
+        assert_eq!(environment.axes.pointer, Pointer::Fine);
+        assert_eq!(environment.axes.hover, Hover::Hover);
+        assert_eq!(environment.axes.orientation, Orientation::Landscape);
+        assert_eq!(environment.axes.reduced_motion, ReducedMotion::NoPreference);
+    }
+
+    #[test]
+    fn start_contexts_carry_the_axes_flat_beside_the_color_scheme() {
+        let mut context = start_context();
+        context.environment = phone().axes;
+        let wire = serde_json::to_value(&context).unwrap();
+        assert_eq!(wire["sizeClass"], "compact");
+        assert_eq!(wire["pointer"], "coarse");
+        assert_eq!(wire["hover"], "none");
+        assert_eq!(wire["orientation"], "portrait");
+        assert_eq!(wire["reducedMotion"], "reduce");
+        let decoded: StartContext = serde_json::from_value(wire).unwrap();
+        assert_eq!(decoded.environment, phone().axes);
+
+        let mut runtime = MosaicRuntime::new(AdaptiveApp::default());
+        runtime.start(context).unwrap();
+        assert_eq!(runtime.environment().axes, phone().axes);
+    }
+
+    #[test]
+    fn environment_payloads_are_whole_and_tolerate_new_axes() {
+        let mut payload = serde_json::to_value(phone()).unwrap();
+        assert_eq!(payload["colorScheme"], "dark");
+        assert_eq!(payload["reducedMotion"], "reduce");
+        assert_eq!(Environment::from_payload(&payload).unwrap(), phone());
+        payload["futureAxis"] = json!("anything");
+        assert_eq!(Environment::from_payload(&payload).unwrap(), phone());
+        payload.as_object_mut().unwrap().remove("orientation");
+        assert!(Environment::from_payload(&payload).is_err());
+        assert!(Environment::from_payload(&json!({"colorScheme": "purple"})).is_err());
+        assert!(Environment::from_payload(&json!(null)).is_err());
+    }
+
+    #[test]
+    fn an_app_that_reacts_rerenders_at_the_next_revision() {
+        let mut runtime = MosaicRuntime::new(AdaptiveApp::default());
+        runtime.start(start_context()).unwrap();
+        let update = runtime.dispatch(phone().into_event(1)).unwrap();
+        assert_eq!(update.revision, 2);
+        assert_eq!(update.props, json!({ "layout": "compact" }));
+        assert_eq!(runtime.environment(), phone());
+        // The change consumed sequence 1; an ordinary event follows at 2.
+        let next = runtime.dispatch(Event::new(2, "onTap", json!({}))).unwrap();
+        assert_eq!(next.revision, 3);
+    }
+
+    #[test]
+    fn an_app_that_ignores_it_consumes_the_sequence_and_keeps_its_revision() {
+        let mut runtime = MosaicRuntime::new(TestApp::default());
+        runtime.start(start_context()).unwrap();
+        let update = runtime.dispatch(phone().into_event(1)).unwrap();
+        assert_eq!(update.revision, 1, "nothing new to render");
+        assert_eq!(update.props, Value::Null);
+        assert!(update.effects.is_empty() && update.announcements.is_empty());
+        assert_eq!(runtime.environment(), phone());
+        // TestApp::dispatch was never called with the reserved name.
+        assert_eq!(runtime.app.dispatches, 0);
+        let next = runtime.dispatch(Event::new(2, "onTap", json!({}))).unwrap();
+        assert_eq!(next.revision, 2);
+    }
+
+    #[test]
+    fn an_invalid_environment_is_refused_before_the_app_and_consumes_nothing() {
+        let mut runtime = MosaicRuntime::new(AdaptiveApp::default());
+        runtime.start(start_context()).unwrap();
+        let before = runtime.environment();
+        let error = runtime
+            .dispatch(Event::new(1, ENVIRONMENT_CHANGED, json!({ "sizeClass": "compact" })))
+            .unwrap_err();
+        assert!(matches!(error, RuntimeError::InvalidEnvironment(_)), "{error}");
+        assert!(runtime.app.seen.is_empty());
+        assert_eq!(runtime.environment(), before);
+        // Sequence 1 is still next.
+        assert_eq!(runtime.dispatch(phone().into_event(1)).unwrap().revision, 2);
+    }
+
+    #[test]
+    fn an_app_error_on_a_change_leaves_the_environment_and_sequence_unchanged() {
+        let mut runtime = MosaicRuntime::new(AdaptiveApp {
+            fail_next_change: true,
+            ..AdaptiveApp::default()
+        });
+        runtime.start(start_context()).unwrap();
+        let before = runtime.environment();
+        assert!(matches!(
+            runtime.dispatch(phone().into_event(1)),
+            Err(RuntimeError::Application(TestError))
+        ));
+        assert_eq!(runtime.environment(), before);
+        assert_eq!(runtime.dispatch(phone().into_event(1)).unwrap().revision, 2);
     }
 
     #[test]
@@ -849,6 +1263,51 @@ mod tests {
             ));
             assert_eq!(runtime.app().starts, 0);
         }
+    }
+
+    #[test]
+    fn rejects_an_implausible_utc_offset_before_calling_the_app() {
+        for offset in [-841, 841, i32::MIN, i32::MAX] {
+            let mut runtime = MosaicRuntime::new(TestApp::default());
+            let mut context = start_context();
+            context.utc_offset_minutes = Some(offset);
+            assert!(matches!(
+                runtime.start(context),
+                Err(RuntimeError::InvalidUtcOffset)
+            ));
+            assert_eq!(runtime.app().starts, 0);
+        }
+        for offset in [
+            MIN_UTC_OFFSET_MINUTES,
+            -300,
+            0,
+            330,
+            345,
+            MAX_UTC_OFFSET_MINUTES,
+        ] {
+            let mut runtime = MosaicRuntime::new(TestApp::default());
+            let mut context = start_context();
+            context.utc_offset_minutes = Some(offset);
+            assert!(runtime.start(context).is_ok(), "{offset}");
+        }
+    }
+
+    /// Optional on the wire both ways: an earlier host's context (no key)
+    /// decodes to `None`, and `None` is not written, so an earlier app that
+    /// round-trips the context never sees an unknown key.
+    #[test]
+    fn the_utc_offset_is_optional_on_the_wire() {
+        let without = serde_json::to_value(start_context()).unwrap();
+        assert!(without.get("utcOffsetMinutes").is_none());
+        let decoded: StartContext = serde_json::from_value(without).unwrap();
+        assert_eq!(decoded.utc_offset_minutes, None);
+
+        let mut context = start_context();
+        context.utc_offset_minutes = Some(-300);
+        let with = serde_json::to_value(&context).unwrap();
+        assert_eq!(with["utcOffsetMinutes"], -300);
+        let decoded: StartContext = serde_json::from_value(with).unwrap();
+        assert_eq!(decoded.utc_offset_minutes, Some(-300));
     }
 
     #[test]

@@ -1,16 +1,17 @@
 {
   "language": "arabic",
   "chapter": 11,
-  "sourceHash": "fnv1a64:899dcb54c9d9adc2",
+  "sourceHash": "fnv1a64:fad5abf9d1f96cbf",
   "lessonIds": [
     "AR-C11-ras",
-    "AR-C11-yad"
+    "AR-C11-yad",
+    "AR-R11-how-are-you-cold"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "arabic/narration/ch11.txt",
   "json": "arabic/narration/ch11.json",
-  "textHash": "fnv1a64:f3e2b3ffee6fc887",
-  "jsonHash": "fnv1a64:ba98c2e4c75dd520",
+  "textHash": "fnv1a64:8baceeb7aea66bdd",
+  "jsonHash": "fnv1a64:49fbca8011802408",
   "findings": []
 }

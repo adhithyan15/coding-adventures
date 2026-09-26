@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:285b8dfe6ee1112d",
+  "lessonIds": [
+    "FA-C50-naghshe",
+    "FA-C50-dars",
+    "FA-C50-javab",
+    "FA-C50-kalame",
+    "FA-C50-bazi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch50.txt",
+  "json": "persian/narration/ch50.json",
+  "textHash": "fnv1a64:1c38684d97734a7c",
+  "jsonHash": "fnv1a64:77ebd6ed351a793e",
+  "findings": []
+}

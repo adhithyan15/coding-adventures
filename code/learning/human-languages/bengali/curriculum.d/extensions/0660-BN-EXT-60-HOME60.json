@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-60-HOME60",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a chair, a table, a wall, a roof and a bed.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C82-tiredness",
+  "pathSegment": "KA-PATH-82-UNWELL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-82-UNWELL",
+      "order": 0
+    }
+  ]
+}

@@ -70,6 +70,9 @@
 //! | `InvalidKernelVersion`  | `kernel.version` is anything other than `"1"`         |
 //! | `InvalidSemverString`   | `package.version` or a dependency value not semver-y  |
 //! | `InvalidInitialWindowSize` | either `[app]` initial-window dimension is zero |
+//! | `InvalidDisplayName`    | `[app].display-name` is empty, too long, or has control characters |
+//! | `InvalidBundleIdentifier` | `[app].bundle-identifier` is not reverse DNS |
+//! | `InvalidLayoutRule`     | an `[[app.layouts]]` rule could not work (UI48 §7.2) |
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
 //! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
 //! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
@@ -79,6 +82,8 @@
 //! Each error is *one cause, one variant* — no compound errors, no batched
 //! collection.  The first thing wrong with the manifest is the only thing
 //! the caller hears about; fixing it and re-running is the workflow.
+
+pub mod layouts;
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -127,6 +132,14 @@ pub struct StylesSection {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct AppSection {
     pub initial_window_size: Option<WindowSize>,
+    /// The name an installed app shows under its icon (UI32, UI89).
+    pub display_name: Option<String>,
+    /// The installed app's reverse-DNS identity (UI32, UI89).
+    pub bundle_identifier: Option<String>,
+    /// `[[app.layouts]]`: which environment selects which layout variant, in
+    /// order (UI48 §7.2). Empty means the conventional names select themselves;
+    /// see [`layouts::effective_layout_rules`].
+    pub layouts: Vec<layouts::LayoutRule>,
 }
 
 /// A desktop window's initial logical-pixel dimensions.
@@ -251,6 +264,14 @@ pub struct HostEffectHandler {
     /// or nothing at all where the symbol is already in scope.
     pub include: Option<String>,
     pub install: String,
+    /// The effect kinds this handler answers (UI87 §7.2), or `None` for the
+    /// original meaning: every kind that is not a standard platform kind.
+    ///
+    /// The generated entry point routes each effect by kind: a claimed kind
+    /// goes to this handler; a standard kind (`files.open`, `files.save`) to
+    /// the platform library Mosaic ships; anything else is failed by the host.
+    /// Claiming a standard kind overrides the platform library for it.
+    pub kinds: Option<Vec<String>>,
 }
 
 /// The `[kernel]` table: which ABI version of the primitive kernel this
@@ -288,6 +309,16 @@ pub enum ManifestError {
     /// `[app]` declared a desktop window outside the portable positive
     /// signed-32-bit range accepted by every target window API.
     InvalidInitialWindowSize { width: u32, height: u32 },
+    /// `[app].display-name` was empty, over 64 characters, or contained a
+    /// control character.
+    InvalidDisplayName(String),
+    /// `[app].bundle-identifier` was not reverse DNS: two or more
+    /// dot-separated parts of ASCII letters, digits and `-`, at most 155
+    /// characters.
+    InvalidBundleIdentifier(String),
+    /// An `[[app.layouts]]` rule names an unknown axis or value, repeats a
+    /// variant, or could hide the rules after it.
+    InvalidLayoutRule(String),
     /// `[styles].token_palette` was not a safe, portable package-relative
     /// JSON path.
     InvalidStylePath(String),
@@ -296,6 +327,12 @@ pub enum ManifestError {
     /// It is interpolated verbatim into generated source as a call expression,
     /// so an unshaped string is an arbitrary statement in someone's entry point.
     InvalidHostEffectSymbol(String),
+    /// A `[host_effects]` handler's `kinds` entry was not a plausible effect
+    /// kind, the list was empty, or it named a kind twice.
+    ///
+    /// Kinds are interpolated into generated source as string literals, so
+    /// they are held to a shape as tight as `install`'s.
+    InvalidHostEffectKind(String),
     /// A `[host_effects]` `include` was not a plausible header or import.
     ///
     /// It lands inside `#include "..."`, so a quote and a newline rewrite the
@@ -367,9 +404,26 @@ impl std::fmt::Display for ManifestError {
                 f,
                 "invalid `[app]` initial window size {width}x{height} (both dimensions must be between 1 and 2147483647)"
             ),
+            Self::InvalidDisplayName(name) => write!(
+                f,
+                "invalid `[app]` display-name {name:?} (1 to 64 characters, no control characters)"
+            ),
+            Self::InvalidBundleIdentifier(identifier) => write!(
+                f,
+                "invalid `[app]` bundle-identifier {identifier:?} (reverse DNS: two or more dot-separated parts of letters, digits and `-`)"
+            ),
+            Self::InvalidLayoutRule(detail) => {
+                write!(f, "invalid `[[app.layouts]]` rule: {detail}")
+            }
             Self::InvalidStylePath(path) => write!(
                 f,
                 "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
+            ),
+            Self::InvalidHostEffectKind(value) => write!(
+                f,
+                "invalid `[host_effects]` handler kind `{value}` (kinds are dotted \
+                 names such as `files.save`, listed once each, and the list may not \
+                 be empty)"
             ),
             Self::InvalidHostEffectSymbol(value) => write!(
                 f,
@@ -454,6 +508,11 @@ struct RawApp {
     initial_window_width: Option<u32>,
     #[serde(rename = "initial-window-height")]
     initial_window_height: Option<u32>,
+    #[serde(rename = "display-name")]
+    display_name: Option<String>,
+    #[serde(rename = "bundle-identifier")]
+    bundle_identifier: Option<String>,
+    layouts: Option<Vec<layouts::RawLayoutRule>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -490,6 +549,7 @@ struct RawHostEffectHandler {
     backend: Option<String>,
     include: Option<String>,
     install: Option<String>,
+    kinds: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -542,6 +602,15 @@ fn pascal_case_re() -> &'static Regex {
     // PascalCase: uppercase letter start, then any alphanumerics.
     // (We do *not* require an internal uppercase — `A` is valid PascalCase.)
     RE.get_or_init(|| Regex::new(r"^[A-Z][a-zA-Z0-9]*$").unwrap())
+}
+
+fn host_effect_kind_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    // A kind is written into generated source as a string literal (the set a
+    // router checks), so it gets the same treatment as `install`: a shape with
+    // no quote, backslash or newline in it. Dotted segments, as in
+    // `files.save`; camelCase, as in Engram's `importAnki`.
+    RE.get_or_init(|| Regex::new(r"^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$").unwrap())
 }
 
 fn host_effect_symbol_re() -> &'static Regex {
@@ -714,9 +783,44 @@ fn validate_app(raw: Option<RawApp>) -> Result<AppSection, ManifestError> {
             });
         }
     };
+    let layouts = layouts::validate_layout_rules(raw.layouts.unwrap_or_default())
+        .map_err(ManifestError::InvalidLayoutRule)?;
+    let display_name = match raw.display_name {
+        Some(name)
+            if !name.is_empty()
+                && name.chars().count() <= 64
+                && !name.chars().any(char::is_control) =>
+        {
+            Some(name)
+        }
+        Some(name) => return Err(ManifestError::InvalidDisplayName(name)),
+        None => None,
+    };
+    let bundle_identifier = match raw.bundle_identifier {
+        Some(identifier) if is_bundle_identifier(&identifier) => Some(identifier),
+        Some(identifier) => return Err(ManifestError::InvalidBundleIdentifier(identifier)),
+        None => None,
+    };
     Ok(AppSection {
         initial_window_size,
+        display_name,
+        bundle_identifier,
+        layouts,
     })
+}
+
+/// Reverse DNS as Apple and Android both accept it: two or more non-empty
+/// dot-separated parts of ASCII letters, digits and `-`, 155 characters at
+/// most.
+fn is_bundle_identifier(identifier: &str) -> bool {
+    identifier.len() <= 155
+        && identifier.split('.').count() >= 2
+        && identifier.split('.').all(|part| {
+            !part.is_empty()
+                && part
+                    .chars()
+                    .all(|character| character.is_ascii_alphanumeric() || character == '-')
+        })
 }
 
 fn validate_styles(raw: Option<RawStyles>) -> Result<StylesSection, ManifestError> {
@@ -918,10 +1022,26 @@ fn validate_host_effects(raw: Option<RawHostEffects>) -> Result<HostEffectsSecti
         if !host_effect_symbol_re().is_match(&install) {
             return Err(ManifestError::InvalidHostEffectSymbol(install));
         }
+        let kinds = match handler.kinds {
+            None => None,
+            Some(kinds) => {
+                if kinds.is_empty() {
+                    return Err(ManifestError::InvalidHostEffectKind(String::new()));
+                }
+                let mut seen = HashSet::with_capacity(kinds.len());
+                for kind in &kinds {
+                    if !host_effect_kind_re().is_match(kind) || !seen.insert(kind.as_str()) {
+                        return Err(ManifestError::InvalidHostEffectKind(kind.clone()));
+                    }
+                }
+                Some(kinds)
+            }
+        };
         handlers.push(HostEffectHandler {
             backend,
             include,
             install,
+            kinds,
         });
     }
 
@@ -1051,6 +1171,71 @@ version = "1"
         assert!(pkg.app.initial_window_size.is_none());
         assert!(pkg.host_assets.files.is_empty());
         assert_eq!(pkg.kernel.version, "1");
+    }
+
+    fn app_manifest(app: &str) -> String {
+        format!(
+            "[package]\nname = \"task-app\"\nversion = \"0.1.0\"\ndescription = \"d\"\nlicense = \"MIT\"\n[components]\nexports = [\"TaskApp\"]\n[app]\n{app}\n[kernel]\nversion = \"1\"\n"
+        )
+    }
+
+    #[test]
+    fn parses_optional_app_identity() {
+        let pkg = parse(&app_manifest(
+            "display-name = \"Trestle\"\nbundle-identifier = \"dev.codingadventures.trestle\"",
+        ))
+        .expect("manifest valid");
+        assert_eq!(pkg.app.display_name.as_deref(), Some("Trestle"));
+        assert_eq!(
+            pkg.app.bundle_identifier.as_deref(),
+            Some("dev.codingadventures.trestle")
+        );
+        let bare = parse(&app_manifest("")).expect("manifest valid");
+        assert_eq!(bare.app.display_name, None);
+        assert_eq!(bare.app.bundle_identifier, None);
+    }
+
+    #[test]
+    fn app_identity_is_validated() {
+        for name in ["\"\"", "\"two\\nlines\"", &format!("\"{}\"", "x".repeat(65))] {
+            assert!(matches!(
+                parse(&app_manifest(&format!("display-name = {name}"))),
+                Err(ManifestError::InvalidDisplayName(_))
+            ));
+        }
+        for identifier in ["trestle", "dev..trestle", "dev.trestle app", "dev.trestle/x", ".dev.trestle"] {
+            assert!(matches!(
+                parse(&app_manifest(&format!("bundle-identifier = \"{identifier}\""))),
+                Err(ManifestError::InvalidBundleIdentifier(_))
+            ), "{identifier}");
+        }
+        assert!(parse(&app_manifest("bundle-identifier = \"com.example.my-app2\"")).is_ok());
+    }
+
+    #[test]
+    fn parses_layout_rules_in_the_order_written() {
+        let src = r#"
+[package]
+name = "task-app"
+version = "0.1.0"
+description = "Task application"
+license = "MIT"
+[components]
+exports = ["TaskApp"]
+[[app.layouts]]
+variant = "touch"
+pointer = "coarse"
+[[app.layouts]]
+variant = "compact"
+size-class = "compact"
+[kernel]
+version = "1"
+"#;
+        let pkg = parse(src).expect("manifest valid");
+        let names: Vec<&str> = pkg.app.layouts.iter().map(|rule| rule.variant.as_str()).collect();
+        assert_eq!(names, ["touch", "compact"], "order is the order written, not alphabetical");
+        let bad = src.replace("pointer = \"coarse\"", "pointer = \"mouse\"");
+        assert!(matches!(parse(&bad), Err(ManifestError::InvalidLayoutRule(_))));
     }
 
     #[test]
@@ -1665,6 +1850,55 @@ handlers = [
             pkg.host_effects.handlers[0].include.as_deref(),
             Some("effects.h")
         );
+    }
+
+    /// UI87 §7.2: a handler may name the kinds it answers; without `kinds` it
+    /// keeps the original meaning (every non-standard kind).
+    #[test]
+    fn a_handler_may_claim_the_kinds_it_answers() {
+        let pkg = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "compose", install = "installProbeEffects", kinds = ["importAnki", "files.save"] },
+]
+"#,
+        ))
+        .expect("a handler with kinds must parse");
+        assert_eq!(
+            pkg.host_effects.handlers[0].kinds.as_deref(),
+            Some(&["importAnki".to_string(), "files.save".to_string()][..])
+        );
+
+        let legacy = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [ { backend = "compose", install = "installProbeEffects" } ]
+"#,
+        ))
+        .expect("a handler without kinds must parse");
+        assert!(legacy.host_effects.handlers[0].kinds.is_none());
+    }
+
+    /// Kinds are written into generated source as string literals, so an
+    /// unshaped one, an empty list, or a repeated kind is refused.
+    #[test]
+    fn a_kind_outside_the_shape_is_refused() {
+        for kinds in [
+            r#"[]"#,
+            r#"["files.save", "files.save"]"#,
+            r#"['bad"kind']"#,
+            r#"["files..save"]"#,
+            r#"[".save"]"#,
+            r#"["9lives"]"#,
+            r#"["has space"]"#,
+        ] {
+            let err = parse(&manifest_with(&format!(
+                "\n[host_effects]\nhandlers = [ {{ backend = \"compose\", install = \"installProbeEffects\", kinds = {kinds} }} ]\n"
+            )))
+            .expect_err(kinds);
+            assert!(matches!(err, ManifestError::InvalidHostEffectKind(_)), "{kinds}: {err:?}");
+        }
     }
 
     #[test]

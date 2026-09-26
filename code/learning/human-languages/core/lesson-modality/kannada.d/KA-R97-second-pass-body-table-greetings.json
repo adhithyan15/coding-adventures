@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R97-second-pass-body-table-greetings",
+    "language": "kannada",
+    "chapter": 97,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8d7b418f65f7ba6"
+  },
+  "findings": []
+}

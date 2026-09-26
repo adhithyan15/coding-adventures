@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C61-spoon",
+    "language": "gujarati",
+    "chapter": 61,
+    "sequence": 3123,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a1b1dd6a56548fd"
+  },
+  "findings": []
+}

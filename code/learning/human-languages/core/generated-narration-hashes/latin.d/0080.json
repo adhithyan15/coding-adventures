@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:6c7ef4d7cdc5148e",
+  "lessonIds": [
+    "LA-C80-caseus",
+    "LA-C80-oleum",
+    "LA-C80-uva",
+    "LA-C80-holus",
+    "LA-C80-oliva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch80.txt",
+  "json": "latin/narration/ch80.json",
+  "textHash": "fnv1a64:4aae42f534d4fc55",
+  "jsonHash": "fnv1a64:ad36914be173a2e5",
+  "findings": []
+}

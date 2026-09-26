@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:70f72b8f8edd80fe",
+  "lessonIds": [
+    "GU-C88-glasses",
+    "GU-C88-bag",
+    "GU-C88-wallet",
+    "GU-C88-letter",
+    "GU-C88-gift"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch88.txt",
+  "json": "gujarati/narration/ch88.json",
+  "textHash": "fnv1a64:7ba3e9cb86b709e6",
+  "jsonHash": "fnv1a64:f3aafd1c5eda5eca",
+  "findings": []
+}

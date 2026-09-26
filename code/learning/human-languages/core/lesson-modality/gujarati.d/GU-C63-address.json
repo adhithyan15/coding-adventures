@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C63-address",
+    "language": "gujarati",
+    "chapter": 63,
+    "sequence": 3243,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:342f225099d5561a"
+  },
+  "findings": []
+}

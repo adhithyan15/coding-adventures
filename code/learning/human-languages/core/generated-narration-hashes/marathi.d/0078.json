@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:992b2fee31e5208d",
+  "lessonIds": [
+    "MR-C78-dhavne",
+    "MR-C78-khelne",
+    "MR-C78-vikne",
+    "MR-C78-ughadne",
+    "MR-C78-shijavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch78.txt",
+  "json": "marathi/narration/ch78.json",
+  "textHash": "fnv1a64:e98a338c74ba76c5",
+  "jsonHash": "fnv1a64:8b0e573e0ba40a53",
+  "findings": []
+}

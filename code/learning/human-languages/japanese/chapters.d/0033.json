@@ -1,0 +1,19 @@
+{
+  "chapter": 33,
+  "title": "Apple, Mandarin orange, Strawberry, Peach, Pear",
+  "label": "ch:ja-apple-mandarin-orange-strawberry-peach-pear",
+  "canDo": "I can say an apple, a mandarin orange, a strawberry, a peach and a pear.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C33-nashi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 33: i can say an apple, a mandarin orange, a strawberry, a peach and a pear.",
+    "assesses": [
+      "JA-LEX-C33-FOOD33-03",
+      "JA-LEX-C33-FOOD33-04",
+      "JA-LEX-C33-FOOD33-05"
+    ]
+  }
+}

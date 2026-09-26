@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:b95d0d60f4b71839",
+  "lessonIds": [
+    "GU-C84-clinic",
+    "GU-C84-bank",
+    "GU-C84-police",
+    "GU-C84-ground",
+    "GU-C84-bridge"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch84.txt",
+  "json": "gujarati/narration/ch84.json",
+  "textHash": "fnv1a64:b118e1c15eb60e2f",
+  "jsonHash": "fnv1a64:2c5cd93ba44ec278",
+  "findings": []
+}

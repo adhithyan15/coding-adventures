@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C122-scalae",
+    "language": "latin",
+    "chapter": 122,
+    "sequence": 4840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd8440edff3e1ef3"
+  },
+  "findings": []
+}

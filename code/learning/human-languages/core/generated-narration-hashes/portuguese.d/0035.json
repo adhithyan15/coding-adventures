@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:e36f373ab56b8462",
+  "lessonIds": [
+    "PT-C35-doenca",
+    "PT-C35-fome",
+    "PT-C35-sede",
+    "PT-C35-cansaco",
+    "PT-C35-alegria"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch35.txt",
+  "json": "portuguese/narration/ch35.json",
+  "textHash": "fnv1a64:55c58cb248b531ee",
+  "jsonHash": "fnv1a64:e9914463a4496b3c",
+  "findings": []
+}

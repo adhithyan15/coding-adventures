@@ -1,0 +1,11 @@
+{
+  "id": "IT-C73-brutto",
+  "pathSegment": "IT-PATH-73-AGG2",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-73-AGG2",
+      "order": 0
+    }
+  ]
+}

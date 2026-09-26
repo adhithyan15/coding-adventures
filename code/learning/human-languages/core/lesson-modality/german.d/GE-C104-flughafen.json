@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C104-flughafen",
+    "language": "german",
+    "chapter": 104,
+    "sequence": 4000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:255d7b130ba9a824"
+  },
+  "findings": []
+}

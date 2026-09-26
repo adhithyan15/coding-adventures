@@ -1,0 +1,11 @@
+{
+  "id": "UR-C47-chalna",
+  "pathSegment": "UR-PATH-47-VERBS47",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-47-VERBS47",
+      "order": 3
+    }
+  ]
+}

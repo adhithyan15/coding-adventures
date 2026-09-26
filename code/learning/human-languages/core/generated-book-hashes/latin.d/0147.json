@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:8859d3805489c9b4",
+  "lessonIds": [
+    "LA-C147-surdus",
+    "LA-C147-falsus",
+    "LA-C147-certus",
+    "LA-C147-tutus",
+    "LA-C147-periculosus"
+  ],
+  "tex": "latin/book/chapters/ch147-deaf-false-sure-safe-dangerous.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Beans, Cucumber, Strawberry, Cherry, Melon",
+  "label": "ch:ge-beans-cucumber-strawberry-cherry-melon",
+  "canDo": "I can say beans, a cucumber, a strawberry, a cherry and a melon.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C121-melone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say beans, a cucumber, a strawberry, a cherry and a melon.",
+    "assesses": [
+      "GE-LEX-C121-ESSEN121-03",
+      "GE-LEX-C121-ESSEN121-04",
+      "GE-LEX-C121-ESSEN121-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:871bd8e8ae00cb0d",
+  "lessonIds": [
+    "UR-C70-chhota",
+    "UR-C70-naya",
+    "UR-C70-achchha",
+    "UR-C70-bura",
+    "UR-C70-lamba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch70.txt",
+  "json": "urdu/narration/ch70.json",
+  "textHash": "fnv1a64:b52b0855e3e9a793",
+  "jsonHash": "fnv1a64:09b1d61e198d7ce0",
+  "findings": []
+}

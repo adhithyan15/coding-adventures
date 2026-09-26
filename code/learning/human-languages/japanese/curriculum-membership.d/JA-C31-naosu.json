@@ -1,0 +1,11 @@
+{
+  "id": "JA-C31-naosu",
+  "pathSegment": "JA-PATH-31-VERBS31",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-31-VERBS31",
+      "order": 2
+    }
+  ]
+}

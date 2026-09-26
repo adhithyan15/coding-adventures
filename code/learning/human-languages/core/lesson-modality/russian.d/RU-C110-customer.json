@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C110-customer",
+    "language": "russian",
+    "chapter": 110,
+    "sequence": 5650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8986e5cd241e0bf1"
+  },
+  "findings": []
+}

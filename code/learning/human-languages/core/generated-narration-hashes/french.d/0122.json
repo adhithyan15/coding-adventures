@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:e3d2dc96e9a03a9e",
+  "lessonIds": [
+    "FR-C122-sandwich",
+    "FR-C122-sauce",
+    "FR-C122-vinaigre",
+    "FR-C122-dessert",
+    "FR-C122-repas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch122.txt",
+  "json": "french/narration/ch122.json",
+  "textHash": "fnv1a64:8e31227a01dd4e2c",
+  "jsonHash": "fnv1a64:7eadc9e2c07f9708",
+  "findings": []
+}

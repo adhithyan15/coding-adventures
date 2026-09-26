@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:7aacf187fe540eee",
+  "lessonIds": [
+    "GU-C67-cow",
+    "GU-C67-buffalo",
+    "GU-C67-goat",
+    "GU-C67-dog",
+    "GU-C67-mouse"
+  ],
+  "tex": "gujarati/book/chapters/ch67-cow-buffalo-and-goat.tex"
+}

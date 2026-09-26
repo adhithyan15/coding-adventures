@@ -1,0 +1,11 @@
+{
+  "id": "JA-C41-yama",
+  "pathSegment": "JA-PATH-41-SCHOOL41",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-41-SCHOOL41",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:ff7df3cd22c828f1",
+  "lessonIds": [
+    "GU-C70-red",
+    "GU-C70-yellow",
+    "GU-C70-green",
+    "GU-C70-blue",
+    "GU-C70-black"
+  ],
+  "tex": "gujarati/book/chapters/ch70-red-yellow-green.tex"
+}

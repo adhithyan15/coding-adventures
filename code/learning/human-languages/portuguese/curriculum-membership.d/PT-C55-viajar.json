@@ -1,0 +1,11 @@
+{
+  "id": "PT-C55-viajar",
+  "pathSegment": "PT-PATH-55-VERBOS5",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-55-VERBOS5",
+      "order": 4
+    }
+  ]
+}

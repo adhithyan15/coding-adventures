@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:2eb0588146dd5df4",
+  "lessonIds": [
+    "UR-C131-karva",
+    "UR-C131-khatta",
+    "UR-C131-namkin",
+    "UR-C131-tez",
+    "UR-C131-dhima"
+  ],
+  "tex": "urdu/book/chapters/ch131-bitter-sour-salty-fast-slow.tex"
+}

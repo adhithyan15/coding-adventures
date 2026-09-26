@@ -1,0 +1,11 @@
+{
+  "id": "TA-R112-letters-first-pass",
+  "pathSegment": "TA-PATH-112-LETTERS-LAST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-112-LETTERS-LAST",
+      "order": 4
+    }
+  ]
+}

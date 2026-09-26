@@ -378,6 +378,141 @@ layout TaskApp {
             )
           }
           Else {
+          If ( when: slot: checklists-mode ) {
+            // Checklists (C3a, task-app-checklists-view-v1.md): the project's
+            // templates and runs beside the selection. The run itself is
+            // pkg::mosaic-pkg-checklist::ChecklistRun, a straight pass-through;
+            // the library is the toolkit RecordList. Part names are `cl-` so
+            // none collides with ChecklistRun's own `checklist-` parts.
+            Row [ cl-view ] {
+              Column [ cl-library ] {
+                Text [ cl-heading ] ( content : slot: checklists-title , a11y-role : heading )
+                Row [ cl-composer ] {
+                  HostInput [ cl-name-input ] (
+                    value : slot: new-checklist-name ,
+                    placeholder : "New checklist" ,
+                    a11y-label : "New checklist name" ,
+                    onChange : emit: onNewChecklistNameChange ,
+                    onCommit : emit: onCreateChecklist
+                  )
+                  HostButton [ cl-create-btn ] ( label : "Add checklist" , onClick : emit: onCreateChecklist )
+                }
+                If ( when: slot: checklist-library-empty ) {
+                  // The toolkit EmptyState again. The List view mounts one
+                  // too; the resolver renames a second mount's parts
+                  // (empty-state-m2, …) so they no longer collide (#15959).
+                  // No action button: the name field above is the action.
+                  pkg::mosaic-pkg-toolkit::EmptyState (
+                    title : "No checklists yet" ,
+                    message : "Name one above, add its items, then start a run." ,
+                    action-label : ""
+                  )
+                }
+                Else {
+                  pkg::mosaic-pkg-toolkit::RecordList (
+                    rows : slot: checklist-library-rows ,
+                    selected-key : slot: selected-checklist-key ,
+                    onSelect : emit: onSelectChecklist
+                  )
+                }
+              }
+              Column [ cl-detail ] {
+                If ( when: slot: checklist-run-mode ) {
+                  pkg::mosaic-pkg-checklist::ChecklistRun (
+                    title : slot: checklist-run-title ,
+                    progress-label : slot: checklist-run-progress ,
+                    rows : slot: checklist-run-rows ,
+                    yes-label : "Yes" ,
+                    no-label : "No" ,
+                    complete-label : slot: checklist-complete-label ,
+                    abandon-label : slot: checklist-abandon-label ,
+                    onToggle : emit: onChecklistToggle ,
+                    onAnswerYes : emit: onChecklistAnswerYes ,
+                    onAnswerNo : emit: onChecklistAnswerNo ,
+                    onComplete : emit: onCompleteChecklistRun ,
+                    onAbandon : emit: onAbandonChecklistRun
+                  )
+                  HostButton [ cl-delete-run-btn ] ( label : "Delete run" , onClick : emit: onDeleteChecklist )
+                }
+                Else {
+                  If ( when: slot: checklist-template-mode ) {
+                    // A template's outline (C3c): each item is a toggle button
+                    // that selects it for editing (selected = UI86), with a
+                    // question marker and, inside a question, its branch.
+                    // item = [key, indent, name, question-marker, branch-label,
+                    //         selected-marker].
+                    For ( each: slot: checklist-outline-rows , as: item , index: ii ) {
+                      Row [ cl-outline-row ] {
+                        Text [ cl-outline-indent ] ( content : ( item[1] ) )
+                        If ( when: ( item[4] ) ) {
+                          Text [ cl-outline-branch ] ( content : ( item[4] ) )
+                        }
+                        // item[5] is the selected marker: truthy markers only,
+                        // never a string comparison, which reaches Swift and
+                        // Kotlin as a raw expression.
+                        If ( when: ( item[5] ) ) {
+                          HostButton [ cl-outline-item-selected ] (
+                            label : ( item[2] ) ,
+                            selected : true ,
+                            onClick : emit: onSelectOutlineItem
+                          )
+                        }
+                        Else {
+                          HostButton [ cl-outline-item ] (
+                            label : ( item[2] ) ,
+                            selected : false ,
+                            onClick : emit: onSelectOutlineItem
+                          )
+                        }
+                        If ( when: ( item[3] ) ) {
+                          Text [ cl-outline-question ] ( content : "Question" )
+                        }
+                      }
+                    }
+                    If ( when: slot: outline-item-selected ) {
+                      Row [ cl-outline-actions ] {
+                        HostButton [ cl-toggle-question-btn ] ( label : slot: outline-toggle-label , onClick : emit: onToggleOutlineQuestion )
+                        HostButton [ cl-delete-item-btn ] ( label : "Delete item" , onClick : emit: onDeleteOutlineItem )
+                      }
+                    }
+                    Row [ cl-item-composer ] {
+                      HostInput [ cl-item-input ] (
+                        value : slot: new-checklist-item ,
+                        placeholder : "New item" ,
+                        a11y-label : "New item" ,
+                        onChange : emit: onNewChecklistItemChange ,
+                        onCommit : emit: onAddChecklistItem
+                      )
+                      HostButton [ cl-item-add-btn ] ( label : "Add item" , onClick : emit: onAddChecklistItem )
+                    }
+                    // With a question selected, the composer's item can go
+                    // into one of its branches instead of the top level. Its
+                    // own row: beside the composer it overflowed the pane.
+                    If ( when: slot: outline-question-selected ) {
+                      Row [ cl-branch-actions ] {
+                        HostButton [ cl-add-yes-btn ] ( label : "Add to Yes" , onClick : emit: onAddChecklistItemYes )
+                        HostButton [ cl-add-no-btn ] ( label : "Add to No" , onClick : emit: onAddChecklistItemNo )
+                      }
+                    }
+                    Row [ cl-template-actions ] {
+                      HostButton [ cl-start-btn ] ( label : "Start run" , onClick : emit: onStartChecklistRun )
+                      HostButton [ cl-delete-btn ] ( label : "Delete checklist" , onClick : emit: onDeleteChecklist )
+                    }
+                  }
+                  Else {
+                    // A third EmptyState mount (empty-state-m3, …); see the
+                    // library-pane one above.
+                    pkg::mosaic-pkg-toolkit::EmptyState (
+                      title : "Pick a checklist, or make one" ,
+                      message : "Templates are reusable; each run is checked off on its own." ,
+                      action-label : ""
+                    )
+                  }
+                }
+              }
+            }
+          }
+          Else {
           If ( when: slot: notes-mode ) {
             // Every notes-* slot/emit is a straight pass-through to the
             // package — TaskApp adds no shaping of its own, see Notes.mil
@@ -609,7 +744,8 @@ layout TaskApp {
               }
             }
           }
-          }
+                    }
+}
           }
           }
           }

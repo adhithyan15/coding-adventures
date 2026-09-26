@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "City, Street, Shop, Market, Bank",
+  "label": "ch:pt-city-street-shop-market-bank",
+  "canDo": "I can name a city, a street, a shop, a market and a bank.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PT-C73-banco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can name a city, a street, a shop, a market and a bank.",
+    "assesses": [
+      "PT-LEX-C73-CIDADE1-03",
+      "PT-LEX-C73-CIDADE1-04",
+      "PT-LEX-C73-CIDADE1-05"
+    ]
+  }
+}

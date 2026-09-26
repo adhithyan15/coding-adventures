@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:8a6d3d92a2a1c85e",
+  "lessonIds": [
+    "LA-C108-pons",
+    "LA-C108-villa",
+    "LA-C108-vestis",
+    "LA-C108-tunica",
+    "LA-C108-calceus",
+    "LA-R108-first-pass-the-land-animals-and-describing-words",
+    "LA-R108-second-pass-verbs-time-numbers-and-the-town"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch108.txt",
+  "json": "latin/narration/ch108.json",
+  "textHash": "fnv1a64:2d73db7536bfe1cc",
+  "jsonHash": "fnv1a64:283a6b74c638f860",
+  "findings": []
+}

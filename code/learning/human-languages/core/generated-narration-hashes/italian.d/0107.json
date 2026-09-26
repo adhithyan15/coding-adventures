@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:b01598c522353035",
+  "lessonIds": [
+    "IT-C107-fragola",
+    "IT-C107-ciliegia",
+    "IT-C107-melone",
+    "IT-C107-aglio",
+    "IT-C107-farina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch107.txt",
+  "json": "italian/narration/ch107.json",
+  "textHash": "fnv1a64:4c93aae7a347e450",
+  "jsonHash": "fnv1a64:ee0bebc3143183c5",
+  "findings": []
+}

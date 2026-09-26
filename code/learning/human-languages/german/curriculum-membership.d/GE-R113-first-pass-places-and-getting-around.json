@@ -1,0 +1,11 @@
+{
+  "id": "GE-R113-first-pass-places-and-getting-around",
+  "pathSegment": "GE-PATH-113-HAUS113",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-113-HAUS113",
+      "order": 5
+    }
+  ]
+}

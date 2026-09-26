@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-015-COUNT",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "before": [],
+  "inline": [
+    "FR-EXT-015-COUNT-LANGUAGE-SPECIFIC"
+  ],
+  "after": []
+}

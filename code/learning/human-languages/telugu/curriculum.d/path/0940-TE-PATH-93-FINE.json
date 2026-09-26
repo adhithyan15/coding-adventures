@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-93-FINE",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "TE-EXT-93-FINE"
+  ],
+  "after": []
+}

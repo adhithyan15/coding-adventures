@@ -1,0 +1,11 @@
+{
+  "id": "LA-C66-unguis",
+  "pathSegment": "LA-PATH-66-CORPUS4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-66-CORPUS4",
+      "order": 3
+    }
+  ]
+}

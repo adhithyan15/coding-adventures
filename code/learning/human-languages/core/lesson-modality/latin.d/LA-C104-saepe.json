@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C104-saepe",
+    "language": "latin",
+    "chapter": 104,
+    "sequence": 3810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae3c46935c1368f6"
+  },
+  "findings": []
+}

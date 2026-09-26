@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Yoghurt, Ice cream, Steak, Ham, Juice",
+  "label": "ch:pt-yoghurt-ice-cream-steak-ham-juice",
+  "canDo": "I can say a yoghurt, ice cream, a steak, ham and juice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C108-sumo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say a yoghurt, ice cream, a steak, ham and juice.",
+    "assesses": [
+      "PT-LEX-C108-COMIDA108-03",
+      "PT-LEX-C108-COMIDA108-04",
+      "PT-LEX-C108-COMIDA108-05"
+    ]
+  }
+}

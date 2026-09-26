@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Broom, Washing machine, Sofa, Wardrobe, Saucepan",
+  "label": "ch:ru-broom-washing-machine-sofa-wardrobe-saucepan",
+  "canDo": "I can say a broom, a washing machine, a sofa, a wardrobe and a saucepan.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C97-saucepan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say a broom, a washing machine, a sofa, a wardrobe and a saucepan.",
+    "assesses": [
+      "RU-LEX-C97-THINGS97-03",
+      "RU-LEX-C97-THINGS97-04",
+      "RU-LEX-C97-THINGS97-05"
+    ]
+  }
+}

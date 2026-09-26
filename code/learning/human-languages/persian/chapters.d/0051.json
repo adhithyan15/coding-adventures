@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Letter, Newspaper, Tree, Flower, Leaf",
+  "label": "ch:fa-letter-newspaper-tree-flower-leaf",
+  "canDo": "I can say a letter, a newspaper, a tree, a flower and a leaf.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FA-C51-barg",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can say a letter, a newspaper, a tree, a flower and a leaf.",
+    "assesses": [
+      "FA-LEX-C51-SCHOOL51-03",
+      "FA-LEX-C51-SCHOOL51-04",
+      "FA-LEX-C51-SCHOOL51-05"
+    ]
+  }
+}

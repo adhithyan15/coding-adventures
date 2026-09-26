@@ -1,0 +1,11 @@
+{
+  "id": "RU-C126-boring",
+  "pathSegment": "RU-PATH-126-QUAL126",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-126-QUAL126",
+      "order": 4
+    }
+  ]
+}

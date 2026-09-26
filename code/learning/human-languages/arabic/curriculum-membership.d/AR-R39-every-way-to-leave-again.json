@@ -1,0 +1,11 @@
+{
+  "id": "AR-R39-every-way-to-leave-again",
+  "pathSegment": "AR-PATH-036",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-036-DENY-AND-ASK",
+      "order": 5
+    }
+  ]
+}

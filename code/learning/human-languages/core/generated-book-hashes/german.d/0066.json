@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:ac81f4feefbcafa8",
+  "lessonIds": [
+    "GE-C66-singen",
+    "GE-C66-reisen",
+    "GE-C66-zeigen",
+    "GE-C66-bringen",
+    "GE-C66-vergessen"
+  ],
+  "tex": "german/book/chapters/ch66-to-sing-to-travel-to-show-to-bring-to-forget.tex"
+}

@@ -1,11 +1,11 @@
 {
   "id": "FR-C12-seam",
   "pathSegment": "FR-PATH-015",
-  "pathOrder": 63,
+  "pathOrder": 51,
   "extensions": [
     {
       "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
-      "order": 63
+      "order": 51
     }
   ]
 }

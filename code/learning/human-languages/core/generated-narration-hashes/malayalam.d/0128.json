@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:a09181fae285beb9",
+  "lessonIds": [
+    "ML-C128-house",
+    "ML-C128-room",
+    "ML-C128-kitchen",
+    "ML-C128-bathroom",
+    "ML-C128-yard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch128.txt",
+  "json": "malayalam/narration/ch128.json",
+  "textHash": "fnv1a64:35afd8dfe8904813",
+  "jsonHash": "fnv1a64:b50fc54d4f57d9d3",
+  "findings": []
+}

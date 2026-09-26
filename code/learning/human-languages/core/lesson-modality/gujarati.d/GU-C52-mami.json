@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C52-mami",
+    "language": "gujarati",
+    "chapter": 52,
+    "sequence": 2683,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0a412c1401330e2"
+  },
+  "findings": []
+}

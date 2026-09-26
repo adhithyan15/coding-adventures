@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C94-sekunde",
+    "language": "german",
+    "chapter": 94,
+    "sequence": 3480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1e34841019c35e8"
+  },
+  "findings": []
+}

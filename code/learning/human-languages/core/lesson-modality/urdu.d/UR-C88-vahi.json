@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C88-vahi",
+    "language": "urdu",
+    "chapter": 88,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71aa56db1b6c4c16"
+  },
+  "findings": []
+}

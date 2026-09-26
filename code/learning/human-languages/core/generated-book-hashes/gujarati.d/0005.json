@@ -1,8 +1,10 @@
 {
   "language": "gujarati",
   "chapter": 5,
-  "sourceHash": "fnv1a64:a6821bc644b1c8cd",
+  "sourceHash": "fnv1a64:b3f63b3a46217417",
   "lessonIds": [
+    "GU-C05-chappal",
+    "GU-C05-bagalo",
     "GU-W05-la",
     "GU-W05-pa",
     "GU-W05-cha",

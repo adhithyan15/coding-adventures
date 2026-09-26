@@ -1,0 +1,11 @@
+{
+  "id": "PA-C75-baddal",
+  "pathSegment": "PA-PATH-75-NATURE75",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-75-NATURE75",
+      "order": 2
+    }
+  ]
+}

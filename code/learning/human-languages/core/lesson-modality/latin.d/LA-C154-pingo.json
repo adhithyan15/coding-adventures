@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C154-pingo",
+    "language": "latin",
+    "chapter": 154,
+    "sequence": 6580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1e9d23994c9fa8e"
+  },
+  "findings": []
+}

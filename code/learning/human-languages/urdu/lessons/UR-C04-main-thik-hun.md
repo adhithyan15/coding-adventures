@@ -9,7 +9,7 @@ headword: میں ٹھیک ہوں، شکریہ
 romanization: maiṅ ṭhīk hūṅ, shukriyā
 gloss: I am fine, thank you
 concept_tag: UR-C04-MAIN-THIK-HUN
-prerequisites: [UR-C04-thik]
+prerequisites: [UR-C04-thik, UR-C04-main-hun-more]
 sounds: [rtl, nasal-vowel, retroflex-aspirated-th, long-i, long-u]
 roots: [shared-hindustani-thik, indo-aryan-copula, arabic-shukr]
 etymology_hook: The reply puts shared Hindustani ṭhīk inside inherited Urdu grammar and closes with Persian-shaped Arabic-rooted shukriyā already learned in Chapter 1.

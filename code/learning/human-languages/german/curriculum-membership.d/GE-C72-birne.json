@@ -1,0 +1,11 @@
+{
+  "id": "GE-C72-birne",
+  "pathSegment": "GE-PATH-72-ESSEN4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-72-ESSEN4",
+      "order": 3
+    }
+  ]
+}

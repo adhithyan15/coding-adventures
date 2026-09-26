@@ -1,13 +1,14 @@
 {
   "language": "hindi",
   "chapter": 105,
-  "sourceHash": "fnv1a64:0238a41f94ad5e4a",
+  "sourceHash": "fnv1a64:f92f37bb3a5eda6b",
   "lessonIds": [
     "HI-C97-naam-ji",
     "HI-C97-priya",
     "HI-C97-repaso-sambodhan",
     "HI-C97-sandesh",
-    "HI-C97-sintesis-sandesh"
+    "HI-C97-sintesis-sandesh",
+    "HI-R105-the-last-page"
   ],
   "tex": "hindi/book/chapters/ch105-sambodhan.tex"
 }

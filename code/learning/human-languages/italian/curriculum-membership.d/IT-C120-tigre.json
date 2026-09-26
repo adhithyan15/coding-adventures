@@ -1,0 +1,11 @@
+{
+  "id": "IT-C120-tigre",
+  "pathSegment": "IT-PATH-120-ANIMALI120",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-120-ANIMALI120",
+      "order": 2
+    }
+  ]
+}

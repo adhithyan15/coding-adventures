@@ -1,0 +1,11 @@
+{
+  "id": "ML-C123-notlikethat",
+  "pathSegment": "ML-PATH-123-MAYBE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-123-MAYBE",
+      "order": 1
+    }
+  ]
+}

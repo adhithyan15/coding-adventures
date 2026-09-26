@@ -1,0 +1,11 @@
+{
+  "id": "PT-C123-divertido",
+  "pathSegment": "PT-PATH-123-QUALIDADES123",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-123-QUALIDADES123",
+      "order": 4
+    }
+  ]
+}

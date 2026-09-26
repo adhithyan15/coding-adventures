@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:64c1450f6b7e77a8",
+  "lessonIds": [
+    "UR-C100-chauraha",
+    "UR-C100-aspas",
+    "UR-C100-sath",
+    "UR-C100-bazar",
+    "UR-C100-thana"
+  ],
+  "tex": "urdu/book/chapters/ch100-crossroads-around-with-market-police-station.tex"
+}

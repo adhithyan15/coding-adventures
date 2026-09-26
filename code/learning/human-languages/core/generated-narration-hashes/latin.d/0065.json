@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:5cdfc66c32fe576e",
+  "lessonIds": [
+    "LA-C65-capillus",
+    "LA-C65-venter",
+    "LA-C65-tergum",
+    "LA-C65-frons",
+    "LA-C65-barba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch65.txt",
+  "json": "latin/narration/ch65.json",
+  "textHash": "fnv1a64:db08cc3fec9b6780",
+  "jsonHash": "fnv1a64:9197b199a97592d5",
+  "findings": []
+}

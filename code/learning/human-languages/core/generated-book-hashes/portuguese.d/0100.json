@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:2c922d8c399824e3",
+  "lessonIds": [
+    "PT-C100-despertador",
+    "PT-C100-telemovel",
+    "PT-C100-selo",
+    "PT-C100-carteira",
+    "PT-C100-anel"
+  ],
+  "tex": "portuguese/book/chapters/ch100-alarm-clock-mobile-phone-stamp-wallet-ring.tex"
+}

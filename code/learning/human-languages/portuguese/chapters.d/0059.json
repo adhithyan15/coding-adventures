@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Rain, Wind, Hill, Desert, Fire",
+  "label": "ch:pt-rain-wind-hill-desert-fire",
+  "canDo": "I can name rain, the wind, a hill, a desert and fire.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C59-fogo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can name rain, the wind, a hill, a desert and fire.",
+    "assesses": [
+      "PT-LEX-C59-TEMPO-03",
+      "PT-LEX-C59-TEMPO-04",
+      "PT-LEX-C59-TEMPO-05"
+    ]
+  }
+}

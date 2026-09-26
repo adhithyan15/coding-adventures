@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "School bag, Money, Question, Answer, Word",
+  "label": "ch:pa-school-bag-money-question-answer-word",
+  "canDo": "I can say a school bag, money, a question, an answer and a word.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PA-C72-shabad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say a school bag, money, a question, an answer and a word.",
+    "assesses": [
+      "PA-LEX-C72-SCHOOL72-03",
+      "PA-LEX-C72-SCHOOL72-04",
+      "PA-LEX-C72-SCHOOL72-05"
+    ]
+  }
+}

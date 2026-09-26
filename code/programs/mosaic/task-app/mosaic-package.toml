@@ -13,10 +13,13 @@ mosaic-pkg-sheet = "0.1.0"
 mosaic-pkg-calendar = "0.1.0"
 mosaic-pkg-notes = "0.2.0"
 mosaic-pkg-project-nav = "0.1.0"
+mosaic-pkg-checklist = "0.1.0"
 
 [app]
 initial-window-width = 1280
 initial-window-height = 900
+display-name = "Trestle"
+bundle-identifier = "dev.codingadventures.trestle"
 
 [kernel]
 version = "1"

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:664f7858df04b532",
+  "lessonIds": [
+    "KA-C87-really",
+    "KA-C87-nothing",
+    "KA-C87-ohno",
+    "KA-C87-isthatso",
+    "KA-C87-thesame"
+  ],
+  "tex": "kannada/book/chapters/ch87-quick-replies.tex"
+}

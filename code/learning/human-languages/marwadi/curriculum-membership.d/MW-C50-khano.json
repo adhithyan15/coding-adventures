@@ -1,0 +1,11 @@
+{
+  "id": "MW-C50-khano",
+  "pathSegment": "MW-PATH-50-FAMILY50",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-50-FAMILY50",
+      "order": 4
+    }
+  ]
+}

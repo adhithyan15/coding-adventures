@@ -1,0 +1,11 @@
+{
+  "id": "AR-C63-tara",
+  "pathSegment": "AR-PATH-63-VERBS63",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-63-VERBS63",
+      "order": 1
+    }
+  ]
+}

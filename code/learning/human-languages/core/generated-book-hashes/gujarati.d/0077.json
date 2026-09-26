@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:77d9aace73827430",
+  "lessonIds": [
+    "GU-C77-always",
+    "GU-C77-sometimes",
+    "GU-C77-now",
+    "GU-C77-later",
+    "GU-C77-before"
+  ],
+  "tex": "gujarati/book/chapters/ch77-always-sometimes-now-later.tex"
+}

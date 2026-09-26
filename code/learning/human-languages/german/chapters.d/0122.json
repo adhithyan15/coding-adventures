@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Garlic, Flour, Chocolate, Biscuit, Bread roll",
+  "label": "ch:ge-garlic-flour-chocolate-biscuit-bread-roll",
+  "canDo": "I can say garlic, flour, chocolate, a biscuit and a bread roll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C122-broetchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say garlic, flour, chocolate, a biscuit and a bread roll.",
+    "assesses": [
+      "GE-LEX-C122-ESSEN122-03",
+      "GE-LEX-C122-ESSEN122-04",
+      "GE-LEX-C122-ESSEN122-05"
+    ]
+  }
+}

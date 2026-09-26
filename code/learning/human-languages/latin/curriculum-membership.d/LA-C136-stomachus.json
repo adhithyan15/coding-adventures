@@ -1,0 +1,11 @@
+{
+  "id": "LA-C136-stomachus",
+  "pathSegment": "LA-PATH-136-THINGS136",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-136-THINGS136",
+      "order": 4
+    }
+  ]
+}

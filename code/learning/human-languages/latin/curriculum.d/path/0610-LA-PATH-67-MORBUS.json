@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-67-MORBUS",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "LA-EXT-67-MORBUS"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C138-amica",
+    "language": "latin",
+    "chapter": 138,
+    "sequence": 5680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aec012f938e73b19"
+  },
+  "findings": []
+}

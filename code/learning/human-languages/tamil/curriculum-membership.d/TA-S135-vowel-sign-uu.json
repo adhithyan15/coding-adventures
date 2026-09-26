@@ -1,0 +1,11 @@
+{
+  "id": "TA-S135-vowel-sign-uu",
+  "pathSegment": "TA-PATH-111-LETTERS-COUNT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-111-LETTERS-COUNT",
+      "order": 1
+    }
+  ]
+}

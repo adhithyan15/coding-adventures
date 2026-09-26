@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:88897ab64ffc0720",
+  "lessonIds": [
+    "HI-C109-hansi",
+    "HI-C109-ansu",
+    "HI-C109-dukh",
+    "HI-C109-akela",
+    "HI-C109-thanda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch109.txt",
+  "json": "hindi/narration/ch109.json",
+  "textHash": "fnv1a64:faac21a7ca0a20dc",
+  "jsonHash": "fnv1a64:c4f1340192266189",
+  "findings": []
+}

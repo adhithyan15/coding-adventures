@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:4af804c823f0c067",
+  "lessonIds": [
+    "JA-C65-koi",
+    "JA-C65-semi",
+    "JA-C65-tonbo",
+    "JA-C65-imo",
+    "JA-C65-gobou"
+  ],
+  "tex": "japanese/book/chapters/ch65-carp-cicada-dragonfly-potato-burdock-root.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C91-stark",
+  "pathSegment": "GE-PATH-91-ADJ3",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-91-ADJ3",
+      "order": 0
+    }
+  ]
+}

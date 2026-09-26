@@ -1,0 +1,11 @@
+{
+  "id": "GE-C118-pullover",
+  "pathSegment": "GE-PATH-118-DINGE118",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-118-DINGE118",
+      "order": 2
+    }
+  ]
+}

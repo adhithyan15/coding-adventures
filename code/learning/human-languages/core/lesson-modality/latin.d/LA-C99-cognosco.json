@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C99-cognosco",
+    "language": "latin",
+    "chapter": 99,
+    "sequence": 3560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d436a45714a92958"
+  },
+  "findings": []
+}

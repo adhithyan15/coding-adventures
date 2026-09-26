@@ -1,0 +1,11 @@
+{
+  "id": "BN-C85-angti",
+  "pathSegment": "BN-PATH-85-CLOTHES85",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-85-CLOTHES85",
+      "order": 3
+    }
+  ]
+}

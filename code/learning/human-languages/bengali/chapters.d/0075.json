@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Rich, Poor, Dirty, Bitter, Sour",
+  "label": "ch:bn-rich-poor-dirty-bitter-sour",
+  "canDo": "I can say rich, poor, dirty, bitter and sour.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C75-tok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say rich, poor, dirty, bitter and sour.",
+    "assesses": [
+      "BN-LEX-C75-ADJ75-03",
+      "BN-LEX-C75-ADJ75-04",
+      "BN-LEX-C75-ADJ75-05"
+    ]
+  }
+}

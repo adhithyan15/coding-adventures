@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Bitter, Salty, Heavy, Thin, Fat",
+  "label": "ch:ru-bitter-salty-heavy-thin-fat",
+  "canDo": "I can say bitter, salty, heavy, thin and fat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C130-fat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say bitter, salty, heavy, thin and fat.",
+    "assesses": [
+      "RU-LEX-C130-QUAL130-03",
+      "RU-LEX-C130-QUAL130-04",
+      "RU-LEX-C130-QUAL130-05"
+    ]
+  }
+}

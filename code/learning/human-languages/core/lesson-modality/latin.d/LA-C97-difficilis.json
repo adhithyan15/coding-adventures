@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C97-difficilis",
+    "language": "latin",
+    "chapter": 97,
+    "sequence": 3470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0405b1a9335d4f7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C81-geld",
+    "language": "german",
+    "chapter": 81,
+    "sequence": 2850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfdcc2257e0b834d"
+  },
+  "findings": []
+}

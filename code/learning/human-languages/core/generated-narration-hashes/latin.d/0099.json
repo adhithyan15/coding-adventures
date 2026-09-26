@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:a40d1a51eab19b60",
+  "lessonIds": [
+    "LA-C99-cognosco",
+    "LA-C99-curo",
+    "LA-C99-narro",
+    "LA-C99-laudo",
+    "LA-C99-moveo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch99.txt",
+  "json": "latin/narration/ch99.json",
+  "textHash": "fnv1a64:95a02a06089ac486",
+  "jsonHash": "fnv1a64:c90925e1488f28d9",
+  "findings": []
+}

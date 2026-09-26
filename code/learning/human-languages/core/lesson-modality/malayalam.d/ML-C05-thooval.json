@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C05-thooval",
+    "language": "malayalam",
+    "chapter": 5,
+    "sequence": 285,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e093dc7e677cae8b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:585bf491ba2ab296",
+  "lessonIds": [
+    "PT-C72-aqui",
+    "PT-C72-ali",
+    "PT-C72-longe",
+    "PT-C72-perto",
+    "PT-C72-depressa"
+  ],
+  "tex": "portuguese/book/chapters/ch72-here-there-far-near-quickly.tex"
+}

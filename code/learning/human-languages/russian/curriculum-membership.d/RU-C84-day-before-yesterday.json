@@ -1,0 +1,11 @@
+{
+  "id": "RU-C84-day-before-yesterday",
+  "pathSegment": "RU-PATH-84-TIME84",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-84-TIME84",
+      "order": 4
+    }
+  ]
+}

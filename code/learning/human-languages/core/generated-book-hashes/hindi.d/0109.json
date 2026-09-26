@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:bc5d1df7e23068a0",
+  "lessonIds": [
+    "HI-C109-hansi",
+    "HI-C109-ansu",
+    "HI-C109-dukh",
+    "HI-C109-akela",
+    "HI-C109-thanda"
+  ],
+  "tex": "hindi/book/chapters/ch109-laughter-and-tears.tex"
+}

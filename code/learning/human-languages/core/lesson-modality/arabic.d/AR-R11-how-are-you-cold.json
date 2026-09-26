@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R11-how-are-you-cold",
+    "language": "arabic",
+    "chapter": 11,
+    "sequence": 551,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:264e821765e48a0d"
+  },
+  "findings": []
+}

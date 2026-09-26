@@ -1,0 +1,11 @@
+{
+  "id": "GE-C91-schwach",
+  "pathSegment": "GE-PATH-91-ADJ3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-91-ADJ3",
+      "order": 1
+    }
+  ]
+}

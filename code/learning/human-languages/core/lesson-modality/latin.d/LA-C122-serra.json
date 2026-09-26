@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C122-serra",
+    "language": "latin",
+    "chapter": 122,
+    "sequence": 4820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80ccbd3fb4a89dbb"
+  },
+  "findings": []
+}

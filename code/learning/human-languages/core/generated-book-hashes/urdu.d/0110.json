@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:703c7d970d449c60",
+  "lessonIds": [
+    "UR-C110-tivi",
+    "UR-C110-kampyutar",
+    "UR-C110-mobail",
+    "UR-C110-fon",
+    "UR-C110-chashma",
+    "UR-R110-first-pass-places-can-and-want",
+    "UR-R110-second-pass-things-in-the-house"
+  ],
+  "tex": "urdu/book/chapters/ch110-television-computer-mobile-phone-phone-glasses.tex"
+}

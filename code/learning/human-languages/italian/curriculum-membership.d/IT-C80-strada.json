@@ -1,0 +1,11 @@
+{
+  "id": "IT-C80-strada",
+  "pathSegment": "IT-PATH-80-DOVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-80-DOVE",
+      "order": 4
+    }
+  ]
+}

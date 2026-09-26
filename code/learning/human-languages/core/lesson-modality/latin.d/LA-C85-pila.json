@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C85-pila",
+    "language": "latin",
+    "chapter": 85,
+    "sequence": 2840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b114de6d02b37e81"
+  },
+  "findings": []
+}

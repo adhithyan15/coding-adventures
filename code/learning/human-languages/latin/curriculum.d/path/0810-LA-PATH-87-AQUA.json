@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-87-AQUA",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-87-AQUA"
+  ],
+  "after": []
+}

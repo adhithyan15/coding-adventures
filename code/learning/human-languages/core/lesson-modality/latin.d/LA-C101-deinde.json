@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C101-deinde",
+    "language": "latin",
+    "chapter": 101,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:400d84b107901e48"
+  },
+  "findings": []
+}

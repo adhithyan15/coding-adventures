@@ -1,0 +1,11 @@
+{
+  "id": "GE-C82-baum",
+  "pathSegment": "GE-PATH-82-NATUR1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-82-NATUR1",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:d054cb86e9c87d51",
+  "lessonIds": [
+    "UR-C132-ganda",
+    "UR-C132-amir",
+    "UR-C132-sach",
+    "UR-C132-mazbut",
+    "UR-C132-kamzor",
+    "UR-R132-first-pass-nature-animals-and-the-body",
+    "UR-R132-second-pass-the-body-and-describing-words"
+  ],
+  "tex": "urdu/book/chapters/ch132-dirty-rich-true-strong-weak.tex"
+}

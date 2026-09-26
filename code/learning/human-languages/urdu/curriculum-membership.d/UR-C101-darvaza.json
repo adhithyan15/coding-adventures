@@ -1,0 +1,11 @@
+{
+  "id": "UR-C101-darvaza",
+  "pathSegment": "UR-PATH-101-LOC101",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-101-LOC101",
+      "order": 4
+    }
+  ]
+}

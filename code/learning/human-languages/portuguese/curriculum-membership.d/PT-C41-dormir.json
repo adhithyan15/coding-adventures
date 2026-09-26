@@ -1,0 +1,11 @@
+{
+  "id": "PT-C41-dormir",
+  "pathSegment": "PT-PATH-41-VERBOS2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-41-VERBOS2",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:33d17617e4874756",
+  "lessonIds": [
+    "KA-C106-farewell",
+    "KA-C106-today",
+    "KA-C106-later",
+    "KA-C106-phone",
+    "KA-C106-seeyou",
+    "KA-R106-first-pass-moods-body-find",
+    "KA-R106-second-pass-home-work-wishes"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch106.txt",
+  "json": "kannada/narration/ch106.json",
+  "textHash": "fnv1a64:3a8611b072d3179c",
+  "jsonHash": "fnv1a64:9dd8451b5ebf2136",
+  "findings": []
+}

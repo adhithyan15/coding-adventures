@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-130-NUMEROS130",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "before": [],
+  "inline": [
+    "PT-EXT-130-NUMEROS130"
+  ],
+  "after": []
+}

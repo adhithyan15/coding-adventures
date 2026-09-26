@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:392b558bf3bf4615",
+  "lessonIds": [
+    "PT-C77-roupa",
+    "PT-C77-camisa",
+    "PT-C77-vestido",
+    "PT-C77-calcas",
+    "PT-C77-sapatos"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch77.txt",
+  "json": "portuguese/narration/ch77.json",
+  "textHash": "fnv1a64:863e2c0336070be9",
+  "jsonHash": "fnv1a64:47c0adcb82e12789",
+  "findings": []
+}

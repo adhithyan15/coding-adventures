@@ -1,8 +1,8 @@
 Arabic, chapter 10: Family.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 أب, أم (ab, umm) — father and mother.
 
 Warm-up.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 What are Arabic's words for father and mother? (أب ab, أم umm.) What are their Hebrew cousins? (av, em — not borrowings, both from the same ancient Semitic root.) What naming pattern does umm still form today? (Umm + [child's name], "mother of ___," a living honorific.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 أخ, أخت (akh, ukht) — brother and sister.
 
 Warm-up.
@@ -55,3 +55,46 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What are Arabic's words for brother and sister? (أخ akh, أخت ukht.) How is ukht built from akh? (The same root, plus a plain feminine ‑ت ending — the simple pattern, not the colors' elaborate template.) What are their Hebrew cousins? (ach, achot.)
+
+
+Lesson 3 of 3.
+The name exchange, cold — the introduction exchange run cold, eight lessons after it was taught and never asked for since — four suffixes, one missing verb, and a root that means honour.
+
+Warm-up.
+[pause 4 seconds]
+Eight lessons ago this book taught you to give your name and ask for somebody else's, and has not asked since. Say the whole exchange from memory before you read another line.
+
+The two words.
+[a table of 2 rows, read aloud]
+word: اسم ism. letters, right to left: alif, sīn, mīm. what it is: name — root s–m–w, cousin of Hebrew shem.
+word: ما mā. letters, right to left: mīm, alif. what it is: what, standing before a noun.
+Neither needed a new letter. اسم has no tie to English name or Latin nōmen — the resemblance is an accident, and the real cousin is Hebrew.
+
+Grammar Lens: four suffixes and no verb.
+[a table of 3 rows, read aloud]
+glued on: ـي -ī. means: my. gives: اسمي ismī.
+glued on: ـك -ka. means: your, to a man. gives: اسمك ismuka.
+glued on: ـك -ki. means: your, to a woman. gives: اسمك ismuki.
+Arabic has no separate word for my. It fastens ي, the yāʾ, onto the end of the noun — the habit that also fastens الـ for the. The suffixes are the grammar of the exchange, and the two written forms of your name are identical on the page.
+There is no word for is either. Ismī Arun is literally my-name Arun — the zero copula, shared with the Dravidian languages.
+
+The two words: أنت, split by the listener.
+أنت is alif with a hamza seat, then nūn, then tāʾ — one skeleton for both genders. What splits them is a vowel mark that everyday text leaves off: أنتَ anta to a man, أنتِ anti to a woman.
+The European and Dravidian tracks split you by register. Arabic splits it by the listener's gender instead — and the Semitic -ta / -ti ending is the same t that marks you in Hebrew atta / att.
+
+The exchange.
+تشرفنا tasharrafnā closes it — letters tāʾ, shīn, rāʾ, fāʾ, root sh–r–f, honour: sharaf (honour), sharīf (noble, the title behind English sheriff). The polite close is not pleased to meet you but we have been honoured.
+[your turn — say: ask a man for his name — mā ismuka?]
+[pause 8 seconds for the answer]
+[your turn — say: ask a woman — mā ismuki?]
+[pause 8 seconds for the answer]
+[your turn — say: answer with your own — ismī …]
+[pause 8 seconds for the answer]
+[your turn — say: close the exchange — tasharrafnā]
+[pause 8 seconds for the answer]
+[your turn — recall: the verb Arabic left out of every line above]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+Name the Hebrew cousin of اسم. (Shem.) Say which axis Arabic uses to split أنت, where register would be the obvious choice. (The listener's gender.) Give the literal sense of تشرفنا. (We have been honoured.) And say where the gender of the question sits. (In the suffix — -ka to a man, -ki to a woman.)

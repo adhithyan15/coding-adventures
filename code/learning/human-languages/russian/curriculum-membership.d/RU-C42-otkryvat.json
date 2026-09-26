@@ -1,0 +1,11 @@
+{
+  "id": "RU-C42-otkryvat",
+  "pathSegment": "RU-PATH-42-VERB5",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-42-VERB5",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:d4111297c21178f6",
+  "lessonIds": [
+    "FR-C99-magasin",
+    "FR-C99-ecole",
+    "FR-C99-banque",
+    "FR-C99-train",
+    "FR-C99-avion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch99.txt",
+  "json": "french/narration/ch99.json",
+  "textHash": "fnv1a64:169e9e1ed0d3df82",
+  "jsonHash": "fnv1a64:0fce82cb07c8b16c",
+  "findings": []
+}

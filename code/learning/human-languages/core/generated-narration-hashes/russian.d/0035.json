@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:8e514142428c0ba3",
+  "lessonIds": [
+    "RU-C35-son",
+    "RU-C35-daughter",
+    "RU-C35-grandmother",
+    "RU-C35-husband",
+    "RU-C35-wife"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch35.txt",
+  "json": "russian/narration/ch35.json",
+  "textHash": "fnv1a64:a5eb40b2c592e673",
+  "jsonHash": "fnv1a64:8a0722faa4164058",
+  "findings": []
+}

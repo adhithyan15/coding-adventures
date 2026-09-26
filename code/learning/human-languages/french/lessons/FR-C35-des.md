@@ -8,7 +8,7 @@ type: grammar
 headword: des
 gloss: "some, and also the plural of un — one word doing the last two jobs the article system was missing"
 concept_tag: FR-PARTITIVE-DES
-prerequisites: [FR-C35-de-la, FR-C06-un]
+prerequisites: [FR-C35-de-la, FR-C06-un, FR-C22-chien-chat-more]
 sounds: [liaison-z]
 roots: [de-latin]
 etymology_hook: "English has no plural of a: it says books where French must say des livres, so the word French cannot omit is the word English never built"

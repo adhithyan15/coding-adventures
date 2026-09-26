@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Reason, Because of that, Place, Right, Left",
+  "label": "ch:la-reason-because-of-that-place-right-left",
+  "canDo": "I can say a reason, because of that, a place, right and left.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C114-sinister",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a reason, because of that, a place, right and left.",
+    "assesses": [
+      "LA-LEX-C114-WHY114-03",
+      "LA-LEX-C114-WHY114-04",
+      "LA-LEX-C114-WHY114-05"
+    ]
+  }
+}

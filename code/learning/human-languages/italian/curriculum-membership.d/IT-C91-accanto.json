@@ -1,0 +1,11 @@
+{
+  "id": "IT-C91-accanto",
+  "pathSegment": "IT-PATH-91-LUOGHI91",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-91-LUOGHI91",
+      "order": 3
+    }
+  ]
+}

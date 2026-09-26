@@ -4,8 +4,323 @@
   "chapter": 5,
   "title": "Marks Above, Below, and Beside the Letter",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3cc8fdea3f353e7e",
+  "sourceHash": "fnv1a64:bf335b3270cf66e6",
   "lessons": [
+    {
+      "id": "MR-C05-amrut",
+      "sequence": 57,
+      "title": "अमृत (amṛt) — nectar",
+      "headword": "अमृत",
+      "romanization": "amṛt",
+      "gloss": "nectar",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d271c01e42166272",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अमृत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अमृत — amṛt — \"nectar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: amṛt. Look at its shape as you say it: the lessons that follow take pieces of it, अ and ृ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amṛt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amṛt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amṛt, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amṛt*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"nectar\"? (अमृत, amṛt.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C05-kiran",
+      "sequence": 58,
+      "title": "किरण (kiraṇ) — a ray of light",
+      "headword": "किरण",
+      "romanization": "kiraṇ",
+      "gloss": "a ray of light",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:180d2ecbace8f1ba",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किरण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किरण — kiraṇ — \"a ray of light\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: kiraṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ि and ण, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiraṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiraṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiraṇ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiraṇ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a ray of light\"? (किरण, kiraṇ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C05-tup",
+      "sequence": 59,
+      "title": "तूप (tūp) — ghee",
+      "headword": "तूप",
+      "romanization": "tūp",
+      "gloss": "ghee",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9000c3511bcdb8ba",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तूप",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तूप — tūp — \"ghee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: tūp. Look at its shape as you say it: the lessons that follow take pieces of it, ू and प, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūp, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūp*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"ghee\"? (तूप, tūp.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "MR-W05-i-matra",
       "sequence": 60,
@@ -21,7 +336,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:61db9dd12cedbbfa",
+      "sourceHash": "fnv1a64:0649be3387b5d330",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -242,7 +557,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3e4a6212a4258e35",
+      "sourceHash": "fnv1a64:811bd74d729cb123",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -354,7 +669,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d1ea9f64f9b04707",
+      "sourceHash": "fnv1a64:625ef29d56bbb423",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -581,7 +896,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:df07fdb628169e8b",
+      "sourceHash": "fnv1a64:c9ce61649595c509",
       "notice": {
         "modality": "pen",
         "needs": [

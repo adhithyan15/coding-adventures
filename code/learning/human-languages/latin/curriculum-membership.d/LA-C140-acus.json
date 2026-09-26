@@ -1,0 +1,11 @@
+{
+  "id": "LA-C140-acus",
+  "pathSegment": "LA-PATH-140-THINGS140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-140-THINGS140",
+      "order": 2
+    }
+  ]
+}

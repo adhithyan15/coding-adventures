@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C103-jacket",
+    "language": "russian",
+    "chapter": 103,
+    "sequence": 5260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76a43072f3973c0d"
+  },
+  "findings": []
+}

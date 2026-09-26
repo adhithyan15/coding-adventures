@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: FR-C06-practice
-spine_node: SPINE-TIME-OF-DAY
+spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 212
 chapter: 6
 type: practice-mix

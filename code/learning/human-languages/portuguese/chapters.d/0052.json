@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Pen, Paper, Notebook, Pencil, Bag",
+  "label": "ch:pt-pen-paper-notebook-pencil-bag",
+  "canDo": "I can name a pen, paper, a notebook, a pencil and a bag.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C52-bolsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can name a pen, paper, a notebook, a pencil and a bag.",
+    "assesses": [
+      "PT-LEX-C52-COISAS1-03",
+      "PT-LEX-C52-COISAS1-04",
+      "PT-LEX-C52-COISAS1-05"
+    ]
+  }
+}

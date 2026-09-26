@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:ef7de6df40242e20",
+  "lessonIds": [
+    "PA-C58-vechna",
+    "PA-C58-dena",
+    "PA-C58-rakkhna",
+    "PA-C58-kholhna",
+    "PA-C58-pakauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch58.txt",
+  "json": "punjabi/narration/ch58.json",
+  "textHash": "fnv1a64:3dcc7a19024ae581",
+  "jsonHash": "fnv1a64:627852c759f31076",
+  "findings": []
+}

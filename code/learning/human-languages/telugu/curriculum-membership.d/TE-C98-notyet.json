@@ -1,0 +1,11 @@
+{
+  "id": "TE-C98-notyet",
+  "pathSegment": "TE-PATH-98-REPLY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-98-REPLY",
+      "order": 1
+    }
+  ]
+}

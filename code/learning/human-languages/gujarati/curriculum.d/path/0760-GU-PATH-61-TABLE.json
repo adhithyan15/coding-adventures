@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-61-TABLE",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "GU-EXT-61-TABLE"
+  ],
+  "after": []
+}

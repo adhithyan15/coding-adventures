@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:016d4357a9ebf4b1",
+  "lessonIds": [
+    "TE-C91-areyouwell",
+    "TE-C91-longtime",
+    "TE-C91-whatsnew",
+    "TE-C91-whereto",
+    "TE-C91-eaten",
+    "TE-R91-second-pass-greetings",
+    "TE-R91-second-pass-people"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch91.txt",
+  "json": "telugu/narration/ch91.json",
+  "textHash": "fnv1a64:a17951bbff7f5b80",
+  "jsonHash": "fnv1a64:90df5bdf7ca9758d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C47-sona",
+  "pathSegment": "UR-PATH-47-VERBS47",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-47-VERBS47",
+      "order": 1
+    }
+  ]
+}

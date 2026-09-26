@@ -1,0 +1,11 @@
+{
+  "language": "urdu",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:a3f3457140bff3fb",
+  "lessonIds": [
+    "UR-W34-be",
+    "UR-W34-te",
+    "UR-W34-tte"
+  ],
+  "tex": "urdu/book/chapters/ch34-ur-letters-on-the-boat.tex"
+}

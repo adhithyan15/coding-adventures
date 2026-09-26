@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Mountain, Forest, River, Lake, Stone",
+  "label": "ch:pa-mountain-forest-river-lake-stone",
+  "canDo": "I can say a mountain, a forest, a river, a lake and a stone.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C74-patthar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say a mountain, a forest, a river, a lake and a stone.",
+    "assesses": [
+      "PA-LEX-C74-NATURE74-03",
+      "PA-LEX-C74-NATURE74-04",
+      "PA-LEX-C74-NATURE74-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Juice, Soup, Naan bread, Paratha, Samosa",
+  "label": "ch:ur-juice-soup-naan-bread-paratha-samosa",
+  "canDo": "I can say juice, soup, naan bread, a paratha and a samosa.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C119-samosa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say juice, soup, naan bread, a paratha and a samosa.",
+    "assesses": [
+      "UR-LEX-C119-THINGS119-03",
+      "UR-LEX-C119-THINGS119-04",
+      "UR-LEX-C119-THINGS119-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C57-tooi",
+  "pathSegment": "JA-PATH-57-PLACE57",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-57-PLACE57",
+      "order": 1
+    }
+  ]
+}

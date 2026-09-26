@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:93d7b3b0632db56a",
+  "lessonIds": [
+    "RU-C112-problem",
+    "RU-C112-sentence",
+    "RU-C112-page",
+    "RU-C112-music",
+    "RU-C112-sport"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch112.txt",
+  "json": "russian/narration/ch112.json",
+  "textHash": "fnv1a64:fdc4fe3977c2de05",
+  "jsonHash": "fnv1a64:77555a1322ccb287",
+  "findings": []
+}

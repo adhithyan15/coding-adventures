@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Pen, Paper, School, Money, Question",
+  "label": "ch:bn-pen-paper-school-money-question",
+  "canDo": "I can say a pen, paper, a school, money and a question.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "BN-C64-proshno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say a pen, paper, a school, money and a question.",
+    "assesses": [
+      "BN-LEX-C64-SCHOOL64-03",
+      "BN-LEX-C64-SCHOOL64-04",
+      "BN-LEX-C64-SCHOOL64-05"
+    ]
+  }
+}

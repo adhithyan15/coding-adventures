@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Here, There, Road, Lane, Station",
+  "label": "ch:mw-here-there-road-lane-station",
+  "canDo": "I can say here, there, a road, a lane and a station.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C82-tesan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say here, there, a road, a lane and a station.",
+    "assesses": [
+      "MW-LEX-C82-PLACE82-03",
+      "MW-LEX-C82-PLACE82-04",
+      "MW-LEX-C82-PLACE82-05"
+    ]
+  }
+}

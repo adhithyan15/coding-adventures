@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:63a0fb7d157e66f2",
+  "lessonIds": [
+    "GU-C89-student",
+    "GU-C89-question",
+    "GU-C89-answer",
+    "GU-C89-bhanvu",
+    "GU-C89-shikhavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch89-questions-and-answers.tex"
+}

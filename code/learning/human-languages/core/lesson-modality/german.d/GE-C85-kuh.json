@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C85-kuh",
+    "language": "german",
+    "chapter": 85,
+    "sequence": 3050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cb8b912971ec037"
+  },
+  "findings": []
+}

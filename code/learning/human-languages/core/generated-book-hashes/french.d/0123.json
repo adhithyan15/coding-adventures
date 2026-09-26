@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:6dc03e380152ced9",
+  "lessonIds": [
+    "FR-C123-infirmiere",
+    "FR-C123-cuisinier",
+    "FR-C123-policier",
+    "FR-C123-vendeur",
+    "FR-C123-agriculteur"
+  ],
+  "tex": "french/book/chapters/ch123-nurse-cook-police-officer-shop-assistant-farmer.tex"
+}

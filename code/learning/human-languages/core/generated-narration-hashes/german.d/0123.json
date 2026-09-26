@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:5653058b950d7fab",
+  "lessonIds": [
+    "GE-C123-butter",
+    "GE-C123-sosse",
+    "GE-C123-essig",
+    "GE-C123-nachtisch",
+    "GE-C123-mahlzeit",
+    "GE-R123-first-pass-clothes-food-and-work",
+    "GE-R123-second-pass-school-free-time-and-colours"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch123.txt",
+  "json": "german/narration/ch123.json",
+  "textHash": "fnv1a64:4b682487010decd1",
+  "jsonHash": "fnv1a64:d891dc88b9dafbcd",
+  "findings": []
+}

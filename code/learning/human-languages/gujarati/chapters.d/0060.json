@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Salt, Chilli and Something Sweet",
+  "label": "ch:gu-salt-chilli-and-something-sweet",
+  "canDo": "I can name chilli, salt, thepla, jalebi and puri.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C60-puri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can name chilli, salt, thepla, jalebi and puri.",
+    "assesses": [
+      "GU-LEX-C60-SNACKS-03",
+      "GU-LEX-C60-SNACKS-04",
+      "GU-LEX-C60-SNACKS-05"
+    ]
+  }
+}

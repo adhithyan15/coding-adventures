@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:218d1229d3a0737a",
+  "lessonIds": [
+    "AR-W49-ta-emphatic",
+    "AR-W49-za-emphatic",
+    "AR-W49-dhal",
+    "AR-R49-letters-first-pass",
+    "AR-R49-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch49.txt",
+  "json": "arabic/narration/ch49.json",
+  "textHash": "fnv1a64:b607a2921ad49489",
+  "jsonHash": "fnv1a64:b238b9f77753c3b0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C74-soro",
+    "language": "marwadi",
+    "chapter": 74,
+    "sequence": 5050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d912d75503f685f"
+  },
+  "findings": []
+}

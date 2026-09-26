@@ -1,0 +1,11 @@
+{
+  "id": "PA-C73-khed",
+  "pathSegment": "PA-PATH-73-SCHOOL73",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-73-SCHOOL73",
+      "order": 0
+    }
+  ]
+}

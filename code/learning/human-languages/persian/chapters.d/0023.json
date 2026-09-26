@@ -1,0 +1,19 @@
+{
+  "chapter": 23,
+  "title": "The Hook Family",
+  "label": "ch:fa-letters-hook-family",
+  "canDo": "I can write he-ye jimi, jim, khe and che, and tell the four apart by their dots.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-W23-che",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 23: i can write he-ye jimi, jim, khe and che, and tell the four apart by their dots.",
+    "assesses": [
+      "FA-SCRIPT-C23-JIM-01",
+      "FA-SCRIPT-C23-KHE-01",
+      "FA-SCRIPT-C23-CHE-01"
+    ]
+  }
+}

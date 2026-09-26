@@ -1,0 +1,11 @@
+{
+  "id": "PT-C128-fim-de-semana",
+  "pathSegment": "PT-PATH-128-QUALIDADES128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-128-QUALIDADES128",
+      "order": 3
+    }
+  ]
+}

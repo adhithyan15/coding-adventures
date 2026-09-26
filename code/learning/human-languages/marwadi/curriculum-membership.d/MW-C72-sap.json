@@ -1,0 +1,11 @@
+{
+  "id": "MW-C72-sap",
+  "pathSegment": "MW-PATH-72-ANIMALS72",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-72-ANIMALS72",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Fan, Key, Lock, Plate, Spoon",
+  "label": "ch:bn-fan-key-lock-plate-spoon",
+  "canDo": "I can say a fan, a key, a lock, a plate and a spoon.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-C62-chamoch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say a fan, a key, a lock, a plate and a spoon.",
+    "assesses": [
+      "BN-LEX-C62-HOME62-03",
+      "BN-LEX-C62-HOME62-04",
+      "BN-LEX-C62-HOME62-05"
+    ]
+  }
+}

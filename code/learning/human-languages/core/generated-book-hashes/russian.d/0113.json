@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:f2f0aa49bb600927",
+  "lessonIds": [
+    "RU-C113-game",
+    "RU-C113-film",
+    "RU-C113-song",
+    "RU-C113-drawing",
+    "RU-C113-life"
+  ],
+  "tex": "russian/book/chapters/ch113-game-film-song-drawing-life.tex"
+}

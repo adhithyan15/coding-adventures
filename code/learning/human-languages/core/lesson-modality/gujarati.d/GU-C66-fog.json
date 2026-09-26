@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C66-fog",
+    "language": "gujarati",
+    "chapter": 66,
+    "sequence": 3393,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41548d1444925a5d"
+  },
+  "findings": []
+}

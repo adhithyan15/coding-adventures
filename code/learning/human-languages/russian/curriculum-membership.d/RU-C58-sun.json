@@ -1,0 +1,11 @@
+{
+  "id": "RU-C58-sun",
+  "pathSegment": "RU-PATH-58-SKY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-58-SKY",
+      "order": 1
+    }
+  ]
+}

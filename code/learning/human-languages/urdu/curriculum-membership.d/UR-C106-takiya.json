@@ -1,0 +1,11 @@
+{
+  "id": "UR-C106-takiya",
+  "pathSegment": "UR-PATH-106-THINGS106",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-106-THINGS106",
+      "order": 4
+    }
+  ]
+}

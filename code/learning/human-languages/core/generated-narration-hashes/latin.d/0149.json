@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:e9cd3fde4c07cc7f",
+  "lessonIds": [
+    "LA-C149-fuscus",
+    "LA-C149-canus",
+    "LA-C149-aureus",
+    "LA-C149-argenteus",
+    "LA-C149-prudens"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch149.txt",
+  "json": "latin/narration/ch149.json",
+  "textHash": "fnv1a64:90a3bf207da1d8f4",
+  "jsonHash": "fnv1a64:6d2a95c0b22b0141",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C88-relative",
+  "pathSegment": "TE-PATH-88-PEOPLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-88-PEOPLE",
+      "order": 4
+    }
+  ]
+}

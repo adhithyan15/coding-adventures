@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Cup, Plate, Glass, Fork, Knife",
+  "label": "ch:ge-cup-plate-glass-fork-knife",
+  "canDo": "I can say a cup, a plate, a glass, a fork and a knife.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-R79-second-pass-the-house-school-things-and-nature",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say a cup, a plate, a glass, a fork and a knife.",
+    "assesses": [
+      "GE-LEX-C79-GESCHIRR-03",
+      "GE-LEX-C79-GESCHIRR-04",
+      "GE-LEX-C79-GESCHIRR-05"
+    ]
+  }
+}

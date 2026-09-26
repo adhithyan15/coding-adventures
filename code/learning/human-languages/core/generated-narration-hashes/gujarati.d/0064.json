@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:75cf0bb71353b847",
+  "lessonIds": [
+    "GU-C64-flower",
+    "GU-C64-leaf",
+    "GU-C64-mountain",
+    "GU-C64-forest",
+    "GU-C64-stone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch64.txt",
+  "json": "gujarati/narration/ch64.json",
+  "textHash": "fnv1a64:ca8587c272cbfe4c",
+  "jsonHash": "fnv1a64:dd5e4e98020de3f2",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:8d767fde6b441279",
+  "lessonIds": [
+    "LA-C96-pulcher",
+    "LA-C96-rotundus",
+    "LA-C96-vacuus",
+    "LA-C96-clarus",
+    "LA-C96-obscurus"
+  ],
+  "tex": "latin/book/chapters/ch96-beautiful-round-empty-bright-dark.tex"
+}

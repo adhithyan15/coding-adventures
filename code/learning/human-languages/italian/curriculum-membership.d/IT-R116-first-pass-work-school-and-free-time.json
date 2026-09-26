@@ -1,0 +1,11 @@
+{
+  "id": "IT-R116-first-pass-work-school-and-free-time",
+  "pathSegment": "IT-PATH-116-TEMPOLIBERO116",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-116-TEMPOLIBERO116",
+      "order": 5
+    }
+  ]
+}

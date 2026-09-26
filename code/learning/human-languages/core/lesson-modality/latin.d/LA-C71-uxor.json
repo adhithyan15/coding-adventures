@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C71-uxor",
+    "language": "latin",
+    "chapter": 71,
+    "sequence": 2150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f83b2a975b2448bc"
+  },
+  "findings": []
+}

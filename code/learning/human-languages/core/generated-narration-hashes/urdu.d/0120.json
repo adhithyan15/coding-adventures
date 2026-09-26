@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:62b16eaf9ba4dd62",
+  "lessonIds": [
+    "UR-C120-halva",
+    "UR-C120-khir",
+    "UR-C120-chatni",
+    "UR-C120-kabab",
+    "UR-C120-biryani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch120.txt",
+  "json": "urdu/narration/ch120.json",
+  "textHash": "fnv1a64:14b313212f847c34",
+  "jsonHash": "fnv1a64:21b74f2395fd0b2d",
+  "findings": []
+}

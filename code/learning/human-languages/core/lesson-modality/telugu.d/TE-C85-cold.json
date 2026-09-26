@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C85-cold",
+    "language": "telugu",
+    "chapter": 85,
+    "sequence": 3070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3998b17bc1b0676"
+  },
+  "findings": []
+}

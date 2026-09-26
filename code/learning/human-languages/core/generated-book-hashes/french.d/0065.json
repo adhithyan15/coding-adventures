@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:36fbf030c7fd8f47",
+  "lessonIds": [
+    "FR-C65-laisser",
+    "FR-C65-porter",
+    "FR-C65-envoyer",
+    "FR-C65-recevoir",
+    "FR-C65-sentir"
+  ],
+  "tex": "french/book/chapters/ch65-leave-carry-send-receive-feel.tex"
+}

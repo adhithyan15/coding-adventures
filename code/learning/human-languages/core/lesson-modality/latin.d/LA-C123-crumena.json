@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C123-crumena",
+    "language": "latin",
+    "chapter": 123,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d8cfdb66a304f3d"
+  },
+  "findings": []
+}

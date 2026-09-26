@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C113-vahi",
+    "language": "hindi",
+    "chapter": 113,
+    "sequence": 4980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bba1198beff903f5"
+  },
+  "findings": []
+}

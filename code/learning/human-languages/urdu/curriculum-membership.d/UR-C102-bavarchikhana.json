@@ -1,0 +1,11 @@
+{
+  "id": "UR-C102-bavarchikhana",
+  "pathSegment": "UR-PATH-102-LOC102",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-102-LOC102",
+      "order": 0
+    }
+  ]
+}

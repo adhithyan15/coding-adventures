@@ -1,0 +1,11 @@
+{
+  "id": "ML-C117-tablet",
+  "pathSegment": "ML-PATH-117-BODY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-117-BODY",
+      "order": 2
+    }
+  ]
+}

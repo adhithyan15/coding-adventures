@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:326b4bd1fc28b363",
+  "lessonIds": [
+    "TA-C102-fatherselderbrother",
+    "TA-C102-periyamma",
+    "TA-C102-motherinlaw",
+    "TA-C102-daughterinlaw",
+    "TA-C102-soninlaw"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch102.txt",
+  "json": "tamil/narration/ch102.json",
+  "textHash": "fnv1a64:bab220faa4fdd64d",
+  "jsonHash": "fnv1a64:4f205a6e36c107ac",
+  "findings": []
+}

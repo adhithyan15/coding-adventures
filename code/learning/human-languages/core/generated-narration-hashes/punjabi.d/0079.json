@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:8ef908bccff455ef",
+  "lessonIds": [
+    "PA-C79-sapp",
+    "PA-C79-vadda",
+    "PA-C79-chhota",
+    "PA-C79-navam",
+    "PA-C79-purana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch79.txt",
+  "json": "punjabi/narration/ch79.json",
+  "textHash": "fnv1a64:1b9dff0d578c6cac",
+  "jsonHash": "fnv1a64:28bc04ff0612c377",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C92-office",
+  "pathSegment": "KA-PATH-92-WORK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-92-WORK",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-152-QUAL152",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "LA-EXT-152-QUAL152"
+  ],
+  "after": []
+}

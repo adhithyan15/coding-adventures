@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "School bag, Exam, Class, Study, Shirt",
+  "label": "ch:mr-school-bag-exam-class-study-shirt",
+  "canDo": "I can say a school bag, an exam, a class, study and a shirt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C135-sart",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say a school bag, an exam, a class, study and a shirt.",
+    "assesses": [
+      "MR-LEX-C135-THINGS135-03",
+      "MR-LEX-C135-THINGS135-04",
+      "MR-LEX-C135-THINGS135-05"
+    ]
+  }
+}

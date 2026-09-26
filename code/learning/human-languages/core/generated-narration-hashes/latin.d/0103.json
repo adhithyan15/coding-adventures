@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:ce951b8168ff88f7",
+  "lessonIds": [
+    "LA-C103-hodie",
+    "LA-C103-heri",
+    "LA-C103-annus",
+    "LA-C103-mensis",
+    "LA-C103-aurora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch103.txt",
+  "json": "latin/narration/ch103.json",
+  "textHash": "fnv1a64:7b7859416e02c4a3",
+  "jsonHash": "fnv1a64:b95276c3cfd20a0c",
+  "findings": []
+}

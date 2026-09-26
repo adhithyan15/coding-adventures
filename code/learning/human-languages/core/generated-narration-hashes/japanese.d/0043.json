@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:25201949d824f4e3",
+  "lessonIds": [
+    "JA-C43-suna",
+    "JA-C43-tanbo",
+    "JA-C43-hoshi",
+    "JA-C43-kumo",
+    "JA-C43-taiyou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch43.txt",
+  "json": "japanese/narration/ch43.json",
+  "textHash": "fnv1a64:ea87fd4bb5c8635d",
+  "jsonHash": "fnv1a64:a99c05fc70687101",
+  "findings": []
+}

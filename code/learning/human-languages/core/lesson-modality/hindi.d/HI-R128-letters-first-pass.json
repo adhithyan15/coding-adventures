@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R128-letters-first-pass",
+    "language": "hindi",
+    "chapter": 128,
+    "sequence": 5770,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:38d2c39ffe69e323"
+  },
+  "findings": []
+}

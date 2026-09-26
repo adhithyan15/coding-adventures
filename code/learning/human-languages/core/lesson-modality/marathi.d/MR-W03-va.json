@@ -3,7 +3,7 @@
     "id": "MR-W03-va",
     "language": "marathi",
     "chapter": 3,
-    "sequence": 32,
+    "sequence": 36,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:352175ea2c51a1b7",
+    "sourceHash": "fnv1a64:c7553df9e939d083",
     "detachableSegments": [
       "Script",
       "Writing — heard cue"

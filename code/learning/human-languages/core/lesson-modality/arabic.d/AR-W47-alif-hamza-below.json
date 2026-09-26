@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W47-alif-hamza-below",
+    "language": "arabic",
+    "chapter": 47,
+    "sequence": 1310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:32f74a165a0d12ea",
+    "detachableSegments": [
+      "Script you'll notice: إ",
+      "Writing: إ"
+    ]
+  },
+  "findings": []
+}

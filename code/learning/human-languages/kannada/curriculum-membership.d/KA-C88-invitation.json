@@ -1,0 +1,11 @@
+{
+  "id": "KA-C88-invitation",
+  "pathSegment": "KA-PATH-88-WELCOME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-88-WELCOME",
+      "order": 1
+    }
+  ]
+}

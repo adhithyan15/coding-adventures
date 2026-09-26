@@ -1,0 +1,11 @@
+{
+  "id": "RU-C127-kind",
+  "pathSegment": "RU-PATH-127-QUAL127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-127-QUAL127",
+      "order": 1
+    }
+  ]
+}

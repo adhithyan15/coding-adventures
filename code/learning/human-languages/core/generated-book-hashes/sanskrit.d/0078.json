@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:7f2f05a0d659c77f",
+  "lessonIds": [
+    "SA-C78-mango",
+    "SA-C78-banana",
+    "SA-C78-oil",
+    "SA-C78-bread",
+    "SA-C78-payasam"
+  ],
+  "tex": "sanskrit/book/chapters/ch78-mango-banana-bread.tex"
+}

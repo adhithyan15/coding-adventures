@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R99-second-pass-names-moods",
+    "language": "telugu",
+    "chapter": 99,
+    "sequence": 3890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e018b16edf9872b7"
+  },
+  "findings": []
+}

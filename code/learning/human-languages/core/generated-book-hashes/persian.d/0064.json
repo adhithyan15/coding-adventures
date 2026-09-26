@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:318058e1a9f76196",
+  "lessonIds": [
+    "FA-C64-abi",
+    "FA-C64-siyah",
+    "FA-C64-sefid",
+    "FA-C64-hafte",
+    "FA-C64-sal"
+  ],
+  "tex": "persian/book/chapters/ch64-blue-black-white-week-year.tex"
+}

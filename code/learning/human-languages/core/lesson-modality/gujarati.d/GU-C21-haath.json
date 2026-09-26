@@ -3,7 +3,7 @@
     "id": "GU-C21-haath",
     "language": "gujarati",
     "chapter": 25,
-    "sequence": 960,
+    "sequence": 973,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:be76f02c6dac8fb4",
+    "sourceHash": "fnv1a64:0ca4101e838d7c64",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."

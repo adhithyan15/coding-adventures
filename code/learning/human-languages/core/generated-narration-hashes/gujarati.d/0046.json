@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:d7cd87d457e67847",
+  "lessonIds": [
+    "GU-C46-head",
+    "GU-C46-leg",
+    "GU-C46-belly",
+    "GU-C46-tooth",
+    "GU-C46-hair"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch46.txt",
+  "json": "gujarati/narration/ch46.json",
+  "textHash": "fnv1a64:4df68e3a453b91b3",
+  "jsonHash": "fnv1a64:542f636c8c8db7e2",
+  "findings": []
+}

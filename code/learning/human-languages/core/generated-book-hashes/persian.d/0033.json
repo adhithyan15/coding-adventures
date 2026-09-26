@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:b5d9ae45bf4f93d1",
+  "lessonIds": [
+    "FA-C33-khale",
+    "FA-C33-shohar",
+    "FA-C33-hamsar",
+    "FA-C33-bachche",
+    "FA-C33-khanevade"
+  ],
+  "tex": "persian/book/chapters/ch33-aunt-husband-spouse-child-family.tex"
+}

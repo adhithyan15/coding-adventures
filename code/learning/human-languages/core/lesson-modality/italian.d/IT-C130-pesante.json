@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C130-pesante",
+    "language": "italian",
+    "chapter": 130,
+    "sequence": 6480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f9c814e03c77301"
+  },
+  "findings": []
+}

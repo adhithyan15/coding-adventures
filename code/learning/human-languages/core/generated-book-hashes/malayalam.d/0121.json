@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:5a9b410a543f33c4",
+  "lessonIds": [
+    "ML-C121-call",
+    "ML-C121-ticket",
+    "ML-C121-bus",
+    "ML-C121-station",
+    "ML-C121-map"
+  ],
+  "tex": "malayalam/book/chapters/ch121-out-and-about.tex"
+}

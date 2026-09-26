@@ -1,0 +1,11 @@
+{
+  "id": "BN-C75-tok",
+  "pathSegment": "BN-PATH-75-ADJ75",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-75-ADJ75",
+      "order": 4
+    }
+  ]
+}

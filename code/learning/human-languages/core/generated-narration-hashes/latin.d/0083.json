@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:af824ac03eb6493d",
+  "lessonIds": [
+    "LA-C83-culina",
+    "LA-C83-tectum",
+    "LA-C83-lucerna",
+    "LA-C83-poculum",
+    "LA-C83-culter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch83.txt",
+  "json": "latin/narration/ch83.json",
+  "textHash": "fnv1a64:fc203b3bd3ec0425",
+  "jsonHash": "fnv1a64:1d0b61f1576d8bc0",
+  "findings": []
+}

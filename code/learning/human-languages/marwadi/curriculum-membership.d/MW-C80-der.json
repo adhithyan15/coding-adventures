@@ -1,0 +1,11 @@
+{
+  "id": "MW-C80-der",
+  "pathSegment": "MW-PATH-80-TIME80",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-80-TIME80",
+      "order": 3
+    }
+  ]
+}

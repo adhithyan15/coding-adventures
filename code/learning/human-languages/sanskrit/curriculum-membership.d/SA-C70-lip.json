@@ -1,0 +1,11 @@
+{
+  "id": "SA-C70-lip",
+  "pathSegment": "SA-PATH-70-BODY2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-70-BODY2",
+      "order": 4
+    }
+  ]
+}

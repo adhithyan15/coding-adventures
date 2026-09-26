@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Nurse, Cook, Police officer, Shop assistant, Farmer",
+  "label": "ch:fr-nurse-cook-police-officer-shop-assistant-farmer",
+  "canDo": "I can name a nurse, a cook, a police officer, a shop assistant, a farmer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C123-agriculteur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can name a nurse, a cook, a police officer, a shop assistant, a farmer.",
+    "assesses": [
+      "FR-LEX-C123-METIERS75-03",
+      "FR-LEX-C123-METIERS75-04",
+      "FR-LEX-C123-METIERS75-05"
+    ]
+  }
+}

@@ -132,7 +132,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     let persisted = loadPersistedSnapshot()
     var persistenceWarning = persisted.warning
     func create(_ snapshot: Any?) throws -> [String: Any] {
-      let start: [String: Any] = [
+      var start: [String: Any] = [
         "protocolVersion": mosaicProtocolVersion,
         "locale": Locale.current.identifier,
         "colorScheme": "system",
@@ -140,6 +140,9 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         "platform": "apple",
         "restoredSnapshot": snapshot ?? NSNull(),
       ]
+      // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
+      let utcOffsetMinutes = TimeZone.current.secondsFromGMT() / 60
+      if (-840...840).contains(utcOffsetMinutes) { start["utcOffsetMinutes"] = utcOffsetMinutes }
       return try invoke(runtime: runtime, value: start) { bytes, output in
         mosaic_binding_create(runtime, bytes, &app, output)
       }

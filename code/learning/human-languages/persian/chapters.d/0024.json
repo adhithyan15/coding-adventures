@@ -1,0 +1,19 @@
+{
+  "chapter": 24,
+  "title": "Letters From Asking and Saying",
+  "label": "ch:fa-letters-asking-saying",
+  "canDo": "I can write pe, ye, kaf and gaf, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-W24-gaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 24: i can write pe, ye, kaf and gaf, and find each one in a word I already say.",
+    "assesses": [
+      "FA-SCRIPT-C24-YE-01",
+      "FA-SCRIPT-C24-KAF-01",
+      "FA-SCRIPT-C24-GAF-01"
+    ]
+  }
+}

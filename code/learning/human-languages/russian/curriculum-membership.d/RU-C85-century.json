@@ -1,0 +1,11 @@
+{
+  "id": "RU-C85-century",
+  "pathSegment": "RU-PATH-85-TIME85",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-85-TIME85",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C125-sanivar",
+    "language": "marathi",
+    "chapter": 125,
+    "sequence": 5740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cbc083f60b4ea46"
+  },
+  "findings": []
+}

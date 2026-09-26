@@ -1,0 +1,11 @@
+{
+  "id": "MW-C76-sacho",
+  "pathSegment": "MW-PATH-76-ADJ76",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-76-ADJ76",
+      "order": 2
+    }
+  ]
+}

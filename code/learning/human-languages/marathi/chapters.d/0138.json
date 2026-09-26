@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Peas, Pomegranate, Watermelon, Coconut, Flour",
+  "label": "ch:mr-peas-pomegranate-watermelon-coconut-flour",
+  "canDo": "I can say peas, a pomegranate, a watermelon, a coconut and flour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C138-pith",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: i can say peas, a pomegranate, a watermelon, a coconut and flour.",
+    "assesses": [
+      "MR-LEX-C138-THINGS138-03",
+      "MR-LEX-C138-THINGS138-04",
+      "MR-LEX-C138-THINGS138-05"
+    ]
+  }
+}

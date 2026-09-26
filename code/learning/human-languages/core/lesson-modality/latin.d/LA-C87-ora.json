@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C87-ora",
+    "language": "latin",
+    "chapter": 87,
+    "sequence": 3000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1dc2df97fa4e5bd"
+  },
+  "findings": []
+}

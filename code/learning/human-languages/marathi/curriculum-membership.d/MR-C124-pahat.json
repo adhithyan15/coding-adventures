@@ -1,0 +1,11 @@
+{
+  "id": "MR-C124-pahat",
+  "pathSegment": "MR-PATH-124-WANT124",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-124-WANT124",
+      "order": 1
+    }
+  ]
+}

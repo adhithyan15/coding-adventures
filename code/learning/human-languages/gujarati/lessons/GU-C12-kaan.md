@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C12-kaan
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 610
+sequence: 623
 chapter: 18
 type: word
 headword: કાન

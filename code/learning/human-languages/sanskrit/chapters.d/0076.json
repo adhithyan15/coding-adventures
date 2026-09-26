@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Rain, Cold and Heat",
+  "label": "ch:sa-rain-cold-heat",
+  "canDo": "I can name rain, the cold, the heat, spring and summer.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C76-summer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can name rain, the cold, the heat, spring and summer.",
+    "assesses": [
+      "SA-LEX-C76-WEATHER-03",
+      "SA-LEX-C76-WEATHER-04",
+      "SA-LEX-C76-WEATHER-05"
+    ]
+  }
+}

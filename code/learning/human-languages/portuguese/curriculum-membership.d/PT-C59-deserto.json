@@ -1,0 +1,11 @@
+{
+  "id": "PT-C59-deserto",
+  "pathSegment": "PT-PATH-59-TEMPO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-59-TEMPO",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:aa477a1ad8678770",
+  "lessonIds": [
+    "GE-C106-supermarkt",
+    "GE-C106-tankstelle",
+    "GE-C106-schwimmbad",
+    "GE-C106-stadion",
+    "GE-C106-fabrik"
+  ],
+  "tex": "german/book/chapters/ch106-supermarket-petrol-station-swimming-pool-stadium-factory.tex"
+}

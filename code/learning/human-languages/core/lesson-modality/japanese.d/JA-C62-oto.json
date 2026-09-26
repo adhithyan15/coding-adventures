@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C62-oto",
+    "language": "japanese",
+    "chapter": 62,
+    "sequence": 3770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7915999480845dc8"
+  },
+  "findings": []
+}

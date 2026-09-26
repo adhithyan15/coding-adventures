@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C109-boite-aux-lettres",
+    "language": "french",
+    "chapter": 109,
+    "sequence": 4890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:390425d5a793dbfe"
+  },
+  "findings": []
+}

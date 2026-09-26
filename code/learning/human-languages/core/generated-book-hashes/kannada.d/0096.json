@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:d7c60c7f23b46934",
+  "lessonIds": [
+    "KA-C96-eaten",
+    "KA-C96-whatsnew",
+    "KA-C96-longtime",
+    "KA-C96-hello",
+    "KA-C96-wellbeing"
+  ],
+  "tex": "kannada/book/chapters/ch96-greetings-people-say.tex"
+}

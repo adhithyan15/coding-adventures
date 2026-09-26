@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Never, Now, Then, Far, Near",
+  "label": "ch:fr-never-now-then-far-near",
+  "canDo": "I can name never, now, then, far, near.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FR-C96-pres",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can name never, now, then, far, near.",
+    "assesses": [
+      "FR-LEX-C96-TEMPS48-03",
+      "FR-LEX-C96-TEMPS48-04",
+      "FR-LEX-C96-TEMPS48-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-74-OPUS",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "LA-EXT-74-OPUS"
+  ],
+  "after": []
+}

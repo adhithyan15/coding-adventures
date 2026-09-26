@@ -1,0 +1,11 @@
+{
+  "id": "UR-R132-first-pass-nature-animals-and-the-body",
+  "pathSegment": "UR-PATH-132-QUAL132",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-132-QUAL132",
+      "order": 5
+    }
+  ]
+}

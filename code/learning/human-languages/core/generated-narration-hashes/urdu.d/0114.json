@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:b2ee6b038cb891ba",
+  "lessonIds": [
+    "UR-C114-imtihan",
+    "UR-C114-zaban",
+    "UR-C114-sabzi",
+    "UR-C114-piyaz",
+    "UR-C114-lahsan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch114.txt",
+  "json": "urdu/narration/ch114.json",
+  "textHash": "fnv1a64:94b2ffd1920e503f",
+  "jsonHash": "fnv1a64:511e24d7c777ace8",
+  "findings": []
+}

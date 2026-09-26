@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 22,
-  "sourceHash": "fnv1a64:e1376b07810debca",
+  "sourceHash": "fnv1a64:f2aff0d125ee2147",
   "lessonIds": [
     "UR-C22-kahna",
     "UR-C22-kya-kaha",
@@ -14,6 +14,6 @@
   "text": "urdu/narration/ch22.txt",
   "json": "urdu/narration/ch22.json",
   "textHash": "fnv1a64:1e6e5bae993c0f19",
-  "jsonHash": "fnv1a64:3702acdf1488b36a",
+  "jsonHash": "fnv1a64:59f0c90606763f05",
   "findings": []
 }

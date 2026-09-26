@@ -1,0 +1,11 @@
+{
+  "id": "HI-C117-mama",
+  "pathSegment": "HI-PATH-117-AUNT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-117-AUNT",
+      "order": 2
+    }
+  ]
+}

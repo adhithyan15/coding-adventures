@@ -1,0 +1,11 @@
+{
+  "id": "JA-C48-nagai",
+  "pathSegment": "JA-PATH-48-ANIMALS48",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-48-ANIMALS48",
+      "order": 3
+    }
+  ]
+}

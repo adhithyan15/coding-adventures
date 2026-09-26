@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C65-well",
+    "language": "gujarati",
+    "chapter": 65,
+    "sequence": 3323,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7ae8f6dd20f3a26"
+  },
+  "findings": []
+}

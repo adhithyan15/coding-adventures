@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:e5245994de4f75d7",
+  "lessonIds": [
+    "AR-C67-tamatim",
+    "AR-C67-jazar",
+    "AR-C67-zubda",
+    "AR-C67-asal",
+    "AR-C67-inab"
+  ],
+  "tex": "arabic/book/chapters/ch67-tomatoes-carrots-butter-honey-grapes.tex"
+}

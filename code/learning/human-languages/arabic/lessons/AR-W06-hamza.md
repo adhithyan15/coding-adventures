@@ -8,20 +8,20 @@ type: writing
 headword: "ء، أ"
 gloss: hamza marks the glottal catch and can ride on alif as its seat
 romanization: hamza
-prerequisites: [AR-W06-sukun-shadda-tanwin]
+prerequisites: [AR-W06-sukun-shadda-tanwin, AR-C02-ahlan]
 sounds: [arabic-hamza]
 roots: [abjad-vowels]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-AHLAN]
 introduces:
   knowledge: [AR-CONCEPT-W06-HAMZA-01, AR-CONCEPT-W06-HAMZA-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-W06-HAMZA-01, AR-CONCEPT-W06-HAMZA-02]
+  knowledge: [AR-CONCEPT-W06-HAMZA-01, AR-CONCEPT-W06-HAMZA-02, AR-LEX-ANCHOR-AHLAN]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W06-sukun-shadda-tanwin, AR-W06-harakat-and-hamza, AR-C02-anta-a
 # ء and أ — the glottal catch
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-AHLAN] -->
 
 [PAUSE 2s] The marks in the last lesson supplied vowels. **Hamza** is different:
 it writes a real consonant sound.

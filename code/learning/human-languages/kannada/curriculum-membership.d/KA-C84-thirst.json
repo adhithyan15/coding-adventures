@@ -1,0 +1,11 @@
+{
+  "id": "KA-C84-thirst",
+  "pathSegment": "KA-PATH-84-BODY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-84-BODY",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:9288ae88b4ce805f",
+  "lessonIds": [
+    "RU-C94-television",
+    "RU-C94-computer",
+    "RU-C94-fridge",
+    "RU-C94-cooker",
+    "RU-C94-shower"
+  ],
+  "tex": "russian/book/chapters/ch94-television-computer-fridge-cooker-shower.tex"
+}

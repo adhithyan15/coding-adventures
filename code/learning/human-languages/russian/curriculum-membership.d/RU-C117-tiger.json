@@ -1,0 +1,11 @@
+{
+  "id": "RU-C117-tiger",
+  "pathSegment": "RU-PATH-117-THINGS117",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-117-THINGS117",
+      "order": 1
+    }
+  ]
+}

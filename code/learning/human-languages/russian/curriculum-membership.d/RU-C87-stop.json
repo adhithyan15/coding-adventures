@@ -1,0 +1,11 @@
+{
+  "id": "RU-C87-stop",
+  "pathSegment": "RU-PATH-87-LOC87",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-87-LOC87",
+      "order": 3
+    }
+  ]
+}

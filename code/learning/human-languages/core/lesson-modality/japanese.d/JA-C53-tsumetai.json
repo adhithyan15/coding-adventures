@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C53-tsumetai",
+    "language": "japanese",
+    "chapter": 53,
+    "sequence": 3280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62c1a225c6479318"
+  },
+  "findings": []
+}

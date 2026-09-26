@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Stone, Sand, Shore, Island, Field",
+  "label": "ch:ru-stone-sand-shore-island-field",
+  "canDo": "I can name a stone, sand, a shore, an island and a field.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C57-field",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can name a stone, sand, a shore, an island and a field.",
+    "assesses": [
+      "RU-LEX-C57-NATURE3-03",
+      "RU-LEX-C57-NATURE3-04",
+      "RU-LEX-C57-NATURE3-05"
+    ]
+  }
+}

@@ -618,6 +618,26 @@ pub struct LayoutPackageResolver {
     cache: Mutex<HashMap<(String, String), ResolvedComponent>>,
 }
 
+/// One part renamed because its component was mounted more than once
+/// (UI34 §5 step 4). `from` is the authored name, `to` the name it has in
+/// this mount. The artifact builder copies `from`'s style to `to`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PartRename {
+    pub package: String,
+    pub component: String,
+    pub from: String,
+    pub to: String,
+}
+
+/// State carried through one resolve: the in-flight `(P, C)` stack (cycle
+/// detection), how many times each `(P, C)` has been mounted so far, and the
+/// renames made.
+struct ResolveState {
+    visiting: Vec<(String, String)>,
+    mounts: HashMap<(String, String), usize>,
+    renames: Vec<PartRename>,
+}
+
 #[derive(Clone)]
 struct ResolvedComponent {
     layout: LayoutDef,
@@ -635,15 +655,33 @@ impl LayoutPackageResolver {
     /// Mutate `layout` in place, replacing every `pkg::P::C` node with the
     /// referenced component's compiled layout tree.
     pub fn resolve(&self, layout: &mut LayoutDef) -> Result<(), LayoutResolveError> {
-        let mut visiting: Vec<(String, String)> = Vec::new();
-        self.resolve_node(&mut layout.root, &mut visiting)
+        self.resolve_with_renames(layout).map(|_| ())
+    }
+
+    /// [`Self::resolve`], also returning the parts renamed because a
+    /// component was mounted more than once. The first mount of each
+    /// `(P, C)` keeps its authored names; the n-th (n ≥ 2) gets `-m<n>` on every
+    /// inlined part (UI34 §5 step 4). Empty when every component is mounted
+    /// once, which leaves the output exactly as before.
+    pub fn resolve_with_renames(
+        &self,
+        layout: &mut LayoutDef,
+    ) -> Result<Vec<PartRename>, LayoutResolveError> {
+        let mut state = ResolveState {
+            visiting: Vec::new(),
+            mounts: HashMap::new(),
+            renames: Vec::new(),
+        };
+        self.resolve_node(&mut layout.root, &mut state)?;
+        Ok(state.renames)
     }
 
     fn resolve_node(
         &self,
         node: &mut LayoutNode,
-        visiting: &mut Vec<(String, String)>,
+        state: &mut ResolveState,
     ) -> Result<(), LayoutResolveError> {
+        let visiting = &mut state.visiting;
         let pushed: Vec<(String, String)> = {
             let mut pushed = Vec::new();
             while let Some((pkg, comp)) = node
@@ -658,19 +696,24 @@ impl LayoutPackageResolver {
                 visiting.push((pkg.clone(), comp.clone()));
                 pushed.push((pkg.clone(), comp.clone()));
                 let resolved = self.resolve_component(&pkg, &comp)?;
-                self.substitute(node, resolved, &pkg, &comp)?;
+                let mount = {
+                    let count = state.mounts.entry((pkg.clone(), comp.clone())).or_insert(0);
+                    *count += 1;
+                    *count
+                };
+                self.substitute(node, resolved, &pkg, &comp, mount, &mut state.renames)?;
             }
             pushed
         };
 
         let mut i = 0;
         while i < node.children.len() {
-            self.resolve_node(&mut node.children[i], visiting)?;
+            self.resolve_node(&mut node.children[i], state)?;
             i += 1;
         }
 
         for _ in &pushed {
-            visiting.pop();
+            state.visiting.pop();
         }
         Ok(())
     }
@@ -681,10 +724,13 @@ impl LayoutPackageResolver {
         resolved: ResolvedComponent,
         pkg: &str,
         comp: &str,
+        mount: usize,
+        renames: &mut Vec<PartRename>,
     ) -> Result<(), LayoutResolveError> {
         let call_props = std::mem::take(&mut target.props);
         let consumer_part = target.part_name.take();
         let call_children = std::mem::take(&mut target.children);
+        let caller_named_root = consumer_part.is_some();
 
         target.tag = resolved.layout.root.tag;
         target.part_name = consumer_part.or(resolved.layout.root.part_name);
@@ -698,6 +744,33 @@ impl LayoutPackageResolver {
 
         let exports = self.package_exports(pkg)?;
         qualify_local_refs(target, pkg, &exports);
+
+        // A second (third, …) mount: suffix every inlined part so the tree
+        // keeps unique part names. Before splicing, so the caller's own
+        // children keep theirs; a root the caller named is theirs too.
+        if mount >= 2 {
+            // `-m2`, not `-2`: a Mosaic identifier segment cannot start with a digit,
+            // and a consumer `.msl` must be able to name the renamed part.
+            let suffix = format!("-m{mount}");
+            let mut rename = |node: &mut LayoutNode| {
+                if let Some(name) = node.part_name.as_mut() {
+                    let from = name.clone();
+                    name.push_str(&suffix);
+                    renames.push(PartRename {
+                        package: pkg.to_string(),
+                        component: comp.to_string(),
+                        from,
+                        to: name.clone(),
+                    });
+                }
+            };
+            if !caller_named_root {
+                rename(target);
+            }
+            for child in &mut target.children {
+                visit_nodes_mut(child, &mut rename);
+            }
+        }
 
         let child_count = call_children.len();
         let accepted = splice_default_children(target, call_children);
@@ -831,6 +904,14 @@ impl LayoutPackageResolver {
 /// match. Inserted caller nodes are deliberately not traversed here: their
 /// bindings belong to the consuming component and must not be rewritten in the
 /// dependency's slot scope.
+/// Apply `f` to `node` and every node beneath it, depth-first.
+fn visit_nodes_mut(node: &mut LayoutNode, f: &mut impl FnMut(&mut LayoutNode)) {
+    f(node);
+    for child in &mut node.children {
+        visit_nodes_mut(child, f);
+    }
+}
+
 fn splice_default_children(node: &mut LayoutNode, authored: Vec<LayoutNode>) -> bool {
     let mut authored = Some(authored);
     splice_default_children_inner(node, &mut authored)
@@ -2124,5 +2205,155 @@ version = "1"
             matches!(err, LayoutResolveError::CircularPackageReference { .. }),
             "expected cycle error, got {err:?}"
         );
+    }
+    // ---- Mounting a component more than once (UI34 §5 step 4) ----
+
+    /// A package with `Empty` (two parts), `Card` (splices caller children)
+    /// and `Pair` (mounts `Empty` itself).
+    fn multi_mount_packages() -> (TempDir, PathBuf) {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let kit = make_pkg(&pkgs, "kit", "kit", &["Empty", "Card", "Pair"]);
+        write_component(
+            &kit,
+            "Empty",
+            "component Empty { slot title : text ; }",
+            "layout Empty { Column [ empty ] { Text [ empty-title ] ( content: slot: title ) } }",
+        );
+        write_component(
+            &kit,
+            "Card",
+            "component Card { slot children : list<node> ; }",
+            "layout Card { Box [ card ] { slot: children } }",
+        );
+        write_component(
+            &kit,
+            "Pair",
+            "component Pair { }",
+            "layout Pair { Row [ pair ] { Empty ( title: \"inner\" ) } }",
+        );
+        (tmp, pkgs)
+    }
+
+    fn part_names(node: &LayoutNode, out: &mut Vec<String>) {
+        if let Some(name) = &node.part_name {
+            out.push(name.clone());
+        }
+        for child in &node.children {
+            part_names(child, out);
+        }
+    }
+
+    #[test]
+    fn a_second_mount_is_suffixed_and_the_first_keeps_its_names() {
+        let (_tmp, pkgs) = multi_mount_packages();
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout App { Column [ app ] {
+  pkg::kit::Empty ( title: "one" )
+  pkg::kit::Empty ( title: "two" )
+  pkg::kit::Empty ( title: "three" )
+} }"#,
+        );
+        let renames = resolver
+            .resolve_with_renames(&mut layout)
+            .expect("resolves");
+        let mut names = Vec::new();
+        part_names(&layout.root, &mut names);
+        assert_eq!(
+            names,
+            [
+                "app",
+                "empty",
+                "empty-title",
+                "empty-m2",
+                "empty-title-m2",
+                "empty-m3",
+                "empty-title-m3"
+            ]
+        );
+        let pairs: Vec<(&str, &str)> = renames
+            .iter()
+            .map(|r| (r.from.as_str(), r.to.as_str()))
+            .collect();
+        assert_eq!(
+            pairs,
+            [
+                ("empty", "empty-m2"),
+                ("empty-title", "empty-title-m2"),
+                ("empty", "empty-m3"),
+                ("empty-title", "empty-title-m3")
+            ]
+        );
+        assert!(renames
+            .iter()
+            .all(|r| r.package == "kit" && r.component == "Empty"));
+        moslayout_compiler::validate(&layout, None).expect("unique part names");
+    }
+
+    #[test]
+    fn a_single_mount_is_unchanged_and_reports_no_renames() {
+        let (_tmp, pkgs) = multi_mount_packages();
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(r#"layout App { pkg::kit::Empty ( title: "one" ) }"#);
+        assert!(resolver
+            .resolve_with_renames(&mut layout)
+            .unwrap()
+            .is_empty());
+        let mut names = Vec::new();
+        part_names(&layout.root, &mut names);
+        assert_eq!(names, ["empty", "empty-title"]);
+    }
+
+    #[test]
+    fn caller_parts_are_never_suffixed() {
+        let (_tmp, pkgs) = multi_mount_packages();
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout App { Column [ app ] {
+  pkg::kit::Card { Text [ first-body ] ( content: "a" ) }
+  pkg::kit::Card [ named-card ] { Text [ second-body ] ( content: "b" ) }
+} }"#,
+        );
+        resolver.resolve(&mut layout).expect("resolves");
+        let mut names = Vec::new();
+        part_names(&layout.root, &mut names);
+        // The second Card's root is caller-named and its child caller-authored.
+        assert_eq!(
+            names,
+            ["app", "card", "first-body", "named-card", "second-body"]
+        );
+    }
+
+    #[test]
+    fn a_component_mounted_inside_another_counts_across_the_whole_tree() {
+        let (_tmp, pkgs) = multi_mount_packages();
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout App { Column [ app ] {
+  pkg::kit::Empty ( title: "top" )
+  pkg::kit::Pair
+  pkg::kit::Pair
+} }"#,
+        );
+        resolver.resolve(&mut layout).expect("resolves");
+        let mut names = Vec::new();
+        part_names(&layout.root, &mut names);
+        assert_eq!(
+            names,
+            [
+                "app",
+                "empty",
+                "empty-title",
+                "pair",
+                "empty-m2",
+                "empty-title-m2",
+                "pair-m2",
+                "empty-m3",
+                "empty-title-m3"
+            ]
+        );
+        moslayout_compiler::validate(&layout, None).expect("unique part names");
     }
 }

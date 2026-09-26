@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C33-ke
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 1880
+sequence: 1893
 chapter: 37
 type: word
 headword: કે

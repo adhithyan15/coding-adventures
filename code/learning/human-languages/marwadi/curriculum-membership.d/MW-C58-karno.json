@@ -1,0 +1,11 @@
+{
+  "id": "MW-C58-karno",
+  "pathSegment": "MW-PATH-58-VERBS58",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-58-VERBS58",
+      "order": 1
+    }
+  ]
+}

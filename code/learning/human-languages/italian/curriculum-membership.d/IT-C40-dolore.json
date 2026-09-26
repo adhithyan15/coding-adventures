@@ -1,0 +1,11 @@
+{
+  "id": "IT-C40-dolore",
+  "pathSegment": "IT-PATH-40-CORPO4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-40-CORPO4",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C31-dasu",
+    "language": "japanese",
+    "chapter": 31,
+    "sequence": 2160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afa03942e19d70a6"
+  },
+  "findings": []
+}

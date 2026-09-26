@@ -1,0 +1,11 @@
+{
+  "id": "JA-C29-tanoshimu",
+  "pathSegment": "JA-PATH-29-VERBS29",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-29-VERBS29",
+      "order": 4
+    }
+  ]
+}

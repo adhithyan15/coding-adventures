@@ -1,0 +1,11 @@
+{
+  "id": "GE-C80-heft",
+  "pathSegment": "GE-PATH-80-SACHEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-80-SACHEN",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C82-sella",
+    "language": "latin",
+    "chapter": 82,
+    "sequence": 2700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c172d760351b3e1a"
+  },
+  "findings": []
+}

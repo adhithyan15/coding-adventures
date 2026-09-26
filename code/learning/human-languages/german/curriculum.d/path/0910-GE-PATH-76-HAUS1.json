@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-76-HAUS1",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "GE-EXT-76-HAUS1"
+  ],
+  "after": []
+}

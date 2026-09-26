@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C05-tup",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 59,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9000c3511bcdb8ba"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:2b862d3f8a2d74b5",
+  "lessonIds": [
+    "LA-C121-cochlear",
+    "LA-C121-olla",
+    "LA-C121-patina",
+    "LA-C121-catinus",
+    "LA-C121-candela"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch121.txt",
+  "json": "latin/narration/ch121.json",
+  "textHash": "fnv1a64:84032445648c2b07",
+  "jsonHash": "fnv1a64:39cb16aa8e615b9f",
+  "findings": []
+}

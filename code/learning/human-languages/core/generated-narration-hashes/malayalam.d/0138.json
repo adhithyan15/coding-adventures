@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:b9a2fd72e4601543",
+  "lessonIds": [
+    "ML-C138-bird",
+    "ML-C138-snake",
+    "ML-C138-monkey",
+    "ML-C138-tiger",
+    "ML-C138-rabbit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch138.txt",
+  "json": "malayalam/narration/ch138.json",
+  "textHash": "fnv1a64:089633d84eb38935",
+  "jsonHash": "fnv1a64:41af08177d561660",
+  "findings": []
+}

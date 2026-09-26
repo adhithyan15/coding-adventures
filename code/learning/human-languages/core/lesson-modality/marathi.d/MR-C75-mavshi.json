@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C75-mavshi",
+    "language": "marathi",
+    "chapter": 75,
+    "sequence": 3140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77785836f29c3000"
+  },
+  "findings": []
+}

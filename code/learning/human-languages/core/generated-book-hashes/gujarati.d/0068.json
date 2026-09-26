@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:136736e400144c2a",
+  "lessonIds": [
+    "GU-C68-tiger",
+    "GU-C68-lion",
+    "GU-C68-elephant",
+    "GU-C68-monkey",
+    "GU-C68-snake",
+    "GU-R68-first-pass-the-body-the-family-and-the-house",
+    "GU-R68-second-pass-food-the-land-and-animals"
+  ],
+  "tex": "gujarati/book/chapters/ch68-tiger-lion-and-elephant.tex"
+}

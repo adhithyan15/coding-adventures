@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C147-tvaca",
+    "language": "marathi",
+    "chapter": 147,
+    "sequence": 6900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ae7ac1148b48ec7"
+  },
+  "findings": []
+}

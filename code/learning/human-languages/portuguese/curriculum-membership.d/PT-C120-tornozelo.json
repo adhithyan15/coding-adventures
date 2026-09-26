@@ -1,0 +1,11 @@
+{
+  "id": "PT-C120-tornozelo",
+  "pathSegment": "PT-PATH-120-CORPO120",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-120-CORPO120",
+      "order": 0
+    }
+  ]
+}

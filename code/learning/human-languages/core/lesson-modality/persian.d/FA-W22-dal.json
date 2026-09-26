@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W22-dal",
+    "language": "persian",
+    "chapter": 22,
+    "sequence": 1010,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:07e0e169b549bd08",
+    "detachableSegments": [
+      "Script you'll notice: د",
+      "Writing: د"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

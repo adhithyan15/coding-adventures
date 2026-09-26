@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:24bd9ce50ef425c8",
+  "lessonIds": [
+    "MW-C46-pith",
+    "MW-C46-jibh",
+    "MW-C46-akh",
+    "MW-C46-nak",
+    "MW-C46-dil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch46.txt",
+  "json": "marwadi/narration/ch46.json",
+  "textHash": "fnv1a64:09efe5d5ca4ba1fe",
+  "jsonHash": "fnv1a64:963d3c577308cc27",
+  "findings": []
+}

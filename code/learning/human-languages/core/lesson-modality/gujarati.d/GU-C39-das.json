@@ -3,7 +3,7 @@
     "id": "GU-C39-das",
     "language": "gujarati",
     "chapter": 43,
-    "sequence": 2240,
+    "sequence": 2253,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a679f45713245d6c"
+    "sourceHash": "fnv1a64:6f85a64889fbca90"
   },
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C84-pain",
+  "pathSegment": "TE-PATH-84-UNWELL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-84-UNWELL",
+      "order": 1
+    }
+  ]
+}

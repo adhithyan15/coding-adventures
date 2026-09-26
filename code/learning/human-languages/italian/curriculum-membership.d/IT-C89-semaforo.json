@@ -1,0 +1,11 @@
+{
+  "id": "IT-C89-semaforo",
+  "pathSegment": "IT-PATH-89-LUOGHI89",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-89-LUOGHI89",
+      "order": 4
+    }
+  ]
+}

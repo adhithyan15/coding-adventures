@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Word, Board, Rubber, Homework, Problem",
+  "label": "ch:pt-word-board-rubber-homework-problem",
+  "canDo": "I can say a word, a board, a rubber, homework and a problem.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-R113-second-pass-free-time-and-nature",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a word, a board, a rubber, homework and a problem.",
+    "assesses": [
+      "PT-LEX-C113-ESCOLA113-03",
+      "PT-LEX-C113-ESCOLA113-04",
+      "PT-LEX-C113-ESCOLA113-05"
+    ]
+  }
+}

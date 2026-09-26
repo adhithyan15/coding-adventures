@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C78-mango",
+    "language": "sanskrit",
+    "chapter": 78,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89e80e131e8eb5de"
+  },
+  "findings": []
+}

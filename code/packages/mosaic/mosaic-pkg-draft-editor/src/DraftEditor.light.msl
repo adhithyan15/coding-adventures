@@ -1,0 +1,80 @@
+// DraftEditor.light.msl — light-theme styling.
+//
+// Properties every native backend lowers, except the fields' `width` and the
+// body's `min-height` (Qt and Flutter keep their own field size; pinned in the
+// native gate). Padding is one uniform value
+// (Qt reads a single padding and fans it out, #15247). Text parts carry
+// colour and size only (#15276).
+
+style DraftEditor {
+  part draft-editor {
+    padding       : 16 ;
+    gap           : 8 ;
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+  }
+  part draft-editor-title-group {
+    gap : 4 ;
+  }
+  part draft-editor-title-label {
+    color     : "#6c757d" ;
+    font-size : 12 ;
+  }
+  part draft-editor-title {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 16 ;
+  }
+  part draft-editor-body-label {
+    color     : "#6c757d" ;
+    font-size : 12 ;
+  }
+  part draft-editor-body {
+    width         : 100% ;
+    min-height    : 160 ;
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part draft-editor-actions {
+    gap : 8 ;
+  }
+  part draft-editor-save {
+    padding       : 8 ;
+    background    : "#0d6efd" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#0a58ca" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part draft-editor-delete {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#b02a37" ;
+    border-width  : 1 ;
+    border-color  : "#b02a37" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part draft-editor-cancel {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+}

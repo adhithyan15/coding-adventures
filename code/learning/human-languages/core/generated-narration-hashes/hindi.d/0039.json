@@ -1,18 +1,19 @@
 {
   "language": "hindi",
   "chapter": 39,
-  "sourceHash": "fnv1a64:c036025e870772ca",
+  "sourceHash": "fnv1a64:b50fbecc64e86528",
   "lessonIds": [
     "HI-C39-dost",
     "HI-C39-baccha",
     "HI-C39-aadmi",
-    "HI-C39-aurat"
+    "HI-C39-aurat",
+    "HI-S135-letter-au"
   ],
   "voiceLessons": 3,
   "drivablePrefix": 0,
   "text": "hindi/narration/ch39.txt",
   "json": "hindi/narration/ch39.json",
-  "textHash": "fnv1a64:b456b9b63cb2a5be",
-  "jsonHash": "fnv1a64:ca6720ae79304a3b",
+  "textHash": "fnv1a64:0d8aca345e6616a8",
+  "jsonHash": "fnv1a64:0deb107ccb1a71e2",
   "findings": []
 }

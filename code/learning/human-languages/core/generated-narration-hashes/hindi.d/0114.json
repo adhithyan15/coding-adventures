@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:35eee15f2b979b60",
+  "lessonIds": [
+    "HI-C114-mafi",
+    "HI-C114-koibaat",
+    "HI-C114-badhai",
+    "HI-C114-shubhkamnaen",
+    "HI-C114-nimantran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch114.txt",
+  "json": "hindi/narration/ch114.json",
+  "textHash": "fnv1a64:5882998be21f8a1a",
+  "jsonHash": "fnv1a64:4b2ed174b56f3366",
+  "findings": []
+}

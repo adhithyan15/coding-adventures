@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:67bb58efe2aa1f9e",
+  "lessonIds": [
+    "GU-C79-saturday",
+    "GU-C79-sunday",
+    "GU-C79-tomorrow",
+    "GU-C79-yesterday",
+    "GU-C79-time"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch79.txt",
+  "json": "gujarati/narration/ch79.json",
+  "textHash": "fnv1a64:08da81aae0e1285d",
+  "jsonHash": "fnv1a64:fb8e4d2ef349702c",
+  "findings": []
+}

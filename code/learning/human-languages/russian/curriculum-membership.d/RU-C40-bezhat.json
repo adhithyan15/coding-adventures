@@ -1,0 +1,11 @@
+{
+  "id": "RU-C40-bezhat",
+  "pathSegment": "RU-PATH-40-VERB3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-40-VERB3",
+      "order": 3
+    }
+  ]
+}

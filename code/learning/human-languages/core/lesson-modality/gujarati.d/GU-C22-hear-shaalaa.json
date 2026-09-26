@@ -3,7 +3,7 @@
     "id": "GU-C22-hear-shaalaa",
     "language": "gujarati",
     "chapter": 26,
-    "sequence": 1040,
+    "sequence": 1053,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c456df355ea7fb0b"
+    "sourceHash": "fnv1a64:7f4424ede73a14c7"
   },
   "findings": []
 }

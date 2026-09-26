@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:9effd696dfacc0f5",
+  "lessonIds": [
+    "LA-C85-pila",
+    "LA-C85-rota",
+    "LA-C85-gladius",
+    "LA-C85-corona",
+    "LA-C85-anulus",
+    "LA-R85-first-pass-the-body-health-and-people",
+    "LA-R85-second-pass-verbs-food-the-house-and-things"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch85.txt",
+  "json": "latin/narration/ch85.json",
+  "textHash": "fnv1a64:c6926f77039ab202",
+  "jsonHash": "fnv1a64:3c6111620f22d780",
+  "findings": []
+}

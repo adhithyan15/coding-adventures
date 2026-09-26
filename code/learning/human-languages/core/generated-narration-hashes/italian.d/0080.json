@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:81c223de369a4d87",
+  "lessonIds": [
+    "IT-C80-sotto",
+    "IT-C80-dentro",
+    "IT-C80-fuori",
+    "IT-C80-piazza",
+    "IT-C80-strada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch80.txt",
+  "json": "italian/narration/ch80.json",
+  "textHash": "fnv1a64:501d80294a67d784",
+  "jsonHash": "fnv1a64:221bda7dcdde71a1",
+  "findings": []
+}

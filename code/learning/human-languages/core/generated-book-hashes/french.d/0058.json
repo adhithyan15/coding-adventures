@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:dc3cae851ae36006",
+  "lessonIds": [
+    "FR-C58-voisin",
+    "FR-C58-invite",
+    "FR-C58-bebe",
+    "FR-C58-petit-fils",
+    "FR-C58-petite-fille"
+  ],
+  "tex": "french/book/chapters/ch58-neighbour-guest-baby-grandson-granddaughter.tex"
+}

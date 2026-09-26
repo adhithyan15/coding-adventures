@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:8048b7bc34fd50d3",
+  "lessonIds": [
+    "PT-C92-mota",
+    "PT-C92-navio",
+    "PT-C92-barco",
+    "PT-C92-autocarro",
+    "PT-C92-comboio",
+    "PT-R92-first-pass-can-want-why-and-places",
+    "PT-R92-second-pass-getting-around-and-the-house"
+  ],
+  "tex": "portuguese/book/chapters/ch92-motorbike-ship-boat-bus-train.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C39-gaanam",
+    "language": "malayalam",
+    "chapter": 39,
+    "sequence": 924,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:708aa8e2826878b1"
+  },
+  "findings": []
+}

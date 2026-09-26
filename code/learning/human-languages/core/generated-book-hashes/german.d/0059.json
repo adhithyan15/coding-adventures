@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:ddac75b4005f2694",
+  "lessonIds": [
+    "GE-C59-fieber",
+    "GE-C59-arzt",
+    "GE-C59-aerztin",
+    "GE-C59-krankenhaus",
+    "GE-C59-krank"
+  ],
+  "tex": "german/book/chapters/ch59-fever-doctor-doctor-hospital-ill.tex"
+}

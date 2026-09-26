@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-77-HOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a room, the kitchen, the bathroom, the roof and a key.",
+  "prerequisites": []
+}

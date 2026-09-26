@@ -1,0 +1,11 @@
+{
+  "id": "PA-C50-chihra",
+  "pathSegment": "PA-PATH-50-BODY50",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-50-BODY50",
+      "order": 3
+    }
+  ]
+}

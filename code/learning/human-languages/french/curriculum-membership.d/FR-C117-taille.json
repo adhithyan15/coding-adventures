@@ -1,0 +1,11 @@
+{
+  "id": "FR-C117-taille",
+  "pathSegment": "FR-PATH-117-HABITS69",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-117-HABITS69",
+      "order": 3
+    }
+  ]
+}

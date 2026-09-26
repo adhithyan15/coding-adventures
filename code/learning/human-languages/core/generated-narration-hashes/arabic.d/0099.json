@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:58ad51258a563228",
+  "lessonIds": [
+    "AR-C99-musiqa",
+    "AR-C99-akhbar",
+    "AR-C99-balad",
+    "AR-C99-lugha",
+    "AR-C99-qissa",
+    "AR-R99-first-pass-nature-animals-and-describing-words",
+    "AR-R99-second-pass-time-places-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch99.txt",
+  "json": "arabic/narration/ch99.json",
+  "textHash": "fnv1a64:350809a4c168e737",
+  "jsonHash": "fnv1a64:3871a3994a1fdbed",
+  "findings": []
+}

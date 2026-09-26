@@ -9,18 +9,18 @@ type: writing
 headword: ও
 romanization: "o"
 gloss: "the independent o — the fourth vowel to show both of its bodies"
-prerequisites: [BN-W04-ja]
+prerequisites: [BN-W04-ja, BN-C09-jal, BN-C10-ojon]
 sounds: []
 roots: []
 etymology_hook: "The fourth vowel in this book to appear twice over: once as a sign that rides a consonant, once as a letter that stands on its own, and the rule choosing between them has not changed since the first script chapter."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-O-MATRA-01, BN-SCRIPT-AA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-HA-01]
+  knowledge: [BN-SCRIPT-O-MATRA-01, BN-SCRIPT-AA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-HA-01, BN-LEX-ANCHOR-JAL, BN-LEX-ANCHOR-OJON]
 introduces:
   knowledge: [BN-SCRIPT-O-INDEP-01]
 practises:
-  knowledge: [BN-SCRIPT-O-INDEP-01, BN-SCRIPT-O-MATRA-01, BN-SCRIPT-AA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-HA-01, BN-SCRIPT-KEMON-READ-01]
+  knowledge: [BN-SCRIPT-O-INDEP-01, BN-SCRIPT-O-MATRA-01, BN-SCRIPT-AA-01, BN-SCRIPT-I-INDEP-01, BN-SCRIPT-E-INDEP-01, BN-SCRIPT-HA-01, BN-SCRIPT-KEMON-READ-01, BN-LEX-ANCHOR-JAL, BN-LEX-ANCHOR-OJON]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [BN-W04-e-indep, BN-W03-o-matra, BN-W02-kemon-read]
 # ও — the independent o
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-E-INDEP-01, BN-SCRIPT-O-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-E-INDEP-01, BN-SCRIPT-O-MATRA-01, BN-LEX-ANCHOR-JAL, BN-LEX-ANCHOR-OJON] -->
 
 [PAUSE 2s] Write **এ**, then write **ো** and say which letter it wraps around.
 

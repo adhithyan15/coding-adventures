@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C52-futoi",
+    "language": "japanese",
+    "chapter": 52,
+    "sequence": 3260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e969daec8a6c4cc8"
+  },
+  "findings": []
+}

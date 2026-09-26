@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 23,
-  "sourceHash": "fnv1a64:ae0a7edfbfad3df2",
+  "sourceHash": "fnv1a64:6883e3737a9c37fb",
   "lessonIds": [
     "KA-C23-dina",
+    "KA-C23-kathe",
     "KA-S129-letter-tha"
   ],
   "tex": "kannada/book/chapters/ch23-day.tex"

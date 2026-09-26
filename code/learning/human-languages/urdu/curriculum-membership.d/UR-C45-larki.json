@@ -1,0 +1,11 @@
+{
+  "id": "UR-C45-larki",
+  "pathSegment": "UR-PATH-45-FAMILY45",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-45-FAMILY45",
+      "order": 1
+    }
+  ]
+}

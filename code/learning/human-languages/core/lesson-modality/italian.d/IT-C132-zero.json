@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C132-zero",
+    "language": "italian",
+    "chapter": 132,
+    "sequence": 6550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b543736cb0cb32eb"
+  },
+  "findings": []
+}

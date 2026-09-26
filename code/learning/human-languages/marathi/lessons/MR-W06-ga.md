@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W06-ga
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 71
+sequence: 81
 delivery: script
 chapter: 6
 type: writing
 headword: ग
 romanization: "ga"
 gloss: ga — the voiced partner of ka
-prerequisites: [MR-W06-kha]
+prerequisites: [MR-W06-kha, MR-C06-ghagar]
 sounds: [unaspirated-g]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-A-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-LEX-ANCHOR-GHAGAR]
 introduces:
   knowledge: [MR-SCRIPT-GA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-GA-01, MR-SCRIPT-KHA-01, MR-SCRIPT-A-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-GA-01, MR-SCRIPT-KHA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-LEX-ANCHOR-GHAGAR]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-kha, MR-W05-a-independent]
 # ग — the same place, with the voice on
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-GHAGAR] -->
 
 Put two fingers on your throat and say *ka*, then *ga*. The place in your mouth does not move. Something else switches on.
 

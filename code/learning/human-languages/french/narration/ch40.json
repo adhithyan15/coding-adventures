@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Two Ideas, One Sentence",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:db852cdf8793493d",
+  "sourceHash": "fnv1a64:daafe21d736424f5",
   "lessons": [
     {
       "id": "FR-C36-svo",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a2027d49d0694dc",
+      "sourceHash": "fnv1a64:fcf931b1e97fda53",
       "notice": null,
       "blocks": [
         {

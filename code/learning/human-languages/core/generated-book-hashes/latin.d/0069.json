@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:6c21d3ef07520d7f",
+  "lessonIds": [
+    "LA-C69-gaudium",
+    "LA-C69-ira",
+    "LA-C69-timor",
+    "LA-C69-laetus",
+    "LA-C69-tristis"
+  ],
+  "tex": "latin/book/chapters/ch69-joy-anger-fear.tex"
+}

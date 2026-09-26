@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:ca6a20a43e3bb6e7",
+  "lessonIds": [
+    "PT-C104-blusa",
+    "PT-C104-fato",
+    "PT-C104-tubarao",
+    "PT-C104-trovao",
+    "PT-C104-relampago"
+  ],
+  "tex": "portuguese/book/chapters/ch104-blouse-suit-shark-thunder-lightning.tex"
+}

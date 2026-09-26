@@ -1,0 +1,11 @@
+{
+  "id": "UR-R121-second-pass-food-and-clothes",
+  "pathSegment": "UR-PATH-121-THINGS121",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "UR-EXT-121-THINGS121",
+      "order": 6
+    }
+  ]
+}

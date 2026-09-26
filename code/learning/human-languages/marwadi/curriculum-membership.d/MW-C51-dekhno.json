@@ -1,0 +1,11 @@
+{
+  "id": "MW-C51-dekhno",
+  "pathSegment": "MW-PATH-51-VERBS51",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-51-VERBS51",
+      "order": 3
+    }
+  ]
+}

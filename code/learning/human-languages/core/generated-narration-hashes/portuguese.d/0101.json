@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:f04c92023e7b472b",
+  "lessonIds": [
+    "PT-C101-colar",
+    "PT-C101-fotografia",
+    "PT-C101-vela",
+    "PT-C101-calendario",
+    "PT-C101-mensagem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch101.txt",
+  "json": "portuguese/narration/ch101.json",
+  "textHash": "fnv1a64:5222fd3ef8f4e28b",
+  "jsonHash": "fnv1a64:9d7af1da1688620d",
+  "findings": []
+}

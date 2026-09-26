@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Grandchildren, Neighbours, Names",
+  "label": "ch:ta-grandchildren-names",
+  "canDo": "I can name a grandson and granddaughter, a neighbour, a family name and a pet name.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C103-petname",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can name a grandson and granddaughter, a neighbour, a family name and a pet name.",
+    "assesses": [
+      "TA-LEX-C103-NEXTGEN-03",
+      "TA-LEX-C103-NEXTGEN-04",
+      "TA-LEX-C103-NEXTGEN-05"
+    ]
+  }
+}

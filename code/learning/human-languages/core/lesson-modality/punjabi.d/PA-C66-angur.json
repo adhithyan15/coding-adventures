@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C66-angur",
+    "language": "punjabi",
+    "chapter": 66,
+    "sequence": 3560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48082cb53b6528f6"
+  },
+  "findings": []
+}

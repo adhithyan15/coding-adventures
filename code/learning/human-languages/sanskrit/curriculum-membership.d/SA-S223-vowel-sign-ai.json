@@ -1,11 +1,11 @@
 {
   "id": "SA-S223-vowel-sign-ai",
   "pathSegment": "SA-PATH-100",
-  "pathOrder": 49,
+  "pathOrder": 50,
   "extensions": [
     {
       "id": "SA-EXT-100-SCRIPT-RECOGNITION",
-      "order": 49
+      "order": 50
     }
   ]
 }

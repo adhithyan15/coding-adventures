@@ -1,0 +1,11 @@
+{
+  "id": "JA-C40-mondai",
+  "pathSegment": "JA-PATH-40-HOME40",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-40-HOME40",
+      "order": 3
+    }
+  ]
+}

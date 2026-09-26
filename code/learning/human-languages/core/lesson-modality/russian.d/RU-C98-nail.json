@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C98-nail",
+    "language": "russian",
+    "chapter": 98,
+    "sequence": 5030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a2ac00944aae205"
+  },
+  "findings": []
+}

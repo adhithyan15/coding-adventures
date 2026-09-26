@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:181cb385e7855fb4",
+  "lessonIds": [
+    "LA-C92-mus",
+    "LA-C92-gallina",
+    "LA-C92-asinus",
+    "LA-C92-elephantus",
+    "LA-C92-cervus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch92.txt",
+  "json": "latin/narration/ch92.json",
+  "textHash": "fnv1a64:76ca33d87fe55d7e",
+  "jsonHash": "fnv1a64:824c8638c708a065",
+  "findings": []
+}

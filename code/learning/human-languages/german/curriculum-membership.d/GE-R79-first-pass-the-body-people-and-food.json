@@ -1,0 +1,11 @@
+{
+  "id": "GE-R79-first-pass-the-body-people-and-food",
+  "pathSegment": "GE-PATH-79-GESCHIRR",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-79-GESCHIRR",
+      "order": 5
+    }
+  ]
+}

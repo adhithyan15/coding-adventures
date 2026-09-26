@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Bread, Mango, Vegetables, House, Window",
+  "label": "ch:bn-bread-mango-vegetables-house-window",
+  "canDo": "I can say bread, a mango, vegetables, a house, home and a window.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "BN-C59-janala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say bread, a mango, vegetables, a house, home and a window.",
+    "assesses": [
+      "BN-LEX-C59-FOOD59-03",
+      "BN-LEX-C59-FOOD59-04",
+      "BN-LEX-C59-FOOD59-05"
+    ]
+  }
+}

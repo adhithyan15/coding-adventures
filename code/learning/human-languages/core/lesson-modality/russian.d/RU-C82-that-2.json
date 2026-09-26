@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C82-that-2",
+    "language": "russian",
+    "chapter": 82,
+    "sequence": 4130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:270396c83bee9cf4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-R91-second-pass-greetings",
+  "pathSegment": "TE-PATH-91-GREET",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TE-EXT-91-GREET",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C66-heat",
+    "language": "gujarati",
+    "chapter": 66,
+    "sequence": 3373,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c33d1dd7347042bf"
+  },
+  "findings": []
+}

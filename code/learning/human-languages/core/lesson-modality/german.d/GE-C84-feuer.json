@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C84-feuer",
+    "language": "german",
+    "chapter": 84,
+    "sequence": 3000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eaf2d289ea121e37"
+  },
+  "findings": []
+}

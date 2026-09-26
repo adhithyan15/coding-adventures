@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C109-mahina",
+    "language": "marathi",
+    "chapter": 109,
+    "sequence": 4870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55ec5902e651243e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C125-nephew",
+    "language": "malayalam",
+    "chapter": 125,
+    "sequence": 4830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d7daef3dcae1ea2"
+  },
+  "findings": []
+}

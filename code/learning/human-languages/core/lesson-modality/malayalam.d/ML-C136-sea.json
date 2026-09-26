@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C136-sea",
+    "language": "malayalam",
+    "chapter": 136,
+    "sequence": 5360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d40d591df4880cb"
+  },
+  "findings": []
+}

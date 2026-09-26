@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C55-admi",
+    "language": "punjabi",
+    "chapter": 55,
+    "sequence": 3030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bad4557e7e20d38"
+  },
+  "findings": []
+}

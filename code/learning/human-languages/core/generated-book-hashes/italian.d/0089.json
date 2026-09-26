@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:f17cd11728bd2dfc",
+  "lessonIds": [
+    "IT-C89-fabbrica",
+    "IT-C89-ufficio",
+    "IT-C89-angolo",
+    "IT-C89-incrocio",
+    "IT-C89-semaforo"
+  ],
+  "tex": "italian/book/chapters/ch89-factory-office-corner-crossroads-traffic-lights.tex"
+}

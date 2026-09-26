@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:28385167153c6138",
+  "lessonIds": [
+    "IT-C72-grande",
+    "IT-C72-piccolo",
+    "IT-C72-nuovo",
+    "IT-C72-vecchio",
+    "IT-C72-bello"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch72.txt",
+  "json": "italian/narration/ch72.json",
+  "textHash": "fnv1a64:b670aebbac753f10",
+  "jsonHash": "fnv1a64:9a16b1f08f5bab7d",
+  "findings": []
+}

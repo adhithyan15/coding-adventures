@@ -1,11 +1,11 @@
 {
   "id": "TE-S156-script-recall",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 58,
+  "pathOrder": 61,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 58
+      "order": 61
     }
   ]
 }

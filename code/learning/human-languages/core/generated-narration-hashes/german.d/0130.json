@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:660010fd758bffa8",
+  "lessonIds": [
+    "GE-C130-rosa",
+    "GE-C130-orange",
+    "GE-C130-huebsch",
+    "GE-C130-rund",
+    "GE-C130-breit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch130.txt",
+  "json": "german/narration/ch130.json",
+  "textHash": "fnv1a64:d7e08c0b351c774c",
+  "jsonHash": "fnv1a64:38b8c4a4fff542b5",
+  "findings": []
+}

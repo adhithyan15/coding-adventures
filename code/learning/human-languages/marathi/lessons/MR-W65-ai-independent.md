@@ -9,20 +9,20 @@ type: writing
 headword: ऐ
 romanization: "ai"
 gloss: the standing ai — the letter a number was waiting on
-prerequisites: [MR-W65-o-independent, MR-W59-ai-matra]
+prerequisites: [MR-W65-o-independent, MR-W59-ai-matra, MR-C65-ola, MR-C65-aivaj]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-O-INDEPENDENT-01, MR-SCRIPT-AI-MATRA-01]
+  knowledge: [MR-SCRIPT-O-INDEPENDENT-01, MR-SCRIPT-AI-MATRA-01, MR-LEX-ANCHOR-OLA, MR-LEX-ANCHOR-AIVAJ]
 introduces:
   knowledge: [MR-SCRIPT-AI-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-AI-INDEPENDENT-01, MR-SCRIPT-AI-MATRA-01, MR-SCRIPT-O-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-AI-INDEPENDENT-01, MR-SCRIPT-AI-MATRA-01, MR-SCRIPT-O-INDEPENDENT-01, MR-LEX-ANCHOR-OLA, MR-LEX-ANCHOR-AIVAJ]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W59-ai-matra, MR-W65-o-independent]
 # ऐ — the letter a number was waiting on
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-AI-MATRA-01, MR-SCRIPT-O-INDEPENDENT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-AI-MATRA-01, MR-SCRIPT-O-INDEPENDENT-01, MR-LEX-ANCHOR-OLA, MR-LEX-ANCHOR-AIVAJ] -->
 
 [PAUSE 2s] Draw the **ai** sign from the chapter where you met it. Then draw the
 standing letter from the lesson before this one.

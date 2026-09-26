@@ -1,0 +1,15 @@
+# Corpus cases html-tree-builder does not pass yet, one `#source` id per line.
+#
+# This is BR03's progress bar. tests/corpus.rs fails if an unlisted case
+# fails or a listed case passes, so every change that fixes a case removes its
+# line in the same commit. Lines should only ever disappear.
+scripted/adoption01.dat:1
+scripted/ark.dat:1
+scripted/webkit01.dat:1
+scripted/webkit01.dat:2
+scripted_foster01.dat:1
+scripted_foster01.dat:2
+webkit02.dat:45
+webkit02.dat:46
+webkit02.dat:47
+webkit02.dat:48

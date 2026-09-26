@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C106-shisha",
+    "language": "urdu",
+    "chapter": 106,
+    "sequence": 5530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e86d270be1c3f3ff"
+  },
+  "findings": []
+}

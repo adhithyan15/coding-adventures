@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C116-musica",
+    "language": "italian",
+    "chapter": 116,
+    "sequence": 5550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51fdd71218f625f6"
+  },
+  "findings": []
+}

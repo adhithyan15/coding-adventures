@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W07-independent-ii
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 88
+sequence: 101
 delivery: script
 chapter: 7
 type: writing
 headword: ઈ
 romanization: "ī"
 gloss: "the independent long-i vowel"
-prerequisites: [GU-W07-tta]
+prerequisites: [GU-W07-tta, GU-C07-int]
 sounds: []
 roots: []
 etymology_hook: "A family word ends with long ī standing as a whole letter; the form arrives before the word."
 duration:
   max_seconds: 230
 requires:
-  knowledge: [GU-SCRIPT-II-MATRA-01, GU-SCRIPT-TTA-01]
+  knowledge: [GU-SCRIPT-II-MATRA-01, GU-SCRIPT-TTA-01, GU-LEX-ANCHOR-INT]
 introduces:
   knowledge: [GU-SCRIPT-INDEPENDENT-II-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-II-MATRA-01, GU-SCRIPT-INDEPENDENT-II-01]
+  knowledge: [GU-SCRIPT-II-MATRA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-LEX-ANCHOR-INT]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W07-tta, GU-W03-ii-matra]
 # ઈ — independent long ī
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-II-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-II-MATRA-01, GU-LEX-ANCHOR-INT] -->
 
 Write attached long-*ī* sign **ી** once and say “needs a consonant.” Put it
 away. Long *ī* standing alone needs a whole letter.

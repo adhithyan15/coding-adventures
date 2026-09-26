@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Journey, Music, News, Country, Story",
+  "label": "ch:fa-journey-music-news-country-story",
+  "canDo": "I can say a journey, music, news, a country and a story.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FA-R78-second-pass-places-the-town-clothes-and-numbers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say a journey, music, news, a country and a story.",
+    "assesses": [
+      "FA-LEX-C78-WORLD78-03",
+      "FA-LEX-C78-WORLD78-04",
+      "FA-LEX-C78-WORLD78-05"
+    ]
+  }
+}

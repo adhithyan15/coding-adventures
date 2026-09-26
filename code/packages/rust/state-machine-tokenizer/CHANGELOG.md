@@ -4,6 +4,23 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 
 ## Unreleased
 
+### Fixed
+
+- `commit_attribute`, `commit_attribute_dedup` and `mark_self_closing` accept
+  an end tag and drop the attribute or flag, as WHATWG does, so a lexer
+  definition can run end-tag attributes through its ordinary attribute states.
+  Emitting an end tag clears any pending attribute.
+
+- `switch_to_if_appropriate_end_tag(yes, no)` switches state on whether the
+  current end tag matches the last start tag, so HTML text-mode end tags are
+  decided where the WHATWG tokenizer decides them.
+
+- `commit_attribute_dedup` looks names up in a set instead of scanning the
+  tag's attributes, so a tag with N attributes costs N rather than N² (30,000
+  attributes in 739 KB took 7.6 s to lex and parse). The set is rebuilt from
+  the tag whenever the two disagree, and cleared when a start tag is created or
+  seeded. Found by the security review of `html-tree-builder`'s foreign content.
+
 ### Added
 
 - Added a conditional parse-error action for appropriate HTML end tags, so

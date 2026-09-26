@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C39-aath
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2220
+sequence: 2233
 chapter: 43
 type: word
 headword: આઠ

@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Book, Notebook, Pen, Sheet of paper, School",
+  "label": "ch:ar-book-notebook-pen-sheet-of-paper-school",
+  "canDo": "I can say a book, a notebook, a pen, a sheet of paper and a school.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C73-madrasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say a book, a notebook, a pen, a sheet of paper and a school.",
+    "assesses": [
+      "AR-LEX-C73-SCHOOL73-03",
+      "AR-LEX-C73-SCHOOL73-04",
+      "AR-LEX-C73-SCHOOL73-05"
+    ]
+  }
+}

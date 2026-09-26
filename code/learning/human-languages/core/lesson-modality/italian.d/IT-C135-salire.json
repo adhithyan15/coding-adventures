@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C135-salire",
+    "language": "italian",
+    "chapter": 135,
+    "sequence": 6700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03f4d195f9c28be2"
+  },
+  "findings": []
+}

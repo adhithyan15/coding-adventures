@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:7e92ceedcb626fdf",
+  "lessonIds": [
+    "PT-C47-bolo",
+    "PT-C47-mel",
+    "PT-C47-almoco",
+    "PT-C47-jantar",
+    "PT-C47-limao"
+  ],
+  "tex": "portuguese/book/chapters/ch47-cake-honey-lunch-dinner-lemon.tex"
+}

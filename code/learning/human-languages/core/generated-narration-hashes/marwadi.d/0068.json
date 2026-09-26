@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:806fb879217a39bf",
+  "lessonIds": [
+    "MW-C68-jangal",
+    "MW-C68-nadi",
+    "MW-C68-bhato",
+    "MW-C68-ret",
+    "MW-C68-khet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch68.txt",
+  "json": "marwadi/narration/ch68.json",
+  "textHash": "fnv1a64:cece2ce6e327abba",
+  "jsonHash": "fnv1a64:f20b31ec6d8c9aa1",
+  "findings": []
+}

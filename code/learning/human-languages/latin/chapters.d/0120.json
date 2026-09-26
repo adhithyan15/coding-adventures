@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Sack, Box, Cushion, Blanket, Napkin",
+  "label": "ch:la-sack-box-cushion-blanket-napkin",
+  "canDo": "I can say a sack, a box, a cushion, a blanket and a napkin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C120-mappa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a sack, a box, a cushion, a blanket and a napkin.",
+    "assesses": [
+      "LA-LEX-C120-THINGS120-03",
+      "LA-LEX-C120-THINGS120-04",
+      "LA-LEX-C120-THINGS120-05"
+    ]
+  }
+}

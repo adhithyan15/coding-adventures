@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Nice, Kind, Serious, Right, Wrong",
+  "label": "ch:pt-nice-kind-serious-right-wrong",
+  "canDo": "I can say nice, kind, serious, right and wrong.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C124-errado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say nice, kind, serious, right and wrong.",
+    "assesses": [
+      "PT-LEX-C124-QUALIDADES124-03",
+      "PT-LEX-C124-QUALIDADES124-04",
+      "PT-LEX-C124-QUALIDADES124-05"
+    ]
+  }
+}

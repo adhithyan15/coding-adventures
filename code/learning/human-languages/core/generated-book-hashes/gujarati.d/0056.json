@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:2281c8cf8eee9e19",
+  "lessonIds": [
+    "GU-C56-gaavu",
+    "GU-C56-naachvu",
+    "GU-C56-hasvu",
+    "GU-C56-saambhalvu",
+    "GU-C56-shikhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch56-sing-dance-laugh-listen-learn.tex"
+}

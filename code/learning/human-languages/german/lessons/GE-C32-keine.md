@@ -8,7 +8,7 @@ type: word
 headword: keine
 gloss: no, not a — in front of a die-word, and in front of every plural, wearing the same -e that eine wears
 concept_tag: GE-NEGATE-NOUN-KEINE
-prerequisites: [GE-C32-kein, GE-C06-ein-eine, GE-C01-die-plural]
+prerequisites: [GE-C32-kein, GE-C06-ein-eine, GE-C01-die-plural, GE-C22-hund-katze-more]
 sounds: [diphthong-ei]
 roots: [ohg-nihein]
 etymology_hook: "keine takes the -e that eine takes, because kein is ein with two letters on the front and nothing else changed — the ending machine underneath is the one that came with ein and eine"

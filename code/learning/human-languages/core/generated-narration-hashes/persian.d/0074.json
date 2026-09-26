@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:0a0daafc1c8f19e2",
+  "lessonIds": [
+    "FA-C74-jurab",
+    "FA-C74-jib",
+    "FA-C74-angoshtar",
+    "FA-C74-kolah",
+    "FA-C74-kafsh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch74.txt",
+  "json": "persian/narration/ch74.json",
+  "textHash": "fnv1a64:f6d7c01429e9a675",
+  "jsonHash": "fnv1a64:6d4403213119ed11",
+  "findings": []
+}

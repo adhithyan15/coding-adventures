@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 15,
-  "sourceHash": "fnv1a64:3c63c8a7c4813ab8",
+  "sourceHash": "fnv1a64:320e1f45080fd105",
   "lessonIds": [
     "GU-C09-levun",
     "GU-C09-puchhvun",
@@ -13,6 +13,6 @@
   "text": "gujarati/narration/ch15.txt",
   "json": "gujarati/narration/ch15.json",
   "textHash": "fnv1a64:7fedea2b67dce3e2",
-  "jsonHash": "fnv1a64:32e36752cebeba39",
+  "jsonHash": "fnv1a64:c50d5f66b04a0f46",
   "findings": []
 }

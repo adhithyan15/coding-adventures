@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:38aeb19379658a86",
+  "lessonIds": [
+    "GE-C70-banane",
+    "GE-C70-kartoffel",
+    "GE-C70-tomate",
+    "GE-C70-zwiebel",
+    "GE-C70-moehre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch70.txt",
+  "json": "german/narration/ch70.json",
+  "textHash": "fnv1a64:0987463b1cb50aaf",
+  "jsonHash": "fnv1a64:4ac21b492441894b",
+  "findings": []
+}

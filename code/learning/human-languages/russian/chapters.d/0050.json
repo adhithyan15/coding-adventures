@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Wall, Roof, Garden, Bathroom, Clock",
+  "label": "ch:ru-wall-roof-garden-bathroom-clock",
+  "canDo": "I can name a wall, a roof, a garden, the bathroom and a clock.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "RU-C50-clock",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can name a wall, a roof, a garden, the bathroom and a clock.",
+    "assesses": [
+      "RU-LEX-C50-HOME3-03",
+      "RU-LEX-C50-HOME3-04",
+      "RU-LEX-C50-HOME3-05"
+    ]
+  }
+}

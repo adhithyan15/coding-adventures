@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:dbaad78b85cb3591",
+  "lessonIds": [
+    "JA-C27-yomu",
+    "JA-C27-kaku",
+    "JA-C27-hanasu",
+    "JA-C27-matsu",
+    "JA-C27-au"
+  ],
+  "tex": "japanese/book/chapters/ch27-to-read-to-write-to-speak-to-wait-to-meet.tex"
+}

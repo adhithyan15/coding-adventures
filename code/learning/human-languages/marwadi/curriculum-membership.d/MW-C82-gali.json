@@ -1,0 +1,11 @@
+{
+  "id": "MW-C82-gali",
+  "pathSegment": "MW-PATH-82-PLACE82",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-82-PLACE82",
+      "order": 3
+    }
+  ]
+}

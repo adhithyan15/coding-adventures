@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C113-abhinahin",
+    "language": "hindi",
+    "chapter": 113,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce97e60998fcf67f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:092d7ef64c60c697",
+  "lessonIds": [
+    "LA-C77-mitto",
+    "LA-C77-maneo",
+    "LA-C77-cado",
+    "LA-C77-pono",
+    "LA-C77-invenio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch77.txt",
+  "json": "latin/narration/ch77.json",
+  "textHash": "fnv1a64:25f70e6972b6d9ad",
+  "jsonHash": "fnv1a64:69c75eb7ca7b234c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C62-bed",
+    "language": "gujarati",
+    "chapter": 62,
+    "sequence": 3153,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9620ed3c37f03525"
+  },
+  "findings": []
+}

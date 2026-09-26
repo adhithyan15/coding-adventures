@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:8c43a423ec308e0b",
+  "lessonIds": [
+    "FA-C76-hefdah",
+    "FA-C76-hejdah",
+    "FA-C76-nuzdah",
+    "FA-C76-si",
+    "FA-C76-chehel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch76.txt",
+  "json": "persian/narration/ch76.json",
+  "textHash": "fnv1a64:d29027dd35f382f9",
+  "jsonHash": "fnv1a64:e52e56b443f80abc",
+  "findings": []
+}

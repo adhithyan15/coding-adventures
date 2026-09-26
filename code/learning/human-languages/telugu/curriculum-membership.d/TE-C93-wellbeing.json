@@ -1,0 +1,11 @@
+{
+  "id": "TE-C93-wellbeing",
+  "pathSegment": "TE-PATH-93-FINE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-93-FINE",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C68-cura",
+  "pathSegment": "LA-PATH-68-AEGER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-68-AEGER",
+      "order": 4
+    }
+  ]
+}

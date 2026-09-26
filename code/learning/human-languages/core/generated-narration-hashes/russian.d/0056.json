@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:f163c54ceb4c5100",
+  "lessonIds": [
+    "RU-C56-mountain",
+    "RU-C56-forest",
+    "RU-C56-river",
+    "RU-C56-lake",
+    "RU-C56-sea"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch56.txt",
+  "json": "russian/narration/ch56.json",
+  "textHash": "fnv1a64:071b96df952e15e3",
+  "jsonHash": "fnv1a64:ec3bca22ed209df2",
+  "findings": []
+}

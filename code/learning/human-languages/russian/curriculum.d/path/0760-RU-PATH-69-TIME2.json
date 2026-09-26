@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-69-TIME2",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "RU-EXT-69-TIME2"
+  ],
+  "after": []
+}

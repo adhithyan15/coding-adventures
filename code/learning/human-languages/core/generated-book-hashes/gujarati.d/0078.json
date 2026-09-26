@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:bc8efce677203b5a",
+  "lessonIds": [
+    "GU-C78-monday",
+    "GU-C78-tuesday",
+    "GU-C78-wednesday",
+    "GU-C78-thursday",
+    "GU-C78-friday"
+  ],
+  "tex": "gujarati/book/chapters/ch78-monday-to-friday.tex"
+}

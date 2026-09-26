@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:54c84e825be09352",
+  "lessonIds": [
+    "BN-C74-dami",
+    "BN-C74-sosta",
+    "BN-C74-nichu",
+    "BN-C74-bhorti",
+    "BN-C74-khali"
+  ],
+  "tex": "bengali/book/chapters/ch74-expensive-cheap-low-full-empty.tex"
+}

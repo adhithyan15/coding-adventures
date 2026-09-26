@@ -1,0 +1,11 @@
+{
+  "id": "UR-C89-koi",
+  "pathSegment": "UR-PATH-89-DEF89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-89-DEF89",
+      "order": 2
+    }
+  ]
+}

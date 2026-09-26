@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C67-dog",
+    "language": "gujarati",
+    "chapter": 67,
+    "sequence": 3433,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:191d4f311907d2ac"
+  },
+  "findings": []
+}

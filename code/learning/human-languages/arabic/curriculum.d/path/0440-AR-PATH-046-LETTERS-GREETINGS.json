@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-046-LETTERS-GREETINGS",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "AR-EXT-046-LETTERS-GREETINGS"
+  ],
+  "after": []
+}

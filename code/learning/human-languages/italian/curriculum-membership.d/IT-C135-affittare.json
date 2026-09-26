@@ -1,0 +1,11 @@
+{
+  "id": "IT-C135-affittare",
+  "pathSegment": "IT-PATH-135-VERBI135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-135-VERBI135",
+      "order": 3
+    }
+  ]
+}

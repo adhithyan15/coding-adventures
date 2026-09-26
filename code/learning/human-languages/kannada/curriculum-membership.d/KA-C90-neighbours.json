@@ -1,0 +1,11 @@
+{
+  "id": "KA-C90-neighbours",
+  "pathSegment": "KA-PATH-90-KIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-90-KIN",
+      "order": 3
+    }
+  ]
+}

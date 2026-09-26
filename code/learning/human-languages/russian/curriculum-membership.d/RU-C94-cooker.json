@@ -1,0 +1,11 @@
+{
+  "id": "RU-C94-cooker",
+  "pathSegment": "RU-PATH-94-THINGS94",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-94-THINGS94",
+      "order": 3
+    }
+  ]
+}

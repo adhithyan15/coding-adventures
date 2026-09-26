@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Ear, Fever, Hospital, Pain, Hunger",
+  "label": "ch:bn-ear-fever-hospital-pain-hunger",
+  "canDo": "I can say an ear, a fever, a hospital, pain and hunger.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C44-khide",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can say an ear, a fever, a hospital, pain and hunger.",
+    "assesses": [
+      "BN-LEX-C44-BODY44-03",
+      "BN-LEX-C44-BODY44-04",
+      "BN-LEX-C44-BODY44-05"
+    ]
+  }
+}

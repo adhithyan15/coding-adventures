@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C63-khat",
+    "language": "marwadi",
+    "chapter": 63,
+    "sequence": 4450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a59e799e00f52b9"
+  },
+  "findings": []
+}

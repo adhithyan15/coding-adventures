@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-131-KITCHEN",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ML-EXT-131-KITCHEN"
+  ],
+  "after": []
+}

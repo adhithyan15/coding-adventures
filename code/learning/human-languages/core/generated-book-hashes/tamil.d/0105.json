@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:b8b05bad5fde2336",
+  "lessonIds": [
+    "TA-C105-signature",
+    "TA-C105-occupation",
+    "TA-C105-college",
+    "TA-C105-school"
+  ],
+  "tex": "tamil/book/chapters/ch105-signature-work-school.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C82-dever",
+  "pathSegment": "PT-PATH-82-PODER82",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-82-PODER82",
+      "order": 1
+    }
+  ]
+}

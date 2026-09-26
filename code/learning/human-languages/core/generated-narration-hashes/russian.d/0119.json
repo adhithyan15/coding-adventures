@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:9f86cf79912f5806",
+  "lessonIds": [
+    "RU-C119-ankle",
+    "RU-C119-wrist",
+    "RU-C119-cheek",
+    "RU-C119-lips",
+    "RU-C119-chest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch119.txt",
+  "json": "russian/narration/ch119.json",
+  "textHash": "fnv1a64:9ed71b79ce780551",
+  "jsonHash": "fnv1a64:a535d92113e17881",
+  "findings": []
+}

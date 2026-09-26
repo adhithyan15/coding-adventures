@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:1c070032dd4e44cf",
+  "lessonIds": [
+    "FA-C70-bank",
+    "FA-C70-istgah",
+    "FA-C70-mashin",
+    "FA-C70-otobus",
+    "FA-C70-ghatar"
+  ],
+  "tex": "persian/book/chapters/ch70-bank-station-car-bus-train.tex"
+}

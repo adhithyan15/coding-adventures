@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Dinner, Breakfast, Rice, Pear, Lemon",
+  "label": "ch:ge-dinner-breakfast-rice-pear-lemon",
+  "canDo": "I can say dinner, breakfast, rice, a pear and a lemon.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C72-zitrone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say dinner, breakfast, rice, a pear and a lemon.",
+    "assesses": [
+      "GE-LEX-C72-ESSEN4-03",
+      "GE-LEX-C72-ESSEN4-04",
+      "GE-LEX-C72-ESSEN4-05"
+    ]
+  }
+}

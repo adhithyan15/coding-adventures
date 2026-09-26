@@ -1,0 +1,11 @@
+{
+  "id": "BN-C46-didima",
+  "pathSegment": "BN-PATH-46-FAMILY46",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-46-FAMILY46",
+      "order": 1
+    }
+  ]
+}

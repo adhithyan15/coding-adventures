@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:f4dbfb3890ad3850",
+  "lessonIds": [
+    "FR-C92-doux",
+    "FR-C92-sale",
+    "FR-C92-jeune",
+    "FR-C92-gentil",
+    "FR-C92-etroit"
+  ],
+  "tex": "french/book/chapters/ch92-soft-dirty-young-kind-narrow.tex"
+}

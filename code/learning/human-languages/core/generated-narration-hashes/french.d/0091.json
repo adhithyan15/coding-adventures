@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:8daa8813a24ae430",
+  "lessonIds": [
+    "FR-C91-fort",
+    "FR-C91-faible",
+    "FR-C91-riche",
+    "FR-C91-pauvre",
+    "FR-C91-gris"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch91.txt",
+  "json": "french/narration/ch91.json",
+  "textHash": "fnv1a64:94800619148d808d",
+  "jsonHash": "fnv1a64:e245757200e421f3",
+  "findings": []
+}

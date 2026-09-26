@@ -1,0 +1,11 @@
+{
+  "id": "FR-C103-vetements",
+  "pathSegment": "FR-PATH-103-VILLE55",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-103-VILLE55",
+      "order": 2
+    }
+  ]
+}

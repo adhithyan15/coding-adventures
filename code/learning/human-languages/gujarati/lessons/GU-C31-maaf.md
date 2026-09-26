@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C31-maaf
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1810
+sequence: 1823
 chapter: 35
 type: phrase
 headword: માફ કરો

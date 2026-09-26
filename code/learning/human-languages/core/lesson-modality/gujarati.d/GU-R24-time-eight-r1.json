@@ -3,7 +3,7 @@
     "id": "GU-R24-time-eight-r1",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1280,
+    "sequence": 1293,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b08a4c79f693597e",
+    "sourceHash": "fnv1a64:ef767a9de8ba01ae",
     "detachableSegments": [
       "Writing — from meaning, with every model covered"
     ]

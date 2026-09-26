@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:a67d63b3871214f6",
+  "lessonIds": [
+    "GU-C52-kaka",
+    "GU-C52-kaki",
+    "GU-C52-mama",
+    "GU-C52-mami",
+    "GU-C52-husband"
+  ],
+  "tex": "gujarati/book/chapters/ch52-uncles-aunts-and-a-husband.tex"
+}

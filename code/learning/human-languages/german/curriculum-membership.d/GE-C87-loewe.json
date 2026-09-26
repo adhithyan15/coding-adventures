@@ -1,0 +1,11 @@
+{
+  "id": "GE-C87-loewe",
+  "pathSegment": "GE-PATH-87-TIERE2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-87-TIERE2",
+      "order": 3
+    }
+  ]
+}

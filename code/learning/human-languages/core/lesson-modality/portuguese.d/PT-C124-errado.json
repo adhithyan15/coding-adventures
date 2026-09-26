@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C124-errado",
+    "language": "portuguese",
+    "chapter": 124,
+    "sequence": 6240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01bd13f0e1e19366"
+  },
+  "findings": []
+}

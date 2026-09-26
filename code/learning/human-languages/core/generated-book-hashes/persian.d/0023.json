@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:47b1a1ed4ecce195",
+  "lessonIds": [
+    "FA-W23-he-jimi",
+    "FA-W23-jim",
+    "FA-W23-khe",
+    "FA-W23-che"
+  ],
+  "tex": "persian/book/chapters/ch23-fa-letters-of-the-hook-family.tex"
+}

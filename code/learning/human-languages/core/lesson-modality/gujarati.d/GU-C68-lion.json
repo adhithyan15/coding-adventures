@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C68-lion",
+    "language": "gujarati",
+    "chapter": 68,
+    "sequence": 3463,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6398c3eed4f51594"
+  },
+  "findings": []
+}

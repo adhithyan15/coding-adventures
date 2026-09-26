@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:5c0683a9dd0094d7",
+  "lessonIds": [
+    "LA-C78-vivo",
+    "LA-C78-intro",
+    "LA-C78-redeo",
+    "LA-C78-timeo",
+    "LA-C78-gaudeo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch78.txt",
+  "json": "latin/narration/ch78.json",
+  "textHash": "fnv1a64:72bab61614de3acc",
+  "jsonHash": "fnv1a64:ca8a893d7d13df06",
+  "findings": []
+}

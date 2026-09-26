@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 87,
+  "title": "Eighty, Ninety, Thousand, Hundred thousand, World",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cebf0e93f6fb73b0",
+  "lessons": [
+    {
+      "id": "MW-C87-assi",
+      "sequence": 5670,
+      "title": "अस्सी (assī) — eighty",
+      "headword": "अस्सी",
+      "romanization": "assī",
+      "gloss": "eighty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a88e2171e83e4a7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for sixty, then the Marwadi for seventy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अस्सी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अस्सी — assī — \"eighty\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "assī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *assī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say assī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *assī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for sixty, then the Marwadi for seventy, then say assī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for sixty, then the Marwadi for seventy, then say *assī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अस्सी (assī) mean? (\"Eighty\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C87-assi-type",
+              "prompt": "Type the Marwadi for 'eighty'.",
+              "assesses": [
+                "MW-LEX-C87-NUMBERS87-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अस्सी",
+                "assī"
+              ],
+              "feedback": {
+                "correct": "Right: अस्सी (assī) is 'eighty'.",
+                "incorrect": "'eighty' is अस्सी (assī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C87-nabbai",
+      "sequence": 5680,
+      "title": "नब्बै (nabbai) — ninety",
+      "headword": "नब्बै",
+      "romanization": "nabbai",
+      "gloss": "ninety",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69d76403a9f0b0ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for seventy, then the Marwadi for eighty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नब्बै",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नब्बै — nabbai — \"ninety\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabbai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabbai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabbai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabbai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nabbai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nabbai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for seventy, then the Marwadi for eighty, then say nabbai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for seventy, then the Marwadi for eighty, then say *nabbai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नब्बै (nabbai) mean? (\"Ninety\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C87-nabbai-type",
+              "prompt": "Type the Marwadi for 'ninety'.",
+              "assesses": [
+                "MW-LEX-C87-NUMBERS87-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नब्बै",
+                "nabbai"
+              ],
+              "feedback": {
+                "correct": "Right: नब्बै (nabbai) is 'ninety'.",
+                "incorrect": "'ninety' is नब्बै (nabbai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C87-hajar",
+      "sequence": 5690,
+      "title": "हजार (hajār) — a thousand",
+      "headword": "हजार",
+      "romanization": "hajār",
+      "gloss": "a thousand",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4580296f9c81cd15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for eighty, then the Marwadi for ninety."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हजार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हजार — hajār — \"a thousand\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hajār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hajār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hajār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hajār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for eighty, then the Marwadi for ninety, then say hajār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for eighty, then the Marwadi for ninety, then say *hajār* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हजार (hajār) mean? (\"A thousand\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C87-hajar-type",
+              "prompt": "Type the Marwadi for 'a thousand'.",
+              "assesses": [
+                "MW-LEX-C87-NUMBERS87-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हजार",
+                "hajār"
+              ],
+              "feedback": {
+                "correct": "Right: हजार (hajār) is 'a thousand'.",
+                "incorrect": "'a thousand' is हजार (hajār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C87-lakh",
+      "sequence": 5700,
+      "title": "लाख (lākh) — a hundred thousand",
+      "headword": "लाख",
+      "romanization": "lākh",
+      "gloss": "a hundred thousand",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:871e2c47f8438cb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for ninety, then the Marwadi for a thousand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाख — lākh — \"a hundred thousand\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lākh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lākh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lākh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lākh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say lākh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *lākh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for ninety, then the Marwadi for a thousand, then say lākh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for ninety, then the Marwadi for a thousand, then say *lākh* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाख (lākh) mean? (\"A hundred thousand\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C87-lakh-type",
+              "prompt": "Type the Marwadi for 'a hundred thousand'.",
+              "assesses": [
+                "MW-LEX-C87-NUMBERS87-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लाख",
+                "lākh"
+              ],
+              "feedback": {
+                "correct": "Right: लाख (lākh) is 'a hundred thousand'.",
+                "incorrect": "'a hundred thousand' is लाख (lākh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C87-duniya",
+      "sequence": 5710,
+      "title": "दुनिया (duniyā) — the world",
+      "headword": "दुनिया",
+      "romanization": "duniyā",
+      "gloss": "the world",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d7a1b426a84bc2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a thousand, then the Marwadi for a hundred thousand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुनिया",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुनिया — duniyā — \"the world\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duniyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duniyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duniyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duniyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say duniyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *duniyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a thousand, then the Marwadi for a hundred thousand, then say duniyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a thousand, then the Marwadi for a hundred thousand, then say *duniyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुनिया (duniyā) mean? (\"The world\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C87-duniya-type",
+              "prompt": "Type the Marwadi for 'the world'.",
+              "assesses": [
+                "MW-LEX-C87-NUMBERS87-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दुनिया",
+                "duniyā"
+              ],
+              "feedback": {
+                "correct": "Right: दुनिया (duniyā) is 'the world'.",
+                "incorrect": "'the world' is दुनिया (duniyā)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

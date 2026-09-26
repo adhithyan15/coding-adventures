@@ -1,0 +1,11 @@
+{
+  "id": "LA-C136-pollex",
+  "pathSegment": "LA-PATH-136-THINGS136",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-136-THINGS136",
+      "order": 1
+    }
+  ]
+}

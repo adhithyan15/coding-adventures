@@ -1,0 +1,11 @@
+{
+  "id": "IT-R106-first-pass-things-clothes-and-tools",
+  "pathSegment": "IT-PATH-106-CIBO106",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-106-CIBO106",
+      "order": 5
+    }
+  ]
+}

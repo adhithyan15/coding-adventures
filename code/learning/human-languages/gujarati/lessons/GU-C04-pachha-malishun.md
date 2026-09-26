@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C04-pachha-malishun
 spine_node: SPINE-TAKE-LEAVE
-sequence: 270
+sequence: 283
 chapter: 10
 type: phrase
 headword: પાછા મળીશું

@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Map, Lesson, Answer, Word, Game",
+  "label": "ch:fa-map-lesson-answer-word-game",
+  "canDo": "I can say a map, a lesson, an answer, a word and a game.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FA-C50-bazi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can say a map, a lesson, an answer, a word and a game.",
+    "assesses": [
+      "FA-LEX-C50-SCHOOL50-03",
+      "FA-LEX-C50-SCHOOL50-04",
+      "FA-LEX-C50-SCHOOL50-05"
+    ]
+  }
+}

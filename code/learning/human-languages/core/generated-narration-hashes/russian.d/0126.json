@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:cf981039fb395316",
+  "lessonIds": [
+    "RU-C126-last",
+    "RU-C126-famous",
+    "RU-C126-important",
+    "RU-C126-interesting",
+    "RU-C126-boring"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch126.txt",
+  "json": "russian/narration/ch126.json",
+  "textHash": "fnv1a64:b382d358f70d7a1d",
+  "jsonHash": "fnv1a64:8840348c0d2a1de3",
+  "findings": []
+}

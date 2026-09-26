@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "To win, To lose, To teach, To explain, To ask for",
+  "label": "ch:ur-to-win-to-lose-to-teach-to-explain-to-ask-for",
+  "canDo": "I can say to win, to lose, to teach, to explain and to ask for.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-C140-mangna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say to win, to lose, to teach, to explain and to ask for.",
+    "assesses": [
+      "UR-LEX-C140-ACT140-03",
+      "UR-LEX-C140-ACT140-04",
+      "UR-LEX-C140-ACT140-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:459bcc51a8960448",
+  "lessonIds": [
+    "LA-C63-bracchium",
+    "LA-C63-digitus",
+    "LA-C63-dens",
+    "LA-C63-lingua",
+    "LA-C63-nasus"
+  ],
+  "tex": "latin/book/chapters/ch63-arm-finger-tooth.tex"
+}

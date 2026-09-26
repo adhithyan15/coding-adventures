@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:0fe2e6afb2fe6270",
+  "lessonIds": [
+    "UR-C135-mashhur",
+    "UR-C135-bahadur",
+    "UR-C135-hoshiyar",
+    "UR-C135-thaka",
+    "UR-C135-bhuka"
+  ],
+  "tex": "urdu/book/chapters/ch135-famous-brave-clever-tired-hungry.tex"
+}

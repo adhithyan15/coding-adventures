@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Space, Bottle, Mirror, Stairs, Pink",
+  "label": "ch:ru-space-bottle-mirror-stairs-pink",
+  "canDo": "I can say space, a bottle, a mirror, stairs and pink.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C123-pink",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say space, a bottle, a mirror, stairs and pink.",
+    "assesses": [
+      "RU-LEX-C123-THINGS123-03",
+      "RU-LEX-C123-THINGS123-04",
+      "RU-LEX-C123-THINGS123-05"
+    ]
+  }
+}

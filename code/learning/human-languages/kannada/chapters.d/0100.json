@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Help Me Find It",
+  "label": "ch:ka-help-me-find-it",
+  "canDo": "I can ask for a map, a ticket, a bus and a station, and say it is near.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C100-near",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can ask for a map, a ticket, a bus and a station, and say it is near.",
+    "assesses": [
+      "KA-LEX-C100-FIND-03",
+      "KA-LEX-C100-FIND-04",
+      "KA-LEX-C100-FIND-05"
+    ]
+  }
+}

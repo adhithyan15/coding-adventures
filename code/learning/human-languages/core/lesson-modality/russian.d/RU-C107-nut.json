@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C107-nut",
+    "language": "russian",
+    "chapter": 107,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f8406c04d9e4790"
+  },
+  "findings": []
+}

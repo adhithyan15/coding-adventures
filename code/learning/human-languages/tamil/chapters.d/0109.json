@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Letters From Your First Words",
+  "label": "ch:ta-letters-from-first-words",
+  "canDo": "I can write the letters i and sa and the vowel sign ai, and find each one in a word I have said since chapter 1.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-S129-letter-sa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can write the letters i and sa and the vowel sign ai, and find each one in a word I have said since chapter 1.",
+    "assesses": [
+      "TA-SCRIPT-RECOG-127",
+      "TA-SCRIPT-RECOG-128",
+      "TA-SCRIPT-RECOG-129"
+    ]
+  }
+}

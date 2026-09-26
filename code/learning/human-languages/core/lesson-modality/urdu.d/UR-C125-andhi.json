@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C125-andhi",
+    "language": "urdu",
+    "chapter": 125,
+    "sequence": 6550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38c6708fb883a5bd"
+  },
+  "findings": []
+}

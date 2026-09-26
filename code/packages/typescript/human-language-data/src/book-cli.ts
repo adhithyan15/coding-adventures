@@ -1,3 +1,5 @@
+import { FIGURE_CONFIG_PATH, resolvedFigureTargets } from "./figure-cli.js";
+import { withFilmstripImages } from "./figure-targets.js";
 import {
   existsSync,
   lstatSync,
@@ -534,10 +536,19 @@ export function generatedBookOutputs(
       "book-generation.json must declare an HTTP(S) sourceBaseUrl",
     );
   }
-  const lessons = loadLessons(root);
-  assertHandwrittenLessonCoverageFrom(root, config, lessons);
+  const authored = loadLessons(root);
+  assertHandwrittenLessonCoverageFrom(root, config, authored);
+  // HL-C443: the book prints each filmstrip at the top of its lesson's Writing
+  // block. Only the book sees these images; narration keeps the authored lesson.
+  // A curriculum with no figure config (the fixture roots in the tests, or a
+  // track bundle that ships no figures) prints none; the figure CLI itself still
+  // requires the file.
+  const figureTargets = statIfPresent(join(root, FIGURE_CONFIG_PATH)) === undefined
+    ? []
+    : resolvedFigureTargets(root, authored);
+  const lessons = withFilmstripImages(authored, figureTargets);
   const policy = loadChapterPolicy(root);
-  const modality = summarizeModality(lessons, {
+  const modality = summarizeModality(authored, {
     maxLinearisableTableColumns: policy.maxLinearisableTableColumns,
   });
   const outputs = new Map<string, string>();

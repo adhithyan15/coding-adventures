@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:509810fbaf58652a",
+  "lessonIds": [
+    "PT-C33-pele",
+    "PT-C33-unha",
+    "PT-C33-queixo",
+    "PT-C33-garganta",
+    "PT-C33-estomago"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch33.txt",
+  "json": "portuguese/narration/ch33.json",
+  "textHash": "fnv1a64:d5da0cddda5a7f51",
+  "jsonHash": "fnv1a64:b4e3b67315c338b5",
+  "findings": []
+}

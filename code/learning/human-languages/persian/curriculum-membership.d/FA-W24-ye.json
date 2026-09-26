@@ -1,0 +1,11 @@
+{
+  "id": "FA-W24-ye",
+  "pathSegment": "FA-PATH-024-LETTERS-NAMES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-024-LETTERS-NAMES",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:45338266a314dd31",
+  "lessonIds": [
+    "MR-C145-gal",
+    "MR-C145-jibh",
+    "MR-C145-hanuvati",
+    "MR-C145-kopar",
+    "MR-C145-managat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch145.txt",
+  "json": "marathi/narration/ch145.json",
+  "textHash": "fnv1a64:a38bc09dcc1757bb",
+  "jsonHash": "fnv1a64:1391f7c5197e7455",
+  "findings": []
+}

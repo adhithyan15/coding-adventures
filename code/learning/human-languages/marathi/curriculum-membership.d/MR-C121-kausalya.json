@@ -1,0 +1,11 @@
+{
+  "id": "MR-C121-kausalya",
+  "pathSegment": "MR-PATH-121-CAN121",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-121-CAN121",
+      "order": 2
+    }
+  ]
+}

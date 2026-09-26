@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:93c6138ac8bf6dc1",
+  "lessonIds": [
+    "IT-C88-municipio",
+    "IT-C88-supermercato",
+    "IT-C88-distributore",
+    "IT-C88-piscina",
+    "IT-C88-stadio"
+  ],
+  "tex": "italian/book/chapters/ch88-town-hall-supermarket-petrol-station-swimming-pool-stadium.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Music, News, Country, Language, Story",
+  "label": "ch:ar-music-news-country-language-story",
+  "canDo": "I can say music, news, a country, a language and a story.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-R99-second-pass-time-places-the-town-clothes-and-numbers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say music, news, a country, a language and a story.",
+    "assesses": [
+      "AR-LEX-C99-WORLD99-03",
+      "AR-LEX-C99-WORLD99-04",
+      "AR-LEX-C99-WORLD99-05"
+    ]
+  }
+}

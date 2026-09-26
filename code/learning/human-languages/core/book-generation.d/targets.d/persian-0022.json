@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 22,
+  "output": "persian/book/chapters/ch22-fa-letters-that-never-join-forward.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Enter, Go Out, Come Back, Study, Travel",
+  "label": "ch:pt-enter-go-out-come-back-study-travel",
+  "canDo": "I can say to go in, to go out, to come back, to study and to travel.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PT-R55-second-pass-food-the-house-and-things",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say to go in, to go out, to come back, to study and to travel.",
+    "assesses": [
+      "PT-LEX-C55-VERBOS5-03",
+      "PT-LEX-C55-VERBOS5-04",
+      "PT-LEX-C55-VERBOS5-05"
+    ]
+  }
+}

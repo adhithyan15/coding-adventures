@@ -1,0 +1,11 @@
+{
+  "id": "MW-C65-kitab",
+  "pathSegment": "MW-PATH-65-HOME65",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-65-HOME65",
+      "order": 3
+    }
+  ]
+}

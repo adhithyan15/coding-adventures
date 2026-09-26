@@ -5,6 +5,43 @@ documented in this file.
 
 ## Unreleased
 
+### Fixed
+- **Security: raw-text elements could be closed or escaped early.** Three
+  pre-existing tokenizer differences from WHATWG let markup that a spec
+  parser keeps inert become live elements (found by the security review of
+  the end-tag change below):
+  - `</` followed by a non-letter in RCDATA, RAWTEXT or script data started
+    an end-tag name, so `<style></</style>` never closed and a later
+    `<img onerror>` hidden in an attribute value became real. It is now `</`
+    text, reconsumed in the text state.
+  - Attributes on a matching text-mode end tag were scanned to the first `>`
+    (RCDATA/RAWTEXT ignored quotes; script data opened a quote on any `"`),
+    so `</style a="><img ...>">` ended early. They now run through the
+    ordinary attribute states, entered by `text_end_tag_attributes` (which
+    flushes the preceding text first) and dropped on emit.
+  - Data-state end tags with attributes (`</p a="><img ...>">`) did the same
+    and now use the ordinary attribute states too. End of input inside them
+    reports WHATWG's `eof-in-tag`; the fixtures that expected the local
+    `eof-in-end-tag-name-state` for that case were updated.
+- RCDATA, RAWTEXT and script data decide whether `</name` is an appropriate
+  end tag at the first whitespace or `/`, as the WHATWG tokenizer does, instead
+  of only at `>`. So `<script></script ` followed by end of file drops the
+  unfinished tag with `eof-in-tag` (it used to become text), `</script/ >`
+  closes the script, and `</scrip ` inside `<!--` is text at once, so a later
+  `</script>` still closes. New `*_end_tag_mismatch` and
+  `*_self_closing_end_tag_mismatch` states turn a mismatched name back into
+  text; a mismatched tag seeded through `HtmlLexContext::end_tag_continuation`
+  keeps its literal recovery. `html-tree-builder` passes 31 more corpus cases.
+- The html5lib smoke fixture no longer rewrites the four upstream "End tag
+  closing RCDATA or RAWTEXT" cases to the old output:
+  `normalize_html5lib_fixtures.py` keeps upstream's tokens and `eof-in-tag`.
+- `tests/generated_source_test.rs` fails when `src/generated_html1.rs` drifts
+  from `html1.lexer.states.toml`; `HTML_LEXER_REGENERATE=1` rewrites it.
+- A tag with many attributes lexes in linear time (the duplicate check in
+  `state-machine-tokenizer` is a set lookup now). `tests/attribute_dedup_test.rs`
+  pins first-duplicate-wins, the `duplicate-attribute` error, a clean slate
+  per tag, and 30,000 attributes.
+
 ### Added
 - Script end tags that reach EOF after whitespace, attributes, quoted attribute
   data, or a trailing solidus now report `eof-in-tag` while preserving their

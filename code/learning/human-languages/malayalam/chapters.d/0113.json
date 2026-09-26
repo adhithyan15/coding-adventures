@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Letters From Your First Words",
+  "label": "ch:ml-letters-first-words",
+  "canDo": "I can write sha, nga, lla and kha, and find each one in a word from the first chapters.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ML-W113-kha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can write sha, nga, lla and kha, and find each one in a word from the first chapters.",
+    "assesses": [
+      "ML-SCRIPT-C113-NGA-01",
+      "ML-SCRIPT-C113-LLA-01",
+      "ML-SCRIPT-C113-KHA-01"
+    ]
+  }
+}

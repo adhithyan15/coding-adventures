@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:3f4700046a7d4a1f",
+  "lessonIds": [
+    "LA-C159-sentio",
+    "LA-C159-pendeo",
+    "LA-C159-taceo",
+    "LA-C159-servo",
+    "LA-C159-muto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch159.txt",
+  "json": "latin/narration/ch159.json",
+  "textHash": "fnv1a64:f235e7a647e3a208",
+  "jsonHash": "fnv1a64:5839629f78518b6b",
+  "findings": []
+}

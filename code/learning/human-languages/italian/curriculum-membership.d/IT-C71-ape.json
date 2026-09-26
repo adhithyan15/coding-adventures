@@ -1,0 +1,11 @@
+{
+  "id": "IT-C71-ape",
+  "pathSegment": "IT-PATH-71-ANIMALI4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-71-ANIMALI4",
+      "order": 2
+    }
+  ]
+}

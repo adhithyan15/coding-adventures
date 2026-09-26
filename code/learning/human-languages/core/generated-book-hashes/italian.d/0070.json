@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:88dd297794c71867",
+  "lessonIds": [
+    "IT-C70-serpente",
+    "IT-C70-gallina",
+    "IT-C70-anatra",
+    "IT-C70-pecora",
+    "IT-C70-capra"
+  ],
+  "tex": "italian/book/chapters/ch70-snake-hen-duck-sheep-goat.tex"
+}

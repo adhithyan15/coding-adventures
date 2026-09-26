@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:9d2f2e08e5216da0",
+  "lessonIds": [
+    "JA-C41-tegami",
+    "JA-C41-jikan",
+    "JA-C41-namae",
+    "JA-C41-okane",
+    "JA-C41-yama"
+  ],
+  "tex": "japanese/book/chapters/ch41-letter-time-name-money-mountain.tex"
+}

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b0430dfa6506936c",
+  "sourceHash": "fnv1a64:fcb6ab78bbea61c2",
   "lessons": [
     {
       "id": "ML-C08-dayavayi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:216fa0b67ea1f0c5",
+      "sourceHash": "fnv1a64:6f4174c640cab8ed",
       "notice": null,
       "blocks": [
         {
@@ -111,7 +111,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The heart of the word is വാ — va stretched by the long‑ā sign ാ (-ā) — then യി, ya + the i sign (ി). Malayalam's rounded letters hang their vowel-signs to the right; the long ാ is simply a tall stroke after the consonant, the same ā you would meet across the Dravidian scripts."
+              "text": "The heart of the word is വാ — va stretched by the long‑ā sign ാ (-ā) — then യി, ya + the i sign (ി). You met both signs in പോയി വരാം: the same tall stroke, the same yi."
             }
           ]
         },

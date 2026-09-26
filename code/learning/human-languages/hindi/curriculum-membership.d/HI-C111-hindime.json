@@ -1,0 +1,11 @@
+{
+  "id": "HI-C111-hindime",
+  "pathSegment": "HI-PATH-111-ASK",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-111-ASK",
+      "order": 0
+    }
+  ]
+}

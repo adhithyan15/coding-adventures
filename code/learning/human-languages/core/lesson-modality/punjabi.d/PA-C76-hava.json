@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C76-hava",
+    "language": "punjabi",
+    "chapter": 76,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c4dc4e12de842fa"
+  },
+  "findings": []
+}

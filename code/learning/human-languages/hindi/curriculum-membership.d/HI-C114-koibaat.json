@@ -1,0 +1,11 @@
+{
+  "id": "HI-C114-koibaat",
+  "pathSegment": "HI-PATH-114-SORRY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-114-SORRY",
+      "order": 1
+    }
+  ]
+}

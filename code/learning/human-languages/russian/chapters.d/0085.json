@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Second, Weekend, Date, Century, Often",
+  "label": "ch:ru-second-weekend-date-century-often",
+  "canDo": "I can say a second, the weekend, a date, a century and often.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-C85-often",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say a second, the weekend, a date, a century and often.",
+    "assesses": [
+      "RU-LEX-C85-TIME85-03",
+      "RU-LEX-C85-TIME85-04",
+      "RU-LEX-C85-TIME85-05"
+    ]
+  }
+}

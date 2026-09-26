@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:0d45245dcf2fc30a",
+  "lessonIds": [
+    "RU-C118-squirrel",
+    "RU-C118-owl",
+    "RU-C118-whale",
+    "RU-C118-dolphin",
+    "RU-C118-elbow"
+  ],
+  "tex": "russian/book/chapters/ch118-squirrel-owl-whale-dolphin-elbow.tex"
+}

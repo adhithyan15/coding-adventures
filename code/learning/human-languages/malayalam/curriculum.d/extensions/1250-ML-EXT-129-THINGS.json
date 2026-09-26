@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-129-THINGS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a bed, a key, an umbrella, my glasses and a watch, and ask where they are.",
+  "prerequisites": []
+}

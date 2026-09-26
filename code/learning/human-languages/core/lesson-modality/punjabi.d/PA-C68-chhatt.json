@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C68-chhatt",
+    "language": "punjabi",
+    "chapter": 68,
+    "sequence": 3660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f898f766f2552f53"
+  },
+  "findings": []
+}

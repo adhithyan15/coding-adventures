@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-96-HELLO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can greet someone the way Kannada speakers do day to day: have you eaten, what's new, long time, hello, are you well.",
+  "prerequisites": []
+}

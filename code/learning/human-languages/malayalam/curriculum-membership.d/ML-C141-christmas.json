@@ -1,0 +1,11 @@
+{
+  "id": "ML-C141-christmas",
+  "pathSegment": "ML-PATH-141-FESTIVALS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-141-FESTIVALS",
+      "order": 2
+    }
+  ]
+}

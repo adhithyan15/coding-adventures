@@ -1,0 +1,11 @@
+{
+  "id": "AR-W46-dal",
+  "pathSegment": "AR-PATH-046-LETTERS-GREETINGS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-046-LETTERS-GREETINGS",
+      "order": 2
+    }
+  ]
+}

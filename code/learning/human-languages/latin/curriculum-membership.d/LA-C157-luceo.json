@@ -1,0 +1,11 @@
+{
+  "id": "LA-C157-luceo",
+  "pathSegment": "LA-PATH-157-ACT157",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-157-ACT157",
+      "order": 2
+    }
+  ]
+}

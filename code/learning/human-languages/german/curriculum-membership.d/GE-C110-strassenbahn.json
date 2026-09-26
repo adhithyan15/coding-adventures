@@ -1,0 +1,11 @@
+{
+  "id": "GE-C110-strassenbahn",
+  "pathSegment": "GE-PATH-110-RICHTUNG110",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-110-RICHTUNG110",
+      "order": 4
+    }
+  ]
+}

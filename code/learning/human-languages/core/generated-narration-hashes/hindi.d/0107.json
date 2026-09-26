@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:898d05f78a57cd71",
+  "lessonIds": [
+    "HI-C107-doctor",
+    "HI-C107-aspatal",
+    "HI-C107-chot",
+    "HI-C107-kamzori",
+    "HI-C107-sehat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch107.txt",
+  "json": "hindi/narration/ch107.json",
+  "textHash": "fnv1a64:c0818a5a4fc7de32",
+  "jsonHash": "fnv1a64:4471b39c67d81b5e",
+  "findings": []
+}

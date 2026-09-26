@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C57-tel",
+    "language": "bengali",
+    "chapter": 57,
+    "sequence": 3020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22c797875d1d09c7"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-R81-letters-first-pass",
+  "pathSegment": "RU-PATH-081-LETTERS-YO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-081-LETTERS-YO",
+      "order": 1
+    }
+  ]
+}

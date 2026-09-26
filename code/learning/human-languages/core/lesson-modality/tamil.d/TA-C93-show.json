@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C93-show",
+    "language": "tamil",
+    "chapter": 93,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:164716a4ed03337b"
+  },
+  "findings": []
+}

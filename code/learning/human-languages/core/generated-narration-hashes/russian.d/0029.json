@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:ae996fb94c7a2ca9",
+  "lessonIds": [
+    "RU-C29-head",
+    "RU-C29-hand",
+    "RU-C29-leg",
+    "RU-C29-belly",
+    "RU-C29-tooth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch29.txt",
+  "json": "russian/narration/ch29.json",
+  "textHash": "fnv1a64:9cbed80ef5db33e3",
+  "jsonHash": "fnv1a64:0ce477116d04d8a3",
+  "findings": []
+}

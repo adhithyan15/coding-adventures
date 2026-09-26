@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Table, Chair, Bed, Lamp, Key",
+  "label": "ch:ru-table-chair-bed-lamp-key",
+  "canDo": "I can name a table, a chair, a bed, a lamp and a key.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "RU-C49-key",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can name a table, a chair, a bed, a lamp and a key.",
+    "assesses": [
+      "RU-LEX-C49-HOME2-03",
+      "RU-LEX-C49-HOME2-04",
+      "RU-LEX-C49-HOME2-05"
+    ]
+  }
+}

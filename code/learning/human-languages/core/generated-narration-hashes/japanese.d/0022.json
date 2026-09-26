@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:7849439a54b8c1d6",
+  "lessonIds": [
+    "JA-C22-ase",
+    "JA-C22-namida",
+    "JA-C22-koe",
+    "JA-C22-netsu",
+    "JA-C22-itai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch22.txt",
+  "json": "japanese/narration/ch22.json",
+  "textHash": "fnv1a64:7e91ff22875145a2",
+  "jsonHash": "fnv1a64:aefcd80dfb180660",
+  "findings": []
+}

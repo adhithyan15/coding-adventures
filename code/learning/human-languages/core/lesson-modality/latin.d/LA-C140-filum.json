@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C140-filum",
+    "language": "latin",
+    "chapter": 140,
+    "sequence": 5780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28bb3190e29f4e0e"
+  },
+  "findings": []
+}

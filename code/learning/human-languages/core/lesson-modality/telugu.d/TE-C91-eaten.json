@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C91-eaten",
+    "language": "telugu",
+    "chapter": 91,
+    "sequence": 3430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:558fc822c8555e82"
+  },
+  "findings": []
+}

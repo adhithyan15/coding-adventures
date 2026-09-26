@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:ebfefd203f7f527e",
+  "lessonIds": [
+    "LA-C79-cibus",
+    "LA-C79-cena",
+    "LA-C79-prandium",
+    "LA-C79-ientaculum",
+    "LA-C79-caro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch79.txt",
+  "json": "latin/narration/ch79.json",
+  "textHash": "fnv1a64:83d2dd4154b03bc4",
+  "jsonHash": "fnv1a64:647ed7a8b19b4671",
+  "findings": []
+}

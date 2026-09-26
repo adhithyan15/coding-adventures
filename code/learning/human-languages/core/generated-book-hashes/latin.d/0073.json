@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:ece0711c4538048d",
+  "lessonIds": [
+    "LA-C73-puella",
+    "LA-C73-senex",
+    "LA-C73-regina",
+    "LA-C73-nauta",
+    "LA-C73-poeta"
+  ],
+  "tex": "latin/book/chapters/ch73-girl-old-man-queen-sailor-poet.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:5aebc6c944255d33",
+  "lessonIds": [
+    "JA-C32-sakana",
+    "JA-C32-niku",
+    "JA-C32-tamago",
+    "JA-C32-yasai",
+    "JA-C32-kudamono"
+  ],
+  "tex": "japanese/book/chapters/ch32-fish-meat-egg-vegetables-fruit.tex"
+}

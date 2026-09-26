@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-100-FAMILY",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "TA-EXT-100-FAMILY"
+  ],
+  "after": []
+}

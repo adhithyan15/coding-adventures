@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "TA-R84-vowels-signs-and-the-dot",
+    "language": "tamil",
+    "chapter": 84,
+    "sequence": 3502,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c5c4a09805db7d21",
+    "detachableSegments": [
+      "Script: standing, or hanging",
+      "Script: the three signs with no standing partner here",
+      "Script: the dot that removes a vowel"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C148-mau",
+    "language": "marathi",
+    "chapter": 148,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b954212fc6e19aff"
+  },
+  "findings": []
+}

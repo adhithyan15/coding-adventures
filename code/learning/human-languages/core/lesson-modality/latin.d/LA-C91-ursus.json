@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C91-ursus",
+    "language": "latin",
+    "chapter": 91,
+    "sequence": 3190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9f571dfa383ecd6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C99-namaste",
+  "pathSegment": "TE-PATH-99-WELCOME",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-99-WELCOME",
+      "order": 0
+    }
+  ]
+}

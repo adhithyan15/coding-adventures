@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:f4cfacd9655d2326",
+  "lessonIds": [
+    "UR-C128-hiran",
+    "UR-C128-kabutar",
+    "UR-C128-tota",
+    "UR-C128-bhalu",
+    "UR-C128-kamar"
+  ],
+  "tex": "urdu/book/chapters/ch128-deer-pigeon-parrot-bear-waist.tex"
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C35-jo-write
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 2000
+sequence: 2013
 delivery: script
 chapter: 39
 type: writing

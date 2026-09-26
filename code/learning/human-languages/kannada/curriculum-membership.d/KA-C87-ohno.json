@@ -1,0 +1,11 @@
+{
+  "id": "KA-C87-ohno",
+  "pathSegment": "KA-PATH-87-REPLIES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-87-REPLIES",
+      "order": 2
+    }
+  ]
+}

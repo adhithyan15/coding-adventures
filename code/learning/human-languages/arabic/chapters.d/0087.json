@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Yesterday, Tomorrow, Now, Sometimes, Before",
+  "label": "ch:ar-yesterday-tomorrow-now-sometimes-before",
+  "canDo": "I can say yesterday, tomorrow, now, sometimes and before.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C87-qabla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say yesterday, tomorrow, now, sometimes and before.",
+    "assesses": [
+      "AR-LEX-C87-TIME87-03",
+      "AR-LEX-C87-TIME87-04",
+      "AR-LEX-C87-TIME87-05"
+    ]
+  }
+}

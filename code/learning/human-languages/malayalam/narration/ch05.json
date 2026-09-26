@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b3971e0b0dd418cd",
+  "sourceHash": "fnv1a64:bbfa162249f47b76",
   "lessons": [
     {
       "id": "ML-C05-samsaarikkuka",
@@ -797,6 +797,111 @@
       ]
     },
     {
+      "id": "ML-C05-kodi",
+      "sequence": 281,
+      "title": "കൊടി (koṭi) — a flag",
+      "headword": "കൊടി",
+      "romanization": "koṭi",
+      "gloss": "a flag",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8c74aec8d0f424a1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൊടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊടി — koṭi — \"a flag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: koṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൊ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭi, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭi*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a flag\"? (കൊടി, koṭi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-S143-vowel-sign-o",
       "sequence": 282,
       "title": "◌ൊ — one character, met inside words you already say",
@@ -811,7 +916,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6d0cf2eb76cb0c6a",
+      "sourceHash": "fnv1a64:13903f5cec06dd22",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -968,7 +1073,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f38b40469f70fdbd",
+      "sourceHash": "fnv1a64:e15b7231c881907d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1111,6 +1216,111 @@
       ]
     },
     {
+      "id": "ML-C05-thooval",
+      "sequence": 285,
+      "title": "തൂവൽ (tūval) — a feather",
+      "headword": "തൂവൽ",
+      "romanization": "tūval",
+      "gloss": "a feather",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e093dc7e677cae8b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തൂവൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൂവൽ — tūval — \"a feather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: tūval. Look at its shape as you say it: the next lesson takes one piece of it, ൽ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūval",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūval*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūval, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūval*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a feather\"? (തൂവൽ, tūval.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-S144-chillu-l",
       "sequence": 286,
       "title": "ൽ — one character, met inside words you already say",
@@ -1125,7 +1335,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e9cd3cf75ffca464",
+      "sourceHash": "fnv1a64:31ca62b271bd220e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1284,7 +1494,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3beb1f2c5721b4df",
+      "sourceHash": "fnv1a64:8c92f1e0316b912d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1406,6 +1616,111 @@
       ]
     },
     {
+      "id": "ML-C05-hamsam",
+      "sequence": 295,
+      "title": "ഹംസം (haṃsam) — a swan",
+      "headword": "ഹംസം",
+      "romanization": "haṃsam",
+      "gloss": "a swan",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9654b0f942e169c6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഹംസം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹംസം — haṃsam — \"a swan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: haṃsam. Look at its shape as you say it: the next lesson takes one piece of it, ഹ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṃsam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṃsam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṃsam, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṃsam*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a swan\"? (ഹംസം, haṃsam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-S127-letter-ha",
       "sequence": 296,
       "title": "ഹ — one character, met inside words you already say",
@@ -1420,7 +1735,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc7a3e40406e52b3",
+      "sourceHash": "fnv1a64:edeeecc738483bc7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1579,7 +1894,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea53c5e76c405ddf",
+      "sourceHash": "fnv1a64:4f3042454e052d11",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:9320b7c91d046249",
+  "lessonIds": [
+    "AR-C74-haqiba",
+    "AR-C74-mal",
+    "AR-C74-kharita",
+    "AR-C74-dars",
+    "AR-C74-jawab",
+    "AR-R74-first-pass-the-body-family-verbs-and-food",
+    "AR-R74-second-pass-food-the-home-and-school"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch74.txt",
+  "json": "arabic/narration/ch74.json",
+  "textHash": "fnv1a64:200629dabba9e7b6",
+  "jsonHash": "fnv1a64:c1e23d09b6a55378",
+  "findings": []
+}

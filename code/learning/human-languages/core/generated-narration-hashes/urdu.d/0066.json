@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:87b96d254eb90816",
+  "lessonIds": [
+    "UR-C66-suraj",
+    "UR-C66-chad",
+    "UR-C66-samandar",
+    "UR-C66-ag",
+    "UR-C66-barf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch66.txt",
+  "json": "urdu/narration/ch66.json",
+  "textHash": "fnv1a64:66636ab2edda4757",
+  "jsonHash": "fnv1a64:88a493633780542e",
+  "findings": []
+}

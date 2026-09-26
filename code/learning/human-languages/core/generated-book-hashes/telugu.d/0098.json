@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:be6ae76983c6e2f9",
+  "lessonIds": [
+    "TE-C98-nothing",
+    "TE-C98-notyet",
+    "TE-C98-enough",
+    "TE-C98-true",
+    "TE-C98-thatone"
+  ],
+  "tex": "telugu/book/chapters/ch98-nothing-not-yet.tex"
+}

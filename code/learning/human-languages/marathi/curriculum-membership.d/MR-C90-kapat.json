@@ -1,0 +1,11 @@
+{
+  "id": "MR-C90-kapat",
+  "pathSegment": "MR-PATH-90-HOME90",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-90-HOME90",
+      "order": 3
+    }
+  ]
+}

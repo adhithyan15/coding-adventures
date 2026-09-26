@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C88-hajar",
+    "language": "bengali",
+    "chapter": 88,
+    "sequence": 4550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e426d4a5e93accad"
+  },
+  "findings": []
+}

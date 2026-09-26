@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:5acebd4879ed5691",
+  "lessonIds": [
+    "GE-C59-fieber",
+    "GE-C59-arzt",
+    "GE-C59-aerztin",
+    "GE-C59-krankenhaus",
+    "GE-C59-krank"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch59.txt",
+  "json": "german/narration/ch59.json",
+  "textHash": "fnv1a64:1e0e9a43d714410f",
+  "jsonHash": "fnv1a64:bad3c4bd318f7af6",
+  "findings": []
+}

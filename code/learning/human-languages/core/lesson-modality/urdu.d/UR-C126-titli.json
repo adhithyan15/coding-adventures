@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C126-titli",
+    "language": "urdu",
+    "chapter": 126,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65959cf4132583bf"
+  },
+  "findings": []
+}

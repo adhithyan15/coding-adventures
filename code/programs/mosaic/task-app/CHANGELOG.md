@@ -12,6 +12,69 @@ remain in the window with diagnostic text, explicit saved-data reassurance, and
 a **Try again** action that discards any partial host and starts fresh. The Linux
 acceptance lane forces the failure and drives the emitted retry control.
 
+- `[app]` names the installed app **Trestle** with the identity
+  `dev.codingadventures.trestle`, used by the generated iOS / iPadOS project
+  (UI89 §2.2).
+
+### Changed — Checklists empty states use the toolkit EmptyState
+
+- Both Checklists empty states ("No checklists yet" in the library, "Pick a
+  checklist, or make one" in the detail pane) are the toolkit `EmptyState`
+  again, like the List view's "Your Inbox is ready". C3a had drawn them as
+  plain text because a second mount of one component failed the build
+  (`DuplicatePart 'empty-state'`); the resolver now renames the second and
+  third mounts' parts (#15959), so all three share the heading semantics and
+  styles. The `cl-library-empty` / `cl-detail-empty` parts and styles are
+  gone. Checked on Compose with the screenshot harness: the three render
+  identically.
+
+### Added — writing questions into a checklist template (C3c, #14018)
+
+- **Looked at, not just asserted.** The Compose screenshot harness
+  (`TaskAppScreenshots`, #14798) now renders three more states: the empty
+  Checklists library, a template with a question and both branches, and a
+  run. The renders showed three defects no test had caught, all fixed:
+  - the composer fields were invisible, their placeholders reading as labels;
+  - every Checklists button fell back to the backend's Material purple;
+  - the selected outline item looked like the rest, and "Add to No"
+    overflowed the pane.
+  The controls now clone Trestle's own styles: the edit field, the add
+  button, the outline cancel button, and the chip with the accent for the
+  selected item. The branch buttons get their own row.
+
+- A template's outline rows are toggle buttons (`selected`, UI86) that select
+  an item. Each row shows its branch ("Yes"/"No") and a "Question" marker.
+- With an item selected, **Make it a question / Make it a step** and
+  **Delete item** appear. With a question selected, **Add to Yes** and
+  **Add to No** appear beside the composer.
+- The rows carry a selected marker instead of the layout comparing strings.
+  `item[0] == selected-outline-key` compiled verbatim into Swift and Kotlin,
+  where `selected-outline-key` reads as a subtraction. The local
+  `swift build -c release` and `gradle compileKotlin` caught this.
+
+### Added — the Checklists view (C3a, #14018)
+
+A seventh view, **Checklists**, sits beside List, Board, Sheet, Calendar and
+Notes (spec: `code/specs/task-app-checklists-view-v1.md`):
+
+- a library of the project's templates and runs (the toolkit `RecordList`),
+  with a *New checklist* composer;
+- beside it, the selection:
+  - a template's outline, with *Add item*, **Start run** and **Delete
+    checklist**;
+  - or a run, through `pkg::mosaic-pkg-checklist::ChecklistRun` (tick,
+    answer, Complete, Abandon), then **Delete run**.
+
+`TaskApp.mil` gains the 15 `checklist*` slots and 13 events, and the manifest
+depends on `mosaic-pkg-checklist`. The native hosts get the behaviour from
+`task-mosaic-app`. The web host passes inert values until C3b.
+
+Both empty states are plain text, not the toolkit `EmptyState`. The list view
+already mounts one, and an inlined component keeps its part names, so a
+second instance fails the package build with `DuplicatePart 'empty-state'`.
+`package_compiles` now builds the package on every backend, which catches this
+(the per-file compiles cannot).
+
 ### Fixed — Compose startup no longer fails outside the window (#15786)
 
 The generated Compose Desktop app now paints a themed loading state before its

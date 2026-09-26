@@ -3,7 +3,7 @@
     "id": "GU-C33-ke-write",
     "language": "gujarati",
     "chapter": 37,
-    "sequence": 1900,
+    "sequence": 1913,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:de58764f4353fe75",
+    "sourceHash": "fnv1a64:0607501248e39451",
     "detachableSegments": [
       "Script — two signs, neither new",
       "Writing — guided copy, model in view"

@@ -1,5 +1,84 @@
 # Changelog
 
+## 2026-09-25 (checkbox row index)
+
+- **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
+  - `emit_host_checkbox` takes the `For` payload scope; the new `checkbox_toggle_dispatch` picks the payload for both `Checkbox` and `TriStateCheckbox`, and the lambda parameter is `_` when the dispatch does not read it.
+
+## 2026-09-25 (choice labels)
+
+- **A labelled `HostCheckbox` / `HostRadio` centres its label on the control.** The emitter wraps a labelled checkbox or radio in its own `Row` with no vertical alignment, so the label sat at the top of Material's 48dp touch target, above the control's centre: Engram's "Suspend" / "Tag only" leech-action radios and Browse's "Reschedule reviews". The web's inline `<label>` sits level with its control. These emitter-built Rows now pass `verticalAlignment = Alignment.CenterVertically`. Authored Rows keep their defaults.
+  - Measured: across every Mosaic program only Engram's output changes (14 lines). Rendered: the Options and Browse labels are level with their controls in both themes, and the other Engram screens are byte-identical. 210 emitter tests pass.
+
+## 2026-09-24 (number inputs)
+
+- **`HostNumberInput` is a `BasicTextField`, like `HostInput`.** It lowered to Material's `TextField`, which enforces a 280×56dp minimum and paints its own filled container inside the part's border. On Engram's Deck options (found with the Engram screenshot harness):
+  - every number field was twice the height of the text fields;
+  - the five review-factor fields overflowed the panel and drew "Hard multiplier" and "Easy bonus" over each other;
+  - the leech row and the bury checkboxes were pushed out of the panel.
+
+  The part's style now owns the box, as for a text field. The field also takes the same width decisions (`fillMaxWidth()` outside a Row, a percentage's weight in one), because `HostNumberInput` joins `parts_filling_width` and `leaf_parts_row_weighted`. The Material `placeholder` is gone: a number's text is never empty, so it never showed.
+  - Rendered: Engram's Options fits the panel with every label visible, and Browse's Cards field is compact. The other Engram screens and every Trestle view are byte-identical. Native-complete (0) and Trestle's emitted-control contract pass.
+## 2026-09-25 (button elevation)
+
+- **A `HostButton` with an authored background casts no Material shadow.** Material's `Button` has a default elevation, so every styled button drew a drop shadow that no other backend draws: a web button casts none unless its style asks. The shadow was also the only visible edge of buttons authored as borderless. Trestle's task name, Edit, Delete and "+ Sub-project" (`background: transparent; border-width: 0`) read as boxed buttons on Compose, and on the web as plain clickable text. A button whose part authors a background now passes `elevation = null`. A part that authors `elevation` still gets its shadow, through `Modifier.shadow` in its own chain (UI41), and an unstyled button keeps Material's defaults.
+  - Rendered: Trestle (light and dark) and Engram (light). Borderless buttons now read as on the web, and bordered ones (Engram's nav options, `#dee2e6` 1px) show just their border. `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass.
+
+## 2026-09-24 (disabled buttons)
+
+- **A disabled `HostButton` keeps its authored background.** `ButtonDefaults.buttonColors(backgroundColor = …)` sets only the enabled colour. A disabled button therefore fell back to Material's `disabledBackgroundColor`, `onSurface` at 12% over the light theme's surface, which is near-white. On Engram's dark Collection panel, "Delete note" and "Delete note type" rendered as blank pale pills while nothing was selected, found with the Engram screenshot harness (#15987). `disabledBackgroundColor` is now the same expression. That matches the web, where a disabled button keeps its authored background unless the package styles `state disabled`. Rendered: the two buttons show their crimson in Engram's Decks screen, the other five Engram screens and every Trestle view are byte-identical, and the emitter's 210 tests pass.
+## 2026-09-24 (wrap rows)
+
+- **A wrapping Row of fraction-width items stretches each line, as CSS does.** CSS lays `flex-wrap: wrap` out in lines, and `align-items` defaults to `stretch`, so every item on a line is as tall as the tallest. `FlowRow` leaves items at their own heights. In Calendar, the week with an event was ragged: the event's day ran about 55px below its neighbours, whose borders stopped at their 96px `min-height`. `fillMaxRowHeight()` cannot fix it, because it measures an item against the line's *remaining* width and so collapsed the cells into one line (see the lesson in `lessons.d`).
+  - Such a Row now lowers to `_MosaicWrapRow`, a file-private `Layout` emitted only when used. Each item takes `floor(rowWidth × fraction)` from its `_mosaicWrapItem(f)` parent data. Lines break on those widths. A line's height is its tallest item's `maxIntrinsicHeight`, and every item is measured once at `Constraints.fixed(width, lineHeight)`.
+  - It applies only where it is exactly right: a wrapping Row with no gap, `justify-content`, `align-items` or `text-align` of its own, whose children (through `For` / `If` / `Else`) are all containers with a percentage width below 100% and no `height`. Everything else keeps `FlowRow`.
+  - Measured: across every Mosaic program only Trestle's output changes, in Calendar. The rendered week shares one bottom border, and every other Trestle view is byte-identical. `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass.
+
+## 2026-09-24 (text box)
+
+- **A `Text` wears its part's box.** The `Text` arm built the part's whole `ComposeStyle` but passed only its text style to `emit_text`. The modifier chain was thrown away: padding, background, rounded corners, size and border. Calendar's today badge (a 21px amber pill) was never drawn, and Trestle's "Up next" count and due-date pills were bare text. The drop reporter lowers the same properties through the container path, so it reported 0 degradations. Now the chain follows the width decision (`fillMaxWidth()` / `weight` / the UI59 floor, which comes first as it does for containers) and precedes the semantics. The previous semantics-first order is gone. The reporter's answer is now true, and a lesson records the gap.
+  - Measured before/after across every Mosaic program:
+    - Trestle changes on 57 lines: pills, padded labels, and the day-name row's padding.
+    - Engram changes on 172, across both of its generated files: 41 paddings, and a 56px width on each of two stat labels.
+    - Venture changes on 8 lines: the view-source panel gets its authored max width, height, background, border and padding, and the page title's modifiers are reordered.
+    - Journal and VisiCalc don't change.
+  - Verified: Trestle's dark renders (every view changes only by padding and pills), `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass. Engram and Venture compile.
+  - `taskapp_native_control_contract.py`'s two error-text markers are now `Text(newTaskNameError, ` and `Text(newTaskDueError, `, because those texts now carry their `padding-left` modifier before `color`.
+
+## 2026-09-24 (text-align)
+
+- **A `Text`'s own `text-align` reaches its `Text` call.** Until now `text-align` was lowered only on containers, as content alignment. On a `Text` leaf it was ignored, and the drop wasn't reported. Calendar's day names stayed at the start of their now-weighted columns (#15968), while the web centres them. Now a `Text` part's base `text-align` becomes `textAlign = TextAlign.Start/Center/End`, and the `TextAlign` import is added only when used.
+  - On its own, `textAlign` aligns only within the `Text`'s box, which wraps its content. In a Row the box already has its share (`weight`). Outside a Row, a `center` or `end` text also gets `fillMaxWidth()`, as the stretched flex item it is on the web.
+  - A part that authors its own `width` / `min-width` / `max-width` never fills: Calendar's today badge is a 21px pill. Neither does a part used in a Row even once (the `parts_filling_width` rule), nor `start`.
+  - Measured before/after across every Mosaic program: Trestle changes on its 7 day names (now centred), Engram on 2 stat labels, and VisiCalc on its address label. Those last three sit in Rows under the width guard, so they get `textAlign` and no fill, and their layout doesn't move. Trestle's Calendar render changed, and every other view is byte-identical.
+  - Verified: `TaskAppUiTest` passes, the emitted-control contract passes, and the native-complete report shows 0 degradations. Engram and VisiCalc compile.
+  - Still open: `calendar-daynum-today`'s `width`, `height`, `background` and `border-radius` don't reach its `Text` at all, so today's pill isn't drawn, and that isn't reported either.
+
+## 2026-09-24 (row controls)
+
+- **A control's percentage width in a Row is its share of the Row.** Since #15968 a `Text` in a RowScope took `weight(f)` from a percentage width, but `HostInput`, `Input` and `HostButton` didn't. Their `width: 100%` fills only outside a Row, so in a Row it was dropped without a report. Journal's search field, beside *Clear*, stayed at its intrinsic ~120px in a 276px pane. The precomputed set (renamed `leaf_parts_row_weighted`) now covers the three controls, and their modifier chain starts with `.weight(f)`, unless the chain already decides the width (a `max-width`). A part used both in and out of a Row still gets neither the weight nor the fill.
+  - Measured before/after across every Mosaic program: Journal changes on 1 control (`search-input`) and Trestle on 4. In Trestle, the sidebar's project buttons now span the sidebar, the *New project* field takes what `+` leaves, and a task row's name takes the row's slack, pushing its due date and buttons to the row's end, as on the web. Engram, VisiCalc and the demos don't change.
+  - Verified: `TaskAppUiTest` passes, the emitted-control contract passes, and the native-complete report is still 0 degradations.
+
+## 2026-09-24 (placeholders)
+
+- **A field's placeholder wears the field's text style, dimmed (#14798).** The `HostInput` placeholder `Text` took only a bound `font-size`. A field whose typed text was light (`TextStyle(color = …)`) therefore showed its placeholder in Material's black: in dark Trestle, "What needs doing?", "Due (optional)" and "New project" were black on #1a1714. The placeholder now takes the field's colour, size, weight and family, with the colour at 60% alpha (`(Color(…)).copy(alpha = 0.6f)`), as a browser draws `::placeholder`. An unstyled field keeps `Text(text = …)`. Rendered in dark Trestle. `TaskAppUiTest` passes, and Engram and Journal compile.
+
+## 2026-09-24 (later)
+
+- **`HostNavigationSplit` wears its own part style (#14798).** The split's `Box` was written as a bare `Modifier.fillMaxSize()`, so its part's `background` never appeared and its `color` never reached its children, and nothing reported the drop. Trestle's `app-shell` sets both. On Compose the dark theme drew a white window, and every label without its own colour fell back to Material's black. Now the part's modifier chain follows `fillMaxSize()`, as a container's follows its default fill, and its text style (`cell_text_style`) becomes the inherited text context of both the pane and the detail. Rendered: dark Trestle shows the #1a1714 window with readable default text in every view. `TaskAppUiTest` passes, the gate reports 0 degradations, and Engram and Journal compile. Still open: text typed into a field (`BasicTextField`) keeps Material's black in the dark theme.
+
+## 2026-09-24
+
+- **Percentage widths below 100%.** A percentage had no pixel value, so `width : "14.2857%"` was dropped without a report. Calendar rendered as one column of 42 full-width day cells under seven day names packed into "SunMonTueWedThuFriSat" (found with the extended Trestle screenshot harness). Now:
+  - a container outside a RowScope (a FlowRow's children included) takes `_mosaicFillFraction(f)`, a file-private layout modifier emitted only when used. It is `fillMaxWidth(f)` floored rather than rounded: rounding made each cell 141px of a 984px row, and the seventh wrapped;
+  - any percentage on a RowScope child is a share of the Row (`weight(f)`). `100%` stays weight 1. For a `Text` leaf the weight comes from a precomputed part set (`text_parts_row_weighted`), using the UI59 scope rule.
+  Measured before/after: Trestle changes on 9 lines, all in Calendar (the seven day names, the title, the cells). Engram, Journal and VisiCalc don't change. `TaskAppUiTest` passes. Still open: a `Text`'s `text-align`, and day rows of unequal height.
+- **A `Text` wears its own part's text style.** `color`, `font-size`, `font-weight` and `font-family: monospace` on a `Text`'s part now reach the `Text(...)` call, layered over any colour a container threads down. Before, only a `Text` with a `font-size` *prop* (#15081) read its part; every other label fell back to Material's default black and the degradation report stayed empty. On a dark theme that made the toolkit `EmptyState` heading and message and `DraftEditor`'s field labels unreadable (Journal on Compose, found with the screenshot harness in #15963). Unstyled text keeps the `Text(text = ...)` shape. Verified locally: Trestle's `TaskAppUiTest` passes, Engram, VisiCalc, Journal and Trestle compile, and Journal's dark renders show every label. `taskapp_native_control_contract.py` now matches the styled call shape for Trestle's error, row and empty-state text.
+- **`width: 100%` fills on a leaf control outside a Row.** `HostInput`, `Input` and `HostButton` wrap their content, and a percentage has no pixel value, so an authored `width: 100%` was dropped without a report. DraftEditor's fields measured 120px in a 750px editor. Such a control now gets `fillMaxWidth()`, first in its modifier chain like the container default, unless the chain already decides the width (a `max-width` keeps its own `widthIn(max).fillMaxWidth()` order). Inside a RowScope `fillMaxWidth()` would take the whole Row before its siblings are measured, so a part used in a Row even once keeps its intrinsic width everywhere; the set is precomputed once (`parts_filling_width`), like the UI59 width guards. Measured before/after: Trestle changes on 12 controls (composer, edit fields, Notes, sheet cell editor), Engram on none; Trestle's `TaskAppUiTest` passes and its renders are unchanged where the field already sat in a filling container. Other percentages (Calendar's 14.2857% cells, which sit in a Row) are still not lowered.
+
+- **Each `If` branch runs inside `_MosaicBranch { … }`**, a new file-private, non-inline composable, so its body compiles to its own JVM lambda method. A plain Kotlin `if` kept every branch in the enclosing lambda's bytecode, so an app shell's `If`/`Else` view chain piled every view into one method. Adding Trestle's seventh view (Checklists, C3a of #14018) broke its Compose build with `MethodTooLargeException: TaskAppKt.TaskApp$lambda$1$0$1`, the JVM's 64 KB method limit. The wrapper adds no layout node, and Row/Column scopes stay available as implicit receivers. Verified locally: TaskApp with Checklists fails `gradle compileKotlin` before the fix and builds after it.
+
 ## 2026-09-13
 
 - Project numeric font-size bindings on Text, HostInput, HostButton and HostTable as native TextUnit values. Preserve authored/inherited fallbacks for invalid live values, propagate table typography through split sections and scale input placeholders.
@@ -8,6 +87,13 @@ All notable changes to `mosaic-emit-compose` are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+### Changed — drag and drop goes through platform functions (UI89 §3.4)
+
+Components no longer touch AWT: they call `mosaicDragText`,
+`mosaicDragPosition` and `mosaicDragTransfer`, which each platform defines in
+its `MosaicPlatform.kt`. `DESKTOP_PLATFORM_KT` is the desktop one (the same AWT
+code as before); Android supplies its own.
 
 ### Added — `HostNavigationSplit` lowers to Material 3 adaptive navigation (UI29-6, #15481)
 

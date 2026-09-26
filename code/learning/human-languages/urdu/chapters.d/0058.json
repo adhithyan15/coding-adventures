@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Window, Chair, Wall, Roof, Bed",
+  "label": "ch:ur-window-chair-wall-roof-bed",
+  "canDo": "I can say a window, a chair, a wall, a roof and a bed.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "UR-C58-bistar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can say a window, a chair, a wall, a roof and a bed.",
+    "assesses": [
+      "UR-LEX-C58-HOME58-03",
+      "UR-LEX-C58-HOME58-04",
+      "UR-LEX-C58-HOME58-05"
+    ]
+  }
+}

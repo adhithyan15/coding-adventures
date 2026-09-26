@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Soft, Dirty, Young, Kind, Narrow",
+  "label": "ch:fr-soft-dirty-young-kind-narrow",
+  "canDo": "I can name soft, dirty, young, kind, narrow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C92-etroit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can name soft, dirty, young, kind, narrow.",
+    "assesses": [
+      "FR-LEX-C92-ADJ44-03",
+      "FR-LEX-C92-ADJ44-04",
+      "FR-LEX-C92-ADJ44-05"
+    ]
+  }
+}

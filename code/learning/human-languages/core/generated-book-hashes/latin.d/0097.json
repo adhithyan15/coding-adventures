@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:82e00f418036cf7c",
+  "lessonIds": [
+    "LA-C97-facilis",
+    "LA-C97-difficilis",
+    "LA-C97-carus",
+    "LA-C97-fortis",
+    "LA-C97-sapiens"
+  ],
+  "tex": "latin/book/chapters/ch97-easy-hard-dear-brave-wise.tex"
+}

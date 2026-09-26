@@ -1,0 +1,11 @@
+{
+  "id": "GE-C123-mahlzeit",
+  "pathSegment": "GE-PATH-123-ESSEN123",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-123-ESSEN123",
+      "order": 4
+    }
+  ]
+}

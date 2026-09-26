@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:1ad09ae76b357198",
+  "lessonIds": [
+    "TA-C92-slowly",
+    "TA-C92-again",
+    "TA-C92-loudly",
+    "TA-C92-oneminute",
+    "TA-C92-wait"
+  ],
+  "tex": "tamil/book/chapters/ch92-slowly-again-louder.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C70-dat",
+  "pathSegment": "MR-PATH-70-BODY70",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-70-BODY70",
+      "order": 3
+    }
+  ]
+}

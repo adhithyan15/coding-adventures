@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C65-venter",
+    "language": "latin",
+    "chapter": 65,
+    "sequence": 1850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:900d30ab73cd6641"
+  },
+  "findings": []
+}

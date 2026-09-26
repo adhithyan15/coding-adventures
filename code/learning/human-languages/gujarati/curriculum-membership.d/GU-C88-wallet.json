@@ -1,0 +1,11 @@
+{
+  "id": "GU-C88-wallet",
+  "pathSegment": "GU-PATH-88-CARRY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-88-CARRY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C58-ceu",
+    "language": "portuguese",
+    "chapter": 58,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1a62f1cc8801a4f"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-94-POLITE",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "TE-EXT-94-POLITE"
+  ],
+  "after": []
+}

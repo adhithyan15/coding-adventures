@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:037f692dbaf26f9e",
+  "lessonIds": [
+    "LA-C104-saepe",
+    "LA-C104-semper",
+    "LA-C104-numquam",
+    "LA-C104-nunc",
+    "LA-C104-mox"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch104.txt",
+  "json": "latin/narration/ch104.json",
+  "textHash": "fnv1a64:3faab417d695dfce",
+  "jsonHash": "fnv1a64:50e2faa64bcb3c88",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:8a8134ae2a88544b",
+  "lessonIds": [
+    "HI-C124-bhukha",
+    "HI-C124-pyasa",
+    "HI-C124-nindaa",
+    "HI-C124-pasina",
+    "HI-C124-sirdard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch124.txt",
+  "json": "hindi/narration/ch124.json",
+  "textHash": "fnv1a64:8d1aae52a4a58059",
+  "jsonHash": "fnv1a64:e96bba72d64c5a6f",
+  "findings": []
+}

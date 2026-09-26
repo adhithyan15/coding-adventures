@@ -1,11 +1,11 @@
 {
   "id": "PA-W05-job",
   "pathSegment": "PA-PATH-021",
-  "pathOrder": 5,
+  "pathOrder": 6,
   "extensions": [
     {
       "id": "PA-EXT-026-A1-WORK-FIELD",
-      "order": 5
+      "order": 6
     }
   ]
 }

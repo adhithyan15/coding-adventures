@@ -1,0 +1,11 @@
+{
+  "id": "AR-C56-rajul",
+  "pathSegment": "AR-PATH-56-FAMILY56",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-56-FAMILY56",
+      "order": 2
+    }
+  ]
+}

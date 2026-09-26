@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:53ce468d1c220009",
+  "lessonIds": [
+    "UR-C117-badam",
+    "UR-C117-mungphali",
+    "UR-C117-dahi",
+    "UR-C117-tel",
+    "UR-C117-ata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch117.txt",
+  "json": "urdu/narration/ch117.json",
+  "textHash": "fnv1a64:a92f900c381c6fb6",
+  "jsonHash": "fnv1a64:f7db03c29627ae10",
+  "findings": []
+}

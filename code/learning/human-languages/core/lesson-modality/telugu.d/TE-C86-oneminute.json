@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C86-oneminute",
+    "language": "telugu",
+    "chapter": 86,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d5aba52a26437a0"
+  },
+  "findings": []
+}

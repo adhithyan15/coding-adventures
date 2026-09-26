@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-48-ANIMALS48",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "JA-EXT-48-ANIMALS48"
+  ],
+  "after": []
+}

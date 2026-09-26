@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C72-vir",
+    "language": "latin",
+    "chapter": 72,
+    "sequence": 2220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d0006a84c05c01c"
+  },
+  "findings": []
+}

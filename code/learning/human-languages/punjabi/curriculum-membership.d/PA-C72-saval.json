@@ -1,0 +1,11 @@
+{
+  "id": "PA-C72-saval",
+  "pathSegment": "PA-PATH-72-SCHOOL72",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-72-SCHOOL72",
+      "order": 2
+    }
+  ]
+}

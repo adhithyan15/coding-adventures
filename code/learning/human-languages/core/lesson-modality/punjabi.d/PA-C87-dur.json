@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C87-dur",
+    "language": "punjabi",
+    "chapter": 87,
+    "sequence": 4650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38fc59e0961d2d0e"
+  },
+  "findings": []
+}

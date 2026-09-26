@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C138-domina",
+    "language": "latin",
+    "chapter": 138,
+    "sequence": 5670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bc52fb562521ad8"
+  },
+  "findings": []
+}

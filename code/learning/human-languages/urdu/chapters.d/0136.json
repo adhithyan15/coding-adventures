@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Thirsty, Fresh, Raw, Ripe, Pink",
+  "label": "ch:ur-thirsty-fresh-raw-ripe-pink",
+  "canDo": "I can say thirsty, fresh, raw, ripe and pink.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C136-gulabi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say thirsty, fresh, raw, ripe and pink.",
+    "assesses": [
+      "UR-LEX-C136-QUAL136-03",
+      "UR-LEX-C136-QUAL136-04",
+      "UR-LEX-C136-QUAL136-05"
+    ]
+  }
+}

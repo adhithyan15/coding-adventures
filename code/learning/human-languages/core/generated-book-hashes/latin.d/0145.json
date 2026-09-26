@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:268af60fee7776ae",
+  "lessonIds": [
+    "LA-C145-acerbus",
+    "LA-C145-vivus",
+    "LA-C145-mitis",
+    "LA-C145-ferox",
+    "LA-C145-iucundus"
+  ],
+  "tex": "latin/book/chapters/ch145-sour-alive-gentle-fierce-pleasant.tex"
+}

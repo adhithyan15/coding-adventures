@@ -1,0 +1,11 @@
+{
+  "id": "AR-C98-hubb",
+  "pathSegment": "AR-PATH-98-WORLD98",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-98-WORLD98",
+      "order": 4
+    }
+  ]
+}

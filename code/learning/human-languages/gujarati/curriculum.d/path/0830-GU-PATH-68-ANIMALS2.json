@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-68-ANIMALS2",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "GU-EXT-68-ANIMALS2"
+  ],
+  "after": []
+}

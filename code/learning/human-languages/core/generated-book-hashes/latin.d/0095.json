@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:fef485ca86415681",
+  "lessonIds": [
+    "LA-C95-calidus",
+    "LA-C95-frigidus",
+    "LA-C95-siccus",
+    "LA-C95-umidus",
+    "LA-C95-dulcis"
+  ],
+  "tex": "latin/book/chapters/ch95-hot-cold-dry-wet-sweet.tex"
+}

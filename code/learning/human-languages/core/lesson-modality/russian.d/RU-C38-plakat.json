@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C38-plakat",
+    "language": "russian",
+    "chapter": 38,
+    "sequence": 1890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ce406c8e175fd42"
+  },
+  "findings": []
+}

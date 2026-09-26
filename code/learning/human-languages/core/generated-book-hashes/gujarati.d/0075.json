@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:a2f0e4a66387d8b6",
+  "lessonIds": [
+    "GU-C75-ahead",
+    "GU-C75-behind",
+    "GU-C75-inside",
+    "GU-C75-outside",
+    "GU-C75-between"
+  ],
+  "tex": "gujarati/book/chapters/ch75-ahead-behind-in-and-out.tex"
+}

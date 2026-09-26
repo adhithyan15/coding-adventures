@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "How You Feel Inside",
+  "label": "ch:ml-how-you-feel-inside",
+  "canDo": "I can name sadness, fear, anger, laughter and worry.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C116-worry",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can name sadness, fear, anger, laughter and worry.",
+    "assesses": [
+      "ML-LEX-C116-FEELINGS-03",
+      "ML-LEX-C116-FEELINGS-04",
+      "ML-LEX-C116-FEELINGS-05"
+    ]
+  }
+}

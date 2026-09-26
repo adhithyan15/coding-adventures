@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:c1fcfac31b692e51",
+  "lessonIds": [
+    "BN-C87-kuri",
+    "BN-C87-tirish",
+    "BN-C87-chollish",
+    "BN-C87-ponchash",
+    "BN-C87-eksho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch87.txt",
+  "json": "bengali/narration/ch87.json",
+  "textHash": "fnv1a64:39e0c74eac52880e",
+  "jsonHash": "fnv1a64:3697036dc331aca7",
+  "findings": []
+}

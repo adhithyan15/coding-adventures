@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "How Do You Say It?",
+  "label": "ch:ta-how-do-you-say-it",
+  "canDo": "I can ask what something means and how to say it in Tamil, ask to be shown, and say I did not hear.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C93-didnthear",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can ask what something means and how to say it in Tamil, ask to be shown, and say I did not hear.",
+    "assesses": [
+      "TA-LEX-C93-ASK-03",
+      "TA-LEX-C93-ASK-04",
+      "TA-LEX-C93-ASK-05"
+    ]
+  }
+}

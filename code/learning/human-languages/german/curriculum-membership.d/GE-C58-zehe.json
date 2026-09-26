@@ -1,0 +1,11 @@
+{
+  "id": "GE-C58-zehe",
+  "pathSegment": "GE-PATH-58-KOERPER3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-58-KOERPER3",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:8a14e2f4b3ba8822",
+  "lessonIds": [
+    "RU-C82-this",
+    "RU-C82-this-2",
+    "RU-C82-that",
+    "RU-C82-that-2",
+    "RU-C82-such"
+  ],
+  "tex": "russian/book/chapters/ch82-this-this-that-that-such.tex"
+}

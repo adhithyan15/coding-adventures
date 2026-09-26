@@ -1,0 +1,11 @@
+{
+  "id": "KA-C98-shyness",
+  "pathSegment": "KA-PATH-98-MOODS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-98-MOODS",
+      "order": 2
+    }
+  ]
+}

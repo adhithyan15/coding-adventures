@@ -1,0 +1,11 @@
+{
+  "id": "IT-C83-ristorante",
+  "pathSegment": "IT-PATH-83-CITTA3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-83-CITTA3",
+      "order": 4
+    }
+  ]
+}

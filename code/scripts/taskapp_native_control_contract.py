@@ -105,8 +105,8 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             '.testTag("name-input-corrected")',
             '.testTag("due-input-error")',
             '.testTag("due-input-corrected")',
-            "Text(text = newTaskNameError",
-            "Text(text = newTaskDueError",
+            "Text(newTaskNameError, ",
+            "Text(newTaskDueError, ",
             '.testTag("due-input")',
             "onValueChange = { v -> dispatch(TaskAppEvent.NewTaskDueChange(v)) }",
             '.testTag("add-btn")',
@@ -123,11 +123,13 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "onClick = { dispatch(TaskAppEvent.EditTask(i)) }",
             "onClick = { dispatch(TaskAppEvent.SaveTaskEdit) }",
             "onClick = { dispatch(TaskAppEvent.CancelTaskEdit) }",
-            "Text(text = ( row [ 2 ] )",
-            "Text(text = ( row [ 3 ] )",
-            'Text(text = "Your Inbox is ready"',
+            "Text(( row [ 2 ] ), ",
+            "Text(( row [ 3 ] ), ",
+            'Text("Your Inbox is ready", ',
         ),
-        "src/main/kotlin/Main.kt": (
+        # The shared app shell (UI89 §3.4): the startup UI and the host wiring
+        # that desktop and Android both use.
+        "src/main/kotlin/MosaicAppShell.kt": (
             "fun MosaicStartup(",
             'testTag("mosaic-startup-loading")',
             'Text("Starting TaskApp…")',

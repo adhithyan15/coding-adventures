@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C90-idhar",
+    "language": "urdu",
+    "chapter": 90,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f28c864b78e4416"
+  },
+  "findings": []
+}

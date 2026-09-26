@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 99,
+  "output": "urdu/book/chapters/ch99-the-letters-ze-and-toe.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

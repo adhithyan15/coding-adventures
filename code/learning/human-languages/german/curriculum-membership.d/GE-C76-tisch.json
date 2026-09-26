@@ -1,0 +1,11 @@
+{
+  "id": "GE-C76-tisch",
+  "pathSegment": "GE-PATH-76-HAUS1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-76-HAUS1",
+      "order": 2
+    }
+  ]
+}

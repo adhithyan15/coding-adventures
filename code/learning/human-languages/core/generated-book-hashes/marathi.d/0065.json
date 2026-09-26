@@ -1,10 +1,13 @@
 {
   "language": "marathi",
   "chapter": 65,
-  "sourceHash": "fnv1a64:9a960d3babfc7ee0",
+  "sourceHash": "fnv1a64:354ad7d991209d4d",
   "lessonIds": [
+    "MR-C65-iishvar",
     "MR-W65-ii-independent",
+    "MR-C65-ola",
     "MR-W65-o-independent",
+    "MR-C65-aivaj",
     "MR-W65-ai-independent",
     "MR-W65-au-independent",
     "MR-R65-standing-vowels",

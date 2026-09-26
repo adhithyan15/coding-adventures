@@ -1,0 +1,11 @@
+{
+  "id": "KA-C87-thesame",
+  "pathSegment": "KA-PATH-87-REPLIES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-87-REPLIES",
+      "order": 4
+    }
+  ]
+}

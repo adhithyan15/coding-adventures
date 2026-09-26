@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Wife, Son, Daughter and Guests",
+  "label": "ch:gu-wife-son-daughter-and-guests",
+  "canDo": "I can name a wife, a son, a daughter, a relative and a guest.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GU-C53-guest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can name a wife, a son, a daughter, a relative and a guest.",
+    "assesses": [
+      "GU-LEX-C53-FAMILY3-03",
+      "GU-LEX-C53-FAMILY3-04",
+      "GU-LEX-C53-FAMILY3-05"
+    ]
+  }
+}

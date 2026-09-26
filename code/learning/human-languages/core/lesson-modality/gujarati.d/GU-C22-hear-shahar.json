@@ -3,7 +3,7 @@
     "id": "GU-C22-hear-shahar",
     "language": "gujarati",
     "chapter": 26,
-    "sequence": 1020,
+    "sequence": 1033,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:be2649023e22b9b5"
+    "sourceHash": "fnv1a64:1f6b732285971df1"
   },
   "findings": []
 }

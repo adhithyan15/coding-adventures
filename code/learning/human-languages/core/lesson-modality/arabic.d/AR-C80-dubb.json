@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C80-dubb",
+    "language": "arabic",
+    "chapter": 80,
+    "sequence": 3000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a913d6cc9bf37839"
+  },
+  "findings": []
+}

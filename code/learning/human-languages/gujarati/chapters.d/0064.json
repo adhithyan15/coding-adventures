@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Flower, Mountain and Forest",
+  "label": "ch:gu-flower-mountain-and-forest",
+  "canDo": "I can name a flower, a leaf, a mountain, a forest and a stone.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C64-stone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can name a flower, a leaf, a mountain, a forest and a stone.",
+    "assesses": [
+      "GU-LEX-C64-LAND-03",
+      "GU-LEX-C64-LAND-04",
+      "GU-LEX-C64-LAND-05"
+    ]
+  }
+}

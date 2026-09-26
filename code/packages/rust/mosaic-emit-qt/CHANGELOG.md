@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-09-25 (checkbox row index)
+
+- **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
+  - The index form reuses `HostButton`'s signal args (`onToggled: sig(i)`); `onToggled` fires for user input only. The shared `checked` builder reads a loop binding or row expression with `Boolean(...)`, so `HostRadio` accepts those forms too.
+
+## 2026-09-24
+
+- **Fixed: a signal named like a control member no longer calls that member.**
+  A handler such as `onClicked: toggle(i)` is written *inside* the Button, and
+  QML resolves an unqualified name against the control's own members first. So
+  an emit that lowered to `toggle` called `Button.toggle()`, and the component's
+  signal never fired. This made the toolkit's `Accordion`, `Select` and
+  `DropdownMenu`, and `ChecklistRun`'s `onToggle` (C2 of #14018), inert on Qt.
+  `onClicked: click()` re-fires `clicked`, and `onToggled: toggle()` flips the
+  box it came from. `allocate_qml_signal_names` now learns, per emit, which
+  controls call it (`emit_call_scopes`: button, text input, link text, popup,
+  range). A signal that collides with a member of one of *those* controls gets
+  the `mosaicEmit…` spelling, exactly like an `Item`-member clash. Only real
+  clashes are renamed: `select` fired from a button keeps its name, and so does
+  Engram's `undo`, whose host contract pins it. The host still receives the raw
+  event name. Tests that pinned the broken `click`/`toggle` spellings are
+  updated; a new test covers scoped allocation.
+
 ## 2026-09-23
 
 - **Security: data `Text` renders as plain text.** Every `Text` that shows

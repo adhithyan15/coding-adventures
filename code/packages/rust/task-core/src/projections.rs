@@ -140,10 +140,13 @@ impl ProjectState {
 
     /// A flat list of leaf tasks, sorted by deadline (soonest first) then name.
     pub fn todos(&self) -> Vec<TodoRow> {
+        // Checklist items are not todos: a template's items would otherwise show as
+        // open work forever (task-app-checklists-v1.md).
+        let owned = self.checklist_owned();
         let mut rows: Vec<TodoRow> = self
             .tasks
             .values()
-            .filter(|t| t.kind == TaskKind::Leaf)
+            .filter(|t| t.kind == TaskKind::Leaf && !owned.contains(&t.id))
             .map(|t| TodoRow {
                 task: t.id.clone(),
                 name: t.name.clone(),
@@ -174,11 +177,12 @@ impl ProjectState {
         };
 
         let mut columns = Vec::new();
+        let owned = self.checklist_owned();
         // Leading column for unassigned tasks.
         let no_status: Vec<KanbanCard> = self
             .tasks
             .values()
-            .filter(|t| t.kind != TaskKind::Summary && t.status.is_none())
+            .filter(|t| t.kind != TaskKind::Summary && t.status.is_none() && !owned.contains(&t.id))
             .map(&card)
             .collect();
         if !no_status.is_empty() {
@@ -196,7 +200,11 @@ impl ProjectState {
             let cards: Vec<KanbanCard> = self
                 .tasks
                 .values()
-                .filter(|t| t.kind != TaskKind::Summary && t.status.as_ref() == Some(&st.id))
+                .filter(|t| {
+                    t.kind != TaskKind::Summary
+                        && t.status.as_ref() == Some(&st.id)
+                        && !owned.contains(&t.id)
+                })
                 .map(&card)
                 .collect();
             columns.push(KanbanColumn {
@@ -247,9 +255,11 @@ impl ProjectState {
     /// The relation graph: tasks as nodes, dependencies and generic links as labelled
     /// edges.
     pub fn flowchart(&self) -> FlowGraph {
+        let owned = self.checklist_owned();
         let nodes = self
             .tasks
             .values()
+            .filter(|t| !owned.contains(&t.id))
             .map(|t| FlowNode {
                 task: t.id.clone(),
                 name: t.name.clone(),
@@ -273,6 +283,7 @@ impl ProjectState {
                 scheduling: false,
             });
         }
+        edges.retain(|e| !owned.contains(&e.from) && !owned.contains(&e.to));
         FlowGraph { nodes, edges }
     }
 
@@ -288,10 +299,15 @@ impl ProjectState {
                 decision_children.extend(d.no_children.iter().cloned());
             }
         }
+        // Checklist templates and runs have their own projections
+        // (`checklist_run`, `checklist_outline`); the project-wide walk skips them.
+        let owned = self.checklist_owned();
         let mut roots: Vec<&Task> = self
             .tasks
             .values()
-            .filter(|t| t.parent.is_none() && !decision_children.contains(&t.id))
+            .filter(|t| {
+                t.parent.is_none() && !decision_children.contains(&t.id) && !owned.contains(&t.id)
+            })
             .collect();
         roots.sort_by(|a, b| a.order.cmp(&b.order).then_with(|| a.id.0.cmp(&b.id.0)));
         roots.into_iter().map(|t| t.id.clone()).collect()

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C36-ame-aapne
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 2040
+sequence: 2053
 chapter: 40
 type: word
 headword: અમે / આપણે

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:e215b680f4aaa438",
+  "lessonIds": [
+    "PT-C62-cobra",
+    "PT-C62-galinha",
+    "PT-C62-pato",
+    "PT-C62-ovelha",
+    "PT-C62-cabra"
+  ],
+  "tex": "portuguese/book/chapters/ch62-snake-hen-duck-sheep-goat.tex"
+}

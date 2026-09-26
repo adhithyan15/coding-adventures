@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Laying the Table",
+  "label": "ch:ml-laying-the-table",
+  "canDo": "I can name a glass, a bottle, a cup, a spoon and a plate.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ML-C134-plate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can name a glass, a bottle, a cup, a spoon and a plate.",
+    "assesses": [
+      "ML-LEX-C134-TABLE-03",
+      "ML-LEX-C134-TABLE-04",
+      "ML-LEX-C134-TABLE-05"
+    ]
+  }
+}

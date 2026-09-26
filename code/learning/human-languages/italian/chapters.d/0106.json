@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Beef, Vegetables, Mushroom, Beans, Cucumber",
+  "label": "ch:it-beef-vegetables-mushroom-beans-cucumber",
+  "canDo": "I can say beef, vegetables, a mushroom, beans and a cucumber.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R106-second-pass-food-and-drink",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say beef, vegetables, a mushroom, beans and a cucumber.",
+    "assesses": [
+      "IT-LEX-C106-CIBO106-03",
+      "IT-LEX-C106-CIBO106-04",
+      "IT-LEX-C106-CIBO106-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C58-flour",
+    "language": "gujarati",
+    "chapter": 58,
+    "sequence": 2963,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5102bfc2fd045093"
+  },
+  "findings": []
+}

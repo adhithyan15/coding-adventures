@@ -1,8 +1,8 @@
 Hindi, chapter 39: The People Around You.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 दोस्त (dost) — the friend, who is "the one chosen".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -46,7 +46,7 @@ Wrap-up Recall.
 How do you say "my friend" about a woman? (मेरी दोस्त (dost) — the possessive follows the person.) What did the root behind dōst first mean? (To taste, try, choose.) Why does Persian say d- where Avestan says z-? (A regular sound law.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 बच्चा / बच्ची / बछड़ा (bacchā / bacchī / bachṛā) — children and the inherited "yearling".
 
 Warm-up.
@@ -82,7 +82,7 @@ Wrap-up Recall.
 What is the feminine of बच्चा, and how does the possessive move? (बच्ची — merā bacchā, merī bacchī.) Is Persian bacca descended from Sanskrit vatsa? (No — they are sisters; Hindi's inherited cousin is बछड़ा.) What does the root mean? (Year — a child is a yearling.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 आदमी (ādmī) — the man, and the lean breaking backwards.
 
 Warm-up.
@@ -118,7 +118,7 @@ Wrap-up Recall.
 कुर्सी and आदमी (ādmī) end alike — same gender? (No.) What is the -ī of ādamī doing? (Arabic "belonging to" — "of Adam.") Is ʾādām from the word for ground? (No — Genesis is making a deliberate pun; the root is usually connected to redness.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 औरत (aurat) — the word for "woman," and which one to use.
 
 Warm-up.
@@ -156,3 +156,60 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Does Arabic عورة mean "woman"? (No — that sense is Persian.) Which goes on a public sign, which in conversation? (महिला written; औरत spoken.) Your family, minding every possessive? (Merā pitā, merī mātā, merā bhāī, merī bahin, merā bacchā.)
+
+
+Lesson 5 of 5.
+औ (au) — the standing form, and the longest build.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: औ, Script: built out of a letter you have and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+You have said औरत (aurat), "woman". Its first letter is the one this lesson writes.
+[pause 1 second]
+Before the new one: ◌ौ — how does it differ from ◌ो?
+[pause 2 seconds]
+That mark has a standing form, and it is the most elaborate character in this book.
+
+Script you'll notice: औ.
+औ — au.
+Same vowel, standing on its own with no consonant to ride on. Like झ, it arrives before any word that needs it, so there is nothing to find it inside yet.
+What it is made of:
+the joined upper and lower bowls of अ.
+a separately swept middle shoulder.
+the inner stem.
+the trailing stem.
+two separate upper arcs.
+the top shirorekhā.
+
+Script: built out of a letter you have.
+[a table of 3 rows, read aloud]
+what you see: अ. what it is: the base, taught long ago.
+what you see: two upper arcs. what it is: what makes it au.
+what you see: ◌ौ. what it is: the same vowel, riding on a consonant.
+The two arcs are the same two that the sitting mark carries above the bar. Whichever posture the vowel is in, au is the one with a pair of strokes — one idea, two shapes, and a count that decides it.
+
+Writing: औ.
+1. curve right around the upper bowl and continue down and around the lower bowl without lifting.
+2. lift and sweep the middle shoulder right.
+3. lift and descend the inner stem.
+4. lift and descend the trailing stem.
+5. lift at the trailing stem's headline junction and sweep the lower upper arc upward and left.
+6. lift at the same junction and sweep the taller upper arc upward and left.
+7. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 6. More than any other character you have drawn — take it slowly.
+Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari औ stroke order.svg’, panels 1–7, Wikimedia Commons, 5 August 2023.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at the mark and the letter side by side, and count the arcs on each]
+[pause 8 seconds for the answer]
+◌ौ, औ (au).
+[once you have stopped driving — trace: औ (au) once, slowly, counting the lifts]
+[your turn — say: which base letter you can see inside it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What sound is औ? (au.) What is its sitting form? (◌ौ.) How many pen lifts does it take? (Six — the most in the book.)

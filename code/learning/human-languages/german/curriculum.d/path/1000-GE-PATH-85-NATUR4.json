@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-85-NATUR4",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "GE-EXT-85-NATUR4"
+  ],
+  "after": []
+}

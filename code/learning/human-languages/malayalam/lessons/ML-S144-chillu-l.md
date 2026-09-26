@@ -9,17 +9,17 @@ type: writing
 headword: "ൽ"
 gloss: the single character ൽ — recognised inside words you already say
 romanization: "l"
-prerequisites: [ML-S111-letter-ca]
+prerequisites: [ML-S111-letter-ca, ML-C05-thooval]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-111]
+  knowledge: [ML-SCRIPT-RECOG-111, ML-LEX-ANCHOR-THOOVAL]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-144]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-111, ML-SCRIPT-RECOG-144]
+  knowledge: [ML-SCRIPT-RECOG-111, ML-SCRIPT-RECOG-144, ML-LEX-ANCHOR-THOOVAL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S111-letter-ca]
 # ൽ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-111] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-111, ML-LEX-ANCHOR-THOOVAL] -->
 
 [PAUSE 1s] Before the new one: ച — what does it do?
 

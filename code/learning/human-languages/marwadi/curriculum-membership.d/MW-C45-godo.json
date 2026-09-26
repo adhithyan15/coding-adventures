@@ -1,0 +1,11 @@
+{
+  "id": "MW-C45-godo",
+  "pathSegment": "MW-PATH-45-BODY45",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-45-BODY45",
+      "order": 4
+    }
+  ]
+}

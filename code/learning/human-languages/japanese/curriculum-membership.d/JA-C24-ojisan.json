@@ -1,0 +1,11 @@
+{
+  "id": "JA-C24-ojisan",
+  "pathSegment": "JA-PATH-24-HEALTH24",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-24-HEALTH24",
+      "order": 2
+    }
+  ]
+}

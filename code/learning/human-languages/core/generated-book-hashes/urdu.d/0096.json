@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:795a744fcdc27d5e",
+  "lessonIds": [
+    "UR-C96-lamha",
+    "UR-C96-jab",
+    "UR-C96-kidhar",
+    "UR-C96-daen",
+    "UR-C96-baen"
+  ],
+  "tex": "urdu/book/chapters/ch96-moment-when-where-to-the-right-to-the-left.tex"
+}

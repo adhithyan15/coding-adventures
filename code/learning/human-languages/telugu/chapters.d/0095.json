@@ -1,0 +1,21 @@
+{
+  "chapter": 95,
+  "title": "How Do You Say It?",
+  "label": "ch:te-how-do-you-say-it",
+  "canDo": "I can ask how to say something in Telugu, ask to be shown, ask someone to speak gently, and say I could not hear.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-R95-second-pass-asking",
+    "kind": "production",
+    "summary": "Complete TE-R95-second-pass-asking: courtesies and questions about the language, from cold.",
+    "assesses": [
+      "TE-LEX-C95-ASK-01",
+      "TE-LEX-C95-ASK-02",
+      "TE-LEX-C95-ASK-03",
+      "TE-LEX-C95-ASK-04",
+      "TE-LEX-C95-ASK-05"
+    ]
+  }
+}

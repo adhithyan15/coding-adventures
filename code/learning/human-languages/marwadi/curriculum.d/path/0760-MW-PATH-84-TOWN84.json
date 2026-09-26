@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-84-TOWN84",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "MW-EXT-84-TOWN84"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C55-laavvu",
+  "pathSegment": "GU-PATH-55-HOUSEWORK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-55-HOUSEWORK",
+      "order": 3
+    }
+  ]
+}

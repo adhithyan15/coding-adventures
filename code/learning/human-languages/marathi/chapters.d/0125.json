@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Tuesday, Wednesday, Thursday, Friday, Saturday",
+  "label": "ch:mr-tuesday-wednesday-thursday-friday-saturday",
+  "canDo": "I can say Tuesday, Wednesday, Thursday, Friday and Saturday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-C125-sanivar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say Tuesday, Wednesday, Thursday, Friday and Saturday.",
+    "assesses": [
+      "MR-LEX-C125-TIME125-03",
+      "MR-LEX-C125-TIME125-04",
+      "MR-LEX-C125-TIME125-05"
+    ]
+  }
+}

@@ -8,6 +8,7 @@ resolver = "2"
 # (independent of this `members` list) and applies the documented SKIP.
 exclude = ["os-kernel"]
 members = [
+    "v8-test262",
     "browser-bookmarks",
     "bounded-json",
     "browser-bookmarks-file",
@@ -194,8 +195,10 @@ members = [
     "engram-core-wasm",
     "engram-wasm",
     "photo-picker-mosaic-app",
+    "mosaic-ios-project",
     "html-lexer",
     "html-parser",
+    "html-tree-builder",
     "html-to-layout",
     "html-to-paint",
     "venture-browser-core",
@@ -1197,6 +1200,8 @@ members = [
   "markdown-docx",
   "task-core",
   "journal-core",
+  "journal-wasm",
+  "journal-mosaic-app",
   "task-mosaic-app",
   "visicalc-mosaic-app",
   "task-wasm",

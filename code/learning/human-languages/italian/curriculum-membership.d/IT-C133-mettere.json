@@ -1,0 +1,11 @@
+{
+  "id": "IT-C133-mettere",
+  "pathSegment": "IT-PATH-133-VERBI133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-133-VERBI133",
+      "order": 2
+    }
+  ]
+}

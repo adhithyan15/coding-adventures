@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:f329ccb484447aa5",
+  "lessonIds": [
+    "FR-C115-aspirateur",
+    "FR-C115-linge",
+    "FR-C115-lessive",
+    "FR-C115-fer",
+    "FR-C115-poche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch115.txt",
+  "json": "french/narration/ch115.json",
+  "textHash": "fnv1a64:2e7f50f2d6ac1087",
+  "jsonHash": "fnv1a64:da4bc482ab01b8aa",
+  "findings": []
+}

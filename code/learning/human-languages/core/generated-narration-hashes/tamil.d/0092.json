@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:484c0d19824c5e0d",
+  "lessonIds": [
+    "TA-C92-slowly",
+    "TA-C92-again",
+    "TA-C92-loudly",
+    "TA-C92-oneminute",
+    "TA-C92-wait"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch92.txt",
+  "json": "tamil/narration/ch92.json",
+  "textHash": "fnv1a64:b07ce129813210d7",
+  "jsonHash": "fnv1a64:c663372849a4757a",
+  "findings": []
+}

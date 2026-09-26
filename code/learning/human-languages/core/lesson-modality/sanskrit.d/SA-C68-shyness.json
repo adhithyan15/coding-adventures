@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C68-shyness",
+    "language": "sanskrit",
+    "chapter": 68,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc911e65e42e3f53"
+  },
+  "findings": []
+}

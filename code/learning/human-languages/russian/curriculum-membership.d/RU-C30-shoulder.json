@@ -1,0 +1,11 @@
+{
+  "id": "RU-C30-shoulder",
+  "pathSegment": "RU-PATH-30-BODY2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-30-BODY2",
+      "order": 3
+    }
+  ]
+}

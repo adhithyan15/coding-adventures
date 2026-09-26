@@ -1,0 +1,11 @@
+{
+  "id": "HI-C112-sahi",
+  "pathSegment": "HI-PATH-112-RIGHT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-112-RIGHT",
+      "order": 0
+    }
+  ]
+}

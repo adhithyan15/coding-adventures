@@ -1,0 +1,11 @@
+{
+  "id": "KA-C104-worker",
+  "pathSegment": "KA-PATH-104-JOBS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-104-JOBS",
+      "order": 1
+    }
+  ]
+}

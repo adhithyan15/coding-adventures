@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:fe8f8608b61d3698",
+  "lessonIds": [
+    "BN-C83-gari",
+    "BN-C83-bas",
+    "BN-C83-setu",
+    "BN-C83-mondir",
+    "BN-C83-hotel"
+  ],
+  "tex": "bengali/book/chapters/ch83-car-bus-bridge-temple-hotel.tex"
+}

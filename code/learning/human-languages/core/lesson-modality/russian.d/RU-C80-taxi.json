@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C80-taxi",
+    "language": "russian",
+    "chapter": 80,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff687d42e4ff7c7f"
+  },
+  "findings": []
+}

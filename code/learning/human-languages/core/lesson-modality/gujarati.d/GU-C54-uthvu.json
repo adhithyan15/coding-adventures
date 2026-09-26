@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C54-uthvu",
+    "language": "gujarati",
+    "chapter": 54,
+    "sequence": 2773,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9eca3a58e517e7a4"
+  },
+  "findings": []
+}
