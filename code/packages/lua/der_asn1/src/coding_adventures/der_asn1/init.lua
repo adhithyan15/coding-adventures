@@ -524,25 +524,35 @@ function M.decode_null(element)
     if #value ~= 0 then fail("non-empty-null", #require_element(element).header) end
 end
 
-local function oid_subidentifier(value, start, value_offset)
+local function oid_mul_add(hi, lo, extra, octet, allow_first_extra, offset)
+    local low_product = lo * 128 + (octet & 0x7f)
+    local next_lo = low_product % TWO32
+    local high_product = hi * 128 + (low_product // TWO32)
+    local next_hi = high_product % TWO32
+    local next_extra = extra * 128 + (high_product // TWO32)
+    local valid_extra = allow_first_extra
+        and next_extra <= 1
+        and (next_extra == 0 or (next_hi == 0 and next_lo <= 79))
+    if next_extra ~= 0 and not valid_extra then
+        fail("object-identifier-overflow", offset)
+    end
+    return next_hi, next_lo, next_extra
+end
+
+local function oid_subidentifier(value, start, value_offset, allow_first_extra)
     if value:byte(start) == 0x80 then
         fail("non-minimal-object-identifier", value_offset + start - 1)
     end
-    local hi, lo = 0, 0
+    local hi, lo, extra = 0, 0, 0
     local index = start
     while true do
         if index > #value then fail("unterminated-object-identifier", value_offset + index - 1) end
         local octet = value:byte(index)
-        hi, lo = wide_mul_add(
-            hi,
-            lo,
-            128,
-            octet & 0x7f,
-            "object-identifier-overflow",
-            value_offset + index - 1
+        hi, lo, extra = oid_mul_add(
+            hi, lo, extra, octet, allow_first_extra, value_offset + index - 1
         )
         index = index + 1
-        if (octet & 0x80) == 0 then return hi, lo, index end
+        if (octet & 0x80) == 0 then return hi, lo, extra, index end
     end
 end
 
@@ -556,12 +566,14 @@ local function decode_oid(element, tag_class, number, limits)
     local value_offset = #require_element(element).header
     local configured = normalize_limits(limits)
     if #value == 0 then fail("empty-object-identifier", value_offset) end
-    local first_hi, first_lo, index = oid_subidentifier(value, 1, value_offset)
+    local first_hi, first_lo, first_extra, index = oid_subidentifier(value, 1, value_offset, true)
     local arcs
-    if first_hi == 0 and first_lo < 40 then
+    if first_extra == 0 and first_hi == 0 and first_lo < 40 then
         arcs = { "0", tostring(first_lo) }
-    elseif first_hi == 0 and first_lo < 80 then
+    elseif first_extra == 0 and first_hi == 0 and first_lo < 80 then
         arcs = { "1", tostring(first_lo - 40) }
+    elseif first_extra == 1 then
+        arcs = { "2", wide_decimal(U32_MAX, (TWO32 + first_lo) - 80) }
     else
         local arc_hi, arc_lo = wide_sub_small(first_hi, first_lo, 80)
         arcs = { "2", wide_decimal(arc_hi, arc_lo) }
@@ -569,8 +581,9 @@ local function decode_oid(element, tag_class, number, limits)
     if #arcs > configured.max_oid_arcs then fail("oid-arc-limit-exceeded", value_offset) end
     while index <= #value do
         local arc_start = index
-        local hi, lo
-        hi, lo, index = oid_subidentifier(value, index, value_offset)
+        local hi, lo, extra
+        hi, lo, extra, index = oid_subidentifier(value, index, value_offset, false)
+        assert(extra == 0)
         if #arcs >= configured.max_oid_arcs then
             fail("oid-arc-limit-exceeded", value_offset + arc_start - 1)
         end

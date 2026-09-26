@@ -355,6 +355,14 @@ describe("portable DER ASN.1 conformance", function()
         arcs[1] = "9"
         assert.equals("1", first:arcs()[1])
 
+        local combined = hex_to_bytes("8280808080808080804f")
+        local universal = der_asn1.Decoder.new():decode_exact("\x06\x0a" .. combined)
+        local universal_oid = der_asn1.decode_object_identifier(universal)
+        assert.same({ "2", "18446744073709551615" }, universal_oid:arcs())
+        local implicit = der_asn1.Decoder.new():decode_exact("\x88\x0a" .. combined)
+        local implicit_oid = der_asn1.decode_implicit_object_identifier(implicit, 8)
+        assert.same({ "2", "18446744073709551615" }, implicit_oid:arcs())
+
         local _, problem = capture(function()
             return der_asn1.Decoder.new():decode_exact("\x04\x04dead")
         end)
