@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Electric fan, Scissors, Hammer, Nail, Ladder",
+  "label": "ch:ta-electric-fan-scissors-hammer-nail-ladder",
+  "canDo": "I can say an electric fan, scissors, a hammer, a nail and a ladder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C135-eni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say an electric fan, scissors, a hammer, a nail and a ladder.",
+    "assesses": [
+      "TA-LEX-C135-THINGS135-03",
+      "TA-LEX-C135-THINGS135-04",
+      "TA-LEX-C135-THINGS135-05"
+    ]
+  }
+}

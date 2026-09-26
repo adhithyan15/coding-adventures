@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:d3f63d7141f34acf",
+  "lessonIds": [
+    "TA-C124-takkali",
+    "TA-C124-milakay",
+    "TA-C124-inci",
+    "TA-C124-puntu",
+    "TA-C124-ten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch124.txt",
+  "json": "tamil/narration/ch124.json",
+  "textHash": "fnv1a64:9f8c2ba3189e7a4c",
+  "jsonHash": "fnv1a64:f20f18b9701cd9d2",
+  "findings": []
+}

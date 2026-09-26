@@ -1,0 +1,11 @@
+{
+  "id": "TA-C130-eli",
+  "pathSegment": "TA-PATH-130-THINGS130",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-130-THINGS130",
+      "order": 2
+    }
+  ]
+}

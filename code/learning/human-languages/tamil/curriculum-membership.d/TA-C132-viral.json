@@ -1,0 +1,11 @@
+{
+  "id": "TA-C132-viral",
+  "pathSegment": "TA-PATH-132-THINGS132",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-132-THINGS132",
+      "order": 4
+    }
+  ]
+}

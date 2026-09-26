@@ -1,0 +1,636 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 113,
+  "title": "Straight ahead, Near, Distance, Behind, In front",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:82a6b1f40bbe89e1",
+  "lessons": [
+    {
+      "id": "TA-C113-neraka",
+      "sequence": 4900,
+      "title": "நேராக (nērāka) — straight ahead",
+      "headword": "நேராக",
+      "romanization": "nērāka",
+      "gloss": "straight ahead",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5066292fb6ee2204",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for are you well? (spoken), then the Tamil for how are you? (spoken)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நேராக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேராக — nērāka — \"straight ahead\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nērāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nērāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nērāka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nērāka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nērāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nērāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for are you well? (spoken), then the Tamil for how are you? (spoken), then say nērāka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for are you well? (spoken), then the Tamil for how are you? (spoken), then say *nērāka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நேராக (nērāka) mean? (\"Straight ahead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C113-arukil",
+      "sequence": 4910,
+      "title": "அருகில் (arukil) — near, close by",
+      "headword": "அருகில்",
+      "romanization": "arukil",
+      "gloss": "near, close by",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01b4b0fc8ea265ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for how are you? (spoken), then the Tamil for straight ahead."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One slot changes: இங்கே, அங்கே, எங்கே. Here, there, where?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அருகில்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அருகில் — arukil — \"near, close by\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arukil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arukil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arukil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arukil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say arukil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *arukil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for how are you? (spoken), then the Tamil for straight ahead, then say arukil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for how are you? (spoken), then the Tamil for straight ahead, then say *arukil* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அருகில் (arukil) mean? (\"Near, close by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C113-turam",
+      "sequence": 4920,
+      "title": "தூரம் (tūram) — distance; far",
+      "headword": "தூரம்",
+      "romanization": "tūram",
+      "gloss": "distance; far",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b71fedc475a25273",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for straight ahead, then the Tamil for near."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தூரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தூரம் — tūram — \"distance; far\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tūram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tūram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for straight ahead, then the Tamil for near, then say tūram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for straight ahead, then the Tamil for near, then say *tūram* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தூரம் (tūram) mean? (\"Distance; far\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C113-pinnal",
+      "sequence": 4930,
+      "title": "பின்னால் (piṉṉāl) — behind",
+      "headword": "பின்னால்",
+      "romanization": "piṉṉāl",
+      "gloss": "behind",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb30a52b49315c3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for near, then the Tamil for distance; far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பின்னால்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பின்னால் — piṉṉāl — \"behind\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṉṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṉṉāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṉṉāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṉṉāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say piṉṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *piṉṉāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for near, then the Tamil for distance; far, then say piṉṉāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for near, then the Tamil for distance; far, then say *piṉṉāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பின்னால் (piṉṉāl) mean? (\"Behind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C113-munnal",
+      "sequence": 4940,
+      "title": "முன்னால் (muṉṉāl) — in front",
+      "headword": "முன்னால்",
+      "romanization": "muṉṉāl",
+      "gloss": "in front",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e2b1d458be083cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for distance; far, then the Tamil for behind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னால்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னால் — muṉṉāl — \"in front\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say muṉṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *muṉṉāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for distance; far, then the Tamil for behind, then say muṉṉāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for distance; far, then the Tamil for behind, then say *muṉṉāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னால் (muṉṉāl) mean? (\"In front\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

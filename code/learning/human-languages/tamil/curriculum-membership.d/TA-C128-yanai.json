@@ -1,0 +1,11 @@
+{
+  "id": "TA-C128-yanai",
+  "pathSegment": "TA-PATH-128-THINGS128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-128-THINGS128",
+      "order": 3
+    }
+  ]
+}

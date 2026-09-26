@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C144-kanamana",
+    "language": "tamil",
+    "chapter": 144,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:567af99489cd26d2"
+  },
+  "findings": []
+}

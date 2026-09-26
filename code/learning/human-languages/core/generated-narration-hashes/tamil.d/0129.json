@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:7d803d0fd27e7057",
+  "lessonIds": [
+    "TA-C129-cinkam",
+    "TA-C129-karati",
+    "TA-C129-kuranku",
+    "TA-C129-muyal",
+    "TA-C129-man2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch129.txt",
+  "json": "tamil/narration/ch129.json",
+  "textHash": "fnv1a64:a27a76050093f28f",
+  "jsonHash": "fnv1a64:b4ce5443bd345c8f",
+  "findings": []
+}

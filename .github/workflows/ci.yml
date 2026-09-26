@@ -2954,14 +2954,14 @@ jobs:
           # landed in the wrong scope would still satisfy the grep while the
           # first symptom at runtime is an `Await` going unanswered. So the
           # import and the call site are both checked, and the call is required
-          # to come after the host assignment it takes as an argument.
+          # to come after the fresh local host is assigned to app state.
           python3 - "$engram_output/flutter/lib/main.dart" <<'PY'
           import sys
 
           text = open(sys.argv[1], encoding="utf-8").read()
           assert "import 'engram_effects.dart';" in text, "handler is never imported"
-          assign = text.index("_mosaicHost = widget.mosaicHost")
-          install = text.index("installEngramEffects(")
+          assign = text.index("_mosaicHost = host;")
+          install = text.index("installEngramEffects(host);")
           assert install > assign, "handler is installed before the host exists"
           PY
 

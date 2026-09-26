@@ -1,0 +1,636 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 153,
+  "title": "To climb, To get down, To turn, To join, To bathe",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e1ceab8dff4a9047",
+  "lessons": [
+    {
+      "id": "TA-C153-eru",
+      "sequence": 7100,
+      "title": "ஏறு (ēṟu) — to climb, to get on",
+      "headword": "ஏறு",
+      "romanization": "ēṟu",
+      "gloss": "to climb, to get on",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf60da6e2779477e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to fly, then the Tamil for to fall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏறு — ēṟu — \"to climb, to get on\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ēṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ēṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to fly, then the Tamil for to fall, then say ēṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to fly, then the Tamil for to fall, then say *ēṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏறு (ēṟu) mean? (\"To climb, to get on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C153-iranku",
+      "sequence": 7110,
+      "title": "இறங்கு (iṟaṅku) — to get down, to get off",
+      "headword": "இறங்கு",
+      "romanization": "iṟaṅku",
+      "gloss": "to get down, to get off",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b71ce951a09578bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to fall, then the Tamil for to climb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இறங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இறங்கு — iṟaṅku — \"to get down, to get off\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṟaṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṟaṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say iṟaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *iṟaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to fall, then the Tamil for to climb, then say iṟaṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to fall, then the Tamil for to climb, then say *iṟaṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இறங்கு (iṟaṅku) mean? (\"To get down, to get off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C153-tirumpu",
+      "sequence": 7120,
+      "title": "திரும்பு (tirumpu) — to turn, to return",
+      "headword": "திரும்பு",
+      "romanization": "tirumpu",
+      "gloss": "to turn, to return",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd20cf75fed6be2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to climb, then the Tamil for to get down."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say வா, then build on varu-: வருகிறேன். Then பார் and கேள்."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திரும்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திரும்பு — tirumpu — \"to turn, to return\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirumpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirumpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirumpu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirumpu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tirumpu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tirumpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to climb, then the Tamil for to get down, then say tirumpu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to climb, then the Tamil for to get down, then say *tirumpu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திரும்பு (tirumpu) mean? (\"To turn, to return\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C153-cer",
+      "sequence": 7130,
+      "title": "சேர் (cēr) — to join, to reach",
+      "headword": "சேர்",
+      "romanization": "cēr",
+      "gloss": "to join, to reach",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2a7b42e3bd7b450",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to get down, then the Tamil for to turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சேர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சேர் — cēr — \"to join, to reach\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cēr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cēr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to get down, then the Tamil for to turn, then say cēr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to get down, then the Tamil for to turn, then say *cēr* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சேர் (cēr) mean? (\"To join, to reach\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C153-kuli",
+      "sequence": 7140,
+      "title": "குளி (kuḷi) — to bathe",
+      "headword": "குளி",
+      "romanization": "kuḷi",
+      "gloss": "to bathe",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef1e26f977d68b9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to turn, then the Tamil for to join."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குளி — kuḷi — \"to bathe\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kuḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kuḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to turn, then the Tamil for to join, then say kuḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to turn, then the Tamil for to join, then say *kuḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குளி (kuḷi) mean? (\"To bathe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C123-venkayam",
+    "language": "tamil",
+    "chapter": 123,
+    "sequence": 5490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45fe1bef1fab8d9b"
+  },
+  "findings": []
+}

@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 149,
+  "title": "Famous, Dangerous, Safe, True, False",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cfa1830cdc33500b",
+  "lessons": [
+    {
+      "id": "TA-C149-pirapalamana",
+      "sequence": 6900,
+      "title": "பிரபலமான (pirapalamāṉa) — famous",
+      "headword": "பிரபலமான",
+      "romanization": "pirapalamāṉa",
+      "gloss": "famous",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f2cf994646d9d1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for dry, then the Tamil for wet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிரபலமான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரபலமான — pirapalamāṉa — \"famous\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pirapalamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pirapalamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pirapalamāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pirapalamāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pirapalamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pirapalamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for dry, then the Tamil for wet, then say pirapalamāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for dry, then the Tamil for wet, then say *pirapalamāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிரபலமான (pirapalamāṉa) mean? (\"Famous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C149-apattana",
+      "sequence": 6910,
+      "title": "ஆபத்தான (āpattāṉa) — dangerous",
+      "headword": "ஆபத்தான",
+      "romanization": "āpattāṉa",
+      "gloss": "dangerous",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d04c890ce7d9c480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for wet, then the Tamil for famous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆபத்தான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆபத்தான — āpattāṉa — \"dangerous\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpattāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpattāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpattāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpattāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āpattāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āpattāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for wet, then the Tamil for famous, then say āpattāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for wet, then the Tamil for famous, then say *āpattāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆபத்தான (āpattāṉa) mean? (\"Dangerous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C149-patukappana",
+      "sequence": 6920,
+      "title": "பாதுகாப்பான (pātukāppāṉa) — safe",
+      "headword": "பாதுகாப்பான",
+      "romanization": "pātukāppāṉa",
+      "gloss": "safe",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9c9fc0b181dac81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for famous, then the Tamil for dangerous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பாதுகாப்பான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாதுகாப்பான — pātukāppāṉa — \"safe\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātukāppāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātukāppāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātukāppāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātukāppāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pātukāppāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pātukāppāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for famous, then the Tamil for dangerous, then say pātukāppāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for famous, then the Tamil for dangerous, then say *pātukāppāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பாதுகாப்பான (pātukāppāṉa) mean? (\"Safe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C149-unmaiyana",
+      "sequence": 6930,
+      "title": "உண்மையான (uṇmaiyāṉa) — true",
+      "headword": "உண்மையான",
+      "romanization": "uṇmaiyāṉa",
+      "gloss": "true",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18783e21d2e0fefd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for dangerous, then the Tamil for safe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உண்மையான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உண்மையான — uṇmaiyāṉa — \"true\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇmaiyāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇmaiyāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṇmaiyāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṇmaiyāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say uṇmaiyāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *uṇmaiyāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for dangerous, then the Tamil for safe, then say uṇmaiyāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for dangerous, then the Tamil for safe, then say *uṇmaiyāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உண்மையான (uṇmaiyāṉa) mean? (\"True\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C149-poyyana",
+      "sequence": 6940,
+      "title": "பொய்யான (poyyāṉa) — false",
+      "headword": "பொய்யான",
+      "romanization": "poyyāṉa",
+      "gloss": "false",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b8b1f3a9493e505",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for safe, then the Tamil for true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பொய்யான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பொய்யான — poyyāṉa — \"false\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poyyāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poyyāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poyyāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poyyāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say poyyāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *poyyāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for safe, then the Tamil for true, then say poyyāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for safe, then the Tamil for true, then say *poyyāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பொய்யான (poyyāṉa) mean? (\"False\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

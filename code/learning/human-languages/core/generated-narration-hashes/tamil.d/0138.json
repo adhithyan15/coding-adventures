@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:51a646b0868f9eb4",
+  "lessonIds": [
+    "TA-C138-tervu",
+    "TA-C138-patil",
+    "TA-C138-puli2",
+    "TA-C138-milaku",
+    "TA-C138-katuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch138.txt",
+  "json": "tamil/narration/ch138.json",
+  "textHash": "fnv1a64:b610f4d17be5841f",
+  "jsonHash": "fnv1a64:53d30a8c695ad8b7",
+  "findings": []
+}

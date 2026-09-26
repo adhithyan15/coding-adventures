@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 145,
+  "title": "Soft, Hard, Clean, Dirty, Fast",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b20eab9eefdfaac",
+  "lessons": [
+    {
+      "id": "TA-C145-menmaiyana",
+      "sequence": 6650,
+      "title": "மென்மையான (meṉmaiyāṉa) — soft",
+      "headword": "மென்மையான",
+      "romanization": "meṉmaiyāṉa",
+      "gloss": "soft",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a16192f9f81d5a28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for heavy, then the Tamil for light."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மென்மையான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மென்மையான — meṉmaiyāṉa — \"soft\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meṉmaiyāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meṉmaiyāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meṉmaiyāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meṉmaiyāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say meṉmaiyāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *meṉmaiyāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for heavy, then the Tamil for light, then say meṉmaiyāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for heavy, then the Tamil for light, then say *meṉmaiyāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மென்மையான (meṉmaiyāṉa) mean? (\"Soft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C145-katinamana",
+      "sequence": 6660,
+      "title": "கடினமான (kaṭiṉamāṉa) — hard, difficult",
+      "headword": "கடினமான",
+      "romanization": "kaṭiṉamāṉa",
+      "gloss": "hard, difficult",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50d524fde006a8dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for light, then the Tamil for soft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கடினமான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடினமான — kaṭiṉamāṉa — \"hard, difficult\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭiṉamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭiṉamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭiṉamāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭiṉamāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṭiṉamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṭiṉamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for light, then the Tamil for soft, then say kaṭiṉamāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for light, then the Tamil for soft, then say *kaṭiṉamāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கடினமான (kaṭiṉamāṉa) mean? (\"Hard, difficult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C145-cuttamana",
+      "sequence": 6670,
+      "title": "சுத்தமான (cuttamāṉa) — clean",
+      "headword": "சுத்தமான",
+      "romanization": "cuttamāṉa",
+      "gloss": "clean",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3da7ec31b3616eb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for soft, then the Tamil for hard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுத்தமான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுத்தமான — cuttamāṉa — \"clean\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuttamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuttamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuttamāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuttamāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cuttamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cuttamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for soft, then the Tamil for hard, then say cuttamāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for soft, then the Tamil for hard, then say *cuttamāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுத்தமான (cuttamāṉa) mean? (\"Clean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C145-alukkana",
+      "sequence": 6680,
+      "title": "அழுக்கான (aḻukkāṉa) — dirty",
+      "headword": "அழுக்கான",
+      "romanization": "aḻukkāṉa",
+      "gloss": "dirty",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70546039dd574b7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hard, then the Tamil for clean."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அழுக்கான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அழுக்கான — aḻukkāṉa — \"dirty\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḻukkāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḻukkāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aḻukkāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aḻukkāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say aḻukkāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *aḻukkāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hard, then the Tamil for clean, then say aḻukkāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hard, then the Tamil for clean, then say *aḻukkāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அழுக்கான (aḻukkāṉa) mean? (\"Dirty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C145-vekamana",
+      "sequence": 6690,
+      "title": "வேகமான (vēkamāṉa) — fast",
+      "headword": "வேகமான",
+      "romanization": "vēkamāṉa",
+      "gloss": "fast",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3ef23eb936f23ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for clean, then the Tamil for dirty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேகமான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேகமான — vēkamāṉa — \"fast\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēkamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēkamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēkamāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēkamāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vēkamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vēkamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for clean, then the Tamil for dirty, then say vēkamāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for clean, then the Tamil for dirty, then say *vēkamāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வேகமான (vēkamāṉa) mean? (\"Fast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

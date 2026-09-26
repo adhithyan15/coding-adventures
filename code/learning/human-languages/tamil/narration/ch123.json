@@ -1,0 +1,636 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 123,
+  "title": "Vegetables, Banana, Mango, Coconut, Onion",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:78d2e348c8d835af",
+  "lessons": [
+    {
+      "id": "TA-C123-kaykari",
+      "sequence": 5450,
+      "title": "காய்கறி (kāykaṟi) — vegetables",
+      "headword": "காய்கறி",
+      "romanization": "kāykaṟi",
+      "gloss": "vegetables",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bd2ccf157ebbf12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a fish, then the Tamil for meat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காய்கறி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காய்கறி — kāykaṟi — \"vegetables\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāykaṟi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāykaṟi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāykaṟi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāykaṟi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kāykaṟi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kāykaṟi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a fish, then the Tamil for meat, then say kāykaṟi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a fish, then the Tamil for meat, then say *kāykaṟi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காய்கறி (kāykaṟi) mean? (\"Vegetables\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C123-valaippalam",
+      "sequence": 5460,
+      "title": "வாழைப்பழம் (vāḻaippaḻam) — a banana",
+      "headword": "வாழைப்பழம்",
+      "romanization": "vāḻaippaḻam",
+      "gloss": "a banana",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87016e0ae4488049",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for meat, then the Tamil for vegetables."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வாழைப்பழம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாழைப்பழம் — vāḻaippaḻam — \"a banana\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḻaippaḻam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḻaippaḻam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḻaippaḻam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḻaippaḻam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vāḻaippaḻam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vāḻaippaḻam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for meat, then the Tamil for vegetables, then say vāḻaippaḻam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for meat, then the Tamil for vegetables, then say *vāḻaippaḻam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வாழைப்பழம் (vāḻaippaḻam) mean? (\"A banana\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C123-mampalam",
+      "sequence": 5470,
+      "title": "மாம்பழம் (māmpaḻam) — a mango",
+      "headword": "மாம்பழம்",
+      "romanization": "māmpaḻam",
+      "gloss": "a mango",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4826c9fa49e8e0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for vegetables, then the Tamil for a banana."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say எனக்குத் தமிழ் பிடிக்கும், then the plain verb for wanting, விரும்பு."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மாம்பழம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மாம்பழம் — māmpaḻam — \"a mango\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māmpaḻam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māmpaḻam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māmpaḻam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māmpaḻam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say māmpaḻam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *māmpaḻam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for vegetables, then the Tamil for a banana, then say māmpaḻam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for vegetables, then the Tamil for a banana, then say *māmpaḻam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மாம்பழம் (māmpaḻam) mean? (\"A mango\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C123-tenkay",
+      "sequence": 5480,
+      "title": "தேங்காய் (tēṅkāy) — a coconut",
+      "headword": "தேங்காய்",
+      "romanization": "tēṅkāy",
+      "gloss": "a coconut",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d22afe7fa170296",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a banana, then the Tamil for a mango."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தேங்காய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தேங்காய் — tēṅkāy — \"a coconut\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēṅkāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēṅkāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēṅkāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēṅkāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tēṅkāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tēṅkāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a banana, then the Tamil for a mango, then say tēṅkāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a banana, then the Tamil for a mango, then say *tēṅkāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தேங்காய் (tēṅkāy) mean? (\"A coconut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C123-venkayam",
+      "sequence": 5490,
+      "title": "வெங்காயம் (veṅkāyam) — an onion",
+      "headword": "வெங்காயம்",
+      "romanization": "veṅkāyam",
+      "gloss": "an onion",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45fe1bef1fab8d9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a mango, then the Tamil for a coconut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெங்காயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெங்காயம் — veṅkāyam — \"an onion\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṅkāyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṅkāyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṅkāyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṅkāyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say veṅkāyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *veṅkāyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a mango, then the Tamil for a coconut, then say veṅkāyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a mango, then the Tamil for a coconut, then say *veṅkāyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெங்காயம் (veṅkāyam) mean? (\"An onion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C131-erumpu",
+    "language": "tamil",
+    "chapter": 131,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8a343055c079c58"
+  },
+  "findings": []
+}

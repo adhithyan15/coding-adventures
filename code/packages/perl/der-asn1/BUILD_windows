@@ -1,0 +1,2 @@
+set "PERL5LIB=..\der-tlv\lib;%PERL5LIB%" && if exist C:\Strawberry\perl\bin\perl.exe (C:\Strawberry\perl\bin\perl.exe -Ilib -c lib\CodingAdventures\DerAsn1.pm) else (perl -Ilib -c lib\CodingAdventures\DerAsn1.pm)
+set "PERL5LIB=..\der-tlv\lib;%PERL5LIB%" && if exist C:\Strawberry\perl\bin\perl.exe (C:\Strawberry\perl\bin\perl.exe -S prove -l -v t\) else (perl -S prove -l -v t\)

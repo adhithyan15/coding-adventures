@@ -1,0 +1,11 @@
+{
+  "id": "TA-C142-vattu",
+  "pathSegment": "TA-PATH-142-THINGS142",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-142-THINGS142",
+      "order": 1
+    }
+  ]
+}

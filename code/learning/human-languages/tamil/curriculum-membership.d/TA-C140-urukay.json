@@ -1,0 +1,11 @@
+{
+  "id": "TA-C140-urukay",
+  "pathSegment": "TA-PATH-140-THINGS140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-140-THINGS140",
+      "order": 2
+    }
+  ]
+}

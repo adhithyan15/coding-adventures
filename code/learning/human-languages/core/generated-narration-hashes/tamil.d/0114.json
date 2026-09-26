@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:331da87923782f73",
+  "lessonIds": [
+    "TA-C114-natuvil",
+    "TA-C114-teru",
+    "TA-C114-palam",
+    "TA-C114-punka",
+    "TA-C114-koyil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch114.txt",
+  "json": "tamil/narration/ch114.json",
+  "textHash": "fnv1a64:fcb6d077fd5975bf",
+  "jsonHash": "fnv1a64:f71d9d25fa6e7a5a",
+  "findings": []
+}

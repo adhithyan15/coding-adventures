@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:86bb4d29098c8600",
+  "lessonIds": [
+    "TA-C123-kaykari",
+    "TA-C123-valaippalam",
+    "TA-C123-mampalam",
+    "TA-C123-tenkay",
+    "TA-C123-venkayam"
+  ],
+  "tex": "tamil/book/chapters/ch123-vegetables-banana-mango-coconut-onion.tex"
+}

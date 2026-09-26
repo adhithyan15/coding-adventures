@@ -1,0 +1,11 @@
+{
+  "id": "TA-C147-tairiyamana",
+  "pathSegment": "TA-PATH-147-QUAL147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-147-QUAL147",
+      "order": 4
+    }
+  ]
+}

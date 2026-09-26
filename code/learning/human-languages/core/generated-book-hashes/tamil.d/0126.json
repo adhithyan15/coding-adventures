@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:b36db1c92a08b6d6",
+  "lessonIds": [
+    "TA-C126-eri",
+    "TA-C126-kulam",
+    "TA-C126-katu",
+    "TA-C126-ilai",
+    "TA-C126-man"
+  ],
+  "tex": "tamil/book/chapters/ch126-lake-pond-forest-leaf-soil.tex"
+}

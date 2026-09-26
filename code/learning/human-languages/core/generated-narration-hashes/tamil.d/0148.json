@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:dc5c44d7f6d1e03d",
+  "lessonIds": [
+    "TA-C148-alamana",
+    "TA-C148-akalamana",
+    "TA-C148-kurukiya",
+    "TA-C148-kaynta",
+    "TA-C148-nanainta",
+    "TA-R148-first-pass-animals-and-the-body",
+    "TA-R148-second-pass-the-body-and-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch148.txt",
+  "json": "tamil/narration/ch148.json",
+  "textHash": "fnv1a64:130b7e45e8ffa358",
+  "jsonHash": "fnv1a64:e5be60008bdc3596",
+  "findings": []
+}

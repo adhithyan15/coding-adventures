@@ -7,9 +7,17 @@
  */
 
 import { describe, expect, it } from "vitest";
+import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { measureLetterAnchoring } from "../src/letter-anchoring.js";
 import { defaultCurriculumRoot, loadLessons } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
+import { loadLetterAnchoringCeilingPins } from "./letter-anchoring-ceiling-pins.js";
+
+const CEILING_DIR = fileURLToPath(new URL("./letter-anchoring-ceilings/", import.meta.url));
+const CEILINGS = loadLetterAnchoringCeilingPins(CEILING_DIR);
 
 // TAMIL LETTER KA, MA, VA; TAMIL SIGN VIRAMA.
 const KA = "க";
@@ -146,6 +154,68 @@ describe("anchoring", () => {
   it("skips a Latin-script track: its reader can already write the alphabet", () => {
     const report = measureLetterAnchoring([lesson("ES-C1", 10, { headword: "hola", language: "spanish" })]);
     expect(report.tracks).toEqual([]);
+  });
+});
+
+describe("letter-anchoring ceiling owner discovery", () => {
+  function fixture(): string {
+    return mkdtempSync(join(tmpdir(), "letter-anchoring-ceilings-"));
+  }
+
+  it("rejects empty, unsafe, nested, and malformed owner sets", () => {
+    const root = fixture();
+    try {
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/must not be empty/);
+      writeFileSync(join(root, "bad.txt"), "{}\n");
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/unsafe/);
+      rmSync(join(root, "bad.txt"));
+
+      mkdirSync(join(root, "nested.json"));
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/real file/);
+      rmSync(join(root, "nested.json"), { recursive: true });
+
+      writeFileSync(join(root, "toy.json"), '{"cold":0,"buildsToward":0,"unwritten":-1}\n');
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/non-negative/);
+      writeFileSync(join(root, "toy.json"), '{"cold":0,"buildsToward":0,"unwritten":0,"extra":0}\n');
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/expected exactly/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects uppercase and case-fold-colliding owner names", () => {
+    const root = fixture();
+    const pin = '{"cold":0,"buildsToward":0,"unwritten":0}\n';
+    try {
+      writeFileSync(join(root, "Toy.json"), pin);
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/use lowercase/);
+      try {
+        writeFileSync(join(root, "toy.json"), pin, { flag: "wx" });
+      } catch {
+        return;
+      }
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/case-fold/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a symlink owner without opening its target", () => {
+    const root = fixture();
+    const outside = fixture();
+    const target = join(outside, "target.json");
+    writeFileSync(target, '{"cold":0,"buildsToward":0,"unwritten":0}\n');
+    try {
+      try {
+        symlinkSync(target, join(root, "toy.json"), "file");
+      } catch {
+        return;
+      }
+      expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/real file/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+      rmSync(outside, { recursive: true, force: true });
+    }
   });
 });
 
@@ -290,31 +360,11 @@ describe("the real corpus", () => {
   // weather). The two sets left, ਟ ਠ ਡ (chapter 3) and ੜ ਘ ਦ (chapter 7), sit in
   // chapters whose R1 retrievals are one to three lessons apart, so a word
   // inserted there pushes older atoms out of R1.
-  const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
-    arabic: [0, 4, 0],
-    bengali: [0, 11, 0],
-    chinese: [0, 51, 0],
-    gujarati: [4, 4, 0],
-    hindi: [0, 1, 0],
-    japanese: [1, 35, 0],
-    kannada: [0, 0, 0],
-    malayalam: [2, 12, 0],
-    marathi: [6, 4, 0],
-    marwadi: [0, 49, 0],
-    persian: [0, 4, 0],
-    punjabi: [2, 2, 0],
-    russian: [0, 0, 0],
-    sanskrit: [0, 0, 0],
-    tamil: [0, 9, 0],
-    telugu: [0, 0, 0],
-    urdu: [0, 5, 0],
-  };
-
   it("measures every non-Latin track", () => {
     expect(report.tracks.map((entry) => entry.language)).toEqual(Object.keys(CEILINGS));
   });
 
-  for (const [language, [cold, buildsToward, unwritten]] of Object.entries(CEILINGS)) {
+  for (const [language, { cold, buildsToward, unwritten }] of Object.entries(CEILINGS)) {
     it(`${language} does not get less gentle to write`, () => {
       const measured = track(report, language);
       expect(measured.cold, `${language} cold letter lessons`).toBeLessThanOrEqual(cold);

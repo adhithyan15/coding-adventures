@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C136-pantu",
+    "language": "tamil",
+    "chapter": 136,
+    "sequence": 6160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:512a7969359e460d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:e36f1680c9467c6e",
+  "lessonIds": [
+    "TA-C116-tottam",
+    "TA-C116-mulai",
+    "TA-C116-tiruppam",
+    "TA-C116-mutiyum",
+    "TA-C116-tiramai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch116.txt",
+  "json": "tamil/narration/ch116.json",
+  "textHash": "fnv1a64:79e3ee9babba8ad8",
+  "jsonHash": "fnv1a64:b3dced8a206e9a0b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "To break, To put, To send, To look for, To teach",
+  "label": "ch:ta-to-break-to-put-to-send-to-look-for-to-teach",
+  "canDo": "I can say to break, to put, to send, to look for and to teach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C151-karpi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: i can say to break, to put, to send, to look for and to teach.",
+    "assesses": [
+      "TA-LEX-C151-ACT151-03",
+      "TA-LEX-C151-ACT151-04",
+      "TA-LEX-C151-ACT151-05"
+    ]
+  }
+}

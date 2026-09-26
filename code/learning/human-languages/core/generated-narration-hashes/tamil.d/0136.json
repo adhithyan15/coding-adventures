@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:f5ccea8c8b0c1e7d",
+  "lessonIds": [
+    "TA-C136-kuppi",
+    "TA-C136-pantu",
+    "TA-C136-pattam",
+    "TA-C136-pommai",
+    "TA-C136-panappai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch136.txt",
+  "json": "tamil/narration/ch136.json",
+  "textHash": "fnv1a64:ad140cf36d9af454",
+  "jsonHash": "fnv1a64:03582648af33abb2",
+  "findings": []
+}

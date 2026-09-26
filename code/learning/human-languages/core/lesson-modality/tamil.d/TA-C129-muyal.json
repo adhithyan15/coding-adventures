@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C129-muyal",
+    "language": "tamil",
+    "chapter": 129,
+    "sequence": 5780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e88d13f98dc31b8d"
+  },
+  "findings": []
+}

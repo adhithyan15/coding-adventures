@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:40c68f86528e25ed",
+  "lessonIds": [
+    "TA-C137-motiram",
+    "TA-C137-valaiyal",
+    "TA-C137-kalurai",
+    "TA-C137-kaiyurai",
+    "TA-C137-vakuppu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch137.txt",
+  "json": "tamil/narration/ch137.json",
+  "textHash": "fnv1a64:ec7a4235aa544474",
+  "jsonHash": "fnv1a64:a9fed5b5d135c1e7",
+  "findings": []
+}

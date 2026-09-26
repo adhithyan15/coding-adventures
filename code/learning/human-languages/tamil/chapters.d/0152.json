@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "To forget, To jump, To swim, To fly, To fall",
+  "label": "ch:ta-to-forget-to-jump-to-swim-to-fly-to-fall",
+  "canDo": "I can say to forget, to jump, to swim, to fly and to fall.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C152-vilu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: i can say to forget, to jump, to swim, to fly and to fall.",
+    "assesses": [
+      "TA-LEX-C152-ACT152-03",
+      "TA-LEX-C152-ACT152-04",
+      "TA-LEX-C152-ACT152-05"
+    ]
+  }
+}

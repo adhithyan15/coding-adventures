@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C125-itli",
+    "language": "tamil",
+    "chapter": 125,
+    "sequence": 5550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92a4ca46bf480831"
+  },
+  "findings": []
+}

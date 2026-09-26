@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 148,
+  "title": "Deep, Wide, Narrow, Dry, Wet",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:dc5c44d7f6d1e03d",
+  "lessons": [
+    {
+      "id": "TA-C148-alamana",
+      "sequence": 6800,
+      "title": "ஆழமான (āḻamāṉa) — deep",
+      "headword": "ஆழமான",
+      "romanization": "āḻamāṉa",
+      "gloss": "deep",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9fcadcaf4dfa3a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for lazy; a lazy person, then the Tamil for brave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆழமான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆழமான — āḻamāṉa — \"deep\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḻamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḻamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḻamāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḻamāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āḻamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āḻamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for lazy; a lazy person, then the Tamil for brave, then say āḻamāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for lazy; a lazy person, then the Tamil for brave, then say *āḻamāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆழமான (āḻamāṉa) mean? (\"Deep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C148-akalamana",
+      "sequence": 6810,
+      "title": "அகலமான (akalamāṉa) — wide",
+      "headword": "அகலமான",
+      "romanization": "akalamāṉa",
+      "gloss": "wide",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39369552a2e8d8c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for brave, then the Tamil for deep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அகலமான",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அகலமான — akalamāṉa — \"wide\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akalamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akalamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akalamāṉa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akalamāṉa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say akalamāṉa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *akalamāṉa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for brave, then the Tamil for deep, then say akalamāṉa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for brave, then the Tamil for deep, then say *akalamāṉa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அகலமான (akalamāṉa) mean? (\"Wide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C148-kurukiya",
+      "sequence": 6820,
+      "title": "குறுகிய (kuṟukiya) — narrow",
+      "headword": "குறுகிய",
+      "romanization": "kuṟukiya",
+      "gloss": "narrow",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8033f7e41cb96876",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for deep, then the Tamil for wide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குறுகிய",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறுகிய — kuṟukiya — \"narrow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟukiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟukiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟukiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟukiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kuṟukiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kuṟukiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for deep, then the Tamil for wide, then say kuṟukiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for deep, then the Tamil for wide, then say *kuṟukiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குறுகிய (kuṟukiya) mean? (\"Narrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C148-kaynta",
+      "sequence": 6830,
+      "title": "காய்ந்த (kāynta) — dry",
+      "headword": "காய்ந்த",
+      "romanization": "kāynta",
+      "gloss": "dry",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc49c7c157ca862c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for wide, then the Tamil for narrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காய்ந்த",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காய்ந்த — kāynta — \"dry\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāynta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāynta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāynta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāynta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kāynta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kāynta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for wide, then the Tamil for narrow, then say kāynta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for wide, then the Tamil for narrow, then say *kāynta* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காய்ந்த (kāynta) mean? (\"Dry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C148-nanainta",
+      "sequence": 6840,
+      "title": "நனைந்த (naṉainta) — wet",
+      "headword": "நனைந்த",
+      "romanization": "naṉainta",
+      "gloss": "wet",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bf1519ee9776e17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for narrow, then the Tamil for dry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நனைந்த",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நனைந்த — naṉainta — \"wet\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṉainta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṉainta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṉainta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṉainta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say naṉainta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *naṉainta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for narrow, then the Tamil for dry, then say naṉainta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for narrow, then the Tamil for dry, then say *naṉainta* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நனைந்த (naṉainta) mean? (\"Wet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R148-first-pass-animals-and-the-body",
+      "sequence": 6850,
+      "title": "Animals and the body — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 140-143",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:956a4278c5238b0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for dry and wet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grapes, a pomegranate, a pickle, a waterfall, a hill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grapes, a pomegranate, a pickle, a waterfall, a hill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an island, an insect, a spider, a pig, a donkey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an island, an insect, a spider, a pig, a donkey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a camel, a duck, a cheek, a wrist, an elbow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a camel, a duck, a cheek, a wrist, an elbow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thumb, bad, beautiful, long, short",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thumb, bad, beautiful, long, short]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Grapes? (திராட்சை, tirāṭcai.) A pomegranate? (மாதுளை, mātuḷai.) A pickle? (ஊறுகாய், ūṟukāy.) A waterfall? (அருவி, aruvi.) A hill? (குன்று, kuṉṟu.) An island? (தீவு, tīvu.) An insect? (பூச்சி, pūcci.) A spider? (சிலந்தி, cilanti.) A pig? (பன்றி, paṉṟi.) A donkey? (கழுதை, kaḻutai.) A camel? (ஒட்டகம், ottakam.) A duck? (வாத்து, vāttu.) A cheek? (கன்னம், kaṉṉam.) A wrist? (மணிக்கட்டு, maṇikkaṭṭu.) An elbow? (முழங்கை, muḻaṅkai.) A thumb? (கட்டைவிரல், kaṭṭaiviral.) Bad? (கெட்ட, keṭṭa.) Beautiful? (அழகான, aḻakāṉa.) Long? (நீளமான, nīḷamāṉa.) Short? (குட்டையான, kuṭṭaiyāṉa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R148-second-pass-the-body-and-describing-words",
+      "sequence": 6860,
+      "title": "The body and describing words — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 144-148",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:629ae4cba01e18f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for tall and hot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tall, hot, cold, heavy, light",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tall, hot, cold, heavy, light]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soft, hard, clean, dirty, fast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: soft, hard, clean, dirty, fast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bitter, sour, spicy, rich, poor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bitter, sour, spicy, rich, poor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "young, old, clever; a clever person, lazy; a lazy person, brave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: young, old, clever; a clever person, lazy; a lazy person, brave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deep, wide, narrow, dry, wet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: deep, wide, narrow, dry, wet]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tall? (உயரமான, uyaramāṉa.) Hot? (சூடான, cūṭāṉa.) Cold? (குளிர்ந்த, kuḷirnta.) Heavy? (கனமான, kaṉamāṉa.) Light? (லேசான, lēcāṉa.) Soft? (மென்மையான, meṉmaiyāṉa.) Hard? (கடினமான, kaṭiṉamāṉa.) Clean? (சுத்தமான, cuttamāṉa.) Dirty? (அழுக்கான, aḻukkāṉa.) Fast? (வேகமான, vēkamāṉa.) Bitter? (கசப்பு, kacappu.) Sour? (புளிப்பு, puḷippu.) Spicy? (காரம், kāram.) Rich? (பணக்கார, paṇakkāra.) Poor? (ஏழை, ēḻai.) Young? (இளைய, iḷaiya.) Old? (வயதான, vayatāṉa.) Clever; a clever person? (புத்திசாலி, putticāli.) Lazy; a lazy person? (சோம்பேறி, cōmpēṟi.) Brave? (தைரியமான, tairiyamāṉa.) Deep? (ஆழமான, āḻamāṉa.) Wide? (அகலமான, akalamāṉa.) Narrow? (குறுகிய, kuṟukiya.) Dry? (காய்ந்த, kāynta.) Wet? (நனைந்த, naṉainta.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

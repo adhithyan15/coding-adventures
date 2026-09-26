@@ -1,0 +1,11 @@
+{
+  "id": "TA-C139-kirai",
+  "pathSegment": "TA-PATH-139-THINGS139",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-139-THINGS139",
+      "order": 1
+    }
+  ]
+}

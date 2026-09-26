@@ -1,0 +1,11 @@
+{
+  "id": "TA-C145-cuttamana",
+  "pathSegment": "TA-PATH-145-QUAL145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-145-QUAL145",
+      "order": 2
+    }
+  ]
+}

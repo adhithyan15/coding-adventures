@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C137-valaiyal",
+    "language": "tamil",
+    "chapter": 137,
+    "sequence": 6210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12e6eedd34eed06c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C153-tirumpu",
+    "language": "tamil",
+    "chapter": 153,
+    "sequence": 7120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd20cf75fed6be2b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C137-motiram",
+    "language": "tamil",
+    "chapter": 137,
+    "sequence": 6200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d484a4f4a85f007"
+  },
+  "findings": []
+}

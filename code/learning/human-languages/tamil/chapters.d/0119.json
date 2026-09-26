@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Key, Lock, Towel, Pillow, Blanket",
+  "label": "ch:ta-key-lock-towel-pillow-blanket",
+  "canDo": "I can say a key, a lock, a towel, a pillow and a blanket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C119-porvai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a key, a lock, a towel, a pillow and a blanket.",
+    "assesses": [
+      "TA-LEX-C119-THINGS119-03",
+      "TA-LEX-C119-THINGS119-04",
+      "TA-LEX-C119-THINGS119-05"
+    ]
+  }
+}

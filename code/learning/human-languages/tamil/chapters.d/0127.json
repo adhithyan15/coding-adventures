@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Star, Dew, Thunder, Lightning, Storm",
+  "label": "ch:ta-star-dew-thunder-lightning-storm",
+  "canDo": "I can say a star, dew, thunder, lightning and a storm.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C127-puyal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say a star, dew, thunder, lightning and a storm.",
+    "assesses": [
+      "TA-LEX-C127-THINGS127-03",
+      "TA-LEX-C127-THINGS127-04",
+      "TA-LEX-C127-THINGS127-05"
+    ]
+  }
+}

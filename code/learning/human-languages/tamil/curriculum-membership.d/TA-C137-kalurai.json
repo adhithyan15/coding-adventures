@@ -1,0 +1,11 @@
+{
+  "id": "TA-C137-kalurai",
+  "pathSegment": "TA-PATH-137-THINGS137",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-137-THINGS137",
+      "order": 2
+    }
+  ]
+}

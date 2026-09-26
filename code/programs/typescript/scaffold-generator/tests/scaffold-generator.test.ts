@@ -151,6 +151,10 @@ describe("dirName", () => {
   it("returns snake_case for elixir", () => {
     expect(dirName("logic-gates", "elixir")).toBe("logic_gates");
   });
+
+  it("returns snake_case for lua", () => {
+    expect(dirName("logic-gates", "lua")).toBe("logic_gates");
+  });
 });
 
 // =========================================================================

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C156-perukku",
+  "pathSegment": "TA-PATH-156-ACT156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-156-ACT156",
+      "order": 1
+    }
+  ]
+}

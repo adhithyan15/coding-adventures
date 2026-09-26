@@ -1,0 +1,11 @@
+{
+  "id": "TA-C123-valaippalam",
+  "pathSegment": "TA-PATH-123-THINGS123",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-123-THINGS123",
+      "order": 1
+    }
+  ]
+}

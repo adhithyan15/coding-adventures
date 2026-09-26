@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C141-kalutai",
+    "language": "tamil",
+    "chapter": 141,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f77371b99940e72"
+  },
+  "findings": []
+}

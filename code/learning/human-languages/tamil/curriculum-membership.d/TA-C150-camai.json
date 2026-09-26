@@ -1,0 +1,11 @@
+{
+  "id": "TA-C150-camai",
+  "pathSegment": "TA-PATH-150-QUAL150",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-150-QUAL150",
+      "order": 3
+    }
+  ]
+}
