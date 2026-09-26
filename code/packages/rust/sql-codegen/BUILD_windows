@@ -1,2 +1,4 @@
-$env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER = "rust-lld"
+# The build tool runs each line as its own `cmd /C` from this package's
+# directory (PowerShell and batch-file syntax do not work here), so each
+# line is one command, and a step elsewhere is `cd <dir> && <command>`.
 cargo test --package coding-adventures-sql-codegen

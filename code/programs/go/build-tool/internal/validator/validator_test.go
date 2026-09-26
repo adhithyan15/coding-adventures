@@ -1150,3 +1150,47 @@ func TestWindowsPathSeparatorIsNotAContinuation(t *testing.T) {
 		t.Fatal("guard is not proving anything: this command should trip the sh rule")
 	}
 }
+
+func TestValidateWindowsBuildLinesRejectsPowerShellAndBatchSyntax(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{name: "rust/powershell", relPath: "code/packages/rust/powershell", lang: "rust"},
+		{name: "rust/batch", relPath: "code/packages/rust/batch", lang: "rust"},
+		{name: "rust/fine", relPath: "code/packages/rust/fine", lang: "rust"},
+	})
+	for _, pkg := range pkgs {
+		writeBuildFile(t, pkg.Path, "BUILD", "cargo test\n")
+		switch filepath.Base(pkg.Path) {
+		case "powershell":
+			writeBuildFile(t, pkg.Path, "BUILD_windows",
+				"$env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER = \"rust-lld\"\nSet-Location ../other\ncargo test\n")
+		case "batch":
+			writeBuildFile(t, pkg.Path, "BUILD_windows", "pushd %~dp0..\ncargo test\n")
+		case "fine":
+			writeBuildFile(t, pkg.Path, "BUILD_windows",
+				"# a comment that mentions %~dp0 and $env: is fine\nrem harmless\n@echo off\ncd ../other && npm install --silent\ncargo test\nif errorlevel 1 exit /b 1\n")
+		}
+	}
+
+	problems := validateWindowsBuildLines(pkgs)
+	joined := strings.Join(problems, "\n")
+	if len(problems) != 3 {
+		t.Fatalf("expected 3 problems (2 PowerShell, 1 batch), got %d:\n%s", len(problems), joined)
+	}
+	for _, want := range []string{
+		"rust/powershell (BUILD_windows line 1): PowerShell variable or assignment",
+		"rust/powershell (BUILD_windows line 2): PowerShell command",
+		"rust/batch (BUILD_windows line 1): `%~dp0` expands only inside a batch file",
+	} {
+		if !strings.Contains(joined, want) {
+			t.Fatalf("missing %q in:\n%s", want, joined)
+		}
+	}
+	if strings.Contains(joined, "rust/fine") {
+		t.Fatalf("a cmd-compatible BUILD_windows was flagged:\n%s", joined)
+	}
+}

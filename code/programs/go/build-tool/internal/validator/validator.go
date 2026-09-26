@@ -142,6 +142,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 		problems = append(problems, ciProblem)
 	}
 	problems = append(problems, validateNoSilentlyTruncatedCommands(packages)...)
+	problems = append(problems, validateWindowsBuildLines(packages)...)
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
 	problems = append(problems, validateRustWorkspaceMembers(packages)...)
@@ -576,6 +577,79 @@ func validateNoSilentlyTruncatedCommands(packages []discovery.Package) []string 
 		}
 	}
 	return problems
+}
+
+// validateWindowsBuildLines rejects `BUILD_windows` lines that cannot run as
+// the build tool runs them.
+//
+// Every non-comment line of a BUILD file is its own `cmd /C` invocation on
+// Windows (`executor.shellCommandForOS`), started in the package directory.
+// That is not a PowerShell session and not a batch file, and two kinds of
+// line written as if it were one fail there:
+//
+//   - PowerShell (`$env:X = "y"`, `$ErrorActionPreference = "Stop"`,
+//     `Set-Location ..`, `Write-Host`, `if (-not $?) { ... }`): cmd.exe reads
+//     the line as a program name and fails ("The filename, directory name, or
+//     volume label syntax is incorrect").
+//   - `%~dp0` (the batch file's own directory): it expands only inside a .bat
+//     file, so `pushd %~dp0..` fails ("The system cannot find the path
+//     specified").
+//
+// Neither shows up until Windows CI happens to rebuild the package, which for
+// a leaf package can be months later and on someone else's PR (a change to
+// the shared `parser` crate rebuilt ~735 packages and found five). So this
+// reads `BUILD_windows` directly, on every host, rather than only the BUILD
+// file chosen for the current one.
+//
+// Harmless leftovers are allowed: `rem`, `@echo off` and `if errorlevel` run
+// under `cmd /C` without failing (they only do nothing useful).
+func validateWindowsBuildLines(packages []discovery.Package) []string {
+	var problems []string
+	for _, pkg := range packages {
+		if pkg.IsStarlark {
+			continue
+		}
+		data, err := os.ReadFile(filepath.Join(pkg.Path, "BUILD_windows"))
+		if err != nil {
+			continue
+		}
+		for number, line := range strings.Split(string(data), "\n") {
+			trimmed := strings.TrimSpace(line)
+			if trimmed == "" || strings.HasPrefix(trimmed, "#") {
+				continue
+			}
+			if reason := windowsBuildLineProblem(trimmed); reason != "" {
+				problems = append(problems, fmt.Sprintf(
+					"%s (BUILD_windows line %d): %s: %q. Each line runs as its own `cmd /C` "+
+						"from the package directory; write one command per line, and "+
+						"`cd <dir> && <command>` for a step elsewhere.",
+					pkg.Name, number+1, reason, truncateForMessage(trimmed),
+				))
+			}
+		}
+	}
+	return problems
+}
+
+// windowsBuildLineProblem says why a `BUILD_windows` line cannot run under
+// `cmd /C`, or returns "" when it can.
+func windowsBuildLineProblem(line string) string {
+	lower := strings.ToLower(line)
+	switch {
+	case strings.HasPrefix(line, "$"):
+		return "PowerShell variable or assignment"
+	case strings.HasPrefix(lower, "set-location"),
+		strings.HasPrefix(lower, "push-location"),
+		strings.HasPrefix(lower, "pop-location"),
+		strings.HasPrefix(lower, "write-host"),
+		strings.HasPrefix(lower, "write-output"),
+		strings.HasPrefix(lower, "if (-not"),
+		strings.HasPrefix(lower, "if ($"):
+		return "PowerShell command"
+	case strings.Contains(lower, "%~dp0"):
+		return "`%~dp0` expands only inside a batch file"
+	}
+	return ""
 }
 
 // continuationCharForBuildFile returns the line-continuation character of the

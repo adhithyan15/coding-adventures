@@ -1,16 +1,9 @@
-$ErrorActionPreference = 'Stop'
-
-Push-Location ..\..\..\packages\typescript\directed-graph
+# The build tool runs each line as its own `cmd /C` from this package's
+# directory (PowerShell and batch-file syntax do not work here), so each
+# line is one command, and a step elsewhere is `cd <dir> && <command>`.
+cd ../../../packages/typescript/directed-graph && npm install --silent
+cd ../../../packages/typescript/state-machine && npm install --silent
+cd ../../../packages/typescript/cli-builder && npm install --silent
 npm install --silent
-Pop-Location
-
-Push-Location ..\..\..\packages\typescript\state-machine
-npm install --silent
-Pop-Location
-
-Push-Location ..\..\..\packages\typescript\cli-builder
-npm install --silent
-Pop-Location
-
-npm install --silent
-.\node_modules\.bin\vitest.cmd run --coverage
+node_modules\.bin
+node_modules\.bin\vitest.cmd run --coverage

@@ -1,8 +1,6 @@
-$ErrorActionPreference = 'Stop'
-
-# Build the generated VS Code extension package on Windows.
-# Compiles TypeScript and runs the unit tests.
-
+# The build tool runs each line as its own `cmd /C` from this package's
+# directory (PowerShell and batch-file syntax do not work here), so each
+# line is one command, and a step elsewhere is `cd <dir> && <command>`.
 npm install --silent
 npx tsc -p .
 npm test
