@@ -14276,8 +14276,8 @@ entering the established-language denominator.
 ### DER ASN.1 portable implementation progress
 
 The closed 122-case, 22-error language-neutral contract now has complete
-package-native consumers in thirteen of fifteen established lanes: Rust, Python,
-Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, and Perl. Every consumer executes all
+package-native consumers in fourteen of fifteen established lanes: Rust, Python,
+Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir. Every consumer executes all
 46 referenced DER TLV framing cases rather than treating delegated rows as
 automatic success. The refined
 corpus adds unsigned-64 OID boundaries, implicit-OID failures, exact explicit
@@ -14321,25 +14321,33 @@ owner, budget, transactionality, exact-u64, tag, finite-limit, packaging, and
 redaction checks at 98.7 percent statement and 96.3 percent subroutine
 coverage; Perl::Critic, POD, distribution testing, both build fronts,
 capability-schema validation, and the real Go build-tool two-package
-dependency plan pass. All thirteen use empty capability
+dependency plan pass. Elixir passes the complete 122-case suite and all 46
+delegated framing cases plus native sealed-wrapper, exact-owner, shared-budget,
+transactionality, exact-u64, OID equality, tag, finite-limit, and redaction
+checks at 100 percent line coverage; formatting, warnings-as-errors compilation,
+both build fronts, Windows-front validation, capability-schema validation, and
+the real Go build-tool two-package dependency plan pass. All fourteen use empty capability
 manifests, structural limits, shared work budgets,
 transactional cursors, unsigned-width-safe integer and OID handling, and
-payload-free diagnostics. Elixir and Lua
-remain in this same serial work item; no parity PR is
+payload-free diagnostics. Lua remains in this same serial work item; no parity PR is
 open yet. Independent security review made validated element and primitive
-wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, and Perl, hid raw DER
+wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir, hid raw DER
 framing helpers from typed package surfaces, and added adversarial zero-value,
 runtime-token, immutable-snapshot, and redaction tests. Swift cursors additionally
 retain their originating decoder so a same-limit foreign decoder cannot reset
 the shared total-element budget. Perl keeps wrapper state and construction
 helpers lexical, rejects non-u32 schema tags and host-oversized limits before
 numeric conversion, and retains exact unsigned arithmetic through Math::BigInt.
+Elixir uses private lexical-function identities for immutable sealed decoder,
+element, and cursor values, threads exact-owner state without Agents or ETS,
+and rejects non-u32 tags plus non-finite or host-oversized limits before binary
+arithmetic.
 
 A bounded pre-next-lane audit closed the neutral-corpus holes before multiplying
 implementations. The prose now keeps allocation and ownership strategy
 non-normative instead of requiring every language to expose Rust's borrowed,
 `Copy`, or native `u64` representation. The consumer registry is explicitly a
-15-lane target denominator rather than a completion assertion. All thirteen
+15-lane target denominator rather than a completion assertion. All fourteen
 implemented lanes execute the refined corpus; this refinement remains part of
 the same serial work item and no second PR was opened.
 
