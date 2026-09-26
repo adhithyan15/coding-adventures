@@ -15329,9 +15329,13 @@ mod tests {
         let traversal_anchor = root.child("traversal-anchor");
         fs::create_dir_all(&traversal_anchor).unwrap();
         let separator = std::path::MAIN_SEPARATOR;
+        // `TestRoot` is canonical, which on Windows means a `\\?\` verbatim
+        // path, and Windows does not resolve `..` inside a verbatim path. A
+        // user types the ordinary spelling, so build the alternate from that.
+        let anchor = traversal_anchor.display().to_string();
+        let anchor = anchor.strip_prefix(r"\\?\").unwrap_or(&anchor);
         let via_parent = format!(
-            "{}{separator}..{separator}{}",
-            traversal_anchor.display(),
+            "{anchor}{separator}..{separator}{}",
             real.file_name().unwrap().to_string_lossy()
         );
         let alternate_spelling = StorageLocation::new(via_parent).unwrap();

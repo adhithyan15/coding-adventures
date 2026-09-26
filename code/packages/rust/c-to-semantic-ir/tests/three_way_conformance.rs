@@ -115,13 +115,15 @@ fn run_reference(cc: &str, src: &str) -> String {
     let cpath = uniq(".c");
     let exe = uniq(std::env::consts::EXE_SUFFIX);
     write_fresh(&cpath, src.as_bytes());
-    let build = std::process::Command::new(cc)
-        .args(["-std=c99", "-fwrapv", "-o"])
-        .arg(&exe)
-        .arg(&cpath)
-        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
-        .output()
-        .expect("reference compiler runs");
+    let mut build = std::process::Command::new(cc);
+    build.args(["-std=c99", "-fwrapv", "-o"]).arg(&exe).arg(&cpath);
+    // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in).
+    // Windows has no libm: clang hands `-lm` to the MSVC linker as `m.lib`,
+    // which fails with LNK1181, and the C runtime already carries the maths.
+    if !cfg!(windows) {
+        build.arg("-lm");
+    }
+    let build = build.output().expect("reference compiler runs");
     assert!(
         build.status.success(),
         "reference C failed to compile:\n{}\n--- source ---\n{src}",
