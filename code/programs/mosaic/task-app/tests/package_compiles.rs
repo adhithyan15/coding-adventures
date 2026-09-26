@@ -120,6 +120,24 @@ fn manifest_declares_task_app() {
         acceptance.contains("generatedStartupFailureIsVisibleAndRetryRerunsInitialization"),
         "Compose acceptance must drive the generated startup failure and retry path"
     );
+    let flutter_acceptance = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../packages/rust/task-mosaic-app/conformance/flutter/widget_test.dart"),
+    )
+    .expect("Flutter acceptance source must exist");
+    for marker in [
+        "forced TaskApp initial-props failure",
+        "expect(failingHost.disposed, isTrue)",
+        "mosaic-startup-loading",
+        "mosaic-startup-failure",
+        "mosaic-startup-retry",
+        "expect(startupAttempts, 2)",
+    ] {
+        assert!(
+            flutter_acceptance.contains(marker),
+            "Flutter acceptance must drive generated startup failure and retry: {marker}"
+        );
+    }
 }
 
 /// #15263: the persistence status and long local-data path must not compete

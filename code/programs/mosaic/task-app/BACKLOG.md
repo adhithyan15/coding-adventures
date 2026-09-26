@@ -187,7 +187,7 @@ step, no artifact. The ordered queue below comes from that spec.
   native startup failure states (above). Ranks with Tier A, since it is the same
   defect on five platforms that ship release artifacts. Compose Desktop is
   covered by the focused generated-shell and acceptance slice tracked in #15786,
-  and Qt by #15818. Flutter, SwiftUI, and WinUI remain.
+  Qt by #15818, and Flutter by #16084. SwiftUI and WinUI remain.
 - **P2 [#13982](https://github.com/adhithyan15/coding-adventures/issues/13982):**
   a `packages.microsoft.com` 403 hard-fails required jobs through 10 unguarded
   `apt-get update` calls across 5 workflows. Red-flagged a four-file docs PR.
