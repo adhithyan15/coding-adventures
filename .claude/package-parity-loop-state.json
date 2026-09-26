@@ -12,38 +12,38 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 15761,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15761",
-    "title": "feat(der-tlv): complete portable conformance across 15 lanes",
-    "branch": "codex/parity-der-tlv-portable-conformance-20260919",
-    "item_id": "der-tlv-portable-conformance",
-    "opened_at": "2026-09-20T08:35:49Z",
-    "head_revision": "e8ef4bcbf87543f2b505863362e8cfa5ff7e14f2",
+    "number": 16088,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16088",
+    "title": "feat(der-asn1): complete portable conformance across established lanes",
+    "branch": "codex/parity-der-asn1-portable-conformance-20260920",
+    "item_id": "der-asn1-portable-conformance",
+    "opened_at": "2026-09-26T20:59:38Z",
+    "head_revision": "10ee16d7de0",
     "checks_status": "pending",
     "auto_merge_enabled": false
   },
   "last_ci_action": {
-    "observed_at": "2026-09-20T06:46:10Z",
-    "pr_number": 15708,
-    "status": "merged",
-    "notes": "PR #15708 reached terminal acceptable conclusions on every required and advisory check, including both protected CI gates and all three OCaml fresh-solve and locked-fixture platforms. GitHub reported the reviewed head CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that evidence was complete, and GitHub merged the reviewed head automatically at 2026-09-20T06:46:10Z as a6149a44b8a3184e84ffa076d05c04340d6d7825; no plain manual merge command was used."
+    "observed_at": "2026-09-26T21:55:43Z",
+    "pr_number": 16088,
+    "status": "failed",
+    "notes": "Repo-wide metadata contracts next failed because the new TypeScript DER ASN.1 project made the portability audit's expected total, standalone-emission, isolated-standalone, and locked-compiler counts stale by one. The smallest in-scope repair updates only those assertions and their provenance comments; all 16 focused tests and diff hygiene pass locally."
   },
   "last_inventory": {
-    "revision": "a6149a44b8a3184e84ffa076d05c04340d6d7825",
+    "revision": "d66d76f43cbab8f2cbccbfff63a38b3207b1ea23",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1448,
-    "implementation_package_slots": 4673,
-    "all_reported_identities": 1488,
-    "high_consensus_packages": 175,
+    "implementation_identities": 1470,
+    "implementation_package_slots": 4723,
+    "all_reported_identities": 1512,
+    "high_consensus_packages": 177,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 969,
-    "singleton_missing_slots": 13566,
-    "rust_singletons": 789,
+    "singleton_packages": 989,
+    "singleton_missing_slots": 13846,
+    "rust_singletons": 806,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -3603,7 +3603,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": false,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, and provenance kernels concrete enough for a dedicated owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, and asset/MIME derivation from browser, Vite, filesystem, and UI authority, define fixtures and dependency order, and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, and #13765 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, and `forme-dev-server`; all remain covered by this family rather than creating duplicate singleton owners. Dedicated PR #13768 merged the missing shared TypeScript base-config boundary registration, and #13765 registered forme-dev-server under that boundary, so this family owner remains unblocked for future dependency/leverage selection."
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, provenance, and deploy-planning kernels concrete enough for a dedicated family owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, asset/MIME derivation, and the merged `forme-deploy-runner-core` manifest-validation, complete-set planning, injected-content preflight, verified-snapshot, and dry-run/report behavior from browser, Vite, filesystem, network, credential, CLI, and UI authority; define fixtures and dependency order; and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, #13765, #15785, and #15820 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, `forme-deploy-runner-core`, and `forme-deploy-runner-github-pages-adapter`; all remain covered by this family rather than creating duplicate singleton owners. The GitHub Pages adapter's network, time, credentials, repository publication, filesystem, and CLI authority remains native/external classification work outside parity-loop selection."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -5327,7 +5327,7 @@
       "branch": null,
       "pr_number": null,
       "classification_notes": "PR #14643 extends deterministic adoption-agency recovery across headings, non-div special and paragraph blocks, orphan and nested list items and containers, mixed div/special/list chains, wrapped inner formatting clones, and active-formatting marker boundaries. Include tree shape, reconstruction order, ignored-across-marker behavior, stable diagnostics, and resource bounds in the neutral HTML corpus; DOM presentation, CSS/layout/paint, browser hosts, files, network, and native rendering remain outside.",
-      "notes": "Discovered during the collision-checked 1c5ed9c1e9 pre-publication audit after merged PR #10258 extended the existing Rust html-parser without adding a package identity. The empty-capability frontend is deterministic over html-lexer and dom-core but had no explicit parity owner. Merged PRs #10262, #10268, #10273, #10278, #10283, #10291, and #10295 expand exact post-head, table hidden-input, head-content, select, template-text, fostered-formatting, and seeded fragment-context recovery diagnostics without adding identities. Merged PR #10302 extends the tokenizer/markup seam with exact script end-tag EOF diagnostics and remains owned here through the explicit state-machine tokenizer dependency; merged PR #10311 adds exact plaintext insertion diagnostics without adding an identity. Later merged slices add generic fostered starts, fostered list items and images, generic and center table ends, EOF table recovery, mismatched template ends, template colgroup starts, and template-column text diagnostics without new identities. Merged PR #12735 adds exact recovered `</br>` diagnostic positions inside the same existing Rust frontend and is further corpus evidence for this owner, not a new identity. Merged PR #12760 adds positioned table-only start-tag diagnostics for repeated tags, Unicode/CRLF offsets, fragments, and table/template/foreign-content exclusions; retain that deterministic source-position evidence here. Merged PR #12772 adds exact rejected-frameset start-tag positions across normal, Unicode, CRLF, fragment, template, and foreign-content cases; keep that source-position evidence in this same portable owner. Merged PRs #12828 and #12833 add positioned table-character and implied-row diagnostics, including Unicode and CRLF offsets; retain that deterministic recovery evidence here. Merged PR #12856 adds exact nested-anchor start diagnostics and recovery positions inside the same existing Rust frontend; retain those source-position and reconstruction cases here. Merged PR #12946 adds exact unmatched landmark end-tag positions across normal, Unicode, CRLF, template, fragment, and foreign-content contexts; retain that deterministic recovery evidence here. Merged PR #12951 adds token-emission positions for unmatched address, blockquote, and center end tags across normal, Unicode/CRLF, fragment, matched, truncated, direct-token, and foreign-content cases; retain that recovery evidence here. Define language-neutral fixtures and established-lane implementations for tokenizer handoff, tree construction and recovery, exact stable diagnostics, document and fragment projections, html5lib conformance, hostile-input handling, and explicit resource bounds. Rendering, networking, and browser-host authority remain outside this portable contract."
+      "notes": "Discovered during the collision-checked 1c5ed9c1e9 pre-publication audit after merged PR #10258 extended the existing Rust html-parser without adding a package identity. The empty-capability frontend is deterministic over html-lexer and dom-core but had no explicit parity owner. Merged PRs #10262, #10268, #10273, #10278, #10283, #10291, and #10295 expand exact post-head, table hidden-input, head-content, select, template-text, fostered-formatting, and seeded fragment-context recovery diagnostics without adding identities. Merged PR #10302 extends the tokenizer/markup seam with exact script end-tag EOF diagnostics and remains owned here through the explicit state-machine tokenizer dependency; merged PR #10311 adds exact plaintext insertion diagnostics without adding an identity. Later merged slices add generic fostered starts, fostered list items and images, generic and center table ends, EOF table recovery, mismatched template ends, template colgroup starts, and template-column text diagnostics without new identities. Merged PR #12735 adds exact recovered `</br>` diagnostic positions inside the same existing Rust frontend and is further corpus evidence for this owner, not a new identity. Merged PR #12760 adds positioned table-only start-tag diagnostics for repeated tags, Unicode/CRLF offsets, fragments, and table/template/foreign-content exclusions; retain that deterministic source-position evidence here. Merged PR #12772 adds exact rejected-frameset start-tag positions across normal, Unicode, CRLF, fragment, template, and foreign-content cases; keep that source-position evidence in this same portable owner. Merged PRs #12828 and #12833 add positioned table-character and implied-row diagnostics, including Unicode and CRLF offsets; retain that deterministic recovery evidence here. Merged PR #12856 adds exact nested-anchor start diagnostics and recovery positions inside the same existing Rust frontend; retain those source-position and reconstruction cases here. Merged PR #12946 adds exact unmatched landmark end-tag positions across normal, Unicode, CRLF, template, fragment, and foreign-content contexts; retain that deterministic recovery evidence here. Merged PR #12951 adds token-emission positions for unmatched address, blockquote, and center end tags across normal, Unicode/CRLF, fragment, matched, truncated, direct-token, and foreign-content cases; retain that recovery evidence here. Merged PRs #16039 through #16056 add the Rust `html-tree-builder` identity plus scripting, table recovery, active formatting, foreign-content, fragment, and raw-text behavior; keep that identity inside this owner rather than creating a duplicate singleton. Define language-neutral fixtures and established-lane implementations for tokenizer handoff, tree construction and recovery, exact stable diagnostics, document and fragment projections, html5lib conformance, hostile-input handling, and explicit resource bounds. Rendering, networking, and browser-host authority remain outside this portable contract."
     },
     {
       "id": "vault-pm-format-portable-conformance",
@@ -5394,7 +5394,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Merged PR #10464 adds native Compose HostLink emission over mosaic-emit-compose, mosaic-compile, and UI38. Open PR #13011 adds test-only five-backend native-complete and degradation evidence for the same generated wrappers and artifact-builder boundary; it does not create a portable package or build-tool contract. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Merged PR #10464 adds native Compose HostLink emission over mosaic-emit-compose, mosaic-compile, and UI38. Open PR #13011 adds test-only five-backend native-complete and degradation evidence for the same generated wrappers and artifact-builder boundary; it does not create a portable package or build-tool contract. Merged PR #16041 adds the deterministic Rust `mosaic-ios-project` Xcode-project generator; retain it as target-specific generated-native infrastructure inside this review rather than manufacturing an automatic fifteen-lane gap. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-axis-snapshot-host-native-authority-review",
@@ -9486,7 +9486,7 @@
     {
       "id": "der-tlv-portable-conformance",
       "title": "Define portable DER TLV framing conformance and established-lane parity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-der-tlv-portable-conformance-20260919",
       "pr_number": 15761,
@@ -9506,16 +9506,115 @@
       "final_review_notes": "Independent closure review verified the neutral registry, capability identity checks, direct aggregate execution, and package-native runtime ownership. Independent .NET review found and closed a C# init-only Limits invariant bypass; fresh C# and F# suites exceed their 95 percent coverage gates. The 19-commit implementation rebased conflict-free onto current origin/main 095c928528ee27fe5b2f9a34ad8c094243c9a523 before publication preparation.",
       "publication_notes": "Opened ready-for-review PR #15761 from clean validated head e8ef4bcbf87543f2b505863362e8cfa5ff7e14f2 after a normal first push from exact origin/main 095c928528ee27fe5b2f9a34ad8c094243c9a523. Immediately before publication, the branch was 20 commits ahead and zero behind, no other parity PR was active, no PR already targeted this branch, and a paginated scan of 14 live pull requests and 481 file entries found zero exact overlap with the 153 changed paths. GitHub reports the PR non-draft with initial CI, CodeQL, and documentation checks queued or running; auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
       "post_open_review_notes": "A read-only final-diff audit found that the portable prose overstated allocation and architecture guarantees: Lua and other value-oriented runtimes may copy byte projections, and the current corpus validates each consumer's supported index domain without proving every 32-bit architecture. The documentation now makes allocation strategy non-normative, requires byte-exact projections, and limits overflow claims to supported index domains. The 54-case fixture, 15-lane closure, and package-parity suites pass unchanged after this claim-precision repair.",
-      "notes": "Delivered the zero-runtime-dependency, empty-capability, in-memory DER TLV framing decoder as a closed portable contract in all 15 established lanes. The neutral suite and implementations cover identifier classes, constructed bits, tag and length canonicality, truncation, exact trailing rejection, configured limits, byte-exact projections, untouched remainders, sibling cursor offsets, non-advancement after failure, and payload-redacted kind/offset errors while keeping allocation strategy, ASN.1 schema decoding, X.509, cryptography, trust, TLS, transport, and ambient authority outside this owner. Ready-for-review PR #15761 is the sole active parity PR; the item remains pr-open until GitHub merges it through guarded auto-merge after terminal acceptable checks and a conflict-free mergeability result."
+      "merge_revision": "f280bdbd4df120379afe96a17dfba49251c161b5",
+      "merged_at": "2026-09-20T14:33:51Z",
+      "merge_notes": "Every required and advisory final-head check was terminal and acceptable, GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and GitHub merged PR #15761 automatically without a plain manual merge command.",
+      "notes": "Delivered the zero-runtime-dependency, empty-capability, in-memory DER TLV framing decoder as a closed portable contract in all 15 established lanes. The neutral suite and implementations cover identifier classes, constructed bits, tag and length canonicality, truncation, exact trailing rejection, configured limits, byte-exact projections, untouched remainders, sibling cursor offsets, non-advancement after failure, and payload-redacted kind/offset errors while keeping allocation strategy, ASN.1 schema decoding, X.509, cryptography, trust, TLS, transport, and ambient authority outside this owner. PR #15761 merged automatically after all checks passed."
     },
     {
       "id": "der-asn1-portable-conformance",
       "title": "Define portable typed ASN.1 DER value conformance and established-lane parity",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["der-tlv-portable-conformance"],
+      "branch": "codex/parity-der-asn1-portable-conformance-20260920",
+      "pr_number": 16088,
+      "selected_at": "2026-09-20T14:36:10Z",
+      "selection_revision": "82f851dc277b5f1931a3e64276466cd1d742e3d0",
+      "selection_notes": "Selected after PR #15761 merged through guarded auto-merge, followed by a collision-checked exact-main inventory refresh and bounded package, owner, fixture, and validation audits. DER ASN.1 is the sole dependency-shaped root immediately unlocked by DER TLV and now directly gates ten confirmed Rust X.509 consumers plus six registered extension-family owners. The dedicated worktree was rebased to origin/main 346be10b6e86467693e064eb9eba433d61fe3e60 after PR #15798 merged; that refresh added the Subject Alternative Name owner without changing the selected in-progress item.",
+      "notes": "Own the portable empty-capability typed ASN.1 DER layer above the merged DER TLV contract. Freeze a language-neutral semantic suite that references rather than copies the DER TLV framing corpus, then deliver all 15 established lanes for canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, IA5String, NULL, OID, implicit primitive values, exact SEQUENCE, SET, and context-specific wrappers, shared budgets, transactional failures, and payload-redacted local offsets. Keep X.509 schema, path validation, trust, signatures, TLS, network, credentials, and ambient authority outside this owner.",
+      "progress_notes": "The neutral contract closes 122 cases and 22 stable errors. Its independent oracle and all fifteen completed lane adapters cover unsigned-64 OID boundaries, malformed and budget-limited implicit OIDs, exact explicit-tag rejection, nested exact/over-depth behavior, shared nested element budgets, and all 46 referenced DER TLV cases; a machine check reserves only the safely unreachable host-size bit-length-overflow error. Python passes 123 tests at 97.17% line coverage; Rust passes its full suite; Go passes race with 91.2% coverage; Dart passes 128 tests; Java and Kotlin pass tests plus JaCoCo; TypeScript passes 133 tests at 97.27% statements, 93.75% branches, 98.33% functions, and 98.29% lines; C# passes 126 tests at 95.66% line, 95.93% branch, and 98.57% method coverage. Ruby now passes all 122 cases and 46 delegated framing cases plus native immutability, sealed-wrapper, limit, OID equality, and redaction checks at 98.36% line and 95.79% branch coverage; StandardRB, gem packaging, Unix and Windows build fronts, and the real Go build-tool dependency plan pass. F# passes all 122 cases and 46 delegated framing cases plus all 22 error identifiers, native private-constructor, immutable-snapshot, bounded OID equality, limit, helper, and redaction checks at 96.55% line and 91.03% branch coverage; packaging, dependency audit, the Windows build front, and the real Go build-tool two-package dependency plan pass. Swift passes all 122 cases and 46 delegated framing cases plus all 22 error identifiers, immutable snapshots, exact-owner shared budgets, bounded UInt64 OID equality, limit, helper, and redaction checks at 97.87% source line coverage; formatter lint, release warnings-as-errors, package description, Unix and Windows build fronts, and the real Go build-tool two-package dependency plan pass. Haskell passes all 122 cases and 46 delegated framing cases plus native exact-owner, shared-budget, transactionality, concurrency, limit, wrapper, and redaction checks at 95% expression and alternative coverage; Cabal check and source packaging, warnings-as-errors, Unix and Windows build fronts, and the real Go build-tool two-package dependency plan pass. Perl passes all 122 cases and 46 delegated framing cases plus native provenance, owner, budget, transactionality, exact-u64, tag, finite-limit, packaging, and redaction checks at 98.7% statement and 96.3% subroutine coverage; Perl::Critic, POD, distribution testing, Unix and Windows build fronts, capability-schema validation, and the real Go build-tool two-package dependency plan pass. Elixir passes all 122 cases and 46 delegated framing cases plus native private-process-backed wrapper, exact-owner, replay-safe shared-budget, transactionality, exact-u64 including the first combined OID boundary, OID equality, tag, finite-limit, and redaction checks at 96.89% line coverage; formatting, warnings-as-errors compilation, Unix and Windows build fronts, Windows-front validation, capability-schema validation, and the real Go build-tool two-package dependency plan pass. The specification is representation-neutral about ownership, allocation, immutable wrappers, and exact unsigned values, and the 15-lane consumer registry is explicitly a target denominator rather than a completion assertion. Security review made validated element and primitive wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir, hid raw framing helpers from typed package surfaces, rejected oversized input before copying in Kotlin, C#, and Ruby, made Kotlin and C# OID arc lists runtime-immutable, bound Swift cursors to their originating decoder state, made Haskell shared budget checks concurrency-safe, kept Perl wrapper state and construction helpers lexical, rejected non-u32 Perl schema tags and host-oversized limits, kept Elixir decoder, element, cursor, and typed payloads behind private immutable handle processes and made shared budgets plus cursor progress replay-safe through a restricted decoder state process, rejected non-u32 Elixir tags plus non-finite or host-oversized limits, and added defensive zero-value, runtime-token, immutable-snapshot, published-surface, concurrency, and redaction tests. Lua completes the fifteenth established lane: all 122 cases and 46 delegated framing rows plus native private-registry, exact-owner, transactional-budget, exact two-limb u64/OID, tag, limit, equality, and redaction checks pass at 98.30% production line coverage; syntax, LuaCheck, LuaRocks metadata/install, both build fronts, capability validation, collision checks, and the real Go build-tool dependency plan pass.",
+      "refresh_notes": "The last full collision-checked schema-3 inventory was generated at origin/main d66d76f43cbab8f2cbccbfff63a38b3207b1ea23. The branch was subsequently rebased without overlap onto origin/main 04dfbed3935 and now contains 45 implementation and bookkeeping commits; the inventory counts below remain the explicitly preserved earlier snapshot pending the required post-merge regeneration. The refreshed collision-clean schema-3 inventory records 1,470 implementation identities, 4,723 implementation slots, 1,512 all-reported identities, 989 singleton packages with 13,846 missing slots, 806 Rust singletons, five OCaml packages, zero canonical collisions, and zero unknown buckets. All discovered identities remain assigned to an existing family owner, a pending portable owner, or an explicit native/applicability review; DER ASN.1 is the sole active parity item and ready-for-review PR #16088 is open.",
+      "fixture_audit_notes": "Completed and independently validated the 122-case refinement: unsigned-64 OID boundaries, malformed and budget-limited implicit OIDs, wrong-class, primitive, and wrong-number explicit wrappers, nested exact and over-depth boundaries, repeated shared nested-budget failure, and a machine-checked reserved disposition for bit-length-overflow. Allocation and ownership remain non-normative; Rust borrowed, Copy, iterator, and native u64 representations are reference-lane choices rather than portable requirements."
+    },
+    {
+      "id": "x509-certificate-version-portable-conformance",
+      "title": "Define portable X.509 Certificate Version conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Exact post-PR #15668 inventory reconciliation found the Rust-only der-asn1 package without a parity owner. Classify its zero-external-dependency, allocation-free, empty-capability typed ASN.1 DER layer as portable. Freeze neutral fixtures and the Rust oracle for canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, NULL, and OID values; exact SEQUENCE, SET, and context-specific wrappers; shared depth, element, and OID budgets; non-advancement after failure; and payload-redacted kind/offset errors. Keep X.509 schema, path validation, trust, signatures, TLS, network, credentials, and ambient authority outside this owner. It depends on the existing DER TLV framing contract."
+      "notes": "Discovered by the collision-checked exact-main refresh after merged PR #15812 added the Rust-only x509-certificate-version identity. Own the optional RFC 5280 [0] EXPLICIT Version field: omitted v1 default, accepted explicit v2 and v3, DER rejection of explicit default v1 and unsupported values, exact constructed context-specific tag zero, one canonical INTEGER child, shared depth and element budgets, local offsets, transactional failure, and redacted diagnostics. Keep complete TBSCertificate parsing, version-dependent field policy, paths, signatures, trust, revocation, clocks, TLS, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-extension-portable-conformance",
+      "title": "Define portable generic X.509 Extension conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15748 added the Rust-only x509-extension identity. Own the exact generic Extension sequence: validated extension OID, DEFAULT FALSE critical flag, opaque OCTET STRING value, shared budgets, transactional failure, local offsets, and redacted diagnostics. Keep extension-specific semantics, certificate policy, signatures, validation, trust, revocation, TLS, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-extensions-portable-conformance",
+      "title": "Define portable bounded X.509 Extensions conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15755 added the Rust-only x509-extensions identity. Own a non-empty ordered sequence of at most 64 generic extensions, duplicate extension-OID rejection, shared nested budgets, exact offset rebasing, transactional failure, and redacted diagnostics. Keep extension-specific interpretation and certificate policy outside this owner."
+    },
+    {
+      "id": "x509-basic-constraints-portable-conformance",
+      "title": "Define portable X.509 Basic Constraints conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15765 added the Rust-only x509-basic-constraints identity. Own OID 2.5.29.19, the CA DEFAULT FALSE form, canonical TRUE, and a nonnegative arbitrary-width pathLen value over one generic extension. Keep trust-path decisions and cross-extension Key Usage policy outside this owner; the singular generic Extension owner, not the plural Extensions owner, is its structural prerequisite."
+    },
+    {
+      "id": "x509-key-usage-portable-conformance",
+      "title": "Define portable X.509 Key Usage conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15772 added the Rust-only x509-key-usage identity. Own OID 2.5.29.15 and canonical named-bit decoding over one generic extension. Resolve the RFC 5280 profile treatment of unnamed bits explicitly before freezing the Rust oracle's current rejection behavior. Keep Basic Constraints, Extended Key Usage, authorization, path validation, trust, and certificate policy outside this owner."
+    },
+    {
+      "id": "x509-extended-key-usage-portable-conformance",
+      "title": "Define portable X.509 Extended Key Usage conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15784 added the Rust-only x509-extended-key-usage identity. Own a non-empty bounded OID sequence, original wire order, and duplicate-purpose preservation over one generic extension. Treat anyExtendedKeyUsage as an uninterpreted OID and keep authorization, path validation, trust, and certificate policy outside this owner."
+    },
+    {
+      "id": "x509-subject-alt-name-portable-conformance",
+      "title": "Define portable X.509 Subject Alternative Name conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "x509-extension-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked exact-main refresh after merged PR #15798 added the Rust-only x509-subject-alt-name identity. Own OID 2.5.29.17, a non-empty bounded GeneralNames sequence, typed IA5String, IP-address, and registered-ID choices, counted opaque constructed choices, shared budgets, exact local offsets, transactional failure, and redacted diagnostics over one generic extension. Keep DNS syntax, server-identity matching, certificate policy, path validation, signatures, trust, TLS, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-serial-number-portable-conformance",
+      "title": "Define portable X.509 certificate serial-number conformance and established-lane parity",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered before PR #15806 merged the Rust-only x509-serial-number identity through guarded auto-merge as f24c2e8c6a17ed4dd08f5c26a2e34291fe87fbf7. Own canonical positive nonzero certificate serial-number INTEGER decoding, the RFC 5280 twenty-content-octet ceiling, exact and normalized magnitude views, stable local offsets, bounded work, and redacted diagnostics. Keep serial generation, issuer uniqueness, certificate parsing, path validation, signatures, trust, TLS, transport, clocks, entropy, credentials, and ambient authority outside this owner."
+    },
+    {
+      "id": "ocaml-der-tlv-emerging-lane-consumer",
+      "title": "Add the OCaml consumer for portable DER TLV conformance",
+      "status": "pending",
+      "depends_on": ["der-tlv-portable-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Register the emerging OCaml lane's DER TLV consumer against the merged neutral contract after the native OCaml build tool reaches current-contract conformance. This is an explicit emerging-lane closure item and does not add OCaml to the 15-language denominator or implicitly promote the lane."
+    },
+    {
+      "id": "ocaml-der-asn1-emerging-lane-consumer",
+      "title": "Add the OCaml consumer for portable typed ASN.1 DER conformance",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance", "ocaml-der-tlv-emerging-lane-consumer", "ocaml-build-tool-current-contract-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Register the emerging OCaml lane's typed ASN.1 DER consumer after both the neutral established-lane contract and OCaml DER TLV consumer exist. This closes a future portable-core gap without changing the current 15-language denominator or implicitly promoting OCaml."
     },
     {
       "id": "x509-time-portable-conformance",
@@ -10150,6 +10249,81 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered after merged PR #14820 added the Rust-only qr-locate identity. Compose the reviewed vision primitives into deterministic bounded candidate location, perspective estimation, sampling, ordering, diagnostics, and applicable-lane rollout. Require real-photo fixture coverage before broad ports; camera, native imaging, filesystem, and device authority remain outside."
+    },
+    {
+      "id": "journal-core-portable-conformance",
+      "title": "Define portable Journal core conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked exact-main refresh after merged PR #15917 added the empty-capability Rust `journal-core` identity. Define language-neutral fixtures and established-lane implementations for the bounded journal model, commands, projections, search, caller-supplied dates, serialization, ordering, transactional failures, and stable redacted diagnostics. Keep clocks, files, export, host UI, native ABI, browser, network, and ambient authority outside this core."
+    },
+    {
+      "id": "journal-wasm-boundary-applicability-review",
+      "title": "Classify Journal WASM transport and host applicability",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["journal-core-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #15944 added Rust `journal-wasm`. Separate its deterministic JSON command, response, and error envelope over journal-core from Rust/WASM/JavaScript host glue, allocation ABI, browser integration, and deployment authority. Freeze the transport projection only after the Journal core contract is stable; record narrow target applicability instead of treating the complete WASM package as an automatic fifteen-lane gap."
+    },
+    {
+      "id": "journal-mosaic-workbench-classification",
+      "title": "Classify portable Journal Mosaic workbench behavior and native boundaries",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["journal-core-portable-conformance", "mosaic-app-runtime-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review", "mosaic-app-wasm-rust-and-javascript-host-review"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after the Journal series added Rust `journal-mosaic-app` and Mosaic-domain `mosaic-pkg-draft-editor`; fold the related `mosaic-pkg-checklist` authored component into this workbench review rather than creating established-lane slots for domain-language packages. Define portable state transitions, command mapping, deterministic projections, injected export content, and stable diagnostics, while separating native ABI, files.save, UI hosts, and clock authority. Reconcile the current empty capability declaration with production SystemTime reads before any selection or port."
+    },
+    {
+      "id": "source-preprocessor-portable-conformance",
+      "title": "Define portable generic source-preprocessor conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PRs #15853 and #15873 added the Rust-only `source-preprocessor` identity. Define neutral fixtures and established-lane implementations for injected-file include resolution, conditionals, macro expansion, Prosser hide sets, source maps, diagnostics, recursion and work ceilings, and transactional failure. Require a truthful empty capability manifest for the pure injected core; keep filesystem traversal, environment lookup, and CLI I/O outside."
+    },
+    {
+      "id": "macrooct-frontend-portable-conformance",
+      "title": "Define portable MacroOct frontend conformance",
+      "status": "pending",
+      "depends_on": ["source-preprocessor-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered with the Rust-only `macrooct-lexer` and `macrooct-iir-compiler` identities in PRs #15853 and #15873. Own the bounded dialect lexer, preprocessing integration, source locations, deterministic IIR projection, malformed-input behavior, stable diagnostics, and established-lane fixtures above the generic source-preprocessor contract. Require explicit empty capability manifests for both packages; keep file discovery, process execution, and host compiler authority outside."
+    },
+    {
+      "id": "pdp8-simulator-singleton-classification",
+      "title": "Classify DEC PDP-8 simulator parity beyond Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #15684 added the Rust-only `pdp8-simulator` identity without a capability manifest. Reconcile its deterministic machine state, instruction semantics, lifecycle, atomic fault behavior, traces, fixtures, and resource ceilings against the established functional-simulator pattern, then define applicable-lane implementations or narrow reviewed exceptions. Require a truthful empty capability manifest for the pure simulator core; keep devices, files, timing, and host I/O outside."
+    },
+    {
+      "id": "x509-name-portable-conformance",
+      "title": "Define portable X.509 Name conformance",
+      "status": "pending",
+      "depends_on": ["der-asn1-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #15822 added the Rust-only `x509-name` identity. Define language-neutral fixtures and established-lane implementations for bounded RDN sequences, canonical DER SET ordering, validated attribute OIDs with opaque values, shared depth and element budgets, exact local offsets, transactional failures, and payload-redacted diagnostics above typed DER ASN.1. Keep string-profile interpretation, canonical-name comparison, certificate policy, path validation, trust, TLS, transport, and ambient authority outside."
+    },
+    {
+      "id": "v8-test262-runner-applicability-review",
+      "title": "Classify V8 Test262 runner core and host authority",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PRs #16013, #16037, and #16040 added Rust `v8-test262`. Audit the bounded header parser, classification, list comparison, parse budgets, and deterministic report core for a possible neutral fixture contract, while keeping corpus provenance, filesystem enumeration, environment access, baseline writes, stdout, and the Rust JavaScript-parser execution path in an explicit host-authority and applicability review. Do not treat the complete runner as an immediate fifteen-lane package gap."
     },
     {
       "id": "build-tool-ci-gate-registry-established-lane-parity",

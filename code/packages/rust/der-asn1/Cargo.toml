@@ -6,3 +6,6 @@ description = "Bounded allocation-free typed ASN.1 DER value decoding"
 
 [dependencies]
 der-tlv = { path = "../der-tlv" }
+
+[dev-dependencies]
+serde_json = "1"
