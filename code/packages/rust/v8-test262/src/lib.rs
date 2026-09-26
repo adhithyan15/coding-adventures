@@ -62,14 +62,13 @@ pub const MAX_FILE_BYTES: u64 = 8 * 1024 * 1024;
 
 /// The largest test source handed to the parser. Every test262 file but one
 /// is under 500 KB; the exception, `staging/sm/String/string-upper-lower-mapping.js`
-/// (3.2 MB of case-mapping literals), makes javascript-parser allocate about
-/// 35 GB, because the shared packrat parser memoises a deep clone of each
-/// subtree at every (rule, position) and the expression grammar has some
-/// twenty precedence levels. On a CI runner that is an out-of-memory kill,
-/// not a result. Sources over the budget are a `Skip` with this reason until
-/// the parser shares memoised subtrees; they stay on the pass list, so they
-/// are judged again the moment the budget allows.
-pub const PARSE_BUDGET_BYTES: usize = 1024 * 1024;
+/// (3.2 MB of case-mapping literals), once made javascript-parser allocate
+/// about 35 GB, because the shared packrat parser memoised a deep clone of each
+/// subtree at every (rule, position). The memo now shares subtrees, and that
+/// file parses in about 3 GB and five seconds (release build), so it is judged.
+/// The budget stays, above it, as a bound on what one test may cost: a source
+/// over it is a `Skip` with this reason, never a pass.
+pub const PARSE_BUDGET_BYTES: usize = 4 * 1024 * 1024;
 
 fn over_parse_budget(source: &str) -> bool {
     source.len() > PARSE_BUDGET_BYTES
