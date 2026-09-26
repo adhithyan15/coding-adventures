@@ -176,10 +176,19 @@ function cursorResult(testCase: FixtureCase, decoder: Asn1Decoder, root: Asn1Ele
       catch (error: unknown) { events.push(failure(error, "container-value")); }
       continue;
     }
-    if (action !== "read" && action !== "read-with-different-limits") throw new Error(`unsupported action ${action}`);
-    const active = action === "read" ? decoder : new Asn1Decoder({ ...decoder.limits, maxTotalElements: decoder.limits.maxTotalElements + 1 });
+    if (action !== "read" && action !== "read-with-different-limits" && action !== "read-nested-sequence") throw new Error(`unsupported action ${action}`);
+    const active = action !== "read-with-different-limits" ? decoder : new Asn1Decoder({ ...decoder.limits, maxTotalElements: decoder.limits.maxTotalElements + 1 });
     try {
       const child = cursor.read(active);
+      if (action === "read-nested-sequence") {
+        if (child === undefined) throw new Error("nested child required");
+        const nested = decoder.sequence(child);
+        const grandchild = nested.read(decoder);
+        if (grandchild === undefined) throw new Error("nested grandchild required");
+        nested.finish();
+        events.push({ outcome: "value", tag: grandchild.tag, depth: grandchild.depth });
+        continue;
+      }
       events.push(child === undefined ? { outcome: "end" } : { outcome: "value", tag: child.tag, depth: child.depth });
     } catch (error: unknown) { events.push(failure(error, "container-value")); }
   }
@@ -218,7 +227,7 @@ function runCase(testCase: FixtureCase): unknown {
 
 describe("DER ASN.1 v1 portable conformance", () => {
   it("pins the closed profile", () => {
-    expect(contract.cases).toHaveLength(109);
+    expect(contract.cases).toHaveLength(122);
     expect(contract.error_ids).toHaveLength(22);
     const references = contract.cases.flatMap((testCase) => testCase.der_tlv_case_id === undefined ? [] : [testCase.der_tlv_case_id]);
     expect(references).toHaveLength(46);

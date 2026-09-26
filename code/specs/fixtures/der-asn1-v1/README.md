@@ -12,8 +12,9 @@ non-exact references, and requires the typed consumer to project the same raw
 element or framing failure. Changes to canonical identifier, length, limit, or
 trailing-data behavior therefore remain single-owned by DER TLV.
 
-The remaining cases own typed semantics: BOOLEAN, INTEGER and checked `u64`
-conversion, BIT STRING, OCTET STRING, IA5String, NULL, OBJECT IDENTIFIER,
+The remaining cases own typed semantics: BOOLEAN, INTEGER and checked
+conversion into the unsigned 64-bit range, BIT STRING, OCTET STRING, IA5String,
+NULL, OBJECT IDENTIFIER,
 schema-selected primitive context-specific values, SEQUENCE, SET, explicit
 wrappers, shared depth and element budgets, cursor transactionality, local
 offset domains, and payload-blind errors.
@@ -22,10 +23,16 @@ offset domains, and payload-blind errors.
 
 Expected results describe values rather than runtime object identity. Byte
 projections use lowercase hexadecimal. Integers preserve their signed DER
-contents and use decimal strings for `u64` values. OID arcs are decimal strings
+contents and use decimal strings for values in the unsigned 64-bit range. OID arcs are decimal strings
 so JavaScript, Dart, JSON, and other numeric runtimes cannot silently round
 values beyond their exact integer domain. The contract requires byte equality,
 not a particular borrowed-view or copying strategy.
+
+The consumer registry is the closed target denominator for all 15 established
+lanes. Membership records required coverage; it does not by itself assert that
+a lane is already implemented. The aggregate gate remains intentionally red
+until every registered package has its real source, tests, metadata, and BUILD
+fronts.
 
 Every error names an `offset_scope`. `operation-input` starts at the outer
 element's identifier. `container-value` starts at the first contents octet of a

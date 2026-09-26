@@ -189,6 +189,20 @@ def cursor_result(
             )
         try:
             child = cursor.read(active)
+            if action == "read-nested-sequence":
+                assert child is not None
+                nested = decoder.sequence(child)
+                grandchild = nested.read(decoder)
+                assert grandchild is not None
+                nested.finish()
+                events.append(
+                    {
+                        "outcome": "value",
+                        "tag": tag(grandchild),
+                        "depth": grandchild.depth,
+                    }
+                )
+                continue
             events.append(
                 {"outcome": "end"}
                 if child is None

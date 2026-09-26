@@ -302,6 +302,24 @@ fn cursor_case(
                     Err(error) => failure(error, "container-value"),
                 });
             }
+            "read-nested-sequence" => {
+                let current = cursor.as_mut().expect("cursor");
+                events.push(match current.read(decoder) {
+                    Ok(Some(element)) => match decoder.sequence(element) {
+                        Ok(mut nested) => match nested.read(decoder) {
+                            Ok(Some(grandchild)) => match nested.finish() {
+                                Ok(()) => json!({"outcome":"value", "tag":tag_projection(grandchild), "depth":grandchild.depth()}),
+                                Err(error) => failure(error, "container-value"),
+                            },
+                            Ok(None) => panic!("nested sequence must contain one child"),
+                            Err(error) => failure(error, "container-value"),
+                        },
+                        Err(error) => failure(error, "container-value"),
+                    },
+                    Ok(None) => panic!("outer sequence must contain a nested child"),
+                    Err(error) => failure(error, "container-value"),
+                });
+            }
             other => panic!("unsupported cursor action {other}"),
         }
     }
@@ -376,7 +394,7 @@ fn consumes_every_closed_der_asn1_case() {
     let document = fixture("der-asn1-v1");
     let upstream = fixture("der-tlv-v1");
     let cases = document["cases"].as_array().expect("fixture cases");
-    assert_eq!(cases.len(), 109, "closed DER ASN.1 profile changed");
+    assert_eq!(cases.len(), 122, "closed DER ASN.1 profile changed");
     assert_eq!(document["error_ids"].as_array().unwrap().len(), 22);
 
     for case in cases {

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "profile": "x690-der-asn1-values-v1-portable-consumers",
   "fixture": "code/specs/fixtures/der-asn1-v1/cases.json",
-  "case_count": 109,
+  "case_count": 122,
   "error_id_count": 22,
   "established_lane_count": 15,
   "consumers": [

@@ -31,7 +31,7 @@ class DerAsn1Test {
 
     @TestFactory
     fun portableConformance(): Stream<DynamicTest> {
-        assertEquals(109, fixture.path("cases").size())
+        assertEquals(122, fixture.path("cases").size())
         assertEquals(22, fixture.path("error_ids").size())
         val references = fixture.path("cases").filter { it.has("der_tlv_case_id") }
         assertEquals(46, references.size)
@@ -313,12 +313,20 @@ class DerAsn1Test {
                 catch (error: Asn1Error) { events += failure(error, "container-value") }
                 continue
             }
-            check(action == "read" || action == "read-with-different-limits")
-            val active = if (action == "read") decoder else Asn1Decoder(
+            check(action == "read" || action == "read-with-different-limits" || action == "read-nested-sequence")
+            val active = if (action != "read-with-different-limits") decoder else Asn1Decoder(
                 decoder.limits.copy(maxTotalElements = decoder.limits.maxTotalElements + 1),
             )
             try {
                 val child = cursor.read(active)
+                if (action == "read-nested-sequence") {
+                    checkNotNull(child)
+                    val nested = decoder.sequence(child)
+                    val grandchild = checkNotNull(nested.read(decoder))
+                    nested.finish()
+                    events += linkedMapOf("outcome" to "value", "tag" to tag(grandchild), "depth" to grandchild.depth)
+                    continue
+                }
                 events += if (child == null) {
                     linkedMapOf("outcome" to "end")
                 } else {

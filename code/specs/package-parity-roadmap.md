@@ -14275,20 +14275,24 @@ entering the established-language denominator.
 
 ### DER ASN.1 portable implementation progress
 
-The closed 109-case, 22-error language-neutral contract now has complete
+The closed 122-case, 22-error language-neutral contract now has complete
 package-native consumers in eight of fifteen established lanes: Rust, Python,
 Go, Dart, Java, TypeScript, Kotlin, and C#. Every consumer executes all 46 referenced DER TLV framing
-cases rather than treating delegated rows as automatic success. Python passes
-110 tests at 97.45 percent line coverage; Rust passes its full suite, Clippy,
-and formatting; Go passes race, vet, trimpath build, and 90.7 percent coverage;
+cases rather than treating delegated rows as automatic success. The refined
+corpus adds unsigned-64 OID boundaries, implicit-OID failures, exact explicit
+tag rejection, nested depth boundaries, and shared nested element budgets;
+an independent oracle proves that `bit-length-overflow` is the only reserved
+host-size error not safely executable by the bounded neutral corpus. Python
+passes 123 tests at 97.17 percent line coverage; Rust passes its full suite,
+Clippy, and formatting; Go passes race, vet, trimpath build, and 91.2 percent coverage;
 Dart passes fatal analysis and its coverage gate with 96.97 percent line and
 98.18 percent function coverage; Java passes Java 21 warnings-as-errors and
 JaCoCo with 96.25 percent line and 94.44 percent branch coverage. TypeScript
-passes its production build, 120 Vitest tests, a zero-high-vulnerability npm
+passes its production build, 133 Vitest tests, a zero-high-vulnerability npm
 audit, and coverage at 97.27 percent statements, 93.75 percent branches, 98.33
 percent functions, and 98.29 percent lines. Kotlin passes Java 21
-warnings-as-errors, 116 JUnit tests, and its JaCoCo gate at 95.26 percent line
-coverage. C# passes 113 xUnit tests with 95.66 percent line, 95.93 percent
+warnings-as-errors, its full 129-test JUnit suite, and its JaCoCo gate at 95.26 percent line
+coverage. C# passes 126 xUnit tests with 95.66 percent line, 95.93 percent
 branch, and 98.57 percent method coverage, plus warning-clean Release build and
 pack, format verification, and a zero-vulnerability NuGet audit. All eight use
 empty capability manifests, structural limits, shared work budgets,
@@ -14300,15 +14304,13 @@ wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, and C#, hid raw DE
 framing helpers from typed package surfaces, and added adversarial zero-value,
 runtime-token, immutable-snapshot, and redaction tests.
 
-A bounded pre-next-lane audit also found neutral-corpus holes worth closing
-inside this same work item before multiplying implementations: valid OID arcs
-at and above signed-64 boundaries, malformed and budget-limited implicit OIDs,
-wrong-class and primitive explicit wrappers, nested shared-budget and exact
-depth boundaries, and the intentionally unexercised `bit-length-overflow`
-error. The prose must also keep allocation strategy non-normative and avoid
-requiring every language to expose Rust's borrowed, `Copy`, or native `u64`
-representation. These are fixture/spec refinements, not a second implementation
-item or a reason to open another PR.
+A bounded pre-next-lane audit closed the neutral-corpus holes before multiplying
+implementations. The prose now keeps allocation and ownership strategy
+non-normative instead of requiring every language to expose Rust's borrowed,
+`Copy`, or native `u64` representation. The consumer registry is explicitly a
+15-lane target denominator rather than a completion assertion. All eight
+implemented lanes execute the refined corpus; this refinement remains part of
+the same serial work item and no second PR was opened.
 
 ## Autonomous Loop Protocol
 

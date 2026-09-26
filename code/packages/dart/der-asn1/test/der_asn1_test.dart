@@ -229,7 +229,9 @@ Map<String, dynamic> cursorResult(
       }
       continue;
     }
-    if (action != 'read' && action != 'read-with-different-limits') {
+    if (action != 'read' &&
+        action != 'read-with-different-limits' &&
+        action != 'read-nested-sequence') {
       throw StateError('unsupported cursor action $action');
     }
     final active = action == 'read-with-different-limits'
@@ -241,6 +243,19 @@ Map<String, dynamic> cursorResult(
         : decoder;
     try {
       final child = cursor.read(active);
+      if (action == 'read-nested-sequence') {
+        if (child == null) throw StateError('nested child required');
+        final nested = decoder.sequence(child);
+        final grandchild = nested.read(decoder);
+        if (grandchild == null) throw StateError('nested grandchild required');
+        nested.finish();
+        events.add({
+          'outcome': 'value',
+          'tag': tagProjection(grandchild),
+          'depth': grandchild.depth,
+        });
+        continue;
+      }
       events.add(
         child == null
             ? {'outcome': 'end'}
@@ -329,7 +344,7 @@ void main() {
   final cases = document['cases'] as List<dynamic>;
 
   test('pins the closed DER ASN.1 profile', () {
-    expect(cases, hasLength(109));
+    expect(cases, hasLength(122));
     expect(document['error_ids'] as List<dynamic>, hasLength(22));
   });
 

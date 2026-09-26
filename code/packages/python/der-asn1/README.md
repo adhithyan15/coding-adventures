@@ -22,5 +22,5 @@ errors interpolate hostile payload bytes.
 
 - der-tlv
 
-The package consumes all 109 cases in the language-neutral DER ASN.1 v1
+The package consumes all 122 cases in the language-neutral DER ASN.1 v1
 fixture. Run the native front door with `BUILD` or `BUILD_windows`.

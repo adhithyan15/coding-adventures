@@ -32,7 +32,7 @@ final class DerAsn1Test {
 
     @TestFactory
     Stream<DynamicTest> portableConformance() {
-        assertEquals(109, FIXTURE.path("cases").size());
+        assertEquals(122, FIXTURE.path("cases").size());
         assertEquals(22, FIXTURE.path("error_ids").size());
         var tests = new ArrayList<DynamicTest>();
         for (JsonNode testCase : FIXTURE.path("cases")) {
@@ -249,7 +249,8 @@ final class DerAsn1Test {
                 }
                 continue;
             }
-            if (!action.equals("read") && !action.equals("read-with-different-limits")) {
+            if (!action.equals("read") && !action.equals("read-with-different-limits")
+                    && !action.equals("read-nested-sequence")) {
                 throw new IllegalStateException("unsupported cursor action " + action);
             }
             var active = decoder;
@@ -261,6 +262,15 @@ final class DerAsn1Test {
             }
             try {
                 var child = cursor.read(active);
+                if (action.equals("read-nested-sequence")) {
+                    if (child == null) throw new IllegalStateException("nested child required");
+                    var nested = decoder.sequence(child);
+                    var grandchild = nested.read(decoder);
+                    if (grandchild == null) throw new IllegalStateException("nested grandchild required");
+                    nested.finish();
+                    events.add(map("outcome", "value", "tag", tag(grandchild), "depth", grandchild.depth()));
+                    continue;
+                }
                 events.add(child == null
                     ? map("outcome", "end")
                     : map("outcome", "value", "tag", tag(child), "depth", child.depth()));

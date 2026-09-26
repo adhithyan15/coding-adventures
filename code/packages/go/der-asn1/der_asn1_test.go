@@ -238,7 +238,7 @@ func cursorResult(testCase map[string]any, decoder *ASN1Decoder, root ASN1Elemen
 			} else {
 				events = append(events, map[string]any{"outcome": "finished"})
 			}
-		case "read", "read-with-different-limits":
+		case "read", "read-with-different-limits", "read-nested-sequence":
 			active := decoder
 			if action == "read-with-different-limits" {
 				mismatch := decoder.Limits()
@@ -250,6 +250,23 @@ func cursorResult(testCase map[string]any, decoder *ASN1Decoder, root ASN1Elemen
 				events = append(events, errorProjection(readErr, "container-value"))
 			} else if child == nil {
 				events = append(events, map[string]any{"outcome": "end"})
+			} else if action == "read-nested-sequence" {
+				nested, nestedErr := decoder.Sequence(*child)
+				if nestedErr != nil {
+					events = append(events, errorProjection(nestedErr, "container-value"))
+					continue
+				}
+				grandchild, nestedErr := nested.Read(decoder)
+				if nestedErr == nil {
+					nestedErr = nested.Finish()
+				}
+				if nestedErr != nil {
+					events = append(events, errorProjection(nestedErr, "container-value"))
+				} else if grandchild == nil {
+					panic("nested sequence must contain one child")
+				} else {
+					events = append(events, map[string]any{"outcome": "value", "tag": tagProjection(*grandchild), "depth": grandchild.Depth()})
+				}
 			} else {
 				events = append(events, map[string]any{"outcome": "value", "tag": tagProjection(*child), "depth": child.Depth()})
 			}
@@ -316,7 +333,7 @@ func runCase(document, upstream, testCase map[string]any) map[string]any {
 func TestPortableConformance(t *testing.T) {
 	document := fixture(t, "der-asn1-v1")
 	upstream := fixture(t, "der-tlv-v1")
-	if len(array(document["cases"])) != 109 || len(array(document["error_ids"])) != 22 {
+	if len(array(document["cases"])) != 122 || len(array(document["error_ids"])) != 22 {
 		t.Fatal("closed DER ASN.1 profile changed")
 	}
 	for _, raw := range array(document["cases"]) {

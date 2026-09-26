@@ -342,6 +342,68 @@ def cursor_result(
                 )
             )
             continue
+        if action == "read-nested-sequence":
+            if offset == len(contents):
+                events.append({"outcome": "end"})
+                continue
+            if elements_read >= limits["max_total_elements"]:
+                events.append(
+                    failure_result(
+                        TypedFailure("element-limit-exceeded", 0, "container-value")
+                    )
+                )
+                continue
+            try:
+                child = decode_one(contents[offset:], limits["der"])
+            except FramingFailure as error:
+                events.append(
+                    failure_result(
+                        TypedFailure(
+                            "framing",
+                            offset + error.offset,
+                            "container-value",
+                            error.error_id,
+                        )
+                    )
+                )
+                continue
+            offset += child.encoded_len
+            elements_read += 1
+            try:
+                expect_tag(child, "universal", True, 16)
+                if 2 >= limits["max_depth"]:
+                    raise TypedFailure("depth-limit-exceeded", 0, "container-value")
+                nested_contents = value_bytes(contents[offset - child.encoded_len :], child)
+                if elements_read >= limits["max_total_elements"]:
+                    raise TypedFailure(
+                        "element-limit-exceeded", 0, "container-value"
+                    )
+                grandchild = decode_one(nested_contents, limits["der"])
+                elements_read += 1
+                if grandchild.encoded_len != len(nested_contents):
+                    raise TypedFailure(
+                        "framing",
+                        grandchild.encoded_len,
+                        "container-value",
+                        "trailing-data",
+                    )
+                events.append(
+                    value_result(tag=tag_result(grandchild), depth=2)
+                )
+            except FramingFailure as error:
+                events.append(
+                    failure_result(
+                        TypedFailure(
+                            "framing",
+                            error.offset,
+                            "container-value",
+                            error.error_id,
+                        )
+                    )
+                )
+            except TypedFailure as error:
+                events.append(failure_result(error))
+            continue
         if offset == len(contents):
             events.append({"outcome": "end"})
             continue
@@ -468,6 +530,20 @@ class DerAsn1FixtureTests(unittest.TestCase):
         self.assertEqual(set(references), expected)
         self.assertEqual(len(references), len(set(references)))
         self.assertEqual(len(references), len(expected))
+
+    def test_only_host_size_bit_length_overflow_is_reserved(self) -> None:
+        exercised: set[str] = set()
+        for case in self.document["cases"]:
+            expected = case["expected"]
+            if "error_id" in expected:
+                exercised.add(expected["error_id"])
+            for event in expected.get("events", []):
+                if "error_id" in event:
+                    exercised.add(event["error_id"])
+        self.assertEqual(
+            set(self.document["error_ids"]) - exercised,
+            {"bit-length-overflow"},
+        )
 
     def test_independent_oracle_matches_every_case(self) -> None:
         for case in self.document["cases"]:

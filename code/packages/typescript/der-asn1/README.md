@@ -1,7 +1,7 @@
 # DER ASN.1 for TypeScript
 
 Bounded typed ASN.1 DER value decoding over the language-neutral
-`der-asn1-v1` behavior contract. The package consumes all 109 portable cases,
+`der-asn1-v1` behavior contract. The package consumes all 122 portable cases,
 including all 46 referenced DER-TLV framing cases.
 
 ## Dependencies

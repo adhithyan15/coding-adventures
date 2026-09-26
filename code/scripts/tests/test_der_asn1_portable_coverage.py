@@ -292,7 +292,7 @@ def check_fixture_and_capabilities() -> None:
         REPO_ROOT / "code/specs/schemas/required_capabilities.schema.json"
     )
     validator = Draft202012Validator(capability_schema)
-    assert len(fixture["cases"]) == document["case_count"] == 109
+    assert len(fixture["cases"]) == document["case_count"] == 122
     assert len(fixture["error_ids"]) == document["error_id_count"] == 22
     for consumer in document["consumers"]:
         package_root = consumer["package_root"]

@@ -13,6 +13,6 @@ stable upstream DER error kind without interpolating hostile payload bytes.
 
 - der-tlv
 
-The package-native suite executes all 109 language-neutral DER ASN.1 v1 cases,
+The package-native suite executes all 122 language-neutral DER ASN.1 v1 cases,
 including the 46 referenced DER TLV cases. Run `BUILD` for race, coverage, vet,
 and trimpath build validation.

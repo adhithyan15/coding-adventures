@@ -10,7 +10,7 @@ operations share explicit depth and element budgets; failed cursor reads are
 transactional; errors expose stable identifiers and local offsets without
 including hostile input payloads.
 
-The portable conformance suite consumes all 109 language-neutral ASN.1 cases,
+The portable conformance suite consumes all 122 language-neutral ASN.1 cases,
 including direct verification of the 46 delegated DER-TLV cases and all 22
 typed error identifiers.
 

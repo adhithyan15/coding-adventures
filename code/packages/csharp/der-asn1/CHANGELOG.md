@@ -4,4 +4,4 @@
 
 - Add bounded typed ASN.1 DER decoding over the native C# DER-TLV package.
 - Add immutable validated value wrappers and transactional shared-budget cursors.
-- Cover all 109 language-neutral cases, 46 delegated framing cases, and 22 stable errors.
+- Cover all 122 language-neutral cases, 46 delegated framing cases, and 22 stable errors.

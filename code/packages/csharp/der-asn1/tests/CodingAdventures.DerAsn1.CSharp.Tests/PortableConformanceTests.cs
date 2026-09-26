@@ -36,7 +36,7 @@ public sealed class PortableConformanceTests
     public void FixtureRosterAndDelegationAreClosed()
     {
         JsonArray cases = Fixture["cases"]!.AsArray();
-        Assert.Equal(109, cases.Count);
+        Assert.Equal(122, cases.Count);
         Assert.Equal(22, Fixture["error_ids"]!.AsArray().Count);
         string[] references = cases
             .Where(node => node!.AsObject().ContainsKey("der_tlv_case_id"))
@@ -280,7 +280,7 @@ public sealed class PortableConformanceTests
                 }
                 continue;
             }
-            if (action is not ("read" or "read-with-different-limits"))
+            if (action is not ("read" or "read-with-different-limits" or "read-nested-sequence"))
             {
                 throw new InvalidDataException($"unsupported cursor action {action}");
             }
@@ -297,6 +297,16 @@ public sealed class PortableConformanceTests
             try
             {
                 DerAsn1.Asn1Element? child = cursor.Read(active);
+                if (action == "read-nested-sequence")
+                {
+                    if (child is null) throw new InvalidDataException("nested child required");
+                    DerAsn1.Asn1Cursor nested = decoder.Sequence(child);
+                    DerAsn1.Asn1Element? grandchild = nested.Read(decoder);
+                    if (grandchild is null) throw new InvalidDataException("nested grandchild required");
+                    nested.Finish();
+                    events.Add(Map(("outcome", "value"), ("tag", Tag(grandchild)), ("depth", grandchild.Depth)));
+                    continue;
+                }
                 events.Add(child is null
                     ? Map(("outcome", "end"))
                     : Map(("outcome", "value"), ("tag", Tag(child)), ("depth", child.Depth)));
