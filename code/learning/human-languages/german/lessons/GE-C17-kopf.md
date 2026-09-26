@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04, GE-ETYMON-KOPF-05]
+  knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04, GE-ETYMON-KOPF-05]
+  knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -65,19 +65,8 @@ A useful phrase is:
 German compounds simply place nouns together: **Kopf** (head) + **Schmerzen**
 (pains).
 
-## The word, taken apart: The old cup
-<!-- hl-knowledge: introduces=[GE-ETYMON-KOPF-05]; assesses=[] -->
-
-**Kopf** originally meant a **cup or bowl**. It is related to English **cup**;
-both were early borrowings of Late Latin ***cuppa***. A container word became
-slang for the skull and eventually took over the everyday job.
-
-German’s older inherited head-word did not disappear completely. The next
-micro-lesson follows it into compounds and compares the same container metaphor
-in French.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04, GE-ETYMON-KOPF-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: “der Kopf” — release *p* into *f*]
@@ -87,7 +76,7 @@ in French.
 [REPEAT x2] “Der Kopf — masculine, capitalised.”
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04, GE-ETYMON-KOPF-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04] -->
 
 [PAUSE 3s] Say “the head.” (**Der Kopf**.) Give its gender. (**Masculine**.) Why
 the capital? (It is a **noun**.) What did *Kopf* first mean? (A **cup or bowl**.)

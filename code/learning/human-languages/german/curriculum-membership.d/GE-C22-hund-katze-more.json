@@ -1,11 +1,11 @@
 {
-  "id": "GE-C23-gruen-gelb",
+  "id": "GE-C22-hund-katze-more",
   "pathSegment": "GE-PATH-026",
-  "pathOrder": 2,
+  "pathOrder": 1,
   "extensions": [
     {
       "id": "GE-EXT-026-LANGUAGE-SPECIFIC",
-      "order": 2
+      "order": 1
     }
   ]
 }

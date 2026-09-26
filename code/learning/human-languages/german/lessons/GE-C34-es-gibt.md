@@ -8,7 +8,7 @@ type: phrase
 headword: es gibt
 gloss: there is, there are — literally "it gives", and it takes the done-to form this chapter has taught
 concept_tag: GE-EXISTENCE-ES-GIBT
-prerequisites: [GE-C34-praedikativ, GE-C34-den, GE-C03-es]
+prerequisites: [GE-C34-praedikativ, GE-C34-den, GE-C03-es, GE-C22-hund-katze-more]
 sounds: []
 roots: []
 etymology_hook: "each language picks a different verb to say a thing exists: German gives it, French has it there, Spanish has it outright, English puts it there — and only German's choice makes the thing an object"

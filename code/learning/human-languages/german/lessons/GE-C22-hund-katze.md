@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [GE-LEX-HUND-02, GE-ETYMON-HUND-03, GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06]
+  knowledge: [GE-LEX-HUND-02, GE-ETYMON-HUND-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-HUND-02, GE-ETYMON-HUND-03, GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06]
+  knowledge: [GE-LEX-HUND-02, GE-ETYMON-HUND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -53,26 +53,8 @@ unexplained mystery word, with no confirmed cognates in any other
 language — the exact same *shape* of story as Spanish's *perro* displacing
 *can*, just in a completely different language family.
 
-## The word, taken apart: Katze
-<!-- hl-knowledge: introduces=[GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06]; assesses=[] -->
-
-Here's the twist: **Katze** ("**cat**") looks like it should be native
-Germanic too, sitting right next to native *Hund* — but it isn't. **Katze**
-descends from Proto-Germanic **\*kattuz**, which is itself a borrowing of the
-**same Late Latin cattus** you already met with French's *chat* and Spanish's
-*gato* — most likely ultimately **Afro-Asiatic**, traveling out of Egypt
-along Roman trade routes. Every Germanic language shows this **same**
-borrowing (Dutch *kat*, Swedish *katt*, Icelandic *köttur*) — so unlike "dog"
-words, which go their own separate ways in nearly every language, "cat"
-words are remarkably **widespread** across both Germanic and Romance,
-because the word traveled **with the animal itself**. Be honest that this
-isn't a universal rule, though: **Romanian** (*pisică*) and much of **South
-Slavic** (Serbian/Croatian *mačka*) built their own onomatopoeic cat-words
-instead, imitating the sound of a cat's call rather than inheriting *cattus*
-— so the spread is wide, but not without real exceptions.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HUND-02, GE-ETYMON-HUND-03, GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HUND-02, GE-ETYMON-HUND-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Hund" — dog, native Germanic, cousin of English "hound"]
@@ -81,7 +63,7 @@ instead, imitating the sound of a cat's call rather than inheriting *cattus*
 - [YOU SAY: "Katze" — cat, surprisingly a Latin loanword, not native at all]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HUND-02, GE-ETYMON-HUND-03, GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HUND-02, GE-ETYMON-HUND-03] -->
 
 [PAUSE 3s] Is **Hund** native Germanic, and what's its English cousin? (**Yes**
 — cousin of English **hound**.) What word did English replace *hound* with,

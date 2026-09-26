@@ -8,7 +8,7 @@ type: practice
 headword: und · oder · aber · sondern · denn · weil
 gloss: six joiners, and the one that moves the verb — run over every sentence the book owns
 concept_tag: GE-REVIEW-VERBINDUNGEN
-prerequisites: [GE-C35-weil]
+prerequisites: [GE-C35-weil, GE-C23-gruen-gelb-more]
 sounds: []
 roots: []
 duration:

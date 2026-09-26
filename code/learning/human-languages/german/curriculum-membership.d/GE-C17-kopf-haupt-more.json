@@ -1,11 +1,11 @@
 {
-  "id": "GE-C17-kopf-haupt",
+  "id": "GE-C17-kopf-haupt-more",
   "pathSegment": "GE-PATH-022",
-  "pathOrder": 2,
+  "pathOrder": 3,
   "extensions": [
     {
       "id": "GE-EXT-022-ETYMOLOGY",
-      "order": 0
+      "order": 1
     }
   ]
 }

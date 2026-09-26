@@ -8,7 +8,7 @@ type: practice
 headword: Kopf · Haupt · Nase
 gloss: two words for one head, the face they sit on, and why the cup-word won
 concept_tag: GE-REVIEW-KOPF-HAUPT
-prerequisites: [GE-C02-freut-mich, GE-C03-vielen-dank, GE-C03-es-geht, GE-C04-sehen, GE-C04-auf, GE-C17-kopf, GE-C17-kopf-haupt, GE-C30-nase]
+prerequisites: [GE-C02-freut-mich, GE-C03-vielen-dank, GE-C03-es-geht, GE-C04-sehen, GE-C04-auf, GE-C17-kopf, GE-C17-kopf-haupt, GE-C30-nase, GE-C17-kopf-haupt-more]
 sounds: []
 roots: []
 duration:

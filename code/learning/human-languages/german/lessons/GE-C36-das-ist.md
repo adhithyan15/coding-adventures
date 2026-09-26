@@ -8,7 +8,7 @@ type: phrase
 headword: Das ist mein Bruder
 gloss: this is — the phrase that introduces somebody else, using a das that stands for no gender at all
 concept_tag: GE-INTRODUCE-OTHERS
-prerequisites: [GE-C36-ihr-her, GE-C16-er-ist, GE-C02-freut-mich]
+prerequisites: [GE-C36-ihr-her, GE-C16-er-ist, GE-C02-freut-mich, GE-C22-hund-katze-more]
 sounds: []
 roots: []
 etymology_hook: "das ist meine Schwester keeps das even in front of a die-word, because that das is not the article but the old pointing word behind it — the demonstrative *þat that also gave English that"
