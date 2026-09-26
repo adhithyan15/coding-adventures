@@ -491,8 +491,10 @@ runtime's `environment()` is the one the user is looking at.
   difference.
 - **"No reaction" keeps the current props.** The runtime answers an
   environment the app ignores with the current revision and `props: null`
-  (§7.1). The Swift host treats an update without props as nothing to render
-  and keeps showing what it showed; it never replaces props with nothing.
+  (§7.1). The Swift host treats an update without props *at the revision
+  it is showing* as nothing to render, and keeps showing what it showed. A
+  props-less update that moves the revision is a defect and is not papered
+  over.
 - **Color scheme is the rendered one.** SwiftUI's `colorScheme` is what the
   window actually uses, so the report says `light` or `dark`, never
   `system`.

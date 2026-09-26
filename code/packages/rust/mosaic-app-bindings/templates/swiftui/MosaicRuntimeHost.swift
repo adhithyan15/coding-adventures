@@ -264,12 +264,17 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         // Settle BEFORE persisting: the runtime refuses to snapshot while an
         // effect is outstanding, so persisting first warns on every effect.
         var settled = settleEffects(update)
-        // An update without props (an environment the app did not react to,
-        // UI48 §7.1) carries nothing to render: keep the props and revision
-        // already showing rather than handing the view nothing.
-        if settled["props"] is NSNull, let showing = latestUpdate["props"] {
+        // An update without props AT THE REVISION ALREADY SHOWING (an
+        // environment the app did not react to, UI48 §7.1) carries nothing to
+        // render: keep the props showing rather than handing the view nothing.
+        // Only then -- a props-less update that moves the revision is a
+        // defect, and is left as it is so it surfaces instead of being hidden.
+        if settled["props"] is NSNull,
+           let showing = latestUpdate["props"],
+           let revision = settled["revision"] as? NSNumber,
+           let shownRevision = latestUpdate["revision"] as? NSNumber,
+           revision == shownRevision {
           settled["props"] = showing
-          settled["revision"] = latestUpdate["revision"]
         }
         persistSnapshot()
         latestUpdate = Self.withPersistenceWarning(settled, effectWarning ?? persistenceWarning)
