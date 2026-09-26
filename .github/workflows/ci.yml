@@ -2426,8 +2426,9 @@ jobs:
           xcrun simctl launch "$simulator" dev.codingadventures.trestle
           sleep 10
           # Still running ten seconds later: it started, loaded the engine and
-          # did not crash rendering the first frame.
-          xcrun simctl spawn "$simulator" launchctl list | grep -q 'dev.codingadventures.trestle'
+          # did not crash rendering the first frame. Drain all launchctl output:
+          # grep -q can close the pipe early and make simctl fail with SIGPIPE.
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
           xcrun simctl shutdown "$simulator"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
