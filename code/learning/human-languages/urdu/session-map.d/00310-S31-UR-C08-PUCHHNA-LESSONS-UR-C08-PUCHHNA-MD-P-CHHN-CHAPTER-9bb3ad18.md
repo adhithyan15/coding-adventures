@@ -1,0 +1,1 @@
+| **S31** | [`UR-C08-puchhna`](./lessons/UR-C08-puchhna.md): **پوچھنا** *pūchhnā* | Chapter 4 practice *(N+15)*; *bolnā* *(N+7)*; *paṛhnā* *(N+3)*; *lenā* *(N+1)* | ask with *kyā*, then say *maiṅ pūchhtā/pūchhtī hūṅ* |

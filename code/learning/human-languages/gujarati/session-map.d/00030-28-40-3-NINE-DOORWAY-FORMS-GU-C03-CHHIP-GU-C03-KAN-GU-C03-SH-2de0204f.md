@@ -1,0 +1,1 @@
+| 28-40 | 3 | Nine Doorway Forms | `GU-C03-chhip` -> `GU-C03-kan` -> `GU-C03-shak` -> `GU-W03-ja` -> `GU-W03-o-matra` -> `GU-W03-anusvara` -> `GU-W03-ii-matra` -> `GU-W03-u-matra` -> `GU-W03-chha` -> `GU-W03-ka` -> `GU-W03-nna` -> `GU-W03-sha` -> `GU-R03-doorway-three-r1` |

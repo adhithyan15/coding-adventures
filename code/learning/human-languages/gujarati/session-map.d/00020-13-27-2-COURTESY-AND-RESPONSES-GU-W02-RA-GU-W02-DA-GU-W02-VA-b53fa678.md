@@ -1,0 +1,1 @@
+| 13-27 | 2 | Courtesy and Responses | `GU-W02-ra` -> `GU-W02-da` -> `GU-W02-va` -> `GU-W02-ya` -> `GU-W02-bha` -> `GU-W02-dha` -> `GU-W02-vocalic-r` -> `GU-C01-aabhaar` -> `GU-C01-aavjo` -> `GU-C01-haa-naa` -> `GU-W01-haa-guided-copy` -> `GU-W01-haa-delayed-copy` -> `GU-W01-haa-dictation` -> `GU-C01-saarun` -> `GU-C01-practice` |

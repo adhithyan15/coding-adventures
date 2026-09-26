@@ -1,9 +1,12 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { expect, it } from "vitest";
 import { compileLessonActivities } from "../../../src/activity.js";
 import { measureContinuity, REINFORCEMENT_WINDOWS } from "../../../src/continuity.js";
-import { defaultCurriculumRoot, loadTrackChapters, loadTrackLessons } from "../../../src/loader.js";
+import {
+  DOC_SHARD_PLANS,
+  defaultRepoRoot,
+  unshardDocContents,
+} from "../../../src/doc-shard-cli.js";
+import { loadTrackChapters, loadTrackLessons } from "../../../src/loader.js";
 import {
   expectLanguageContinuity,
   expectLanguageLessonBudgets,
@@ -18,10 +21,10 @@ it("keeps the Gujarati session map aligned with canonical chapter and lesson ord
   const ledger = loadTrackChapters().find((track) => track.language === "gujarati");
   expect(ledger).toBeDefined();
 
-  const markdown = readFileSync(
-    join(defaultCurriculumRoot(), "gujarati", "session-map.md"),
-    "utf8",
-  );
+  const sessionMapPath = "code/learning/human-languages/gujarati/session-map.md";
+  const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === sessionMapPath);
+  expect(plan).toBeDefined();
+  const markdown = unshardDocContents(defaultRepoRoot(), plan!);
   const inventory = markdown
     .split("## Canonical session inventory", 2)[1]
     ?.split("## Current boundary", 1)[0];

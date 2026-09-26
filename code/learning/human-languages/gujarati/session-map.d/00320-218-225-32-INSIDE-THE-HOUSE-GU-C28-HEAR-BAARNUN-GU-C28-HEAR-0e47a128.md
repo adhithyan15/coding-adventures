@@ -1,0 +1,1 @@
+| 218-225 | 32 | Inside the House | `GU-C28-hear-baarnun` -> `GU-C28-hear-baari` -> `GU-C28-hear-khurshi` -> `GU-C28-hear-chaavi` -> `GU-C28-hear-divo` -> `GU-C28-house-five` -> `GU-C28-baari` -> `GU-R28-house-five-r1` |

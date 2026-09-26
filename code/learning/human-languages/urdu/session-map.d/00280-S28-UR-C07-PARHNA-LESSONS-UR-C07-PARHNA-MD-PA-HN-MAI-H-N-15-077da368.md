@@ -1,0 +1,1 @@
+| **S28** | [`UR-C07-parhna`](./lessons/UR-C07-parhna.md): **پڑھنا** *paṛhnā* | *maiṅ ... hūṅ* *(N+15)*; *honā* *(N+7)*; *jānnā* *(N+3)*; *samajhnā* *(N+1)* | trace the retroflex mark on **ٹ**, then on **ڑ** |

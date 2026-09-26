@@ -1,0 +1,1 @@
+| **S32** | [`UR-C08-madad`](./lessons/UR-C08-madad.md): **مدد کرنا** *madad karnā* | *khudā* *(N+15)*; *jānnā* *(N+7)*; *likhnā* *(N+3)*; *pūchhnā* *(N+1)* | say both Arabic roots — *ḥ-f-ẓ* and *m-d-d* |

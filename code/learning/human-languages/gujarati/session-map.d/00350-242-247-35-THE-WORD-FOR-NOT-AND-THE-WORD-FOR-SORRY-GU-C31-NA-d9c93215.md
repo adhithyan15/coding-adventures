@@ -1,0 +1,1 @@
+| 242-247 | 35 | The Word for Not, and the Word for Sorry | `GU-C31-nathi` -> `GU-C31-samajto-nathi` -> `GU-W08-pha` -> `GU-C31-maaf` -> `GU-C31-repair-five` -> `GU-R35-second-pass-read-it-or-repair-it` |
