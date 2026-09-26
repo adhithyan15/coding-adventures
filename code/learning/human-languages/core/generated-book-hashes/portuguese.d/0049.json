@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:197ad09405c93dbd",
+  "lessonIds": [
+    "PT-C49-cama",
+    "PT-C49-chave",
+    "PT-C49-parede",
+    "PT-C49-telhado",
+    "PT-C49-jardim"
+  ],
+  "tex": "portuguese/book/chapters/ch49-bed-key-wall-roof-garden.tex"
+}

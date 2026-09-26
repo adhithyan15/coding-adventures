@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C85-oiseau",
+    "language": "french",
+    "chapter": 85,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e342b34f9b4fec3f"
+  },
+  "findings": []
+}

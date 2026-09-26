@@ -1,0 +1,11 @@
+{
+  "id": "PT-C63-elefante",
+  "pathSegment": "PT-PATH-63-ANIMAIS4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-63-ANIMAIS4",
+      "order": 4
+    }
+  ]
+}

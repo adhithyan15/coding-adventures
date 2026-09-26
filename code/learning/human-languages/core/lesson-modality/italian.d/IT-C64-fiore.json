@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C64-fiore",
+    "language": "italian",
+    "chapter": 64,
+    "sequence": 2790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ff9a637bee32cd6"
+  },
+  "findings": []
+}

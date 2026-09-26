@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C63-orologio",
+    "language": "italian",
+    "chapter": 63,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89e73a9602254481"
+  },
+  "findings": []
+}

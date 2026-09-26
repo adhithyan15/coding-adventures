@@ -1,0 +1,11 @@
+{
+  "id": "FR-C92-doux",
+  "pathSegment": "FR-PATH-92-ADJ44",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-92-ADJ44",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Lion, Monkey, Bee, Ant, Elephant",
+  "label": "ch:pt-lion-monkey-bee-ant-elephant",
+  "canDo": "I can name a lion, a monkey, a bee, an ant and an elephant.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C63-elefante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can name a lion, a monkey, a bee, an ant and an elephant.",
+    "assesses": [
+      "PT-LEX-C63-ANIMAIS4-03",
+      "PT-LEX-C63-ANIMAIS4-04",
+      "PT-LEX-C63-ANIMAIS4-05"
+    ]
+  }
+}

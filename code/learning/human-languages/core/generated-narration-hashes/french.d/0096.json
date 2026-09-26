@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:2fe8126948813238",
+  "lessonIds": [
+    "FR-C96-jamais",
+    "FR-C96-maintenant",
+    "FR-C96-puis",
+    "FR-C96-loin",
+    "FR-C96-pres"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch96.txt",
+  "json": "french/narration/ch96.json",
+  "textHash": "fnv1a64:be7bb00f72a18915",
+  "jsonHash": "fnv1a64:35a5a655dea41bbf",
+  "findings": []
+}

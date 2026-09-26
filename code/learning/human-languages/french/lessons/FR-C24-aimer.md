@@ -8,7 +8,7 @@ type: word
 headword: aimer
 gloss: to like AND to love — one French verb where English keeps two, so the strength comes from what follows it, and adding bien makes it WEAKER
 concept_tag: VERB-LIKE-LOVE
-prerequisites: [FR-C24-aider, FR-C22-chien-chat, FR-C23-vert-jaune]
+prerequisites: [FR-C24-aider, FR-C22-chien-chat, FR-C23-vert-jaune, FR-C22-chien-chat-more]
 sounds: [nasal-in, er-ending]
 roots: [amare-latin]
 etymology_hook: "aimer ← Latin amāre 'to love' → amateur (one who does it for love), amorous, amiable, amicable, amity, enamoured, paramour — and amāre has no agreed deeper ancestor, so the trail honestly stops at Latin"

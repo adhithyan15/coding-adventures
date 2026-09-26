@@ -1,0 +1,11 @@
+{
+  "id": "FR-C67-poulet",
+  "pathSegment": "FR-PATH-67-VERBES19",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-67-VERBES19",
+      "order": 2
+    }
+  ]
+}

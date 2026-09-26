@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:503b8a159226eaf6",
+  "lessonIds": [
+    "IT-C46-bambina",
+    "IT-C46-vicino",
+    "IT-C46-ospite",
+    "IT-C46-ragazzo",
+    "IT-C46-ragazza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch46.txt",
+  "json": "italian/narration/ch46.json",
+  "textHash": "fnv1a64:06a4ea55a1513a3f",
+  "jsonHash": "fnv1a64:121806c7382b007d",
+  "findings": []
+}

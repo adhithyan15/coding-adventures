@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:c655b191767dcdd1",
+  "lessonIds": [
+    "FR-C73-cuisine",
+    "FR-C73-fenetre",
+    "FR-C73-chaise",
+    "FR-C73-cle",
+    "FR-C73-mur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch73.txt",
+  "json": "french/narration/ch73.json",
+  "textHash": "fnv1a64:e627efe33cf6f5e4",
+  "jsonHash": "fnv1a64:06d0388792809aec",
+  "findings": []
+}

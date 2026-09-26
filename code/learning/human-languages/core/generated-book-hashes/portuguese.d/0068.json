@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:d26e9e797bbcdede",
+  "lessonIds": [
+    "PT-C68-forte",
+    "PT-C68-fraco",
+    "PT-C68-rico",
+    "PT-C68-pobre",
+    "PT-C68-amarelo"
+  ],
+  "tex": "portuguese/book/chapters/ch68-strong-weak-rich-poor-yellow.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Thin, Big, Heavy, Light, Sweet",
+  "label": "ch:fr-thin-big-heavy-light-sweet",
+  "canDo": "I can name thin, big, heavy, light (not heavy), sweet (with sugar).",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C93-sucre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can name thin, big, heavy, light (not heavy), sweet (with sugar).",
+    "assesses": [
+      "FR-LEX-C93-ADJ45-03",
+      "FR-LEX-C93-ADJ45-04",
+      "FR-LEX-C93-ADJ45-05"
+    ]
+  }
+}

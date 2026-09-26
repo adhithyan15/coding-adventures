@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-63-COSE3",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a watch, glasses, a box, a suitcase, a ticket.",
+  "prerequisites": []
+}

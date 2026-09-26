@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "A Little Girl, Neighbour, Guest, Boy, Girl",
+  "label": "ch:it-a-little-girl-neighbour-guest-boy-girl",
+  "canDo": "I can name a little girl, a neighbour, a guest, a boy, a girl.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C46-ragazza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can name a little girl, a neighbour, a guest, a boy, a girl.",
+    "assesses": [
+      "IT-LEX-C46-PERSONE-03",
+      "IT-LEX-C46-PERSONE-04",
+      "IT-LEX-C46-PERSONE-05"
+    ]
+  }
+}

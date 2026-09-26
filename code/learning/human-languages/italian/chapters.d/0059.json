@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Glass, Plate, Spoon, Knife, Fork",
+  "label": "ch:it-glass-plate-spoon-knife-fork",
+  "canDo": "I can name a glass (to drink from), a plate, a spoon, a knife, a fork.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "IT-C59-forchetta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can name a glass (to drink from), a plate, a spoon, a knife, a fork.",
+    "assesses": [
+      "IT-LEX-C59-TAVOLA-03",
+      "IT-LEX-C59-TAVOLA-04",
+      "IT-LEX-C59-TAVOLA-05"
+    ]
+  }
+}

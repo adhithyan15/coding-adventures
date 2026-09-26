@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:2565e05b8ad9c42f",
+  "lessonIds": [
+    "FR-C67-trouver",
+    "FR-C67-poisson",
+    "FR-C67-poulet",
+    "FR-C67-fruit",
+    "FR-C67-pomme"
+  ],
+  "tex": "french/book/chapters/ch67-find-fish-chicken-fruit-apple.tex"
+}

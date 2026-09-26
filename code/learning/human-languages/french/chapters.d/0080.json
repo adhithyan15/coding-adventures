@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Box, Suitcase, Ticket, Map, Photo",
+  "label": "ch:fr-box-suitcase-ticket-map-photo",
+  "canDo": "I can name a box, a suitcase, a ticket, a map, a photo.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FR-C80-photo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can name a box, a suitcase, a ticket, a map, a photo.",
+    "assesses": [
+      "FR-LEX-C80-CHOSES32-03",
+      "FR-LEX-C80-CHOSES32-04",
+      "FR-LEX-C80-CHOSES32-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Phone, Umbrella, Money, Present, Watch",
+  "label": "ch:pt-phone-umbrella-money-present-watch",
+  "canDo": "I can name a phone, an umbrella, money, a present and a watch.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C53-relogio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can name a phone, an umbrella, money, a present and a watch.",
+    "assesses": [
+      "PT-LEX-C53-COISAS2-03",
+      "PT-LEX-C53-COISAS2-04",
+      "PT-LEX-C53-COISAS2-05"
+    ]
+  }
+}

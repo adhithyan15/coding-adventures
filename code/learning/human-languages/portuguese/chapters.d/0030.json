@@ -1,0 +1,19 @@
+{
+  "chapter": 30,
+  "title": "Arm, Leg, Foot, Finger",
+  "label": "ch:pt-arm-leg-foot-finger",
+  "canDo": "I can name an arm, a leg, a foot, a finger and a tooth.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C30-dente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 30: i can name an arm, a leg, a foot, a finger and a tooth.",
+    "assesses": [
+      "PT-LEX-C30-CORPO1-03",
+      "PT-LEX-C30-CORPO1-04",
+      "PT-LEX-C30-CORPO1-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:dfa14fa2e589afc9",
+  "lessonIds": [
+    "PT-C45-fruta",
+    "PT-C45-maca",
+    "PT-C45-banana",
+    "PT-C45-laranja",
+    "PT-C45-uva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch45.txt",
+  "json": "portuguese/narration/ch45.json",
+  "textHash": "fnv1a64:01f45282c7154c8f",
+  "jsonHash": "fnv1a64:4c201f27fefc7c15",
+  "findings": []
+}

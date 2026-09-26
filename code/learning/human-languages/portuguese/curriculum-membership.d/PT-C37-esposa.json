@@ -1,0 +1,11 @@
+{
+  "id": "PT-C37-esposa",
+  "pathSegment": "PT-PATH-37-FAMILIA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-37-FAMILIA1",
+      "order": 4
+    }
+  ]
+}

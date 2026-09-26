@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C70-riz",
+    "language": "french",
+    "chapter": 70,
+    "sequence": 2890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e20f95bade35ef7"
+  },
+  "findings": []
+}

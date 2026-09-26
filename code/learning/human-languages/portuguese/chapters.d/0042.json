@@ -1,0 +1,19 @@
+{
+  "chapter": 42,
+  "title": "Run, Hear, Teach, Learn, Open",
+  "label": "ch:pt-run-hear-teach-learn-open",
+  "canDo": "I can say to run, to hear, to teach, to learn and to open.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C42-abrir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 42: i can say to run, to hear, to teach, to learn and to open.",
+    "assesses": [
+      "PT-LEX-C42-VERBOS3-03",
+      "PT-LEX-C42-VERBOS3-04",
+      "PT-LEX-C42-VERBOS3-05"
+    ]
+  }
+}

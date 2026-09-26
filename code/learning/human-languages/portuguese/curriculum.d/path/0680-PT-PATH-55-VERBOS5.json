@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-55-VERBOS5",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "PT-EXT-55-VERBOS5"
+  ],
+  "after": []
+}

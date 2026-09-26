@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:703b89abf8d0fb2e",
+  "lessonIds": [
+    "IT-C79-sempre",
+    "IT-C79-mai",
+    "IT-C79-adesso",
+    "IT-C79-lontano",
+    "IT-C79-sopra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch79.txt",
+  "json": "italian/narration/ch79.json",
+  "textHash": "fnv1a64:90b85e1ceaeffdaa",
+  "jsonHash": "fnv1a64:2cdcb8ca838bb7e4",
+  "findings": []
+}

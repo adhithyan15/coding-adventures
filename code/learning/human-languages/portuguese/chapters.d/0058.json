@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Field, Sky, Sun, Star, Cloud",
+  "label": "ch:pt-field-sky-sun-star-cloud",
+  "canDo": "I can name a field, the sky, the sun, a star and a cloud.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C58-nuvem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can name a field, the sky, the sun, a star and a cloud.",
+    "assesses": [
+      "PT-LEX-C58-CEU-03",
+      "PT-LEX-C58-CEU-04",
+      "PT-LEX-C58-CEU-05"
+    ]
+  }
+}

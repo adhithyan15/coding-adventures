@@ -1,0 +1,11 @@
+{
+  "id": "IT-C78-settimana",
+  "pathSegment": "IT-PATH-78-TEMPO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-78-TEMPO",
+      "order": 0
+    }
+  ]
+}

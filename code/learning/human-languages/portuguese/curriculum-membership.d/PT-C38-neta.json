@@ -1,0 +1,11 @@
+{
+  "id": "PT-C38-neta",
+  "pathSegment": "PT-PATH-38-FAMILIA2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-38-FAMILIA2",
+      "order": 4
+    }
+  ]
+}

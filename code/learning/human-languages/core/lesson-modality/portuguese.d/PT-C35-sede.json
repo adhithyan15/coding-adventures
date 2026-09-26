@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C35-sede",
+    "language": "portuguese",
+    "chapter": 35,
+    "sequence": 1380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:352476718c72c0a6"
+  },
+  "findings": []
+}

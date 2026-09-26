@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C96-pres",
+    "language": "french",
+    "chapter": 96,
+    "sequence": 4220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac95e5054608ce55"
+  },
+  "findings": []
+}

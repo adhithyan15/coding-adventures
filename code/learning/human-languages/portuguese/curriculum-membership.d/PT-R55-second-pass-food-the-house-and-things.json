@@ -1,0 +1,11 @@
+{
+  "id": "PT-R55-second-pass-food-the-house-and-things",
+  "pathSegment": "PT-PATH-55-VERBOS5",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PT-EXT-55-VERBOS5",
+      "order": 6
+    }
+  ]
+}

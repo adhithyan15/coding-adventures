@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C39-pelle",
+    "language": "italian",
+    "chapter": 39,
+    "sequence": 1540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b01fd0f26baf5baf"
+  },
+  "findings": []
+}

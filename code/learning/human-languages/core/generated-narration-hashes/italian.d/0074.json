@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:71c540be865fbc23",
+  "lessonIds": [
+    "IT-C74-veloce",
+    "IT-C74-lento",
+    "IT-C74-facile",
+    "IT-C74-difficile",
+    "IT-C74-caro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch74.txt",
+  "json": "italian/narration/ch74.json",
+  "textHash": "fnv1a64:3badd6caf4eef0fe",
+  "jsonHash": "fnv1a64:dd718331dc4a7206",
+  "findings": []
+}

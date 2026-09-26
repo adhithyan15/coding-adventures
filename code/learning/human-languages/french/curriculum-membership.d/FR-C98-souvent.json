@@ -1,0 +1,11 @@
+{
+  "id": "FR-C98-souvent",
+  "pathSegment": "FR-PATH-98-TEMPS50",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-98-TEMPS50",
+      "order": 1
+    }
+  ]
+}

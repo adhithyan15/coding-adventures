@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Kitchen, Window, Chair, Key, Wall",
+  "label": "ch:fr-kitchen-window-chair-key-wall",
+  "canDo": "I can name a kitchen, a window, a chair, a key, a wall.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FR-C73-mur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can name a kitchen, a window, a chair, a key, a wall.",
+    "assesses": [
+      "FR-LEX-C73-MAISON25-03",
+      "FR-LEX-C73-MAISON25-04",
+      "FR-LEX-C73-MAISON25-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C39-pancia",
+    "language": "italian",
+    "chapter": 39,
+    "sequence": 1510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:848a605bdf24da31"
+  },
+  "findings": []
+}

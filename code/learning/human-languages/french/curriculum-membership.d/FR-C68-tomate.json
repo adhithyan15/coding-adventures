@@ -1,0 +1,11 @@
+{
+  "id": "FR-C68-tomate",
+  "pathSegment": "FR-PATH-68-CUISINE20",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-68-CUISINE20",
+      "order": 3
+    }
+  ]
+}

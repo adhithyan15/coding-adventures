@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Roof, Garden, Lamp, Bathroom, Bedroom",
+  "label": "ch:fr-roof-garden-lamp-bathroom-bedroom",
+  "canDo": "I can name a roof, a garden, a lamp, a bathroom, a bedroom.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FR-C74-chambre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can name a roof, a garden, a lamp, a bathroom, a bedroom.",
+    "assesses": [
+      "FR-LEX-C74-MAISON26-03",
+      "FR-LEX-C74-MAISON26-04",
+      "FR-LEX-C74-MAISON26-05"
+    ]
+  }
+}

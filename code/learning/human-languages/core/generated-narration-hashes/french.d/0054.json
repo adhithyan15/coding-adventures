@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:dd5f51e07e6d451c",
+  "lessonIds": [
+    "FR-C54-hopital",
+    "FR-C54-maladie",
+    "FR-C54-soif",
+    "FR-C54-fatigue",
+    "FR-C54-malade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch54.txt",
+  "json": "french/narration/ch54.json",
+  "textHash": "fnv1a64:c15d9935e55d610d",
+  "jsonHash": "fnv1a64:36b6288945f7612f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C70-minuto",
+    "language": "portuguese",
+    "chapter": 70,
+    "sequence": 3160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eaf9a1fc9456ce78"
+  },
+  "findings": []
+}

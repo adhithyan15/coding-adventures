@@ -1,0 +1,11 @@
+{
+  "id": "IT-C45-cugino",
+  "pathSegment": "IT-PATH-45-FAMIGLIA2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-45-FAMIGLIA2",
+      "order": 2
+    }
+  ]
+}

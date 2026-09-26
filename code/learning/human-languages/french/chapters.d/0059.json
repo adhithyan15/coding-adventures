@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Nephew, Niece, Pupil, Teacher, Laugh",
+  "label": "ch:fr-nephew-niece-pupil-teacher-laugh",
+  "canDo": "I can name a nephew, a niece, a pupil, a teacher, to laugh.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FR-C59-rire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can name a nephew, a niece, a pupil, a teacher, to laugh.",
+    "assesses": [
+      "FR-LEX-C59-FAMILLE11-03",
+      "FR-LEX-C59-FAMILLE11-04",
+      "FR-LEX-C59-FAMILLE11-05"
+    ]
+  }
+}

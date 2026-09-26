@@ -1,0 +1,11 @@
+{
+  "id": "IT-C76-forte",
+  "pathSegment": "IT-PATH-76-AGG5",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-76-AGG5",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C57-ilha",
+  "pathSegment": "PT-PATH-57-NATUREZA2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-57-NATUREZA2",
+      "order": 4
+    }
+  ]
+}

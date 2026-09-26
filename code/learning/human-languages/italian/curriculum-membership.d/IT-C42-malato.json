@@ -1,0 +1,11 @@
+{
+  "id": "IT-C42-malato",
+  "pathSegment": "IT-PATH-42-STARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-42-STARE",
+      "order": 3
+    }
+  ]
+}

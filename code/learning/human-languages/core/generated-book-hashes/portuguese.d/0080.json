@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:95014058e5f69d15",
+  "lessonIds": [
+    "PT-C80-pagar",
+    "PT-C80-usar",
+    "PT-C80-mostrar",
+    "PT-C80-limpar",
+    "PT-C80-cortar"
+  ],
+  "tex": "portuguese/book/chapters/ch80-pay-use-show-clean-cut.tex"
+}

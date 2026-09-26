@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C32-rosto",
+    "language": "portuguese",
+    "chapter": 32,
+    "sequence": 1240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f60b57d08c2eb82"
+  },
+  "findings": []
+}

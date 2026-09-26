@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C80-usar",
+    "language": "portuguese",
+    "chapter": 80,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3f341b60b54dd96"
+  },
+  "findings": []
+}

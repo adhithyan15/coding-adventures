@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Forty to a Thousand, and Zero",
+  "label": "ch:pt-forty-to-a-thousand-and-zero",
+  "canDo": "I can say forty, fifty, a hundred, a thousand and zero.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C79-zero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say forty, fifty, a hundred, a thousand and zero.",
+    "assesses": [
+      "PT-LEX-C79-NUMEROS-03",
+      "PT-LEX-C79-NUMEROS-04",
+      "PT-LEX-C79-NUMEROS-05"
+    ]
+  }
+}

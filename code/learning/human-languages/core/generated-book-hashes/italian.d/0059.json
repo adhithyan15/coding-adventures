@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:66c1b4f331cbf954",
+  "lessonIds": [
+    "IT-C59-bicchiere",
+    "IT-C59-piatto",
+    "IT-C59-cucchiaio",
+    "IT-C59-coltello",
+    "IT-C59-forchetta"
+  ],
+  "tex": "italian/book/chapters/ch59-glass-plate-spoon-knife-fork.tex"
+}

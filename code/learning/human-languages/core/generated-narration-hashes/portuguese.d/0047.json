@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:ab7bc148a84c0d26",
+  "lessonIds": [
+    "PT-C47-bolo",
+    "PT-C47-mel",
+    "PT-C47-almoco",
+    "PT-C47-jantar",
+    "PT-C47-limao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch47.txt",
+  "json": "portuguese/narration/ch47.json",
+  "textHash": "fnv1a64:0aaace0b58e155d5",
+  "jsonHash": "fnv1a64:febb0d37fe0a8392",
+  "findings": []
+}

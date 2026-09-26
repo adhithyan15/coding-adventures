@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Station, Bus, Train, Plane, Car",
+  "label": "ch:it-station-bus-train-plane-car",
+  "canDo": "I can name a station, a bus, a train, an aeroplane, a car.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "IT-C82-macchina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can name a station, a bus, a train, an aeroplane, a car.",
+    "assesses": [
+      "IT-LEX-C82-CITTA2-03",
+      "IT-LEX-C82-CITTA2-04",
+      "IT-LEX-C82-CITTA2-05"
+    ]
+  }
+}

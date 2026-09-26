@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C84-polizia",
+    "language": "italian",
+    "chapter": 84,
+    "sequence": 3810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da3b83cddf0d7498"
+  },
+  "findings": []
+}

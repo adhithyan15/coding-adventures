@@ -1,0 +1,19 @@
+{
+  "chapter": 38,
+  "title": "Uncle, Aunt, Cousin, Grandchildren",
+  "label": "ch:pt-uncle-aunt-cousin-grandchildren",
+  "canDo": "I can name an uncle, an aunt, a cousin, a grandson and a granddaughter.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C38-neta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 38: i can name an uncle, an aunt, a cousin, a grandson and a granddaughter.",
+    "assesses": [
+      "PT-LEX-C38-FAMILIA2-03",
+      "PT-LEX-C38-FAMILIA2-04",
+      "PT-LEX-C38-FAMILIA2-05"
+    ]
+  }
+}

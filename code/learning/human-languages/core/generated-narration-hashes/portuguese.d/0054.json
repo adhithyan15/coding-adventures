@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:e59985d83084ee5c",
+  "lessonIds": [
+    "PT-C54-oculos",
+    "PT-C54-caixa",
+    "PT-C54-mala",
+    "PT-C54-bilhete",
+    "PT-C54-mapa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch54.txt",
+  "json": "portuguese/narration/ch54.json",
+  "textHash": "fnv1a64:4c4574557251123b",
+  "jsonHash": "fnv1a64:c9832829987c48d8",
+  "findings": []
+}

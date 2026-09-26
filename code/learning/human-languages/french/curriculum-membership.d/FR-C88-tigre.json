@@ -1,0 +1,11 @@
+{
+  "id": "FR-C88-tigre",
+  "pathSegment": "FR-PATH-88-ANIMAUX40",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-88-ANIMAUX40",
+      "order": 4
+    }
+  ]
+}

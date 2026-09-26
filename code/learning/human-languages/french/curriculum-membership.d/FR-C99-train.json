@@ -1,0 +1,11 @@
+{
+  "id": "FR-C99-train",
+  "pathSegment": "FR-PATH-99-VILLE51",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-99-VILLE51",
+      "order": 3
+    }
+  ]
+}

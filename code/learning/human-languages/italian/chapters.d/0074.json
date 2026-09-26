@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Fast, Slow, Easy, Difficult, Dear",
+  "label": "ch:it-fast-slow-easy-difficult-dear",
+  "canDo": "I can name fast, slow, easy, difficult, dear.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C74-caro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can name fast, slow, easy, difficult, dear.",
+    "assesses": [
+      "IT-LEX-C74-AGG3-03",
+      "IT-LEX-C74-AGG3-04",
+      "IT-LEX-C74-AGG3-05"
+    ]
+  }
+}

@@ -1,8 +1,8 @@
 Italian, chapter 15: Two Italian Pasts.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 ho parlato — the past built from "have".
 
 Warm-up.
@@ -49,7 +49,7 @@ Wrap-up Recall.
 What two pieces make the passato prossimo? (Avere + the past participle.) What is parlare's participle? (Parlato from -ātum.) What did ho parlato originally mean? ("I have [a thing] spoken" — a possessive.) Why can the participle agree? (It was an adjective describing the object.) Next: the other Italian past, and where it still lives.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 parlò — the past that depends where you are.
 
 Warm-up.
@@ -80,6 +80,27 @@ region: Tuscany. everyday past: both, with a distinction of distance in time.
 region: North. everyday past: passato prossimo almost always; parlò feels literary.
 So the "correct" answer changes as you travel. In the north the passato remoto has retreated to books, exactly as French's passé simple and German's Präteritum did. In the south it never left.
 
+Guided Practice.
+[pause 1 second]
+[your turn — say: the pair — "parlò … ha parlato"]
+[pause 8 seconds for the answer]
+[your turn — say: the sisters — "parlò, habló, falou"]
+[pause 8 seconds for the answer]
+[your turn — say: the geography — "in Palermo ordinary; in Milano literary"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the ancestor of parlò? (parabolāvit.) What decides whether it sounds normal or bookish? (Where in Italy you are — everyday in the south, literary in the north.)
+
+
+Lesson 3 of 3.
+Three retreats and two holdouts — the simple past across Romance and German.
+
+Warm-up.
+[pause 2 seconds]
+Say parlò. Where in Italy does it sound ordinary, and where does it sound like a book?
+
 What you've built: three retreats and two holdouts.
 [a table of 5 rows, read aloud]
 language: French. simple past: passé simple. status in speech: gone — books only.
@@ -91,13 +112,11 @@ Three languages let a "have" compound push the inherited past out of conversatio
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the pair — "parlò … ha parlato"]
-[pause 8 seconds for the answer]
 [your turn — say: the sisters — "parlò, habló, falou, il parla"]
 [pause 8 seconds for the answer]
-[your turn — say: the geography — "in Palermo ordinary; in Milano literary"]
+[your turn — say: which one is caught mid-process — Italian]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the ancestor of parlò? (parabolāvit.) What decides whether it sounds normal or bookish? (Where in Italy you are — everyday in the south, literary in the north.) Which languages kept this tense fully alive? (Spanish and Portuguese.) Which lost it entirely from speech? (French.) Next chapter: the verbs that take essere instead of avere.
+Which languages kept this tense fully alive? (Spanish and Portuguese.) Which lost it entirely from speech? (French.) Next chapter: the verbs that take essere instead of avere.

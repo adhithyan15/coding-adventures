@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Strong, Weak, Rich, Poor, Yellow",
+  "label": "ch:pt-strong-weak-rich-poor-yellow",
+  "canDo": "I can say strong, weak, rich and poor, and yellow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C68-amarelo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say strong, weak, rich and poor, and yellow.",
+    "assesses": [
+      "PT-LEX-C68-ADJ5-03",
+      "PT-LEX-C68-ADJ5-04",
+      "PT-LEX-C68-ADJ5-05"
+    ]
+  }
+}

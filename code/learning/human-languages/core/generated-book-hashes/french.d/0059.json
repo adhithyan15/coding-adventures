@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:3704c8f4e0c537b6",
+  "lessonIds": [
+    "FR-C59-neveu",
+    "FR-C59-niece",
+    "FR-C59-eleve",
+    "FR-C59-professeur",
+    "FR-C59-rire"
+  ],
+  "tex": "french/book/chapters/ch59-nephew-niece-pupil-teacher-laugh.tex"
+}

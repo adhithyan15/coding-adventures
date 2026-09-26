@@ -1,0 +1,11 @@
+{
+  "id": "PT-C54-mala",
+  "pathSegment": "PT-PATH-54-COISAS3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-54-COISAS3",
+      "order": 2
+    }
+  ]
+}

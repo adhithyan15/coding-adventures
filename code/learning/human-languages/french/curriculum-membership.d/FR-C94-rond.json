@@ -1,0 +1,11 @@
+{
+  "id": "FR-C94-rond",
+  "pathSegment": "FR-PATH-94-ADJ46",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-94-ADJ46",
+      "order": 2
+    }
+  ]
+}

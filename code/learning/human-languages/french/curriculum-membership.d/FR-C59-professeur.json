@@ -1,0 +1,11 @@
+{
+  "id": "FR-C59-professeur",
+  "pathSegment": "FR-PATH-59-FAMILLE11",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-59-FAMILLE11",
+      "order": 3
+    }
+  ]
+}

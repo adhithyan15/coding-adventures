@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C63-valigia",
+    "language": "italian",
+    "chapter": 63,
+    "sequence": 2760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f78a3f9a009284a"
+  },
+  "findings": []
+}

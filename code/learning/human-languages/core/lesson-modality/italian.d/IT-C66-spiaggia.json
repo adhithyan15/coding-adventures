@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C66-spiaggia",
+    "language": "italian",
+    "chapter": 66,
+    "sequence": 2880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e92f3229ed4572a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Cheap, Tall, Low, Full, Empty",
+  "label": "ch:it-cheap-tall-low-full-empty",
+  "canDo": "I can name cheap, tall, short, full, empty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C75-vuoto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can name cheap, tall, short, full, empty.",
+    "assesses": [
+      "IT-LEX-C75-AGG4-03",
+      "IT-LEX-C75-AGG4-04",
+      "IT-LEX-C75-AGG4-05"
+    ]
+  }
+}

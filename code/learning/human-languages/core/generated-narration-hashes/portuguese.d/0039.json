@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:1d5ad00281e01462",
+  "lessonIds": [
+    "PT-C39-crianca",
+    "PT-C39-vizinho",
+    "PT-C39-convidado",
+    "PT-C39-menino",
+    "PT-C39-menina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch39.txt",
+  "json": "portuguese/narration/ch39.json",
+  "textHash": "fnv1a64:f6300674eb04c58d",
+  "jsonHash": "fnv1a64:67978c9c9b1a2476",
+  "findings": []
+}

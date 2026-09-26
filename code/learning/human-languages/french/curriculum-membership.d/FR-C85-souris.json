@@ -1,0 +1,11 @@
+{
+  "id": "FR-C85-souris",
+  "pathSegment": "FR-PATH-85-ANIMAUX37",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-85-ANIMAUX37",
+      "order": 3
+    }
+  ]
+}

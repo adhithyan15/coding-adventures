@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:0c446213ddc90559",
+  "lessonIds": [
+    "IT-C68-cane",
+    "IT-C68-gatto",
+    "IT-C68-cavallo",
+    "IT-C68-mucca",
+    "IT-C68-maiale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch68.txt",
+  "json": "italian/narration/ch68.json",
+  "textHash": "fnv1a64:018a13c51bc36aec",
+  "jsonHash": "fnv1a64:7ea054ce2a991c8a",
+  "findings": []
+}

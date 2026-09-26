@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 29,
-  "sourceHash": "fnv1a64:2c3b3146fad1ac8b",
+  "sourceHash": "fnv1a64:05a1a0b3dfaaf13f",
   "lessonIds": [
     "FR-C25-comprendre",
     "FR-C25-penser",
@@ -13,6 +13,6 @@
   "text": "french/narration/ch29.txt",
   "json": "french/narration/ch29.json",
   "textHash": "fnv1a64:69cf709e7027b8ec",
-  "jsonHash": "fnv1a64:47e1c214e833c840",
+  "jsonHash": "fnv1a64:c744a11f17d1766b",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:de6f29060da725ce",
+  "lessonIds": [
+    "IT-C71-leone",
+    "IT-C71-scimmia",
+    "IT-C71-ape",
+    "IT-C71-formica",
+    "IT-C71-elefante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch71.txt",
+  "json": "italian/narration/ch71.json",
+  "textHash": "fnv1a64:1e6e7458c61ab5f7",
+  "jsonHash": "fnv1a64:4760b9b5b9136f21",
+  "findings": []
+}

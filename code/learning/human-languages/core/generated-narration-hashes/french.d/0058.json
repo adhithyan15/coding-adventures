@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:892569937a02444f",
+  "lessonIds": [
+    "FR-C58-voisin",
+    "FR-C58-invite",
+    "FR-C58-bebe",
+    "FR-C58-petit-fils",
+    "FR-C58-petite-fille"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch58.txt",
+  "json": "french/narration/ch58.json",
+  "textHash": "fnv1a64:f90944c16fe3a8f7",
+  "jsonHash": "fnv1a64:3ae95d428a3f9d94",
+  "findings": []
+}

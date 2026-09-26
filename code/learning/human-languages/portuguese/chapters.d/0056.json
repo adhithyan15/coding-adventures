@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Tree, Flower, Leaf, Mountain, Forest",
+  "label": "ch:pt-tree-flower-leaf-mountain-forest",
+  "canDo": "I can name a tree, a flower, a leaf, a mountain and a forest.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C56-floresta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can name a tree, a flower, a leaf, a mountain and a forest.",
+    "assesses": [
+      "PT-LEX-C56-NATUREZA1-03",
+      "PT-LEX-C56-NATUREZA1-04",
+      "PT-LEX-C56-NATUREZA1-05"
+    ]
+  }
+}

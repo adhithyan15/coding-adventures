@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:be4ba86c9438890a",
+  "lessonIds": [
+    "PT-C80-pagar",
+    "PT-C80-usar",
+    "PT-C80-mostrar",
+    "PT-C80-limpar",
+    "PT-C80-cortar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch80.txt",
+  "json": "portuguese/narration/ch80.json",
+  "textHash": "fnv1a64:cc37bf8bca46c1cd",
+  "jsonHash": "fnv1a64:7db546fe3c1dc8dd",
+  "findings": []
+}

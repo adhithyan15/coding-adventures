@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C59-piatto",
+    "language": "italian",
+    "chapter": 59,
+    "sequence": 2520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65532f9a62937d7b"
+  },
+  "findings": []
+}

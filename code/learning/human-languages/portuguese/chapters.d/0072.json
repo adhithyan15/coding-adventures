@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Here, There, Far, Near, Quickly",
+  "label": "ch:pt-here-there-far-near-quickly",
+  "canDo": "I can say here, there, far, near and quickly.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C72-depressa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say here, there, far, near and quickly.",
+    "assesses": [
+      "PT-LEX-C72-ONDE-03",
+      "PT-LEX-C72-ONDE-04",
+      "PT-LEX-C72-ONDE-05"
+    ]
+  }
+}

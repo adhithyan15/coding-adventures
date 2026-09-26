@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:83c7ce098238c9f4",
+  "lessonIds": [
+    "IT-C75-economico",
+    "IT-C75-alto",
+    "IT-C75-basso",
+    "IT-C75-pieno",
+    "IT-C75-vuoto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch75.txt",
+  "json": "italian/narration/ch75.json",
+  "textHash": "fnv1a64:38f1e98b9d3d3451",
+  "jsonHash": "fnv1a64:73c5e7dc384aef94",
+  "findings": []
+}

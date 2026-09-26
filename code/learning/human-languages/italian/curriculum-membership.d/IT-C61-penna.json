@@ -1,0 +1,11 @@
+{
+  "id": "IT-C61-penna",
+  "pathSegment": "IT-PATH-61-COSE1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-61-COSE1",
+      "order": 1
+    }
+  ]
+}

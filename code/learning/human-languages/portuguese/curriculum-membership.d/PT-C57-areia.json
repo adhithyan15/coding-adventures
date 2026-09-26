@@ -1,0 +1,11 @@
+{
+  "id": "PT-C57-areia",
+  "pathSegment": "PT-PATH-57-NATUREZA2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-57-NATUREZA2",
+      "order": 3
+    }
+  ]
+}

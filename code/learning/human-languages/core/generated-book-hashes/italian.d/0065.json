@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:04d6efb89e126119",
+  "lessonIds": [
+    "IT-C65-fiume",
+    "IT-C65-lago",
+    "IT-C65-mare",
+    "IT-C65-pietra",
+    "IT-C65-sabbia"
+  ],
+  "tex": "italian/book/chapters/ch65-river-lake-sea-stone-sand.tex"
+}

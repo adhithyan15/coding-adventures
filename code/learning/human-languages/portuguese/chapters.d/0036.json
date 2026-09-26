@@ -1,0 +1,19 @@
+{
+  "chapter": 36,
+  "title": "Fear, Anger, Sadness, Happy, Sad",
+  "label": "ch:pt-fear-anger-sadness-happy-sad",
+  "canDo": "I can name fear, anger and sadness, and say happy and sad.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C36-triste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 36: i can name fear, anger and sadness, and say happy and sad.",
+    "assesses": [
+      "PT-LEX-C36-SENTIR-03",
+      "PT-LEX-C36-SENTIR-04",
+      "PT-LEX-C36-SENTIR-05"
+    ]
+  }
+}

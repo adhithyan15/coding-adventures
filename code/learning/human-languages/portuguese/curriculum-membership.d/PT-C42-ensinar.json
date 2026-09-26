@@ -1,0 +1,11 @@
+{
+  "id": "PT-C42-ensinar",
+  "pathSegment": "PT-PATH-42-VERBOS3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-42-VERBOS3",
+      "order": 2
+    }
+  ]
+}

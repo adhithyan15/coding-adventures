@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C94-sec",
+    "language": "french",
+    "chapter": 94,
+    "sequence": 4120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a206b06a013c491"
+  },
+  "findings": []
+}

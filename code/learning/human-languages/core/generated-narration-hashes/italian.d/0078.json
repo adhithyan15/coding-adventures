@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:6179c168cbbaac3f",
+  "lessonIds": [
+    "IT-C78-settimana",
+    "IT-C78-mese",
+    "IT-C78-anno",
+    "IT-C78-mattina",
+    "IT-C78-minuto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch78.txt",
+  "json": "italian/narration/ch78.json",
+  "textHash": "fnv1a64:87919ce92790ac33",
+  "jsonHash": "fnv1a64:38b93b4bfac11afc",
+  "findings": []
+}

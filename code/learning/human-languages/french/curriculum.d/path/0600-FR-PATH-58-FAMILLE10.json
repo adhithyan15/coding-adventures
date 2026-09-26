@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-58-FAMILLE10",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "FR-EXT-58-FAMILLE10"
+  ],
+  "after": []
+}

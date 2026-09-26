@@ -155,12 +155,19 @@ pub enum PipelineEmitError {
     /// no escaping makes an unsafe scheme safe.
     UnsafeUriScheme(String),
     InvalidTypography(String),
+    /// A layout variant name that cannot become part of a Swift type name
+    /// (UI48 ENV2: `touch` → `…TouchView`).
+    UnsafeVariantName(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::InvalidTypography(reason) => write!(f, "invalid SwiftUI typography: {reason}"),
+            Self::UnsafeVariantName(variant) => write!(
+                f,
+                "layout variant `{variant}` cannot name a SwiftUI view (letters, digits and single `-` only)"
+            ),
             PipelineEmitError::ComponentNameMismatch {
                 mosmodel,
                 moslayout,
@@ -235,6 +242,23 @@ pub struct EmitOptions {
     /// Fixtures replace that fallback, which is what a demo app or a component
     /// page actually shows before any host is attached.
     pub slot_values: HashMap<String, String>,
+
+    /// The root component's layout variants the app can switch between at
+    /// run time, in rule order (UI48 §7.2, ENV3). Empty — the default —
+    /// mounts the default layout only and leaves the shell byte-for-byte as
+    /// before. Each variant's view must be in the app (see
+    /// [`from_pipeline_variant`]).
+    pub layout_variants: Vec<LayoutChoice>,
+}
+
+/// One run-time layout choice: show `variant` when every condition holds.
+/// Conditions are UI48 axis keys and values (`("size-class", "compact")`),
+/// validated by the package manifest and checked again here before they are
+/// written into Swift.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LayoutChoice {
+    pub variant: String,
+    pub conditions: Vec<(String, String)>,
 }
 
 impl Default for EmitOptions {
@@ -246,6 +270,7 @@ impl Default for EmitOptions {
             pinned_swift_tools: "5.10".to_string(),
             pinned_macos_min: ".v13".to_string(),
             pinned_ios_min: ".v16".to_string(),
+            layout_variants: Vec::new(),
         }
     }
 }
@@ -364,6 +389,26 @@ fn build_swiftui_project_files(
         return Err(ProjectShellError::SwiftKeywordCollision(name.to_string()));
     }
 
+    for choice in &options.layout_variants {
+        let safe = |text: &str| {
+            !text.is_empty()
+                && text
+                    .chars()
+                    .all(|character| character.is_ascii_lowercase() || character == '-')
+        };
+        if variant_view_type(name, &choice.variant).is_none()
+            || !choice
+                .conditions
+                .iter()
+                .all(|(axis, value)| safe(axis) && safe(value))
+        {
+            return Err(ProjectShellError::InvalidSwiftIdentifier(format!(
+                "layout variant `{}`",
+                choice.variant
+            )));
+        }
+    }
+
     Ok(ProjectFiles {
         package_swift: build_package_swift(options),
         app_swift: build_app_swift(
@@ -371,6 +416,7 @@ fn build_swiftui_project_files(
             &interface.slots,
             options.require_runtime,
             &options.slot_values,
+            &options.layout_variants,
         ),
         readme: build_swiftui_platform_readme(name, options.require_runtime),
     })
@@ -422,12 +468,44 @@ fn build_app_swift(
     slots: &[SlotDecl],
     require_runtime: bool,
     slot_values: &HashMap<String, String>,
+    layout_variants: &[LayoutChoice],
 ) -> String {
     // The Mosaic SwiftUI emitter produces a `View` struct named
     // `{component_name}View` (per pipeline.rs:120 doc comment), so
     // mount that here.
-    let root_view =
-        build_root_view_initializer(component_name, slots, "host.props", "host", require_runtime, slot_values);
+    let view = |view_type: &str| {
+        build_root_view_initializer(
+            view_type,
+            slots,
+            "host.props",
+            "host",
+            require_runtime,
+            slot_values,
+        )
+    };
+    let root_view = if layout_variants.is_empty() {
+        view(&format!("{component_name}View"))
+    } else {
+        // UI48 ENV3: every variant takes the same arguments (the interface is
+        // shared), so the choice is a switch over the selector's answer.
+        let mut chooser = String::from(
+            "MosaicEnvironmentReader { environment in
+        switch MosaicLayoutSelector.variant(environment) {
+",
+        );
+        for choice in layout_variants {
+            let view_type = variant_view_type(component_name, &choice.variant)
+                .expect("validated in build_swiftui_project_files");
+            writeln!(chooser, "        case \"{}\":", choice.variant).unwrap();
+            writeln!(chooser, "      {}", view(&view_type)).unwrap();
+        }
+        chooser.push_str("        default:
+");
+        writeln!(chooser, "      {}", view(&format!("{component_name}View"))).unwrap();
+        chooser.push_str("        }
+      }");
+        chooser
+    };
     let mut out = String::new();
     write!(
         out,
@@ -453,18 +531,118 @@ fn build_app_swift(
     } else {
         out.push_str(&build_mosaic_host_state(component_name));
     }
+    if !layout_variants.is_empty() {
+        out.push_str(&build_layout_selector_swift(layout_variants));
+    }
     out
 }
 
+/// The run-time half of UI48 ENV3 for SwiftUI: observe the environment,
+/// then pick a layout with the package's rules.
+///
+/// Size class comes from the window's width with UI48's default thresholds
+/// (compact below 600 points, regular below 1024, expanded above), measured
+/// the same way on iPhone, iPad split view and a macOS window.
+/// `horizontalSizeClass` would say `regular` for a narrow Mac window and
+/// does not exist there at all. The rules are the manifest's, in order;
+/// first match wins, and no match is the default layout.
+fn build_layout_selector_swift(layout_variants: &[LayoutChoice]) -> String {
+    let mut rules = String::new();
+    for choice in layout_variants {
+        let test = if choice.conditions.is_empty() {
+            "true".to_string()
+        } else {
+            choice
+                .conditions
+                .iter()
+                .map(|(axis, value)| format!("environment.value(\"{axis}\") == \"{value}\""))
+                .collect::<Vec<_>>()
+                .join(" && ")
+        };
+        writeln!(rules, "    if {test} {{ return \"{}\" }}", choice.variant).unwrap();
+    }
+    format!(
+        r#"
+/// The host environment as UI48 describes it, observed from SwiftUI.
+struct MosaicObservedEnvironment {{
+  let width: CGFloat
+  let height: CGFloat
+  let colorScheme: ColorScheme
+  let reduceMotion: Bool
+
+  func value(_ axis: String) -> String {{
+    switch axis {{
+    case "size-class":
+      return width < 600 ? "compact" : (width < 1024 ? "regular" : "expanded")
+    case "pointer":
+      #if os(iOS)
+      return "coarse"
+      #else
+      return "fine"
+      #endif
+    case "hover":
+      #if os(iOS)
+      return "none"
+      #else
+      return "hover"
+      #endif
+    case "orientation":
+      return height > width ? "portrait" : "landscape"
+    case "color-scheme":
+      return colorScheme == .dark ? "dark" : "light"
+    case "reduced-motion":
+      return reduceMotion ? "reduce" : "no-preference"
+    default:
+      return ""
+    }}
+  }}
+}}
+
+/// Measures the window and hands the environment to its content, which
+/// fills the window as the root view did before.
+struct MosaicEnvironmentReader<Content: View>: View {{
+  @Environment(\.colorScheme) private var colorScheme
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  private let content: (MosaicObservedEnvironment) -> Content
+
+  init(@ViewBuilder content: @escaping (MosaicObservedEnvironment) -> Content) {{
+    self.content = content
+  }}
+
+  var body: some View {{
+    GeometryReader {{ geometry in
+      content(
+        MosaicObservedEnvironment(
+          width: geometry.size.width,
+          height: geometry.size.height,
+          colorScheme: colorScheme,
+          reduceMotion: reduceMotion
+        )
+      )
+      .frame(width: geometry.size.width, height: geometry.size.height)
+    }}
+  }}
+}}
+
+/// The package's `[[app.layouts]]` rules (UI48 §7.2), generated.
+enum MosaicLayoutSelector {{
+  static func variant(_ environment: MosaicObservedEnvironment) -> String? {{
+{rules}    return nil
+  }}
+}}
+"#
+    )
+}
+
 fn build_root_view_initializer(
-    component_name: &str,
+    view_type: &str,
     slots: &[SlotDecl],
     props_expr: &str,
     host_expr: &str,
     require_runtime: bool,
     slot_values: &HashMap<String, String>,
 ) -> String {
-    let mut out = format!("{component_name}View(\n");
+    let mut out = format!("{view_type}(\n");
     for slot in slots {
         let field = to_camel_case_first_lower(&slot.name);
         let value = host_value_for_slot(slot, props_expr, host_expr, require_runtime, slot_values);
@@ -2941,6 +3119,53 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_component(interface, layout, style, None)
+}
+
+/// The Swift type of a layout variant's root view (UI48 §7.2, ENV2): the
+/// component, the variant in PascalCase, then `View` — `EngramApp` with
+/// `touch` is `EngramAppTouchView`, `split-pane` is `SplitPane`. `None` for a
+/// variant name that is not letters, digits and `-`.
+pub fn variant_view_type(component: &str, variant: &str) -> Option<String> {
+    let valid = !variant.is_empty()
+        && variant
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || character == '-')
+        && variant.split('-').all(|part| !part.is_empty());
+    if !valid {
+        return None;
+    }
+    let pascal: String = variant
+        .split('-')
+        .map(|part| {
+            let mut characters = part.chars();
+            let first = characters.next().expect("parts are non-empty");
+            first.to_ascii_uppercase().to_string() + characters.as_str()
+        })
+        .collect();
+    Some(format!("{component}{pascal}View"))
+}
+
+/// Emit one layout **variant** so it can share an app with the default
+/// (UI48 §7.2, ENV2): the same view code under [`variant_view_type`], and no
+/// `{Component}Event` enum or extension — the interface is the same for every
+/// variant and the default layout's file declares it once. File-private
+/// helpers repeat, which Swift allows.
+pub fn from_pipeline_variant(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: &str,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_component(interface, layout, style, Some(variant))
+}
+
+fn emit_component(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: Option<&str>,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
     validate_typography(&layout.root)?;
     // 1. Sanity check: the three IRs must agree on the component name. The
     //    style IR's name is not yet enforced (matches React backend behaviour).
@@ -3023,13 +3248,22 @@ pub fn from_pipeline(
         writeln!(out).unwrap();
     }
 
-    // 3. Event enum (analog of UI24 §3.1 event union).
-    out.push_str(&emit_event_union(name, &interface.emits)?);
-    writeln!(out).unwrap();
+    // 3. Event enum (analog of UI24 §3.1 event union). A variant uses the
+    //    default layout's, so an app can hold both (UI48 ENV2).
+    let view_type = match variant {
+        None => {
+            out.push_str(&emit_event_union(name, &interface.emits)?);
+            writeln!(out).unwrap();
+            format!("{name}View")
+        }
+        Some(variant) => variant_view_type(name, variant)
+            .ok_or_else(|| PipelineEmitError::UnsafeVariantName(variant.to_string()))?,
+    };
 
     // 4. View struct: properties + body computed property.
     out.push_str(&emit_view_struct(
         name,
+        &view_type,
         &interface.slots,
         &interface.emits,
         &layout.root,
@@ -3667,13 +3901,14 @@ fn swift_event_payload_dictionary(emit: &EmitDecl) -> Result<String, PipelineEmi
 /// order, then `dispatch` last so it stands out in code review.
 fn emit_view_struct(
     component: &str,
+    view_type: &str,
     slots: &[SlotDecl],
     emits: &[EmitDecl],
     layout_root: &LayoutNode,
     part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
-    writeln!(out, "struct {component}View: View {{").unwrap();
+    writeln!(out, "struct {view_type}: View {{").unwrap();
 
     // Stored properties: slots first, then dispatch.
     for s in slots {
@@ -8614,6 +8849,42 @@ mod tests {
     // with `import SwiftUI`, the event enum, and the View struct.
     // ---------------------------------------------------------------------
 
+    // UI48 ENV2: a layout variant shares an app with the default.
+    #[test]
+    fn variant_view_types_are_pascal_case_and_refuse_unusable_names() {
+        assert_eq!(variant_view_type("EngramApp", "touch").as_deref(), Some("EngramAppTouchView"));
+        assert_eq!(
+            variant_view_type("TaskApp", "split-pane").as_deref(),
+            Some("TaskAppSplitPaneView")
+        );
+        assert_eq!(variant_view_type("A", "v2").as_deref(), Some("AV2View"));
+        for bad in ["", "-x", "x-", "a--b", "a.b", "a b", "a\"b", "ä"] {
+            assert_eq!(variant_view_type("A", bad), None, "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn a_variant_names_its_own_view_and_reuses_the_default_event_type() {
+        let m = component("Grid", vec![], vec![]);
+        let default = from_pipeline(&m, &box_layout("Grid"), &empty_style("Grid"))
+            .unwrap()
+            .output;
+        let touch = from_pipeline_variant(&m, &box_layout("Grid"), &empty_style("Grid"), "touch")
+            .unwrap()
+            .output;
+        assert!(default.contains("enum GridEvent"));
+        assert!(default.contains("struct GridView: View {"));
+        assert!(!touch.contains("enum GridEvent"), "{touch}");
+        assert!(!touch.contains("extension GridEvent"), "{touch}");
+        assert!(touch.contains("struct GridTouchView: View {"), "{touch}");
+        assert!(touch.contains("let dispatch: (GridEvent) -> Void"), "{touch}");
+        assert!(!touch.contains("struct GridView:"), "{touch}");
+        assert!(matches!(
+            from_pipeline_variant(&m, &box_layout("Grid"), &empty_style("Grid"), "bad name"),
+            Err(PipelineEmitError::UnsafeVariantName(_))
+        ));
+    }
+
     #[test]
     fn empty_box_layout_compiles_clean() {
         let m = component("Empty", vec![], vec![]);
@@ -12631,6 +12902,75 @@ mod tests {
             extended.project.is_none(),
             "default options must NOT emit a project shell"
         );
+    }
+
+    fn shell_with_variants(variants: Vec<LayoutChoice>) -> Result<String, PipelineEmitError> {
+        let m = component("Hello", vec![], vec![]);
+        let l = layout_with("Hello", container_node("Box", vec![]));
+        let options = EmitOptions {
+            emit_project: true,
+            layout_variants: variants,
+            ..EmitOptions::default()
+        };
+        Ok(from_pipeline_with_options(&m, &l, &empty_style("Hello"), &options)?
+            .project
+            .expect("project")
+            .app_swift)
+    }
+
+    #[test]
+    fn a_shell_without_variants_has_no_selector() {
+        let app = shell_with_variants(vec![]).unwrap();
+        assert!(!app.contains("MosaicEnvironmentReader"), "{app}");
+        assert!(app.contains("      HelloView("), "{app}");
+    }
+
+    #[test]
+    fn a_shell_with_variants_selects_by_the_rules_in_order() {
+        let app = shell_with_variants(vec![
+            LayoutChoice {
+                variant: "compact".into(),
+                conditions: vec![("size-class".into(), "compact".into())],
+            },
+            LayoutChoice {
+                variant: "touch".into(),
+                conditions: vec![
+                    ("pointer".into(), "coarse".into()),
+                    ("hover".into(), "none".into()),
+                ],
+            },
+        ])
+        .unwrap();
+        assert!(app.contains("MosaicEnvironmentReader { environment in"), "{app}");
+        assert!(app.contains("case \"compact\":\n      HelloCompactView("), "{app}");
+        assert!(app.contains("case \"touch\":\n      HelloTouchView("), "{app}");
+        assert!(app.contains("default:\n      HelloView("), "{app}");
+        let compact = app
+            .find("if environment.value(\"size-class\") == \"compact\" { return \"compact\" }")
+            .expect("compact rule");
+        let touch = app
+            .find("if environment.value(\"pointer\") == \"coarse\" && environment.value(\"hover\") == \"none\" { return \"touch\" }")
+            .expect("touch rule");
+        assert!(compact < touch, "rules keep their order");
+        // The selector types follow the host state, outside the WindowGroup
+        // the builder's shell edits anchor on.
+        let host_state = app.find("class MosaicHostState").expect("host state");
+        assert!(app.find("enum MosaicLayoutSelector").unwrap() > host_state);
+    }
+
+    #[test]
+    fn a_shell_refuses_variant_data_it_cannot_write_safely() {
+        let bad = |variant: &str, axis: &str, value: &str| {
+            shell_with_variants(vec![LayoutChoice {
+                variant: variant.into(),
+                conditions: vec![(axis.into(), value.into())],
+            }])
+            .is_err()
+        };
+        assert!(bad("comp act", "size-class", "compact"));
+        assert!(bad("compact", "size-class\") == \"x", "compact"));
+        assert!(bad("compact", "size-class", "compact\" || true"));
+        assert!(!bad("compact", "size-class", "compact"));
     }
 
     #[test]

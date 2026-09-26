@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C83-museo",
+    "language": "italian",
+    "chapter": 83,
+    "sequence": 3760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8442e0aa0c25e8d8"
+  },
+  "findings": []
+}

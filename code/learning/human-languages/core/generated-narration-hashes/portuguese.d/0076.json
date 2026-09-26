@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:ed78864d947cd780",
+  "lessonIds": [
+    "PT-C76-aldeia",
+    "PT-C76-correio",
+    "PT-C76-policia",
+    "PT-C76-teatro",
+    "PT-C76-biblioteca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch76.txt",
+  "json": "portuguese/narration/ch76.json",
+  "textHash": "fnv1a64:4215a9762b032cb2",
+  "jsonHash": "fnv1a64:b685843a0a112679",
+  "findings": []
+}

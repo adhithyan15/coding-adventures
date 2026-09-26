@@ -1,0 +1,11 @@
+{
+  "id": "IT-R60-second-pass-food-the-house-and-the-table",
+  "pathSegment": "IT-PATH-60-VERBI5",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-60-VERBI5",
+      "order": 6
+    }
+  ]
+}

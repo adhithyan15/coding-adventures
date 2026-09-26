@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:07f61c001d02fc21",
+  "lessonIds": [
+    "IT-C54-torta",
+    "IT-C54-zuppa",
+    "IT-C54-miele",
+    "IT-C54-olio",
+    "IT-C54-pranzo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch54.txt",
+  "json": "italian/narration/ch54.json",
+  "textHash": "fnv1a64:7d94a75e53abb040",
+  "jsonHash": "fnv1a64:a2e25518603d6d88",
+  "findings": []
+}

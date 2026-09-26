@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C59-coltello",
+    "language": "italian",
+    "chapter": 59,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c9b6c4fb02faaf5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:f32d78079bab39fc",
+  "lessonIds": [
+    "FR-C74-toit",
+    "FR-C74-jardin",
+    "FR-C74-lampe",
+    "FR-C74-bain",
+    "FR-C74-chambre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch74.txt",
+  "json": "french/narration/ch74.json",
+  "textHash": "fnv1a64:4ecd7a8983bbcf59",
+  "jsonHash": "fnv1a64:833fe95100cd0c4f",
+  "findings": []
+}

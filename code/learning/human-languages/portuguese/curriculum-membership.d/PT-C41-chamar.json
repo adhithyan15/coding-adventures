@@ -1,0 +1,11 @@
+{
+  "id": "PT-C41-chamar",
+  "pathSegment": "PT-PATH-41-VERBOS2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-41-VERBOS2",
+      "order": 2
+    }
+  ]
+}

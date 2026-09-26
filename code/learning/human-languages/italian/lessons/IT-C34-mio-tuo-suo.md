@@ -8,7 +8,7 @@ type: word
 headword: mio, tuo, suo
 gloss: "my, your, his/her — a whole column this book has never had, and a mi that was never one of them"
 concept_tag: PRONOUN-MY
-prerequisites: [IT-C33-qui-li, IT-C33-questo, IT-C30-non, IT-C13-rosso-blu]
+prerequisites: [IT-C33-qui-li, IT-C33-questo, IT-C30-non, IT-C13-rosso-blu, IT-C13-colori-origini]
 sounds: [io-glide, uo-glide]
 roots: []
 etymology_hook: "mio, tuo, suo are Latin meus, tuus, suus; the mi of mi chiamo looks like a possessive and is not one"

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:6e3524357af5a7de",
+  "lessonIds": [
+    "IT-C61-bottiglia",
+    "IT-C61-penna",
+    "IT-C61-carta",
+    "IT-C61-quaderno",
+    "IT-C61-matita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch61.txt",
+  "json": "italian/narration/ch61.json",
+  "textHash": "fnv1a64:abb65aa1119939f6",
+  "jsonHash": "fnv1a64:7fb24580b3db8cfa",
+  "findings": []
+}

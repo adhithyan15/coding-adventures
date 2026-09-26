@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Bag, Phone, Umbrella, Money, Present",
+  "label": "ch:it-bag-phone-umbrella-money-present",
+  "canDo": "I can name a bag, a phone, an umbrella, money, a present.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "IT-C62-regalo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can name a bag, a phone, an umbrella, money, a present.",
+    "assesses": [
+      "IT-LEX-C62-COSE2-03",
+      "IT-LEX-C62-COSE2-04",
+      "IT-LEX-C62-COSE2-05"
+    ]
+  }
+}

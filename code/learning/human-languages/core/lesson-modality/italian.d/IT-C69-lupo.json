@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C69-lupo",
+    "language": "italian",
+    "chapter": 69,
+    "sequence": 3050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d9b975467571091"
+  },
+  "findings": []
+}

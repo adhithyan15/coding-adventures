@@ -1,0 +1,11 @@
+{
+  "id": "FR-C69-huile",
+  "pathSegment": "FR-PATH-69-CUISINE21",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-69-CUISINE21",
+      "order": 4
+    }
+  ]
+}

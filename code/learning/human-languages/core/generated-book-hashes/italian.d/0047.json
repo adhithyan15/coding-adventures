@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:272bd99609b9451b",
+  "lessonIds": [
+    "IT-C47-cantare",
+    "IT-C47-ballare",
+    "IT-C47-ridere",
+    "IT-C47-piangere",
+    "IT-C47-lavare"
+  ],
+  "tex": "italian/book/chapters/ch47-sing-dance-laugh-cry-wash.tex"
+}

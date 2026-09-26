@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:22622e0591158925",
+  "lessonIds": [
+    "PT-C77-roupa",
+    "PT-C77-camisa",
+    "PT-C77-vestido",
+    "PT-C77-calcas",
+    "PT-C77-sapatos"
+  ],
+  "tex": "portuguese/book/chapters/ch77-clothes-shirt-dress-trousers-shoes.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C74-aviao",
+  "pathSegment": "PT-PATH-74-CIDADE2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-74-CIDADE2",
+      "order": 1
+    }
+  ]
+}

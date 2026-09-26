@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Ugly, Long, Short, Hot, Cold",
+  "label": "ch:it-ugly-long-short-hot-cold",
+  "canDo": "I can name ugly, long, short, hot, cold.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C73-freddo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can name ugly, long, short, hot, cold.",
+    "assesses": [
+      "IT-LEX-C73-AGG2-03",
+      "IT-LEX-C73-AGG2-04",
+      "IT-LEX-C73-AGG2-05"
+    ]
+  }
+}

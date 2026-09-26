@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C56-cucina",
+    "language": "italian",
+    "chapter": 56,
+    "sequence": 2360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea382644c3a4ff1a"
+  },
+  "findings": []
+}

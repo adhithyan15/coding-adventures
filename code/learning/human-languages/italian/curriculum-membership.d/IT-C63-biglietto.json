@@ -1,0 +1,11 @@
+{
+  "id": "IT-C63-biglietto",
+  "pathSegment": "IT-PATH-63-COSE3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-63-COSE3",
+      "order": 4
+    }
+  ]
+}

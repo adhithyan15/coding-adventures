@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C56-montanha",
+    "language": "portuguese",
+    "chapter": 56,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e9139d7bec7a9a2"
+  },
+  "findings": []
+}

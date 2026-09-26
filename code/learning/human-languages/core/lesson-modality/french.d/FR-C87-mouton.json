@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C87-mouton",
+    "language": "french",
+    "chapter": 87,
+    "sequence": 3730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1aa7ff44b6d99b4b"
+  },
+  "findings": []
+}

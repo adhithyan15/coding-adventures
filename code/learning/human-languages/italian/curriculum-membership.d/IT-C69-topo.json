@@ -1,0 +1,11 @@
+{
+  "id": "IT-C69-topo",
+  "pathSegment": "IT-PATH-69-ANIMALI2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-69-ANIMALI2",
+      "order": 1
+    }
+  ]
+}

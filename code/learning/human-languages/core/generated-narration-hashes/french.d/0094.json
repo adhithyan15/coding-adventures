@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:c3b80c6b45774980",
+  "lessonIds": [
+    "FR-C94-sale",
+    "FR-C94-amer",
+    "FR-C94-rond",
+    "FR-C94-carre",
+    "FR-C94-sec"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch94.txt",
+  "json": "french/narration/ch94.json",
+  "textHash": "fnv1a64:f9750b6dc8385ca4",
+  "jsonHash": "fnv1a64:449aa377c9472932",
+  "findings": []
+}

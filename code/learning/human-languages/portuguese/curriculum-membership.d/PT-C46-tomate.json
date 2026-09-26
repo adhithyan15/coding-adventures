@@ -1,0 +1,11 @@
+{
+  "id": "PT-C46-tomate",
+  "pathSegment": "PT-PATH-46-LEGUMES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-46-LEGUMES",
+      "order": 1
+    }
+  ]
+}

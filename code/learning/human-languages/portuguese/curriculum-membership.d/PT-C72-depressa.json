@@ -1,0 +1,11 @@
+{
+  "id": "PT-C72-depressa",
+  "pathSegment": "PT-PATH-72-ONDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-72-ONDE",
+      "order": 4
+    }
+  ]
+}

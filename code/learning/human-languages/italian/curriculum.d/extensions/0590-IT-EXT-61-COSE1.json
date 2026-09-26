@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-61-COSE1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a bottle, a pen, paper, a notebook, a pencil.",
+  "prerequisites": []
+}

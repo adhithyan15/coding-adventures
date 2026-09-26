@@ -1,0 +1,11 @@
+{
+  "id": "PT-C42-ouvir",
+  "pathSegment": "PT-PATH-42-VERBOS3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-42-VERBOS3",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-84-NATURE36",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "FR-EXT-84-NATURE36"
+  ],
+  "after": []
+}

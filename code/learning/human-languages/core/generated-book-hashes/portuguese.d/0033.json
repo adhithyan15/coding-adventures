@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:42bf8167bb2ba669",
+  "lessonIds": [
+    "PT-C33-pele",
+    "PT-C33-unha",
+    "PT-C33-queixo",
+    "PT-C33-garganta",
+    "PT-C33-estomago"
+  ],
+  "tex": "portuguese/book/chapters/ch33-skin-nail-chin-throat-stomach.tex"
+}
