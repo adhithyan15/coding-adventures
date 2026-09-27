@@ -195,7 +195,9 @@ See `CHANGELOG.d/` for the full feature matrix. The headline:
 - ✅ Containers (Box / Row / Column / Stack), leaves (Text / Image /
   Spacer / Divider / Icon), and the most-used host primitives
   (HostInput / HostButton / HostCheckbox / HostRadio / HostSlider / HostScroll)
-  are wired with a passing test each.
+  are wired with a passing test each. Fixed-height `HostScroll` parts lower to
+  bounded `SizedBox` viewports so long content scrolls instead of expanding,
+  and bounded Columns honor child `flex-grow` through `Expanded`.
 - ✅ `HostNavigationSplit` lowers to a side-by-side pane/detail `Row` at
   regular widths and a Material `Drawer` at compact widths, with pane naming
   carried by `Semantics`; `collapse: never` pins the static row.

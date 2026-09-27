@@ -1743,7 +1743,6 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
       "back-button", "forward-button", "home-button", "reload-button", "stop-button",
-      "bookmark-button", "bookmarks-button", "history-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1775,6 +1774,19 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       "print-page-button", "share-page-button", "page-info-button",
       "zoom-out-button", "zoom-reset-button", "zoom-in-button", "view-source-button",
     ]
+    return nativeActionRowControlPoint(identifier: identifier, identifiers: identifiers)
+  }
+
+  private func nativeLibraryControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+    let identifiers = [
+      "bookmark-button", "bookmarks-button", "history-button", "find-button",
+    ]
+    return nativeActionRowControlPoint(identifier: identifier, identifiers: identifiers)
+  }
+
+  private func nativeActionRowControlPoint(
+    identifier: String, identifiers: [String]
+  ) -> (NSPoint, NSWindow)? {
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
     guard let address = findEditableTextField(in: NSApp, visited: &visited),
@@ -1787,29 +1799,33 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       guard let ancestor = addressBranch.superview else { return nil }
       addressBranch = ancestor
     }
-    let rowY = contentView.subviews
+    let candidateRowYs = contentView.subviews
       .filter {
-        abs($0.frame.height - addressBranch.frame.height) < 1
-          && abs($0.frame.minY - addressBranch.frame.minY) > 1
+        $0.frame.height <= addressBranch.frame.height + 1
+          && abs($0.frame.midY - addressBranch.frame.midY) > 1
           && $0.frame.width < 200
+          && !String(describing: type(of: $0)).contains("KeyViewProxy")
       }
-      .map { $0.frame.minY }
-      .min(by: {
-        abs($0 - addressBranch.frame.minY) < abs($1 - addressBranch.frame.minY)
-      })
-    guard let rowY else { return nil }
-    let controls = contentView.subviews
-      .filter {
-        abs($0.frame.minY - rowY) < 1
-          && abs($0.frame.height - addressBranch.frame.height) < 1
-          && $0.frame.width < 200
+      .map { $0.frame.midY }
+      .sorted {
+        abs($0 - addressBranch.frame.midY) < abs($1 - addressBranch.frame.midY)
       }
-      .sorted { $0.frame.minX < $1.frame.minX }
-    guard controls.count == identifiers.count else { return nil }
-    let control = controls[controlIndex]
-    return (
-      control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil), window
-    )
+    for rowY in candidateRowYs {
+      let controls = contentView.subviews
+        .filter {
+          abs($0.frame.midY - rowY) < 1
+            && $0.frame.height <= addressBranch.frame.height + 1
+            && $0.frame.width < 200
+            && !String(describing: type(of: $0)).contains("KeyViewProxy")
+        }
+        .sorted { $0.frame.minX < $1.frame.minX }
+      guard controls.count == identifiers.count else { continue }
+      let control = controls[controlIndex]
+      return (
+        control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil), window
+      )
+    }
+    return nil
   }
 
   private func accessibleControlLabels(identifier: String) -> Set<String> {
@@ -1862,6 +1878,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     NSApp.activate(ignoringOtherApps: true)
     if let (point, window) = accessibleControlPoint(identifier: identifier)
       ?? nativeToolbarControlPoint(identifier: identifier)
+      ?? nativeLibraryControlPoint(identifier: identifier)
       ?? nativePageActionControlPoint(identifier: identifier)
     {
       sendPrimaryClick(at: point, to: window)
