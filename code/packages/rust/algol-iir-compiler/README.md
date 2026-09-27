@@ -219,7 +219,8 @@ handles unconditional cross-assigned dependency cycles when every participating
 write is a supported local scalar assignment. Such a cycle may also contain
 conditional expressions whose selectors use the exact loop control or exact
 ordinary local snapshots, including snapshots that evolve through another
-supported recurrence in the graph. The same exact snapshots may select
+supported recurrence in the graph or recursively through their own supported
+recurrence. The same exact snapshots may select
 conditional statement branches containing recurrence-cycle writes. Those changing
 dependency recurrences may contain conditional expressions when their selectors
 are the controlled scalar or other exact local snapshots in that graph. The
