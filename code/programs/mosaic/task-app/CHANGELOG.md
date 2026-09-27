@@ -4,6 +4,11 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+Entries added after `task-app-v0.3.0` accumulate here until the next version is
+cut.
+
+## [0.3.0] - 2026-09-27
+
 ### Fixed — WinUI startup failures stay visible and recoverable (#16097)
 
 The strict generated WinUI app now opens on a native loading surface before
@@ -153,9 +158,6 @@ Checked on WinUI: the generated TaskApp still reports zero degradations under
 `--profile native-complete`, builds with `dotnet build`, and UI Automation
 shows the switcher's selected option as `IsSelected` (`List=True`, the rest
 false), with a screen reader's Select moving it.
-
-Entries added after `task-app-v0.2.0` accumulate here until the next version is
-cut.
 
 ### Changed -- the empty List is the toolkit EmptyState (#15440)
 
