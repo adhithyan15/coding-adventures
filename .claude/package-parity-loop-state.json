@@ -15,14 +15,14 @@
     "number": 16198,
     "url": "https://github.com/adhithyan15/coding-adventures/pull/16198",
     "branch": "codex/parity-perl-diff-selection-20260927",
-    "implementation_revision": "6b3fffa42f1467013232ea7049652a9d8272a0a9",
+    "implementation_revision": "09f927e0e92a2739feb07f1cd0975b92f8416e48",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-27T23:26:30Z",
+    "observed_at": "2026-09-27T23:34:56Z",
     "pr_number": 16198,
     "status": "checks-pending",
-    "notes": "Opened ready-for-review PR #16198 from the validated clean Perl graph/diff branch after rebasing onto exact latest origin/main 76fae96352e714c60fdc697b20bbe1fa128d7f1c. GitHub reports OPEN, non-draft, and MERGEABLE; initial CI, CodeQL, and human-language checks are queued, so guarded auto-merge remains disabled."
+    "notes": "PR #16198 remains open and mergeable. A parallel read-only correctness review found that Perl appended source locations to thrown structural codes; the smallest in-scope repair now uses a typed string-overloaded error so raw exceptions contain only the stable code. Focused and full Perl suites pass on the repaired head; checks must rerun, so guarded auto-merge remains disabled."
   },
   "last_inventory": {
     "revision": "6d4472c93675ad025d1c5d0260267afd474744ad",
@@ -1251,10 +1251,10 @@
       "selected_at": "2026-09-27T23:05:37Z",
       "selection_revision": "6d4472c93675ad025d1c5d0260267afd474744ad",
       "selection_notes": "Selected only after PR #16188 completed all final-head checks acceptably and merged through guarded squash auto-merge. The collision-checked exact-main schema-3 inventory remains unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 178 high-consensus packages with 265 missing slots, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. All five formal dependencies are merged, the owner is not selection-blocked, and the refreshed dependency/leverage audit ranks this bounded Perl graph/diff adoption first with four direct and nine transitive unfinished descendants. A live 12-PR file-list audit found no overlap with the Perl build-tool, neutral build-tool fixtures/spec, parity state, or roadmap surfaces.",
-      "progress_notes": "Added a pure GraphDiff boundary that consumes the exact eight graph and eleven diff-selection fixtures over caller-owned values. It emits canonical topology and closure results, hashes the governed repository-boundary document, validates complete declared glob lists, compiles strict portable Unicode-scalar glob tokens once, uses bounded rolling-row dynamic programming with a semantics-preserving literal fast path, enforces exact BUILD-front and 50-million-unit preflight precedence, and returns no partial cycle or selection output. The module gains no filesystem, Git, environment, process, or network authority.",
-      "validated_at": "2026-09-27T23:24:02Z",
-      "validation_revision": "708e655e6cffdb52b86fb1fb52e6672d846f3fa1",
-      "validation_notes": "Passed the focused and full Perl suites (16 files, 148 tests), focused Devel::Cover with GraphDiff at 100% statements and subroutines plus 91.6% branches, changed-file Perl::Critic severity 5, MakeMaker generation and gmake test, the canonical BUILD front, the 162-case/285-file neutral corpus validator, 25 conformance schema tests, 10 package-parity tests, collision and unknown-bucket checks, focused Go graphdiff/globmatch tests and vet, a Go trimpath build, and a real 261-package Perl dry plan with orphan check clean. Exact direct-module CPAN audit reported zero advisories; the implementation avoids caller-generated regexes. A live 13-PR file-list audit found no overlap, and git diff checks are clean.",
+      "progress_notes": "Added a pure GraphDiff boundary that consumes the exact eight graph and eleven diff-selection fixtures over caller-owned values. It emits canonical topology and closure results, hashes the governed repository-boundary document, validates complete declared glob lists, compiles strict portable Unicode-scalar glob tokens once, uses bounded rolling-row dynamic programming with a semantics-preserving literal fast path, enforces exact BUILD-front and 50-million-unit preflight precedence, and returns no partial cycle or selection output. A post-publication read-only review also found and closed source-location leakage from raw Perl exceptions by introducing a typed string-overloaded stable error. The module gains no filesystem, Git, environment, process, or network authority.",
+      "validated_at": "2026-09-27T23:34:56Z",
+      "validation_revision": "09f927e0e92a2739feb07f1cd0975b92f8416e48",
+      "validation_notes": "Passed the focused and full Perl suites (16 files, 148 tests), including raw structural and invalid-glob exception assertions with no source path or line; GraphDiff syntax passes under Perl 5.38.2 and 5.42.2. The prior validated head also passed focused Devel::Cover with GraphDiff at 100% statements and subroutines plus 91.6% branches, changed-file Perl::Critic severity 5, MakeMaker generation and gmake test, the canonical BUILD front, the 162-case/285-file neutral corpus validator, 25 conformance schema tests, 10 package-parity tests, collision and unknown-bucket checks, focused Go graphdiff/globmatch tests and vet, a Go trimpath build, and a real 261-package Perl dry plan with orphan check clean. Exact direct-module CPAN audit reported zero advisories; the implementation avoids caller-generated regexes. A live 14-PR file-list audit found no overlap, and git diff checks are clean.",
       "publication_notes": "Opened ready-for-review PR #16198 from the validated clean branch after rebasing onto latest origin/main. A live 14-PR file-list audit found zero overlap. GitHub reports the PR open, non-draft, and MERGEABLE; initial CI, CodeQL, and human-language checks are queued, so guarded auto-merge remains disabled.",
       "notes": "Repair the embedded production graph and diff modules and dynamically consume all eight graph and eleven diff-selection cases with canonical topology, no partial cycle output, strict bounded matching, stable failures, and no new authority."
     },
