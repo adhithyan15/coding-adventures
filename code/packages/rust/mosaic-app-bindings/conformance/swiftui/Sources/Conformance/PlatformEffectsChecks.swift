@@ -118,6 +118,28 @@ private func checkSave(in directory: URL) {
     (try? FileManager.default.attributesOfItem(atPath: secret.path))?[.posixPermissions] as? Int
   check(permissions == 0o600, "replaced file keeps 0600, got \(String(describing: permissions))")
   check((try? String(contentsOf: secret, encoding: .utf8)) == "new", "replaced contents")
+
+  // Only the rwx bits carry over: never setuid, setgid or sticky.
+  let tool = directory.appendingPathComponent("tool.txt")
+  FileManager.default.createFile(
+    atPath: tool.path, contents: Data("old".utf8), attributes: [.posixPermissions: 0o4755])
+  check(
+    okValue(
+      mosaicRunFilesSave(
+        ["suggestedName": "tool.txt", "bytes": encoded("new")] as [String: Any],
+        dialogs: FakeDialogs(tool))) != nil, "save over a setuid file")
+  let toolPermissions =
+    (try? FileManager.default.attributesOfItem(atPath: tool.path))?[.posixPermissions] as? Int
+  check(toolPermissions == 0o755, "setuid is not copied, got \(String(describing: toolPermissions))")
+
+  // A new file stays owner-only.
+  let fresh = directory.appendingPathComponent("fresh.txt")
+  _ = mosaicRunFilesSave(
+    ["suggestedName": "fresh.txt", "bytes": encoded("x")] as [String: Any],
+    dialogs: FakeDialogs(fresh))
+  let freshPermissions =
+    (try? FileManager.default.attributesOfItem(atPath: fresh.path))?[.posixPermissions] as? Int
+  check(freshPermissions == 0o600, "a new file is 0600, got \(String(describing: freshPermissions))")
 }
 
 private func checkSaveRefusals(in directory: URL) {
@@ -175,6 +197,21 @@ private func checkOpen(in directory: URL) {
   check(
     failure(mosaicRunFilesOpen(NSNull(), dialogs: FakeDialogs(directory)))
       == "that is not a regular file", "a directory is refused")
+
+  // A FIFO is refused from the open descriptor, at once -- opening it for a
+  // blocking read would hang the main queue for ever.
+  let fifo = directory.appendingPathComponent("pipe")
+  check(mkfifo(fifo.path, 0o600) == 0, "mkfifo")
+  check(
+    failure(mosaicRunFilesOpen(NSNull(), dialogs: FakeDialogs(fifo)))
+      == "that is not a regular file", "a FIFO is refused without blocking")
+
+  // A symlink the person chose is resolved when the panel returns, and read.
+  let link = directory.appendingPathComponent("link.png")
+  check(symlink(source.path, link.path) == 0, "symlink")
+  let linked = okValue(mosaicRunFilesOpen(NSNull(), dialogs: FakeDialogs(link)))
+  check(linked?["bytes"] as? String == Data([1, 2, 3]).base64EncodedString(), "chosen symlink")
+  check(linked?["name"] as? String == "link.png", "the chosen name, not the link target")
 
   // One byte over the limit, bounded while reading.
   let large = directory.appendingPathComponent("large.bin")

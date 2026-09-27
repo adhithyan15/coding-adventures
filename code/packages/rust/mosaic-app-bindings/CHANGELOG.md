@@ -16,8 +16,12 @@ together):
   trailing dot or space); an extension of an accepted type when the app names
   one.
 - The save is written to an owner-only temporary file created with `O_EXCL`
-  beside the target, given the replaced file's permissions, and `rename`d into
-  place.
+  beside the target, given the replaced file's rwx bits (never setuid, setgid
+  or sticky; only from a regular file the person owns) with `fchmod` on the
+  open descriptor, and `rename`d into place.
+- `files.open` opens the chosen file once (`O_NONBLOCK | O_NOFOLLOW`, after
+  resolving a symlink the person chose) and checks its type with `fstat` on
+  that descriptor, so a FIFO swapped in cannot hang the main queue.
 - iOS and iPadOS: no panels yet (UI89 step 6). A standard kind fails at once
   with "… is not available on this platform yet" rather than waiting. Every
   AppKit use is behind `#if os(macOS)`, which a Rust test checks.

@@ -164,19 +164,44 @@ private func mosaicOk(_ value: [String: Any]) -> [String: Any] { ["ok": value] }
 private func mosaicCancelled() -> [String: Any] { ["cancelled": [String: Any]()] }
 func mosaicFailed(_ message: String) -> [String: Any] { ["failed": ["message": message]] }
 
-/// Read at most `limit` bytes, or nil if the file is longer. Bounded while
-/// reading, not by checking the size first: a file can grow between a check
-/// and a read, which is the TOCTOU the XAML handler's review found (#15218).
-private func mosaicReadBounded(_ url: URL, limit: Int) throws -> Data? {
-  let handle = try FileHandle(forReadingFrom: url)
-  defer { try? handle.close() }
+/// What reading the chosen file came to.
+enum MosaicOpenRead {
+  case bytes(Data)
+  case notRegular
+  case tooLarge
+  case unreadable
+}
+
+/// Open the chosen file ONCE and decide everything from that descriptor.
+///
+/// - The type check is `fstat` on the open descriptor, not a separate lookup
+///   by path: a path checked and then opened can be swapped in between, and a
+///   FIFO swapped in would block the main queue for ever.
+/// - `O_NONBLOCK` makes even that open return at once on a FIFO; a regular
+///   file ignores the flag, so reads behave normally.
+/// - A symlink the person chose is resolved once, here; the open then uses
+///   `O_NOFOLLOW`, so a link swapped in after that is refused, not followed.
+/// - Bounded while reading, not by checking the size first: a file can grow
+///   between a check and a read, which is the TOCTOU the XAML handler's review
+///   found (#15218).
+func mosaicReadChosenFile(_ url: URL, limit: Int) -> MosaicOpenRead {
+  let descriptor = open(url.resolvingSymlinksInPath().path, O_RDONLY | O_NONBLOCK | O_NOFOLLOW)
+  guard descriptor >= 0 else { return .unreadable }
+  let handle = FileHandle(fileDescriptor: descriptor, closeOnDealloc: true)
+  var info = stat()
+  guard fstat(descriptor, &info) == 0 else { return .unreadable }
+  guard (info.st_mode & S_IFMT) == S_IFREG else { return .notRegular }
   var out = Data()
-  while true {
-    guard let chunk = try handle.read(upToCount: 64 * 1024), !chunk.isEmpty else {
-      return out
+  do {
+    while true {
+      guard let chunk = try handle.read(upToCount: 64 * 1024), !chunk.isEmpty else {
+        return .bytes(out)
+      }
+      if out.count + chunk.count > limit { return .tooLarge }
+      out.append(chunk)
     }
-    if out.count + chunk.count > limit { return nil }
-    out.append(chunk)
+  } catch {
+    return .unreadable
   }
 }
 
@@ -208,20 +233,15 @@ func mosaicRunFilesOpen(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: 
   guard let chosen = dialogs.chooseFileToOpen(extensions: mosaicExtensions(for: request)) else {
     return mosaicCancelled()
   }
-  let values = try? chosen.resourceValues(forKeys: [.isRegularFileKey])
-  guard values?.isRegularFile == true else {
-    return mosaicFailed("that is not a regular file")
-  }
   // Not the error's own text: it can carry the full local path, and a
   // failure message is data the app sees.
-  let bytes: Data?
-  do {
-    bytes = try mosaicReadBounded(chosen, limit: mosaicMaxOpenBytes)
-  } catch {
-    return mosaicFailed("couldn't read the selected file")
-  }
-  guard let bytes else {
+  let bytes: Data
+  switch mosaicReadChosenFile(chosen, limit: mosaicMaxOpenBytes) {
+  case .bytes(let read): bytes = read
+  case .notRegular: return mosaicFailed("that is not a regular file")
+  case .tooLarge:
     return mosaicFailed("the selected file is larger than \(mosaicMaxOpenBytes) bytes")
+  case .unreadable: return mosaicFailed("couldn't read the selected file")
   }
   return mosaicOk([
     "name": chosen.lastPathComponent,
@@ -268,11 +288,24 @@ func mosaicRunFilesSave(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: 
 /// Write `bytes` beside `target` and rename it into place, so an interrupted
 /// save never leaves a half-written file where the person's old one was.
 ///
-/// The temporary file is created owner-only (0600) and exclusively (`O_EXCL`,
-/// so it cannot be a link someone planted), then given the permissions of the
-/// file it replaces: saving over a private file never leaves the new one
-/// readable by other users.
+/// - The temporary file is created owner-only (0600) and exclusively
+///   (`O_EXCL`, so it cannot be a link someone planted).
+/// - It takes the permission bits (rwx only -- never setuid, setgid or
+///   sticky) of the file it replaces, so saving over a private file never
+///   leaves the new one readable by other users. Only from a regular file the
+///   person owns: a file someone else planted does not get to choose them.
+/// - Those bits are applied with `fchmod` on the open descriptor. A `chmod`
+///   by path would follow a symlink swapped in after the write, and land on
+///   whatever file it pointed at.
 private func mosaicWriteReplacing(_ target: URL, with bytes: Data) -> [String: Any] {
+  var mode: mode_t = 0o600
+  var existing = stat()
+  if lstat(target.path, &existing) == 0,
+    (existing.st_mode & S_IFMT) == S_IFREG,
+    existing.st_uid == getuid()
+  {
+    mode = existing.st_mode & 0o777
+  }
   let directory = target.deletingLastPathComponent()
   let temporary = directory.appendingPathComponent(".mosaic-save-\(UUID().uuidString).tmp")
   let descriptor = open(temporary.path, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0o600)
@@ -284,16 +317,16 @@ private func mosaicWriteReplacing(_ target: URL, with bytes: Data) -> [String: A
   }
   do {
     try handle.write(contentsOf: bytes)
+    guard fchmod(descriptor, mode) == 0 else {
+      try? handle.close()
+      return mosaicFailed("couldn't save the file")
+    }
     try handle.synchronize()
   } catch {
     try? handle.close()
     return mosaicFailed("couldn't save the file")
   }
   try? handle.close()
-  var existing = stat()
-  if lstat(target.path, &existing) == 0 && (existing.st_mode & S_IFMT) == S_IFREG {
-    _ = chmod(temporary.path, existing.st_mode & 0o7777)
-  }
   guard rename(temporary.path, target.path) == 0 else {
     return mosaicFailed("couldn't save the file")
   }
