@@ -196,6 +196,8 @@ class OcamlCapabilityGateTest(unittest.TestCase):
             "ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0",
             "ocaml-base-compiler.5.2.1",
             "opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
+            'archive-mirrors: "https://opam.ocaml.org/cache"',
+            "opam var root --global",
             "opam install . --deps-only --with-test --with-dev-setup",
             "dune runtest --force --instrument-with bisect_ppx",
             '--coverage-glob "bisect*.coverage"',

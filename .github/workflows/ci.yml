@@ -744,6 +744,13 @@ jobs:
           python code/scripts/ocaml_toolchain_lock.py validate-repository-report \
             --names "$repository_names" \
             --listing "$repository_listing"
+          opam_config="$(opam var root --global)/config"
+          test -f "$opam_config"
+          if grep -q '^archive-mirrors:' "$opam_config"; then
+            echo "unexpected preconfigured opam archive mirror" >&2
+            exit 1
+          fi
+          printf 'archive-mirrors: "https://opam.ocaml.org/cache"\n' >> "$opam_config"
           test -z "$(find . -name dune-workspace -print -quit)"
           cd code/packages/ocaml/ca-capability-analyzer
           opam install . --deps-only --with-test --with-dev-setup \
