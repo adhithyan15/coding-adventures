@@ -22,6 +22,59 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:గ",
+    {
+      script: "telugu",
+      glyph: "గ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep up and over the broad lower arch",
+              path: [
+                { x: 120, y: 12 },
+                { x: 88, y: 70 },
+                { x: 68, y: 145 },
+                { x: 80, y: 230 },
+                { x: 105, y: 320 },
+                { x: 155, y: 405 },
+                { x: 220, y: 455 },
+                { x: 295, y: 465 },
+                { x: 370, y: 445 },
+                { x: 430, y: 398 },
+                { x: 472, y: 330 },
+                { x: 500, y: 250 },
+                { x: 493, y: 170 },
+                { x: 470, y: 95 },
+                { x: 430, y: 25 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "cup through the separate upper flourish",
+              path: [
+                { x: 165, y: 560 },
+                { x: 190, y: 505 },
+                { x: 235, y: 465 },
+                { x: 275, y: 468 },
+                { x: 320, y: 495 },
+                { x: 365, y: 540 },
+                { x: 415, y: 595 },
+                { x: 470, y: 645 },
+                { x: 525, y: 680 },
+                { x: 580, y: 685 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("గ"),
+    },
+  ],
+  [
     "telugu:ఖ",
     {
       script: "telugu",

@@ -17,6 +17,7 @@ import { registerStrokeHonestyTests } from "../support/stroke-honesty";
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
 const TELUGU_KA = DUCTUS[ductusKey("telugu", "క")];
 const TELUGU_KHA = DUCTUS[ductusKey("telugu", "ఖ")];
+const TELUGU_GA = DUCTUS[ductusKey("telugu", "గ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -48,6 +49,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఖ", TELUGU_KHA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("గ", TELUGU_GA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -113,6 +117,19 @@ describe("handwriting ductus", () => {
         "return left along the crown",
       ],
       ["draw the separate downward stem"],
+    ]);
+  });
+
+  it("Telugu గ keeps its two source-verified movements in separate pen-down runs", () => {
+    expect(penLifts(TELUGU_GA)).toBe(1);
+    expect(TELUGU_GA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_GA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      ["sweep up and over the broad lower arch"],
+      ["cup through the separate upper flourish"],
     ]);
   });
 
