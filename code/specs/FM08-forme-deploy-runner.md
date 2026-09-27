@@ -1,7 +1,7 @@
 # FM08 — Forme Deploy Runner
 
-> **Status:** v0 specification. Core, filesystem, GitHub Pages, and CLI/product
-> composition implemented; completion reconciliation remains in FM-B012.
+> **Status:** Headless v0 implemented. Core, filesystem, GitHub Pages, and
+> CLI/product composition are complete through FM-B012.
 > **Layer:** FM08 (last layer of the FM00 vision — applies a
 > deploy manifest to a real target).
 > **Predecessor:** `forme-aot-deploy-manifest-emitter` produces

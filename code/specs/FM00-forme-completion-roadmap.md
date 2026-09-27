@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-09-20.
+> **Status:** Living delivery backlog, last prioritized 2026-09-27.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -11,13 +11,13 @@
 |---|---|---|
 | Vision and delivery backlog | Active | [FM00 vision](FM00-forme-vision.md) and this roadmap |
 | Kernel | Implemented | [FM01](FM01-forme-kernel.md) |
-| Plugin host | Specified; implementation pending | [FM02](FM02-forme-plugin-host.md) |
+| Plugin host | Specification complete; implementation active | [FM02](FM02-forme-plugin-host.md) |
 | Orchestrator | Headless v0 implemented | [FM03](FM03-forme-orchestrator.md) |
 | Style IR | Implemented | [FM04](FM04-forme-style-ir.md) |
 | Interactivity IR | Location reserved; contract pending | [FM05](FM05-forme-interactivity-ir.md) |
 | AOT compiler | Static v0 implemented | [FM06](FM06-forme-aot-compiler.md) |
 | CLI and development server | Headless v0 implemented | [FM07](FM07-forme-cli-dev-server.md) |
-| Deploy runner | Active | [FM08](FM08-forme-deploy-runner.md) |
+| Deploy runner | Headless v0 implemented | [FM08](FM08-forme-deploy-runner.md) |
 
 ## What “complete” means
 
@@ -36,14 +36,15 @@ well-tested packages. We will deliver that in three horizons:
    backend, accessibility, performance, and security gates are part of the
    release contract.
 
-The first horizon is the current release target. Work for later horizons stays
-visible so a local optimization cannot quietly close the project early.
+Headless v0 is complete. Extensible v1 is now the current release target; work
+for the authoring horizon stays visible so a local optimization cannot quietly
+close the project early.
 
 ## Current baseline
 
-The implementation is substantial but not yet an end-to-end product:
+The implementation now forms a complete headless v0 product:
 
-- 66 TypeScript `forme-*` packages and 199 package test files cover the kernel,
+- 66 TypeScript `forme-*` packages and 200 package test files cover the kernel,
   stage contracts, a bounded concurrent orchestrator, Style IR, AOT emitters, document
   transforms, collections, feeds, routing, and static output.
 - The blog proves a ten-stage routed DAG: source → parse → asset resolution →
@@ -63,10 +64,12 @@ The implementation is substantial but not yet an end-to-end product:
   formats stable diagnostics and exits, and cooperatively handles SIGINT. Watch
   serves only successful in-memory artifacts, coalesces project changes,
   reloads browsers over SSE, and retains the last good site across failures.
-  The pure deploy-runner core validates manifests, plans complete owned output
-  sets, preflights content, and produces deterministic dry-run reports. The
-  filesystem adapter stages and reversibly swaps complete validated trees; the
-  hosted adapter, plugin host, runtime sandbox, and authoring shell remain.
+  `forme deploy` validates manifests and selected content stores, plans complete
+  owned output sets, performs write-free target inspection, and produces
+  deterministic reports. The filesystem adapter reversibly swaps complete
+  validated trees, while the GitHub Pages adapter publishes independently owned
+  prefixes through non-forced ref updates. The plugin host, runtime sandbox,
+  interactivity contract, and authoring shell remain.
 - The CLI now persists per-invocation cache entries and topology-scoped
   materialized checkpoints through a containment-checked project cache.
   Filesystem sources publish validated external-state manifests, and successful
@@ -81,13 +84,12 @@ The implementation is substantial but not yet an end-to-end product:
 - Interactivity IR now has a canonical FM05 location but no normative schema or
   package. FM06 reconciles the existing static AOT family, FM07 records the
   shipped headless CLI/dev server, and the deploy-runner contract is FM08.
-- The completed concurrent scheduler now has product-level clean/incremental
-  and reproducibility proof in both live sites. The remaining headless-product
-  path has reconciled the specification map and is implementing the deploy
-  runner as four independently reviewed capability boundaries.
-  Both live sites use the same product CLI, watch server,
+- The completed concurrent scheduler has product-level clean/incremental and
+  reproducibility proof in both live sites. The reconciled specification map
+  and four independently reviewed deploy boundaries close the headless-product
+  path. Both live sites use the same product CLI, watch server, deploy command,
   and centralized local-dependency bootstrap; site-local code is limited to
-  content adapters and post-build artifact assertions.
+  content adapters, target declarations, and artifact assertions.
 
 ## Prioritization method
 
@@ -148,10 +150,10 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 35 | FM-B044 | done | Implement the pure deploy-runner core | `forme-deploy-runner-core` strictly validates bounded current and previous manifests, rejects portable-path and prefix collisions, computes a stable immutable complete-set plan, and emits deterministic reports. Its cancellable manifest-bound reader deduplicates dry-run preflight and gives adapters only the exact trusted byte snapshot it size/hash-verified. Adversarial tests cover previous-only ownership, mutable or changing stores, resource bounds, cancellation, and canonical ordering. |
 | 36 | FM-B045 | done | Implement atomic filesystem publication | Depends on completed FM-B044. `forme-deploy-runner-fs-adapter` stages the complete planned output set in an exclusively created sibling tree, rejects linked or escaping components and external hard-link mutation, swaps through a retained same-parent backup, restores every pre-finalize failure or cancellation, and proves stale-file/directory pruning plus write-free exact retries. |
 | 37 | FM-B046 | done | Implement the GitHub Pages publication adapter | Depends on completed FM-B044. `forme-deploy-runner-github-pages-adapter` publishes one validated owned source-branch prefix through bounded Git Data API calls and a non-forced atomic ref update; it preserves sibling and unowned paths, verifies immutable candidate completeness, prunes only identity-checked stale files, and reports unprovable ref outcomes as indeterminate. |
-| 38 | FM-B047 | active | Compose `forme deploy` and dogfood it | Depends on completed FM-B045 and FM-B046. Add the command through the repository CLI builder, implement directory/bundle/inline content-store selection and scoped capabilities, explicitly bootstrap the two legacy sites' existing target ownership from verified identities, then make both live Pages workflows deploy through it with clean-checkout, dry-run, rollback, and availability assertions. |
-| 39 | FM-B012 | blocked | Complete the deploy runner | Depends on FM-B044–FM-B047. Close the FM08 implementation ledger after the core, filesystem and GitHub Pages adapters, deterministic reporting, `forme deploy` composition, and both live product paths are merged. |
-| 40 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 41 | FM-B014 | ready | Implement the plugin host and wire protocol | Depends on completed FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
+| 38 | FM-B047 | done | Compose `forme deploy` and dogfood it | Depends on completed FM-B045 and FM-B046. Add the command through the repository CLI builder, implement directory/bundle/inline content-store selection and scoped capabilities, explicitly bootstrap the two legacy sites' existing target ownership from verified identities, then make both live Pages workflows deploy through it with clean-checkout, dry-run, rollback, and availability assertions. |
+| 39 | FM-B012 | done | Complete the deploy runner | Depends on FM-B044–FM-B047. Close the FM08 implementation ledger after the core, filesystem and GitHub Pages adapters, deterministic reporting, `forme deploy` composition, and both live product paths are merged. |
+| 40 | FM-B014 | active | Implement the plugin host and wire protocol | Depends on completed FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
+| 41 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
 | 42 | FM-B015 | blocked | Ship plugin installation, runtimes, and sandboxes | Depends on FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
 | 43 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
 | 44 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
@@ -160,7 +162,7 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 
 ## Dependency path
 
-The shortest path to the current release target is:
+The completed dependency path to Headless v0 was:
 
 `FM-B002 → FM-B019 → FM-B003 → FM-B004`, alongside `FM-B005` and
 `FM-B025 → FM-B026 → FM-B027 → FM-B030 → FM-B028 → FM-B006`, then
@@ -168,9 +170,9 @@ The shortest path to the current release target is:
 FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
-FM-B011 should land before new numbered specs are added. FM-B013–FM-B018 are
-visible v1 work and must not interrupt the headless dogfood path unless they
-uncover a contract or security flaw in that path.
+Headless v0 is complete. The shortest path to Extensible v1 is now
+`FM-B014 → FM-B015`; FM-B013 can proceed independently before joining the
+authoring path at FM-B016 and the backend proof at FM-B017.
 
 ## Discovery log
 
@@ -188,7 +190,7 @@ work.
 | 2026-08-27 | `forme-render-static` hard-codes a light classless theme instead of consuming Style IR. | FM-B005 |
 | 2026-08-27 | FM01–FM04 reserve FM05/FM06/FM07 for Interactivity IR, AOT, and CLI, but FM05 is now the deploy runner and FM06/FM07 files are absent. | Resolved in FM-B011: FM05/FM06/FM07 now own those reserved contracts, the deploy runner moved to FM08, and a CI contract prevents another collision. |
 | 2026-08-27 | The orchestrator README understates the implemented reproducible-build support, while caching, bounded streaming, fan-out, and concurrency remain incomplete. | FM-B010 and FM-B011 |
-| 2026-08-27 | The Forme blog workflow can succeed while the public blog root is missing, so deployment success alone is not an end-to-end availability check. | FM-B004 and FM-B012 |
+| 2026-08-27 | The Forme blog workflow can succeed while the public blog root is missing, so deployment success alone is not an end-to-end availability check. | Resolved across FM-B004 and FM-B047: the product emits the complete blog surface and both Forme publication workflows end with bounded live availability assertions. |
 | 2026-08-27 | The DAG builder ignores explicit `wires` and assigns one inferred producer per instance. Routed nodes therefore cannot feed article rendering and collection building in the same blog run. | Added FM-B019 and moved it ahead of FM-B003. |
 | 2026-08-27 | `forme-orchestrator` tests pass but its TypeScript build cannot resolve Node APIs imported through `forme-cache` and `forme-pipeline-config` because the package omits `@types/node`. | Resolve in FM-B019 and retain `npm run build` as a package gate. |
 | 2026-08-27 | The blog deployment workflow did not watch `forme-router` or `forme-collect-chronological`, so future changes to its routed DAG could bypass the clean-build check. | Resolved in FM-B003 by adding both package paths. |
@@ -238,7 +240,7 @@ work.
 | 2026-09-19 | Product replay tests show that `forme-resolve-asset-refs-fs` and `forme-load-assets-fs` still rerun to observe ambient asset state even when authored sources are unchanged, while both emitters and unrelated pure stages skip. | Correctness requires these capability-bearing readers to remain conservative because their upstream values do not describe external asset bytes. This is not a headless-v0 blocker; a future plugin/external-dependency contract may optimize it without weakening invalidation. |
 | 2026-09-19 | The topology fingerprint included stage version and config but not effective per-instance capability grants. Reusing a prior checkpoint after authority changes would cross a security-relevant cache boundary. | Resolved in FM-B037 by including the sorted effective capability set in the revision-ledger/checkpoint namespace, with a regression test proving grant changes invalidate reuse. |
 | 2026-09-19 | A replay path could be lexically contained but still escape through a pre-existing directory or final-file symlink beneath `outDir`. Direct writes would also modify an external hard-link target. | Resolved in FM-B037 for both normal emission and replay: reject linked components and final targets, verify canonical parents remain beneath the real output root, and publish exclusive same-directory temporary files by rename. |
-| 2026-09-19 | Per-file atomic writes cannot prune files that disappeared from one artifact or atomically publish the union of the blog's two sinks, because emitters intentionally share `dist` without an output-ownership contract. | Fold into FM-B012: the deploy runner must stage the complete named-output artifact set, reject cross-artifact path collisions, publish it as one tree, and remove stale files without letting one emitter delete a sibling's output. |
+| 2026-09-19 | Per-file atomic writes cannot prune files that disappeared from one artifact or atomically publish the union of the blog's two sinks, because emitters intentionally share `dist` without an output-ownership contract. | Resolved in FM-B047: `forme build --deploy-input` collision-checks and merges the named in-memory artifacts into one complete manifest-bound set, and the deploy adapters publish that set while pruning only declared ownership. |
 | 2026-09-19 | Eager materialization currently serves two contracts at once: replayable fan-out and whole-instance checkpoints. Replacing only the fan-out array would still retain every value for the revision ledger/cache, while dropping stream checkpoints would regress exact affected-set reuse. | Split FM-B010 into FM-B038 (bounded content-addressed stream checkpoints), FM-B039 (bounded multicast/backpressure), and FM-B040 (pipeline-wide scheduling). Keep FM-B010 as the product-level integration milestone so each risky boundary is independently testable and reviewable. |
 | 2026-09-19 | FM-B040 still coupled three failure-sensitive mechanisms: fair permit accounting, concurrent DAG readiness, and one-pass live-stream/checkpoint integration. A permit leak or holding a permit across an upstream wait can deadlock the whole pipeline before scheduler behavior can be reviewed meaningfully. | Split the implementation into FM-B041 (FIFO cancellation-aware permit pool), FM-B042 (concurrent ready/per-item scheduling), and FM-B043 (live multicast plus bounded checkpoint integration). Keep FM-B040 as their scheduler completion milestone. |
 | 2026-09-19 | After FM-B043 merged, the roadmap baseline, root README, orchestrator entry-point header, and watch-loop comment still described concurrency, bounded streaming, side-effect replay, or exact affected scheduling as deferred. | Close FM-B040 by reconciling those status surfaces with the shipped scheduler. Keep product-level clean/incremental and reproducibility proof in the now-active FM-B010 milestone. |
@@ -246,9 +248,10 @@ work.
 | 2026-09-19 | Clean and warm live-site builds produced semantically equal output reports with different nested object insertion order because restored checkpoints are canonically decoded while fresh stage values retain construction order. That makes the advertised deterministic report byte representation depend on whether a stage ran or restored. | Resolved in FM-B010 by recursively canonicalizing summarized report values and making both dogfood sites compare clean and warm output summaries byte-for-byte. |
 | 2026-09-20 | The Forme spec map was documentation-only, so a renamed or duplicate number could silently recreate broken package links. | Resolved in FM-B011 with an always-on metadata contract that checks the exact FM01–FM08 map, required implementation ledgers, roadmap links, and local Markdown targets. |
 | 2026-09-20 | FM-B012 combined four security-sensitive, independently testable boundaries in one PR, while FM08's implementation plan said each package ships separately and simultaneously listed GitHub Pages as both the required v0 hosted target and a future adapter. | Split FM-B012 into FM-B044–FM-B047. FM-B044 first reconciles the contract and lands only the capability-free validation/planning/reporting core; filesystem publication, GitHub Pages, and CLI/product composition follow as separate reviewed changes. |
-| 2026-09-20 | The two Forme dogfood sites and the repository's other Pages applications share a legacy `gh-pages` source branch and publish independent prefixes with `keep_files`; a whole-site Pages artifact deployment would replace sibling applications rather than preserve them. | Reconciled FM-B046 with the deployed product topology: the v0 hosted adapter creates blobs/trees/commits through GitHub's Git Data API and atomically advances the configured Pages source ref with a non-forced compare-and-swap. A reserved per-owner manifest records exact stale-path deletion authority; FM-B047 will dogfood separate landing-page and blog prefixes without changing the repository's Pages mode. |
-| 2026-09-20 | The legacy landing page and blog already occupy their final Pages paths without Forme ownership manifests. Inferring ownership from destination would let a new deployment overwrite unrelated exact-path content. | FM-B046 fails closed on every unowned exact path. FM-B047 must perform a one-time explicit bootstrap that matches the expected existing Git blob identities before normal Forme publication can take over either live prefix. |
+| 2026-09-20 | The two Forme dogfood sites and the repository's other Pages applications share a legacy `gh-pages` source branch and publish independent prefixes with `keep_files`; a whole-site Pages artifact deployment would replace sibling applications rather than preserve them. | Resolved across FM-B046 and FM-B047: the adapter records exact per-owner deletion authority and both live workflows publish separate landing-page and blog ownership through the shared source branch without changing Pages mode. |
+| 2026-09-20 | The legacy landing page and blog already occupy their final Pages paths without Forme ownership manifests. Inferring ownership from destination would let a new deployment overwrite unrelated exact-path content. | Resolved across FM-B046 and FM-B047: publication fails closed on unowned exact paths, while one-time reviewed bootstrap files bind the final target to exact Git-object and SHA-256 identities before either live prefix is adopted. |
 | 2026-09-27 | The root and blog publishers independently advance one shared `gh-pages` ref, so separate workflow concurrency domains could make otherwise-valid compare-and-swap publications race; carrying build output through a deploy job also creates a privilege transition. | FM-B047 gives both workflows one non-cancelling publication concurrency group, keeps build jobs read-only, checksums the exact manifest-bound deploy input before artifact transfer, and grants `contents: write` plus `GITHUB_TOKEN` only to the isolated main-branch deploy job. |
+| 2026-09-27 | The merged root and blog workflows both built, dry-ran, published through Forme, and passed their live availability checks; the duplicate push suite also completed successfully. | Close FM-B047 and the FM-B012 deploy milestone. Headless v0 is complete; reprioritize FM-B014 as the Extensible v1 critical path ahead of independent FM-B013 interactivity work. |
 
 ## Loop protocol
 

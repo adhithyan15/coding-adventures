@@ -13,7 +13,7 @@
 | `forme check` | Implemented | Loads and validates configuration without running the pipeline. |
 | `forme clean` | Implemented | Removes only containment-checked output and cache targets. |
 | `forme watch` preview server | Implemented | Coalesced rebuilds, SSE reload, last-good output, and clean cancellation are tested. |
-| `forme deploy` | In progress in FM-B047 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
+| `forme deploy` | Implemented in FM-B047/FM-B012 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
 | `forme install` and trust UX | Blocked | Requires the FM02 plugin host and FM-B014/FM-B015. |
 | Authoring shell integration | Blocked | FM-B016 owns the non-developer product shell. |
 
