@@ -7,6 +7,7 @@ chapter: 16
 type: word
 headword: చైత్రం వైశాఖం జ్యేష్ఠం ఆషాఢం శ్రావణం భాద్రపదం ఆశ్వయుజం కార్తీకం మార్గశిరం పుష్యం మాఘం ఫాల్గుణం
 gloss: the twelve lunisolar months — matching Kannada and Hindi's shared pan-Indian calendar, completing the split with Tamil/Malayalam's own solar systems
+romanization: "Caitraṁ Vaiśākhaṁ Jyēṣṭhaṁ Āṣāḍhaṁ Śrāvaṇaṁ Bhādrapadaṁ Āśvayujaṁ Kārtīkaṁ Mārgaśiraṁ Puṣyaṁ Māghaṁ Phālguṇaṁ"
 concept_tag: TE-MONTHS
 prerequisites: [TE-C15-neellu-biyyam]
 sounds: [telugu-conjunct-shtha, telugu-anusvara]

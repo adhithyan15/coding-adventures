@@ -1,0 +1,1893 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 17,
+  "title": "The Sentence Learns to End",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:156774201820667a",
+  "lessons": [
+    {
+      "id": "UR-C17-yih",
+      "sequence": 820,
+      "title": "یہ (yih) — \"this,\" and the letter you are owed",
+      "headword": "یہ",
+      "romanization": "yih",
+      "gloss": "this — the nearer of Urdu's two pointing words, and a word whose second letter you cannot yet write",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77b61ee0472d500d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read these off the page, naming the letters from the right before you say each word:"
+            },
+            {
+              "kind": "speech",
+              "text": "کان ناک."
+            },
+            {
+              "kind": "speech",
+              "text": "kān — ear. nāk — nose. Seven letters bought you those."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یہ — yih — this."
+            },
+            {
+              "kind": "speech",
+              "text": "Point at something within reach and name it:"
+            },
+            {
+              "kind": "speech",
+              "text": "یہ کان — yih kān — \"this ear\" یہ ناک — yih nāk — \"this nose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters, and you can read the first of them: ی, the S-curve with no dots. The second is new to your eye, and it will stay new for two more lessons. Say the word now; you will write it shortly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "یہ (yih) points at what is near you. Urdu keeps a second word for what is far, and the two arrived together: both descend from the Old Indo-Aryan demonstratives that Sanskrit wrote as iyam and asau. English lost most of that system and kept a thinner this/that; Urdu kept the pair intact."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a gap in what you can do with یہ so far, and it is worth naming. yih kān is \"this ear\" — a label, not yet a sentence. To say \"this is an ear\" you need the small word hai at the end, which you have been saying since you gave your name. You cannot write hai yet, because both of its letters are still missing from your hand."
+            },
+            {
+              "kind": "speech",
+              "text": "That is what this chapter buys back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih — this",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yih** — this]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih kān, then yih nāk, pointing each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yih kān**, then **yih nāk**, pointing each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "کان and ناک, naming their letters from the right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: کان and ناک, naming their letters from the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the near word yih, and name what it still needs to become a sentence — hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the near word **yih**, and name what it still needs to become a sentence — *hai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"this ear.\" (yih kān.) Which of یہ's two letters can you already write? (The first one, ی.) What small word would turn yih kān into a full sentence? (hai.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: یہ (yih)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C17-yih-near",
+              "prompt": "Does یہ (yih) point at what is near you or what is far from you?",
+              "assesses": [
+                "UR-LEX-YIH"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "near",
+                "close",
+                "nearby",
+                "the near one",
+                "what is close"
+              ],
+              "feedback": {
+                "correct": "Near -- yih is the close-at-hand word.",
+                "incorrect": "NEAR. yih points at what is beside you; a different word handles what is far."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C17-kaam",
+      "sequence": 830,
+      "title": "کام (kām) — \"work,\" and a word you can read the moment you meet it",
+      "headword": "کام",
+      "romanization": "kām",
+      "gloss": "work — inherited from Sanskrit karman, whose borrowed twin English spells karma",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eab369fc4cf4b7c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the near-pointing word, then point at your own ear and use it. (yih; yih kān.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کام — kām — work."
+            },
+            {
+              "kind": "speech",
+              "text": "Now do something you could not do with any word before this one. Read it off the page. From the right: ک, ا, م."
+            },
+            {
+              "kind": "speech",
+              "text": "Every letter in it is already yours, so this word arrives readable on the day you meet it. That is what the seven letters were for."
+            },
+            {
+              "kind": "speech",
+              "text": "کام (kām) is masculine."
+            },
+            {
+              "kind": "speech",
+              "text": "yih kām — \"this work\" — the near-pointing word is still an ear-word; its second letter reaches your hand next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کام is inherited, not borrowed: Sanskrit karman \"act, deed, work\" became Prakrit kamma and then Urdu kām, losing a syllable to a few thousand years of being said out loud."
+            },
+            {
+              "kind": "speech",
+              "text": "Then look at what English did with the same word. English did not inherit it — English borrowed it, late, out of books, and borrowed it whole: karma."
+            },
+            {
+              "kind": "speech",
+              "text": "So one Sanskrit word reached two languages by two roads. The road through ordinary Indian speech wore it down to a plain word for the work you have to get done today. The road through scholarship carried it into English untouched and left it meaning cosmic consequence. Same word. The difference in weight is the difference between being inherited and being borrowed, and you have watched that same fork before, when pūchhnā met pursish."
+            },
+            {
+              "kind": "speech",
+              "text": "A caution worth keeping: Urdu has a second kām, from Sanskrit kāma \"desire,\" and it is a different word wearing the same clothes. This chapter means the working one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "کام (kām) — name the three letters from the right, then say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: کام — name the three letters from the right, then say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām — work; then yih kām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kām** — work; then **yih kām**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "کام (kām) — three letters, right to left, letting the line fall",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: کام — three letters, right to left, letting the line fall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "kām from Prakrit kamma from Sanskrit karman becomes borrowed into English as karma",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **kām** ← Prakrit *kamma* ← Sanskrit *karman* → borrowed into English as **karma**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name کام's three letters from the right. (ک، ا، م.) Say \"this work.\" (yih kām.) Which road shortened the word, the inherited one or the borrowed one? (The inherited one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: کام (kām)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C17-kaam-two-roads",
+              "prompt": "Urdu kām and English karma come from one Sanskrit word. Which language inherited it and which borrowed it?",
+              "assesses": [
+                "UR-ETYMON-KAAM-KARMA"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "urdu inherited it, english borrowed it",
+                "urdu inherited, english borrowed",
+                "urdu inherited it",
+                "english borrowed it",
+                "urdu by inheritance, english by borrowing"
+              ],
+              "feedback": {
+                "correct": "Urdu inherited it through Prakrit and wore it short; English borrowed it whole out of books.",
+                "incorrect": "URDU INHERITED it (through Prakrit kamma); ENGLISH BORROWED it late and kept it whole."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W17-he",
+      "sequence": 840,
+      "title": "ہ (gol he) — the round he, and its four faces",
+      "headword": "ہ",
+      "romanization": "gol he",
+      "gloss": "the round he — one small loop alone, two small loops in the middle of a word",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:25916c7517664407",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write کام (kām) and say it. Three letters, right to left, the line falling as it goes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ہ (gol he)."
+            },
+            {
+              "kind": "speech",
+              "text": "Standing on its own it is one small closed loop with a short curved tail falling away to the left. Draw the loop clockwise from the top, then let the tail drop. Its name is ہ gol he — \"round he\" — and it says h."
+            },
+            {
+              "kind": "speech",
+              "text": "Joining trims a letter, you were told. Gol he is where that promise gets tested, because it changes more than any letter you have written. Four positions, four faces:"
+            },
+            {
+              "kind": "speech",
+              "text": "standing alone, and at the end of a word after a non-joining letter: the small loop with its tail."
+            },
+            {
+              "kind": "speech",
+              "text": "opening a word: the loop stays, the tail is cut short so the next letter can begin."
+            },
+            {
+              "kind": "speech",
+              "text": "in the middle: the loop splits into two small loops side by side, low on the line."
+            },
+            {
+              "kind": "speech",
+              "text": "closing a joined word: the loop flattens into a single round curl hanging off the letter before it."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle form is the one to look at twice. It does not resemble the standing loop at all, and a reader who knows only the standing form meets it mid-word and thinks a new letter has arrived. Same letter, doing its middle job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words, one letter, three positions. Read each from the right, then copy it while the model is still in front of you."
+            },
+            {
+              "kind": "speech",
+              "text": "ہم کہانی یہ (yih)."
+            },
+            {
+              "kind": "speech",
+              "text": "ہم ham \"we\" — gol he opens it, tail trimmed, running into م. کہانی kahānī \"story\" — gol he sits in the middle, wearing the two-loop face. یہ yih \"this\" — gol he closes it, and the word you were owed two lessons ago is now one you can write rather than take on trust."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ہ (gol he) standing alone — the loop, then the falling tail",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ہ standing alone — the loop, then the falling tail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ — and say yih",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ — and say **yih**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "کہانی — name its five letters, and say which face its he wears",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: کہانی — name its five letters, and say which face its he wears]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word can you now write that you could not before? (یہ (yih).) What sound does gol he carry? (h.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W17-he-middle",
+              "prompt": "What does gol he look like in the MIDDLE of a word?",
+              "assesses": [
+                "UR-SCRIPT-HE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "two small loops side by side",
+                "two loops",
+                "two small loops",
+                "a pair of loops",
+                "two little bowls side by side"
+              ],
+              "feedback": {
+                "correct": "Two small loops side by side, low on the line -- nothing like its standing form.",
+                "incorrect": "TWO SMALL LOOPS side by side. The standing single loop splits in the middle of a word."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C17-kahan",
+      "sequence": 850,
+      "title": "کہاں (kahāṅ) — \"where,\" and the family it belongs to",
+      "headword": "کہاں",
+      "romanization": "kahāṅ",
+      "gloss": "where — the fourth member of Urdu's k- question family, and a cousin of English where by way of PIE kʷis",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:654a1f007b6c1622",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write یہ (yih) and say it. Which face is gol he wearing there — the opening one, the middle one, or the closing one? (Closing.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کہاں — kahāṅ — where."
+            },
+            {
+              "kind": "speech",
+              "text": "Four letters. Three of them are yours: ک, then ہ (gol he) wearing its middle face, then ا. The fourth is new, and it carries the nasal hum you can hear at the end of kahāṅ — the same hum that ends maiṅ, hūṅ and nahīṅ. Say the word; the letter arrives before this chapter closes."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ کہاں؟ — yih kahāṅ? — \"this, where?\" — pointing and asking at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put the question words you have met beside the new one and read down the right edge:"
+            },
+            {
+              "kind": "speech",
+              "text": "کیا — kyā — what."
+            },
+            {
+              "kind": "speech",
+              "text": "کہاں — kahāṅ — where."
+            },
+            {
+              "kind": "speech",
+              "text": "kaun — who."
+            },
+            {
+              "kind": "speech",
+              "text": "kab — when."
+            },
+            {
+              "kind": "speech",
+              "text": "kaise — how."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of them opens with ک. That shared consonant is not a coincidence and not a tidy invention: it is inherited. All five come from the Old Indo-Aryan interrogative stem ka-, and کہاں (kahāṅ) in particular runs back through Prakrit kahiṅ to Sanskrit kasmin, \"in what.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Now say the English list out loud — who, what, when, where, how — and listen for its own shared opening. English marks its questions with wh, Latin marks them with qu in quis and quid, and Urdu marks them with ک. Three marks, one inherited consonant: Proto-Indo-European kʷis, split three ways by three sound histories."
+            },
+            {
+              "kind": "speech",
+              "text": "So a learner meeting کہاں (kahāṅ) is not memorising an arbitrary shape. They are meeting a relative of the word they already use for the same job."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahāṅ — where; then yih kahāṅ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kahāṅ** — where; then **yih kahāṅ?**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five k- question words — kyā, kahāṅ, kaun, kab, kaise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five k- question words — **kyā, kahāṅ, kaun, kab, kaise**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "کیا and کہاں (kahāṅ), naming their letters from the right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: کیا and کہاں, naming their letters from the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "kahāṅ from Prakrit kahiṅ from Sanskrit kasmin from PIE kʷis becomes English where, Latin quis",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **kahāṅ** ← Prakrit *kahiṅ* ← Sanskrit *kasmin* ← PIE *\\*kʷis* → English **where**, Latin **quis**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"where.\" (kahāṅ.) How many of its four letters can you already write? (Three.) Name two other members of its k- family. (kyā, kaun, kab, kaise — any two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: کہاں (kahāṅ)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C17-kahan-family",
+              "prompt": "Urdu question words open with k and English question words open with wh. Are those two marks related?",
+              "assesses": [
+                "UR-ETYMON-K-QUESTION-FAMILY"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "yes, both from pie *kwis",
+                "yes",
+                "yes, related",
+                "same root",
+                "both from the same pie root",
+                "yes, from *kwis"
+              ],
+              "feedback": {
+                "correct": "Related: Urdu k, Latin qu and English wh are one PIE consonant taking three roads.",
+                "incorrect": "YES, related. Urdu k-, Latin qu- and English wh- all descend from PIE kʷis."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C17-review-shapes",
+      "sequence": 860,
+      "title": "Eight letters — read them, hear them, write them back",
+      "headword": "یہ کام کہانی ہم",
+      "romanization": "yih, kām, kahānī, ham",
+      "gloss": "eight letters, read aloud, heard, hidden and written back",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d3daa9c135922da0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the eight letters you can now write, and say what the newest one does in the middle of a word. (h; it splits into two small loops.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new here. Ten words, every letter already yours. Read each from the right, naming its letters before you say it."
+            },
+            {
+              "kind": "speech",
+              "text": "سلام کان ناک لال کالا نیلا لینا کام (kām) یہ (yih) ہم."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of them are new to your eye this chapter: کام kām \"work\" and یہ yih \"this.\" Two more are old friends whose letters you could not have named a chapter ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now hide the page. For each word below: look at it, cover it, write it from memory, then uncover and repair whatever came out wrong. Repairing is the part that teaches — do not skip to the next word until you have compared."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ (yih) — look, cover, write, uncover, repair",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ — look, cover, write, uncover, repair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "کام (kām) — look, cover, write, uncover, repair",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: کام — look, cover, write, uncover, repair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ہم — look, cover, write, uncover, repair",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ہم — look, cover, write, uncover, repair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahāṅ, and name the one letter in it you still cannot form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kahāṅ**, and name the one letter in it you still cannot form]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — by ear",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the ear, with the page shut."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih kān, yih nāk, yih kām — pointing each time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yih kān**, **yih nāk**, **yih kām** — pointing each time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahāṅ — and the four other k- question words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kahāṅ** — and the four other k- question words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kām and English karma, and which one was inherited",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kām** and English **karma**, and which one was inherited]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LISTEN",
+              "instruction": "for the nasal hum at the end of kahāṅ, and hum it back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LISTEN: for the nasal hum at the end of *kahāṅ*, and hum it back]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many letters can you write? (Eight.) Which word in this lesson still has a letter you cannot form? (kahāṅ.) What sound is that letter carrying? (The nasal hum at the end.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C17-review-shapes-hidden",
+              "prompt": "After you write a covered word from memory, what do you do before moving on?",
+              "assesses": [
+                "UR-SCRIPT-HE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "uncover and repair it",
+                "compare",
+                "compare and repair",
+                "uncover and compare",
+                "check it against the model",
+                "repair it"
+              ],
+              "feedback": {
+                "correct": "Uncover, compare, repair. The repair is where the shape sticks.",
+                "incorrect": "UNCOVER AND COMPARE, then repair. Writing from memory without checking teaches the error."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W17-bari-ye",
+      "sequence": 870,
+      "title": "ے (baṛī ye) — the big ye, and the end of the sentence",
+      "headword": "ے",
+      "romanization": "baṛī ye",
+      "gloss": "the big ye — a wide flat sweep that only ever ends a word, and the letter that finishes hai",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:74acdb6144d5e70a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ی, then ہ (gol he). One is an S-curve that hooks up at the tip; the other is a small loop with a falling tail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ے (baṛī ye)."
+            },
+            {
+              "kind": "speech",
+              "text": "A wide, flat sweep. Start high on the right, drop through a long shallow curve that goes well below the baseline, and carry it a long way to the left, finishing flat — with no hook, no lift at the tip, and no dots."
+            },
+            {
+              "kind": "speech",
+              "text": "Its name is ے baṛī ye, \"big ye,\" and the letter you already know, ی, is choṭī ye, \"small ye.\" Two names, one family, and one test that separates them at a glance:"
+            },
+            {
+              "kind": "speech",
+              "text": "ی choṭī ye is narrow and curls back up at its tip."
+            },
+            {
+              "kind": "speech",
+              "text": "ے baṛī ye is broad and runs out flat."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second difference, and it is about where each one lives. Small ye turns up anywhere in a word — opening it, in the middle, closing it. Big ye belongs to the end of a word and turns up nowhere else, which means you will never have to work out its middle face. It has none."
+            },
+            {
+              "kind": "speech",
+              "text": "Big ye carries a final e or ai sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two letters, and the smallest word in Urdu that does real work:"
+            },
+            {
+              "kind": "speech",
+              "text": "ہے."
+            },
+            {
+              "kind": "speech",
+              "text": "From the right: ہ (gol he), then ے (baṛī ye). Say it: hai — \"is.\""
+            },
+            {
+              "kind": "speech",
+              "text": "That is the word you have been putting at the end of your sentences since you first said your name, and it has been sitting on the page unreadable for sixteen chapters. Read it now."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more, both already in your ear:"
+            },
+            {
+              "kind": "speech",
+              "text": "کیسے کالے."
+            },
+            {
+              "kind": "speech",
+              "text": "کیسے kaise — \"how,\" with small ye in the middle and big ye at the end, so the pair sit in one word and you can see the difference for yourself. کالے kāle — the masculine plural of \"black.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nine letters. Now read the first sentence this book ever gave you, whole, with nothing taken on trust:"
+            },
+            {
+              "kind": "speech",
+              "text": "میرا نام... ہے."
+            },
+            {
+              "kind": "speech",
+              "text": "merā nām... hai — \"my name is...\". Every letter in it is one you can form: م، ی، ر، ا — ن، ا، م — ہ (gol he)، ے (baṛī ye)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ے (baṛī ye) — wide, flat, below the line, no hook at the tip",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ے — wide, flat, below the line, no hook at the tip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ہے — and say hai",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ہے — and say **hai**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "کیسے — and point at the small ye and the big ye in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: کیسے — and point at the small ye and the big ye in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میرا نام... ہے — and say it with your own name in the gap",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میرا نام ... ہے — and say it with your own name in the gap]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ye curls up at the tip? (Small ye, ی.) Which runs out flat? (Big ye, ے (baṛī ye).) Write \"is.\" (ہے.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W17-bari-ye-position",
+              "prompt": "Where in a word does baṛī ye appear?",
+              "assesses": [
+                "UR-SCRIPT-BARI-YE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "at the end",
+                "end",
+                "word-finally",
+                "only at the end",
+                "the last letter"
+              ],
+              "feedback": {
+                "correct": "At the end, and nowhere else -- so it has no middle form to learn.",
+                "incorrect": "AT THE END of a word only. That is why it has no middle form."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C17-maan",
+      "sequence": 880,
+      "title": "ماں (māṅ) — \"mother,\" and a sentence you can read whole",
+      "headword": "ماں",
+      "romanization": "māṅ",
+      "gloss": "mother — inherited from Sanskrit mātā, cousin of English mother, and neighbour of borrowed Persian mādar",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b8569adb5378c5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ہے and say it. Then write میرا نام... ہے and say it with your own name in the gap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماں — māṅ — mother."
+            },
+            {
+              "kind": "speech",
+              "text": "ماں (māṅ) is feminine, so the possessive takes its feminine form — merī, not merā, the same choice you already make for bahan."
+            },
+            {
+              "kind": "speech",
+              "text": "یہ میری ماں ہے۔ — yih merī māṅ hai. — \"This is my mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Read that sentence off the page. Every letter in it is one you can form except the last of ماں (māṅ), which arrives shortly — and you can hear exactly where it goes, because it is the nasal hum you have been putting on the end of maiṅ and hūṅ all along."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماں (māṅ) is inherited. It comes down through Prakrit from Sanskrit mātā, stem mātṛ, and behind that stands Proto-Indo-European méh₂tēr. The same root gives English mother, Latin mater (behind maternal, matrix), Greek mētēr, and Persian mādar."
+            },
+            {
+              "kind": "speech",
+              "text": "Then notice what Urdu did with the Persian one. It took it. mādar lives in Urdu too, alongside māṅ — the borrowed word kept for formal, poetic and respectful use, the inherited word used at home. This is the pairing you already saw when inherited bhāī sat beside borrowed khāndān: Urdu rarely replaces a native word with a Persian one. It keeps both and gives them different rooms to stand in."
+            },
+            {
+              "kind": "speech",
+              "text": "méh₂tēr also earns a caution. Words for mother across the world's languages tend to start with m, because ma is close to the first sound a baby makes, and that resemblance can arise anywhere without any shared ancestor. The Urdu-to-English link here is not that kind of accident — it is traceable step by step through Sanskrit and Proto-Indo-European. But a resemblance to a mama in an unrelated family would be."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṅ — mother; then merī māṅ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **māṅ** — mother; then **merī māṅ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "یہ میری ماں ہے (yih merī māṅ hai)۔ — name the letters of each word, then say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: یہ میری ماں ہے۔ — name the letters of each word, then say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family words so far — māṅ, bahan, bhāī, dost, khāndān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family words so far — **māṅ, bahan, bhāī, dost, khāndān**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "māṅ from Sanskrit mātā from PIE méh₂tēr becomes English mother, Persian mādar",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **māṅ** ← Sanskrit *mātā* ← PIE *\\*méh₂tēr* → English **mother**, Persian **mādar**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of māṅ and mādar you would use at home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of *māṅ* and *mādar* you would use at home]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"this is my mother.\" (yih merī māṅ hai.) Why merī and not merā? (ماں is feminine.) Name the English cousin of ماں. (Mother.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: ماں (māṅ)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C17-maan-pair",
+              "prompt": "Urdu keeps both māṅ and Persian mādar. Which one is the inherited word?",
+              "assesses": [
+                "UR-ETYMON-MAAN-MATER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "maan",
+                "māṅ",
+                "maa",
+                "the first one",
+                "māṅ is inherited"
+              ],
+              "feedback": {
+                "correct": "māṅ is inherited through Prakrit from Sanskrit mātā; mādar is the Persian borrowing beside it.",
+                "incorrect": "MĀṄ is the inherited one. mādar is borrowed from Persian and kept for formal use."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C17-review-hai",
+      "sequence": 890,
+      "title": "ہے — the smallest word, in every sentence you own",
+      "headword": "یہ میری ماں ہے",
+      "romanization": "yih merī māṅ hai",
+      "gloss": "the copula, read at the end of every sentence you already say",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:400b28570bae1cd2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ہے. Two letters: the small loop, then the wide flat sweep. Say it: hai."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four sentences. Read each from the right, word by word, and say it before you move on."
+            },
+            {
+              "kind": "speech",
+              "text": "میرا نام... ہے۔ یہ میری ماں ہے (yih merī māṅ hai)۔ یہ کام (kām) ہے۔ یہ کالا ہے۔."
+            },
+            {
+              "kind": "speech",
+              "text": "merā nām... hai. — yih merī māṅ hai. — yih kām hai. — yih kālā hai."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what sits at the end of every one of them. ہے is where an Urdu sentence lands, in the place English puts is in the middle. You have been producing that landing by ear since the very first sentence you learned; from today you can also see it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — by ear",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Page shut. Point at things around you and land each sentence on hai."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih kām hai — this is work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yih kām hai** — this is work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih merī māṅ hai — this is my mother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yih merī māṅ hai** — this is my mother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yih lāl hai, then yih kālā hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **yih lāl hai**, then **yih kālā hai**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kahāṅ? — and hum the nasal at its end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kahāṅ?** — and hum the nasal at its end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LISTEN",
+              "instruction": "to hai, haiṅ, hūṅ one after another, and say which is yours when you speak about yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LISTEN: to *hai*, *haiṅ*, *hūṅ* one after another, and say which is yours when you speak about yourself]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ (yih) کام (kām) ہے۔ — three words, right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ کام ہے۔ — three words, right to left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ہے on its own, ten times, until the flat tail stops curling up",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ہے on its own, ten times, until the flat tail stops curling up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of māṅ and mādar is inherited, and which is borrowed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of *māṅ* and *mādar* is inherited, and which is borrowed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of kām and English karma was worn short, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of *kām* and English *karma* was worn short, and why]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write \"this is work.\" (یہ (yih) کام (kām) ہے۔) Which two letters make ہے? (ہ (gol he) and ے (baṛī ye).) Which of them can end a word and nothing else? (ے (baṛī ye).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C17-review-hai-place",
+              "prompt": "Where in an Urdu sentence does ہے sit?",
+              "assesses": [
+                "UR-LEX-MERA-NAAM-HAI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "at the end",
+                "end",
+                "last",
+                "the final word",
+                "sentence-finally"
+              ],
+              "feedback": {
+                "correct": "At the end -- where English would have put is in the middle.",
+                "incorrect": "AT THE END. Urdu lands the sentence on hai; English puts is in the middle."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W17-nun-ghunna",
+      "sequence": 900,
+      "title": "ں (nūn ghunna) — nūn with the dot taken off",
+      "headword": "ں",
+      "romanization": "nūn ghunna",
+      "gloss": "nūn with its dot taken away — the hum at the end of maiṅ, haiṅ and nahīṅ",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e7b0b65378096007",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ن. The deep bowl, a lift, and one dot placed low inside the curve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ں (nūn ghunna)."
+            },
+            {
+              "kind": "speech",
+              "text": "The same deep bowl you drew a chapter ago, swept right to left below the baseline — and then you stop. No lift. No dot."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other letter so far was identified by what was added to it: nūn's dot, kāf's slash, the three teeth of sīn. This one is identified by what was taken away, and the taking away is the meaning. Its name is ں nūn ghunna, and ghunna is the Urdu word for a nasal hum."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the difference it makes. A dotted ن is a full consonant: your tongue touches the roof of your mouth and you say n. A dotless ں (nūn ghunna) asks for no consonant at all. It tells you to send the vowel before it through your nose and then stop. In maiṅ the tongue never lands."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more facts and the letter is yours:"
+            },
+            {
+              "kind": "speech",
+              "text": "ں (nūn ghunna) closes a word and appears nowhere else. Inside a word, that same nasal hum is carried by the ordinary dotted ن — which is why منہ muṅh is spelled with a dot even though nothing in it sounds like a plain n."
+            },
+            {
+              "kind": "speech",
+              "text": "Because it ends the word, ں (nūn ghunna) has one shape to learn and no joined faces."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five words, all of them already in your mouth, none of them readable until now. From the right:"
+            },
+            {
+              "kind": "speech",
+              "text": "میں ہیں نہیں کہاں (kahāṅ) ماں (māṅ)."
+            },
+            {
+              "kind": "speech",
+              "text": "maiṅ \"I\" — haiṅ \"are\" — nahīṅ \"no\" — kahāṅ \"where\" — māṅ \"mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one to dwell on is نہیں. It is the word you learned for saying no, in the very first handful of words this book gave you, and it is four letters you can now name one by one: ن، ہ (gol he)، ی، ں (nūn ghunna) — with a dotted nūn opening it and a dotless one closing it, doing two entirely different jobs in a single short word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ں (nūn ghunna) — the deep bowl, and then nothing",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ں — the deep bowl, and then nothing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میں, then ہیں, then نہیں",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میں, then ہیں, then نہیں]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṅ, letting the vowel hum and keeping your tongue down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **maiṅ**, letting the vowel hum and keeping your tongue down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "at the two nūns in نہیں and say what each one does",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: at the two nūns in نہیں and say what each one does]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ (yih) میری ماں (māṅ) ہیں۔ — and say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ میری ماں ہیں۔ — and say it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write \"no.\" (نہیں.) Write \"I.\" (میں.) Does your tongue touch the roof of your mouth at the end of maiṅ? (No — the hum goes through the nose.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-W17-nun-ghunna-dot",
+              "prompt": "What is the difference between ن and ں (nūn ghunna)?",
+              "assesses": [
+                "UR-SCRIPT-NUN-GHUNNA-WRITE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the dot",
+                "one has a dot",
+                "ں has no dot",
+                "the missing dot",
+                "nun ghunna has no dot"
+              ],
+              "feedback": {
+                "correct": "The dot. Dotted nūn is a consonant; dotless nūn ghunna is a hum on the vowel before it.",
+                "incorrect": "THE DOT. With it you say n; without it you nasalize the vowel before it and stop."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C17-practice",
+      "sequence": 910,
+      "title": "Practice — ten letters, and a sentence that comes off the page",
+      "headword": "ہے میں نہیں ماں",
+      "romanization": "hai, maiṅ, nahīṅ, māṅ",
+      "gloss": "three letters, and the sentence the book opened with becomes a sentence you can write",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:47159efe997f68f0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The letters in this word and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the three letters this chapter gave you and name each one: ہ (gol he)، ے (baṛī ye)، ں (nūn ghunna)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new is taught here. Read each word from the right, naming its letters before you say it:"
+            },
+            {
+              "kind": "speech",
+              "text": "یہ (yih) کام (kām) ماں (māṅ) کہاں (kahāṅ) میں ہیں نہیں ہے."
+            },
+            {
+              "kind": "speech",
+              "text": "Then the sentences:"
+            },
+            {
+              "kind": "speech",
+              "text": "میرا نام... ہے۔ یہ میری ماں ہے (yih merī māṅ hai)۔ یہ کام (kām) ہے۔ نہیں، یہ میرا کام (kām) نہیں ہے۔."
+            },
+            {
+              "kind": "speech",
+              "text": "merā nām... hai. — yih merī māṅ hai. — yih kām hai. — nahīṅ, yih merā kām nahīṅ hai."
+            },
+            {
+              "kind": "speech",
+              "text": "That last one is the first thing in this book you can read that argues back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three letters, and three ideas that will keep paying:"
+            },
+            {
+              "kind": "speech",
+              "text": "a letter can change face by position — gol he standing as one loop and sitting in the middle of a word as two, which is the shape most likely to make a reader think a stranger has arrived."
+            },
+            {
+              "kind": "speech",
+              "text": "a letter can belong to one position only — big ye and nūn ghunna both close a word and turn up nowhere else, so neither costs you a middle form."
+            },
+            {
+              "kind": "speech",
+              "text": "a letter can be defined by subtraction — nūn ghunna is nūn with its dot removed, and the removal is what the letter means."
+            },
+            {
+              "kind": "speech",
+              "text": "And one arithmetic worth doing out loud. Seven letters gave you eight words. Three more gave you ہے, and with it every sentence you already knew how to end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Page covered. Someone says the word, or you say it to yourself from the romanization alone — then write it in Urdu without looking at a model, and only then compare."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "hear hai, write ہے, compare",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: hear *hai*, write **ہے**, compare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "hear maiṅ, write میں, compare",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: hear *maiṅ*, write **میں**, compare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "hear nahīṅ, write نہیں, compare",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: hear *nahīṅ*, write **نہیں**, compare]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "hear yih merī māṅ hai, write it whole, compare and repair",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: hear *yih merī māṅ hai*, write it whole, compare and repair]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many letters can you now write? (Ten.) Which English word is کام (kām)'s borrowed twin? (Karma.) Which English question words share کہاں (kahāṅ)'s inherited consonant? (The wh- family — who, what, when, where.) Which of ماں (māṅ) and mādar would you say at home? (ماں (māṅ).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C17-practice-two-nuns",
+              "prompt": "نہیں opens with a dotted nun and closes with a dotless one. What does each do?",
+              "assesses": [
+                "UR-SCRIPT-READ-HAI-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "the first is the consonant n, the last is a nasal hum",
+                "one is n, one is a hum",
+                "first is a consonant, last nasalizes the vowel",
+                "dotted is n, dotless is the nasal",
+                "the first is n and the second is nasalization"
+              ],
+              "feedback": {
+                "correct": "Dotted nūn is the consonant n; dotless nūn ghunna hums the vowel before it through the nose.",
+                "incorrect": "The DOTTED one is the consonant n. The DOTLESS one nasalizes the vowel before it and stops."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,6 +1,6 @@
 [package]
 name = "diagram-to-paint"
-version = "0.107.0"
+version = "0.108.0"
 edition = "2021"
 description = "Lowers a LayoutedGraphDiagram (DG00) into a PaintScene (P2D00) for rendering by paint-metal and other backends"
 
@@ -15,6 +15,7 @@ text-interfaces = { path = "../text-interfaces" }
 dot-parser = { path = "../dot-parser" }
 mermaid-parser = { path = "../mermaid-parser" }
 diagram-layout-graph = { path = "../diagram-layout-graph" }
+diagram-layout-board = { path = "../diagram-layout-board" }
 diagram-layout-grid = { path = "../diagram-layout-grid" }
 diagram-layout-packet = { path = "../diagram-layout-packet" }
 paint-metal = { path = "../paint-metal" }

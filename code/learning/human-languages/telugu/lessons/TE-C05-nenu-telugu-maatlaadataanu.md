@@ -5,6 +5,7 @@ chapter: 5
 type: phrase
 headword: నేను తెలుగు మాట్లాడతాను
 gloss: I speak Telugu
+romanization: "nēnu telugu māṭlāḍatānu"
 concept_tag: TE-WORD-TELUGU
 prerequisites: [TE-C05-maatlaadu, TE-C03-nenu]
 sounds: [long-u]

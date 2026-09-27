@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:d010bc1d4f183047",
+  "lessonIds": [
+    "PA-C35-mainu",
+    "PA-W09-dulainkar",
+    "PA-W09-dulavan",
+    "PA-C35-changa-ji",
+    "PA-C35-jaldi-milaange"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch35.txt",
+  "json": "punjabi/narration/ch35.json",
+  "textHash": "fnv1a64:399337094d1f2b3b",
+  "jsonHash": "fnv1a64:ec55efb15d86c551",
+  "findings": []
+}

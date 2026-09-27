@@ -31,6 +31,8 @@ nodes still carry link targets and semantic roles for hit testing.
 Inline semantic containers also retain margin, padding, border paint, and a
 typed `inlineBox` decoration-break extension so shared line layout can build
 accurate slice/clone fragments.
+Decoded image dimensions and computed `aspect-ratio`/`object-fit` values enter
+the producer-neutral `replaced` contract rather than host-specific image code.
 The optional visited callback receives only resolved URLs. It selects theme
 colors and inherited link decoration without exposing history or persistence
 policy to this producer adapter. `HtmlStyleContext` adds a host-neutral

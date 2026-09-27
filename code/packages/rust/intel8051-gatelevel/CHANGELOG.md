@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0] — 2026-08-28
+
+### Changed
+
+- Replaced host-backed code, XDATA, IRAM/SFR, PC, and halt storage with an
+  exact 1,050,641-DFF persistent topology using packed stable-Q memory.
+- Added shared complete `Intel8051State`, `StepTrace`, `ExecutionResult`, and
+  typed `Intel8051Error` lifecycle APIs with atomic checked load, restore,
+  step, and run boundaries.
+- Added exhaustive full-state differential coverage for all 256 opcode bytes
+  against `intel8051-simulator`.
+- Corrected RL/RR so carry is preserved, and corrected DIV-by-zero to preserve
+  A and B while setting OV.
+- Replaced data-dependent multiply/divide loops with fixed partial-product and
+  restoring-divider gate networks.
+- Added six lifecycle tests, strict rustdoc conformance, and normative Spec
+  07p2. Total line coverage is 97.51%, with 97.01% in the CPU engine.
+
 ## [0.1.0] — 2026-06-16
 
 Initial release: gate-level Intel 8051 (1980) microcontroller simulator.

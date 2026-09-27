@@ -59,12 +59,12 @@ editing, and save/delete/cancel controls.
 - The generated HTML, WebComponent, and React web hosts handle Anki
   import/export `hostIntent` payloads with browser file input/download helpers
   and the `engram-wasm` APKG byte API. The browser WASM build now performs
-  **legacy V11 `.apkg` import and export itself**, rather than reporting a
+  **Anki import and export itself — every format**, rather than reporting a
   native-host delegation error: the package layer builds for `wasm32` since the
-  export moved onto the zero-dependency `sqlite-file` writer and zstd moved
-  behind an optional `modern-format` feature. Modern `.anki21b` / `.colpkg`
-  still surfaces an explicit error through `hostResult` in the browser, because
-  it needs zstd decompression; native hosts handle every format.
+  export moved onto the zero-dependency `sqlite-file` writer and decompression
+  onto the repo's own `zstd`, which decodes the Huffman and FSE frames real
+  encoders emit. Legacy V11 `.apkg` and modern `.anki21b` / `.colpkg` behave
+  identically in the browser and in native hosts.
 - The generated Electron preload/main shell exposes those calls over
   context-isolated IPC channels and can delegate them to an optional
   `electron/host.ts` or `MOSAIC_ELECTRON_HOST_MODULE` host module. The

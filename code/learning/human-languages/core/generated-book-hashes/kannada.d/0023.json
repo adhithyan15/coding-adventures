@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 23,
-  "sourceHash": "fnv1a64:7b1f6eb65d21c5c0",
+  "sourceHash": "fnv1a64:9aa3ab485dd2fd05",
   "lessonIds": [
-    "KA-C23-dina"
+    "KA-C23-dina",
+    "KA-S127-letter-uu"
   ],
   "tex": "kannada/book/chapters/ch23-day.tex"
 }

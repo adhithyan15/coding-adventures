@@ -7,6 +7,7 @@ chapter: 17
 type: word
 headword: మధ్యాహ్నం అర్ధరాత్రి
 gloss: noon (Sanskrit "middle of day," same as Kannada) and midnight (Sanskrit "HALF of night" — a different root than Kannada's midnight word)
+romanization: "madhyāhnam ardharātri"
 concept_tag: TE-TIME-NOON-MIDNIGHT
 prerequisites: [TE-C16-nelalu]
 sounds: [telugu-conjunct-rdha, telugu-anusvara]

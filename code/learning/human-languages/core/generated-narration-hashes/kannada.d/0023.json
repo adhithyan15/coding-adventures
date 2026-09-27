@@ -1,15 +1,16 @@
 {
   "language": "kannada",
   "chapter": 23,
-  "sourceHash": "fnv1a64:8430eacd3df5139f",
+  "sourceHash": "fnv1a64:f5bc148429471763",
   "lessonIds": [
-    "KA-C23-dina"
+    "KA-C23-dina",
+    "KA-S127-letter-uu"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "kannada/narration/ch23.txt",
   "json": "kannada/narration/ch23.json",
-  "textHash": "fnv1a64:4a0ffac21d9cc656",
-  "jsonHash": "fnv1a64:45281ba3f3d6398e",
+  "textHash": "fnv1a64:676b1ad5aafe2c51",
+  "jsonHash": "fnv1a64:4a8d3981475a3515",
   "findings": []
 }

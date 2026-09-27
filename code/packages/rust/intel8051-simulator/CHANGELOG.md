@@ -1,5 +1,16 @@
 # Changelog — intel8051-simulator
 
+## v0.2.0 — 2026-08-28 — completion audit
+
+- Added complete owned Harvard state, full before/after traces, final run state,
+  and typed atomic load/restore/step/run failures.
+- Added deterministic checked loading and explicit loaded-program boundaries so
+  truncated instructions cannot wrap into stale code.
+- Added a reproducible Python-oracle generator and full-state hashes for all
+  256 opcodes.
+- Preserved the original encoder/backend-compatible legacy API while correcting
+  strict Rust documentation and the normative Spec 07p contract.
+
 ## v0.1.0 — 2026-08-17 — initial port (fourth lane, 9-architecture expansion)
 
 Pure-Rust port of `code/packages/python/intel8051-simulator` (spec

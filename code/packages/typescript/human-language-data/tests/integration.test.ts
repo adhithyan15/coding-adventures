@@ -222,7 +222,13 @@ describe("real curriculum", () => {
       // returns to CHECK-WELLBEING. All three stay within the 12-atom chapter budget.
       // 15 -> 16: HL-C234, the track's first script chapter. Urdu was the LAST track in
       // the corpus teaching no letters at all, in 59 lessons across 15 chapters.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+      // 16 -> 18: HL-C240, the second and third script chapters, and the first Urdu
+      // ones that interleave rather than batch. Chapter 16 taught seven letters in
+      // seven consecutive lessons; 17 and 18 each spend ten lessons alternating one
+      // letter with glossed vocabulary and review, so a word is met by ear two or
+      // more lessons before the glyph that spells it arrives. Both stay inside the
+      // 12-atom chapter budget (eleven each) and both file under SPINE-RESPOND-BASIC.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
     expect(
       books.books
         .find((book) => book.language === "russian")

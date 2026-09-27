@@ -4,14 +4,14 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:91bf4ebe189d7f79",
+  "sourceHash": "fnv1a64:c6a110ceb55fd4da",
   "lessons": [
     {
       "id": "TE-C10-vaaram",
       "sequence": 370,
       "title": "సోమవారం to ఆదివారం — Telugu's week, with a twist on Sunday",
       "headword": "సోమవారం మంగళవారం బుధవారం గురువారం శుక్రవారం శనివారం ఆదివారం",
-      "romanization": "",
+      "romanization": "Somavāram Maṅgaḷavāram Budhavāram Guruvāram Śukravāram Śanivāram Ādivāram",
       "gloss": "the seven weekdays — Sanskritic like Hindi, but Sunday means \"the FIRST day,\" not \"Sun's day\"",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fca7ffd433cc3894",
+      "sourceHash": "fnv1a64:769def69e41c1a23",
       "notice": null,
       "blocks": [
         {

@@ -135,16 +135,17 @@ jobs:
           cargo test --manifest-path code/packages/rust/Cargo.toml \
             -p engram-core-wasm -p engram-wasm -p engram-anki-package
 
-      # The package layer must build for wasm with Anki support included. It is
-      # excluded on wasm only when `modern-format` is on, so this also pins that
-      # the feature gating still works — a regression there would silently
-      # restore the old "handled by native hosts" behaviour.
+      # The package layer must build for wasm with full Anki support — legacy
+      # *and* modern. There is no longer a reduced-capability wasm
+      # configuration to select, so this builds the same crate the native hosts
+      # build. If a C-linking dependency ever creeps back into the graph, this
+      # is where it fails, because `wasm32-unknown-unknown` has no C toolchain.
       - name: Verify the browser engine builds with Anki support
         shell: bash
         run: |
           set -euo pipefail
           cargo build --manifest-path code/packages/rust/Cargo.toml \
-            -p engram-anki-package --no-default-features --target wasm32-unknown-unknown
+            -p engram-anki-package --target wasm32-unknown-unknown
 
       - name: Build the production web bundle
         shell: bash
@@ -240,13 +241,9 @@ jobs:
             Engram ${{ needs.validate.outputs.version }} — web build.
 
             The browser app, built from the Mosaic package on the Rust core.
-            **Legacy Anki `.apkg` import and export run in the browser**; earlier
-            builds delegated both to native hosts and refused them on the web.
-
-            Modern `.anki21b` / `.colpkg` are not supported in this build — they
-            need zstd decompression, which the browser engine does not carry yet.
-            Export from Anki in the legacy format, and the app will say so
-            explicitly rather than failing silently.
+            **Anki import and export run in the browser** — legacy `.apkg` and
+            modern `.anki21b` / `.colpkg` alike. Earlier builds delegated both to
+            native hosts and refused them on the web.
 
             Media import is capped at 32 MiB in the browser.
 

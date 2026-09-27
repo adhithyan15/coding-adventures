@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "PA-C36-shubh-raat",
+    "language": "punjabi",
+    "chapter": 36,
+    "sequence": 2160,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a87e6ffc5eea41ea",
+    "detachableSegments": [
+      "The letters in this word",
+      "Writing: assemble ਸ਼ੁਭ ਰਾਤ"
+    ]
+  },
+  "findings": []
+}

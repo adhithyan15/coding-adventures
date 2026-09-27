@@ -443,8 +443,16 @@ pub fn execute(sim: &mut Intel8051Simulator, d: &DecodedInstr) -> &'static str {
         let (result, new_cy, new_p) = da_flags(sim.acc(), cy_in, ac_in);
         sim.iram[SFR_ACC as usize] = result;
         let mut psw = sim.iram[SFR_PSW as usize];
-        psw = if new_cy != 0 { psw | PSW_CY } else { psw & !PSW_CY };
-        psw = if new_p != 0 { psw | PSW_P } else { psw & !PSW_P };
+        psw = if new_cy != 0 {
+            psw | PSW_CY
+        } else {
+            psw & !PSW_CY
+        };
+        psw = if new_p != 0 {
+            psw | PSW_P
+        } else {
+            psw & !PSW_P
+        };
         sim.iram[SFR_PSW as usize] = psw;
         return "DA A";
     }

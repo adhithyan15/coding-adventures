@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S133-letter-nya",
+    "language": "kannada",
+    "chapter": 47,
+    "sequence": 1231,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:643f6fb739babe13",
+    "detachableSegments": [
+      "Script you'll notice: ಞ",
+      "Writing: ಞ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

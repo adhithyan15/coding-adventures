@@ -1,19 +1,21 @@
 {
   "language": "telugu",
   "chapter": 51,
-  "sourceHash": "fnv1a64:7d1f81f19d1dec62",
+  "sourceHash": "fnv1a64:f4a31942a02885ab",
   "lessonIds": [
     "TE-C51-gratitude",
+    "TE-S132-letter-nya",
     "TE-C51-favour",
     "TE-C51-respect",
+    "TE-S133-vowel-sign-au",
     "TE-C51-blessing",
     "TE-C51-salutation"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 1,
   "text": "telugu/narration/ch51.txt",
   "json": "telugu/narration/ch51.json",
-  "textHash": "fnv1a64:9057300aea9e3920",
-  "jsonHash": "fnv1a64:f211adc4be8da21b",
+  "textHash": "fnv1a64:94df56f4644a0f28",
+  "jsonHash": "fnv1a64:5dd520c4ce2eaa83",
   "findings": []
 }

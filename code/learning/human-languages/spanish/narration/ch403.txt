@@ -5,8 +5,6 @@ Spanish, chapter 403: Chicken, Vegetables and Paella.
 Lesson 1 of 5.
 el pollo — chicken, not dust.
 
-<!-- Safety: teach pollo only against polvo. Do not generate polla/pollas, do not use echar near polvo, and do not turn this contrast into a gender drill. See HL24 section 6.2. The missing forms are deliberate. -->.
-
 Warm-up.
 [pause 2 seconds]
 Say the meat. (La carne.)

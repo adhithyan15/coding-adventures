@@ -41,12 +41,11 @@ These are deferred to follow-up packages:
 
 - **No parallelism.** Stages execute sequentially in topological order. `settings.maxConcurrency` is honoured at `1`.
 - **No streaming pipelining.** A `Stream<X>` producer is fully drained into memory before downstream consumers see values. Lazy streaming lands in v1 alongside parallelism.
-- **No exact affected-stage scheduler yet.** Watch conservatively visits the
-  complete DAG. Sources and capability-bearing stages rerun, while unchanged
-  capability-free downstream invocations are restored from the injected cache.
-  Sources now publish validated external-state revisions and every successful
-  run persists the per-instance revision ledger; using that ledger to restore
-  untouched graph branches remains FM-B036 (FM03 §6).
+- **No side-effect replay yet.** Exact affected scheduling restores untouched
+  capability-free instances from topology-scoped materialized checkpoints.
+  Observed sources can be skipped after their external state proves unchanged;
+  legacy sources and capability-bearing stages still execute conservatively
+  until FM-B037 adds explicit replay/materialization behavior (FM03 §6).
 - **Partial reproducible-build mode.** Stages receive a frozen wall clock, but input-mtime derivation, deterministic randomness, and telemetry policy remain (FM03 §8).
 - **No OpenTelemetry traces.** Telemetry surface is no-op by default.
 
@@ -65,6 +64,9 @@ These are deferred to follow-up packages:
 - Per-instance input/output revision summaries, validated source-state
   manifests, cross-process `inputChanged` comparisons, and a fail-open
   topology-keyed persistent revision ledger
+- Exact changed-and-downstream scheduling with validated whole-instance
+  checkpoints, explicit `skipped` summaries, restored sink outputs, and
+  conservative capability boundaries
 - Deterministic tagged cache encoding for plain Forme values and bytes;
   per-invocation cache hits/misses for safe pure stages, with `useCache: false`
   bypass and fail-open behavior for unsupported/corrupt entries

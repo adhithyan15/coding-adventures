@@ -112,9 +112,26 @@ book-only human validation remain explicit backlog.
   ਦਿਲ is Punjabi's one borrowed body word against four inherited ones; ਸਿਰ
   traces to the same root as English *horn*, not *head*. In the book.
 
-Chapters 1–14 are in the book. Chapter 1 owns the first three Gurmukhi pieces
+- **Chapters 31–36 — Courtesy, and four ways to say goodbye**
+  ([`lessons/PA-C31-*`](./lessons/) … [`lessons/PA-C36-*`](./lessons/),
+  [`lessons/PA-W09-*`](./lessons/)): ਜੀ, ਅੱਛਾ, ਨਾ, ਚੰਗਾ, ਠੀਕ-ਠਾਕ,
+  ਮਿਹਰਬਾਨੀ ਕਰਕੇ, ਮਾਫ਼ ਕਰੋ, ਸਲਾਮ, ਜੀ ਆਇਆਂ ਨੂੰ, ਮੈਨੂੰ, ਚੰਗਾ ਜੀ,
+  ਜਲਦੀ ਮਿਲਾਂਗੇ, ਕੱਲ੍ਹ ਮਿਲਾਂਗੇ, ਸ਼ੁਭ ਰਾਤ. Fourteen one-headword lessons that
+  realize **every pre-A1 spine concept Punjabi had left unrealized**, and nine
+  single-letter script sessions interleaved between them. The ramp is
+  gloss-first: a word arrives by ear in romanization, a later session teaches
+  the one Gurmukhi letter it was missing, something else is learned in between,
+  and the word comes back inside a short writing block that a listener can skip.
+  ਸਲਾਮ completes the track's three greetings across three traditions;
+  ਮਿਹਰਬਾਨੀ carries the name of an Indo-Iranian god of covenants; ਠੀਕ-ਠਾਕ
+  teaches echo reduplication, whose second half is not a word at all. In the
+  book.
+
+Chapters 1–36 are in the book. Chapter 1 owns the first three Gurmukhi pieces
 and the complete pre-A1 writing runway for **ਹਾਂ**; Chapter 14 adds six more
-pieces and assembles **ਨਹੀਂ** and **ਨਮਸਤੇ** without using an untaught sign.
+pieces and assembles **ਨਹੀਂ** and **ਨਮਸਤੇ** without using an untaught sign;
+Chapters 31–36 add nine more pieces and assemble six further words that the
+reader had already learned to say.
 
 ---
 
@@ -177,6 +194,10 @@ representativeness floor.
   ਦਿਲ is Punjabi's one borrowed body word against four inherited ones, and
   trace ਸਿਰ to the same root as English horn rather than English head."*
 
+- **Chapters 31–36** — the six pre-A1 courtesy and parting chapters. Each
+  payoff assesses between two-thirds and seven-eighths of its own chapter's
+  introduced atoms, all well clear of the 0.5 representativeness floor.
+
 Chapters 1–5 are **not in the ledger yet**, and that gap is deliberate. They are
 still schema v1, so their lessons declare no knowledge atoms and no payoff there
 could honestly claim to assess anything. A placeholder would hide debt the HL05
@@ -188,8 +209,8 @@ Compiles with XeLaTeX using the **vendored** Noto Sans Gurmukhi font
 (`../../_fonts/NotoSansGurmukhi-Static.ttf`). Build the isolated entrypoint with
 `code/scripts/check-book-compile.sh --strict punjabi` from the repository root.
 Generated Gurmukhi runs use that font while section bookmarks use the lessons'
-Latin romanization. A forced nine-chapter build is warning-free — zero
-overfull, underfull, missing-character, Hyperref, duplicate-destination, and
+Latin romanization. The full 268-page, thirty-six-chapter build is warning-free — zero overfull,
+underfull, missing-character, Hyperref, duplicate-destination, and
 font-substitution warnings — and the handwritten section bookmarks retain
 readable Gurmukhi plus romanization.
 

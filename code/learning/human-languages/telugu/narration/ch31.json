@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3bfaef7b1191ba4c",
+  "sourceHash": "fnv1a64:2f888320df316efa",
   "lessons": [
     {
       "id": "TE-C31-subha-madhyahnam",
@@ -116,9 +116,9 @@
     {
       "id": "TE-C31-subha-madhyahnam-register",
       "sequence": 600,
-      "title": "శుభ మధ్యాహ్నం (śubha madhyāhnam) — register and evidence",
+      "title": "శుభ మధ్యాహ్నం — register (śubha madhyāhnam) and evidence",
       "headword": "శుభ మధ్యాహ్నం — register",
-      "romanization": "",
+      "romanization": "śubha madhyāhnam",
       "gloss": "a real formal or workplace greeting, less secure as an everyday default",
       "script": "telugu",
       "modality": "voice",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:031882d937ae89d3",
+      "sourceHash": "fnv1a64:9251d3c31280cb76",
       "notice": null,
       "blocks": [
         {

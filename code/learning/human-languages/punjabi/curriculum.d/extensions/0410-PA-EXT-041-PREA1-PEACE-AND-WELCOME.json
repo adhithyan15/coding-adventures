@@ -1,0 +1,16 @@
+{
+  "id": "PA-EXT-041-PREA1-PEACE-AND-WELCOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can greet with salam and welcome someone, and place the postposition nu correctly.",
+  "prerequisites": [
+    "PA-EXT-040-PREA1-PLEASE-AND-SORRY"
+  ],
+  "lessons": [
+    "PA-C34-salaam",
+    "PA-W09-lalla",
+    "PA-C34-ji-aaian-nu",
+    "PA-W09-aara"
+  ]
+}

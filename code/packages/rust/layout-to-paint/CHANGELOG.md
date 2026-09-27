@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Emit centered contain/cover/fill/none image geometry from the shared replaced
+  contract and clip overflowing fitted content backend-neutrally.
+
 - Preserve table, row, cell, and caption box decorations through the existing
   recursive positioned-tree painter, including overflowing span geometry.
 

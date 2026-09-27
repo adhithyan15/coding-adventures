@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "UR-C18-review-aap",
+    "language": "urdu",
+    "chapter": 18,
+    "sequence": 990,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:189a86fb2db5584f",
+    "detachableSegments": [
+      "The letters in this word"
+    ]
+  },
+  "findings": []
+}

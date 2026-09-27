@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W09-gagga",
+    "language": "punjabi",
+    "chapter": 32,
+    "sequence": 2010,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f6c999167f94507d",
+    "detachableSegments": [
+      "Script — one letter"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

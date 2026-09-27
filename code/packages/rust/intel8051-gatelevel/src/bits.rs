@@ -129,9 +129,9 @@ pub fn invert_8bit(value: u8) -> u8 {
 ///
 /// | Flag | Source |
 /// |------|--------|
-/// | CY   | carries[7] |
-/// | AC   | carries[3] |
-/// | OV   | XOR(carries[6], carries[7]) |
+/// | CY   | `carries[7]` |
+/// | AC   | `carries[3]` |
+/// | OV   | `XOR(carries[6], carries[7])` |
 ///
 /// # Example
 /// ```
@@ -256,7 +256,7 @@ mod tests {
         assert_eq!(r, 0x10);
         assert_eq!(carries[3], 1); // AC
         assert_eq!(carries[7], 0); // CY
-        // 0xFF + 0x01 = 0x00, CY=1, AC=1
+                                   // 0xFF + 0x01 = 0x00, CY=1, AC=1
         let (r2, carries2) = add_8bit_full(0xFF, 0x01, 0);
         assert_eq!(r2, 0x00);
         assert_eq!(carries2[7], 1);

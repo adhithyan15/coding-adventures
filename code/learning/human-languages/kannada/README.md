@@ -75,6 +75,20 @@ pieces taught before the whole; and a book you can read straight through.
   dative-subject frame, showing that the frame is inherited even though the
   word filling it is Sanskrit. In the book.
 
+- **The letter ladder** ([`lessons/KA-S*`](./lessons/)): thirty-two
+  one-character lessons drizzled through the word chapters, never more than one
+  to a chapter. Each teaches a single glyph and is placed **before** the first
+  lesson that asks the reader to read it, so no word lesson decodes a letter
+  nobody taught. The eight most recent — ಉ, ಊ, ಝ, ಥ, ಈ, ◌ೃ, ◌ಃ and ಞ — each
+  arrive as *the other half of something already read*: the standing forms of
+  vowel signs met inside *haudu*, *mūru* and *nīvu*; the eighth and ninth
+  entries in the plain-and-breathed run (ಕ/ಖ … ಬ/ಭ); the anusvara's partner
+  mark; and, honestly labelled, a letter that lives only stacked inside ಜ್ಞ.
+
+  Measured by `measureScriptClosure`, Kannada's never-taught glyphs stand at
+  **10**, down from 18, and closure violations at **30**, down from 36. The ten
+  that remain are the digits ೦–೯, logged as HL-C194.
+
 Kannada now covers **fourteen** of the shared spine's core forty verbs.
 
 Every Kannada lesson now remains below five effective minutes, including the

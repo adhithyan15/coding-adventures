@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "UR-W18-pe",
+    "language": "urdu",
+    "chapter": 18,
+    "sequence": 970,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:49834f6f6cbe1566",
+    "detachableSegments": [
+      "Script — the shape",
+      "The letters in this word"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -145,17 +145,6 @@
       "notice": null,
       "blocks": [
         {
-          "index": -1,
-          "type": "unknown",
-          "title": "",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "<!-- Calibration: preserve HL24 section 7.2. Do not present Wireless Fidelity as either the original expansion or a wholly invented myth, and do not attach a precise duration to the Alliance's marketing line. -->."
-            }
-          ]
-        },
-        {
           "index": 0,
           "type": "warmup",
           "title": "Warm-up",

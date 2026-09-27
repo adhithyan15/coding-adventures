@@ -1846,6 +1846,19 @@ where
             self.viewport.width,
             self.viewport.height,
         );
+        let style_context =
+            style_context.with_image_intrinsics(image_resources.iter().filter_map(|resource| {
+                match &resource.state {
+                    BrowserImageResourceState::Ready(pixels) => Some((
+                        resource.url.clone(),
+                        f64::from(pixels.width),
+                        f64::from(pixels.height),
+                    )),
+                    BrowserImageResourceState::Pending | BrowserImageResourceState::Failed(_) => {
+                        None
+                    }
+                }
+            }));
         let mut paint = html_render_tree_to_paint_with_style_context(
             render_tree,
             &style_context,
@@ -2288,6 +2301,18 @@ mod tests {
         node.children
             .iter()
             .find_map(|child| positioned_text_color(child, value))
+    }
+
+    fn positioned_by_id<'a>(
+        node: &'a layout_ir::PositionedNode,
+        id: &str,
+    ) -> Option<&'a layout_ir::PositionedNode> {
+        if node.id.as_deref() == Some(id) {
+            return Some(node);
+        }
+        node.children
+            .iter()
+            .find_map(|child| positioned_by_id(child, id))
     }
 
     #[derive(Default)]
@@ -3281,6 +3306,51 @@ mod tests {
             BrowserSubresourceDisposition::IgnoredDuplicate
         );
         assert!(!duplicate.repaint_required);
+    }
+
+    #[test]
+    fn decoded_image_intrinsics_reflow_replaced_geometry() {
+        let fetcher = |url: &str| {
+            assert_eq!(url, "http://example.test/page.html");
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<img id='hero' src='hero.gif' alt='hero' style='max-width:80px'>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(160.0, 120.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page.html", 120.0);
+        let update = session
+            .begin_execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let pending =
+            positioned_by_id(&session.viewport().unwrap().page().paint.positioned, "hero").unwrap();
+        assert_eq!((pending.width, pending.height), (80.0, 40.0));
+
+        let mut pixels = PixelContainer::new(40, 80);
+        pixels.fill(255, 0, 255, 255);
+        let gif = encode_gif(&pixels);
+        let completion = update.requests[0].resolve(&|_: &str| {
+            Ok(BrowserFetchResponse::new(
+                "http://example.test/hero.gif",
+                200,
+                Some("image/gif".into()),
+                gif.clone(),
+            ))
+        });
+        session.complete_subresource(completion, &pipeline);
+        let ready =
+            positioned_by_id(&session.viewport().unwrap().page().paint.positioned, "hero").unwrap();
+        assert_eq!((ready.width, ready.height), (40.0, 80.0));
     }
 
     #[test]

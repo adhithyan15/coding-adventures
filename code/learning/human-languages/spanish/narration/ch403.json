@@ -23,17 +23,6 @@
       "notice": null,
       "blocks": [
         {
-          "index": -1,
-          "type": "unknown",
-          "title": "",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "<!-- Safety: teach pollo only against polvo. Do not generate polla/pollas, do not use echar near polvo, and do not turn this contrast into a gender drill. See HL24 section 6.2. The missing forms are deliberate. -->."
-            }
-          ]
-        },
-        {
           "index": 0,
           "type": "warmup",
           "title": "Warm-up",

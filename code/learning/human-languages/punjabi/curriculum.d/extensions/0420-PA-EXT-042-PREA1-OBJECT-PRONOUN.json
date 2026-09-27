@@ -1,0 +1,15 @@
+{
+  "id": "PA-EXT-042-PREA1-OBJECT-PRONOUN",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can say to me with mainu and split it into the pronoun and the postposition inside it.",
+  "prerequisites": [
+    "PA-EXT-041-PREA1-PEACE-AND-WELCOME"
+  ],
+  "lessons": [
+    "PA-C35-mainu",
+    "PA-W09-dulainkar",
+    "PA-W09-dulavan"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:53aa8b8e2315f52b",
+  "lessonIds": [
+    "UR-C18-aam",
+    "UR-C18-aasmaan",
+    "UR-W18-alif-madda",
+    "UR-C18-purana",
+    "UR-C18-review-madda",
+    "UR-W18-pe",
+    "UR-C18-voh",
+    "UR-C18-review-aap",
+    "UR-W18-vao",
+    "UR-C18-practice"
+  ],
+  "tex": "urdu/book/chapters/ch18-script-meeting.tex"
+}

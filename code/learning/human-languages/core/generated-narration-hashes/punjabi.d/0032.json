@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:7ea138477100ab84",
+  "lessonIds": [
+    "PA-C32-changa",
+    "PA-W09-chacha",
+    "PA-C32-thik-thak",
+    "PA-W09-gagga"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch32.txt",
+  "json": "punjabi/narration/ch32.json",
+  "textHash": "fnv1a64:848e3827f8aaf524",
+  "jsonHash": "fnv1a64:ea066cd8dcedf4b1",
+  "findings": []
+}

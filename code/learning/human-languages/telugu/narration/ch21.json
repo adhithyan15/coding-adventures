@@ -4,14 +4,14 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:510de91a3cf10446",
+  "sourceHash": "fnv1a64:3fa1988bd2a97e36",
   "lessons": [
     {
       "id": "TE-C21-kukka-pilli",
       "sequence": 490,
-      "title": "కుక్క, పిల్లి — the odd one out, and the word that most likely closes the loop",
+      "title": "కుక్క, పిల్లి (kukka, pilli) — the odd one out, and the word that most likely closes the loop",
       "headword": "కుక్క, పిల్లి",
-      "romanization": "",
+      "romanization": "kukka, pilli",
       "gloss": "dog and cat — kukka genuinely breaks from its Dravidian cousins' shared naayi root, debated as onomatopoeic or a Sanskrit loan; pilli most likely closes the ENTIRE arc's cat-story loop, the probable Dravidian source behind Sanskrit's biDaala and so Hindi's billi",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d43b5bbf7aa9319f",
+      "sourceHash": "fnv1a64:9d5b753d2578edad",
       "notice": null,
       "blocks": [
         {

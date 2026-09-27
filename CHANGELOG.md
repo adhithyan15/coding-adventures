@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   independent **ऋ**, then promoted **ऋतु** into the declared seasons headword
   after script closure became teach-first.
 
+### Venture intrinsic replaced sizing
+
+- Added reusable intrinsic/default sizing, preferred aspect ratios, min/max
+  constraint resolution, and object-fit geometry for replaced boxes.
+- Decoded image dimensions now trigger retained-document reflow and feed the
+  same normal, inline, float, flex, grid, table, paint, and host pipelines.
+
 ### Venture fragmented inline box edges
 
 - Added reusable `layout-inline-box` policy for fragmented margins, padding,

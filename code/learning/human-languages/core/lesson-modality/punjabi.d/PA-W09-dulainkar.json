@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W09-dulainkar",
+    "language": "punjabi",
+    "chapter": 35,
+    "sequence": 2100,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aa87ba2e088a4bf8",
+    "detachableSegments": [
+      "Script — one mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

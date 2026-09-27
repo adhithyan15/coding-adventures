@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "KA-S127-letter-uu",
+    "language": "kannada",
+    "chapter": 23,
+    "sequence": 521,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3353b604f7d87bef",
+    "detachableSegments": [
+      "Script you'll notice: ಊ",
+      "Writing: ಊ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

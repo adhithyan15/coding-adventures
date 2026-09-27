@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W09-dulavan",
+    "language": "punjabi",
+    "chapter": 35,
+    "sequence": 2110,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b2d188052eeb237d",
+    "detachableSegments": [
+      "Script — one mark"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

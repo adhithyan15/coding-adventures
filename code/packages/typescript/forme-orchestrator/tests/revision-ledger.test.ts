@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { filesystemCache } from "@coding-adventures/forme-cache";
+import { filesystemCache, makeEntry, memoryCache } from "@coding-adventures/forme-cache";
 import { computeBinaryRevisionId, computeRevisionId } from "@coding-adventures/forme-identity";
 import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
 import {
@@ -12,6 +12,9 @@ import {
 } from "@coding-adventures/forme-stage";
 import { KERNEL_API_VERSION, Kinds, streamOf } from "@coding-adventures/forme-types";
 import { createOrchestrator } from "../src/index.js";
+import { encodeCachedStageOutput } from "../src/cache-codec.js";
+import { instanceCheckpointKey } from "../src/instance-checkpoint.js";
+import { revisionLedgerKey } from "../src/revision-ledger.js";
 
 const roots: string[] = [];
 afterEach(async () => {
@@ -58,7 +61,7 @@ function observedSource(read: () => MutableSourceValue, runCalls = vi.fn()) {
     description: "source with deterministic external observation",
     consumes: Kinds.Void,
     produces: streamOf(Kinds.ContentSource),
-    capabilities: [],
+    capabilities: ["storage:read"],
     configSchema: null,
     async externalState(_config, ctx) {
       return (await snapshot(ctx)).manifest;
@@ -70,7 +73,7 @@ function observedSource(read: () => MutableSourceValue, runCalls = vi.fn()) {
   });
 }
 
-function transform() {
+function transform(runCalls = vi.fn()) {
   return defineStage({
     name: "@test/revision-transform",
     version: "1.0.0",
@@ -80,7 +83,10 @@ function transform() {
     produces: Kinds.ContentSource,
     capabilities: [],
     configSchema: null,
-    run(input) { return input; },
+    run(input) {
+      runCalls();
+      return input;
+    },
   });
 }
 
@@ -133,13 +139,142 @@ describe("external source state and persistent revision ledger", () => {
     const second = await runFresh();
     expect(second.buildId).toBe(first.buildId);
     expect(second.stages.map(stage => stage.inputChanged)).toEqual([false, false]);
+    expect(second.stages.map(stage => stage.outcome)).toEqual(["skipped", "skipped"]);
     expect(second.stages[1]).toMatchObject({ cacheHits: 1, cacheMisses: 0 });
+    expect(runCalls).toHaveBeenCalledTimes(1);
 
     current = { path: "post.md", text: "second" };
     const third = await runFresh();
     expect(third.buildId).not.toBe(first.buildId);
     expect(third.stages.map(stage => stage.inputChanged)).toEqual([true, true]);
-    expect(runCalls).toHaveBeenCalledTimes(3);
+    expect(third.stages.map(stage => stage.outcome)).toEqual(["success", "success"]);
+    expect(runCalls).toHaveBeenCalledTimes(2);
+  });
+
+  it("runs only a changed source and its downstream closure", async () => {
+    const cacheRoot = await mkdtemp(join(tmpdir(), "forme-affected-branches-"));
+    roots.push(cacheRoot);
+    let left = { path: "left.md", text: "left-v1" };
+    let right = { path: "right.md", text: "right-v1" };
+    const leftSourceCalls = vi.fn();
+    const rightSourceCalls = vi.fn();
+    const leftTransformCalls = vi.fn();
+    const rightTransformCalls = vi.fn();
+    const config: PipelineConfig = {
+      ...pipelineConfig(observedSource(() => left)),
+      name: "affected-branches-test",
+      stages: [
+        { id: "left-source", stage: observedSource(() => left, leftSourceCalls) },
+        { id: "left-transform", stage: transform(leftTransformCalls) },
+        { id: "right-source", stage: observedSource(() => right, rightSourceCalls) },
+        { id: "right-transform", stage: transform(rightTransformCalls) },
+      ],
+      wires: [
+        { from: { id: "left-source" }, to: { id: "left-transform" } },
+        { from: { id: "right-source" }, to: { id: "right-transform" } },
+      ],
+    };
+
+    const runFresh = async () => {
+      const orchestrator = createOrchestrator({
+        cache: filesystemCache(cacheRoot),
+        logger: silentLogger(),
+      });
+      const result = await orchestrator.runOnce(await orchestrator.buildPipeline(config));
+      await orchestrator.dispose();
+      return result;
+    };
+
+    await runFresh();
+    const unchanged = await runFresh();
+    expect(unchanged.stages.map(stage => stage.outcome)).toEqual([
+      "skipped", "skipped", "skipped", "skipped",
+    ]);
+
+    left = { ...left, text: "left-v2" };
+    const changed = await runFresh();
+    expect(changed.stages.map(stage => [stage.instanceId, stage.outcome])).toEqual([
+      ["left-source", "success"],
+      ["left-transform", "success"],
+      ["right-source", "skipped"],
+      ["right-transform", "skipped"],
+    ]);
+    expect(leftSourceCalls).toHaveBeenCalledTimes(2);
+    expect(leftTransformCalls).toHaveBeenCalledTimes(2);
+    expect(rightSourceCalls).toHaveBeenCalledTimes(1);
+    expect(rightTransformCalls).toHaveBeenCalledTimes(1);
+    expect(changed.outputs["right-transform"]).toBeDefined();
+  });
+
+  it("fails open when an unchanged instance checkpoint has the wrong output", async () => {
+    let current = { path: "post.md", text: "stable" };
+    const sourceCalls = vi.fn();
+    const cache = memoryCache();
+    const orchestrator = createOrchestrator({ cache, logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline(
+      pipelineConfig(observedSource(() => current, sourceCalls)),
+    );
+    const first = await orchestrator.runOnce(pipeline);
+    const sourceSummary = first.stages[0]!;
+    const sourceInstance = pipeline.dag.instances.get("source")!;
+    await cache.put(
+      instanceCheckpointKey(
+        revisionLedgerKey(pipeline),
+        sourceInstance,
+        sourceSummary.inputRevision!,
+      ),
+      makeEntry(encodeCachedStageOutput({ value: [], isStream: true })),
+    );
+
+    const second = await orchestrator.runOnce(pipeline);
+    expect(second.outcome).toBe("success");
+    expect(second.stages.map(stage => stage.outcome)).toEqual(["success", "skipped"]);
+    expect(sourceCalls).toHaveBeenCalledTimes(2);
+    expect(second.outputs.transform).toEqual(first.outputs.transform);
+    await orchestrator.dispose();
+  });
+
+  it("reruns capability-bearing instances but restores their untouched pure downstream", async () => {
+    const sourceCalls = vi.fn();
+    const capabilityCalls = vi.fn();
+    const downstreamCalls = vi.fn();
+    const capabilityStage = defineStage({
+      ...transform(),
+      name: "@test/capability-transform",
+      capabilities: ["storage:read"],
+      run(input) {
+        capabilityCalls();
+        return input;
+      },
+    });
+    const downstreamStage = transform(downstreamCalls);
+    const cache = memoryCache();
+    const orchestrator = createOrchestrator({ cache, logger: silentLogger() });
+    const pipeline = await orchestrator.buildPipeline({
+      ...pipelineConfig(observedSource(
+        () => ({ path: "post.md", text: "stable" }),
+        sourceCalls,
+      )),
+      name: "capability-boundary-test",
+      stages: [
+        { id: "source", stage: observedSource(
+          () => ({ path: "post.md", text: "stable" }),
+          sourceCalls,
+        ) },
+        { id: "capability", stage: capabilityStage },
+        { id: "downstream", stage: downstreamStage },
+      ],
+    });
+
+    await orchestrator.runOnce(pipeline);
+    const second = await orchestrator.runOnce(pipeline);
+    expect(second.stages.map(stage => stage.outcome)).toEqual([
+      "skipped", "success", "skipped",
+    ]);
+    expect(sourceCalls).toHaveBeenCalledTimes(1);
+    expect(capabilityCalls).toHaveBeenCalledTimes(2);
+    expect(downstreamCalls).toHaveBeenCalledTimes(1);
+    await orchestrator.dispose();
   });
 
   it("rejects a source manifest whose digest does not match its entries", async () => {

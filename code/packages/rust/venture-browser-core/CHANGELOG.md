@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reflow retained documents with decoded image intrinsic dimensions so async
+  image completion updates layout as well as pixels.
+
 - Keep fixed paint groups outside document translation and apply reusable
   sticky top-inset clamping while scrolling.
 

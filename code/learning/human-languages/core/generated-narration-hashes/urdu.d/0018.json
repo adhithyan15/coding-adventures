@@ -1,0 +1,24 @@
+{
+  "language": "urdu",
+  "chapter": 18,
+  "sourceHash": "fnv1a64:54a50ec7efa84422",
+  "lessonIds": [
+    "UR-C18-aam",
+    "UR-C18-aasmaan",
+    "UR-W18-alif-madda",
+    "UR-C18-purana",
+    "UR-C18-review-madda",
+    "UR-W18-pe",
+    "UR-C18-voh",
+    "UR-C18-review-aap",
+    "UR-W18-vao",
+    "UR-C18-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "urdu/narration/ch18.txt",
+  "json": "urdu/narration/ch18.json",
+  "textHash": "fnv1a64:eec38237e6a4ce32",
+  "jsonHash": "fnv1a64:091b4dd24f1dcba9",
+  "findings": []
+}

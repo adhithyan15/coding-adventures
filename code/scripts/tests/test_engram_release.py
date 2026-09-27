@@ -74,13 +74,18 @@ def _write_bundle(
     wasm: bool = True,
     assets: bool = True,
     empty_wasm: bool = False,
+    root_absolute: bool = False,
 ) -> Path:
     """Build a web-bundle directory, optionally with a piece missing."""
 
     source = root / "dist"
     source.mkdir(parents=True, exist_ok=True)
     if index:
-        (source / "index.html").write_text("<!doctype html>\n", encoding="utf-8")
+        href = "/assets/index-abc.js" if root_absolute else "./assets/index-abc.js"
+        (source / "index.html").write_text(
+            f'<!doctype html>\n<script type="module" src="{href}"></script>\n',
+            encoding="utf-8",
+        )
     if wasm:
         payload = b"" if empty_wasm else b"\x00asm\x01\x00\x00\x00"
         (source / engram_release.WASM_ENGINE).write_bytes(payload)
@@ -150,6 +155,28 @@ class ArchiveWebTests(unittest.TestCase):
                             "0.3.0", COMMIT, source, root / "out"
                         )
                     self.assertIn(expected, str(caught.exception))
+
+    def test_refuses_a_bundle_that_only_works_at_a_domain_root(self) -> None:
+        # The defect v0.3.0 shipped with. Vite defaults to `base: "/"`, so the
+        # entry point referenced `/assets/index-HASH.js`. Served from any
+        # subdirectory, index.html returns 200 and its script 404s: a blank page
+        # that looks like a working deploy. Every other check here asks whether
+        # a file is present; this one asks whether the references resolve.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = _write_bundle(root, root_absolute=True)
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_web("0.3.0", COMMIT, source, root / "out")
+            message = str(caught.exception)
+            self.assertIn("/assets/index-abc.js", message)
+            self.assertIn("root of a domain", message)
+
+    def test_accepts_relative_asset_references(self) -> None:
+        # The corrected shape, so the guard cannot pass by rejecting everything.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = _write_bundle(root)
+            engram_release.archive_web("0.3.0", COMMIT, source, root / "out")
 
     def test_refuses_a_source_directory_that_does_not_exist(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

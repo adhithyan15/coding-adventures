@@ -1,0 +1,10 @@
+{
+  "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "family": "kanban",
+  "level": "partial",
+  "fixtures": [
+    { "id": "plain", "source": "kanban\n  Todo\n    Write grammar\n    Add tests\n  Done\n    Ship" },
+    { "id": "explicit-ids", "source": "kanban\n  todo[Todo]\n    parser[Grammar parser]\n  done[Done]\n    paint[Native paint]" }
+  ]
+}

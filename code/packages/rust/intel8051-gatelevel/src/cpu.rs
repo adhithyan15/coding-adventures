@@ -28,7 +28,21 @@ use crate::alu::{
 };
 use crate::bits::{add_16bit_full, int_to_bits8};
 use crate::registers::RegisterFile8051;
+use crate::state::{DffMemory, StateRegister};
+use intel8051_simulator::{
+    decode::operand_len, ExecutionResult, Intel8051Error, Intel8051Simulator, Intel8051State,
+    StepTrace,
+};
 use logic_gates::gates::{and_gate, not_gate, or_gate};
+use std::panic::{catch_unwind, AssertUnwindSafe};
+
+const CODE_SIZE: usize = 65_536;
+const XDATA_SIZE: usize = 65_536;
+const IRAM_SIZE: usize = 256;
+
+/// Exact persistent topology: 524,288 code bits, 524,288 XDATA bits,
+/// 2,048 IRAM/SFR bits, 16 PC bits, and one halt bit.
+pub const FLIP_FLOP_COUNT: usize = (CODE_SIZE + XDATA_SIZE + IRAM_SIZE) * 8 + 16 + 1;
 
 // ─── SFR addresses ────────────────────────────────────────────────────────────
 
@@ -80,22 +94,30 @@ pub struct Cpu8051 {
     /// Register file: IRAM (including SFRs) + PC.
     pub rf: RegisterFile8051,
     /// Code memory: 64 KB, read-only during execution.
-    pub code: Vec<u8>,
+    pub code: DffMemory,
     /// External data memory: 64 KB, accessed via MOVX.
-    pub xdata: Vec<u8>,
+    pub xdata: DffMemory,
     /// True after a HALT opcode (0xA5) is executed.
     pub halted: bool,
+    loaded_origin: u16,
+    loaded_len: usize,
+    halt_state: StateRegister,
 }
 
 impl Cpu8051 {
     /// Create a new CPU with zeroed memory.
     pub fn new() -> Self {
-        Self {
+        let mut cpu = Self {
             rf: RegisterFile8051::new(),
-            code: vec![0u8; 65536],
-            xdata: vec![0u8; 65536],
+            code: DffMemory::new(CODE_SIZE),
+            xdata: DffMemory::new(XDATA_SIZE),
             halted: false,
-        }
+            loaded_origin: 0,
+            loaded_len: CODE_SIZE,
+            halt_state: StateRegister::new(1),
+        };
+        cpu.reset();
+        cpu
     }
 
     /// Reset to power-on state.
@@ -111,6 +133,7 @@ impl Cpu8051 {
         self.rf.write_iram8(SFR_P1, 0xFF);
         self.rf.write_iram8(SFR_P2, 0xFF);
         self.rf.write_iram8(SFR_P3, 0xFF);
+        self.clock_wires_into_state();
     }
 
     /// Load a program into code memory at `origin` and reset CPU state.
@@ -125,11 +148,167 @@ impl Cpu8051 {
         debug_assert!(
             program.len() <= available,
             "load: program length {} exceeds available code space {} at origin {:#06x}",
-            program.len(), available, origin
+            program.len(),
+            available,
+            origin
         );
-        let end = (start + program.len()).min(65536);
-        self.code[start..end].copy_from_slice(&program[..end - start]);
+        let end = start.saturating_add(program.len()).min(CODE_SIZE);
+        self.code.copy_from_slice(start, &program[..end - start]);
         self.rf.write_pc(origin);
+        self.loaded_origin = origin;
+        self.loaded_len = end - start;
+        self.clock_wires_into_state();
+    }
+
+    /// Return a complete owned snapshot of every architectural bit.
+    pub fn get_state(&self) -> Intel8051State {
+        Intel8051State {
+            pc: self.rf.read_pc(),
+            iram: self.rf.iram_snapshot(),
+            xdata: self.xdata.snapshot(),
+            code: self.code.snapshot(),
+            halted: self.halted,
+            loaded_origin: self.loaded_origin,
+            loaded_len: self.loaded_len,
+        }
+    }
+
+    /// Atomically restore a validated complete state.
+    pub fn restore(&mut self, state: &Intel8051State) -> Result<(), Intel8051Error> {
+        let mut validator = Intel8051Simulator::new();
+        validator.restore(state)?;
+        self.rf.restore_iram(&state.iram);
+        self.rf.write_pc(state.pc);
+        self.xdata.restore_snapshot(&state.xdata);
+        self.code.restore_snapshot(&state.code);
+        self.halted = state.halted;
+        self.loaded_origin = state.loaded_origin;
+        self.loaded_len = state.loaded_len;
+        self.clock_wires_into_state();
+        Ok(())
+    }
+
+    /// Deterministically reset and atomically load at address zero.
+    pub fn load_checked(&mut self, program: &[u8]) -> Result<(), Intel8051Error> {
+        self.load_at_checked(program, 0)
+    }
+
+    /// Deterministically reset and atomically load at an explicit origin.
+    pub fn load_at_checked(&mut self, program: &[u8], origin: u16) -> Result<(), Intel8051Error> {
+        let end = usize::from(origin).checked_add(program.len());
+        if end.is_none_or(|value| value > CODE_SIZE) {
+            return Err(Intel8051Error::ProgramOutOfRange {
+                origin,
+                length: program.len(),
+            });
+        }
+        self.reset();
+        self.code.clear();
+        self.xdata.clear();
+        self.code.copy_from_slice(usize::from(origin), program);
+        self.rf.write_pc(origin);
+        self.loaded_origin = origin;
+        self.loaded_len = program.len();
+        self.clock_wires_into_state();
+        Ok(())
+    }
+
+    fn loaded_contains(&self, address: u16) -> bool {
+        let address = usize::from(address);
+        let start = usize::from(self.loaded_origin);
+        address >= start && address < start + self.loaded_len
+    }
+
+    /// Execute one instruction atomically and compare its complete transition
+    /// with the functional simulator.
+    pub fn step_checked(&mut self) -> Result<StepTrace, Intel8051Error> {
+        if self.halted {
+            return Err(Intel8051Error::Halted);
+        }
+        let pc_before = self.rf.read_pc();
+        let opcode = self.code[usize::from(pc_before)];
+        let length = usize::from(operand_len(opcode)) + 1;
+        if (0..length).any(|offset| !self.loaded_contains(pc_before.wrapping_add(offset as u16))) {
+            return Err(Intel8051Error::TruncatedInstruction {
+                pc: pc_before,
+                length,
+            });
+        }
+        let state_before = self.get_state();
+        let mut oracle = Intel8051Simulator::new();
+        oracle.restore(&state_before)?;
+        let oracle_trace = oracle.step_checked()?;
+        if let Err(payload) = catch_unwind(AssertUnwindSafe(|| self.step())) {
+            self.restore(&state_before)?;
+            let message = payload
+                .downcast_ref::<String>()
+                .cloned()
+                .or_else(|| {
+                    payload
+                        .downcast_ref::<&str>()
+                        .map(|value| (*value).to_string())
+                })
+                .unwrap_or_else(|| "8051 gate execution panicked".to_string());
+            return Err(Intel8051Error::Execution(message));
+        }
+        let state_after = self.get_state();
+        if state_after != oracle_trace.state_after {
+            self.restore(&state_before)?;
+            return Err(Intel8051Error::Execution(format!(
+                "gate transition diverged from functional oracle for {} at {pc_before:#06x}",
+                oracle_trace.mnemonic
+            )));
+        }
+        Ok(StepTrace {
+            pc_before,
+            pc_after: self.rf.read_pc(),
+            raw: oracle_trace.raw,
+            mnemonic: oracle_trace.mnemonic,
+            state_before,
+            state_after,
+        })
+    }
+
+    /// Execute already-loaded code transactionally.
+    pub fn run_loaded_checked(
+        &mut self,
+        max_steps: usize,
+    ) -> Result<ExecutionResult, Intel8051Error> {
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while !self.halted && traces.len() < max_steps {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original)?;
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            pc: self.rf.read_pc(),
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Deterministically load and execute a fresh program transactionally.
+    pub fn run_checked(
+        &mut self,
+        program: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, Intel8051Error> {
+        let original = self.get_state();
+        self.load_checked(program)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original)?;
+                Err(error)
+            }
+        }
     }
 
     /// Run a program until HALT or `max_steps` exceeded.  Returns step count.
@@ -152,6 +331,11 @@ impl Cpu8051 {
         }
         let opcode = self.fetch8();
         self.execute_one(opcode);
+        self.clock_wires_into_state();
+    }
+
+    fn clock_wires_into_state(&mut self) {
+        self.halt_state.write(u16::from(self.halted));
     }
 
     // ── Fetch helpers ─────────────────────────────────────────────────────────
@@ -235,10 +419,18 @@ impl Cpu8051 {
         self.rf.write_iram8(SFR_ACC, res.result);
         let mut psw = self.rf.read_iram8(SFR_PSW);
         psw &= !(PSW_CY | PSW_AC | PSW_OV | PSW_P);
-        if res.cy != 0 { psw |= PSW_CY; }
-        if res.ac != 0 { psw |= PSW_AC; }
-        if res.ov != 0 { psw |= PSW_OV; }
-        if res.parity != 0 { psw |= PSW_P; }
+        if res.cy != 0 {
+            psw |= PSW_CY;
+        }
+        if res.ac != 0 {
+            psw |= PSW_AC;
+        }
+        if res.ov != 0 {
+            psw |= PSW_OV;
+        }
+        if res.parity != 0 {
+            psw |= PSW_P;
+        }
         self.rf.write_iram8(SFR_PSW, psw);
     }
 
@@ -246,9 +438,15 @@ impl Cpu8051 {
     fn set_flags_cy_ac_ov(&mut self, cy: u8, ac: u8, ov: u8) {
         let mut psw = self.rf.read_iram8(SFR_PSW);
         psw &= !(PSW_CY | PSW_AC | PSW_OV);
-        if cy != 0 { psw |= PSW_CY; }
-        if ac != 0 { psw |= PSW_AC; }
-        if ov != 0 { psw |= PSW_OV; }
+        if cy != 0 {
+            psw |= PSW_CY;
+        }
+        if ac != 0 {
+            psw |= PSW_AC;
+        }
+        if ov != 0 {
+            psw |= PSW_OV;
+        }
         self.rf.write_iram8(SFR_PSW, psw);
     }
 
@@ -317,7 +515,10 @@ impl Cpu8051 {
     /// state.
     fn push8(&mut self, val: u8) {
         let sp = self.rf.read_iram8(SFR_SP);
-        debug_assert!(sp != 0xFF, "push8: stack pointer overflow (SP wrapped 0xFF → 0x00)");
+        debug_assert!(
+            sp != 0xFF,
+            "push8: stack pointer overflow (SP wrapped 0xFF → 0x00)"
+        );
         let new_sp = inc8(sp).result; // gate-level increment
         self.rf.write_iram8(SFR_SP, new_sp);
         self.rf.write_iram8(new_sp, val);
@@ -350,7 +551,11 @@ impl Cpu8051 {
 
     /// Sign-extend an 8-bit relative offset to i16.
     fn sign_extend_rel8(rel: u8) -> i16 {
-        if rel >= 0x80 { (rel as i16) - 0x100 } else { rel as i16 }
+        if rel >= 0x80 {
+            (rel as i16) - 0x100
+        } else {
+            rel as i16
+        }
     }
 
     /// Apply a signed 8-bit relative offset to PC using the gate-level adder.
@@ -517,14 +722,14 @@ impl Cpu8051 {
         if opcode == 0xF2 || opcode == 0xF3 {
             let addr = self.rn(opcode & 1) as usize;
             let v = self.acc();
-            self.xdata[addr] = v;
+            self.xdata.write(addr, v);
             return;
         }
         // MOVX @DPTR, A  (0xF0)
         if opcode == 0xF0 {
             let addr = self.dptr() as usize;
             let v = self.acc();
-            self.xdata[addr] = v;
+            self.xdata.write(addr, v);
             return;
         }
 
@@ -945,7 +1150,6 @@ impl Cpu8051 {
         if opcode == 0x23 {
             let res = rl8(self.acc());
             self.rf.write_iram8(SFR_ACC, res.result);
-            self.set_cy(res.cy);
             self.update_parity();
             return;
         }
@@ -962,7 +1166,6 @@ impl Cpu8051 {
         if opcode == 0x03 {
             let res = rr8(self.acc());
             self.rf.write_iram8(SFR_ACC, res.result);
-            self.set_cy(res.cy);
             self.update_parity();
             return;
         }
@@ -1267,7 +1470,8 @@ impl Cpu8051 {
             self.pop_pc();
         }
 
-        // Unknown opcode — silently skip (undefined on real 8051)
+        // Defensive no-op: all 255 architectural bytes and the 0xA5 repository
+        // HALT sentinel are handled above.
     }
 }
 
@@ -1282,6 +1486,17 @@ impl Default for Cpu8051 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn dff_topology_latches_pc_and_halt() {
+        assert_eq!(FLIP_FLOP_COUNT, 1_050_641);
+        let mut cpu = Cpu8051::new();
+        cpu.rf.write_pc(0x1234);
+        assert_eq!(cpu.rf.latched_pc(), 0x1234);
+        cpu.load_checked(&[HALT_OPCODE]).unwrap();
+        cpu.step();
+        assert_eq!(cpu.halt_state.read(), 1);
+    }
 
     /// Build a program bytes slice, prepended with HALT sentinel (0xA5) terminator.
     fn prog(bytes: &[u8]) -> Vec<u8> {
@@ -1441,18 +1656,18 @@ mod tests {
 
     #[test]
     fn rl_a() {
-        // MOV A, #0b10000001; RL A → 0b00000011, CY=1
+        // MOV A, #0b10000001; RL A → 0b00000011, CY unchanged
         let cpu = run(&[0x74, 0x81, 0x23]);
         assert_eq!(cpu.rf.read_iram8(SFR_ACC), 0x03);
-        assert_eq!((cpu.rf.read_iram8(SFR_PSW) >> 7) & 1, 1);
+        assert_eq!((cpu.rf.read_iram8(SFR_PSW) >> 7) & 1, 0);
     }
 
     #[test]
     fn rr_a() {
-        // MOV A, #0b10000001; RR A → 0b11000000, CY=1
+        // MOV A, #0b10000001; RR A → 0b11000000, CY unchanged
         let cpu = run(&[0x74, 0x81, 0x03]);
         assert_eq!(cpu.rf.read_iram8(SFR_ACC), 0xC0);
-        assert_eq!((cpu.rf.read_iram8(SFR_PSW) >> 7) & 1, 1);
+        assert_eq!((cpu.rf.read_iram8(SFR_PSW) >> 7) & 1, 0);
     }
 
     #[test]
@@ -1570,7 +1785,7 @@ mod tests {
         // MOV B = MOV dir #0xF0 (SFR_B), #13
         let cpu = run(&[0x74, 12, 0x75, 0xF0, 13, 0xA4]);
         assert_eq!(cpu.rf.read_iram8(SFR_ACC), 156); // lo=0x9C
-        assert_eq!(cpu.rf.read_iram8(SFR_B), 0);    // hi=0, OV=0
+        assert_eq!(cpu.rf.read_iram8(SFR_B), 0); // hi=0, OV=0
     }
 
     #[test]

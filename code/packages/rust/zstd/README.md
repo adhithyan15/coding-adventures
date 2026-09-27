@@ -168,10 +168,16 @@ files:
 ## Tests
 
 ```
-cargo test -p zstd
+cargo test -p zstd@0.2.0
 ```
 
-49 unit tests + 3 doctests. Grouped by what they can and cannot prove:
+The version is not decoration: `engram-anki-package` keeps the third-party
+`zstd` crate as a dev-dependency oracle, so two packages named `zstd` exist in
+the workspace graph and a bare `-p zstd` is ambiguous.
+
+The suite is grouped below by what each group can and cannot prove. A count
+is deliberately not quoted here — it goes stale on the next commit, and the
+interesting property is the *shape* of the coverage, not its size:
 
 | Test group | What it checks | Can it catch a wire-format bug? |
 |------------|----------------|---------------------------------|
@@ -191,7 +197,7 @@ vectors carry the same conformance gate without a subprocess.
 To rebuild the golden vectors after an intentional change:
 
 ```
-cargo test -p zstd -- --ignored regenerate_golden_vectors
+cargo test -p zstd@0.2.0 -- --ignored regenerate_golden_vectors
 ```
 
 ## Dependencies

@@ -18,7 +18,7 @@ The word, taken apart.
 ఎలా (elā, "how") is native Dravidian, on the interrogative base ఎ- (e-) you already met in ēmiṭi. Telugu gathers nearly all its questions under this e-: ēmiṭi (what), elā (how), evaru (who), ekkaḍa (where), eppuḍu (when), enduku (why). It is the same Dravidian question-root that heads Tamil's eppaḍi and Kannada's ēnu — a family older than the Sanskrit words that Telugu otherwise borrows so freely.
 
 Sounds you'll need.
-ఎ (independent short e) + లా (lā) becomes ఎలా (elā).
+ఎ (independent short e) + లా (lā) becomes ఎలా (elā) (elā).
 
 Guided Practice.
 [pause 1 second]
@@ -45,7 +45,7 @@ The letters in this word.
 The new word is ఉన్నారు (unnāru, "you are/exist"): from the verb ఉండు (uṇḍu, "to be, to exist, to stay") + the respectful-you ending -ారు (-āru). Note the doubled న్న (nn).
 
 The phrase, taken apart.
-మీరు ఎలా ఉన్నారు? = మీరు (mīru, "you," respectful) + ఎలా (elā, "how") + ఉన్నారు (unnāru, "are") — "you how are?", the verb last, as in every Telugu sentence. The verb is ఉండు (uṇḍu), "to be / to exist / to stay" — native Dravidian, and the workhorse behind "how are you," "I'm well," and (you'll see in Chapter 5) "I live."
+మీరు ఎలా ఉన్నారు? (mīru elā unnāru?) = మీరు (mīru, "you," respectful) + ఎలా (elā, "how") + ఉన్నారు (unnāru, "are") — "you how are?", the verb last, as in every Telugu sentence. The verb is ఉండు (uṇḍu), "to be / to exist / to stay" — native Dravidian, and the workhorse behind "how are you," "I'm well," and (you'll see in Chapter 5) "I live."
 
 Grammar Lens: the verb carries "you".
 The ending -ారు (-āru) already means "you (respectful)," so mīru can be dropped: elā unnāru? is a complete "how are you?" To a friend (nuvvu), the ending changes: నువ్వు ఎలా ఉన్నావు? (nuvvu elā unnāvu? — -āvu for the familiar "you"). Match the "you" to the verb-ending, as Telugu always does.

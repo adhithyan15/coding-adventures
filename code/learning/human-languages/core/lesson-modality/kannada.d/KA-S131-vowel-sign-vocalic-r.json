@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S131-vowel-sign-vocalic-r",
+    "language": "kannada",
+    "chapter": 36,
+    "sequence": 791,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5a2136853ea51502",
+    "detachableSegments": [
+      "Script you'll notice: ◌ೃ",
+      "Writing: ◌ೃ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

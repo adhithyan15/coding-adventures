@@ -5,6 +5,7 @@ chapter: 3
 type: word
 headword: ఎలా
 gloss: how
+romanization: "elā"
 concept_tag: QUESTION-HOW
 prerequisites: [TE-C02-emiti]
 sounds: [independent-e, long-aa]

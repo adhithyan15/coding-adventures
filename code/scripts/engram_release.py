@@ -87,6 +87,39 @@ def _zip_tree(source: Path, output: Path, root_name: str, commit: str) -> None:
                 archive.write(path, f"{root_name}/{relative}")
 
 
+# `src="/assets/…"`, `href="/assets/…"`, and the bare engine path. Matching on
+# the quote plus leading slash is what distinguishes a root-absolute URL from a
+# relative one (`./assets/…`) or a protocol-relative/external one (`//host/…`).
+ROOT_ABSOLUTE_REF = re.compile(r'(?:src|href)\s*=\s*"(/(?!/)[^"]*)"')
+
+
+def _reject_root_absolute_assets(source: Path) -> None:
+    """Refuse a bundle whose entry point can only be served from a domain root.
+
+    This is the check that the v0.3.0 bundle needed and did not have. Every
+    other check here asks whether a file is *present*; this one asks whether the
+    references between them *resolve*. A bundle can pass all of the former and
+    still be broken, because `index.html` returns 200 from any path while its
+    script 404s — the page renders blank, which looks far more like a working
+    deploy than a failure.
+
+    Only `index.html` is scanned, deliberately. It is the entry point, so if its
+    references are relative the bundle relocates; hashed JS chunks contain
+    minified string literals where a leading slash is often not a URL at all,
+    and matching those would trade a real check for a noisy one.
+    """
+
+    index = source / "index.html"
+    offenders = sorted(set(ROOT_ABSOLUTE_REF.findall(index.read_text(encoding="utf-8"))))
+    if offenders:
+        raise ValueError(
+            "index.html references assets from the domain root "
+            f"({', '.join(offenders)}), so the bundle only works when served "
+            "from the root of a domain — unzip it into a subdirectory and the "
+            "page loads blank. Emit with a relative Vite `base`."
+        )
+
+
 def archive_web(version: str, commit: str, source: Path, output_dir: Path) -> Path:
     """Verify and archive the production web bundle.
 
@@ -114,6 +147,8 @@ def archive_web(version: str, commit: str, source: Path, output_dir: Path) -> Pa
     # failing at load. Cheap to rule out; expensive to diagnose in the wild.
     if (source / WASM_ENGINE).stat().st_size == 0:
         raise ValueError(f"{WASM_ENGINE} is empty")
+
+    _reject_root_absolute_assets(source)
 
     output = output_dir / f"engram-web-v{version}.zip"
     _zip_tree(source, output, f"engram-web-v{version}", commit)

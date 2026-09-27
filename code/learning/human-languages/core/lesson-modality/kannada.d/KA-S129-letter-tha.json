@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S129-letter-tha",
+    "language": "kannada",
+    "chapter": 28,
+    "sequence": 571,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c4aba4215aa1f29f",
+    "detachableSegments": [
+      "Script you'll notice: ಥ",
+      "Writing: ಥ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

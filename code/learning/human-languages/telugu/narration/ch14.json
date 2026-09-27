@@ -4,14 +4,14 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:765457f31aff1c29",
+  "sourceHash": "fnv1a64:d772ea0e40da9ec4",
   "lessons": [
     {
       "id": "TE-C14-rutuvulu",
       "sequence": 410,
       "title": "వసంత ఋతువు, వేసవి, వానాకాలం, శీతాకాలం — the pattern completes itself",
       "headword": "వసంత ఋతువు వేసవి వానాకాలం శీతాకాలం",
-      "romanization": "",
+      "romanization": "vasanta ṛtuvu vēsavi vānākālam śītākālam",
       "gloss": "spring, summer, monsoon, winter — completing the Dravidian pattern of native heat/rain words plus Sanskrit spring",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85f205dcd671057f",
+      "sourceHash": "fnv1a64:d06672e3fe039e1d",
       "notice": null,
       "blocks": [
         {

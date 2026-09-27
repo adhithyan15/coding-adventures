@@ -2,9 +2,10 @@
 name = "coding-adventures-intel8051-gatelevel"
 version = "0.1.0"
 edition = "2021"
-description = "Intel 8051 gate-level simulator — every operation routes through real logic gates"
+description = "Complete Intel 8051 gate-level simulator with 1,050,641 DFFs, fixed gate datapaths, checked lifecycle, and full-state functional differentials"
 license = "MIT"
 
 [dependencies]
 logic-gates = { path = "../logic-gates" }
 arithmetic = { path = "../arithmetic" }
+intel8051-simulator = { path = "../intel8051-simulator" }

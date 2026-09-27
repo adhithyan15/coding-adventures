@@ -1,0 +1,16 @@
+{
+  "id": "PA-EXT-038-PREA1-THREE-ANSWERS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can answer with ji, achchha and na, and write achchha in Gurmukhi.",
+  "prerequisites": [
+    "PA-EXT-037-A1-PHONE-FIELD"
+  ],
+  "lessons": [
+    "PA-C31-ji",
+    "PA-C31-achchha",
+    "PA-W09-chhachha",
+    "PA-C31-na"
+  ]
+}

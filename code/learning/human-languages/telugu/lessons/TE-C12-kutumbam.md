@@ -7,6 +7,7 @@ chapter: 12
 type: word
 headword: నాన్న అమ్మ అన్న తమ్ముడు అక్క చెల్లి
 gloss: father, mother, and four age-graded sibling words — Telugu's own father-word and "younger sister" word, but the same age-first system
+romanization: "nānna amma anna tammuḍu akka celli"
 concept_tag: TE-FAMILY-BASIC
 prerequisites: [TE-C11-rangulu]
 sounds: [telugu-retroflex-dda, telugu-geminate-nna]

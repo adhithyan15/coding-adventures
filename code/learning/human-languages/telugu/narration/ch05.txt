@@ -52,7 +52,7 @@ The letters in this word.
 తెలుగు (telugu): తె (te) + లు (lu) + గు (gu).
 
 The sentence, taken apart.
-నేను తెలుగు మాట్లాడతాను = నేను (nēnu, "I") + తెలుగు (telugu, "Telugu," the object) + మాట్లాడతాను (māṭlāḍatānu, "speak") — "I Telugu speak," the verb last as always. The name తెలుగు (telugu) is native, of debated origin (often linked to tenugu, and to the land Trilinga); its vowel-rich sound and habit of ending most words in a vowel earned it the old nickname "the Italian of the East." It is the language of the Kāvya poets and, today, of some eighty million speakers.
+నేను తెలుగు మాట్లాడతాను (nēnu telugu māṭlāḍatānu) = నేను (nēnu, "I") + తెలుగు (telugu, "Telugu," the object) + మాట్లాడతాను (māṭlāḍatānu, "speak") — "I Telugu speak," the verb last as always. The name తెలుగు (telugu) is native, of debated origin (often linked to tenugu, and to the land Trilinga); its vowel-rich sound and habit of ending most words in a vowel earned it the old nickname "the Italian of the East." It is the language of the Kāvya poets and, today, of some eighty million speakers.
 
 Grammar Lens: no gender on "I speak".
 Māṭlāḍatānu is the same whether a man or a woman says it — Telugu, like Tamil, marks no gender in the first or second person (only the third: -āḍu he, -undi she/it). This is unlike Hindi, where even "I speak" changes for the speaker's gender (boltā/boltī).

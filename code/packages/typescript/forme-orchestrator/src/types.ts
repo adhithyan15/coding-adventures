@@ -39,6 +39,7 @@ export interface StageRunSummary {
   readonly elapsedMs: number;
   readonly cacheHits: number;
   readonly cacheMisses: number;
+  /** `skipped` includes cancellation/fail-fast skips and validated unchanged restores. */
   readonly outcome: "success" | "skipped" | "failed";
   readonly errorCount: number;
   /** Revision of this instance's complete materialized input, or null when unavailable. */

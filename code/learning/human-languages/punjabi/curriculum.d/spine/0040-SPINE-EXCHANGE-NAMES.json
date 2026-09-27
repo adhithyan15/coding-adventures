@@ -12,10 +12,9 @@
     "PA-PATH-027",
     "PA-PATH-029",
     "PA-PATH-031",
-    "PA-PATH-032"
+    "PA-PATH-032",
+    "PA-PATH-037"
   ],
-  "omits": [
-    "PRONOUN-ME"
-  ],
+  "omits": [],
   "relocates": {}
 }

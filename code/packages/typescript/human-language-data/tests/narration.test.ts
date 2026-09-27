@@ -80,6 +80,33 @@ describe("speakable inline Markdown", () => {
   it("removes typography a voice would otherwise pronounce", () => {
     expect(speakableInline("**hola** is said *OH-la*")).toBe("hola is said OH-la");
     expect(speakableInline("`silent-h` — the h")).toBe("silent-h — the h");
+
+    // An HTML comment is a note to the next AUTHOR and must never be said.
+    //
+    // This is not hypothetical tidiness. `parse.ts` consumes only the three
+    // `hl-*` directives; anything else an author leaves in a comment used to
+    // reach `speech.text` verbatim. Three lessons carried one, and two were
+    // SAFETY notes: ES-C403 names the vulgar form of `pollo` that must never be
+    // generated, and ES-C404 names the Wi-Fi expansion HL24 forbids presenting
+    // as fact. Both were being read aloud — a note written to keep a word out of
+    // the learner's mouth was putting it in their ear by the one route the
+    // lesson had carefully closed.
+    expect(
+      speakableInline("el pollo <!-- Safety: do not generate polla --> is chicken"),
+    ).toBe("el pollo is chicken");
+    expect(speakableInline("<!-- author note -->")).toBe("");
+    // A comment spanning lines goes too — block text arrives already joined.
+    expect(
+      speakableInline("before <!-- one\ntwo\nthree --> after"),
+    ).toBe("before after");
+    // Unterminated: an author who forgets `-->` gets silence for the rest, not
+    // the remainder of the lesson narrated as if it were a note.
+    expect(speakableInline("kept <!-- forgot to close")).toBe("kept");
+    // The three real directives are consumed by parse.ts long before this, but
+    // stripping them here too costs nothing and keeps the funnel total.
+    expect(
+      speakableInline("<!-- hl-knowledge: introduces=[X]; assesses=[] -->say this"),
+    ).toBe("say this");
     expect(speakableInline("~~struck~~ out")).toBe("struck out");
   });
 

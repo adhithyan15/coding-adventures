@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5c5cd4c2eebf816a",
+  "sourceHash": "fnv1a64:7d0e2b590becb216",
   "lessons": [
     {
       "id": "TE-C07-numbers-1-5",
@@ -185,7 +185,7 @@
       "sequence": 340,
       "title": "ఆరు, ఏడు, ఎనిమిది, తొమ్మిది, పది — six to ten",
       "headword": "ఆరు ఏడు ఎనిమిది తొమ్మిది పది",
-      "romanization": "",
+      "romanization": "āru ēḍu enimidi tommidi padi",
       "gloss": "six to ten — where Telugu wanders furthest from its Dravidian cousins",
       "script": "telugu",
       "modality": "sight",
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:ad0f0d5bb46a0ef3",
+      "sourceHash": "fnv1a64:06e03e9dc7d497c8",
       "notice": {
         "modality": "sight",
         "needs": [

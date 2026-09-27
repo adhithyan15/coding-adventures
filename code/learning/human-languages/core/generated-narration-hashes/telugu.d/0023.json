@@ -1,15 +1,16 @@
 {
   "language": "telugu",
   "chapter": 23,
-  "sourceHash": "fnv1a64:ece18b024e8a6897",
+  "sourceHash": "fnv1a64:bbbeb2717a06a089",
   "lessonIds": [
-    "TE-C23-roju"
+    "TE-C23-roju",
+    "TE-S126-letter-nna"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch23.txt",
   "json": "telugu/narration/ch23.json",
-  "textHash": "fnv1a64:3948abd51f7f90f9",
-  "jsonHash": "fnv1a64:dd2827c4ca830f3c",
+  "textHash": "fnv1a64:9eb44147b2b75507",
+  "jsonHash": "fnv1a64:0deb4e9fa011af38",
   "findings": []
 }

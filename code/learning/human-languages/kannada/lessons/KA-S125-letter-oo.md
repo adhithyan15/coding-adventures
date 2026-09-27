@@ -9,34 +9,35 @@ type: writing
 headword: "ಓ"
 gloss: the single character ಓ — recognised inside words you already say
 romanization: "ō"
-prerequisites: [KA-S124-letter-pa]
+prerequisites: [KA-S130-letter-ii]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-124]
+  knowledge: [KA-SCRIPT-RECOG-130]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-125]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-124, KA-SCRIPT-RECOG-125]
+  knowledge: [KA-SCRIPT-RECOG-130, KA-SCRIPT-RECOG-125]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-S124-letter-pa]
+reviews_of: [KA-S130-letter-ii]
 ---
 
 # ಓ — one character, met inside a word you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-124] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-130] -->
 
-[PAUSE 1s] Before the new one: ಪ — what sound does it carry?
+[PAUSE 1s] Before the new one: ಈ — what sound does it carry, and what is
+its riding half?
 
-[PAUSE 2s] One character this time, and it is the last of the twenty-four this
-book drizzles in. It waited this long for a reason worth knowing.
+[PAUSE 2s] One character this time. It waited longer than most, for a reason
+worth knowing.
 
 ## Script you'll notice: ಓ
 <!-- hl-knowledge: introduces=[KA-SCRIPT-RECOG-125]; assesses=[] -->
@@ -58,7 +59,7 @@ The word you already say that opens with it:
 
 - **ಓದು** *ōdu* — to read, to study
 
-**Why this one came last.** Every other character in this sequence was
+**Why this one waited.** Every other character in this sequence was
 introduced once a word containing it was already in your mouth. ಓ had to wait
 until ಓದು was taught, because until then there was nothing to find it inside —
 and a character shown without a word to hold it is a character you will not keep.

@@ -1,0 +1,24 @@
+{
+  "chapter": 35,
+  "title": "Me, and Two Ways to Part",
+  "label": "ch:pa-me-and-parting",
+  "canDo": "I can say to me with mainu and take my leave with changa ji or jaldi milaange, split mainu into the pronoun and the postposition fused inside it, hear the Persian ending shared by jaldi and khushi, and write mainu and the welcome from the previous chapter.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PA-C35-jaldi-milaange",
+    "kind": "production",
+    "summary": "The reader parts with a promise of soon, separates the borrowed adverb from the inherited verb, connects the Persian ending on jaldi to the one already met on khushi, runs three partings against each other, and writes mainu from memory using both marks traced in this chapter.",
+    "assesses": [
+      "PA-LEX-JALDI",
+      "PA-ETYMON-JALDI-JALD",
+      "PA-SCRIPT-MAINU-01",
+      "PA-LEX-MAINU",
+      "PA-LEX-CHANGA-JI",
+      "PA-SCRIPT-DULAVAN-01",
+      "PA-SCRIPT-DULAINKAR-01"
+    ]
+  }
+}

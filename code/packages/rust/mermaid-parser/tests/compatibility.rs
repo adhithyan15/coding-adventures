@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
-    parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
+    parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
     parse_sequence_diagram, parse_timeline, parse_xychart,
     MERMAID_COMPATIBILITY_BASELINE,
 };
@@ -36,6 +36,23 @@ const PACKET_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/packet-11.16.1-corpus.json"
 ));
+const KANBAN_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/kanban-11.16.1-corpus.json"
+));
+
+#[test]
+fn pinned_kanban_subset_corpus_parses_to_board_ir() {
+    let corpus: Value = serde_json::from_str(KANBAN_CORPUS).expect("kanban corpus must be JSON");
+    assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        let board = parse_kanban(source)
+            .unwrap_or_else(|error| panic!("kanban fixture {id} failed: {error}"));
+        assert!(!board.columns.is_empty());
+    }
+}
 
 #[test]
 fn pinned_packet_subset_corpus_parses_to_packet_ir() {
@@ -571,9 +588,9 @@ Alice->>Bob: Hello
 
 #[test]
 fn recognized_but_unimplemented_family_is_not_reported_as_unknown() {
-    let error = parse_any_mermaid("kanban\nTodo\n  task1[Task]")
+    let error = parse_any_mermaid("architecture-beta\ngroup api(cloud)[API]")
         .err()
-        .expect("kanban support is not implemented yet");
+        .expect("architecture support is not implemented yet");
     assert!(error.message.contains("recognized but not implemented"));
     assert!(error.message.contains(MERMAID_COMPATIBILITY_BASELINE));
 }

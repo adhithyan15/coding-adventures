@@ -9,6 +9,7 @@ use std::collections::HashMap;
 use layout_ir::{
     Constraints, Content, ExtValue, LayoutNode, PositionedNode, SizeValue, TextMeasurer,
 };
+use layout_replaced::{intrinsic_inline_size, IntrinsicSize};
 
 pub const VERSION: &str = "0.1.0";
 
@@ -566,6 +567,19 @@ fn min_content_main<M: TextMeasurer>(node: &LayoutNode, row: bool, measurer: &M)
         }
         return measurer.measure(&text.value, &text.font, None).height;
     }
+    if matches!(node.content, Some(Content::Image(_))) {
+        if row {
+            return intrinsic_inline_size(node);
+        }
+        let intrinsic = IntrinsicSize::from_layout(node);
+        return intrinsic.height.unwrap_or_else(|| {
+            intrinsic
+                .aspect_ratio
+                .map_or(layout_replaced::DEFAULT_HEIGHT, |ratio| {
+                    intrinsic_inline_size(node) / ratio
+                })
+        });
+    }
     if row { node.min_width } else { node.min_height }.unwrap_or(0.0)
 }
 
@@ -791,7 +805,7 @@ fn align_content_name(value: AlignContent) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use layout_ir::{font_spec, size_fixed, MeasureResult, TextContent};
+    use layout_ir::{font_spec, size_fixed, ImageContent, ImageFit, MeasureResult, TextContent};
 
     struct Mono;
     impl TextMeasurer for Mono {
@@ -925,6 +939,28 @@ mod tests {
         let result =
             layout_flexbox_with(&root, fixed_constraints(20.0, 10.0), &Mono, simple_layout);
         assert_eq!(result.children[0].width, 55.0);
+    }
+
+    #[test]
+    fn automatic_minimum_preserves_replaced_intrinsic_width() {
+        let image = LayoutNode::leaf_image(ImageContent {
+            src: "fixture.gif".into(),
+            fit: ImageFit::Contain,
+        })
+        .with_ext(
+            "replaced",
+            layout_replaced::replaced_ext(Some(80.0), Some(40.0), None),
+        );
+        let mut root = LayoutNode::container(vec![image])
+            .with_width(size_fixed(60.0))
+            .with_height(size_fixed(40.0));
+        root.ext.insert(
+            "flex".into(),
+            flex_ext(Default::default(), Default::default()),
+        );
+        let result =
+            layout_flexbox_with(&root, fixed_constraints(60.0, 40.0), &Mono, simple_layout);
+        assert_eq!(result.children[0].width, 80.0);
     }
 
     #[test]

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 10,
-  "sourceHash": "fnv1a64:91bf4ebe189d7f79",
+  "sourceHash": "fnv1a64:c6a110ceb55fd4da",
   "lessonIds": [
     "TE-C10-vaaram",
     "TE-S05-sign-virama",
@@ -12,6 +12,6 @@
   "text": "telugu/narration/ch10.txt",
   "json": "telugu/narration/ch10.json",
   "textHash": "fnv1a64:02b05428441ceaa9",
-  "jsonHash": "fnv1a64:07724b4a421a19b7",
+  "jsonHash": "fnv1a64:4b72a57b030d3a4e",
   "findings": []
 }

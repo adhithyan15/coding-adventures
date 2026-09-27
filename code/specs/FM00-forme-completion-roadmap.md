@@ -50,17 +50,18 @@ The implementation is substantial but not yet an end-to-end product:
   serves only successful in-memory artifacts, coalesces project changes,
   reloads browsers over SSE, and retains the last good site across failures.
   There is no plugin host, runtime sandbox, authoring shell, or deploy runner.
-- The CLI now persists unchanged capability-free, non-source stage invocations
-  across processes through a containment-checked project cache and deterministic
-  tagged codec. Filesystem sources publish validated external-state manifests,
-  and successful runs persist per-instance input/output revisions for the next
-  process. Sources and capability-bearing stages still rerun until exact
-  affected scheduling and side-effect replay land.
+- The CLI now persists per-invocation cache entries and topology-scoped
+  materialized checkpoints through a containment-checked project cache.
+  Filesystem sources publish validated external-state manifests, and successful
+  runs persist per-instance revisions. Exact changed-and-downstream scheduling
+  restores untouched observed sources and capability-free stages across fresh
+  processes; capability-bearing transforms and emitters still rerun until
+  side-effect replay lands.
 - Interactivity IR has no numbered spec or package. The AOT implementation
   refers to a missing FM06 spec, and the existing FM05 deploy-runner spec
   collides with older FM01–FM04 references that use FM05 for Interactivity IR.
-- The remaining headless-product gap is project-persistent affected-set
-  scheduling, bounded concurrent streaming, and the deploy runner. Both live
+- The remaining headless-product gap is filesystem side-effect replay, bounded
+  concurrent streaming, and the deploy runner. Both live
   sites now use the same product CLI, watch server,
   and centralized local-dependency bootstrap; site-local code is limited to
   content adapters and post-build artifact assertions.
@@ -109,8 +110,8 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 20 | FM-B031 | done | Add safe per-invocation stage cache reuse | Capability-free non-source invocations derive deterministic keys from canonical materialized inputs, round-trip Forme values and bytes through the injected cache, report per-item hits/misses, invalidate on input/version/config changes, honor `useCache: false`, and fail open on unsupported or corrupt payloads. Sources and capability-bearing stages are deliberately never skipped. |
 | 21 | FM-B033 | done | Persist safe pure-stage entries across CLI processes | Depends on FM-B031. The CLI opens a containment-checked filesystem cache when `settings.cacheDir` is configured; unchanged pure invocations hit across fresh processes, changed inputs miss, reports expose cache statistics, `cacheDir: null` remains in-memory, and `forme clean` removes persistent state. Both live sites dogfood the cache while sources and filesystem emitters remain conservative. |
 | 22 | FM-B034 | done | Persist filesystem source identities and content revisions | Depends on FM-B033. A source without an identity sidecar creates one atomically, concurrent first reads converge on one UUIDv7, invalid sidecars fail without destructive replacement, opt-out remains write-free, and byte-identical content retains its revision across rename while edits change it. |
-| 23 | FM-B035 | active | Publish external source state and persist the revision ledger | Depends on FM-B034. The stage contract exposes a validated external-state hook; `forme-source-fs` publishes a deterministic sorted locator/identity/content-revision manifest without rereading files during `run`; run summaries and a project-persistent ledger record per-instance input/output revisions; and `buildId` derives from observed source state across fresh orchestrators. |
-| 24 | FM-B036 | blocked | Schedule the exact changed-and-downstream set | Depends on FM-B035. The scheduler loads the prior ledger, identifies changed instances plus their transitive downstream closure, restores untouched outputs from cache, and reports skipped instances; per-item cache reuse remains available inside affected stream stages. |
+| 23 | FM-B035 | done | Publish external source state and persist the revision ledger | Depends on FM-B034. The stage contract exposes a validated external-state hook; `forme-source-fs` publishes a deterministic sorted locator/identity/content-revision manifest without rereading files during `run`; run summaries and a project-persistent ledger record per-instance input/output revisions; and `buildId` derives from observed source state across fresh orchestrators. |
+| 24 | FM-B036 | active | Schedule the exact changed-and-downstream set | Depends on FM-B035. The scheduler loads the prior ledger, identifies changed instances plus their transitive downstream closure, restores untouched capability-free outputs from validated cache checkpoints, reports skipped instances, and fails open to execution when reuse is unsafe or unavailable; per-item cache reuse remains available inside affected stream stages. |
 | 25 | FM-B037 | blocked | Replay filesystem emitter side effects safely | Depends on FM-B036. Capability-bearing filesystem emitters declare replay/materialization behavior; an unchanged incremental build can restore a missing or cleaned output tree without re-running unrelated transforms, and corrupt/missing replay data fails open to execution. |
 | 26 | FM-B032 | blocked | Complete external revisions, side-effect replay, and the exact affected set | Depends on FM-B035–FM-B037. Sources publish deterministic external-state manifests; scheduler state records per-instance input/output revisions; changed instances plus their downstream closure rerun; filesystem emitters replay or materialize outputs correctly after clean. |
 | 27 | FM-B010 | ready | Finish bounded streaming and parallel scheduling | Depends on FM-B032. Lazy fan-out, bounded buffers, backpressure, and pipeline-wide `maxConcurrency` avoid draining every stream into memory; deterministic tests cover cancellation and reproducibility. |
@@ -199,6 +200,7 @@ work.
 | 2026-09-01 | Persistent-cache dogfooding showed that `forme-source-fs` reads identity sidecars but generates a fresh logical ID whenever one is absent; the landing content had a sidecar while the three blog posts did not, so unchanged blog inputs correctly missed cache keys. | Added explicit authored sidecars for the current blog posts so FM-B033 can be dogfooded. Split FM-B034 ahead of FM-B032 to make first-read identity persistence and rename-safe content revisions independently reviewable. |
 | 2026-09-01 | FM01 requires a filesystem source to persist a generated UUIDv7 on first encounter, while `forme-source-fs` v0.2 deliberately implemented only read-side sidecars to retain a read-only capability profile. Exact cross-process affected-set scheduling cannot trust source identity until that deferred write contract exists. | FM-B034 explicitly adds the audited `storage:write` capability, uses exclusive creation so concurrent builds converge without overwriting metadata, and treats malformed existing sidecars as errors rather than silently replacing user-authored state. |
 | 2026-09-01 | FM-B032 still combined source observation, graph scheduling, and filesystem side-effect restoration. Skipping an emitter before replay is independently proven can leave a clean output tree empty even when every transform cache entry is valid. | Split FM-B035 (external-state manifest and persistent revision ledger), FM-B036 (exact affected-set scheduling), and FM-B037 (filesystem effect replay); retain FM-B032 as their completion milestone. |
+| 2026-09-01 | Exact scheduling cannot reuse the per-invocation cache alone: item-wise transforms do not have one aggregate entry, and a cache hit must be checked against the prior successful output revision before a whole instance is skipped. | FM-B036 adds topology-scoped materialized-output checkpoints for capability-free instances, validates restored revisions, and treats missing, corrupt, or mismatched checkpoints as an execution fallback. Capability-bearing stages remain conservative for FM-B037. |
 
 ## Loop protocol
 

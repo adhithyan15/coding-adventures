@@ -24,17 +24,72 @@
 //! nothing useful a `memory_size` parameter could vary.
 
 use crate::decode::decode;
+use crate::decode::operand_len;
 use crate::execute::execute;
 use crate::opcodes::{
-    CODE_SIZE, IRAM_SIZE, PSW_AC, PSW_CY, PSW_OV, PSW_P, SFR_ACC, SFR_B, SFR_DPH, SFR_DPL,
-    SFR_P0, SFR_P1, SFR_P2, SFR_P3, SFR_PSW, SFR_SP, XDATA_SIZE,
+    CODE_SIZE, IRAM_SIZE, PSW_AC, PSW_CY, PSW_OV, PSW_P, SFR_ACC, SFR_B, SFR_DPH, SFR_DPL, SFR_P0,
+    SFR_P1, SFR_P2, SFR_P3, SFR_PSW, SFR_SP, XDATA_SIZE,
 };
+use std::fmt;
+use std::panic::{catch_unwind, AssertUnwindSafe};
+
+/// Complete owned snapshot of the Harvard machine and loaded-program boundary.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Intel8051State {
+    pub pc: u16,
+    pub iram: [u8; IRAM_SIZE],
+    pub xdata: Vec<u8>,
+    pub code: Vec<u8>,
+    pub halted: bool,
+    pub loaded_origin: u16,
+    pub loaded_len: usize,
+}
+
+/// One checked fetch/decode/execute transition.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StepTrace {
+    pub pc_before: u16,
+    pub pc_after: u16,
+    pub raw: Vec<u8>,
+    pub mnemonic: String,
+    pub state_before: Intel8051State,
+    pub state_after: Intel8051State,
+}
+
+/// Typed fail-closed lifecycle error.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Intel8051Error {
+    Halted,
+    ProgramOutOfRange { origin: u16, length: usize },
+    InvalidState(String),
+    TruncatedInstruction { pc: u16, length: usize },
+    Execution(String),
+}
+
+impl fmt::Display for Intel8051Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Halted => write!(f, "CPU is halted"),
+            Self::ProgramOutOfRange { origin, length } => write!(
+                f,
+                "program of {length} bytes at {origin:#06x} exceeds code memory"
+            ),
+            Self::InvalidState(message) | Self::Execution(message) => f.write_str(message),
+            Self::TruncatedInstruction { pc, length } => write!(
+                f,
+                "{length}-byte instruction at {pc:#06x} crosses the loaded program boundary"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for Intel8051Error {}
 
 /// Summary of a bounded `run` — the counterpart to the Python
 /// reference's `ExecutionResult` (from the shared `simulator_protocol`
 /// package), trimmed to the fields this crate's callers (mainly
 /// `intel8051-backend`'s tests) actually need.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExecutionResult {
     /// `true` if the HALT sentinel (`0xA5`) was reached before
     /// `max_steps` ran out.
@@ -43,6 +98,10 @@ pub struct ExecutionResult {
     pub steps: usize,
     /// Program counter after the run stopped.
     pub pc: u16,
+    /// Complete final Harvard state.
+    pub final_state: Intel8051State,
+    /// Complete transition traces for checked runs.
+    pub traces: Vec<StepTrace>,
 }
 
 /// Behavioral simulator for the Intel 8051 (MCS-51) microcontroller.
@@ -63,6 +122,8 @@ pub struct Intel8051Simulator {
     pub(crate) pc: u16,
     /// `true` once the HALT sentinel (`0xA5`) has been executed.
     pub(crate) halted: bool,
+    loaded_origin: u16,
+    loaded_len: usize,
 }
 
 impl Default for Intel8051Simulator {
@@ -81,6 +142,8 @@ impl Intel8051Simulator {
             xdata: vec![0u8; XDATA_SIZE],
             pc: 0,
             halted: false,
+            loaded_origin: 0,
+            loaded_len: CODE_SIZE,
         };
         sim.reset();
         sim
@@ -126,6 +189,165 @@ impl Intel8051Simulator {
         );
         self.code[start..start + code.len()].copy_from_slice(code);
         self.pc = start_addr;
+        self.loaded_origin = start_addr;
+        self.loaded_len = code.len();
+    }
+
+    /// Return a complete owned snapshot of every architectural byte.
+    pub fn get_state(&self) -> Intel8051State {
+        Intel8051State {
+            pc: self.pc,
+            iram: self.iram,
+            xdata: self.xdata.clone(),
+            code: self.code.clone(),
+            halted: self.halted,
+            loaded_origin: self.loaded_origin,
+            loaded_len: self.loaded_len,
+        }
+    }
+
+    /// Atomically restore a validated complete snapshot.
+    pub fn restore(&mut self, state: &Intel8051State) -> Result<(), Intel8051Error> {
+        if state.code.len() != CODE_SIZE || state.xdata.len() != XDATA_SIZE {
+            return Err(Intel8051Error::InvalidState(format!(
+                "state requires {CODE_SIZE} code and {XDATA_SIZE} xdata bytes; found {} and {}",
+                state.code.len(),
+                state.xdata.len()
+            )));
+        }
+        let end = usize::from(state.loaded_origin).checked_add(state.loaded_len);
+        if end.is_none_or(|value| value > CODE_SIZE) {
+            return Err(Intel8051Error::InvalidState(format!(
+                "loaded range {:#06x}+{} exceeds code memory",
+                state.loaded_origin, state.loaded_len
+            )));
+        }
+        self.pc = state.pc;
+        self.iram = state.iram;
+        self.xdata.clone_from(&state.xdata);
+        self.code.clone_from(&state.code);
+        self.halted = state.halted;
+        self.loaded_origin = state.loaded_origin;
+        self.loaded_len = state.loaded_len;
+        Ok(())
+    }
+
+    /// Deterministically reset and atomically load at address zero.
+    pub fn load_checked(&mut self, code: &[u8]) -> Result<(), Intel8051Error> {
+        self.load_at_checked(code, 0)
+    }
+
+    /// Deterministically reset and atomically load at an explicit origin.
+    pub fn load_at_checked(&mut self, code: &[u8], origin: u16) -> Result<(), Intel8051Error> {
+        let end = usize::from(origin).checked_add(code.len());
+        if end.is_none_or(|value| value > CODE_SIZE) {
+            return Err(Intel8051Error::ProgramOutOfRange {
+                origin,
+                length: code.len(),
+            });
+        }
+        self.reset();
+        self.code.fill(0);
+        self.xdata.fill(0);
+        let start = usize::from(origin);
+        self.code[start..start + code.len()].copy_from_slice(code);
+        self.pc = origin;
+        self.loaded_origin = origin;
+        self.loaded_len = code.len();
+        Ok(())
+    }
+
+    fn loaded_contains(&self, address: u16) -> bool {
+        let address = usize::from(address);
+        let start = usize::from(self.loaded_origin);
+        address >= start && address < start + self.loaded_len
+    }
+
+    /// Execute one validated instruction atomically with complete state.
+    pub fn step_checked(&mut self) -> Result<StepTrace, Intel8051Error> {
+        if self.halted {
+            return Err(Intel8051Error::Halted);
+        }
+        let pc_before = self.pc;
+        let opcode = self.code[usize::from(pc_before)];
+        let length = usize::from(operand_len(opcode)) + 1;
+        if (0..length).any(|offset| !self.loaded_contains(pc_before.wrapping_add(offset as u16))) {
+            return Err(Intel8051Error::TruncatedInstruction {
+                pc: pc_before,
+                length,
+            });
+        }
+        let raw: Vec<u8> = (0..length)
+            .map(|offset| self.code[usize::from(pc_before.wrapping_add(offset as u16))])
+            .collect();
+        let state_before = self.get_state();
+        let mnemonic = match catch_unwind(AssertUnwindSafe(|| self.step())) {
+            Ok(mnemonic) => mnemonic,
+            Err(payload) => {
+                self.restore(&state_before)?;
+                let message = payload
+                    .downcast_ref::<String>()
+                    .cloned()
+                    .or_else(|| {
+                        payload
+                            .downcast_ref::<&str>()
+                            .map(|value| (*value).to_string())
+                    })
+                    .unwrap_or_else(|| "8051 execution panicked".to_string());
+                return Err(Intel8051Error::Execution(message));
+            }
+        };
+        let state_after = self.get_state();
+        Ok(StepTrace {
+            pc_before,
+            pc_after: self.pc,
+            raw,
+            mnemonic,
+            state_before,
+            state_after,
+        })
+    }
+
+    /// Execute already-loaded code transactionally.
+    pub fn run_loaded_checked(
+        &mut self,
+        max_steps: usize,
+    ) -> Result<ExecutionResult, Intel8051Error> {
+        let original = self.get_state();
+        let mut traces = Vec::new();
+        while !self.halted && traces.len() < max_steps {
+            match self.step_checked() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&original)?;
+                    return Err(error);
+                }
+            }
+        }
+        Ok(ExecutionResult {
+            halted: self.halted,
+            steps: traces.len(),
+            pc: self.pc,
+            final_state: self.get_state(),
+            traces,
+        })
+    }
+
+    /// Deterministically load and execute a fresh program transactionally.
+    pub fn run_checked(
+        &mut self,
+        code: &[u8],
+        max_steps: usize,
+    ) -> Result<ExecutionResult, Intel8051Error> {
+        let original = self.get_state();
+        self.load_checked(code)?;
+        match self.run_loaded_checked(max_steps) {
+            Ok(result) => Ok(result),
+            Err(error) => {
+                self.restore(&original)?;
+                Err(error)
+            }
+        }
     }
 
     /// Execute one instruction and return its mnemonic.  A no-op
@@ -171,6 +393,8 @@ impl Intel8051Simulator {
             halted: self.halted,
             steps,
             pc: self.pc,
+            final_state: self.get_state(),
+            traces: Vec::new(),
         }
     }
 
@@ -498,7 +722,11 @@ mod tests {
         assert_eq!(sim.step(), "HALT");
         let pc_after_first_halt = sim.pc();
         assert_eq!(sim.step(), "HALT");
-        assert_eq!(sim.pc(), pc_after_first_halt, "PC must not advance once halted");
+        assert_eq!(
+            sim.pc(),
+            pc_after_first_halt,
+            "PC must not advance once halted"
+        );
     }
 
     #[test]
@@ -508,14 +736,17 @@ mod tests {
         // Sum 10+9+...+1 = 55.
         let mut sim = Intel8051Simulator::new();
         let code: &[u8] = &[
-            0x78, 10, // MOV R0, #10
-            0x79, 0, // MOV R1, #0
+            0x78,
+            10, // MOV R0, #10
+            0x79,
+            0, // MOV R1, #0
             // loop:
             0xE9, // MOV A, R1
             0x28, // ADD A, R0
             0xF9, // MOV R1, A
-            0xD8, (-5i8) as u8, // DJNZ R0, loop (rel = loop_target(4) - next_pc(9) = -5)
-            0xA5, // HALT
+            0xD8,
+            (-5i8) as u8, // DJNZ R0, loop (rel = loop_target(4) - next_pc(9) = -5)
+            0xA5,         // HALT
         ];
         sim.load_program(code, 0);
         let result = sim.run_loaded_with_limit(1000);

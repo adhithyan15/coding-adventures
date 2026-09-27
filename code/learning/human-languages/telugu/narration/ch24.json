@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1dfd2146b938c6e0",
+  "sourceHash": "fnv1a64:c0d71d8af1d7d06a",
   "lessons": [
     {
       "id": "TE-C24-ratri",
@@ -131,6 +131,175 @@
             {
               "kind": "speech",
               "text": "Where have you already met రాత్రి before this lesson? (అర్ధరాత్రి, ardharātri, \"midnight.\") Does rātri follow the same \"Sanskrit-as-everyday\" pattern as Kannada's rātri, or does it break the pattern the way rōju did for \"day\"? (It matches — rātri really is Telugu's everyday word.) Does Telugu's native-word story cleanly mirror Kannada's single-word iruḷu? (No — it's messier: three words, రేయి/మాపు/ఇరులు, in three overlapping senses, not one clean replacement.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S127-letter-ja",
+      "sequence": 521,
+      "title": "జ (ja) — one character, met inside words you already say",
+      "headword": "జ",
+      "romanization": "ja",
+      "gloss": "the single character జ — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cd3e060e2055f1c9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: జ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: జ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ణ — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: జ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జ — ja."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not j, it is ja."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has జ (ja) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "రోజు rōju — day, the word that came in from Persian."
+            },
+            {
+              "kind": "speech",
+              "text": "జ్యేష్ఠం Jyēṣṭhaṁ — the third of the twelve months."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆశ్వయుజం Āśvayujaṁ — the seventh."
+            },
+            {
+              "kind": "speech",
+              "text": "Rōju is worth a second look. Its first letter is the ర you traced inside namaskāram. Its last is జు — this new letter carrying the u sign you met early on. The vowel sign in the middle is one this book has not stopped on yet, so the word is not wholly yours on the page. Two of its three pieces are, and that is new today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: జ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on జ (ja) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find జ (ja) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find జ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "రోజు, నమస్కారం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "జ three times, saying ja as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: జ three times, saying *ja* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find జ (ja) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find జ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — జ? What sound does it carry? (ja.) Read రోజు aloud, letter by letter, and then as one word."
             }
           ]
         }

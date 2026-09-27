@@ -1,0 +1,500 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 33,
+  "title": "Please and Sorry",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e84a87992b28c01b",
+  "lessons": [
+    {
+      "id": "PA-C33-miharbani-karke",
+      "sequence": 2020,
+      "title": "ਮਿਹਰਬਾਨੀ ਕਰਕੇ (miharbānī karke) — a god's name inside the word for \"please\"",
+      "headword": "ਮਿਹਰਬਾਨੀ ਕਰਕੇ",
+      "romanization": "miharbānī karke",
+      "gloss": "please — \"having done a kindness\", with an Indo-Iranian god inside the kindness",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:54f2d3e7c35a119c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for water the way the drinks chapter taught, with kirpā karke in front of it. That courtesy is Sanskritic. Punjabi has a second one, heard at least as often, and it comes down the other road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਿਹਰਬਾਨੀ — miharbānī — kindness, a favour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮ, ਿ, ਹ, ਰ, ਬ, ਾ, ਨ, ੀ: ਮਿਹਰਬਾਨੀ. Then ਕਰਕੇ. Every shape is already yours, so this phrase is writable on sight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — kindness, a keeper, and Mithra",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਿਹਰਬਾਨੀ is Persian mihrbānī, and it comes apart in three."
+            },
+            {
+              "kind": "speech",
+              "text": "-ī is the quality-making ending, the one on khushī, met when you were pleased to meet someone. -bān means keeper, the piece that turns bāġ, \"garden,\" into bāġbān, \"gardener.\" And mihr means love, affection."
+            },
+            {
+              "kind": "speech",
+              "text": "Mihr is the piece worth stopping on. It descends from Avestan Mithra, an Indo-Iranian divinity who guaranteed covenants, whose name in the other branch of the family is Sanskrit mitra, \"friend\" — the figure Roman soldiers carried west as Mithras. Punjabi's commonest please carries, three layers down, the name of the god who made promises binding."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met ਦੋਸਤ, a Persian word for friend. Mitra is what Sanskrit called a friend, and both continue that same ancient name."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਰਕੇ is \"having done,\" from ਕਰਨਾ. So the phrase means having done a kindness — exactly what the courtesy in front of pāṇī meant, with a Persian noun where that one had a Sanskrit one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing: assemble ਚੰਗਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both letters that changā was waiting for have now been traced. Build it in four moves: ਚ, the tippi ੰ above it, ਗ, and the upright ਾ. Written out: ਚੰਗਾ."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy it once with the model visible. Cover the model, write it again, and compare only whether the tippi sits above the first letter and not the second."
+            },
+            {
+              "kind": "speech",
+              "text": "Then write ਅੱਛਾ once beside it, and look at what the two words share: a first letter that hangs a mark above the line."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miharbānī karke — please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **miharbānī karke** — please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "REQUEST",
+              "instruction": "water, then tea, using this courtesy instead of the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU REQUEST: water, then tea, using this courtesy instead of the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SPLIT",
+              "instruction": "ਮਿਹਰਬਾਨੀ into its three pieces (mihr, -bān, -ī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SPLIT: **ਮਿਹਰਬਾਨੀ** into its three pieces (*mihr*, *-bān*, *-ī*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "mihr to Sanskrit mitra, \"friend,\" and to ਦੋਸਤ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: *mihr* to Sanskrit *mitra*, \"friend,\" and to **ਦੋਸਤ**]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for something politely, the Persian way. (Miharbānī karke.) What are the three pieces of the noun? (Mihr, -bān, -ī.) Which Sanskrit word is mihr's twin? (Mitra.) Write ਚੰਗਾ once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: miharbani; Wiktionary: mihr."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C33-miharbani-karke-mihr",
+              "prompt": "Which Sanskrit word is the exact twin of the mihr inside miharbani?",
+              "assesses": [
+                "PA-ETYMON-MIHARBANI-MITHRA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "mitra",
+                "mitra, friend",
+                "mitra - friend"
+              ],
+              "feedback": {
+                "correct": "mitra, 'friend' - and both continue the Indo-Iranian divinity Mithra, who guaranteed covenants.",
+                "incorrect": "mitra. Persian mihr and Sanskrit mitra are the same ancient name."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-W09-thattha",
+      "sequence": 2030,
+      "title": "ਠ (ttha) — the tongue curled back",
+      "headword": "ਠ",
+      "romanization": "ttha",
+      "gloss": "trace the Gurmukhi letter ththa, the curled-tongue th",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9225f83a77db07eb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one letter"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one letter until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ਤ once — the t made with the tongue against the teeth. Then write ਡ, whose sound is made with the tongue curled back against the roof. Say ṭhīk-ṭhāk aloud and notice that its ṭh belongs to the curled-back family, not the teeth family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one letter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ਠ (ttha) twice and say ṭha: tongue curled back, then a puff of breath. Two small circles hanging from the top line, one above the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the models. Write ਤ, then ਠ (ttha). Compare only where your tongue goes for each one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One letter. The word that needs it twice comes back in the next session."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-W09-thattha-check",
+              "prompt": "Write the Gurmukhi letter ttha - the curled-back th.",
+              "assesses": [
+                "PA-SCRIPT-TTHA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ਠ"
+              ],
+              "feedback": {
+                "correct": "ਠ is ttha, made with the tongue curled back.",
+                "incorrect": "ਠ is ttha. ਤ is the one made against the teeth."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C33-maaf-karo",
+      "sequence": 2040,
+      "title": "ਮਾਫ਼ ਕਰੋ (māf karo) — an Arabic word with a Punjabi verb behind it",
+      "headword": "ਮਾਫ਼ ਕਰੋ",
+      "romanization": "māf karo",
+      "gloss": "sorry, excuse me — literally \"make pardoned\"",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e4e54e2f7a4315da",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say miharbānī karke, then say shukrīā. One is Sanskritic, one is Perso-Arabic, and both are ordinary Punjabi. Recall ਮਦਦ from the helping verb, which came the same road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first — one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਫ਼ — māf — pardoned, excused."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮ, ਾ, then ਫ carrying its dot underneath: ਮਾਫ਼. Then ਕਰੋ. That dot is the pair bindi you placed for ਫ਼ੋਨ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart — pardoned, from a root meaning \"to efface\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਫ਼ is Arabic muʿāf, \"pardoned, excused.\" It is a passive participle: the shape Arabic gives a word to mean having had this done to it. Its three-consonant root is ʿ-f-w, \"to pardon, to efface, to wipe away.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It travelled the road this book keeps returning to: Arabic into Persian, Persian into Punjab, arriving with the dot that marks its foreign consonant. ਮਦਦ, the noun in \"to help,\" came the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਰੋ is \"do\" as a command, from the same ਕਰਨਾ behind karke and madad karnā. The whole phrase reads make pardoned: not a feeling reported, but an act requested."
+            },
+            {
+              "kind": "speech",
+              "text": "Set the two courtesies of this chapter beside each other and the pattern is plain. Miharbānī karke asks for a kindness to be done. Māf karo asks for a pardon to be done. Punjabi builds its politeness out of the same verb both times, and takes the noun from a different tradition each time — one from Sanskrit, one from Arabic."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing: assemble ਠੀਕ-ਠਾਕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The curled-back letter has been traced, so the middling answer can be written. First half: ਠ (ttha), the long ī sign ੀ, ਕ — that is ਠੀਕ. Second half: ਠ (ttha), the upright ਾ, ਕ — ਠਾਕ. Joined with a hyphen: ਠੀਕ-ਠਾਕ."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy it once with the model visible. Then cover it, write it again, and compare only the two vowel signs, since everything else repeats. The repetition is the point: an echo half is written out in full even though it carries no meaning."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māf karo — sorry, excuse me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **māf karo** — sorry, excuse me]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRANSLATE",
+              "instruction": "the phrase word for word (make pardoned)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRANSLATE: the phrase word for word (make pardoned)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STATE",
+              "instruction": "which half of the phrase is borrowed and which is inherited",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STATE: which half of the phrase is borrowed and which is inherited]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "both courtesies — miharbānī karke, māf karo — and name the source of each noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: both courtesies — **miharbānī karke**, **māf karo** — and name the source of each noun]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the divinity hiding inside mihr (Mithra, Sanskrit mitra)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the divinity hiding inside *mihr* (*Mithra*, Sanskrit *mitra*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the Punjabi for sorry. (Māf karo.) What does it mean word for word? (Make pardoned.) Which verb do both of this chapter's courtesies share? (ਕਰਨਾ.) Write ਠੀਕ-ਠਾਕ once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Wiktionary: maaf; Wiktionary: muaf (Arabic)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C33-maaf-karo-source",
+              "prompt": "Which language did maaf come from before Persian carried it into Punjabi?",
+              "assesses": [
+                "PA-ETYMON-MAAF-AFW"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "arabic"
+              ],
+              "feedback": {
+                "correct": "Arabic mu'af, 'pardoned', from the root '-f-w, 'to pardon, to efface'.",
+                "incorrect": "Arabic. The pair bindi under the letter marks the borrowed consonant."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

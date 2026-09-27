@@ -14,13 +14,12 @@
  *     one fan-in invocation. This is correct but not lazy — large streams
  *     allocate fully. Lazy streaming lands in v1 alongside parallelism.
  *
- *   - **Safe cache reuse, not yet an exact affected scheduler.** Sources and
- *     capability-bearing stages still execute on every run because they may
- *     observe or replay external state. Pure downstream invocations reuse
- *     deterministic cached outputs per materialized input. Sources publish
- *     validated external-state revisions and every materialized instance gets
- *     input/output revisions; changed-and-downstream scheduling remains
- *     FM-B036 and side-effect replay remains FM-B037.
+ *   - **Exact affected scheduling with conservative side effects.** Observed
+ *     sources and untouched capability-free instances restore validated
+ *     topology-scoped materialized checkpoints. Changed instances and their
+ *     downstream closure execute, retaining per-item cache reuse. Legacy
+ *     sources and capability-bearing stages remain conservative until
+ *     side-effect replay lands in FM-B037.
  *
  *   - **Reproducible-build mode is wired through.**  When
  *     `settings.reproducibleBuild = true`, every StageContext receives
@@ -85,6 +84,12 @@ import {
   encodeCacheValue,
   type CachedStageOutput,
 } from "./cache-codec.js";
+import type { PipelineRevisionLedger } from "./revision-ledger.js";
+import {
+  canCheckpointInstance,
+  loadInstanceCheckpoint,
+  persistInstanceCheckpoint,
+} from "./instance-checkpoint.js";
 
 /** Per-instance run state held during execution. */
 interface RunState {
@@ -94,6 +99,10 @@ interface RunState {
   isStreamOutput: boolean;
   /** init() was called — must dispose. */
   initialized: boolean;
+  /** This instance changed directly or belongs to an affected downstream closure. */
+  affected: boolean;
+  /** Output was restored as one validated materialized checkpoint. */
+  restored: boolean;
   /** Per-stage summary accumulator. */
   summary: {
     instanceId: string;
@@ -118,6 +127,10 @@ export interface SchedulerOptions {
   readonly bestEffort: boolean;
   readonly cache: CacheBackend;
   readonly useCache: boolean;
+  /** Prior successful revisions for affected-set scheduling. */
+  readonly previousLedger?: PipelineRevisionLedger | null;
+  /** Topology-specific namespace used for materialized output checkpoints. */
+  readonly checkpointNamespace?: string;
   /**
    * When true, every StageContext receives a `frozenClock` whose wall
    * time is fixed for the duration of the run.  Combined with the
@@ -246,6 +259,51 @@ export async function executeDag(
       state.summary.inputRevision = state.summary.externalStateRevision
         ?? revisionForValue(cacheInputValue(inst, states));
 
+      const prior = options.previousLedger?.instances[id];
+      state.summary.inputChanged = prior === undefined
+        ? null
+        : prior.inputRevision !== state.summary.inputRevision;
+      const upstreamAffected = hasAffectedProducer(inst, states);
+      const knownUnchanged = prior !== undefined
+        && state.summary.inputRevision !== null
+        && state.summary.inputChanged === false
+        && !upstreamAffected;
+
+      if (
+        options.useCache
+        && knownUnchanged
+        && prior.outputRevision !== null
+        && options.checkpointNamespace !== undefined
+        && canCheckpointInstance(inst)
+      ) {
+        const restored = await loadInstanceCheckpoint(
+          options.cache,
+          options.checkpointNamespace,
+          inst,
+          state.summary.inputRevision!,
+          prior.outputRevision,
+          options.logger,
+        );
+        if (restored !== null) {
+          state.output = restored.value;
+          state.isStreamOutput = restored.isStream;
+          state.restored = true;
+          state.summary.itemsConsumed = inputs.itemCount;
+          state.summary.itemsProduced = restored.isStream
+            ? (restored.value as unknown[]).length
+            : 1;
+          state.summary.cacheHits = 1;
+          state.summary.outputRevision = prior.outputRevision;
+          state.summary.outcome = "skipped";
+          continue;
+        }
+      }
+
+      const scheduledAffected = prior === undefined
+        || state.summary.inputRevision === null
+        || state.summary.inputChanged !== false
+        || upstreamAffected;
+
       if (hasNamedInputs(inst)) {
         // Named fan-in is a join boundary: every producer has already been
         // materialized, every stream gets a fresh replayable AsyncIterable,
@@ -301,6 +359,24 @@ export async function executeDag(
       }
       state.summary.outputRevision = revisionForValue(state.output);
       state.summary.outcome = "success";
+      state.affected = scheduledAffected
+        || prior?.outputRevision !== state.summary.outputRevision;
+      if (
+        options.useCache
+        && options.checkpointNamespace !== undefined
+        && state.summary.inputRevision !== null
+        && state.summary.outputRevision !== null
+        && canCheckpointInstance(inst)
+      ) {
+        await persistInstanceCheckpoint(
+          options.cache,
+          options.checkpointNamespace,
+          inst,
+          state.summary.inputRevision,
+          { value: state.output, isStream: state.isStreamOutput },
+          options.logger,
+        );
+      }
     } catch (err) {
       if (err instanceof CancellationError) {
         cancelled = true;
@@ -329,7 +405,7 @@ export async function executeDag(
   // happens in the run.ts wrapper that knows about the config).
   for (const sinkId of dag.sinks) {
     const state = states.get(sinkId)!;
-    if (state.summary.outcome === "success") {
+    if (state.summary.outcome === "success" || state.restored) {
       outputs.set(sinkId, state.output);
     }
   }
@@ -360,6 +436,8 @@ function makeState(inst: ResolvedInstance): RunState {
     output: undefined,
     isStreamOutput: false,
     initialized: false,
+    affected: false,
+    restored: false,
     summary: {
       instanceId: inst.id,
       stageName: inst.stage.name,
@@ -376,6 +454,17 @@ function makeState(inst: ResolvedInstance): RunState {
       inputChanged: null,
     },
   };
+}
+
+function hasAffectedProducer(
+  inst: ResolvedInstance,
+  states: Map<string, RunState>,
+): boolean {
+  if (inst.producer !== null && states.get(inst.producer)?.affected) return true;
+  for (const producerId of inst.inputProducers.values()) {
+    if (states.get(producerId)?.affected) return true;
+  }
+  return false;
 }
 
 function revisionForValue(value: unknown): RevisionId | null {
@@ -553,10 +642,9 @@ async function runCached(
   options: SchedulerOptions,
   execute: () => Promise<CachedStageOutput>,
 ): Promise<CacheRunResult> {
-  // Sources observe external state, and capability-bearing stages may read or
-  // replay side effects. Even with revision ledgers, only pure non-source
-  // invocations are safe to skip until FM-B036/F037 schedule affected branches
-  // and replay external effects.
+  // Whole-instance checkpoints handle observed sources and exact unaffected
+  // branches. This per-invocation cache remains limited to pure non-sources;
+  // capability-bearing work waits for FM-B037 side-effect replay.
   const hasInput = inst.producer !== null || inst.inputProducers.size !== 0;
   if (!options.useCache || !hasInput || inst.capabilities.length !== 0) {
     return { ...(await execute()), cacheHit: false, cacheMiss: false };

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:f7d7c24b4bff687d",
+  "lessonIds": [
+    "PA-C35-mainu",
+    "PA-W09-dulainkar",
+    "PA-W09-dulavan",
+    "PA-C35-changa-ji",
+    "PA-C35-jaldi-milaange"
+  ],
+  "tex": "punjabi/book/chapters/ch35-me-and-parting.tex"
+}

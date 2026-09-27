@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S129-letter-vocalic-r",
+    "language": "telugu",
+    "chapter": 26,
+    "sequence": 541,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:60912d0689c29bda",
+    "detachableSegments": [
+      "Script you'll notice: ఋ",
+      "Writing: ఋ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

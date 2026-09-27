@@ -1,13 +1,14 @@
 {
   "language": "kannada",
   "chapter": 47,
-  "sourceHash": "fnv1a64:d6dd5fb63c899777",
+  "sourceHash": "fnv1a64:ad68f70bb553b2ee",
   "lessonIds": [
     "KA-C47-leg",
     "KA-C47-tooth",
     "KA-C47-hair",
     "KA-C47-finger",
-    "KA-C47-stomach"
+    "KA-C47-stomach",
+    "KA-S133-letter-nya"
   ],
   "tex": "kannada/book/chapters/ch47-leg-and-tooth.tex"
 }

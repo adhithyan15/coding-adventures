@@ -60,6 +60,7 @@ use layout_ir::{
     Color, Content, ExtValue, FontSpec, PositionedNode, TextAlign, TextContent, TextDecorationLines,
 };
 use layout_positioned::{Position, PositionedStyle};
+use layout_replaced::{object_fit_rect, IntrinsicSize};
 use paint_instructions::{
     GlyphPosition, ImageSrc, PaintBase, PaintClip, PaintGlyphRun, PaintGroup, PaintImage,
     PaintInstruction, PaintRect, PaintScene,
@@ -203,15 +204,33 @@ where
                 );
             }
             Some(Content::Image(ic)) => {
-                out.push(PaintInstruction::Image(PaintImage {
+                let fit = object_fit_rect(
+                    ic.fit,
+                    box_w,
+                    box_h,
+                    IntrinsicSize::from_positioned(frame.node),
+                );
+                let image = PaintInstruction::Image(PaintImage {
                     base: PaintBase::default(),
-                    x: abs_x * dpr,
-                    y: abs_y * dpr,
-                    width: box_w * dpr,
-                    height: box_h * dpr,
+                    x: (abs_x + fit.x) * dpr,
+                    y: (abs_y + fit.y) * dpr,
+                    width: fit.width * dpr,
+                    height: fit.height * dpr,
                     src: ImageSrc::Uri(ic.src.clone()),
                     opacity: None,
-                }));
+                });
+                if fit.clips {
+                    out.push(PaintInstruction::Clip(PaintClip {
+                        base: PaintBase::default(),
+                        x: abs_x * dpr,
+                        y: abs_y * dpr,
+                        width: box_w * dpr,
+                        height: box_h * dpr,
+                        children: vec![image],
+                    }));
+                } else {
+                    out.push(image);
+                }
             }
             None => {}
         }
@@ -1549,6 +1568,47 @@ mod tests {
             }
             _ => panic!("expected PaintImage"),
         }
+    }
+
+    #[test]
+    fn cover_image_uses_intrinsic_ratio_and_clips_to_replaced_box() {
+        use layout_ir::ImageContent;
+        let mut ext = HashMap::new();
+        ext.insert(
+            "replaced".into(),
+            layout_replaced::replaced_ext(Some(200.0), Some(100.0), None),
+        );
+        let leaf = PositionedNode {
+            x: 10.0,
+            y: 20.0,
+            width: 100.0,
+            height: 100.0,
+            id: None,
+            content: Some(Content::Image(ImageContent {
+                src: "file:///cover.png".into(),
+                fit: layout_ir::ImageFit::Cover,
+            })),
+            children: Vec::new(),
+            ext,
+        };
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let scene = layout_to_paint(&leaf, &make_options(&shaper, &metrics, &resolver));
+        let [PaintInstruction::Clip(clip)] = scene.instructions.as_slice() else {
+            panic!("cover image should emit a content-box clip");
+        };
+        assert_eq!(
+            (clip.x, clip.y, clip.width, clip.height),
+            (10.0, 20.0, 100.0, 100.0)
+        );
+        let [PaintInstruction::Image(image)] = clip.children.as_slice() else {
+            panic!("clip should contain one fitted image");
+        };
+        assert_eq!(
+            (image.x, image.y, image.width, image.height),
+            (-40.0, 20.0, 200.0, 100.0)
+        );
     }
 
     #[test]

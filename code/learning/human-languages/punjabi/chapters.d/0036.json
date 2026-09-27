@@ -1,0 +1,21 @@
+{
+  "chapter": 36,
+  "title": "Tomorrow, and Good Night",
+  "label": "ch:pa-tomorrow-and-goodnight",
+  "canDo": "I can promise to meet tomorrow with kall milaange, explain why kall also means yesterday and what settles the direction, say good night formally with shubh raat while knowing it is not the commonest parting, and write shubh raat in Gurmukhi.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PA-C36-shubh-raat",
+    "kind": "production",
+    "summary": "The reader gives the formal good night, states that it belongs to the formal register rather than to ordinary doorstep speech, traces raat to Sanskrit ratri, runs every parting the book has taught, and writes both words from memory after the short hook has been traced.",
+    "assesses": [
+      "PA-LEX-SHUBH-RAAT",
+      "PA-ETYMON-RAAT-RATRI",
+      "PA-SCRIPT-SHUBH-RAAT-01",
+      "PA-LEX-KALL",
+      "PA-SCRIPT-AUNKAR-01"
+    ]
+  }
+}

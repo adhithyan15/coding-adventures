@@ -1,0 +1,17 @@
+% ============================================================================
+% government-branch-member.query.adj — worked recall over the
+% government-branch-member library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "who makes up this
+% branch?" (direct), "which branch is this body part of?" (reverse), or
+% "list everyone in the executive branch" (multi-valued) — it states no
+% fact of its own — it only `import`s the grounded table and asks binding
+% queries.
+% ============================================================================
+
+import "government-branch-member.adj"
+
+? government_branch_member(legislative, $M)      % expect congress (direct)
+? government_branch_member($B, supreme_court)    % expect judicial (reverse -- the direction a learner is usually quizzed in)
+? government_branch_member(executive, $M)        % expect three solutions: president, vice_president, president_cabinet (multi-valued)
+? government_branch_member($B, senate)           % expect abstain -- the Senate IS named by the source, but nested UNDER Congress as a chamber, not as a direct member of the branch

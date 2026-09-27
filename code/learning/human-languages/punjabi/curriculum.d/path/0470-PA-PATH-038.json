@@ -1,0 +1,16 @@
+{
+  "id": "PA-PATH-038",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "lessons": [
+    "PA-C35-changa-ji",
+    "PA-C35-jaldi-milaange",
+    "PA-C36-kall-milaange",
+    "PA-W09-aunkar",
+    "PA-C36-shubh-raat"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-043-PREA1-FOUR-FAREWELLS"
+  ],
+  "after": []
+}

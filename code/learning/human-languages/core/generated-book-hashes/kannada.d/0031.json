@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 31,
-  "sourceHash": "fnv1a64:49fa1caa1dae87f3",
+  "sourceHash": "fnv1a64:cfce14ef2742ea0a",
   "lessonIds": [
-    "KA-C31-shubha-madhyahna"
+    "KA-C31-shubha-madhyahna",
+    "KA-S130-letter-ii"
   ],
   "tex": "kannada/book/chapters/ch31-good-afternoon.tex"
 }

@@ -5,29 +5,21 @@ edition = "2021"
 description = "APKG archive inspection foundation for Engram Anki compatibility."
 license = "MIT"
 
-# `modern-format` covers Anki's modern `.anki21b` / `.colpkg` packages, whose
-# collection and media payloads are zstd-compressed. It is on by default, so
-# native hosts keep full Anki compatibility with no change.
+# There is no `modern-format` feature any more, and that is the point.
 #
-# It exists to be turned *off* for `wasm32`. The only zstd implementation that
-# handles arbitrary real-world frames today is the third-party `zstd` crate,
-# which reaches libzstd's C sources through `zstd-sys` and cannot target
-# `wasm32-unknown-unknown` — `clang` has no such target, so the build script
-# fails outright.
+# It existed for exactly one reason: the only zstd that could read real frames
+# was the third-party `zstd` crate, which reaches libzstd's C sources through
+# `zstd-sys` and cannot target `wasm32-unknown-unknown` (`clang` has no such
+# target, so the build script fails outright). So the browser build turned the
+# feature off and every modern `.anki21b` / `.colpkg` was refused with an
+# explanatory error — a real capability gap dressed up as a graceful message.
 #
-# Legacy V11 `.apkg` never touches zstd: `write_legacy_apkg` stores its members
-# uncompressed through the repo's own zero-dependency `zip` crate. So switching
-# this feature off yields a package layer that builds for the browser and still
-# does legacy import and export, rather than the current situation where the
-# whole layer is compiled out and every APKG call fails.
-#
-# Completing the repo's own zero-dependency `zstd` to RFC 8878 would let this
-# feature go away entirely — see the tracking issue for Huffman literals and FSE
-# table descriptions.
-[features]
-default = ["modern-format"]
-modern-format = ["dep:zstd_crate"]
-
+# The repo's own `zstd` now decodes Huffman literals and FSE table descriptions
+# per RFC 8878, which is what real encoders emit, so it reads the frames Anki
+# actually writes. It is pure Rust with no build script, so it targets wasm like
+# any other crate. The feature, the `cfg` branches, and the "not available here"
+# error all go away together, and **the browser gains modern-package support**
+# rather than merely keeping the legacy path alive.
 [dependencies]
 coding_adventures_sha1 = { path = "../sha1" }
 engram-core = { path = "../engram-core" }
@@ -36,7 +28,7 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sqlite-file = { path = "../sqlite-file" }
 zip = { path = "../zip" }
-zstd_crate = { package = "zstd", version = "0.13", optional = true }
+zstd = { path = "../zstd" }
 
 # `rusqlite` is a DEV-dependency only. It no longer writes anything: the V11
 # export is emitted by `sqlite-file`'s zero-dependency writer, so the production
@@ -51,6 +43,17 @@ zstd_crate = { package = "zstd", version = "0.13", optional = true }
 #
 # The `serialize` feature is gone with the export path that used it; `bundled`
 # remains so the tests do not depend on a system SQLite.
+# The third-party `zstd` crate keeps its place here, demoted to the same oracle
+# role `rusqlite` holds: the modern-package tests build their fixtures with real
+# libzstd and assert *our* decoder reads what a real encoder actually wrote, and
+# round-trip the other way so libzstd validates the frames we emit.
+#
+# Building those fixtures with our own encoder instead would make the suite
+# circular — it would only prove we can read back our own bytes, which is
+# precisely the trap the decoder sat in before RFC 8878 support landed: every
+# test compared our encoder against our decoder, and two halves wrong in the
+# same way agree perfectly.
 [dev-dependencies]
 rusqlite = { version = "0.32", features = ["bundled"] }
 tempfile = "3"
+zstd_crate = { package = "zstd", version = "0.13" }

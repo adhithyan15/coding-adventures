@@ -1,0 +1,15 @@
+{
+  "id": "PA-PATH-033",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "PA-C31-ji",
+    "PA-C31-achchha",
+    "PA-W09-chhachha",
+    "PA-C31-na"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-038-PREA1-THREE-ANSWERS"
+  ],
+  "after": []
+}

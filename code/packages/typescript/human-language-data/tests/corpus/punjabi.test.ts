@@ -23,16 +23,19 @@ it("keeps the Punjabi changelog free of literal patch markup", () => {
   expect(changelog.indexOf("Punjabi A1 phone-field writing ladder"))
     .toBeLessThan(changelog.indexOf("Punjabi A1 age-field writing ladder"));
 });
+// 173 -> 196 with the pre-A1 courtesy-and-parting tranche (Chapters 31-36): 23 new
+// lessons, of which 14 are content lessons carrying a headword and 9 are single-glyph
+// script sessions the budget counter does not measure.
 it("pins Punjabi lesson-content budgets", () =>
   expectLanguageLessonBudgets("punjabi", {
-    lessons: 173,
+    lessons: 196,
     idioms: 4,
     senses: 3,
     cultureClaims: 7,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 183-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 206-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -47,8 +50,8 @@ it("keeps Punjabi's 183-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(183);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 183 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(206);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 206 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -123,6 +126,25 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "controlled-composition",
     "controlled-composition",
     "controlled-composition",
+    // Chapters 31-36. Nine single-letter observe/trace sessions, interleaved with the
+    // guided and delayed copies that spend each new letter on a word already known by
+    // ear. The pattern alternates on purpose: no two assembly steps run back to back.
+    "observe-trace",
+    "guided-copy",
+    "observe-trace",
+    "observe-trace",
+    "guided-copy",
+    "observe-trace",
+    "guided-copy",
+    "observe-trace",
+    "guided-copy",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
   ]);
 });
 
@@ -543,7 +565,12 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   ]);
   const report = measureContinuity(ordered);
   expect(report.reinforcement.filter((defect) => chapter3Atoms.has(defect.atom))).toEqual([]);
-  expect(report.summary.missedByWindow).toEqual({ R1: 45, R2: 94, R3: 141, R4: 74 });
+  // {45, 94, 141, 74} -> {54, 112, 157, 71}. Chapters 31-36 introduce 45 new atoms, and
+  // the ones taught in the closing sessions have no room left after them for an R1 or R2
+  // return, which is where the R1/R2/R3 growth comes from. R4 FALLS, from 74 to 71: the
+  // new lessons retrieve mainu, madad and the wellbeing answers at long distance, which
+  // is the window the earlier tranches were least able to reach.
+  expect(report.summary.missedByWindow).toEqual({ R1: 54, R2: 112, R3: 157, R4: 71 });
 });
 
 it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {

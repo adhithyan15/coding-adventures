@@ -7,6 +7,7 @@ chapter: 21
 type: word
 headword: కుక్క, పిల్లి
 gloss: dog and cat — kukka genuinely breaks from its Dravidian cousins' shared naayi root, debated as onomatopoeic or a Sanskrit loan; pilli most likely closes the ENTIRE arc's cat-story loop, the probable Dravidian source behind Sanskrit's biDaala and so Hindi's billi
+romanization: "kukka, pilli"
 concept_tag: TE-ANIMALS
 prerequisites: [TE-C20-padakondu-iravai]
 sounds: [telugu-geminate-kk, telugu-geminate-ll]

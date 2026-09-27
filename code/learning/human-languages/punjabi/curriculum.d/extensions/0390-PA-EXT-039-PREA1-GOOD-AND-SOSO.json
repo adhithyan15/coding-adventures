@@ -1,0 +1,16 @@
+{
+  "id": "PA-EXT-039-PREA1-GOOD-AND-SOSO",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "language-specific",
+  "canDo": "I can answer how are you with changa or thik-thak, and name echo reduplication.",
+  "prerequisites": [
+    "PA-EXT-038-PREA1-THREE-ANSWERS"
+  ],
+  "lessons": [
+    "PA-C32-changa",
+    "PA-W09-chacha",
+    "PA-C32-thik-thak",
+    "PA-W09-gagga"
+  ]
+}

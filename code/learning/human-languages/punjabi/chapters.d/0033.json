@@ -1,0 +1,21 @@
+{
+  "chapter": 33,
+  "title": "Please and Sorry",
+  "label": "ch:pa-please-and-sorry",
+  "canDo": "I can ask politely with miharbani karke and apologise with maaf karo, translate both word for word, say which noun in each came from Persian and which from Arabic, and write changa and thik-thak in Gurmukhi.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PA-C33-maaf-karo",
+    "kind": "production",
+    "summary": "The reader produces the apology, translates it as make pardoned, names Arabic as the source of its noun against the Persian source of the previous session's, runs both courtesies against the single verb they share, and writes thik-thak from its now-complete letter set.",
+    "assesses": [
+      "PA-LEX-MAAF",
+      "PA-ETYMON-MAAF-AFW",
+      "PA-LEX-MIHARBANI",
+      "PA-SCRIPT-TTHA-01",
+      "PA-SCRIPT-THIK-THAK-01"
+    ]
+  }
+}

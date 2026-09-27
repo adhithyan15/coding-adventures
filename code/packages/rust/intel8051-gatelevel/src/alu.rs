@@ -16,8 +16,8 @@
 //! | xrl8     | XRL A,…      | P only        |
 //! | inc8     | INC          | P only (no CY/AC/OV) |
 //! | dec8     | DEC          | P only (no CY/AC/OV) |
-//! | rl8      | RL A         | CY (exiting MSB), P |
-//! | rr8      | RR A         | CY (exiting LSB), P |
+//! | rl8      | RL A         | P; CY unchanged |
+//! | rr8      | RR A         | P; CY unchanged |
 //! | rlc8     | RLC A        | CY, P |
 //! | rrc8     | RRC A        | CY, P |
 //! | swap8    | SWAP A       | none |
@@ -36,7 +36,8 @@
 //! - `OV = XOR(carries[6], carries[7])` — signed overflow
 
 use crate::bits::{
-    add_16bit_full, add_8bit_full, compute_parity, int_to_bits8, invert_8bit,
+    add_16bit_full, add_8bit_full, bits_to_u16, compute_parity, int_to_bits16, int_to_bits8,
+    invert_8bit,
 };
 use logic_gates::gates::{and_gate, not_gate, or_gate, xor_gate};
 
@@ -91,7 +92,13 @@ pub fn add8(a: u8, b: u8, carry_in: u8) -> AluResult8051 {
     let cy = carries[7];
     let ac = carries[3];
     let ov = xor_gate(carries[6], carries[7]);
-    AluResult8051 { result, cy, ac, ov, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy,
+        ac,
+        ov,
+        parity: parity_of(result),
+    }
 }
 
 /// 8-bit subtraction with borrow: `A − B − borrow_in`.
@@ -120,7 +127,13 @@ pub fn subb8(a: u8, b: u8, borrow_in: u8) -> AluResult8051 {
     // AC = NOT(nibble carry): no carry out of nibble ↔ nibble borrow
     let ac = not_gate(carries[3]);
     let ov = xor_gate(carries[6], carries[7]);
-    AluResult8051 { result, cy, ac, ov, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy,
+        ac,
+        ov,
+        parity: parity_of(result),
+    }
 }
 
 /// Increment by 1: `A + 1`.
@@ -138,7 +151,13 @@ pub fn subb8(a: u8, b: u8, borrow_in: u8) -> AluResult8051 {
 pub fn inc8(a: u8) -> AluResult8051 {
     let (result, _carries) = add_8bit_full(a, 1, 0);
     // INC clears CY, AC, OV regardless of arithmetic result
-    AluResult8051 { result, cy: 0, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 /// Decrement by 1: `A − 1`.
@@ -157,7 +176,13 @@ pub fn dec8(a: u8) -> AluResult8051 {
     let b_inv = invert_8bit(1u8);
     let (result, _carries) = add_8bit_full(a, b_inv, 1);
     // DEC clears CY, AC, OV
-    AluResult8051 { result, cy: 0, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 /// BCD decimal adjust after addition.
@@ -259,7 +284,13 @@ pub fn anl8(a: u8, b: u8) -> AluResult8051 {
         out[i] = and_gate(a_bits[i], b_bits[i]);
     }
     let result = crate::bits::bits_to_u8(&out);
-    AluResult8051 { result, cy: 0, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 /// 8 OR gates in parallel: `A | B`.
@@ -277,7 +308,13 @@ pub fn orl8(a: u8, b: u8) -> AluResult8051 {
         out[i] = or_gate(a_bits[i], b_bits[i]);
     }
     let result = crate::bits::bits_to_u8(&out);
-    AluResult8051 { result, cy: 0, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 /// 8 XOR gates in parallel: `A ^ B`.
@@ -297,19 +334,24 @@ pub fn xrl8(a: u8, b: u8) -> AluResult8051 {
         out[i] = xor_gate(a_bits[i], b_bits[i]);
     }
     let result = crate::bits::bits_to_u8(&out);
-    AluResult8051 { result, cy: 0, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 // ─── Rotates ─────────────────────────────────────────────────────────────────
 
-/// Rotate left without carry: bit 7 → CY, bit 7 → bit 0.
+/// Rotate left without carry: bit 7 → bit 0. CY is unchanged by the caller.
 ///
 /// The 8051 RL instruction (opcode 0x23) rotates ACC left by one position.
-/// The bit leaving from the MSB becomes both CY and the new LSB.
+/// The bit leaving from the MSB becomes the new LSB.
 ///
 /// ```text
 /// Before:  b7  b6  b5  b4  b3  b2  b1  b0
-/// CY ←  b7
 /// After:   b6  b5  b4  b3  b2  b1  b0  b7
 /// ```
 ///
@@ -318,7 +360,7 @@ pub fn xrl8(a: u8, b: u8) -> AluResult8051 {
 /// use coding_adventures_intel8051_gatelevel::alu::rl8;
 /// let r = rl8(0b10110001);  // MSB=1 rotates into LSB
 /// assert_eq!(r.result, 0b01100011);
-/// assert_eq!(r.cy, 1);
+/// assert_eq!(r.cy, 0); // RL does not modify carry
 /// ```
 pub fn rl8(a: u8) -> AluResult8051 {
     let bits = int_to_bits8(a);
@@ -329,20 +371,26 @@ pub fn rl8(a: u8) -> AluResult8051 {
     out[0] = out_bit;
     out[1..8].copy_from_slice(&bits[..7]);
     let result = crate::bits::bits_to_u8(&out);
-    AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
-/// Rotate right without carry: bit 0 → CY, bit 0 → bit 7.
+/// Rotate right without carry: bit 0 → bit 7. CY is unchanged by the caller.
 ///
 /// The 8051 RR instruction (opcode 0x03).  The bit leaving from the LSB
-/// becomes both CY and the new MSB.
+/// becomes the new MSB.
 ///
 /// # Example
 /// ```
 /// use coding_adventures_intel8051_gatelevel::alu::rr8;
 /// let r = rr8(0b10110001); // LSB=1 rotates into MSB
 /// assert_eq!(r.result, 0b11011000);
-/// assert_eq!(r.cy, 1);
+/// assert_eq!(r.cy, 0); // RR does not modify carry
 /// ```
 pub fn rr8(a: u8) -> AluResult8051 {
     let bits = int_to_bits8(a);
@@ -351,7 +399,13 @@ pub fn rr8(a: u8) -> AluResult8051 {
     out[..7].copy_from_slice(&bits[1..8]);
     out[7] = out_bit; // enters at MSB
     let result = crate::bits::bits_to_u8(&out);
-    AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 /// Rotate left through carry: 9-bit rotate [CY | ACC] left by 1.
@@ -376,7 +430,13 @@ pub fn rlc8(a: u8, cy_in: u8) -> AluResult8051 {
     out[0] = cy_in; // CY enters at bit0
     out[1..8].copy_from_slice(&bits[..7]);
     let result = crate::bits::bits_to_u8(&out);
-    AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: out_bit,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 /// Rotate right through carry: 9-bit rotate [ACC | CY] right by 1.
@@ -401,7 +461,13 @@ pub fn rrc8(a: u8, cy_in: u8) -> AluResult8051 {
     out[..7].copy_from_slice(&bits[1..8]);
     out[7] = cy_in; // CY enters at bit7
     let result = crate::bits::bits_to_u8(&out);
-    AluResult8051 { result, cy: out_bit, ac: 0, ov: 0, parity: parity_of(result) }
+    AluResult8051 {
+        result,
+        cy: out_bit,
+        ac: 0,
+        ov: 0,
+        parity: parity_of(result),
+    }
 }
 
 /// Swap upper and lower nibbles of ACC: `{high, low} → {low, high}`.
@@ -424,15 +490,20 @@ pub fn swap8(a: u8) -> AluResult8051 {
     out[4..8].copy_from_slice(&bits[..4]); // high ← old low
     let result = crate::bits::bits_to_u8(&out);
     // SWAP does NOT update parity
-    AluResult8051 { result, cy: 0, ac: 0, ov: 0, parity: 0 }
+    AluResult8051 {
+        result,
+        cy: 0,
+        ac: 0,
+        ov: 0,
+        parity: 0,
+    }
 }
 
 // ─── MUL / DIV ───────────────────────────────────────────────────────────────
 
 /// Unsigned 8×8 multiply: `A × B`.
 ///
-/// Implemented as a shift-and-add loop (8 iterations), mirroring the
-/// hardware's repeated-addition approach.
+/// Implemented as eight fixed partial-product rows and a 16-bit ripple adder.
 ///
 /// Returns `(hi, lo, ov)`:
 /// - `lo` → written to A
@@ -449,32 +520,25 @@ pub fn swap8(a: u8) -> AluResult8051 {
 /// assert_eq!(ov, 1);
 /// ```
 pub fn mul8(a: u8, b: u8) -> (u8, u8, u8) {
+    let a_bits = int_to_bits8(a);
     let b_bits = int_to_bits8(b);
-    let mut product_lo = 0u16;
-    let mut product_hi = 0u16;
-    let partial = a as u16;
-
-    // Shift-and-add over 8 iterations. `i` both selects `b_bits[i]` and drives
-    // the `partial << i` shift, so the explicit index is needed.
-    #[allow(clippy::needless_range_loop)]
-    for i in 0..8 {
-        if b_bits[i] != 0 {
-            // Add partial product (shifted) into accumulator
-            // We use a 16-bit add to accumulate
-            let shifted = partial << i;
-            let lo_part = (shifted & 0xFF) as u8;
-            let hi_part = ((shifted >> 8) & 0xFF) as u8;
-            let (new_lo, cy_lo) = add_16bit_full(product_lo, lo_part as u16, 0);
-            let _ = cy_lo;
-            product_lo = new_lo & 0xFF;
-            let carry_into_hi = (new_lo >> 8) as u8;
-            let (new_hi, _) = add_16bit_full(product_hi, hi_part as u16 + carry_into_hi as u16, 0);
-            product_hi = new_hi & 0xFF;
+    let mut product = 0u16;
+    for (row, &multiplier_bit) in b_bits.iter().enumerate() {
+        let mut partial_bits = [0u8; 16];
+        for (column, &multiplicand_bit) in a_bits.iter().enumerate() {
+            partial_bits[row + column] = and_gate(multiplicand_bit, multiplier_bit);
         }
+        product = add_16bit_full(product, bits_to_u16(&partial_bits), 0).0;
     }
-
-    let lo = product_lo as u8;
-    let hi = product_hi as u8;
+    let product_bits = int_to_bits16(product);
+    let low_bits: [u8; 8] = product_bits[..8]
+        .try_into()
+        .unwrap_or_else(|_| unreachable!("eight low product bits"));
+    let high_bits: [u8; 8] = product_bits[8..]
+        .try_into()
+        .unwrap_or_else(|_| unreachable!("eight high product bits"));
+    let lo = crate::bits::bits_to_u8(&low_bits);
+    let hi = crate::bits::bits_to_u8(&high_bits);
     // OV = 1 if result > 0xFF (i.e., high byte ≠ 0)
     let hi_bits = crate::bits::int_to_bits8(hi);
     let ov = u8::from(!crate::bits::compute_zero(&hi_bits));
@@ -483,7 +547,7 @@ pub fn mul8(a: u8, b: u8) -> (u8, u8, u8) {
 
 /// Unsigned 8-bit divide: `A / B`.
 ///
-/// Implemented as repeated subtraction, mirroring the hardware.
+/// Implemented as a fixed eight-stage restoring divider.
 ///
 /// Returns `(quotient, remainder, ov)`:
 /// - `quotient` → written to A
@@ -506,30 +570,32 @@ pub fn div8(a: u8, b: u8) -> (u8, u8, u8) {
     // OV = 1 when divisor = 0
     let b_bits = crate::bits::int_to_bits8(b);
     if crate::bits::compute_zero(&b_bits) {
-        return (0, 0, 1);
+        return (a, b, 1);
     }
 
-    let mut quotient = 0u8;
-    let mut remainder = a;
-
-    // Maximum subtractions = 255 (0xFF / 0x01, the worst case for an 8-bit
-    // dividend divided by the smallest non-zero divisor).  The loop cap of
-    // 256 is therefore sufficient; the CY break fires on or before iteration
-    // 255, so iteration 256 is never reached in correct operation.
-    for _ in 0..256u32 {
-        // Compare: remainder < b ?  Use subb8: if CY=1, remainder < b
-        let cmp = subb8(remainder, b, 0);
-        if cmp.cy != 0 {
-            break; // remainder < b, done
+    let dividend_bits = int_to_bits8(a);
+    let mut quotient_bits = [0u8; 8];
+    let mut remainder = 0u16;
+    for bit in (0..8).rev() {
+        // The shift is wiring: move the remainder bus left and connect the next
+        // dividend bit to wire zero.
+        let candidate = (remainder << 1) | u16::from(dividend_bits[bit]);
+        let (difference, carry) = add_16bit_full(candidate, !u16::from(b), 1);
+        let borrow = not_gate(carry);
+        let candidate_bits = int_to_bits16(candidate);
+        let difference_bits = int_to_bits16(difference);
+        let mut selected = [0u8; 16];
+        for wire in 0..16 {
+            selected[wire] = or_gate(
+                and_gate(carry, difference_bits[wire]),
+                and_gate(borrow, candidate_bits[wire]),
+            );
         }
-        remainder = cmp.result;
-        // quotient is bounded by 0xFF/1 = 255 — it cannot overflow here
-        debug_assert!(quotient < 255, "div8: quotient overflow; loop bound violated");
-        let q_res = inc8(quotient);
-        quotient = q_res.result;
+        remainder = bits_to_u16(&selected);
+        quotient_bits[bit] = carry;
     }
 
-    (quotient, remainder, 0)
+    (crate::bits::bits_to_u8(&quotient_bits), remainder as u8, 0)
 }
 
 #[cfg(test)]
@@ -610,11 +676,11 @@ mod tests {
     fn rotate_ops() {
         let r = rl8(0b10000000);
         assert_eq!(r.result, 0b00000001);
-        assert_eq!(r.cy, 1);
+        assert_eq!(r.cy, 0);
 
         let r2 = rr8(0b00000001);
         assert_eq!(r2.result, 0b10000000);
-        assert_eq!(r2.cy, 1);
+        assert_eq!(r2.cy, 0);
 
         let r3 = rlc8(0b10000000, 0);
         assert_eq!(r3.result, 0b00000000);
