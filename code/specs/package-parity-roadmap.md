@@ -14655,6 +14655,34 @@ mergeable with CI, CodeQL, and human-language detection checks queued. Guarded
 auto-merge remains disabled until every required check is terminal and
 acceptable.
 
+### PR #16133 merge, exact-main root audit, and Elixir glob selection
+
+All 47 checks for PR #16133 reached terminal acceptable conclusions at head
+`41dcede68256357961a87a3ce98c81e896921a0b`: 12 succeeded, 34 were expected
+path-gated skips, and CodeQL reported one neutral result. GitHub merged the
+conflict-free PR through guarded squash auto-merge at `2026-09-27T10:20:02Z`
+as `d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57`; no manual merge command was
+used.
+
+The collision-checked exact-main schema-3 inventory remains unchanged at 15
+established lanes, 1,470 implementation identities, 4,737 implementation
+slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml
+packages, zero canonical collisions, and zero unknown buckets. A structural
+root audit found 36 established-lane package roots without BUILD fronts. It
+preserved the existing Python alpha-axp, CDC 6600, and PDP-11 simulator owners;
+registered concrete Kotlin micro-QR, Go neural-primitives, and Go ALGOL owners;
+placed the remaining 27 roots behind a classification-only owner; and added a
+generalized orphan-package-root validation owner plus an explicit dependency
+from the every-engine validation umbrella.
+
+After those collision-free owners were registered, dependency/leverage ranking
+selected `build-tool-elixir-glob-matcher-complexity-hardening`. Both formal
+prerequisites are merged and the leaf unlocks 13 unfinished descendants. Its
+fresh branch starts from the exact merge revision above and is bounded to
+Unicode-scalar portable matching, strict character classes, linear parsing,
+bounded memoized-equivalent state evaluation, stable failures, and complete
+declared-list validation without new host authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
