@@ -11,8 +11,10 @@
 > none of the nine backends (#14003), and specifying that surfaced a missing
 > adaptive container primitive.
 >
-> The native release P0 (#14249) is now closed and the product-scoped SemVer
-> lane (#13543) has published `task-app-v0.1.0`. The UI49 model/compiler bridge
+> The native release P0 (#14249) and native startup-state epic (#13984) are now
+> closed. The product-scoped SemVer lane (#13543) has published
+> `task-app-v0.1.0` and `task-app-v0.2.0`; #16108 prepares `task-app-v0.3.0`
+> from the now-complete native lifecycle gates. The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
 > SwiftUI in #14331, Qt in #14344, Flutter in #14353, and XAML in #14362. The
@@ -59,7 +61,9 @@ links existing Mosaic work instead of duplicating it.
    `task-app-v0.1.0` with only the artifacts that are actually verified. The
    release lane builds a tested web bundle and strict generated native projects;
    installer packaging remains #13522. **Done in #13587, with follow-up clean-
-   runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0` published.**
+   runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0` and
+   `task-app-v0.2.0` published. The next incremental release is
+   [`task-app-v0.3.0` (#16108)](https://github.com/adhithyan15/coding-adventures/issues/16108).**
 8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
    **Done in #13602.**
@@ -140,6 +144,11 @@ step, no artifact. The ordered queue below comes from that spec.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
+The immediate release checkpoint is
+[#16108](https://github.com/adhithyan15/coding-adventures/issues/16108): roll
+the completed native startup-recovery slices and other post-0.2 capabilities
+into `task-app-v0.3.0` before taking the next product feature.
+
 1. **P0 [#14249](https://github.com/adhithyan15/coding-adventures/issues/14249):**
    restore Flutter's bundled Rust runtime after the current Linux runner image
    exposed a broken 3.44.0 native-asset bundle. The repair stages the runtime
@@ -152,12 +161,13 @@ step, no artifact. The ordered queue below comes from that spec.
    remaining native-host and release-polish work.
 2. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
    replace blank startup with loading and failure states. **Done for the web
-   host.** Split out while implementing it:
+   host and all five strict native backends.** Split out while implementing it:
    [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984) —
-   generated native hosts still surface startup failure only through process and
-   log evidence, which needs a distinct surface in five backends and its own
-   emitted-control coverage. The host-neutral contract both share is
-   `code/specs/task-app-startup-states-v1.md`.
+   generated native hosts originally surfaced startup failure only through process
+   and log evidence, so each needed a distinct surface and its own
+   emitted-control coverage. Compose Desktop shipped in #15788, Qt in #15821,
+   Flutter in #16086, SwiftUI in #16093, and WinUI in #16100. The host-neutral
+   contract both share is `code/specs/task-app-startup-states-v1.md`.
 3. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
    make the List-first shell usable in compact windows. **Blocked on
    [#14003](https://github.com/adhithyan15/coding-adventures/issues/14003)
@@ -184,10 +194,10 @@ step, no artifact. The ordered queue below comes from that spec.
 **Discovered while working Tier A, awaiting prioritization.**
 
 - **P1 [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984):**
-  native startup failure states (above). Ranks with Tier A, since it is the same
-  defect on five platforms that ship release artifacts. Compose Desktop is
-  covered by the focused generated-shell and acceptance slice tracked in #15786,
-  Qt by #15818, Flutter by #16084, SwiftUI by #16092, and WinUI by #16097.
+  native startup failure states (above). **Done and closed after all five release
+  backends passed their focused generated-shell or real-runtime acceptance:**
+  Compose Desktop in #15788, Qt in #15821, Flutter in #16086, SwiftUI in #16093,
+  and WinUI in #16100.
 - **P2 [#13982](https://github.com/adhithyan15/coding-adventures/issues/13982):**
   a `packages.microsoft.com` 403 hard-fails required jobs through 10 unguarded
   `apt-get update` calls across 5 workflows. Red-flagged a four-file docs PR.
