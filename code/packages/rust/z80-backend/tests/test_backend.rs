@@ -285,6 +285,62 @@ fn word02_reports_type_arity_and_missing_binding_errors() {
     assert_eq!(Z80Backend::new().name(), "z80");
 }
 
+#[test]
+fn word02_rejects_malformed_boolean_and_instruction_shapes() {
+    let cases = [
+        (
+            vec![
+                ci("const_u8", Some("x"), vec![CIROperand::Int(255)], "u8"),
+                ci("ret_bool", None, vec![CIROperand::Var("x".into())], "bool"),
+            ],
+            "source type mismatch",
+        ),
+        (
+            vec![ci(
+                "const_bool",
+                Some("x"),
+                vec![CIROperand::Bool(true)],
+                "u8",
+            )],
+            "requires bool type",
+        ),
+        (
+            vec![ci(
+                "const_u8",
+                Some("x"),
+                vec![CIROperand::Int(1), CIROperand::Int(2)],
+                "u8",
+            )],
+            "one source",
+        ),
+        (
+            vec![ci("ret_void", None, vec![CIROperand::Int(1)], "void")],
+            "no dest or sources",
+        ),
+        (
+            vec![
+                ci(
+                    "const_bool",
+                    Some("x"),
+                    vec![CIROperand::Bool(true)],
+                    "bool",
+                ),
+                ci(
+                    "ret_bool",
+                    Some("y"),
+                    vec![CIROperand::Var("x".into())],
+                    "bool",
+                ),
+            ],
+            "no dest",
+        ),
+    ];
+    for (cir, expected) in cases {
+        let error = compile(&ctx("malformed", &[], "bool"), &cir).unwrap_err();
+        assert!(error.to_string().contains(expected), "{error}");
+    }
+}
+
 fn const_42_ret_cir() -> Vec<CIRInstr> {
     vec![
         ci("const_i64", Some("v"), vec![CIROperand::Int(42)], "i64"),

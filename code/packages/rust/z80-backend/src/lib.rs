@@ -112,6 +112,11 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         let op = instr.op.as_str();
 
         if op == "ret_void" {
+            if instr.dest.is_some() || !instr.srcs.is_empty() || instr.ty != "void" {
+                return Err(BackendError::InvalidOperand(
+                    "ret_void requires no dest or sources and void type".into(),
+                ));
+            }
             bytes.push(HALT);
             terminated = true;
             continue;
@@ -120,6 +125,12 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         if op.strip_prefix("ret_").is_some() {
             let expected_width = result_width_for_ret(op)
                 .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
+            let expected_ty = op.strip_prefix("ret_").expect("typed return");
+            if instr.dest.is_some() || instr.srcs.len() != 1 || instr.ty != expected_ty {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires one source, no dest, and {expected_ty} type"
+                )));
+            }
             let src_name = parse_var_src(instr, 0, op)?;
             let Some(slot) = find_slot(&slots, &src_name) else {
                 return Err(BackendError::UndefinedVariable(src_name));
@@ -129,6 +140,11 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
                 return Err(BackendError::UnsupportedOp(format!(
                     "{op} cannot return the current {}-bit value",
                     value.width.bits()
+                )));
+            }
+            if value.ty != expected_ty {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source type mismatch"
                 )));
             }
             if slot == 1 {
@@ -148,10 +164,10 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             let dest = require_dest(instr, op)?;
             let width = result_width_for_const(op)
                 .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
-            if matches!(op, "const_u8" | "const_u16") && instr.ty != width.name() {
+            let expected_ty = op.strip_prefix("const_").expect("constant");
+            if instr.ty != expected_ty || instr.srcs.len() != 1 {
                 return Err(BackendError::InvalidOperand(format!(
-                    "{op} requires {} type",
-                    width.name()
+                    "{op} requires {expected_ty} type and one source"
                 )));
             }
             if slots.iter().flatten().any(|value| value.width != width) {
@@ -183,6 +199,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             slots[slot] = Some(CurrentValue {
                 name: dest.to_string(),
                 width,
+                ty: expected_ty.to_string(),
             });
             terminated = false;
             continue;
@@ -229,6 +246,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             slots[target] = Some(CurrentValue {
                 name: dest.into(),
                 width,
+                ty: width.name().to_string(),
             });
             for (slot_index, slot) in slots.iter_mut().enumerate() {
                 if slot_index != target
@@ -398,6 +416,7 @@ impl ResultWidth {
 struct CurrentValue {
     name: String,
     width: ResultWidth,
+    ty: String,
 }
 
 fn result_width_for_const(op: &str) -> Option<ResultWidth> {

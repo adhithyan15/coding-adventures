@@ -6,6 +6,8 @@
   operand slots; reject a third live value and mixed live widths.
 - Execute wrapping byte/word add, subtract, and bitwise operations in the Z80
   simulator, including `ADD HL,DE`, carry/borrow, and both result bytes.
+- Validate CIR result types and instruction shapes, including Boolean return
+  provenance, before emitting code.
 
 ## Unreleased — WORD01 fixed-width result ABI
 
