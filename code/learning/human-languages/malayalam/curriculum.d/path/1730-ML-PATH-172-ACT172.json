@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-172-ACT172",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "ML-EXT-172-ACT172"
+  ],
+  "after": []
+}

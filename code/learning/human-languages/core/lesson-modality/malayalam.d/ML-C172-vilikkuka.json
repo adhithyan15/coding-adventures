@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C172-vilikkuka",
+    "language": "malayalam",
+    "chapter": 172,
+    "sequence": 7380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78009b624cf550e4"
+  },
+  "findings": []
+}

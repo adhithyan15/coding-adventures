@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Wide, Narrow, Low, Ripe, Brave",
+  "label": "ch:ml-wide-narrow-low-ripe-brave",
+  "canDo": "I can say wide, narrow, low, ripe and brave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-R168-second-pass-clothes-things-you-use-and-describing-wo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: i can say wide, narrow, low, ripe and brave.",
+    "assesses": [
+      "ML-LEX-C168-QUAL168-03",
+      "ML-LEX-C168-QUAL168-04",
+      "ML-LEX-C168-QUAL168-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:7f9108b1343bbd52",
+  "lessonIds": [
+    "ML-C174-nirttuka",
+    "ML-C174-kattirikkuka",
+    "ML-C174-tirayuka",
+    "ML-C174-kantettuka",
+    "ML-C174-marakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch174.txt",
+  "json": "malayalam/narration/ch174.json",
+  "textHash": "fnv1a64:9924e139699a9806",
+  "jsonHash": "fnv1a64:0597dcd205cbae94",
+  "findings": []
+}

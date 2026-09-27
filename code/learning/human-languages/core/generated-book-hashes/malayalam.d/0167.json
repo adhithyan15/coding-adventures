@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:3f8ccf0f3d77354a",
+  "lessonIds": [
+    "ML-C167-nanavulla",
+    "ML-C167-unanniya",
+    "ML-C167-irunta",
+    "ML-C167-telinna",
+    "ML-C167-alamulla"
+  ],
+  "tex": "malayalam/book/chapters/ch167-wet-dry-dark-clear-deep.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:cdb7d5424a0382e2",
+  "lessonIds": [
+    "ML-C172-vevikkuka",
+    "ML-C172-kotukkuka",
+    "ML-C172-kontuvaruka",
+    "ML-C172-vilikkuka",
+    "ML-C172-karayuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch172.txt",
+  "json": "malayalam/narration/ch172.json",
+  "textHash": "fnv1a64:18a8a3047e015cfd",
+  "jsonHash": "fnv1a64:9652dcf70bd48b7c",
+  "findings": []
+}

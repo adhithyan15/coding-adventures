@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:613f281661d4fe6c",
+  "lessonIds": [
+    "ML-C164-aviyal",
+    "ML-C164-pappatam",
+    "ML-C164-cutulla",
+    "ML-C164-tanuppulla",
+    "ML-C164-nilamulla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch164.txt",
+  "json": "malayalam/narration/ch164.json",
+  "textHash": "fnv1a64:d9f83db2b1dc11df",
+  "jsonHash": "fnv1a64:e83cc1368871f1a7",
+  "findings": []
+}

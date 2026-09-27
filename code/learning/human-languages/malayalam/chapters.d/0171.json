@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Get up, Sleep, Wake up, Bathe, Wash",
+  "label": "ch:ml-get-up-sleep-wake-up-bathe-wash",
+  "canDo": "I can say to get up, to sleep, to wake up, to bathe and to wash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C171-kalukuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: i can say to get up, to sleep, to wake up, to bathe and to wash.",
+    "assesses": [
+      "ML-LEX-C171-ACT171-03",
+      "ML-LEX-C171-ACT171-04",
+      "ML-LEX-C171-ACT171-05"
+    ]
+  }
+}

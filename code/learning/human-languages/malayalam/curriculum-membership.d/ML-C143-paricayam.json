@@ -1,0 +1,11 @@
+{
+  "id": "ML-C143-paricayam",
+  "pathSegment": "ML-PATH-143-CAN143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-143-CAN143",
+      "order": 2
+    }
+  ]
+}

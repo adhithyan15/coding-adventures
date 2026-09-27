@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C145-agraham",
+    "language": "malayalam",
+    "chapter": 145,
+    "sequence": 5850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6acec5f6ccafab58"
+  },
+  "findings": []
+}

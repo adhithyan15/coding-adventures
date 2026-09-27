@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C142-avasaram",
+    "language": "malayalam",
+    "chapter": 142,
+    "sequence": 5730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:159e867e73aaf0ff"
+  },
+  "findings": []
+}

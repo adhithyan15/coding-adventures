@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C166-bharamulla",
+    "language": "malayalam",
+    "chapter": 166,
+    "sequence": 7000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c034843a246c236"
+  },
+  "findings": []
+}

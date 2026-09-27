@@ -1,0 +1,11 @@
+{
+  "id": "ML-C166-kathinamaya",
+  "pathSegment": "ML-PATH-166-QUAL166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-166-QUAL166",
+      "order": 4
+    }
+  ]
+}

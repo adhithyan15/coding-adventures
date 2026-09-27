@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:4bc2dcac77282c5b",
+  "lessonIds": [
+    "ML-C169-buddhiyulla",
+    "ML-C169-matiyulla",
+    "ML-C169-santamaya",
+    "ML-C169-tirakkulla",
+    "ML-C169-vilakutiya"
+  ],
+  "tex": "malayalam/book/chapters/ch169-clever-lazy-calm-busy-expensive.tex"
+}

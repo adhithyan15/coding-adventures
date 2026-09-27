@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-147-THINGS147",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say soap, a towel, a bag, a wall and a roof.",
+  "prerequisites": []
+}

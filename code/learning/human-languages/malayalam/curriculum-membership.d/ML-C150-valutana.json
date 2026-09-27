@@ -1,0 +1,11 @@
+{
+  "id": "ML-C150-valutana",
+  "pathSegment": "ML-PATH-150-THINGS150",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-150-THINGS150",
+      "order": 2
+    }
+  ]
+}

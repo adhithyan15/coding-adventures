@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:96a5790c91b2c504",
+  "lessonIds": [
+    "ML-C170-vilakuranna",
+    "ML-C170-terraya",
+    "ML-C170-purnamaya",
+    "ML-C170-otuka",
+    "ML-C170-natakkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch170-cheap-wrong-complete-run-walk.tex"
+}

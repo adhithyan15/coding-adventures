@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:3b8bed56d095d104",
+  "lessonIds": [
+    "ML-C150-urulakkilannu",
+    "ML-C150-takkali",
+    "ML-C150-valutana",
+    "ML-C150-kurumulaku",
+    "ML-C150-veluttulli",
+    "ML-R150-first-pass-can-want-and-why",
+    "ML-R150-second-pass-why-and-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch150.txt",
+  "json": "malayalam/narration/ch150.json",
+  "textHash": "fnv1a64:3a68c6d9c4c7d582",
+  "jsonHash": "fnv1a64:48f8f1a6de03d226",
+  "findings": []
+}

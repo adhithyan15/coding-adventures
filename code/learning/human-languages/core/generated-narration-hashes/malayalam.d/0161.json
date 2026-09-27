@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:5130a804d3bbabf2",
+  "lessonIds": [
+    "ML-C161-mannu",
+    "ML-C161-tennu",
+    "ML-C161-vala2",
+    "ML-C161-mulla",
+    "ML-C161-tamara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch161.txt",
+  "json": "malayalam/narration/ch161.json",
+  "textHash": "fnv1a64:0515f152c14b1e7d",
+  "jsonHash": "fnv1a64:1878b2b013682108",
+  "findings": []
+}

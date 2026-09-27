@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C168-itunniya",
+    "language": "malayalam",
+    "chapter": 168,
+    "sequence": 7110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc72179991f68fcf"
+  },
+  "findings": []
+}

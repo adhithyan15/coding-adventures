@@ -9,7 +9,7 @@ headword: '(. , ? ! " " — : ( ) - /)'
 gloss: cold retrieval of the marks, and of the three Malayalam things that were doing their work before they arrived
 romanization: "cihnangal enna ōrmma"
 concept_tag: ML-PUNCT-RECALL
-prerequisites: [ML-W108-the-rest, ML-W108-quotation, ML-W108-question-mark, ML-W108-comma, ML-W108-full-stop]
+prerequisites: [ML-W108-the-rest, ML-W108-quotation, ML-W108-question-mark, ML-W108-comma, ML-W108-full-stop, ML-W108-the-rest-more]
 sounds: []
 roots: []
 duration:

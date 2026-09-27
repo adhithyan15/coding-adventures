@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:ca39cdd29b36a524",
+  "lessonIds": [
+    "ML-C158-toni",
+    "ML-C158-treyin",
+    "ML-C158-talayana",
+    "ML-C158-putappu",
+    "ML-C158-bakkarru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch158.txt",
+  "json": "malayalam/narration/ch158.json",
+  "textHash": "fnv1a64:f71abd34feeeed41",
+  "jsonHash": "fnv1a64:614326cb716a3058",
+  "findings": []
+}

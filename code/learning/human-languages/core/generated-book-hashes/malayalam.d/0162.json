@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:1d9f4ae368661b9c",
+  "lessonIds": [
+    "ML-C162-karati",
+    "ML-C162-kurukkan",
+    "ML-C162-ottakam",
+    "ML-C162-taravu",
+    "ML-C162-munna"
+  ],
+  "tex": "malayalam/book/chapters/ch162-bear-fox-camel-duck-owl.tex"
+}

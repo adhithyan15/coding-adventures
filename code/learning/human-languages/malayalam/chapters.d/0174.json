@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "Stop, Wait, Search, Find, Forget",
+  "label": "ch:ml-stop-wait-search-find-forget",
+  "canDo": "I can say to stop, to wait, to search, to find and to forget.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C174-marakkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: i can say to stop, to wait, to search, to find and to forget.",
+    "assesses": [
+      "ML-LEX-C174-ACT174-03",
+      "ML-LEX-C174-ACT174-04",
+      "ML-LEX-C174-ACT174-05"
+    ]
+  }
+}

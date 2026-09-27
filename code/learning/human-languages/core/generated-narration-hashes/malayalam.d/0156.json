@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:4a9eba4e8d3d7050",
+  "lessonIds": [
+    "ML-C156-panru",
+    "ML-C156-kammal",
+    "ML-C156-vala",
+    "ML-C156-motiram",
+    "ML-C156-koppa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch156.txt",
+  "json": "malayalam/narration/ch156.json",
+  "textHash": "fnv1a64:e9e835a80f8536aa",
+  "jsonHash": "fnv1a64:e8f40232f521d019",
+  "findings": []
+}

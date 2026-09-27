@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C165-madhuramulla",
+    "language": "malayalam",
+    "chapter": 165,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b99ba972ca58fe5c"
+  },
+  "findings": []
+}

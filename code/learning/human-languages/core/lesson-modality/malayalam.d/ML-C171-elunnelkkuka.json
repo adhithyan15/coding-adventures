@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C171-elunnelkkuka",
+    "language": "malayalam",
+    "chapter": 171,
+    "sequence": 7300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e783c915c3b5726e"
+  },
+  "findings": []
+}

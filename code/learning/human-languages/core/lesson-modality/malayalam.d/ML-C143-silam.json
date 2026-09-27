@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C143-silam",
+    "language": "malayalam",
+    "chapter": 143,
+    "sequence": 5780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31e7c0f4c5de078d"
+  },
+  "findings": []
+}

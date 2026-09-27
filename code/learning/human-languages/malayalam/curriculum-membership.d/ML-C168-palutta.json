@@ -1,0 +1,11 @@
+{
+  "id": "ML-C168-palutta",
+  "pathSegment": "ML-PATH-168-QUAL168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-168-QUAL168",
+      "order": 3
+    }
+  ]
+}

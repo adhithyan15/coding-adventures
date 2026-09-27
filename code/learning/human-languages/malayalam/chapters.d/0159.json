@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Scissors, Hammer, Nail, Fence, Gate",
+  "label": "ch:ml-scissors-hammer-nail-fence-gate",
+  "canDo": "I can say scissors, a hammer, a nail, a fence and a gate.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R159-second-pass-nature-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: i can say scissors, a hammer, a nail, a fence and a gate.",
+    "assesses": [
+      "ML-LEX-C159-THINGS159-03",
+      "ML-LEX-C159-THINGS159-04",
+      "ML-LEX-C159-THINGS159-05"
+    ]
+  }
+}

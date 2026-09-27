@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C171-kulikkuka",
+    "language": "malayalam",
+    "chapter": 171,
+    "sequence": 7330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e6e26887ceb6258"
+  },
+  "findings": []
+}

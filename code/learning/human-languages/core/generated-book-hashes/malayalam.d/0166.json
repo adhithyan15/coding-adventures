@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:7fddbfc5fc42b6e9",
+  "lessonIds": [
+    "ML-C166-bharamulla",
+    "ML-C166-vegamulla",
+    "ML-C166-kattiyulla",
+    "ML-C166-mrduvaya",
+    "ML-C166-kathinamaya"
+  ],
+  "tex": "malayalam/book/chapters/ch166-heavy-fast-thick-soft-hard.tex"
+}

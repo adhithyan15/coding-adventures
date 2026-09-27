@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C144-atukontu",
+    "language": "malayalam",
+    "chapter": 144,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e27e7d3a16c65c54"
+  },
+  "findings": []
+}

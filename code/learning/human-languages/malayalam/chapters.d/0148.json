@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Step, Well, Lake, Island, Shore",
+  "label": "ch:ml-step-well-lake-island-shore",
+  "canDo": "I can say a step, a well, a lake, an island and a shore.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C148-tiram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say a step, a well, a lake, an island and a shore.",
+    "assesses": [
+      "ML-LEX-C148-THINGS148-03",
+      "ML-LEX-C148-THINGS148-04",
+      "ML-LEX-C148-THINGS148-05"
+    ]
+  }
+}

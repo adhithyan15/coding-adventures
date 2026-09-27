@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:31453f6ba8754862",
+  "lessonIds": [
+    "ML-C143-sampattu",
+    "ML-C143-utamastan",
+    "ML-C143-paricayam",
+    "ML-C143-silam",
+    "ML-C143-yogyata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch143.txt",
+  "json": "malayalam/narration/ch143.json",
+  "textHash": "fnv1a64:ece7f3b49182a81f",
+  "jsonHash": "fnv1a64:b5aeac32f462e807",
+  "findings": []
+}

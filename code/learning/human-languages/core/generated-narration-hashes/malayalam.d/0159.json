@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:0f55f1370ffba3ae",
+  "lessonIds": [
+    "ML-C159-katrika",
+    "ML-C159-currika",
+    "ML-C159-ani",
+    "ML-C159-veli",
+    "ML-C159-gerru",
+    "ML-R159-first-pass-the-house-and-the-town",
+    "ML-R159-second-pass-nature-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch159.txt",
+  "json": "malayalam/narration/ch159.json",
+  "textHash": "fnv1a64:5b5d393105ed9627",
+  "jsonHash": "fnv1a64:8ed06029a93e5fe7",
+  "findings": []
+}

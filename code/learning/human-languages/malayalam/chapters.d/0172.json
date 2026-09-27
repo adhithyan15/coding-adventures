@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Cook, Give, Bring, Call, Cry",
+  "label": "ch:ml-cook-give-bring-call-cry",
+  "canDo": "I can say to cook, to give, to bring, to call and to cry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C172-karayuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: i can say to cook, to give, to bring, to call and to cry.",
+    "assesses": [
+      "ML-LEX-C172-ACT172-03",
+      "ML-LEX-C172-ACT172-04",
+      "ML-LEX-C172-ACT172-05"
+    ]
+  }
+}

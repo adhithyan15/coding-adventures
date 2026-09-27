@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:382c308436e31ed9",
+  "lessonIds": [
+    "ML-C146-avasyam",
+    "ML-C146-tirumanam",
+    "ML-C146-kattil",
+    "ML-C146-kannati",
+    "ML-C146-cippu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch146.txt",
+  "json": "malayalam/narration/ch146.json",
+  "textHash": "fnv1a64:179d5b375b186e47",
+  "jsonHash": "fnv1a64:c63f6f571eb2b741",
+  "findings": []
+}

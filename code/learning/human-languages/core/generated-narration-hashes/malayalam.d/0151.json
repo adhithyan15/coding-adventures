@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:6b1add2b24c3da47",
+  "lessonIds": [
+    "ML-C151-kutira",
+    "ML-C151-kaluta",
+    "ML-C151-pottu",
+    "ML-C151-panni",
+    "ML-C151-simham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch151.txt",
+  "json": "malayalam/narration/ch151.json",
+  "textHash": "fnv1a64:458791f16a2c2284",
+  "jsonHash": "fnv1a64:a794b1328eaef80f",
+  "findings": []
+}

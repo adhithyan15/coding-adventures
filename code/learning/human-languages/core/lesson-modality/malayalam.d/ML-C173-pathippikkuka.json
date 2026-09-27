@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C173-pathippikkuka",
+    "language": "malayalam",
+    "chapter": 173,
+    "sequence": 7430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c796753063a09dee"
+  },
+  "findings": []
+}
