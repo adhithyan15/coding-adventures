@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-16
+Status date: 2026-09-27
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -10,50 +10,48 @@ roadmap is reconciled.
 
 ## Prioritization run — 2026-09-27
 
-Fresh `origin/main` and the open PR list show no active LANG VM implementation
-PR. Keep one active PR in this loop, then rerank after its merge and log any
-new failure before selecting another item. The immediate queue is:
+PR #16126 delivered VM-071/BEAM11 and merged as `624b6ffe2807abaec0c9e12e3d9a6a23df227108`
+after push and PR CI passed. Its `ets:lookup_element/4` default reads preserve
+typed zero for unwritten cells while explicit guards enforce the declared
+extent. The macOS-discovered allocation bug was repaired by retaining the
+length in an initialized Y slot across `ets:new/2`. Issue #15882's wider
+scratch-register GC-root risk remains open.
 
-1. **#12032 / VM-066 (separate ALGOL owner):** the executed JVM nested-array
-   capture failure keeps the full matrix and silent-skip guard out of normal
-   CI. Preserve its ownership; do not claim the guard is fixed before the
-   failing cell is fixed and the guard runs in CI.
-2. **VM-071 (selected shared-backend item):** six sparse ALGOL arrays trap on
-   real BEAM because unwritten `array<f64>`/`array<str>` keys do not read as
-   zero. Implement the bounded BEAM11 contract and rerun the measured corpus.
-   Issue #15882's scratch-register GC-root risk remains a separate backend
-   defect; the chosen BEAM11 lowering avoids new multi-call allocation work.
+The next shared-platform queue, reranked against that merge and the user's
+request for a gradual 8086/Z80 language, is:
+
+1. **#16164 / VM-074 (selected):** OCT00 falsely promises that 8008 machine
+   code runs unchanged on 8080. An 8008 `JMP` is `0x7C`; an 8080 `JMP` is
+   `0xC3`. Correct the language and simulator specs, audit repeated claims,
+   and pin the control-flow encoding difference in a simulator test before
+   designing the next language on a false compatibility premise.
+2. **VM-072 (user-directed design):** design the next gradual language rung
+   after Nib and Oct for Intel 8086 and Z80. Both have Rust/Python behavioral
+   simulators, Rust encoders, and gate-level models. Their Rust CIR backends
+   currently lower only constants and return/halt, so arithmetic, memory,
+   branches, calls, and I/O need implementation and executed proof. Compare a
+   portable source subset with separate machine-specific intrinsics. Z80
+   extends the 8080 encoding; neither it nor 8086 accepts 8008 binaries as a
+   general rule. Decide one cross-target language versus two rungs from a
+   feature and teaching-cost audit, then run discriminating programs in both
+   simulators before claiming end-to-end support.
 3. **VM-067:** Rust generated grammars lack a CI regeneration guard; issue
    #14202 also reports existing drift. Scope the guard against that baseline
-   before enabling it, so CI genuinely executes a useful assertion.
-4. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
-   `defined()` operand expansion before the C dialect; continue the preprocessor
-   PR ladder one slice at a time.
-5. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
+   before enabling it, so CI executes a useful assertion.
+4. **VM-073:** audit ets-backed `array_set` extent checks for direct IIR
+   consumers and reachable frontends; add a real-Erlang regression if an
+   out-of-range insertion is reachable.
+5. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
+   `defined()` operand expansion before the C dialect; continue one bounded
+   preprocessor slice at a time.
+6. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
    4004 fidelity, VM-029/031 platform acceptance and native GC proofs, and
-   AOT00 exceptions/optimization/concurrency. Re-rank these against observed
-   failures after each merged PR.
+   AOT00 exceptions/optimization/concurrency. Re-rank after each merge.
 
-6. **VM-072 (new language design, user-directed):** design a gradual next
-   language after Nib and Oct that can execute on Intel 8086 and Z80. Both
-   machines already have Rust/Python behavioral simulators, Rust encoders and
-   gate-level models. Their Rust CIR backends currently lower only constants
-   and return/halt, so a real language needs backend arithmetic, memory,
-   branches, calls and I/O before claiming end-to-end support. Z80 extends
-   8080; it is not 8086 binary-compatible. Start with a spec comparing a
-   portable source subset and separate machine-specific intrinsics, then
-   execute the same discriminating programs in both simulators. Decide whether
-   this is one cross-target language or two consecutive ladder rungs from the
-   feature/teaching cost audit; do not equate simulator completeness with a
-   complete compiler backend.
-
-The VM-071 implementation uses `ets:lookup_element/4` with explicit length
-guards instead of the issue's tentative O(N) table pre-population. See
-`BEAM11-ets-array-default-reads.md` for the runtime and validation contract.
-Its first PR CI run found an intermittent macOS upper-bound failure; the
-allocation repair now stores the declared extent in an initialized Y slot
-across `ets:new/2` rather than relying on a scratch X register. Verify that
-the repaired exact head passes all platforms before enabling auto-merge.
+**#12032 / VM-066 remains with the separate ALGOL owner:** the executed JVM
+nested-array capture failure keeps the full matrix and silent-skip guard out
+of normal CI. Do not claim the guard is fixed before the failing cell is fixed
+and the guard runs in CI.
 
 **VM-073 (discovered during BEAM11):** the ets-backed `array_set` lowering
 inserts an arbitrary integer key without consulting the `[Table | Length]`

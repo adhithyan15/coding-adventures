@@ -395,6 +395,21 @@ mod tests {
     }
 
     #[test]
+    fn an_8008_jump_opcode_is_a_one_byte_8080_move() {
+        // intel8008-encoder pins JMP at 0x7C. An 8080 must reassemble the
+        // same source operation as 0xC3: it cannot execute that 8008 ROM.
+        let d = decode_bytes(&[0x7C, 0x34, 0x12]);
+        assert_eq!(d.mnemonic, "mov");
+        assert_eq!(d.fields["dst"], REG_A as i32);
+        assert_eq!(d.fields["src"], REG_H as i32);
+        assert_eq!(d.raw, [0x7C]);
+
+        let jump = decode_bytes(&[JMP, 0x34, 0x12]);
+        assert_eq!(jump.mnemonic, "jmp");
+        assert_eq!(jump.raw, [0xC3, 0x34, 0x12]);
+    }
+
+    #[test]
     fn decode_ret_vs_pop_vs_rcond_no_overlap() {
         assert_eq!(decode_bytes(&[0xC9]).mnemonic, "ret");
         assert_eq!(decode_bytes(&[0xC1]).mnemonic, "pop");
