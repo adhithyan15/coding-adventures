@@ -555,6 +555,9 @@ Use it politely.
     expect(renderInlineMarkdown("*buen**os*** and ***Como** tú.*")).toBe(
       "\\emph{buen\\textbf{os}} and \\emph{\\textbf{Como} tú.}",
     );
+    expect(renderInlineMarkdown("(***Sechzehn*, *siebzehn***.)")).toBe(
+      "(\\textbf{\\emph{Sechzehn}, \\emph{siebzehn}}.)",
+    );
     expect(renderInlineMarkdown("**\\*parabolāvit**")).toBe(
       "\\textbf{*parabolāvit}",
     );

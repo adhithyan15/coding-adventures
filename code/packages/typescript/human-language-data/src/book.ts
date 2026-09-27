@@ -791,6 +791,15 @@ export function renderInlineMarkdown(
     output.push("}");
     emphasis.pop();
   };
+  const nextEmphasisDelimiterWidth = (from: number): number | undefined => {
+    for (let index = from; index < markdown.length; index += 1) {
+      if (markdown[index] !== "*" || markdown[index - 1] === "\\") continue;
+      let width = 1;
+      while (width < 3 && markdown[index + width] === "*") width += 1;
+      return width;
+    }
+    return undefined;
+  };
   while (cursor < markdown.length) {
     const codePoint = markdown.codePointAt(cursor);
     const character = codePoint === undefined ? "" : String.fromCodePoint(codePoint);
@@ -891,6 +900,12 @@ export function renderInlineMarkdown(
       if (top && below && top !== below) {
         close();
         close();
+      } else if (!top && nextEmphasisDelimiterWidth(cursor + 3) === 1) {
+        // A triple opener is ambiguous: `***x** y.*` is italic around bold,
+        // while `***x*, *y***` is bold around two italic runs. The first
+        // delimiter inside the run tells us which layer must be on top.
+        open("bold");
+        open("italic");
       } else {
         open("italic");
         open("bold");

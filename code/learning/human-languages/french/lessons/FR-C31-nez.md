@@ -70,6 +70,6 @@ inherited; one root, English separately borrowed as *nasal*.
 
 [PAUSE 3s] Say "the nose." (***Le nez*** — masculine, silent z.) Is *nez*
 related to English *nose* by inheritance or by borrowing? (**Inheritance** —
-both from PIE *\*nas-***, a genuine cousin pair.) Where does English *nasal*
+both from PIE *\*nas-*, a genuine cousin pair.) Where does English *nasal*
 fit? (A **learned borrowing** of the Latin word, alongside native *nose* —
 the same relationship as *lactic* beside *milk*.)

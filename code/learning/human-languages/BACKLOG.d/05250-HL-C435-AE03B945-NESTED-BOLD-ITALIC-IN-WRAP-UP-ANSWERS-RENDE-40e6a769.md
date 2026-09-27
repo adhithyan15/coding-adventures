@@ -1,6 +1,10 @@
 ## HL-C435-ae03b945 — Nested bold-italic in wrap-up answers renders garbled in 37 book chapters and no gate catches it
 
-**Status: OPEN.** Found while shipping HL-C434, in a lesson I had just written;
+**Status: CLOSED.** The inline renderer now resolves an ambiguous triple opener
+from the first delimiter inside its run: a single asterisk puts italic on top
+of bold, while a double asterisk puts bold on top of italic. Focused coverage
+pins both nestings, including the `Sechzehn` / `siebzehn` form that exposed the
+defect. Found while shipping HL-C434, in a lesson I had just written;
 the same defect turns out to be pre-existing across thirteen tracks. Recorded
 rather than fixed, because fixing it touches 37 chapters in tracks this branch
 does not otherwise go near.
