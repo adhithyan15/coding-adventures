@@ -18,6 +18,9 @@
 - The activity keeps state in `filesDir` and loads the host the way the
   desktop `Main.kt` does: `MosaicStartup` for native-complete, the sample
   fallback otherwise.
+- The two XML files' banners do not quote the command line: XML forbids `--`
+  inside a comment, and aapt refused the file (a test now checks every
+  generated XML comment).
 - `android_application_id` makes `[app] bundle-identifier` legal for Android
   (`-` → `_`, an `x` before a part that starts with a digit, `_` after a Java
   keyword); `android_strings_xml` escapes the label for Android's string
