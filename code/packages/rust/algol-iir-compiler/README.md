@@ -218,9 +218,9 @@ through a graph of supported recurrences. Capped source-order execution also
 handles unconditional cross-assigned dependency cycles when every participating
 write is a supported local scalar assignment. Such a cycle may also contain
 conditional expressions whose selectors use the exact loop control or exact
-ordinary local snapshots unchanged by the body; cycles selected by changing
-values remain conservative. The same stable snapshots may select conditional
-statement branches containing recurrence-cycle writes. Those changing
+ordinary local snapshots, including snapshots that evolve through another
+supported recurrence in the graph. The same exact snapshots may select
+conditional statement branches containing recurrence-cycle writes. Those changing
 dependency recurrences may contain conditional expressions when their selectors
 are the controlled scalar or other exact local snapshots in that graph. The
 recurrence assignment itself may also appear in one or both branches of a
@@ -231,7 +231,7 @@ recurrences. A dependency may be assigned repeatedly in one body pass; bounded
 execution applies every supported write in source order. The next `while`
 element expression consumes all resulting exact dependency and control
 snapshots, and terminating sibling snapshots remain available after the loop.
-Unknown selectors, unsupported dependency writes, string targets, overflow,
+Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
 A conditional predicate is also evaluated when its selector is statically
