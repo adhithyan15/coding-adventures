@@ -98,7 +98,11 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 754 -> 757: #13413's vocalic-r bridge adds guided copy, delayed copy,
     // and sound/function dictation for the already-taught ◌ृ. The lessons
     // reuse SA-SCRIPT-RECOG-205 and introduce no vocabulary or content atom.
-    lessons: 757,
+    // 757 -> 761: #13413's first conjunct bridge waits for every component of
+    // अस्ति to be taught, then moves स्त from observe/trace through a guided
+    // whole-word copy, delayed copy, and sound/meaning dictation. The four
+    // writing lessons reuse known script and lexical atoms only.
+    lessons: 761,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

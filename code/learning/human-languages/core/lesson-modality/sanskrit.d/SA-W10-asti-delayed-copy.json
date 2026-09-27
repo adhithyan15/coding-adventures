@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-W10-asti-delayed-copy",
+    "language": "sanskrit",
+    "chapter": 10,
+    "sequence": 504,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:749f270d081bd16f",
+    "detachableSegments": [
+      "Writing — delayed conjunct copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-W10-asti-guided-copy",
+  "pathSegment": "SA-PATH-010",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-142-WRITING-CONJUNCT-BRIDGE",
+      "order": 1
+    }
+  ]
+}
