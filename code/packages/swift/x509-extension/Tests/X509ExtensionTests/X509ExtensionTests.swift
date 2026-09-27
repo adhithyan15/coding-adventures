@@ -48,6 +48,18 @@ final class X509ExtensionTests: XCTestCase {
     XCTAssertEqual(value.extensionId.encoded, [0x55, 0x1d, 0x11])
   }
 
+  func testErrorDescriptionIsPayloadBlind() throws {
+    let decoder = DerAsn1.Decoder()
+    let root = try decoder.decodeExact(fromHex("30080601800403deadbe"))
+    do {
+      _ = try X509Extension.decodeX509Extension(decoder, root)
+      XCTFail("expected invalid extension identifier")
+    } catch let error as X509Extension.DecodeError {
+      XCTAssertFalse(error.description.lowercased().contains("deadbe"))
+      XCTAssertTrue(error.description.contains("byte 4"))
+    }
+  }
+
   private func attempt(_ decoder: DerAsn1.Decoder, _ root: DerAsn1.Element) -> [String: Any] {
     do {
       let value = try X509Extension.decodeX509Extension(decoder, root)

@@ -151,7 +151,8 @@ X509ExtensionValue decodeX509Extension(
     try {
       critical = decodeBoolean(second);
     } on Asn1Exception catch (error) {
-      throw _semantic(X509ExtensionErrorKind.invalidCritical, error, secondOffset);
+      throw _semantic(
+          X509ExtensionErrorKind.invalidCritical, error, secondOffset);
     }
     if (!critical) {
       throw X509ExtensionError(

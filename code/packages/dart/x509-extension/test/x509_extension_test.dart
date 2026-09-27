@@ -68,12 +68,10 @@ Asn1Limits limits(
           ? BigInt.parse('9223372036854775807')
           : BigInt.from(maxValue! as int),
       maxElements: merged(derDefaults, derOverrides, 'max_elements') as int,
-      maxTagNumber:
-          merged(derDefaults, derOverrides, 'max_tag_number') as int,
+      maxTagNumber: merged(derDefaults, derOverrides, 'max_tag_number') as int,
     ),
     maxDepth: merged(defaults, overrides, 'max_depth') as int,
-    maxTotalElements:
-        merged(defaults, overrides, 'max_total_elements') as int,
+    maxTotalElements: merged(defaults, overrides, 'max_total_elements') as int,
     maxOidArcs: merged(defaults, overrides, 'max_oid_arcs') as int,
   );
 }
@@ -149,6 +147,23 @@ void main() {
     expect(hex(value.extensionValue), '3000');
     expect(value.extensionId.arcs.map((arc) => arc.toString()),
         ['2', '5', '29', '17']);
-    expect(() => value.extensionId.arcs.add(BigInt.zero), throwsUnsupportedError);
+    expect(
+        () => value.extensionId.arcs.add(BigInt.zero), throwsUnsupportedError);
+  });
+
+  test('renders errors without hostile payload bytes', () {
+    final decoder = Asn1Decoder();
+    final root = decoder.decodeExact(
+      materialize([
+        {'hex': '30080601800403deadbe'},
+      ]),
+    );
+    try {
+      decodeX509Extension(decoder, root);
+      fail('expected invalid extension identifier');
+    } on X509ExtensionError catch (error) {
+      expect(error.toString().toLowerCase(), isNot(contains('deadbe')));
+      expect(error.toString(), contains('byte 4'));
+    }
   });
 }
