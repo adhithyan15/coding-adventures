@@ -4,7 +4,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 id: SA-C03-na-cinta
-sequence: 190
+sequence: 192
 spine_node: SPINE-COURTESY-THANK
 chapter: 3
 type: phrase

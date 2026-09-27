@@ -59,6 +59,7 @@ You already say these words, and ◌ः is one of the shapes inside them — the
 
 ## Writing: ◌ः — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-201] -->
+<!-- hl-writing-stage: observe-trace -->
 
 Put your pen on ◌ः and follow its line. Copy the shape you can see — slowly,
 and larger than it is printed.
