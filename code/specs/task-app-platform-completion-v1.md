@@ -57,10 +57,15 @@ package-expanded layout, and light theme in the ordinary emitter test lane
 toolkit SegmentedControl lowering. It is a static structural snapshot: there is
 no runtime, interaction, host, or release-artifact claim.
 
-**Not exercised at TaskApp scope (2 of 9).** `mosaic-emit-webcomponent` and
-`mosaic-emit-paint` still contain no TaskApp product gate or release artifact.
-Emitter-local and MosaicBook fixtures prove their general lowerings, not that
-TaskApp's authored shell survives them.
+**Interactively parity-gated (1 of 9).** `webcomponent` compiles both authored
+themes from TaskApp's package-expanded sources, shares the framework-neutral
+presentation controller and persistence contract with React, and drives create,
+complete, restore, and delete through the emitted Custom Element controls
+(#16125). It is deliberately a CI parity bundle, not a shipped release artifact.
+
+**Not exercised at TaskApp scope (1 of 9).** `mosaic-emit-paint` still contains
+no TaskApp product gate or release artifact. Emitter-local fixtures prove the
+general lowering, not that TaskApp's authored shell survives it.
 
 **Partial.** iOS compiles the generated SwiftUI sources against the iOS 16
 deployment target. That is source portability; nothing runs the app or its
@@ -105,7 +110,8 @@ rather than letting them read as silent gaps.
    TaskApp presence. It needs the same treatment `react` has: emit from
    TaskApp's sources, wire the custom element to `task-wasm`, drive the
    simple-todo lifecycle through the emitted controls, and decide explicitly
-   whether it earns a release artifact or is a parity gate only.
+   whether it earns a release artifact or is a parity gate only. **Implemented
+   as the explicit parity-only gate in #16125.**
 7. **Paint visual-regression gate.** Rasterize the authored shell to a
    deterministic PNG in both themes. This is the only mechanism in the stack
    that would catch a purely visual regression; every existing gate asserts

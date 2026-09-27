@@ -4,6 +4,16 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — shared Web Components parity host (#16125)
+
+The React host's presentation controller is now framework-neutral and shared
+with a `window.mosaicHost` adapter for the emitted TaskApp Custom Element. A
+separate relocatable bundle compiles light and dark themes, boots the real WASM
+engine, restores the existing local workspace record, and keeps storage status
+truthful. Its generated-control acceptance drives create, complete, restore,
+and delete. This bundle gates backend parity in CI and is not published by the
+React release lane.
+
 ### Added — writing questions into a checklist template (C3c, #14018)
 
 The web host serves the same authoring as `task-mosaic-app`: selecting outline

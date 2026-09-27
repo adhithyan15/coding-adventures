@@ -7,6 +7,16 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.3.0` accumulate here until the next version is
 cut.
 
+### Verified — the Web Components host drives the real TaskApp lifecycle (#16125)
+
+TaskApp now compiles both authored themes through the package-expanded
+`webcomponent` backend and wires the emitted `<mos-task-app>` controls to the
+real `task-wasm` engine. React and Custom Element hosts share one extracted,
+framework-neutral presentation controller and the same truthful IndexedDB or
+volatile-memory persistence contract. Browser acceptance creates, completes,
+restores, and deletes a task through the generated shadow-DOM controls. The
+relocatable output is a CI parity gate only, not a new release artifact.
+
 ### Verified — the authored List shell survives static HTML lowering (#16120)
 
 The normal `mosaic-emit-html` test lane now compiles TaskApp's own interface,

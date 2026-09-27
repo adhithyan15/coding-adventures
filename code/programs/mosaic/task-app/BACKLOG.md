@@ -17,9 +17,10 @@
 > `task-app-v0.3.0` release from the complete native lifecycle gates. Release
 > verification found that label-filtered GitHub history can omit valid
 > cross-package product changes; #16116 was repaired in #16117 by making the
-> dated changelog authoritative. With the native lifecycle and SemVer lanes
-> complete, the next unblocked product-scope gap is the static HTML shell gate
-> tracked by #16120. This is coverage work, not resumed feature composition.
+> dated changelog authoritative. The static HTML shell gate shipped in #16121;
+> the next interactive backend gap is the Web Components parity host tracked by
+> #16125. This is coverage work, not resumed feature composition or a new
+> release artifact.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
@@ -149,8 +150,9 @@ The fresh pass this section used to defer to is now written down:
 [`code/specs/task-app-platform-completion-v1.md`](../../../specs/task-app-platform-completion-v1.md).
 It measures TaskApp against all nine Mosaic backends rather than against the
 super-app feature roadmap. Six interactive/native targets are gated and shipped;
-the static HTML structural gate is now #16120, leaving `webcomponent` and
-`paint` without TaskApp-level coverage. The ordered queue below comes from that
+static HTML is structurally gated by #16120/#16121, and Web Components is
+selected as the real-engine parity gate in #16125. Paint is the only backend
+left without TaskApp-level coverage. The ordered queue below comes from that
 spec.
 
 **Tier A — finish the platforms TaskApp already claims.**
@@ -215,9 +217,12 @@ before supporting, label-filtered GitHub history.
 see the spec for the completion bar each one has to clear.
 
 6. **P1 [#16120](https://github.com/adhithyan15/coding-adventures/issues/16120):**
-   static HTML snapshot gate (selected and implemented in this slice; no
-   runtime, host, interaction, or artifact claim).
-7. Web Components host — the last *interactive* backend with no TaskApp presence.
+   static HTML snapshot gate. **Done in #16121**; no runtime, host,
+   interaction, or artifact claim.
+7. **P1 [#16125](https://github.com/adhithyan15/coding-adventures/issues/16125):**
+   Web Components host — the last interactive backend without TaskApp-level
+   coverage. Selected as a real-engine, emitted-control parity gate; no release
+   artifact claim.
 8. Paint visual-regression gate — the only mechanism that would catch a purely
    visual regression.
 
