@@ -1,5 +1,11 @@
 # Changelog — @coding-adventures/forme-deploy-runner-fs-adapter
 
+## Unreleased
+
+- Add a zero-write target inspection API for `forme deploy --dry-run`; it
+  preflights content and verifies existing target state without locks, staging,
+  root creation, or transaction residue.
+
 ## 0.1.0 — 2026-09-20
 
 Initial FM-B045 release.

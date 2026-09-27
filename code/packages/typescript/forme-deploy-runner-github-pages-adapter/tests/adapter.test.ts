@@ -2,8 +2,10 @@ import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import type { ContentStore } from "@coding-adventures/forme-deploy-runner-core";
 import {
+  bootstrapGitHubPagesOwnership,
   createGitHubRestBoundary,
   GitHubPagesBoundaryError,
+  inspectGitHubPagesSite,
   publishGitHubPagesSite,
   type GitHubPagesBoundary,
   type GitHubPagesBoundaryCall,
@@ -475,6 +477,93 @@ describe("publishGitHubPagesSite", () => {
   });
 });
 
+describe("inspectGitHubPagesSite", () => {
+  it("preflights content and target state through a read-only boundary", async () => {
+    const fixture = site({ "index.html": "home" });
+    const boundary = new MockBoundary();
+
+    await expect(inspectGitHubPagesSite({
+      ...options(fixture, boundary),
+      boundary: readBoundary(boundary),
+    })).resolves.toMatchObject({ status: "would-publish", fileCount: 1, totalSizeBytes: 4 });
+
+    expect(boundary.calls.map(({ method }) => method)).toEqual([
+      "getRef", "getCommit", "listOwnershipManifests", "getTargetTree",
+    ]);
+    expect(fixture.reads()).toBe(1);
+  });
+});
+
+describe("bootstrapGitHubPagesOwnership", () => {
+  it("records exact legacy blobs in one ownership-only commit", async () => {
+    const boundary = new MockBoundary();
+    boundary.targetEntries = new Map([
+      ["index.html", { type: "blob", mode: "100644", sha: gitSha("legacy-home") }],
+    ]);
+
+    await expect(bootstrapGitHubPagesOwnership({
+      boundary,
+      owner: "octo",
+      repository: "site",
+      ref: "heads/gh-pages",
+      deploymentOwner: "landing",
+      destination: "",
+      retryLimit: 0,
+      expectation: {
+        version: 1,
+        owner: "octo",
+        repository: "site",
+        ref: "heads/gh-pages",
+        deploymentOwner: "landing",
+        destination: "",
+        files: {
+          "index.html": { sha256: digest("home"), gitBlobSha: gitSha("legacy-home") },
+        },
+      },
+    })).resolves.toMatchObject({ status: "bootstrapped", attempts: 1 });
+
+    expect(boundary.treeCalls).toHaveLength(1);
+    expect(boundary.treeCalls[0]?.entries).toHaveLength(1);
+    expect(boundary.treeCalls[0]?.entries[0]?.path).toBe(".forme/deployments/landing.json");
+    expect(boundary.updateCalls[0]?.force).toBe(false);
+  });
+
+  it("rejects mismatched bindings and legacy blob identities before writing", async () => {
+    const boundary = new MockBoundary();
+    boundary.targetEntries = new Map([
+      ["index.html", { type: "blob", mode: "100644", sha: gitSha("different") }],
+    ]);
+    const base = {
+      boundary,
+      owner: "octo",
+      repository: "site",
+      ref: "heads/gh-pages",
+      deploymentOwner: "landing",
+      destination: "",
+      retryLimit: 0,
+      expectation: {
+        version: 1 as const,
+        owner: "octo",
+        repository: "site",
+        ref: "heads/gh-pages",
+        deploymentOwner: "landing",
+        destination: "",
+        files: {
+          "index.html": { sha256: digest("home"), gitBlobSha: gitSha("legacy-home") },
+        },
+      },
+    };
+
+    await expect(bootstrapGitHubPagesOwnership(base))
+      .rejects.toMatchObject({ code: "OWNERSHIP_CONFLICT" });
+    await expect(bootstrapGitHubPagesOwnership({
+      ...base,
+      expectation: { ...base.expectation, repository: "other" },
+    })).rejects.toMatchObject({ code: "OWNERSHIP_CONFLICT" });
+    expect(boundary.calls.map(({ method }) => method)).not.toContain("createBlob");
+  });
+});
+
 interface SiteFixture {
   readonly manifest: unknown;
   readonly store: ContentStore;
@@ -533,6 +622,15 @@ function options(
     destination: "",
     retryLimit: 0,
     ...overrides,
+  };
+}
+
+function readBoundary(boundary: MockBoundary) {
+  return {
+    getRef: boundary.getRef.bind(boundary),
+    getCommit: boundary.getCommit.bind(boundary),
+    listOwnershipManifests: boundary.listOwnershipManifests.bind(boundary),
+    getTargetTree: boundary.getTargetTree.bind(boundary),
   };
 }
 

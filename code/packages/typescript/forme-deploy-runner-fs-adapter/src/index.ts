@@ -74,6 +74,12 @@ export interface FilesystemPublishResult {
   readonly totalSizeBytes: number;
 }
 
+export interface FilesystemInspectResult {
+  readonly status: "unchanged" | "would-publish";
+  readonly fileCount: number;
+  readonly totalSizeBytes: number;
+}
+
 export type FilesystemPublicationState =
   | "prepared"
   | "committed"
@@ -139,6 +145,31 @@ export async function publishFilesystemSite(
     status: transaction.changed ? "published" : "unchanged",
     fileCount: transaction.fileCount,
     totalSizeBytes: transaction.totalSizeBytes,
+  });
+}
+
+export async function inspectFilesystemSite(
+  options: FilesystemPublishOptions,
+): Promise<FilesystemInspectResult> {
+  const manifest = parseDeployManifest(options.manifest);
+  throwIfAborted(options.signal);
+  const reader = createVerifiedContentReader(manifest, options.contentStore, { signal: options.signal });
+  await reader.preflight();
+  const scanLimits = resolveScanLimits(options.scanLimits);
+  const location = await resolveRoot(options.root);
+  const lockPath = join(location.parent, `.${location.name}.forme-lock`);
+  await requireUnlocked(lockPath);
+  const existing = await inspectTarget(location.root, options.signal, scanLimits);
+  const unchanged = existing !== undefined
+    && await treeMatchesManifest(existing, manifest, reader, options.signal, scanLimits);
+  await requireParentStable(location);
+  if (existing !== undefined) await requireTreeRootStable(existing, "TARGET_UNSAFE");
+  await requireUnlocked(lockPath);
+  throwIfAborted(options.signal);
+  return Object.freeze({
+    status: unchanged ? "unchanged" : "would-publish",
+    fileCount: manifest.fileCount,
+    totalSizeBytes: manifest.totalSizeBytes,
   });
 }
 

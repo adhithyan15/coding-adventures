@@ -163,12 +163,14 @@ Three content store shapes are supported in v0:
   `fs.readFile`. Used when
   the runner runs in the same process / box as the emitter
   and the caller wrote the contents to disk.
-- **`bundle` store**: a single `.tar` or `.zip` archive containing the same
-  base64url digest filenames. Archive entries must be exact single-segment
-  names beneath the bundle root; absolute, traversal, link, or raw-base64 path
-  entries are rejected. Lookup streams
-  the entry out of the archive.  Used for cross-machine
-  deploys (the entire bundle ships as one file).
+- **`bundle` store**: one canonical Forme content bundle. The format begins
+  with `FORME-CONTENT-BUNDLE-V1\n`, then a big-endian unsigned 32-bit record
+  count, followed by strictly digest-sorted records of a raw 32-byte SHA-256,
+  a big-endian unsigned 64-bit content length, and those exact content bytes.
+  Duplicate, missing, extra, out-of-order, truncated, oversized, or trailing
+  data is rejected. The format deliberately has no archive paths, links,
+  permissions, or metadata to interpret. Lookup streams one indexed record
+  from the identity-bound regular bundle file. Used for cross-machine deploys.
 - **`inline` store**: an in-memory `Map<sha256, Uint8Array>`
   populated by the caller.  Used when emitter + runner share
   a process (long-lived dev server, CI worker).
@@ -264,7 +266,7 @@ Required:
 
 Required (one of):
 - `--content-dir <path>` — `directory` content store rooted here.
-- `--content-bundle <path>` — `bundle` content store (.tar or .zip).
+- `--content-bundle <path>` — canonical `.forme-bundle` content store.
 - `--content-inline-fd <int>` — `inline` store reads JSON
   `{ "<sha>": "<base64>" }` from this file descriptor.
 
@@ -272,7 +274,7 @@ Required:
 - `--target <kind>` — `fs` | `github-pages` in headless v0. Later adapters
   extend this enum without weakening the v0 capability boundary.
 
-Required when `--target` is non-`fs`:
+Required for every target:
 - `--target-config <path>` — JSON file with adapter-specific
   config (bucket name, account ID, API token reference, ...).
   Never contains secrets directly; secrets come from env vars
@@ -280,8 +282,10 @@ Required when `--target` is non-`fs`:
 
 Optional:
 - `--previous <path>` — previous manifest for diff-mode deploy.
-- `--dry-run` — validate everything + print the deploy report
-  but make zero writes.
+- `--dry-run` — validate everything, preflight the complete content store,
+  inspect current target state through an adapter API that exposes no write
+  operations, and print the deploy report to stdout with zero local or remote
+  writes. `--dry-run` therefore rejects `--report`.
 - `--concurrency <int>` — max parallel writes (default `4`).
 - `--retry <int>` — per-file retry budget on transient errors
   (default `3`, with exponential backoff).
@@ -401,8 +405,13 @@ The v0 spec covers two reference adapters:
   prefix. Missing or malformed ownership state fails closed before the ref
   update when deletion would be required; it never grants authority over an
   unlisted sibling or an unowned exact path. Existing content adoption requires
-  a separate explicit migration that proves the expected target identities;
-  the normal publish path never infers ownership from destination alone. The
+  a separate explicit migration that binds the expected repository owner,
+  repository, source ref, deployment owner, destination, portable path set,
+  content digests, and regular Git blob identities. The adapter rereads and
+  proves those identities, creates one ownership-manifest-only commit, and
+  advances the ref with the same non-forced compare-and-swap and ambiguous
+  outcome confirmation as publication. Any mismatch or concurrent change
+  fails closed; the normal publish path never infers ownership from destination alone. The
   reserved `.forme` namespace cannot be selected as a destination or appear in
   a user manifest.
 
@@ -527,6 +536,11 @@ considers files that differ between previous and new manifest.
 - Resolve every unique content digest from the store with bounded retention
   (catches missing, size-mismatched, and hash-mismatched content errors).
 - Compute the diff plan.
+- Inspect the configured target through a target-specific read-only boundary.
+  Filesystem inspection takes no lock and creates no staging path. GitHub
+  inspection exposes only GET operations and creates no Git object or ref
+  update. Bootstrap dry-run verifies the same bound expectation without
+  creating its ownership commit.
 - Produce a deploy report with `action` set as if the writes
   had happened, but `bytesWritten` set to `0` and `elapsedMs`
   set to `0` for the unwritten files.
@@ -643,8 +657,9 @@ The runner runs at capability level:
   adapters must still enforce their configured-root containment.
 - **`network:<host>`** — one entry for each exact remote endpoint selected by
   target configuration; unrestricted `network:*` is not a v0 default.
-- **`env:<name>`** — one entry for each credential variable named by the
-  selected adapter; bare or wildcard environment access is not permitted.
+- **`env:GITHUB_TOKEN`** — the only v0 hosted-adapter credential variable.
+  Configuration cannot select an arbitrary environment name; bare or wildcard
+  environment access is not permitted.
 - **NEVER** `shell`, `subprocess`, or unrelated env reads.
 
 Each adapter declares its own `required_capabilities.json`

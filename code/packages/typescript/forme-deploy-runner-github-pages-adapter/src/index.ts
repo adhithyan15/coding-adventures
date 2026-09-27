@@ -124,6 +124,11 @@ export interface GitHubPagesBoundary {
   ) => Promise<void>;
 }
 
+export type GitHubPagesReadBoundary = Pick<
+  GitHubPagesBoundary,
+  "getRef" | "getCommit" | "listOwnershipManifests" | "getTargetTree"
+>;
+
 export interface GitHubPagesPublishOptions {
   readonly manifest: unknown;
   readonly contentStore: ContentStore;
@@ -152,6 +157,49 @@ export interface GitHubPagesPublishResult {
   readonly totalSizeBytes: number;
 }
 
+export interface GitHubPagesInspectOptions extends Omit<GitHubPagesPublishOptions, "boundary"> {
+  readonly boundary: GitHubPagesReadBoundary;
+}
+
+export interface GitHubPagesInspectResult {
+  readonly status: "unchanged" | "would-publish";
+  readonly commitSha: string;
+  readonly fileCount: number;
+  readonly totalSizeBytes: number;
+}
+
+export interface GitHubPagesBootstrapExpectation {
+  readonly version: 1;
+  readonly owner: string;
+  readonly repository: string;
+  readonly ref: string;
+  readonly deploymentOwner: string;
+  readonly destination: string;
+  readonly files: Readonly<Record<string, OwnershipFile>>;
+}
+
+export interface GitHubPagesBootstrapOptions {
+  readonly boundary: GitHubPagesBoundary;
+  readonly owner: string;
+  readonly repository: string;
+  readonly ref: string;
+  readonly deploymentOwner: string;
+  readonly destination: string;
+  readonly expectation: GitHubPagesBootstrapExpectation;
+  readonly retryLimit?: number;
+  readonly maxRetryDelayMs?: number;
+  readonly signal?: AbortSignal;
+  readonly sleep?: (milliseconds: number, signal?: AbortSignal) => Promise<void>;
+  readonly commitMessage?: string;
+}
+
+export interface GitHubPagesBootstrapResult {
+  readonly status: "bootstrapped" | "unchanged";
+  readonly commitSha: string;
+  readonly attempts: number;
+  readonly fileCount: number;
+}
+
 interface ValidatedOptions {
   readonly manifest: DeployManifest;
   readonly contentStore: ContentStore;
@@ -169,7 +217,7 @@ interface ValidatedOptions {
   readonly desiredOwnershipUpperBytes: number;
 }
 
-interface OwnershipFile {
+export interface OwnershipFile {
   readonly sha256: string;
   readonly gitBlobSha: string;
 }
@@ -188,6 +236,138 @@ interface BaseState {
   readonly targetEntries: ReadonlyMap<string, GitHubTargetEntry>;
   readonly ownershipBytesByOwner: ReadonlyMap<string, number>;
   readonly totalOwnershipBytes: number;
+}
+
+export async function inspectGitHubPagesSite(
+  rawOptions: GitHubPagesInspectOptions,
+): Promise<GitHubPagesInspectResult> {
+  const boundary = readOnlyBoundary(rawOptions.boundary);
+  const options = validateOptions({ ...rawOptions, boundary });
+  const reader = createVerifiedContentReader(options.manifest, options.contentStore, {
+    signal: options.signal,
+  });
+  await reader.preflight();
+  const base = await readBaseState(options);
+  validateOwnershipSet(base.owners, options);
+  validateTargetShape(base.targetEntries, base.owners, options);
+  const current = base.owners.get(options.deploymentOwner);
+  const status = current !== undefined && ownershipMatchesManifest(current, options.manifest)
+    ? "unchanged"
+    : "would-publish";
+  return Object.freeze({
+    status,
+    commitSha: base.commitSha,
+    fileCount: options.manifest.fileCount,
+    totalSizeBytes: options.manifest.totalSizeBytes,
+  });
+}
+
+export async function bootstrapGitHubPagesOwnership(
+  rawOptions: GitHubPagesBootstrapOptions,
+): Promise<GitHubPagesBootstrapResult> {
+  const expectation = validateBootstrapExpectation(rawOptions.expectation);
+  assertExpectationBinding(expectation, rawOptions);
+  const manifest = bootstrapManifest(expectation);
+  const options = validateOptions({
+    manifest,
+    contentStore: emptyContentStore(),
+    boundary: rawOptions.boundary,
+    owner: rawOptions.owner,
+    repository: rawOptions.repository,
+    ref: rawOptions.ref,
+    deploymentOwner: rawOptions.deploymentOwner,
+    destination: rawOptions.destination,
+    ...(rawOptions.retryLimit === undefined ? {} : { retryLimit: rawOptions.retryLimit }),
+    ...(rawOptions.maxRetryDelayMs === undefined ? {} : { maxRetryDelayMs: rawOptions.maxRetryDelayMs }),
+    ...(rawOptions.signal === undefined ? {} : { signal: rawOptions.signal }),
+    ...(rawOptions.sleep === undefined ? {} : { sleep: rawOptions.sleep }),
+    commitMessage: rawOptions.commitMessage ?? `forme deploy: bootstrap ${rawOptions.deploymentOwner}`,
+  });
+  const desired = freezeOwnership(options.deploymentOwner, options.destination, { ...expectation.files });
+  const serialized = serializeOwnership(desired);
+  const serializedBytes = Buffer.byteLength(serialized, "utf8");
+  let ownershipBlobSha: string | undefined;
+  let base = await readBaseState(options);
+
+  for (let attempt = 1; attempt <= options.retryLimit + 1; attempt += 1) {
+    if (attempt > 1) base = await readBaseState(options);
+    validateOwnershipSet(base.owners, options);
+    validateProjectedOwnership(base, options, serializedBytes);
+    validateBootstrapTarget(base, desired, options);
+    const current = base.owners.get(options.deploymentOwner);
+    if (current !== undefined) {
+      if (!ownershipMatchesDesired(current, desired)) {
+        throw new GitHubPagesPublishError("OWNERSHIP_CONFLICT", "deployment owner already has different ownership state");
+      }
+      return bootstrapResult("unchanged", base.commitSha, attempt, desired);
+    }
+    if (ownershipBlobSha === undefined) {
+      const blob = await callWithRetry(options, () => options.boundary.createBlob(withSignal(options, {
+        owner: options.owner,
+        repository: options.repository,
+        contentBase64: Buffer.from(serialized, "utf8").toString("base64"),
+      })));
+      validateGitSha(blob.sha, "created ownership blob SHA");
+      ownershipBlobSha = blob.sha;
+    }
+    const ownershipPath = `${OWNERSHIP_PREFIX}${options.deploymentOwner}.json`;
+    const tree = await callWithRetry(options, () => options.boundary.createTree(withSignal(options, {
+      owner: options.owner,
+      repository: options.repository,
+      baseTreeSha: base.treeSha,
+      entries: [Object.freeze({ path: ownershipPath, mode: "100644", type: "blob", sha: ownershipBlobSha! })],
+    })));
+    validateGitSha(tree.sha, "created bootstrap tree SHA");
+    const commit = await callWithRetry(options, () => options.boundary.createCommit(withSignal(options, {
+      owner: options.owner,
+      repository: options.repository,
+      message: options.commitMessage,
+      treeSha: tree.sha,
+      parents: [base.commitSha],
+    })));
+    validateGitSha(commit.sha, "created bootstrap commit SHA");
+    const candidate = await readCommitState(options, commit.sha);
+    const candidateOwner = candidate.owners.get(options.deploymentOwner);
+    if (candidateOwner === undefined || !ownershipMatchesDesired(candidateOwner, desired)) {
+      throw new GitHubPagesPublishError("TARGET_FAILED", "bootstrap candidate does not contain the expected ownership state");
+    }
+    validateBootstrapTarget(candidate, desired, options);
+    try {
+      await updateRefWithRetry(options, withSignal(options, {
+        owner: options.owner,
+        repository: options.repository,
+        ref: options.ref,
+        sha: commit.sha,
+        force: false,
+      }));
+      return bootstrapResult("bootstrapped", commit.sha, attempt, desired);
+    } catch (error) {
+      if (isRefConflict(error)) {
+        if (attempt > options.retryLimit) {
+          throw new GitHubPagesPublishError("RETRY_EXHAUSTED", "source ref advanced during every bootstrap attempt", error);
+        }
+        continue;
+      }
+      const normalized = normalizeBoundaryError(error);
+      if (!isAmbiguousUpdate(normalized)) throw normalized;
+      try {
+        const confirmation = await readBaseState(options);
+        const confirmed = confirmation.owners.get(options.deploymentOwner);
+        if (confirmed !== undefined && ownershipMatchesDesired(confirmed, desired)) {
+          validateBootstrapTarget(confirmation, desired, options);
+          return bootstrapResult("bootstrapped", confirmation.commitSha, attempt, desired);
+        }
+      } catch (confirmationError) {
+        throw new GitHubPagesPublishError(
+          "INDETERMINATE",
+          "the bootstrap ref update was ambiguous and confirmation failed",
+          Object.freeze({ updateError: normalized, confirmationError }),
+        );
+      }
+      throw new GitHubPagesPublishError("INDETERMINATE", "the bootstrap ref update outcome is unknown", normalized);
+    }
+  }
+  throw new GitHubPagesPublishError("RETRY_EXHAUSTED", "bootstrap retry budget exhausted");
 }
 
 export async function publishGitHubPagesSite(
@@ -632,6 +812,144 @@ function ownershipMatchesDesired(left: OwnershipManifest, right: OwnershipManife
     const b = right.files[path];
     return a?.sha256 === b?.sha256 && a.gitBlobSha === b.gitBlobSha;
   });
+}
+
+function ownershipMatchesManifest(ownership: OwnershipManifest, manifest: DeployManifest): boolean {
+  const paths = Object.keys(manifest.files);
+  if (paths.length !== Object.keys(ownership.files).length) return false;
+  return paths.every((path) => ownership.files[path]?.sha256 === manifest.files[path]?.sha256);
+}
+
+function readOnlyBoundary(boundary: GitHubPagesReadBoundary): GitHubPagesBoundary {
+  if (typeof boundary !== "object" || boundary === null) throw new TypeError("boundary is required");
+  const unavailable = async (): Promise<never> => {
+    throw new GitHubPagesPublishError("TARGET_FAILED", "write operation is unavailable through a read-only boundary");
+  };
+  return Object.freeze({
+    getRef: (input: Parameters<GitHubPagesReadBoundary["getRef"]>[0]) => boundary.getRef(input),
+    getCommit: (input: Parameters<GitHubPagesReadBoundary["getCommit"]>[0]) => boundary.getCommit(input),
+    listOwnershipManifests: (
+      input: Parameters<GitHubPagesReadBoundary["listOwnershipManifests"]>[0],
+    ) => boundary.listOwnershipManifests(input),
+    getTargetTree: (
+      input: Parameters<GitHubPagesReadBoundary["getTargetTree"]>[0],
+    ) => boundary.getTargetTree(input),
+    createBlob: unavailable,
+    createTree: unavailable,
+    createCommit: unavailable,
+    updateRef: unavailable,
+  });
+}
+
+function validateBootstrapExpectation(value: unknown): GitHubPagesBootstrapExpectation {
+  const root = record(value, "bootstrap expectation");
+  exactKeys(
+    root,
+    ["version", "owner", "repository", "ref", "deploymentOwner", "destination", "files"],
+    "bootstrap expectation",
+  );
+  if (root.version !== 1) ownershipInvalid("bootstrap expectation version must be 1");
+  const owner = requiredString(root.owner, "owner");
+  if (!ACCOUNT_RE.test(owner)) throw new TypeError("owner must be a portable GitHub account name");
+  const repository = requiredString(root.repository, "repository");
+  if (!REPOSITORY_RE.test(repository) || repository === "." || repository === "..") {
+    throw new TypeError("repository must be a GitHub repository name without slashes");
+  }
+  const ref = validateRef(root.ref);
+  const deploymentOwner = validateDeploymentOwner(root.deploymentOwner);
+  const destination = validateDestination(root.destination);
+  const rawFiles = record(root.files, "bootstrap expectation files");
+  const outputPaths = Object.keys(rawFiles).sort(compareText);
+  if (outputPaths.length === 0) ownershipInvalid("bootstrap expectation must contain at least one file");
+  if (outputPaths.length > MAX_OWNED_FILES) ownershipInvalid("bootstrap expectation has too many files");
+  const files: Record<string, OwnershipFile> = Object.create(null) as Record<string, OwnershipFile>;
+  for (const outputPath of outputPaths) {
+    validateOutputPath(outputPath, "bootstrap output path");
+    rejectReservedTarget(destination, outputPath);
+    validateOutputPath(targetPath(destination, outputPath), "combined bootstrap target path");
+    const rawFile = record(rawFiles[outputPath], `bootstrap file ${JSON.stringify(outputPath)}`);
+    exactKeys(rawFile, ["sha256", "gitBlobSha"], "bootstrap file");
+    if (typeof rawFile.sha256 !== "string" || !SHA256_BASE64_RE.test(rawFile.sha256)) {
+      ownershipInvalid(`bootstrap file ${JSON.stringify(outputPath)} has an invalid SHA-256`);
+    }
+    if (typeof rawFile.gitBlobSha !== "string" || !GIT_SHA_RE.test(rawFile.gitBlobSha)) {
+      ownershipInvalid(`bootstrap file ${JSON.stringify(outputPath)} has an invalid Git blob SHA`);
+    }
+    files[outputPath] = Object.freeze({ sha256: rawFile.sha256, gitBlobSha: rawFile.gitBlobSha });
+  }
+  const collision = firstCollision(outputPaths.map((path) => ({ path, owner: deploymentOwner })));
+  if (collision !== undefined) ownershipInvalid("bootstrap expectation paths collide");
+  return Object.freeze({
+    version: 1,
+    owner,
+    repository,
+    ref,
+    deploymentOwner,
+    destination,
+    files: Object.freeze(files),
+  });
+}
+
+function assertExpectationBinding(
+  expectation: GitHubPagesBootstrapExpectation,
+  options: Pick<GitHubPagesBootstrapOptions, "owner" | "repository" | "ref" | "deploymentOwner" | "destination">,
+): void {
+  for (const field of ["owner", "repository", "ref", "deploymentOwner", "destination"] as const) {
+    if (expectation[field] !== options[field]) {
+      throw new GitHubPagesPublishError(
+        "OWNERSHIP_CONFLICT",
+        `bootstrap expectation ${field} does not match the selected target`,
+      );
+    }
+  }
+}
+
+function bootstrapManifest(expectation: GitHubPagesBootstrapExpectation): unknown {
+  const files = Object.fromEntries(Object.entries(expectation.files).map(([outputPath, file]) => [
+    outputPath,
+    {
+      outputPath,
+      contentType: "application/octet-stream",
+      sizeBytes: 0,
+      sha256: file.sha256,
+      source: "extra",
+    },
+  ]));
+  return { version: 1, fileCount: Object.keys(files).length, totalSizeBytes: 0, files };
+}
+
+function emptyContentStore(): ContentStore {
+  return Object.freeze({
+    has: async () => false,
+    get: async () => { throw new Error("bootstrap does not read content"); },
+    hashes: async function* () { /* bootstrap has no content store */ },
+  });
+}
+
+function validateBootstrapTarget(
+  base: BaseState,
+  desired: OwnershipManifest,
+  options: ValidatedOptions,
+): void {
+  for (const [outputPath, expected] of Object.entries(desired.files)) {
+    const path = targetPath(options.destination, outputPath);
+    const actual = base.targetEntries.get(path);
+    if (actual?.type !== "blob" || actual.mode !== "100644" || actual.sha !== expected.gitBlobSha) {
+      throw new GitHubPagesPublishError(
+        "OWNERSHIP_CONFLICT",
+        `legacy target ${JSON.stringify(path)} does not match the expected regular Git blob`,
+      );
+    }
+  }
+}
+
+function bootstrapResult(
+  status: GitHubPagesBootstrapResult["status"],
+  commitSha: string,
+  attempts: number,
+  desired: OwnershipManifest,
+): GitHubPagesBootstrapResult {
+  return Object.freeze({ status, commitSha, attempts, fileCount: Object.keys(desired.files).length });
 }
 
 function validateOptions(options: GitHubPagesPublishOptions): ValidatedOptions {
