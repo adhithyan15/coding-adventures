@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.20.0";
+pub const VERSION: &str = "0.21.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -29,6 +29,14 @@ const GROUP_HEADER_H: f64 = 32.0;
 const TITLE_H: f64 = 44.0;
 const ROUTE_CLEARANCE: f64 = 12.0;
 const ROUTE_BEND_COST: f64 = 8.0;
+
+fn horizontal_gap(config: Option<&ArchitectureConfig>) -> f64 {
+    config.map_or(COL_GAP, |config| config.node_separation)
+}
+
+fn vertical_gap(config: Option<&ArchitectureConfig>) -> f64 {
+    config.map_or(ROW_GAP, |config| config.node_separation)
+}
 
 fn structural_style(
     node: &StructuralNode,
@@ -90,6 +98,8 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
 }
 
 fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
+    let column_gap = horizontal_gap(diagram.architecture_config.as_ref());
+    let row_gap = vertical_gap(diagram.architecture_config.as_ref());
     for alignment in &diagram.alignments {
         let indices = alignment
             .members
@@ -124,7 +134,7 @@ fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDi
                 for index in indices {
                     nodes[index].x = cursor;
                     nodes[index].y = y;
-                    cursor += nodes[index].width + COL_GAP;
+                    cursor += nodes[index].width + column_gap;
                 }
             }
             StructuralAlignmentAxis::Column => {
@@ -139,7 +149,7 @@ fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDi
                 for index in indices {
                     nodes[index].x = x;
                     nodes[index].y = cursor;
-                    cursor += nodes[index].height + ROW_GAP;
+                    cursor += nodes[index].height + row_gap;
                 }
             }
         }
@@ -223,12 +233,15 @@ fn layout_nodes(
             row_y.push(*row_y.last().unwrap_or(&COMP_PAD));
         }
 
-        let x = COMP_PAD + col as f64 * (MIN_NODE_W + COL_GAP);
+        let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
+            MIN_NODE_W * config.icon_size / 80.0
+        });
+        let x = COMP_PAD + col as f64 * (minimum_width + horizontal_gap(architecture_config));
         let y =
             row_y[row] + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
 
         // Update the starting y for the next row.
-        let next_row_y = y + nh + ROW_GAP;
+        let next_row_y = y + nh + vertical_gap(architecture_config);
         if row + 1 >= row_y.len() {
             row_y.push(next_row_y);
         } else if row_y[row + 1] < next_row_y {
@@ -296,11 +309,11 @@ fn layout_directional_nodes(
             group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
         let (x, y) = if vertical {
             let position = (COMP_PAD, cursor + group_offset);
-            cursor = position.1 + height + ROW_GAP;
+            cursor = position.1 + height + vertical_gap(architecture_config);
             position
         } else {
             let position = (cursor, COMP_PAD + group_offset);
-            cursor = position.0 + width + COL_GAP;
+            cursor = position.0 + width + horizontal_gap(architecture_config);
             position
         };
 
@@ -961,7 +974,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.20.0");
+        assert_eq!(crate::VERSION, "0.21.0");
     }
 
     #[test]
@@ -1239,6 +1252,7 @@ mod tests {
         diagram.architecture_config = Some(ArchitectureConfig {
             icon_size: 120.0,
             font_size: 22.0,
+            node_separation: 110.0,
         });
         diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
             ArchitectureServiceMetadata {
@@ -1251,6 +1265,10 @@ mod tests {
         assert_eq!(layout.nodes[0].style.font_size, 22.0);
         assert!(layout.nodes[0].width >= 240.0);
         assert!(layout.nodes[0].height >= 108.0);
+        assert_eq!(
+            layout.nodes[1].x - (layout.nodes[0].x + layout.nodes[0].width),
+            110.0
+        );
     }
 
     #[test]

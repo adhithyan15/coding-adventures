@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.21.0
+
+- Resolve Mermaid Architecture node-separation configuration into deterministic row and column spacing.
+
 ## 0.20.0
 
 - Resolve Mermaid Architecture icon and font size configuration into node geometry and service typography.
