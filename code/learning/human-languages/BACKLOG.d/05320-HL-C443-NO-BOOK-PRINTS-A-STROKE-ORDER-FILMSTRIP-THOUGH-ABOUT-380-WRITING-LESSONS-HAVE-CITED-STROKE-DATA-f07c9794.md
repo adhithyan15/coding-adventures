@@ -102,6 +102,11 @@ That is about 380 filmstrips that could print today.
   still have none. Each added path needs its primary-source citation and its
   own lesson owner before it can become a figure. Combination filmstrips remain
   later work after the single-letter inventories.
+- **Telugu consonants started with క.** The first base consonant now has the
+  five-movement, two-run order from Sathish Shanmugam's packaged tracing guide,
+  fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson
+  is the figure owner; the rest of the consonant inventory remains one-letter-
+  at-a-time work under the same source gate.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

@@ -182,12 +182,16 @@ describe("stroke ownership migration baseline", () => {
       // Measured for the Malayalam chillu NN repair: the newly source-verified
       // ൺ adds its font-checked ductus. Keys move 377 -> 378 and Malayalam
       // 13 -> 14; Tamil and both shared-identity values remain unchanged.
+      //
+      // Telugu క starts the consonant pass with its five-movement, two-run
+      // source-backed path. Keys move 378 -> 379 and Telugu 9 -> 10; Tamil and
+      // both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 378,
+      keys: 379,
       keyHash:
-        "5ac95f460ce222b4783441588af2a1c77012585dbd74f827c1ad012e5b2a7faf",
+        "cf17a63a98d9fcb2e6951e310b9f80d0e552ce0f0343d21bdc5a90364bcffcdd",
       nonTamilDataHash:
-        "029f32ba62935742791fa1d45fe0df7096b39c861131503778bf3b79f5e2e2a8",
+        "2d0e8f627256cd88af8e3aded0a558c90346e1df9990dde97082ce0f7befd183",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -203,7 +207,7 @@ describe("stroke ownership migration baseline", () => {
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
-        telugu: 9,
+        telugu: 10,
         "urdu-nastaliq": 31,
       },
     });
