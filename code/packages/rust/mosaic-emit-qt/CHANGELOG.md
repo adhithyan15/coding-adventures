@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-27 (the window reports its environment)
+
+- **ENV4 on Qt (UI48 §7.6).** Every `main.cpp` with a host defines `mosaicObserveEnvironment(view, host)` and calls it before the window is shown: one report, then another on each width or height change and (Qt 6.5+) colour scheme change, through `MosaicHost::environmentReport`. An answer with props is applied with `applyMosaicResponse`; a refusal is logged and never applied. A report arriving while effects settle (a resize behind a modal file dialog) retries on one restartable 100 ms timer instead of dispatching mid-settle.
+
 ## 2026-09-25 (checkbox row index)
 
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.

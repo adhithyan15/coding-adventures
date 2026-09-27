@@ -325,6 +325,58 @@ int main(int argc, char **argv) {
     }
 
     {
+        // UI48 ENV4 (§7.6). The conformance app does not react to its
+        // environment, so the runtime answers with the current revision and no
+        // props -- and the host keeps showing what it showed.
+        qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_J"));
+        MosaicHost host;
+        const auto before = host.props();
+        const auto shownProps = before.value(QStringLiteral("props")).toMap();
+        const auto shownRevision = before.value(QStringLiteral("revision")).toLongLong();
+        check(!shownProps.isEmpty(), "the environment checks start from real props");
+
+        const auto compact = MosaicHost::environmentReport(390, 844, false);
+        check(compact.value(QStringLiteral("sizeClass")).toString() == QStringLiteral("compact") &&
+                  compact.value(QStringLiteral("orientation")).toString() == QStringLiteral("portrait") &&
+                  compact.value(QStringLiteral("colorScheme")).toString() == QStringLiteral("light") &&
+                  compact.value(QStringLiteral("pointer")).toString() == QStringLiteral("fine") &&
+                  compact.value(QStringLiteral("hover")).toString() == QStringLiteral("hover") &&
+                  compact.value(QStringLiteral("reducedMotion")).toString() == QStringLiteral("no-preference") &&
+                  compact.size() == 6,
+              "a phone-sized light window reports the six values");
+        check(MosaicHost::environmentReport(599, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("compact") &&
+                  MosaicHost::environmentReport(600, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("regular") &&
+                  MosaicHost::environmentReport(1023, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("regular") &&
+                  MosaicHost::environmentReport(1024, 400, true).value(QStringLiteral("sizeClass")) == QStringLiteral("expanded") &&
+                  MosaicHost::environmentReport(800, 800, true).value(QStringLiteral("orientation")) == QStringLiteral("landscape") &&
+                  MosaicHost::environmentReport(800, 800, true).value(QStringLiteral("colorScheme")) == QStringLiteral("dark"),
+              "size classes split at 600 and 1024, and a square window is landscape");
+
+        const auto reported = host.reportEnvironment(compact);
+        check(!reported.contains(QStringLiteral("error")), "an ignored environment is accepted");
+        check(reported.value(QStringLiteral("revision")).toLongLong() == shownRevision,
+              "an ignored environment keeps the revision");
+        check(reported.value(QStringLiteral("props")).toMap() == shownProps,
+              "an ignored environment keeps the props");
+        check(host.props().value(QStringLiteral("props")).toMap() == shownProps,
+              "the host still shows the same props");
+        check(host.reportEnvironment(compact).isEmpty(),
+              "an unchanged environment is not sent again");
+
+        auto invalid = compact;
+        invalid.insert(QStringLiteral("sizeClass"), QStringLiteral("enormous"));
+        check(host.reportEnvironment(invalid).contains(QStringLiteral("error")),
+              "an invalid environment is refused");
+        check(host.props().value(QStringLiteral("props")).toMap() == shownProps,
+              "a refused environment leaves the props");
+        const auto expanded = MosaicHost::environmentReport(1280, 800, false);
+        check(!host.reportEnvironment(expanded).isEmpty(), "a changed size class is sent");
+        check(!host.reportEnvironment(compact).isEmpty(),
+              "a refused report was not remembered, and going back is a change");
+        check(!host.isSettling(), "no settle is left open");
+    }
+
+    {
         // The library's own behaviour, with fake dialogs: no display needed.
         struct FakeDialogs : MosaicFileDialogs {
             QString choice;

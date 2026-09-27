@@ -4911,6 +4911,7 @@ fn qt_main_with_startup_states(
     const VIEW_ANCHOR: &str = "    QQuickView view;\n";
     const END_ANCHOR: &str = concat!(
         "    mosaicHost.attach(view.rootObject());\n",
+        "    mosaicObserveEnvironment(view, mosaicHost);\n",
         "    view.show();\n",
         "    return app.exec();\n",
         "  } catch (const std::exception &exception) {\n",
@@ -5067,6 +5068,9 @@ Item {{
     );
     let completion = concat!(
         "    mosaicHost.attach(view.rootObject());\n",
+        // UI48 ENV4 (§7.6): each host that starts is observed; one a retry
+        // replaces takes its connections and timer with it.
+        "        mosaicObserveEnvironment(view, mosaicHost);\n",
         "        activeHost = std::move(candidate);\n",
         "      } catch (const std::exception &exception) {\n",
         "        activeHost.reset();\n",

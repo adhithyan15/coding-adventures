@@ -502,6 +502,75 @@ fn push_main_moc(out: &mut String, native_table_count: usize) {
     }
 }
 
+/// UI48 ENV4 (§7.6): the window tells the runtime its environment. Emitted
+/// into every `main.cpp` that has a host, as free functions before `main`.
+///
+/// - The report is the six UI48 §4 values, from `MosaicHost::environmentReport`
+///   (the thresholds live in the host, beside the wire names).
+/// - Width and height changes and a colour scheme change (Qt 6.5+; earlier
+///   Qts read the palette once) send it; the host drops a report equal to the
+///   last one taken, so dragging a window's edge sends nothing until a size
+///   class or orientation flips.
+/// - An answer with props is applied as the QML applies any response; a
+///   refusal is logged, and never applied -- its empty props would blank the
+///   screen.
+/// - A report that arrives while effects settle (a modal file dialog runs a
+///   nested event loop inside the settle) waits for one restartable timer
+///   instead of dispatching in the middle.
+const ENVIRONMENT_OBSERVER_CPP: &str = r#"#include <QDebug>
+#include <QMetaObject>
+#include <QPalette>
+#include <QStyleHints>
+#include <QTimer>
+#include <QWindow>
+
+// UI48 ENV4 (§7.6): the colour scheme the window is drawn in.
+static bool mosaicPrefersDark()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  const auto scheme = QGuiApplication::styleHints()->colorScheme();
+  if (scheme != Qt::ColorScheme::Unknown) return scheme == Qt::ColorScheme::Dark;
+#endif
+  const auto palette = QGuiApplication::palette();
+  return palette.color(QPalette::Window).lightness()
+      < palette.color(QPalette::WindowText).lightness();
+}
+
+// UI48 ENV4 (§7.6): report the window's environment now, and again whenever a
+// bucket may have flipped.
+static void mosaicObserveEnvironment(QQuickView &view, MosaicHost &host)
+{
+  auto *retry = new QTimer(&host);
+  retry->setSingleShot(true);
+  retry->setInterval(100);
+  const auto report = [&view, &host, retry]() {
+    if (host.isSettling()) {
+      retry->start();
+      return;
+    }
+    const auto response = host.reportEnvironment(
+        MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark()));
+    if (response.contains(QStringLiteral("error"))) {
+      qWarning().noquote() << "host error:" << response.value(QStringLiteral("error")).toString();
+      return;
+    }
+    const auto props = response.value(QStringLiteral("props"));
+    if (props.isValid() && !props.isNull() && view.rootObject() != nullptr) {
+      QMetaObject::invokeMethod(view.rootObject(), "applyMosaicResponse",
+                                Q_ARG(QVariant, QVariant::fromValue(response)));
+    }
+  };
+  QObject::connect(retry, &QTimer::timeout, &host, report);
+  QObject::connect(&view, &QWindow::widthChanged, &host, report);
+  QObject::connect(&view, &QWindow::heightChanged, &host, report);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  QObject::connect(QGuiApplication::styleHints(), &QStyleHints::colorSchemeChanged, &host, report);
+#endif
+  report();
+}
+
+"#;
+
 fn push_offscreen_font_fallback(out: &mut String, indent: &str) {
     out.push_str(indent);
     out.push_str("if (QGuiApplication::platformName() == QStringLiteral(\"offscreen\")\n");
@@ -547,6 +616,7 @@ fn build_main_cpp(
         out.push_str("#include <cstdlib>\n");
         out.push_str("#include <stdexcept>\n\n");
         push_native_table_model_class(&mut out, native_table_count);
+        out.push_str(ENVIRONMENT_OBSERVER_CPP);
         out.push_str("int main(int argc, char *argv[])\n{\n");
         out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
         out.push_str("    QQuickStyle::setStyle(QStringLiteral(\"Basic\"));\n  }\n");
@@ -599,6 +669,7 @@ fn build_main_cpp(
         );
         out.push_str("      throw std::runtime_error(\"native-complete could not instantiate the generated QML root\");\n    }\n");
         out.push_str("    mosaicHost.attach(view.rootObject());\n");
+        out.push_str("    mosaicObserveEnvironment(view, mosaicHost);\n");
         out.push_str("    view.show();\n");
         out.push_str("    return app.exec();\n");
         out.push_str("  } catch (const std::exception &exception) {\n");
@@ -626,6 +697,9 @@ fn build_main_cpp(
     out.push_str("#define MOSAIC_HAS_HOST 0\n");
     out.push_str("#endif\n\n");
     push_native_table_model_class(&mut out, native_table_count);
+    out.push_str("#if MOSAIC_HAS_HOST\n");
+    out.push_str(ENVIRONMENT_OBSERVER_CPP);
+    out.push_str("#endif\n");
     out.push_str("int main(int argc, char *argv[])\n");
     out.push_str("{\n");
     out.push_str("  if (qEnvironmentVariableIsEmpty(\"QT_QUICK_CONTROLS_STYLE\")) {\n");
@@ -688,6 +762,7 @@ fn build_main_cpp(
     out.push_str(
         "                            Q_ARG(QVariant, QVariant::fromValue(mosaicHost.props())));\n",
     );
+    out.push_str("  mosaicObserveEnvironment(view, mosaicHost);\n");
     out.push_str("#endif\n\n");
     out.push_str("  view.show();\n");
     out.push_str("  return app.exec();\n");
@@ -17296,5 +17371,52 @@ mod qml_property_ownership_tests {
             &vec!["opacity: 0.5".to_string()],
             "the whole Rectangle block must go, and nothing after it"
         );
+    }
+}
+
+/// UI48 ENV4 (§7.6): every shell with a host tells the runtime its window's
+/// environment.
+#[cfg(test)]
+mod environment_observer_tests {
+    use super::*;
+
+    fn main_cpp(require_runtime: bool) -> String {
+        build_main_cpp("Card", "Mosaic.Card", &[], 0, require_runtime, &HashMap::new())
+    }
+
+    #[test]
+    fn both_shells_observe_the_window_through_the_host() {
+        for require_runtime in [false, true] {
+            let main = main_cpp(require_runtime);
+            let define = main
+                .find("static void mosaicObserveEnvironment(QQuickView &view, MosaicHost &host)")
+                .unwrap_or_else(|| panic!("observer defined:\n{main}"));
+            let call = main
+                .find("mosaicObserveEnvironment(view, mosaicHost);\n")
+                .unwrap_or_else(|| panic!("observer installed:\n{main}"));
+            let show = main.rfind("view.show();").unwrap();
+            assert!(define < main.find("int main(").unwrap());
+            assert!(call < show, "the first report precedes show:\n{main}");
+            for wiring in [
+                "&QWindow::widthChanged",
+                "&QWindow::heightChanged",
+                "&QStyleHints::colorSchemeChanged",
+                "MosaicHost::environmentReport(view.width(), view.height(), mosaicPrefersDark())",
+                "if (host.isSettling()) {\n      retry->start();",
+                "if (response.contains(QStringLiteral(\"error\"))) {",
+            ] {
+                assert!(main.contains(wiring), "{wiring}:\n{main}");
+            }
+            // A refusal is logged before anything is applied: its props are an
+            // empty map, and applying them would blank the screen.
+            assert!(
+                main.find("response.contains(QStringLiteral(\"error\"))").unwrap()
+                    < main.find("\"applyMosaicResponse\",\n                                Q_ARG").unwrap()
+            );
+        }
+        // Without a host there is nothing to observe with.
+        let sample = main_cpp(false);
+        let guarded = sample.find("#if MOSAIC_HAS_HOST\n#include <QDebug>").unwrap();
+        assert!(guarded < sample.find("static void mosaicObserveEnvironment").unwrap());
     }
 }
