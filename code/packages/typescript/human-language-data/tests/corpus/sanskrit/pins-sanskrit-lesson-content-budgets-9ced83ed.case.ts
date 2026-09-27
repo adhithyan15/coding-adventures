@@ -88,7 +88,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // number-cognates-more, pancha-travels-more) split out to fit the atom
     // budget. None introduces an idiom, sense or culture claim; the culture
     // claim stays on pancha-travels. Re-measured against the tree.
-    lessons: 745,
+    // 745 -> 751: #13413's first word bridge adds six writing-only lessons.
+    // They reuse मम and मम नाम plus the already-taught म, न, and long-ā sign;
+    // no idiom, sense, culture claim, or vocabulary atom is added.
+    lessons: 751,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,
