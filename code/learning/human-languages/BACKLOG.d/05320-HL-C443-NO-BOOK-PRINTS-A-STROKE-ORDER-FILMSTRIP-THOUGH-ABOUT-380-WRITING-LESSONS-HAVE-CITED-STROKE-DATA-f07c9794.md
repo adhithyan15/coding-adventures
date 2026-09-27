@@ -82,19 +82,26 @@ That is about 380 filmstrips that could print today.
 - **Tamil first,** then the four Devanagari tracks.
 - **Then every other track with any cited ductus.** 207 lessons now print a
   filmstrip.
-- **Next: headword formats the derivation does not read yet.**
-  - chinese (72 cited letters), russian (18) and urdu (12) print none
-  - arabic and japanese print one each
+- **Every currently cited glyph is now reached.** A fresh ledger-to-target
+  audit after #16111 corrected this entry's stale headword-format forecast.
+  Chinese resolves all 58 cited glyphs, Russian all 22, Urdu all 29, Arabic all
+  15, and Japanese all 23. The corpus changed underneath the forecast: the
+  surviving cited owners are single-grapheme lessons, while compound lessons
+  name letters that already have a separate single-letter owner. Across all
+  switched-on tracks, 431 lesson filmstrips now print.
 
-  In these tracks a writing lesson's headword is not one grapheme. It is a
-  character with its reading, or an upper and lower pair. The fix is a
-  per-track extractor that reads the letter out of such a headword, instead of
-  requiring the whole headword to be one grapheme.
+- **Filmstrips in the app: DONE, tracked by #16114.** The language-ladder app
+  keeps its ordinary figure map eager but puts the 431 filmstrip URL loaders in
+  a dynamically imported module. Opening a writing lesson loads its exact
+  `*-filmstrip.svg` into the first Writing or Script section; unopened lessons
+  add nothing to first paint. The largest eager chunk remains 495,771 bytes,
+  below the 500 kB budget.
 
-- **Filmstrips in the app.** The language-ladder app does not show filmstrips
-  yet. Its eager figure map excludes `*-filmstrip.svg`, because 370 URLs pushed
-  first paint over its 500 kB budget. Showing them there needs a lazily loaded
-  figure map.
+- **Next: fill cited-stroke gaps, one script at a time.** Telugu, Kannada and
+  Malayalam still have only partial sourced inventories; Bengali and Gurmukhi
+  still have none. Each added path needs its primary-source citation and its
+  own lesson owner before it can become a figure. Combination filmstrips remain
+  later work after the single-letter inventories.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

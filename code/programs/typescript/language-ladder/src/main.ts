@@ -98,7 +98,7 @@ import {
 } from "./focused.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
-import { generatedFigureUrl } from "./figures.ts";
+import { generatedFigureUrl, generatedFilmstripUrl } from "./figures.ts";
 import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
 // Per-atom mastery (HL10 §10.1). The scheduler still runs on lessons; this
 // records what the learner actually holds, atom by atom, so a later slice can
@@ -1111,11 +1111,15 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
   const summary = el("summary", "lesson-body__summary");
   summary.textContent = `Open ${lesson.estMinutes || 5}-minute lesson`;
   details.appendChild(summary);
+  let filmstripSection: HTMLElement | null = null;
   for (const sectionData of lessonSections(lesson.body)) {
     const sectionEl = el("section", "lesson-body__section");
     const heading = el("h4", "lesson-body__heading");
     heading.textContent = sectionData.title;
     sectionEl.appendChild(heading);
+    if (filmstripSection === null && /^(?:Writing|Script)\b/.test(sectionData.title.trim())) {
+      filmstripSection = sectionEl;
+    }
     for (const block of sectionData.blocks) {
       if (block.kind === "image") {
         const figure = el("figure", "lesson-body__figure");
@@ -1136,6 +1140,32 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
     }
     details.appendChild(sectionEl);
   }
+
+  // The book inserts filmstrips from generated targets, so authored Markdown
+  // has no image for the app to discover. Ask for the lesson-owned SVG only
+  // when its details open. `generatedFilmstripUrl` returns null for writing
+  // lessons whose glyph has no cited ductus; HL11 section 5.2 remains intact.
+  let filmstripRequested = false;
+  const loadFilmstrip = async () => {
+    if (filmstripRequested || lesson.type !== "writing" || filmstripSection === null) return;
+    filmstripRequested = true;
+    const url = await generatedFilmstripUrl(lesson.language, lesson.id);
+    if (url === null) return;
+    const figure = el("figure", "lesson-body__figure lesson-body__filmstrip");
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = `How ${lesson.headword} is written, stroke by stroke`;
+    img.loading = "lazy";
+    img.decoding = "async";
+    const caption = el("figcaption", "lesson-body__figure-caption");
+    caption.textContent = img.alt;
+    figure.append(img, caption);
+    filmstripSection.insertBefore(figure, filmstripSection.children[1] ?? null);
+  };
+  details.addEventListener("toggle", () => {
+    if (details.open) void loadFilmstrip();
+  });
+  if (details.open) void loadFilmstrip();
   return details;
 }
 
