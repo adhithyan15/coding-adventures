@@ -111,7 +111,7 @@ MosaicHost::MosaicHost(QObject *parent)
             const QPointer<MosaicHost> self(this);
             const auto settled = settleEffects(latestUpdate_);
             if (!self) return;
-            latestUpdate_ = withPersistenceWarning(settled);
+            showUpdate(settled);
         }
         if (!app_) throw std::runtime_error("Mosaic runtime returned a null application handle");
     } catch (const std::exception &exception) {
@@ -150,6 +150,7 @@ void MosaicHost::configureRequiredProps(const QVariantMap &slotNames,
     requireRuntime();
     requiredSlotNames_ = slotNames;
     requiredProps_ = requiredProps;
+    requiredMode_ = true;
 }
 
 QVariantMap MosaicHost::propsRequired() const
@@ -220,7 +221,7 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event)
         const auto settled = keepShowingProps(settleEffects(update));
         if (!self) return {};
         persistSnapshot();
-        latestUpdate_ = withPersistenceWarning(settled);
+        showUpdate(settled);
         if (deferredAnswered_) {
             deferredAnswered_ = false;
             const auto pushed = latestUpdate_;
@@ -245,7 +246,9 @@ QVariantMap MosaicHost::keepShowingProps(const QVariantMap &update) const
         || !update.value(QStringLiteral("props")).isNull()) {
         return update;
     }
-    const auto showing = latestUpdate_.value(QStringLiteral("props"));
+    // The runtime's own props, not the ones shown: those may carry a
+    // persistence warning that has since cleared.
+    const auto showing = shownRuntimeProps_;
     if (showing.isNull() || showing.typeId() != QMetaType::QVariantMap) return update;
     bool revisionOk = false;
     bool shownOk = false;
@@ -259,15 +262,33 @@ QVariantMap MosaicHost::keepShowingProps(const QVariantMap &update) const
 
 QVariantMap MosaicHost::reportEnvironment(const QVariantMap &environment)
 {
-    if (!app_ || environment == lastReportedEnvironment_) return {};
+    if (!app_ || environment == lastReportedEnvironment_ || environment == lastRefusedEnvironment_) {
+        return {};
+    }
+    // A handler may delete this host during the settle, as for any event.
+    const QPointer<MosaicHost> self(this);
     const auto response = handleEvent(QVariantMap{
         {QStringLiteral("name"), QStringLiteral("environmentChanged")},
         {QStringLiteral("payload"), environment},
     });
-    // Remembered only once the runtime took it: a refused report is sent
-    // again with the next one.
-    if (!response.contains(QStringLiteral("error"))) lastReportedEnvironment_ = environment;
-    return response;
+    if (!self) return {};
+    // Remembered only once the runtime took it, so a refused report does not
+    // stand in for the environment the runtime has; but the same refused
+    // report is not sent again on every pixel of a window drag.
+    if (response.contains(QStringLiteral("error"))) {
+        lastRefusedEnvironment_ = environment;
+        return response;
+    }
+    lastReportedEnvironment_ = environment;
+    lastRefusedEnvironment_.clear();
+    if (!requiredMode_ || response.isEmpty()) return response;
+    // A native-complete shell's QML takes its props checked and under their
+    // QML names, as every other event's answer reaches it.
+    try {
+        return requireAndMapUpdate(response, "environment update");
+    } catch (const std::exception &exception) {
+        return failure(QString::fromUtf8(exception.what()));
+    }
 }
 
 QVariantMap MosaicHost::initialEnvironment()
@@ -340,6 +361,7 @@ QVariantMap MosaicHost::restore(const QVariantMap &snapshot)
             requireMap(consume(status, output), "restore update"));
         if (!self) return {};
         latestUpdate_ = settled;
+        shownRuntimeProps_ = settled.value(QStringLiteral("props"));
         return latestUpdate_;
     } catch (const std::exception &exception) {
         return failure(QString::fromUtf8(exception.what()));
@@ -555,7 +577,7 @@ QVariantMap MosaicHost::completeEffect(const QVariant &effectId, const QVariantM
         const auto settled = settleEffects(update);
         if (!self) return {};
         persistSnapshot();
-        latestUpdate_ = withPersistenceWarning(settled);
+        showUpdate(settled);
         // A deferred answer is the return value of no call the UI made -- it
         // arrives whenever the dialog closed -- so the UI has to be told.
         //
@@ -987,6 +1009,12 @@ void MosaicHost::persistSnapshot()
             .arg(QString::fromUtf8(exception.what()));
         qWarning().noquote() << persistenceWarning_;
     }
+}
+
+void MosaicHost::showUpdate(const QVariantMap &settled)
+{
+    shownRuntimeProps_ = settled.value(QStringLiteral("props"));
+    latestUpdate_ = withPersistenceWarning(settled);
 }
 
 QVariantMap MosaicHost::withPersistenceWarning(const QVariantMap &update) const

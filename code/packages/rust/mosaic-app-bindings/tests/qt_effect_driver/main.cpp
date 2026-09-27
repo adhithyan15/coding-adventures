@@ -367,6 +367,8 @@ int main(int argc, char **argv) {
         invalid.insert(QStringLiteral("sizeClass"), QStringLiteral("enormous"));
         check(host.reportEnvironment(invalid).contains(QStringLiteral("error")),
               "an invalid environment is refused");
+        check(host.reportEnvironment(invalid).isEmpty(),
+              "the same refused report is not resent");
         check(host.props().value(QStringLiteral("props")).toMap() == shownProps,
               "a refused environment leaves the props");
         const auto expanded = MosaicHost::environmentReport(1280, 800, false);
@@ -374,6 +376,22 @@ int main(int argc, char **argv) {
         check(!host.reportEnvironment(compact).isEmpty(),
               "a refused report was not remembered, and going back is a change");
         check(!host.isSettling(), "no settle is left open");
+
+        // A native-complete shell: the answer reaches QML checked and under
+        // its QML names, exactly as handleRequiredEvent's does.
+        host.configureRequiredProps(
+            QVariantMap{{QStringLiteral("count"), QStringLiteral("countValue")}},
+            QStringList{QStringLiteral("count")});
+        const auto mapped = host.reportEnvironment(MosaicHost::environmentReport(1280, 800, true));
+        const auto mappedProps = mapped.value(QStringLiteral("props")).toMap();
+        check(!mapped.contains(QStringLiteral("error")) &&
+                  mappedProps.contains(QStringLiteral("countValue")) &&
+                  !mappedProps.contains(QStringLiteral("count")),
+              "a native-complete answer is mapped to QML names");
+        host.configureRequiredProps(QVariantMap{}, QStringList{QStringLiteral("no-such-prop")});
+        check(host.reportEnvironment(MosaicHost::environmentReport(390, 844, true))
+                  .value(QStringLiteral("error")).toString().contains(QStringLiteral("no-such-prop")),
+              "a native-complete answer missing a required prop is refused");
     }
 
     {

@@ -618,14 +618,20 @@ the report alone.
   one's connections go with it.
 - **Deduplicated in the host.** `reportEnvironment` sends nothing without a
   runtime or when the report equals the last one the runtime took; it
-  remembers a report only once taken, so a refusal is retried with the next.
+  remembers a report only once taken, so a refusal is retried with the next
+  change (only the identical refused report is not resent).
+- **Strict shells get strict answers.** In a native-complete shell
+  (`configureRequiredProps`) the answer is checked for required props and
+  mapped to QML property names, exactly as `handleRequiredEvent`'s is; a
+  missing prop is a refusal, not a half-applied screen.
 - **Not in the middle of a settle.** A modal file dialog runs a nested event
   loop inside `settleEffects`, and a resize behind it would dispatch there.
   The shell asks `MosaicHost::isSettling()` first and, if so, retries on one
   restartable 100 ms timer instead.
 - **"No reaction" keeps the current props.** `handleEvent` keeps the props it
   is showing when an update carries `props: null` at the revision it is
-  showing, as the Swift and Kotlin hosts do. The shell applies a report's
+  showing, as the Swift and Kotlin hosts do -- the runtime's own props, so a
+  persistence warning that has since cleared is not kept with them. The shell applies a report's
   answer only when it carries props, and logs a refusal instead of applying
   it (a refusal's props are an empty map, which would blank the screen).
 

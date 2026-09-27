@@ -38,7 +38,10 @@ public:
     // - An app that does not react answers with the props already showing
     //   (see keepShowingProps).
     // - A refusal (an invalid environment) answers {"error": ...} and is not
-    //   remembered, so the next report is sent.
+    //   remembered as the runtime's environment; only the identical report is
+    //   not resent.
+    // - In a native-complete shell (configureRequiredProps) the answer is
+    //   checked and mapped to QML names, as handleRequiredEvent's is.
     Q_INVOKABLE QVariantMap reportEnvironment(const QVariantMap &environment);
 
     // True while effects are being settled. A report arriving then -- a window
@@ -183,6 +186,9 @@ private:
     void quarantinePersistedState(const QString &reason);
     void persistSnapshot();
     QVariantMap withPersistenceWarning(const QVariantMap &update) const;
+    // Record `settled` as what is showing: latestUpdate_ with any persistence
+    // warning, and the runtime's own props beside it for keepShowingProps.
+    void showUpdate(const QVariantMap &settled);
     QVariantMap settleEffects(QVariantMap update);
     QVariantMap completeEffectOnce(quint64 id, const QVariantMap &result);
     void failOutstanding(const QVariantMap &update, const QString &reason);
@@ -198,6 +204,13 @@ private:
     // The last environment the runtime took; a report is never empty, so the
     // empty map means "none yet".
     QVariantMap lastReportedEnvironment_;
+    // The last report the runtime refused, so an identical one is not resent.
+    QVariantMap lastRefusedEnvironment_;
+    // The props the runtime last gave, before any persistence warning.
+    QVariant shownRuntimeProps_;
+    // Set by configureRequiredProps: answers are checked and mapped to QML
+    // names (requireAndMapUpdate) before a shell applies them.
+    bool requiredMode_ = false;
     QVariantMap requiredSlotNames_;
     QStringList requiredProps_;
     QString error_;
