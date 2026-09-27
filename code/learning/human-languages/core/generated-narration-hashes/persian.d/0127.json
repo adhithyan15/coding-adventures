@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:16c7676f9fbadc69",
+  "lessonIds": [
+    "FA-C127-talkh",
+    "FA-C127-torsh",
+    "FA-C127-shur",
+    "FA-C127-banafsh",
+    "FA-C127-khakestari",
+    "FA-R127-first-pass-food-clothes-and-animals",
+    "FA-R127-second-pass-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch127.txt",
+  "json": "persian/narration/ch127.json",
+  "textHash": "fnv1a64:6025ae71bd27ce2d",
+  "jsonHash": "fnv1a64:4ce50d6108732403",
+  "findings": []
+}

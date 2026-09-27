@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Eyebrow, Skin, Bone, Carpet, Sofa",
+  "label": "ch:fa-eyebrow-skin-bone-carpet-sofa",
+  "canDo": "I can say an eyebrow, the skin, a bone, a carpet and a sofa.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C109-mobl",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say an eyebrow, the skin, a bone, a carpet and a sofa.",
+    "assesses": [
+      "FA-LEX-C109-THINGS109-03",
+      "FA-LEX-C109-THINGS109-04",
+      "FA-LEX-C109-THINGS109-05"
+    ]
+  }
+}

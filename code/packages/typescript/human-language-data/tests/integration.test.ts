@@ -9,15 +9,20 @@ import { validateCurriculum } from "../src/curriculum.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { languagesForConcept } from "../src/queries.js";
 import { compileLessonActivities } from "../src/activity.js";
-import { lessonsUpToLevel } from "../src/levels.js";
 import {
   measureGlyphGaps,
   type ScriptInventoryEvidenceModule,
 } from "./script-inventories/helpers.js";
 import { assertCorpusGlyphGapQueue } from "./script-inventory-queue.js";
+import type { IntegrationTrackEvidenceModule } from "./integration-track-evidence/helpers.js";
 
 const scriptInventoryModules = import.meta.glob<ScriptInventoryEvidenceModule>(
   "./script-inventories/**/*.evidence.ts",
+  { eager: true },
+);
+
+const integrationTrackEvidenceModules = import.meta.glob<IntegrationTrackEvidenceModule>(
+  "./integration-track-evidence/*.evidence.ts",
   { eager: true },
 );
 
@@ -32,6 +37,12 @@ const {
   soundTags,
   dataset,
 } = loadEverything();
+
+const curriculumGapReport = buildCurriculumGapReport({
+  registry,
+  lessons,
+  books,
+});
 
 describe("real curriculum", () => {
   it("registers a sound-tag vocabulary for every language track", () => {
@@ -223,7 +234,10 @@ describe("real curriculum", () => {
       // never written -- eighteen letters in chapters 22-26, each from its word.
       // 26 -> 78: the pre-A1 vocabulary tranche, fifty-two chapters of five
       // words in three runs, each run closed by two reviews.
-    ).toEqual(Array.from({ length: 78 }, (_, i) => i + 1));
+      // 78 -> 135: the A1 tranche, fifty-seven chapters of five words in six
+      // runs (time, this and that, places, can, want, why, things, describing
+      // words and verbs), each run closed by two reviews.
+    ).toEqual(Array.from({ length: 135 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -350,7 +364,7 @@ describe("real curriculum", () => {
   });
 
   it("produces a machine-readable migration gap baseline", () => {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
+    const report = curriculumGapReport;
     expect(report.schemaVersion).toBe(1);
     expect(report.durationModel.version).toBe(2);
     // 20 -> 21 in HL-C39 (Mandarin Chinese) -> 22 in HL-C40 (Japanese) -> 23
@@ -382,302 +396,19 @@ describe("real curriculum", () => {
     expect(ids.every((id) => id.length > 0 && id.trim() === id)).toBe(true);
   });
 
-  it("keeps the Spanish chapter 401 directions tranche at A1", () => {
-    const a1Ids = new Set(
-      lessonsUpToLevel(lessons, curricula, spine, "A1")
-        .filter((lesson) => lesson.language === "spanish")
-        .map((lesson) => lesson.realization.lessonId),
-    );
-    expect(
-      [
-        "ES-C401-seguir",
-        "ES-C401-cambiar",
-        "ES-C401-avenida",
-        "ES-C401-recto",
-        "ES-C401-route-recall-1",
-        "ES-C401-route-recall-2",
-      ].filter((id) => !a1Ids.has(id)),
-    ).toEqual([]);
-  });
-
-  it("keeps the Spanish chapter 406 documents tranche at A1", () => {
-    const a1Ids = new Set(
-      lessonsUpToLevel(lessons, curricula, spine, "A1")
-        .filter((lesson) => lesson.language === "spanish")
-        .map((lesson) => lesson.realization.lessonId),
-    );
-    expect(
-      [
-        "ES-C406-cliente",
-        "ES-C406-documento",
-        "ES-C406-dato",
-        "ES-C406-impreso",
-        "ES-C406-rellenar",
-        "ES-C406-documents-recall-1",
-        "ES-C406-documents-recall-2",
-      ].filter((id) => !a1Ids.has(id)),
-    ).toEqual([]);
-  });
-
-  it("keeps the Spanish chapter 407 location tranche at A1", () => {
-    const a1Ids = new Set(
-      lessonsUpToLevel(lessons, curricula, spine, "A1")
-        .filter((lesson) => lesson.language === "spanish")
-        .map((lesson) => lesson.realization.lessonId),
-    );
-    expect(
-      [
-        "ES-C407-medio",
-        "ES-C407-debajo",
-        "ES-C407-fuera",
-        "ES-C407-lado",
-        "ES-C407-location-recall-1",
-        "ES-C407-location-recall-2",
-      ].filter((id) => !a1Ids.has(id)),
-    ).toEqual([]);
-  });
-
-  it("keeps the Spanish Chapters 1-3 schema-v2 pilot closed and under five minutes", () => {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
-    const pilot = lessons.filter(
-      (lesson) =>
-        lesson.language === "spanish" &&
-        lesson.realization.chapter >= 1 &&
-        lesson.realization.chapter <= 4,
-    );
-    // 24 before HL-C18; the tú/usted and cómo splits each added one micro-lesson.
-    // Range widened 1-3 -> 1-4 when HL-C100 inserted `un`/`una` as a new chapter 3:
-    // narrowing the count instead would have quietly dropped the original chapter 3
-    // (`me llamo`) out of the pilot's coverage, which is the thing this guards.
-    // 20 -> 24 when the pre-A1 writing runway (HL19) put ES-W00-hola-observe /
-    // -guided-copy / -delayed-copy / -dictation into chapter 1. Spanish had zero
-    // `hl-writing-stage` evidence before that, so the four are the whole of its
-    // observe-trace -> dictation ladder, not padding.
-    expect(pilot).toHaveLength(24); // HL-C94: these chapters are short on purpose;
-    expect(
-      pilot.every((lesson) => lesson.frontmatter.schema_version === "2"),
-    ).toBe(true);
-    expect(
-      report.duration.violations.filter(
-        (lesson) => lesson.language === "spanish" && (lesson.chapter ?? 0) <= 3,
-      ),
-    ).toEqual([]);
-    expect(
-      report.prerequisites.laterChapterWithoutPrerequisites.filter(
-        (lesson) => lesson.language === "spanish" && (lesson.chapter ?? 0) <= 3,
-      ),
-    ).toEqual([]);
-  });
-
-  it("keeps the Persian and Urdu Chapter 3 chains closed, objective, and under five minutes", () => {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
-    for (const language of ["persian", "urdu"]) {
-      const chapter = lessons.filter(
-        (lesson) =>
-          lesson.language === language && lesson.realization.chapter === 3,
-      );
-      // Urdu's Nastaliq ladder was redistributed out of chapters 16-18 and back
-      // into chapters 1-8 (HL-C240), so its per-chapter lesson counts now differ
-      // from Persian's. Persian's expectations are unchanged. 7 -> 8: the
-      // etymology section of aap/tum/tu moved to its own continuation lesson
-      // so no Urdu lesson introduces more than three atoms.
-      expect(chapter).toHaveLength(language === "urdu" ? 8 : 6);
-      expect(
-        chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
-      ).toBe(true);
-      expect(
-        chapter.every(
-          (lesson) => compileLessonActivities(lesson.blocks).length === 1,
-        ),
-      ).toBe(true);
-      expect(
-        report.duration.violations.filter(
-          (lesson) => lesson.language === language && lesson.chapter === 3,
-        ),
-      ).toEqual([]);
-      expect(
-        report.prerequisites.laterChapterWithoutPrerequisites.filter(
-          (lesson) => lesson.language === language && lesson.chapter === 3,
-        ),
-      ).toEqual([]);
+  it("keeps track-specific integration evidence independently owned", () => {
+    const seen = new Set<string>();
+    for (const [, module] of Object.entries(integrationTrackEvidenceModules).sort(
+      ([left], [right]) => left.localeCompare(right),
+    )) {
+      expect(seen.has(module.integrationTrackEvidence.id)).toBe(false);
+      seen.add(module.integrationTrackEvidence.id);
+      module.integrationTrackEvidence.assert({
+        taxonomy, registry, spine, curricula, books, lessons, scripts, soundTags, dataset,
+        curriculumGapReport,
+      });
     }
-  });
-
-  it("keeps the Persian and Urdu Chapter 4 wellbeing chains closed, objective, and under five minutes", () => {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
-    for (const language of ["persian", "urdu"]) {
-      const chapter = lessons.filter(
-        (lesson) =>
-          lesson.language === language && lesson.realization.chapter === 4,
-      );
-      // Urdu's Nastaliq ladder was redistributed out of chapters 16-18 and back
-      // into chapters 1-8 (HL-C240), so its per-chapter lesson counts now differ
-      // from Persian's. Persian's expectations are unchanged. 9 -> 10: the
-      // mein ... hun frame moved to its own continuation lesson (atom budget).
-      expect(chapter).toHaveLength(language === "urdu" ? 10 : 6);
-      expect(
-        chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
-      ).toBe(true);
-      expect(
-        chapter.every(
-          (lesson) => compileLessonActivities(lesson.blocks).length === 1,
-        ),
-      ).toBe(true);
-      expect(
-        report.duration.violations.filter(
-          (lesson) => lesson.language === language && lesson.chapter === 4,
-        ),
-      ).toEqual([]);
-      expect(
-        report.prerequisites.laterChapterWithoutPrerequisites.filter(
-          (lesson) => lesson.language === language && lesson.chapter === 4,
-        ),
-      ).toEqual([]);
-    }
-  });
-
-  it("keeps the Persian and Urdu Chapter 5 farewell chains closed, objective, and under five minutes", () => {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
-    for (const language of ["persian", "urdu"]) {
-      const chapter = lessons.filter(
-        (lesson) =>
-          lesson.language === language && lesson.realization.chapter === 5,
-      );
-      // Urdu's Nastaliq ladder was redistributed out of chapters 16-18 and back
-      // into chapters 1-8 (HL-C240), so its per-chapter lesson counts now differ
-      // from Persian's. Persian's expectations are unchanged.
-      expect(chapter).toHaveLength(language === "urdu" ? 7 : 5);
-      expect(
-        chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
-      ).toBe(true);
-      expect(
-        chapter.every(
-          (lesson) => compileLessonActivities(lesson.blocks).length === 1,
-        ),
-      ).toBe(true);
-      expect(
-        report.duration.violations.filter(
-          (lesson) => lesson.language === language && lesson.chapter === 5,
-        ),
-      ).toEqual([]);
-      expect(
-        report.prerequisites.laterChapterWithoutPrerequisites.filter(
-          (lesson) => lesson.language === language && lesson.chapter === 5,
-        ),
-      ).toEqual([]);
-    }
-
-    const persianFarewell = lessons.find(
-      (lesson) => lesson.realization.lessonId === "FA-C05-khodahafez",
-    )!;
-    const urduFarewell = lessons.find(
-      (lesson) => lesson.realization.lessonId === "UR-C05-khuda-hafiz",
-    )!;
-    expect(persianFarewell.frontmatter.headword).toBe("خداحافظ");
-    expect(urduFarewell.frontmatter.headword).toBe("خدا حافظ");
-  });
-
-  it("keeps the Japanese script-before-decoding chain closed and under five minutes", () => {
-    // Japanese needs three writing systems, but putting all three in Chapter 1 made
-    // the learner decode before the sign lessons. Pin the repaired structure: twelve
-    // small chapters and spoken repair that demands decoding only for signs the
-    // learner has earned. Chapter 13 deliberately gives its reception and
-    // production checkpoints two activities each so the four skills remain
-    // separately scored; every other lesson keeps one objective activity.
-    //
-    // 117 -> 131, chapters 14 and 15: the cardinals, one to ten. The two chapter
-    // payoffs join chapter 13's checkpoints in carrying TWO activities each,
-    // for the same reason those two do — each scores two separable things (the
-    // run in order, and either where the two already-owned numbers came from or
-    // how juu compounds), and collapsing them would score one and report both.
-    //
-    // 131 -> 157, chapters 16, 17 and 18: the NATIVE count, split at five for
-    // the same reason chapters 14 and 15 split there, and then the counters. The
-    // native series is THREE chapters' worth of atoms in two because
-    // `maxNewAtomsPerChapter` is 12 and the ten words plus five signs are 15;
-    // splitting at five puts 7 and 8 atoms in the two chapters and keeps the
-    // gentle-ramp atom-step finding at zero, where this track has always been.
-    // Each of the three payoffs carries two activities for the same reason
-    // chapter 13's checkpoints do -- each scores two separable things.
-    const report = buildCurriculumGapReport({ registry, lessons, books });
-    const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    // 157 -> 160: chapter 19, the reading rung. Three lessons, no new word and no
-    // new sign -- every kana in them is one the script ladder has taught.
-    // 160 -> 426: chapters 20-71, the pre-A1 vocabulary tranche -- 260
-    // hiragana word lessons (spelled only with kana the reader has written,
-    // or their voiced forms) and six reviews, each with one objective activity.
-    // 426 -> 427: HL-C443, わに (wani) before the chapter-2 わ lesson, since
-    // こんにちは spells its "wa" with は and no word held わ. One activity, in
-    // rōmaji, because わ is written only in the next lesson.
-    expect(japanese).toHaveLength(427);
-    expect(
-      new Set(japanese.map((lesson) => lesson.realization.chapter)),
-    ).toEqual(new Set(Array.from({ length: 71 }, (_, i) => i + 1)));
-    expect(
-      japanese.every((lesson) => lesson.frontmatter.schema_version === "2"),
-    ).toBe(true);
-    expect(
-      japanese.map((lesson) => [
-        lesson.realization.lessonId,
-        compileLessonActivities(lesson.blocks).length,
-      ]),
-    ).toEqual(
-      expect.arrayContaining([
-        ["JA-C13-family-reception", 2],
-        ["JA-C13-family-check", 2],
-        ["JA-R14-one-to-five", 2],
-        ["JA-R15-six-to-ten", 2],
-        ["JA-R16-first-five-things", 2],
-        ["JA-R17-the-other-ten", 2],
-        ["JA-C18-count-the-face", 2],
-        ["JA-R18-counting-things", 2],
-      ]),
-    );
-    const twoActivityLessons = new Set([
-      "JA-C13-family-reception",
-      "JA-C13-family-check",
-      "JA-R14-one-to-five",
-      "JA-R15-six-to-ten",
-      "JA-R16-first-five-things",
-      "JA-R17-the-other-ten",
-      "JA-C18-count-the-face",
-      "JA-R18-counting-things",
-    ]);
-    expect(
-      japanese
-        .filter((lesson) => !twoActivityLessons.has(lesson.realization.lessonId))
-        .every((lesson) => compileLessonActivities(lesson.blocks).length === 1),
-    ).toBe(true);
-    expect(
-      report.duration.violations.filter(
-        (lesson) => lesson.language === "japanese",
-      ),
-    ).toEqual([]);
-    expect(
-      report.prerequisites.laterChapterWithoutPrerequisites.filter(
-        (lesson) => lesson.language === "japanese",
-      ),
-    ).toEqual([]);
-
-    const headwords = new Map(
-      japanese.map((lesson) => [
-        lesson.realization.lessonId,
-        lesson.realization.headword,
-      ]),
-    );
-    expect(headwords.get("JA-C01-konnichiwa")).toBe("こんにちは"); // hiragana
-    expect(headwords.get("JA-C01-nihongo")).toBe("日本語"); // kanji
-    expect(headwords.get("JA-C01-koohii")).toBe("コーヒー"); // katakana
-    // The register field carries two genuinely different grammatical levels here,
-    // not two synonyms, so the plain and polite thanks must not collapse into one.
-    const plain = lessons.find(
-      (lesson) => lesson.realization.lessonId === "JA-C01-arigatou",
-    )!;
-    const polite = lessons.find(
-      (lesson) => lesson.realization.lessonId === "JA-C01-gozaimasu",
-    )!;
-    expect(plain.frontmatter.register).toBe("plain-casual");
-    expect(polite.frontmatter.register).toBe("teineigo-polite");
+    expect(seen.size).toBeGreaterThan(0);
   });
 
   it("GREETING-HELLO joins every track (the normalization payoff)", () => {

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:8df030bae77ecf6f",
+  "lessonIds": [
+    "FA-C116-keshavarz",
+    "FA-C116-ranande",
+    "FA-C116-furushande",
+    "FA-C116-nanva",
+    "FA-C116-kudak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch116.txt",
+  "json": "persian/narration/ch116.json",
+  "textHash": "fnv1a64:8c0a16257dc43e47",
+  "jsonHash": "fnv1a64:52c3a80f9d2e179a",
+  "findings": []
+}

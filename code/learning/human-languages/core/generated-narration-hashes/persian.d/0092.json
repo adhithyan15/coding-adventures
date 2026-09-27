@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:47c09680f6c298ab",
+  "lessonIds": [
+    "FA-C92-chera",
+    "FA-C92-zira",
+    "FA-C92-chon",
+    "FA-C92-dalil",
+    "FA-C92-sabab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch92.txt",
+  "json": "persian/narration/ch92.json",
+  "textHash": "fnv1a64:583e8b1fe1758f40",
+  "jsonHash": "fnv1a64:99df3d36267c19f7",
+  "findings": []
+}

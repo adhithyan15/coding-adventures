@@ -1,0 +1,11 @@
+{
+  "id": "KA-C110-mule",
+  "pathSegment": "KA-PATH-110-LOC110",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-110-LOC110",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C105-bassu",
+  "pathSegment": "TE-PATH-105-LOC105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-105-LOC105",
+      "order": 1
+    }
+  ]
+}

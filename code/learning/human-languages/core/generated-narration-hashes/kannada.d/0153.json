@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:ecf5496b39b7159e",
+  "lessonIds": [
+    "KA-C153-tere",
+    "KA-C153-tumbu",
+    "KA-C153-tallu",
+    "KA-C153-ele",
+    "KA-C153-alu",
+    "KA-R153-first-pass-describing-words-and-verbs",
+    "KA-R153-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch153.txt",
+  "json": "kannada/narration/ch153.json",
+  "textHash": "fnv1a64:ba0abc50caed9823",
+  "jsonHash": "fnv1a64:73b12433eeba405d",
+  "findings": []
+}

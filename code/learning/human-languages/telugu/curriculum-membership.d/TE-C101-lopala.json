@@ -1,0 +1,11 @@
+{
+  "id": "TE-C101-lopala",
+  "pathSegment": "TE-PATH-101-LOC101",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-101-LOC101",
+      "order": 2
+    }
+  ]
+}

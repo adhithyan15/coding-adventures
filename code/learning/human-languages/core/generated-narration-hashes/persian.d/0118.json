@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:d541c20a6e20cc38",
+  "lessonIds": [
+    "FA-C118-jadde",
+    "FA-C118-parking",
+    "FA-C118-kishmish",
+    "FA-C118-alu",
+    "FA-C118-kadu",
+    "FA-R118-first-pass-the-body-and-the-house",
+    "FA-R118-second-pass-school-work-and-getting-around"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch118.txt",
+  "json": "persian/narration/ch118.json",
+  "textHash": "fnv1a64:fce1238fab46cf62",
+  "jsonHash": "fnv1a64:467b26d5e3ef3b42",
+  "findings": []
+}

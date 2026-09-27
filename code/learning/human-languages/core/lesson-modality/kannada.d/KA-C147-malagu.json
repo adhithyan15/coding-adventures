@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C147-malagu",
+    "language": "kannada",
+    "chapter": 147,
+    "sequence": 6440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:363f45dec95e7d20"
+  },
+  "findings": []
+}

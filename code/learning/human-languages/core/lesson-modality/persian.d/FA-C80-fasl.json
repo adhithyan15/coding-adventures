@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C80-fasl",
+    "language": "persian",
+    "chapter": 80,
+    "sequence": 3990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dd29cf828174f66"
+  },
+  "findings": []
+}

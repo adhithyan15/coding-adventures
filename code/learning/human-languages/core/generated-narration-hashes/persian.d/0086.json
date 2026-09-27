@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:0d67b7077e003d81",
+  "lessonIds": [
+    "FA-C86-ruye",
+    "FA-C86-beyn",
+    "FA-C86-samt",
+    "FA-C86-taraf",
+    "FA-C86-gushe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch86.txt",
+  "json": "persian/narration/ch86.json",
+  "textHash": "fnv1a64:532482dd92276e71",
+  "jsonHash": "fnv1a64:7628e3eb2711f55c",
+  "findings": []
+}

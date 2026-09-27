@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C116-mamsam",
+    "language": "telugu",
+    "chapter": 116,
+    "sequence": 4770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e25f9395fe65420b"
+  },
+  "findings": []
+}

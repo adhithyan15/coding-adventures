@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-122-THINGS122",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a whale, a dolphin, a shark, a squirrel and a bat.",
+  "prerequisites": []
+}

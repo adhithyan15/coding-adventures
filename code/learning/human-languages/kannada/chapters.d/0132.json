@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Peacock, Butterfly, Ant, Mosquito, Spider",
+  "label": "ch:ka-peacock-butterfly-ant-mosquito-spider",
+  "canDo": "I can say a peacock, a butterfly, an ant, a mosquito and a spider.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C132-jeda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say a peacock, a butterfly, an ant, a mosquito and a spider.",
+    "assesses": [
+      "KA-LEX-C132-THINGS132-03",
+      "KA-LEX-C132-THINGS132-04",
+      "KA-LEX-C132-THINGS132-05"
+    ]
+  }
+}

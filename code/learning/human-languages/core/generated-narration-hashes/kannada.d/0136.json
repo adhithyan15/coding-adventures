@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:35b6c23597dfbc41",
+  "lessonIds": [
+    "KA-C136-hebberalu",
+    "KA-C136-uguru",
+    "KA-C136-ede",
+    "KA-C136-sonta",
+    "KA-C136-hubbu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch136.txt",
+  "json": "kannada/narration/ch136.json",
+  "textHash": "fnv1a64:580c11ce459ae18d",
+  "jsonHash": "fnv1a64:f1268b35c4d940f4",
+  "findings": []
+}

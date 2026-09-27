@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Right, Left, Straight ahead, Near, Far",
+  "label": "ch:te-right-left-straight-ahead-near-far",
+  "canDo": "I can say right, left, straight ahead, near and far.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C100-duram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say right, left, straight ahead, near and far.",
+    "assesses": [
+      "TE-LEX-C100-LOC100-03",
+      "TE-LEX-C100-LOC100-04",
+      "TE-LEX-C100-LOC100-05"
+    ]
+  }
+}

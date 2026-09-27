@@ -1,0 +1,11 @@
+{
+  "id": "KA-C148-kali",
+  "pathSegment": "KA-PATH-148-ACT148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-148-ACT148",
+      "order": 2
+    }
+  ]
+}

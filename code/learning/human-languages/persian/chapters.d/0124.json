@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Narrow, Deep, Wet, Dry, Soft",
+  "label": "ch:fa-narrow-deep-wet-dry-soft",
+  "canDo": "I can say narrow, deep, wet, dry and soft.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C124-narm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say narrow, deep, wet, dry and soft.",
+    "assesses": [
+      "FA-LEX-C124-QUAL124-03",
+      "FA-LEX-C124-QUAL124-04",
+      "FA-LEX-C124-QUAL124-05"
+    ]
+  }
+}

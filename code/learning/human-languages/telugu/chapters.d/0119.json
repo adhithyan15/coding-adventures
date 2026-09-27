@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Honey, Idli, Dosa, Vada, Coffee",
+  "label": "ch:te-honey-idli-dosa-vada-coffee",
+  "canDo": "I can say honey, an idli, a dosa, a vada and coffee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-R119-second-pass-clothes-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say honey, an idli, a dosa, a vada and coffee.",
+    "assesses": [
+      "TE-LEX-C119-THINGS119-03",
+      "TE-LEX-C119-THINGS119-04",
+      "TE-LEX-C119-THINGS119-05"
+    ]
+  }
+}

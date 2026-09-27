@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C141-somari",
+    "language": "telugu",
+    "chapter": 141,
+    "sequence": 6110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed5adafea9dab999"
+  },
+  "findings": []
+}

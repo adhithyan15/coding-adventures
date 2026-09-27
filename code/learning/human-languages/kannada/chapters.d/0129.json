@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Sun, Horse, Elephant, Tiger, Lion",
+  "label": "ch:ka-sun-horse-elephant-tiger-lion",
+  "canDo": "I can say the sun, a horse, an elephant, a tiger and a lion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C129-simha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say the sun, a horse, an elephant, a tiger and a lion.",
+    "assesses": [
+      "KA-LEX-C129-THINGS129-03",
+      "KA-LEX-C129-THINGS129-04",
+      "KA-LEX-C129-THINGS129-05"
+    ]
+  }
+}

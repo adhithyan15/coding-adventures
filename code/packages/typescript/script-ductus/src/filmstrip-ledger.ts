@@ -23,7 +23,7 @@
 //                |
 //        ┌───────┴────────┐
 //        │                │
-//   the live app     this ledger  ->  data/ductus/filmstrip-geometry.json
+//   the live app     this ledger  ->  data/ductus/filmstrip-geometry.d/
 //   (SvgNode tree)                        |
 //                                    the book's `script-filmstrip` figure
 //
@@ -106,6 +106,7 @@ export interface FilmstripLedger {
 
 /** Where the generated ledger lives, relative to the curriculum root. */
 export const FILMSTRIP_LEDGER_PATH = "data/ductus/filmstrip-geometry.json";
+export const FILMSTRIP_LEDGER_DIRECTORY = "data/ductus/filmstrip-geometry.d";
 
 /** The line the generated file carries so nobody hand-edits it. */
 export const FILMSTRIP_LEDGER_GENERATOR =

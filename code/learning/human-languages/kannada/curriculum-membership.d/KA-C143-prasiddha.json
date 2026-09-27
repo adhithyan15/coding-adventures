@@ -1,0 +1,11 @@
+{
+  "id": "KA-C143-prasiddha",
+  "pathSegment": "KA-PATH-143-QUAL143",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-143-QUAL143",
+      "order": 3
+    }
+  ]
+}

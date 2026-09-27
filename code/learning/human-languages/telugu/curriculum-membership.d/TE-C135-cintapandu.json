@@ -1,0 +1,11 @@
+{
+  "id": "TE-C135-cintapandu",
+  "pathSegment": "TE-PATH-135-THINGS135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-135-THINGS135",
+      "order": 2
+    }
+  ]
+}

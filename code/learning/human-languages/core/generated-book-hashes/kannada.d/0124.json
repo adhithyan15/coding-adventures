@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:6df9a7dfe65ce6b9",
+  "lessonIds": [
+    "KA-C124-alugadde",
+    "KA-C124-badanekayi",
+    "KA-C124-sunthi",
+    "KA-C124-bellulli",
+    "KA-C124-jenu"
+  ],
+  "tex": "kannada/book/chapters/ch124-potato-aubergine-ginger-garlic-honey.tex"
+}

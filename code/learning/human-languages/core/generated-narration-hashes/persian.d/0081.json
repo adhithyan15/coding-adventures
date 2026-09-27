@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:84b18b88c38e34e5",
+  "lessonIds": [
+    "FA-C81-shanbe",
+    "FA-C81-yekshanbe",
+    "FA-C81-doshanbe",
+    "FA-C81-chaharshanbe",
+    "FA-C81-panjshanbe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch81.txt",
+  "json": "persian/narration/ch81.json",
+  "textHash": "fnv1a64:b2f992ec55971b83",
+  "jsonHash": "fnv1a64:3e4f1b108ab178ce",
+  "findings": []
+}

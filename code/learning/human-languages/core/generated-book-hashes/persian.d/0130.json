@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:72d9af7161157b7a",
+  "lessonIds": [
+    "FA-C130-salem",
+    "FA-C130-dorosht",
+    "FA-C130-riz",
+    "FA-C130-kam",
+    "FA-C130-ziyad"
+  ],
+  "tex": "persian/book/chapters/ch130-healthy-coarse-tiny-little-much.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C140-padaina",
+    "language": "telugu",
+    "chapter": 140,
+    "sequence": 6060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3b5608319d03b60"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C122-motte",
+    "language": "kannada",
+    "chapter": 122,
+    "sequence": 5100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc4e6974e7aa92f8"
+  },
+  "findings": []
+}

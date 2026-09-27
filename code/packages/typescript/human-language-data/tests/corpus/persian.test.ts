@@ -32,7 +32,11 @@ it("pins Persian lesson-content budgets", () =>
     // 124 -> 392: two `-more` continuations split off the lessons that
     // introduced four atoms, then chapters 27-78 (260 word lessons) and six
     // reviews. None introduces an idiom, a sense or a culture claim.
-    lessons: 392,
+    //
+    // 392 -> 689: the A1 tranche, chapters 79-135. 285 word lessons
+    // (twenty-five verbs) in six runs, each closing on two reviews. No idiom,
+    // sense or culture claim.
+    lessons: 689,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,

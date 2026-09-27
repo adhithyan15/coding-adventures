@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:da3249d4371ee84f",
+  "lessonIds": [
+    "KA-C151-gellu",
+    "KA-C151-solu",
+    "KA-C151-baccidu",
+    "KA-C151-kapadu",
+    "KA-C151-sudu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch151.txt",
+  "json": "kannada/narration/ch151.json",
+  "textHash": "fnv1a64:0b0f869454fa48f5",
+  "jsonHash": "fnv1a64:2e7a4cad113009d0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C153-tere",
+    "language": "kannada",
+    "chapter": 153,
+    "sequence": 6720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26ed637085592293"
+  },
+  "findings": []
+}

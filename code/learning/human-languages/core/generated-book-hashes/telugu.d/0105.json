@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:629a15b9378ad564",
+  "lessonIds": [
+    "TE-C105-stesan",
+    "TE-C105-bassu",
+    "TE-C105-samarthyam",
+    "TE-C105-naipunyam",
+    "TE-C105-hakku"
+  ],
+  "tex": "telugu/book/chapters/ch105-station-bus-ability-skill-right.tex"
+}

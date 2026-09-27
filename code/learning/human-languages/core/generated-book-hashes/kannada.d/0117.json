@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:4bec452805762f0a",
+  "lessonIds": [
+    "KA-C117-suttige",
+    "KA-C117-kattari",
+    "KA-C117-bacanige",
+    "KA-C117-sabunu",
+    "KA-C117-tavel"
+  ],
+  "tex": "kannada/book/chapters/ch117-hammer-scissors-comb-soap-towel.tex"
+}

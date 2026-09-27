@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-84-DEF84",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-84-DEF84"
+  ],
+  "after": []
+}

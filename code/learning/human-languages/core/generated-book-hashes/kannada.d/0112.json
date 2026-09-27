@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:022186029312ad7b",
+  "lessonIds": [
+    "KA-C112-samarthya",
+    "KA-C112-kausalya",
+    "KA-C112-hakku",
+    "KA-C112-avakasa",
+    "KA-C112-sadhana"
+  ],
+  "tex": "kannada/book/chapters/ch112-ability-skill-right-chance-tool.tex"
+}

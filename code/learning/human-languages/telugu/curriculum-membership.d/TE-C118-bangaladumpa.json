@@ -1,0 +1,11 @@
+{
+  "id": "TE-C118-bangaladumpa",
+  "pathSegment": "TE-PATH-118-THINGS118",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-118-THINGS118",
+      "order": 1
+    }
+  ]
+}

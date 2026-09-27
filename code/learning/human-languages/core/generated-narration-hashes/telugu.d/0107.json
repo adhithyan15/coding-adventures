@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:c961a071539fa96b",
+  "lessonIds": [
+    "TE-C107-korika",
+    "TE-C107-asa",
+    "TE-C107-kala",
+    "TE-C107-uddesam",
+    "TE-C107-pranalika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch107.txt",
+  "json": "telugu/narration/ch107.json",
+  "textHash": "fnv1a64:2bcb6d144e76fc76",
+  "jsonHash": "fnv1a64:62c5a9596848ba0f",
+  "findings": []
+}

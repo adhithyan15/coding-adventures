@@ -1,0 +1,11 @@
+{
+  "id": "KA-C140-udda",
+  "pathSegment": "KA-PATH-140-THINGS140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-140-THINGS140",
+      "order": 2
+    }
+  ]
+}

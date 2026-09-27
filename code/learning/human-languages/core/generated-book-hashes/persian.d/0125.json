@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:427b64d1acb90bc3",
+  "lessonIds": [
+    "FA-C125-seft",
+    "FA-C125-zesht",
+    "FA-C125-javan",
+    "FA-C125-pir",
+    "FA-C125-tanbal"
+  ],
+  "tex": "persian/book/chapters/ch125-hard-ugly-young-old-lazy.tex"
+}

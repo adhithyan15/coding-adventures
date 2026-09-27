@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Pillow, Blanket, Curtain, Lock, Nail",
+  "label": "ch:ka-pillow-blanket-curtain-lock-nail",
+  "canDo": "I can say a pillow, a blanket, a curtain, a lock and a nail.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R116-second-pass-why-and-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a pillow, a blanket, a curtain, a lock and a nail.",
+    "assesses": [
+      "KA-LEX-C116-THINGS116-03",
+      "KA-LEX-C116-THINGS116-04",
+      "KA-LEX-C116-THINGS116-05"
+    ]
+  }
+}

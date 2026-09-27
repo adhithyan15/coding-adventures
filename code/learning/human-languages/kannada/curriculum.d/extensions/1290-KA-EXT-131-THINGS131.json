@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-131-THINGS131",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a snake, a tortoise, a parrot, a pigeon and an owl.",
+  "prerequisites": []
+}

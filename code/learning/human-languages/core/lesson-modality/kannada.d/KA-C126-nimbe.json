@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C126-nimbe",
+    "language": "kannada",
+    "chapter": 126,
+    "sequence": 5280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a54acc625f81c6e"
+  },
+  "findings": []
+}

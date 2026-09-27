@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Tired, Silent, Glad, Wise, Ignorant",
+  "label": "ch:fa-tired-silent-glad-wise-ignorant",
+  "canDo": "I can say tired, silent, glad, wise and ignorant.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C129-nadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say tired, silent, glad, wise and ignorant.",
+    "assesses": [
+      "FA-LEX-C129-QUAL129-03",
+      "FA-LEX-C129-QUAL129-04",
+      "FA-LEX-C129-QUAL129-05"
+    ]
+  }
+}

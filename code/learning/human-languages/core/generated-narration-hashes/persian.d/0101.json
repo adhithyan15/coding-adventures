@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:d8489068e61cb9fd",
+  "lessonIds": [
+    "FA-C101-badam",
+    "FA-C101-peste",
+    "FA-C101-khiyar",
+    "FA-C101-bademjan",
+    "FA-C101-sir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch101.txt",
+  "json": "persian/narration/ch101.json",
+  "textHash": "fnv1a64:d8125064f8252f31",
+  "jsonHash": "fnv1a64:f66e361cc3a71d33",
+  "findings": []
+}

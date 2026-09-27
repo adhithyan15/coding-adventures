@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C120-cheshme",
+    "language": "persian",
+    "chapter": 120,
+    "sequence": 6100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a8452be1e003a29"
+  },
+  "findings": []
+}

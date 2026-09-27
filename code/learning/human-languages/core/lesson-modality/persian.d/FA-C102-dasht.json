@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C102-dasht",
+    "language": "persian",
+    "chapter": 102,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d87711e760ff4483"
+  },
+  "findings": []
+}

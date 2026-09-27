@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-106-CAN106",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "TE-EXT-106-CAN106"
+  ],
+  "after": []
+}

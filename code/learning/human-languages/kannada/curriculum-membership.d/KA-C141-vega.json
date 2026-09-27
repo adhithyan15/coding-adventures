@@ -1,0 +1,11 @@
+{
+  "id": "KA-C141-vega",
+  "pathSegment": "KA-PATH-141-QUAL141",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-141-QUAL141",
+      "order": 4
+    }
+  ]
+}

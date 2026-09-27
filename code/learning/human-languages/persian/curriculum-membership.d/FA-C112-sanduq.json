@@ -1,0 +1,11 @@
+{
+  "id": "FA-C112-sanduq",
+  "pathSegment": "FA-PATH-112-THINGS112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-112-THINGS112",
+      "order": 1
+    }
+  ]
+}

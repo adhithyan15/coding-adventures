@@ -1,0 +1,11 @@
+{
+  "id": "TE-C146-lekkapettu",
+  "pathSegment": "TE-PATH-146-ACT146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-146-ACT146",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C105-rubah",
+  "pathSegment": "FA-PATH-105-THINGS105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-105-THINGS105",
+      "order": 3
+    }
+  ]
+}

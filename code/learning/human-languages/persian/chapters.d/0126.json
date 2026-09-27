@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Clever, Timid, Famous, Dangerous, Safe",
+  "label": "ch:fa-clever-timid-famous-dangerous-safe",
+  "canDo": "I can say clever, timid, famous, dangerous and safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C126-amn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say clever, timid, famous, dangerous and safe.",
+    "assesses": [
+      "FA-LEX-C126-QUAL126-03",
+      "FA-LEX-C126-QUAL126-04",
+      "FA-LEX-C126-QUAL126-05"
+    ]
+  }
+}

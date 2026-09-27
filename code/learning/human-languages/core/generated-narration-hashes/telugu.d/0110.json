@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:83410e1ac53c062a",
+  "lessonIds": [
+    "TE-C110-talam",
+    "TE-C110-talamcevi",
+    "TE-C110-tadu",
+    "TE-C110-meku",
+    "TE-C110-kattera"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch110.txt",
+  "json": "telugu/narration/ch110.json",
+  "textHash": "fnv1a64:2feb8eba9afd2b8c",
+  "jsonHash": "fnv1a64:7a6e38a9761aa647",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C117-sabunu",
+  "pathSegment": "KA-PATH-117-THINGS117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-117-THINGS117",
+      "order": 3
+    }
+  ]
+}

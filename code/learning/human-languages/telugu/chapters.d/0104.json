@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Shore, Office, Garden, Corner, Turn",
+  "label": "ch:te-shore-office-garden-corner-turn",
+  "canDo": "I can say a shore, an office, a garden, a corner and a turn.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C104-malupu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say a shore, an office, a garden, a corner and a turn.",
+    "assesses": [
+      "TE-LEX-C104-LOC104-03",
+      "TE-LEX-C104-LOC104-04",
+      "TE-LEX-C104-LOC104-05"
+    ]
+  }
+}

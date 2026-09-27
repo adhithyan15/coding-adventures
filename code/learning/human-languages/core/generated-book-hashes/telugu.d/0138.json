@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:9a1579ebf55ce7b4",
+  "lessonIds": [
+    "TE-C138-vegam",
+    "TE-C138-andamaina",
+    "TE-C138-lotu",
+    "TE-C138-vedalpu",
+    "TE-C138-iruku"
+  ],
+  "tex": "telugu/book/chapters/ch138-fast-beautiful-deep-wide-narrow.tex"
+}

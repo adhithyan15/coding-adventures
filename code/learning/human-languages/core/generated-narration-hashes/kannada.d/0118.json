@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:cac6958e60c5f075",
+  "lessonIds": [
+    "KA-C118-kannadaka",
+    "KA-C118-gadiyara",
+    "KA-C118-cila",
+    "KA-C118-lekhani",
+    "KA-C118-kagada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch118.txt",
+  "json": "kannada/narration/ch118.json",
+  "textHash": "fnv1a64:79e3bd767a09329f",
+  "jsonHash": "fnv1a64:06fe4bcbc81d9895",
+  "findings": []
+}

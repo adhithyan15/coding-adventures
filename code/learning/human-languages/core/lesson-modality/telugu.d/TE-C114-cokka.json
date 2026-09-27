@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C114-cokka",
+    "language": "telugu",
+    "chapter": 114,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d42325365da4c10f"
+  },
+  "findings": []
+}

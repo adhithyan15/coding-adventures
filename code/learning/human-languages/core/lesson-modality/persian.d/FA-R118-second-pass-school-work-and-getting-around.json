@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R118-second-pass-school-work-and-getting-around",
+    "language": "persian",
+    "chapter": 118,
+    "sequence": 6000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5508533565141735"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C149-todu",
+    "language": "kannada",
+    "chapter": 149,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b4f68a8c30da323"
+  },
+  "findings": []
+}

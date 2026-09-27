@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:24de426cd552425a",
+  "lessonIds": [
+    "FA-C135-randan",
+    "FA-C135-mandan",
+    "FA-C135-zistan",
+    "FA-C135-chaspandan",
+    "FA-C135-charkhidan",
+    "FA-R135-first-pass-describing-words-and-verbs",
+    "FA-R135-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch135.txt",
+  "json": "persian/narration/ch135.json",
+  "textHash": "fnv1a64:409c41b516ba0215",
+  "jsonHash": "fnv1a64:88175fbb141188cf",
+  "findings": []
+}

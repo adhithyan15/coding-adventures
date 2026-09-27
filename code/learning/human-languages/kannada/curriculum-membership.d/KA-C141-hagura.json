@@ -1,0 +1,11 @@
+{
+  "id": "KA-C141-hagura",
+  "pathSegment": "KA-PATH-141-QUAL141",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-141-QUAL141",
+      "order": 0
+    }
+  ]
+}

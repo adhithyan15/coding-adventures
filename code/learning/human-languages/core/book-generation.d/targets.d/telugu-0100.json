@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 100,
+  "output": "telugu/book/chapters/ch100-right-left-straight-ahead-near-far.tex",
+  "scriptSet": "telugu-comparisons"
+}

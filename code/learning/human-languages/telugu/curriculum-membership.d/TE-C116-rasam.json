@@ -1,0 +1,11 @@
+{
+  "id": "TE-C116-rasam",
+  "pathSegment": "TE-PATH-116-THINGS116",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-116-THINGS116",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:c0da8a31733d0043",
+  "lessonIds": [
+    "FA-C111-sini",
+    "FA-C111-kase",
+    "FA-C111-jaru",
+    "FA-C111-satl",
+    "FA-C111-tanab"
+  ],
+  "tex": "persian/book/chapters/ch111-tray-bowl-broom-bucket-rope.tex"
+}

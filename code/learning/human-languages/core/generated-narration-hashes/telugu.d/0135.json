@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:2b88d0e0cbb9410e",
+  "lessonIds": [
+    "TE-C135-miriyalu",
+    "TE-C135-jilakarra",
+    "TE-C135-cintapandu",
+    "TE-C135-nimmakaya",
+    "TE-C135-draksa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch135.txt",
+  "json": "telugu/narration/ch135.json",
+  "textHash": "fnv1a64:b69184d1c1edb3d0",
+  "jsonHash": "fnv1a64:cf95cb8285c43c67",
+  "findings": []
+}

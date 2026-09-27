@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Hotel, Train, Aeroplane, Car, Bicycle",
+  "label": "ch:ka-hotel-train-aeroplane-car-bicycle",
+  "canDo": "I can say a hotel, a train, an aeroplane, a car and a bicycle.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C111-saikal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say a hotel, a train, an aeroplane, a car and a bicycle.",
+    "assesses": [
+      "KA-LEX-C111-LOC111-03",
+      "KA-LEX-C111-LOC111-04",
+      "KA-LEX-C111-LOC111-05"
+    ]
+  }
+}

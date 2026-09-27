@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:33c2b282ad0f05e8",
+  "lessonIds": [
+    "FA-C113-kart",
+    "FA-C113-bilit",
+    "FA-C113-tamr",
+    "FA-C113-pakat",
+    "FA-C113-medadtarash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch113.txt",
+  "json": "persian/narration/ch113.json",
+  "textHash": "fnv1a64:409d4db8f49c5b5b",
+  "jsonHash": "fnv1a64:97af321529576f9a",
+  "findings": []
+}

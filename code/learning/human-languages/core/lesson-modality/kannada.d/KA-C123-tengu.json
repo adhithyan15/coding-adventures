@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C123-tengu",
+    "language": "kannada",
+    "chapter": 123,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba1d3a82e1bb69a8"
+  },
+  "findings": []
+}

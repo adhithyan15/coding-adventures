@@ -1,0 +1,11 @@
+{
+  "id": "FA-C133-pichidan",
+  "pathSegment": "FA-PATH-133-ACT133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-133-ACT133",
+      "order": 2
+    }
+  ]
+}

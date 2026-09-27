@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Clothes, Moustache, Tears, Boat, Train",
+  "label": "ch:te-clothes-moustache-tears-boat-train",
+  "canDo": "I can say clothes, a moustache, tears, a boat and a train.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C133-railu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say clothes, a moustache, tears, a boat and a train.",
+    "assesses": [
+      "TE-LEX-C133-THINGS133-03",
+      "TE-LEX-C133-THINGS133-04",
+      "TE-LEX-C133-THINGS133-05"
+    ]
+  }
+}

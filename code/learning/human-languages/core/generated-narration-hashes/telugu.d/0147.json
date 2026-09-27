@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:4cd91d4ba5b03e5b",
+  "lessonIds": [
+    "TE-C147-tuducu",
+    "TE-C147-kattu",
+    "TE-C147-kuttu",
+    "TE-C147-gelucu",
+    "TE-C147-dacu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch147.txt",
+  "json": "telugu/narration/ch147.json",
+  "textHash": "fnv1a64:59d96df03b981f32",
+  "jsonHash": "fnv1a64:0bb0cc92a4234a4c",
+  "findings": []
+}

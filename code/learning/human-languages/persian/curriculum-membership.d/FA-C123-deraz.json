@@ -1,0 +1,11 @@
+{
+  "id": "FA-C123-deraz",
+  "pathSegment": "FA-PATH-123-THINGS123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-123-THINGS123",
+      "order": 3
+    }
+  ]
+}

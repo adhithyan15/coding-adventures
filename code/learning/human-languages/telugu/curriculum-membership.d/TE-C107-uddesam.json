@@ -1,0 +1,11 @@
+{
+  "id": "TE-C107-uddesam",
+  "pathSegment": "TE-PATH-107-WANT107",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-107-WANT107",
+      "order": 3
+    }
+  ]
+}

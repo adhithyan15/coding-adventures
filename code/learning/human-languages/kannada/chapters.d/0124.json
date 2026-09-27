@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Potato, Aubergine, Ginger, Garlic, Honey",
+  "label": "ch:ka-potato-aubergine-ginger-garlic-honey",
+  "canDo": "I can say a potato, an aubergine, ginger, garlic and honey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C124-jenu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a potato, an aubergine, ginger, garlic and honey.",
+    "assesses": [
+      "KA-LEX-C124-THINGS124-03",
+      "KA-LEX-C124-THINGS124-04",
+      "KA-LEX-C124-THINGS124-05"
+    ]
+  }
+}

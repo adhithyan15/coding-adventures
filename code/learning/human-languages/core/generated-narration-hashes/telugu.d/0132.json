@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:f754a126b4cf9bc4",
+  "lessonIds": [
+    "TE-C132-saksu",
+    "TE-C132-kotu",
+    "TE-C132-dhoti",
+    "TE-C132-jakettu",
+    "TE-C132-tamarapuvvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch132.txt",
+  "json": "telugu/narration/ch132.json",
+  "textHash": "fnv1a64:3f3c9225b69e2d02",
+  "jsonHash": "fnv1a64:5437e80f31ee32e1",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C110-kadalatira",
+    "language": "kannada",
+    "chapter": 110,
+    "sequence": 4460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd19d51e2518b9d8"
+  },
+  "findings": []
+}

@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 135,
+  "title": "Chin, Cheek, Knee, Elbow, Wrist",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0a17e460d08426ba",
+  "lessons": [
+    {
+      "id": "KA-C135-galla",
+      "sequence": 5760,
+      "title": "ಗಲ್ಲ (galla) — the chin",
+      "headword": "ಗಲ್ಲ",
+      "romanization": "galla",
+      "gloss": "the chin",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9b533bfeff329ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the face, then the Kannada for the tongue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗಲ್ಲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಲ್ಲ — galla — \"the chin\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say galla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *galla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the face, then the Kannada for the tongue, then say galla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the face, then the Kannada for the tongue, then say *galla* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಲ್ಲ (galla) mean? (\"The chin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C135-kenne",
+      "sequence": 5770,
+      "title": "ಕೆನ್ನೆ (kenne) — a cheek",
+      "headword": "ಕೆನ್ನೆ",
+      "romanization": "kenne",
+      "gloss": "a cheek",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c95048155ee180d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the tongue, then the Kannada for the chin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೆನ್ನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೆನ್ನೆ — kenne — \"a cheek\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kenne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kenne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the tongue, then the Kannada for the chin, then say kenne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the tongue, then the Kannada for the chin, then say *kenne* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೆನ್ನೆ (kenne) mean? (\"A cheek\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C135-monakalu",
+      "sequence": 5780,
+      "title": "ಮೊಣಕಾಲು (moṇakālu) — a knee",
+      "headword": "ಮೊಣಕಾಲು",
+      "romanization": "moṇakālu",
+      "gloss": "a knee",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23fcdc0877f1493d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for the chin, then the Kannada for a cheek."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೊಣಕಾಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊಣಕಾಲು — moṇakālu — \"a knee\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṇakālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṇakālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṇakālu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṇakālu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say moṇakālu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *moṇakālu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for the chin, then the Kannada for a cheek, then say moṇakālu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for the chin, then the Kannada for a cheek, then say *moṇakālu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೊಣಕಾಲು (moṇakālu) mean? (\"A knee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C135-monakai",
+      "sequence": 5790,
+      "title": "ಮೊಣಕೈ (moṇakai) — an elbow",
+      "headword": "ಮೊಣಕೈ",
+      "romanization": "moṇakai",
+      "gloss": "an elbow",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14e40d52c681450b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a cheek, then the Kannada for a knee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೊಣಕೈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೊಣಕೈ — moṇakai — \"an elbow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṇakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṇakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṇakai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṇakai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say moṇakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *moṇakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a cheek, then the Kannada for a knee, then say moṇakai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a cheek, then the Kannada for a knee, then say *moṇakai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೊಣಕೈ (moṇakai) mean? (\"An elbow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C135-manikattu",
+      "sequence": 5800,
+      "title": "ಮಣಿಕಟ್ಟು (maṇikaṭṭu) — a wrist",
+      "headword": "ಮಣಿಕಟ್ಟು",
+      "romanization": "maṇikaṭṭu",
+      "gloss": "a wrist",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45ff5021589ecb4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a knee, then the Kannada for an elbow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಣಿಕಟ್ಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಣಿಕಟ್ಟು — maṇikaṭṭu — \"a wrist\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇikaṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇikaṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṇikaṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṇikaṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say maṇikaṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *maṇikaṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a knee, then the Kannada for an elbow, then say maṇikaṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a knee, then the Kannada for an elbow, then say *maṇikaṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಣಿಕಟ್ಟು (maṇikaṭṭu) mean? (\"A wrist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R135-first-pass-food-and-nature",
+      "sequence": 5810,
+      "title": "Food and nature — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 127-130",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:447c99f9598d61a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an elbow and a wrist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sea, a forest, soil, a stone, thunder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sea, a forest, soil, a stone, thunder]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lightning, a storm, a wave, a waterfall, an island",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: lightning, a storm, a wave, a waterfall, an island]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sun, a horse, an elephant, a tiger, a lion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sun, a horse, an elephant, a tiger, a lion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bear, a monkey, a rabbit, a deer, a fox",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bear, a monkey, a rabbit, a deer, a fox]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sea? (ಸಮುದ್ರ, samudra.) A forest? (ಕಾಡು, kāḍu.) Soil? (ಮಣ್ಣು, maṇṇu.) A stone? (ಕಲ್ಲು, kallu.) Thunder? (ಗುಡುಗು, guḍugu.) Lightning? (ಮಿಂಚು, miṁcu.) A storm? (ಬಿರುಗಾಳಿ, birugāḷi.) A wave? (ಅಲೆ, ale.) A waterfall? (ಜಲಪಾತ, jalapāta.) An island? (ದ್ವೀಪ, dvīpa.) The sun? (ಸೂರ್ಯ, sūrya.) A horse? (ಕುದುರೆ, kudure.) An elephant? (ಆನೆ, āne.) A tiger? (ಹುಲಿ, huli.) A lion? (ಸಿಂಹ, siṁha.) A bear? (ಕರಡಿ, karaḍi.) A monkey? (ಕೋತಿ, kōti.) A rabbit? (ಮೊಲ, mola.) A deer? (ಜಿಂಕೆ, jiṅke.) A fox? (ನರಿ, nari.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R135-second-pass-nature-and-animals",
+      "sequence": 5820,
+      "title": "Nature and animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 131-135",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd28ad90929d0b33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a snake and a tortoise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a snake, a tortoise, a parrot, a pigeon, an owl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a snake, a tortoise, a parrot, a pigeon, an owl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a peacock, a butterfly, an ant, a mosquito, a spider",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a peacock, a butterfly, an ant, a mosquito, a spider]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a frog, a duck, a pig, a donkey, a camel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a frog, a duck, a pig, a donkey, a camel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rat, a buffalo, a sheep, the face, the tongue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rat, a buffalo, a sheep, the face, the tongue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chin, a cheek, a knee, an elbow, a wrist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chin, a cheek, a knee, an elbow, a wrist]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A snake? (ಹಾವು, hāvu.) A tortoise? (ಆಮೆ, āme.) A parrot? (ಗಿಳಿ, giḷi.) A pigeon? (ಪಾರಿವಾಳ, pārivāḷa.) An owl? (ಗೂಬೆ, gūbe.) A peacock? (ನವಿಲು, navilu.) A butterfly? (ಚಿಟ್ಟೆ, ciṭṭe.) An ant? (ಇರುವೆ, iruve.) A mosquito? (ಸೊಳ್ಳೆ, soḷḷe.) A spider? (ಜೇಡ, jēḍa.) A frog? (ಕಪ್ಪೆ, kappe.) A duck? (ಬಾತುಕೋಳಿ, bātukōḷi.) A pig? (ಹಂದಿ, handi.) A donkey? (ಕತ್ತೆ, katte.) A camel? (ಒಂಟೆ, oṇṭe.) A rat? (ಇಲಿ, ili.) A buffalo? (ಎಮ್ಮೆ, emme.) A sheep? (ಕುರಿ, kuri.) The face? (ಮುಖ, mukha.) The tongue? (ನಾಲಿಗೆ, nālige.) The chin? (ಗಲ್ಲ, galla.) A cheek? (ಕೆನ್ನೆ, kenne.) A knee? (ಮೊಣಕಾಲು, moṇakālu.) An elbow? (ಮೊಣಕೈ, moṇakai.) A wrist? (ಮಣಿಕಟ್ಟು, maṇikaṭṭu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C81-doshanbe",
+  "pathSegment": "FA-PATH-81-TIME81",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-81-TIME81",
+      "order": 2
+    }
+  ]
+}

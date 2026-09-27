@@ -1,0 +1,11 @@
+{
+  "id": "KA-R116-first-pass-places-can-and-want",
+  "pathSegment": "KA-PATH-116-THINGS116",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-116-THINGS116",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Property, Owner, Strength, Wish, Dream",
+  "label": "ch:ka-property-owner-strength-wish-dream",
+  "canDo": "I can say property, an owner, strength, a wish and a dream.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "KA-C113-kanasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say property, an owner, strength, a wish and a dream.",
+    "assesses": [
+      "KA-LEX-C113-CAN113-03",
+      "KA-LEX-C113-CAN113-04",
+      "KA-LEX-C113-CAN113-05"
+    ]
+  }
+}

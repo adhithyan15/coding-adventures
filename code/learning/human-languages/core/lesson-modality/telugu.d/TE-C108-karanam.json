@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C108-karanam",
+    "language": "telugu",
+    "chapter": 108,
+    "sequence": 4320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bab85929e2d8533b"
+  },
+  "findings": []
+}

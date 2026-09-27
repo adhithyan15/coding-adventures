@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C112-sanci",
+    "language": "telugu",
+    "chapter": 112,
+    "sequence": 4530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d96df8f408b1a3b"
+  },
+  "findings": []
+}

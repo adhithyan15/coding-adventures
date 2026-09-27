@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:8809d04037c477bc",
+  "lessonIds": [
+    "FA-C123-pishani",
+    "FA-C123-rish",
+    "FA-C123-sebil",
+    "FA-C123-deraz",
+    "FA-C123-pahn"
+  ],
+  "tex": "persian/book/chapters/ch123-forehead-beard-moustache-long-wide.tex"
+}

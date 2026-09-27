@@ -1,0 +1,11 @@
+{
+  "id": "KA-R126-first-pass-the-house-and-things-you-carry",
+  "pathSegment": "KA-PATH-126-THINGS126",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-126-THINGS126",
+      "order": 5
+    }
+  ]
+}

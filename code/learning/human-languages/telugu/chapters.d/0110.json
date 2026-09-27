@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Lock, Key, Rope, Nail, Scissors",
+  "label": "ch:te-lock-key-rope-nail-scissors",
+  "canDo": "I can say a lock, a key, a rope, a nail and scissors.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C110-kattera",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a lock, a key, a rope, a nail and scissors.",
+    "assesses": [
+      "TE-LEX-C110-THINGS110-03",
+      "TE-LEX-C110-THINGS110-04",
+      "TE-LEX-C110-THINGS110-05"
+    ]
+  }
+}

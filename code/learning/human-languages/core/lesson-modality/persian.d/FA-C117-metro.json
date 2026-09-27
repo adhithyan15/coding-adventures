@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C117-metro",
+    "language": "persian",
+    "chapter": 117,
+    "sequence": 5910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2985eb2961760b4f"
+  },
+  "findings": []
+}

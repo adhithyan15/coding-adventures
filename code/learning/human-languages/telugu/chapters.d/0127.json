@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Tongue, Knee, Shoulder, Eyebrow, Cheek",
+  "label": "ch:te-tongue-knee-shoulder-eyebrow-cheek",
+  "canDo": "I can say the tongue, a knee, a shoulder, an eyebrow and a cheek.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C127-bugga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say the tongue, a knee, a shoulder, an eyebrow and a cheek.",
+    "assesses": [
+      "TE-LEX-C127-THINGS127-03",
+      "TE-LEX-C127-THINGS127-04",
+      "TE-LEX-C127-THINGS127-05"
+    ]
+  }
+}

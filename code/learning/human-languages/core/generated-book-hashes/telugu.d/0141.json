@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:9afbb9d26a326adc",
+  "lessonIds": [
+    "TE-C141-tiyani",
+    "TE-C141-cedaina",
+    "TE-C141-karamaina",
+    "TE-C141-dhairyam",
+    "TE-C141-somari"
+  ],
+  "tex": "telugu/book/chapters/ch141-sweet-bitter-tasting-spicy-courage-lazy.tex"
+}

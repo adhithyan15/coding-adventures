@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C133-misalu",
+    "language": "telugu",
+    "chapter": 133,
+    "sequence": 5650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:988b691fceed77e0"
+  },
+  "findings": []
+}

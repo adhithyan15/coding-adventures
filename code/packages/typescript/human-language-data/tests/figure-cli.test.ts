@@ -11,7 +11,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   assertKnownFigureTarget,
-  FIGURE_HASH_MANIFEST_PATH,
+  FIGURE_HASH_OWNER_DIRECTORY,
   generatedFigureOutputs,
   runFigureGeneration,
 } from "../src/figure-cli.js";
@@ -89,7 +89,7 @@ describe("figure generator filesystem shell", () => {
     const svg = join(root, "spanish", "book", "figures", "ES-C06-cafe-etymology.svg");
     expect(existsSync(svg)).toBe(true);
     expect(readFileSync(svg, "utf8")).toContain("qahwah");
-    expect(readFileSync(join(root, FIGURE_HASH_MANIFEST_PATH), "utf8")).toContain(
+    expect(readFileSync(join(root, FIGURE_HASH_OWNER_DIRECTORY, "spanish.json"), "utf8")).toContain(
       '"svgHash": "fnv1a64:',
     );
     expect(runFigureGeneration(["--check"], root)).toBe(0);

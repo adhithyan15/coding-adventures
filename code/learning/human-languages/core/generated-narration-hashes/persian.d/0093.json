@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:57f1cdcc9ff16d3f",
+  "lessonIds": [
+    "FA-C93-banabarin",
+    "FA-C93-balesh",
+    "FA-C93-patu",
+    "FA-C93-parde",
+    "FA-C93-mikh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch93.txt",
+  "json": "persian/narration/ch93.json",
+  "textHash": "fnv1a64:52da2d244130a05b",
+  "jsonHash": "fnv1a64:de6fdbc581ddbb34",
+  "findings": []
+}

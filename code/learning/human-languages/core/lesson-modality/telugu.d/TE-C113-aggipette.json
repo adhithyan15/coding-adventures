@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C113-aggipette",
+    "language": "telugu",
+    "chapter": 113,
+    "sequence": 4600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e4d25020f408aee"
+  },
+  "findings": []
+}

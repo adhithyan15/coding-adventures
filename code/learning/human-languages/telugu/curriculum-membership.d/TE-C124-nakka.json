@@ -1,0 +1,11 @@
+{
+  "id": "TE-C124-nakka",
+  "pathSegment": "TE-PATH-124-THINGS124",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-124-THINGS124",
+      "order": 1
+    }
+  ]
+}

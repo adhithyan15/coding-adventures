@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C108-raste",
+    "language": "kannada",
+    "chapter": 108,
+    "sequence": 4390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0132024a37ee1671"
+  },
+  "findings": []
+}

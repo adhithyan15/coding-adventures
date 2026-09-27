@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "All, Someone, Something, None, Oneself",
+  "label": "ch:fa-all-someone-something-none-oneself",
+  "canDo": "I can say all, someone, something, none and oneself.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C84-khod",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say all, someone, something, none and oneself.",
+    "assesses": [
+      "FA-LEX-C84-DEF84-03",
+      "FA-LEX-C84-DEF84-04",
+      "FA-LEX-C84-DEF84-05"
+    ]
+  }
+}

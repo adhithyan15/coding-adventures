@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:b55e4523e55e7681",
+  "lessonIds": [
+    "TE-C130-tivi",
+    "TE-C130-kampyutar",
+    "TE-C130-phonu",
+    "TE-C130-tikkettu",
+    "TE-C130-paisa"
+  ],
+  "tex": "telugu/book/chapters/ch130-television-computer-phone-ticket-paisa.tex"
+}

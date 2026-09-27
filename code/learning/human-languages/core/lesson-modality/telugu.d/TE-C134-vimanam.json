@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C134-vimanam",
+    "language": "telugu",
+    "chapter": 134,
+    "sequence": 5710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3100cee77b353816"
+  },
+  "findings": []
+}

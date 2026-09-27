@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:e8f16d98aaeb8e2b",
+  "lessonIds": [
+    "FA-C103-tappe",
+    "FA-C103-jazire",
+    "FA-C103-abshar",
+    "FA-C103-mowj",
+    "FA-C103-rishe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch103.txt",
+  "json": "persian/narration/ch103.json",
+  "textHash": "fnv1a64:d7ca681e2417c866",
+  "jsonHash": "fnv1a64:659621594e494166",
+  "findings": []
+}

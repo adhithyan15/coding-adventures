@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C82-inha",
+    "language": "persian",
+    "chapter": 82,
+    "sequence": 4090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0106e84d541feff3"
+  },
+  "findings": []
+}

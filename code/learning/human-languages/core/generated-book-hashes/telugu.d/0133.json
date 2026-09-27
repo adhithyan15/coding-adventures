@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:a7136f24b05fe9cd",
+  "lessonIds": [
+    "TE-C133-guddalu",
+    "TE-C133-misalu",
+    "TE-C133-kantiniru",
+    "TE-C133-padava",
+    "TE-C133-railu"
+  ],
+  "tex": "telugu/book/chapters/ch133-clothes-moustache-tears-boat-train.tex"
+}

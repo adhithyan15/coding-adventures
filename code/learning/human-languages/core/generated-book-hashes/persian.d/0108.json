@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:50c230fd45f1514a",
+  "lessonIds": [
+    "FA-C108-moch",
+    "FA-C108-shast",
+    "FA-C108-nakhon",
+    "FA-C108-sine",
+    "FA-C108-kamar",
+    "FA-R108-first-pass-food-and-nature",
+    "FA-R108-second-pass-nature-animals-and-the-body"
+  ],
+  "tex": "persian/book/chapters/ch108-wrist-thumb-fingernail-chest-waist.tex"
+}

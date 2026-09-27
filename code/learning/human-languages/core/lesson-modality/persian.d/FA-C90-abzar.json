@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C90-abzar",
+    "language": "persian",
+    "chapter": 90,
+    "sequence": 4480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b74c667b3615cc9"
+  },
+  "findings": []
+}

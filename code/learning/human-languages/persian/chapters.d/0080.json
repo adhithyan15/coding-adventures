@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Spring, Summer, Autumn, Winter, Season",
+  "label": "ch:fa-spring-summer-autumn-winter-season",
+  "canDo": "I can say spring, summer, autumn, winter and a season.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C80-fasl",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say spring, summer, autumn, winter and a season.",
+    "assesses": [
+      "FA-LEX-C80-TIME80-03",
+      "FA-LEX-C80-TIME80-04",
+      "FA-LEX-C80-TIME80-05"
+    ]
+  }
+}

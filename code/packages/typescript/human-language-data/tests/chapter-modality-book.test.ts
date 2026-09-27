@@ -22,6 +22,14 @@ function chapter(overrides: Partial<ChapterModality> = {}): ChapterModality {
   };
 }
 
+// Every book, rendered ONCE at import. Rendering all 23 books is the expensive
+// part of this file and grows with every content PR; doing it inside the test
+// below put the whole render under the test's 30s budget, which it crossed
+// under full-suite load on CI while passing in isolation. Import time is not a
+// test budget, and the render is read-only input to the assertions.
+const ROOT = defaultCurriculumRoot();
+const OUTPUTS = generatedBookOutputs(ROOT);
+
 describe("book chapter modality projection", () => {
   it("prints full modes and the core-drivable prefix with font-independent signs", () => {
     const tex = renderBookChapterModalities("test", [chapter()]);
@@ -60,8 +68,8 @@ describe("book chapter modality projection", () => {
   });
 
   it("covers every generated and handwritten chapter opening in all 23 books", () => {
-    const root = defaultCurriculumRoot();
-    const outputs = generatedBookOutputs(root);
+    const root = ROOT;
+    const outputs = OUTPUTS;
     const modalityFiles = [...outputs.entries()].filter(([path]) =>
       path.endsWith("/book/chapter-modalities.tex"),
     );

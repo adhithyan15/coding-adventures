@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:88d8d7757bba87f1",
+  "lessonIds": [
+    "TE-C141-tiyani",
+    "TE-C141-cedaina",
+    "TE-C141-karamaina",
+    "TE-C141-dhairyam",
+    "TE-C141-somari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch141.txt",
+  "json": "telugu/narration/ch141.json",
+  "textHash": "fnv1a64:a592da5bd69387cc",
+  "jsonHash": "fnv1a64:b7c8be1fdd1410ab",
+  "findings": []
+}

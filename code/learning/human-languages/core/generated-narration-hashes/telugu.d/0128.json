@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:3d8b4f2c6fe3d350",
+  "lessonIds": [
+    "TE-C128-gaddam",
+    "TE-C128-manikattu",
+    "TE-C128-moceyi",
+    "TE-C128-carmam",
+    "TE-C128-raktam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch128.txt",
+  "json": "telugu/narration/ch128.json",
+  "textHash": "fnv1a64:452f26465fa46f21",
+  "jsonHash": "fnv1a64:6f608626c84038c9",
+  "findings": []
+}

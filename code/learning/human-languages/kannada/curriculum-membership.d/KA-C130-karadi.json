@@ -1,0 +1,11 @@
+{
+  "id": "KA-C130-karadi",
+  "pathSegment": "KA-PATH-130-THINGS130",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-130-THINGS130",
+      "order": 0
+    }
+  ]
+}

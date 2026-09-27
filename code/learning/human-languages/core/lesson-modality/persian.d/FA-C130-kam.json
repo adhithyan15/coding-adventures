@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C130-kam",
+    "language": "persian",
+    "chapter": 130,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5ee68e244c54bce"
+  },
+  "findings": []
+}

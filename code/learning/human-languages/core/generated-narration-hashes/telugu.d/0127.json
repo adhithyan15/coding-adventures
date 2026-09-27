@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:24d9b704a5854680",
+  "lessonIds": [
+    "TE-C127-naluka",
+    "TE-C127-mokalu",
+    "TE-C127-bhujam",
+    "TE-C127-kanubomma",
+    "TE-C127-bugga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch127.txt",
+  "json": "telugu/narration/ch127.json",
+  "textHash": "fnv1a64:1f6a7998499e2b0e",
+  "jsonHash": "fnv1a64:f7156beaaf517cef",
+  "findings": []
+}

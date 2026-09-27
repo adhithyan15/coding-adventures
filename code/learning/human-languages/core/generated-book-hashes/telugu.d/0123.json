@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:c1f5f3b06420ad3d",
+  "lessonIds": [
+    "TE-C123-puli",
+    "TE-C123-simham",
+    "TE-C123-elugubanti",
+    "TE-C123-koti",
+    "TE-C123-kundelu"
+  ],
+  "tex": "telugu/book/chapters/ch123-tiger-lion-bear-monkey-rabbit.tex"
+}

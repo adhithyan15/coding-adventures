@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:6331d84757ca27fd",
+  "lessonIds": [
+    "KA-C127-samudra",
+    "KA-C127-kadu",
+    "KA-C127-mannu",
+    "KA-C127-kallu",
+    "KA-C127-gudugu"
+  ],
+  "tex": "kannada/book/chapters/ch127-sea-forest-soil-stone-thunder.tex"
+}

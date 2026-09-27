@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C107-uddesam",
+    "language": "telugu",
+    "chapter": 107,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97ee1f9c3cc4e2e5"
+  },
+  "findings": []
+}

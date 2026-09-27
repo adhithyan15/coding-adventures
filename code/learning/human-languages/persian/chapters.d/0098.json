@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Sandals, Stew, Soup, Salad, Kebab",
+  "label": "ch:fa-sandals-stew-soup-salad-kebab",
+  "canDo": "I can say sandals, a stew, soup, a salad and a kebab.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R98-second-pass-things-in-the-house-and-clothes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say sandals, a stew, soup, a salad and a kebab.",
+    "assesses": [
+      "FA-LEX-C98-THINGS98-03",
+      "FA-LEX-C98-THINGS98-04",
+      "FA-LEX-C98-THINGS98-05"
+    ]
+  }
+}

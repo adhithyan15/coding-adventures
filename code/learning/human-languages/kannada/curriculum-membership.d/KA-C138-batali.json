@@ -1,0 +1,11 @@
+{
+  "id": "KA-C138-batali",
+  "pathSegment": "KA-PATH-138-THINGS138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-138-THINGS138",
+      "order": 1
+    }
+  ]
+}

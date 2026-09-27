@@ -1,0 +1,11 @@
+{
+  "id": "TE-C137-gatti",
+  "pathSegment": "TE-PATH-137-QUAL137",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-137-QUAL137",
+      "order": 2
+    }
+  ]
+}

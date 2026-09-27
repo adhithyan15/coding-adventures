@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:4754fab851af8992",
+  "lessonIds": [
+    "TE-C142-kastapade",
+    "TE-C142-telivaina",
+    "TE-C142-bhayankaramaina",
+    "TE-C142-nallani",
+    "TE-C142-tellani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch142.txt",
+  "json": "telugu/narration/ch142.json",
+  "textHash": "fnv1a64:2d7d3d633224e0d3",
+  "jsonHash": "fnv1a64:cde2fc6fd672821b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:17d1b52f22b21b78",
+  "lessonIds": [
+    "KA-C124-alugadde",
+    "KA-C124-badanekayi",
+    "KA-C124-sunthi",
+    "KA-C124-bellulli",
+    "KA-C124-jenu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch124.txt",
+  "json": "kannada/narration/ch124.json",
+  "textHash": "fnv1a64:44dc5c6dcbb2fb4c",
+  "jsonHash": "fnv1a64:bae34f1beb0f9f3f",
+  "findings": []
+}

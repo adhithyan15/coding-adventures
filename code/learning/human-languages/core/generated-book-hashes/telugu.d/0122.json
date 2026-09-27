@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:5fa3c5bbc4444841",
+  "lessonIds": [
+    "TE-C122-jalapatam",
+    "TE-C122-divi",
+    "TE-C122-avu",
+    "TE-C122-gurram",
+    "TE-C122-enugu"
+  ],
+  "tex": "telugu/book/chapters/ch122-waterfall-island-cow-horse-elephant.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C100-duram",
+    "language": "telugu",
+    "chapter": 100,
+    "sequence": 3940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7db6d672710a4e1e"
+  },
+  "findings": []
+}

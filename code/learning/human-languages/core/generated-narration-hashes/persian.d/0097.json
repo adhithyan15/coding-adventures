@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:5afa891f05f6fe7c",
+  "lessonIds": [
+    "FA-C97-shal",
+    "FA-C97-dastkesh",
+    "FA-C97-gushvare",
+    "FA-C97-gardanband",
+    "FA-C97-chakme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch97.txt",
+  "json": "persian/narration/ch97.json",
+  "textHash": "fnv1a64:ba8aad39f854b279",
+  "jsonHash": "fnv1a64:edc07b68e672a563",
+  "findings": []
+}

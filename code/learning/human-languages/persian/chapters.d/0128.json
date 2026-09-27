@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Golden, Round, Kind, Simple, Calm",
+  "label": "ch:fa-golden-round-kind-simple-calm",
+  "canDo": "I can say golden, round, kind, simple and calm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C128-aram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say golden, round, kind, simple and calm.",
+    "assesses": [
+      "FA-LEX-C128-QUAL128-03",
+      "FA-LEX-C128-QUAL128-04",
+      "FA-LEX-C128-QUAL128-05"
+    ]
+  }
+}

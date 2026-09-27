@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:ae7619091a0b18c0",
+  "lessonIds": [
+    "TE-C142-kastapade",
+    "TE-C142-telivaina",
+    "TE-C142-bhayankaramaina",
+    "TE-C142-nallani",
+    "TE-C142-tellani"
+  ],
+  "tex": "telugu/book/chapters/ch142-hard-working-clever-terrible-black-white.tex"
+}

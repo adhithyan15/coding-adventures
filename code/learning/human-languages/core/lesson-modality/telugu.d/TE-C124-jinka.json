@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C124-jinka",
+    "language": "telugu",
+    "chapter": 124,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5dbfba3c6a84cfc"
+  },
+  "findings": []
+}

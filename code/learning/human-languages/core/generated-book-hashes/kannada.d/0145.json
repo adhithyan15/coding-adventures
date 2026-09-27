@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:92c0a6d9f98106dc",
+  "lessonIds": [
+    "KA-C145-kahi",
+    "KA-C145-huli2",
+    "KA-C145-sihi",
+    "KA-C145-somari",
+    "KA-C145-jana"
+  ],
+  "tex": "kannada/book/chapters/ch145-bitter-sour-sweet-lazy-clever.tex"
+}

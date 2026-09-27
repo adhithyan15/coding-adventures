@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-102-LOC102",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say in the middle, a street, a road, a bridge and a park.",
+  "prerequisites": []
+}

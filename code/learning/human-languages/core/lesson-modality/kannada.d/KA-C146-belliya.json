@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C146-belliya",
+    "language": "kannada",
+    "chapter": 146,
+    "sequence": 6410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e901ba87930fc1e3"
+  },
+  "findings": []
+}

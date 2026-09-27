@@ -1,0 +1,11 @@
+{
+  "id": "FA-C122-nahang",
+  "pathSegment": "FA-PATH-122-THINGS122",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-122-THINGS122",
+      "order": 0
+    }
+  ]
+}

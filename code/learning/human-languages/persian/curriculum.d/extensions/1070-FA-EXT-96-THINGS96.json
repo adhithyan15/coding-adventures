@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-96-THINGS96",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fridge, matches, a ball, a kite and a skirt.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C146-bhayankara",
+    "language": "kannada",
+    "chapter": 146,
+    "sequence": 6380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ba1bc365bcafc5f"
+  },
+  "findings": []
+}

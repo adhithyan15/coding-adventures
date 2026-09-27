@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:54c9c47b72075081",
+  "lessonIds": [
+    "FA-C87-kuche",
+    "FA-C87-meydan",
+    "FA-C87-park",
+    "FA-C87-sahel",
+    "FA-C87-kelisa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch87.txt",
+  "json": "persian/narration/ch87.json",
+  "textHash": "fnv1a64:7291585038b00559",
+  "jsonHash": "fnv1a64:ec25b6ab51a8f42d",
+  "findings": []
+}

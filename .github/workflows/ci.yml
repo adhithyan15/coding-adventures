@@ -744,6 +744,13 @@ jobs:
           python code/scripts/ocaml_toolchain_lock.py validate-repository-report \
             --names "$repository_names" \
             --listing "$repository_listing"
+          opam_config="$(opam var root --global)/config"
+          test -f "$opam_config"
+          if grep -q '^archive-mirrors:' "$opam_config"; then
+            echo "unexpected preconfigured opam archive mirror" >&2
+            exit 1
+          fi
+          printf 'archive-mirrors: "https://opam.ocaml.org/cache"\n' >> "$opam_config"
           test -z "$(find . -name dune-workspace -print -quit)"
           cd code/packages/ocaml/ca-capability-analyzer
           opam install . --deps-only --with-test --with-dev-setup \
@@ -2235,6 +2242,33 @@ jobs:
           installed_taskapp_runtime="$(find "$taskapp_bin" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
           test -n "$installed_taskapp_runtime"
           cmp "$task_runtime_library" "$installed_taskapp_runtime"
+
+          # The strict shell must mount a window before probing the runtime and
+          # stay alive on a loader failure. Remove the bundled dylib from the
+          # built resource bundle, launch from / so no checkout-relative copy
+          # can be found, and require the process to remain alive in its visible
+          # recoverable failure state. The emitted-control contract above pins
+          # that state's detail, reassurance, and retry control.
+          installed_taskapp="$taskapp_bin/App"
+          test -x "$installed_taskapp"
+          missing_runtime="$installed_taskapp_runtime.startup-acceptance"
+          mv "$installed_taskapp_runtime" "$missing_runtime"
+          startup_failure_log="$RUNNER_TEMP/mosaic-swift-taskapp-startup-failure.log"
+          (
+            cd /
+            env -u MOSAIC_APP_LIBRARY "$installed_taskapp" \
+              >"$startup_failure_log" 2>&1 &
+            startup_pid=$!
+            trap 'kill "$startup_pid" 2>/dev/null || true; mv "$missing_runtime" "$installed_taskapp_runtime" 2>/dev/null || true' EXIT
+            sleep 5
+            kill -0 "$startup_pid"
+            kill "$startup_pid"
+            wait "$startup_pid" || true
+            mv "$missing_runtime" "$installed_taskapp_runtime"
+            trap - EXIT
+          )
+          cmp "$task_runtime_library" "$installed_taskapp_runtime"
+
           task_harness="$RUNNER_TEMP/mosaic-swift-taskapp-runtime-conformance"
           cp -R code/packages/rust/task-mosaic-app/conformance/swiftui "$task_harness"
           mkdir -p "$task_harness/Sources/CMosaicRuntime/include"
@@ -2247,8 +2281,6 @@ jobs:
             swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
           env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$task_state_path" MOSAIC_EXPECT_RESTORED=1 \
             swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
-          installed_taskapp="$taskapp_bin/App"
-          test -x "$installed_taskapp"
           taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
           diagnose_taskapp_crash() {
             local diagnostic_log="$RUNNER_TEMP/mosaic-swift-taskapp-lldb.log"
@@ -3236,6 +3268,14 @@ jobs:
           # UI Automation does not need a foreground window, so no interactive
           # desktop session is required.
           $env:MOSAIC_APP_STATE_PATH = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp-ui-state.json'
+          Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
+          pwsh -NoProfile -ExecutionPolicy Bypass `
+            -File code/scripts/taskapp-xaml-startup-smoke.ps1 `
+            -ExePath $executable.FullName `
+            -RuntimePath $installedTaskRuntime
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML recoverable-startup smoke failed with exit code $LASTEXITCODE"
+          }
           Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
           pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/taskapp-xaml-smoke.ps1 -ExePath $executable.FullName
           if ($LASTEXITCODE -ne 0) {

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C112-avakasa",
+  "pathSegment": "KA-PATH-112-CAN112",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-112-CAN112",
+      "order": 3
+    }
+  ]
+}

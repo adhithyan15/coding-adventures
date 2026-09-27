@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Chance, Tool, Property, Owner, Strength",
+  "label": "ch:te-chance-tool-property-owner-strength",
+  "canDo": "I can say a chance, a tool, property, an owner and strength.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "TE-C106-balam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say a chance, a tool, property, an owner and strength.",
+    "assesses": [
+      "TE-LEX-C106-CAN106-03",
+      "TE-LEX-C106-CAN106-04",
+      "TE-LEX-C106-CAN106-05"
+    ]
+  }
+}

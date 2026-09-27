@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Hard-working, Clever, Terrible, Black, White",
+  "label": "ch:te-hard-working-clever-terrible-black-white",
+  "canDo": "I can say hard-working, clever, terrible, black and white.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C142-tellani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say hard-working, clever, terrible, black and white.",
+    "assesses": [
+      "TE-LEX-C142-QUAL142-03",
+      "TE-LEX-C142-QUAL142-04",
+      "TE-LEX-C142-QUAL142-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C147-gelucu",
+    "language": "telugu",
+    "chapter": 147,
+    "sequence": 6400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c740e74c4d4b0918"
+  },
+  "findings": []
+}

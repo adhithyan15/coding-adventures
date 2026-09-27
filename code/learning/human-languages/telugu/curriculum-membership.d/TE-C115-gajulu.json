@@ -1,0 +1,11 @@
+{
+  "id": "TE-C115-gajulu",
+  "pathSegment": "TE-PATH-115-THINGS115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-115-THINGS115",
+      "order": 2
+    }
+  ]
+}

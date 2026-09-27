@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To walk, To close, To open, To drink, To cry",
+  "label": "ch:te-to-walk-to-close-to-open-to-drink-to-cry",
+  "canDo": "I can say to walk, to close, to open, to drink and to cry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-R149-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say to walk, to close, to open, to drink and to cry.",
+    "assesses": [
+      "TE-LEX-C149-ACT149-03",
+      "TE-LEX-C149-ACT149-04",
+      "TE-LEX-C149-ACT149-05"
+    ]
+  }
+}

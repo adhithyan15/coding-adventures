@@ -1,0 +1,11 @@
+{
+  "id": "FA-C87-sahel",
+  "pathSegment": "FA-PATH-87-LOC87",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-87-LOC87",
+      "order": 3
+    }
+  ]
+}

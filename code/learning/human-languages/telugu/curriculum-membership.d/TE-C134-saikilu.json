@@ -1,0 +1,11 @@
+{
+  "id": "TE-C134-saikilu",
+  "pathSegment": "TE-PATH-134-THINGS134",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-134-THINGS134",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C137-subhram",
+  "pathSegment": "TE-PATH-137-QUAL137",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-137-QUAL137",
+      "order": 3
+    }
+  ]
+}

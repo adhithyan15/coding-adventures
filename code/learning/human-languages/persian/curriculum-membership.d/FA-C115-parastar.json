@@ -1,0 +1,11 @@
+{
+  "id": "FA-C115-parastar",
+  "pathSegment": "FA-PATH-115-THINGS115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-115-THINGS115",
+      "order": 2
+    }
+  ]
+}

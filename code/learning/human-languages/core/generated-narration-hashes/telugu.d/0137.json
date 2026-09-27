@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:68abca5d218ba846",
+  "lessonIds": [
+    "TE-C137-telika",
+    "TE-C137-mettani",
+    "TE-C137-gatti",
+    "TE-C137-subhram",
+    "TE-C137-muriki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch137.txt",
+  "json": "telugu/narration/ch137.json",
+  "textHash": "fnv1a64:61ef7a93ede3c63b",
+  "jsonHash": "fnv1a64:6f82fddd459ab9c0",
+  "findings": []
+}

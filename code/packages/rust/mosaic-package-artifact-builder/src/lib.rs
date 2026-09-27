@@ -5040,13 +5040,15 @@ fn qt_main_with_host_effects(
 /// `.swift` under it is compiled and a copied file is already in the build --
 /// unlike Qt, which names its sources and needed `target_sources`.
 ///
-/// The call goes immediately after the host is assigned, through a downcast:
-/// `MosaicHostState` holds its host as `MosaicHostBridgeObject?`, a protocol
-/// that deliberately knows nothing about effects, and the concrete
-/// `MosaicRuntimeHost` is what carries `effectHandler`. The `if let` also makes
-/// the generated code correct when the standard host is absent and the app
-/// falls back to the reflection bridge -- there is no host to install onto
-/// then, and nothing should be.
+/// The call goes immediately after the host is assigned, through a downcast.
+/// In a strict shell that assignment lives inside every recoverable startup
+/// attempt, so retry installs the handler on the fresh host before initial
+/// props are read. `MosaicHostState` holds its host as
+/// `MosaicHostBridgeObject?`, a protocol that deliberately knows nothing about
+/// effects, and the concrete `MosaicRuntimeHost` is what carries
+/// `effectHandler`. The `if let` also makes the permissive generated code
+/// correct when the standard host is absent and the app falls back to the
+/// reflection bridge -- there is no host to install onto then.
 fn swift_app_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
@@ -5389,7 +5391,7 @@ fn flutter_main_with_host_effects(
 /// The fifth and last backend, and the one that differs most from the other
 /// four, for one reason: **XAML's generated host is a static class, not an
 /// instance.** `MosaicRuntimeHost` exposes `EffectHandler`, `CompleteEffect`
-/// and `DeferEffect` as statics over a process-wide `Lazy<Runtime?>`, so there
+/// and `DeferEffect` as statics over a process-wide resettable runtime, so there
 /// is no host value to hand the handler. The emitted call therefore takes no
 /// argument, where Qt, SwiftUI, Compose and Flutter all pass one.
 ///
@@ -5425,14 +5427,14 @@ fn xaml_main_with_host_effects(
     // rather than tidy.
     //
     // `MosaicRuntimeHost.EffectHandler`'s setter is
-    // `if (State.Value is { } runtime) runtime.EffectHandler = value;` -- it
+    // `if (State is { } runtime) runtime.EffectHandler = value;` -- it
     // SILENTLY DOES NOTHING when the runtime has not been loaded. So an install
     // emitted above this line compiles, runs, assigns nothing, and the first
     // symptom is an `Await` going unanswered at runtime, which disables
     // snapshot and restore for the rest of the process.
     //
     // `LoadRequired` is what makes the setter take: it calls `RequiredRuntime`,
-    // which throws rather than returning null, so `State.Value` is non-null on
+    // which throws rather than returning null, so `State` is non-null on
     // every path that reaches the next line.
     const ANCHOR: &str = "MosaicRuntimeHost.LoadRequired();";
     let Some(at) = line_anchored_find(generated, ANCHOR) else {
@@ -5452,7 +5454,7 @@ fn xaml_main_with_host_effects(
         // each still constructs a host there. This one cannot, and the
         // alternative to refusing is worse than it looks: assigning
         // `MosaicRuntimeHost.EffectHandler` reaches a setter that checks
-        // `State.Value is { } runtime` and does NOTHING when the library is
+        // `State is { } runtime` and does NOTHING when the library is
         // absent. A stub build would then claim an installed handler, answer no
         // effects, and report nothing -- the exact silent failure `[host_effects]`
         // exists to prevent.
@@ -11253,14 +11255,14 @@ layout NativeEvents {
 
         let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
         assert!(app.contains(
-            "MosaicRuntimeHost.loadRequired(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
+            "MosaicRuntimeHost.loadRecoverable(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
         ));
-        assert!(app.contains("private let bridge: MosaicHostBridgeObject"));
+        assert!(app.contains("private var bridge: MosaicHostBridgeObject?"));
+        assert!(app.contains("MosaicStartupView(host: host)"));
         assert!(app.contains("MosaicHostValue.requiredString(host.props, \"label\")"));
         assert!(app.contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
         assert!(!app.contains("MosaicHostBridge.load()"));
         assert!(!app.contains("NSClassFromString"));
-        assert!(!app.contains("MosaicHostBridgeObject?"));
         assert!(!app.contains("print(\"Mosaic dispatch:"));
         assert!(!app.contains("Sample Label"));
 
@@ -16573,7 +16575,7 @@ handlers = [
     /// The install lands AFTER `LoadRequired`, and that ordering is the point.
     ///
     /// `MosaicRuntimeHost.EffectHandler`'s setter is
-    /// `if (State.Value is { } runtime) runtime.EffectHandler = value;` -- it
+    /// `if (State is { } runtime) runtime.EffectHandler = value;` -- it
     /// silently assigns nothing when the runtime has not loaded. An install
     /// emitted above the anchor would compile, run, and do nothing at all.
     #[test]
@@ -16594,7 +16596,7 @@ handlers = [
 
     /// No argument, unlike every other backend.
     ///
-    /// XAML's host is a static class over a process-wide `Lazy<Runtime?>`, so
+    /// XAML's host is a static class over a process-wide resettable runtime, so
     /// there is no host value to pass. Pinned because the asymmetry is easy to
     /// "fix" into a call that does not compile.
     #[test]
@@ -16708,7 +16710,11 @@ handlers = [
                     .find("MosaicRuntimeHost.LoadRequired();")
                     .expect("the load call");
                 let install = wired.find("ProbeEffects.Install();").expect("the install");
-                assert!(load < install, "{wired}");
+                let apply = wired
+                    .find("MosaicRuntimeHost.ApplyRequiredProps")
+                    .expect("the props call");
+                assert!(load < install && install < apply, "{wired}");
+                assert!(wired.contains("RetryStartup_Click"), "{wired}");
             } else {
                 let error = wired.expect_err("the stub shell must refuse, not emit a dead install");
                 assert!(
@@ -17195,8 +17201,8 @@ version = "1"
         };
         // BOTH `require_runtime` shapes, because the emitter has two separate
         // `MosaicHostState` templates and picks between them on that flag --
-        // `build_runtime_required_mosaic_host_state` declares `bridge` as
-        // non-optional and assigns `MosaicRuntimeHost.loadRequired()`.
+        // `build_runtime_required_mosaic_host_state` carries a recoverable
+        // loader and the loading/failure/ready views around the optional host.
         //
         // The runtime-required one is the shape that SHIPS: the builder sets
         // this flag for `--profile native-complete` and for any build passing
@@ -17224,7 +17230,7 @@ version = "1"
             assert_eq!(
                 emitted
                     .app_swift
-                    .contains("MosaicRuntimeHost.loadRequired()"),
+                    .contains("MosaicRuntimeHost.loadRecoverable()"),
                 require_runtime,
                 "require_runtime={require_runtime} must select the matching host template"
             );

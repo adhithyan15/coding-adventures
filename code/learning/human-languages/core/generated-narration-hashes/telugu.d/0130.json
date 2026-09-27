@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:59430822bbedc0da",
+  "lessonIds": [
+    "TE-C130-tivi",
+    "TE-C130-kampyutar",
+    "TE-C130-phonu",
+    "TE-C130-tikkettu",
+    "TE-C130-paisa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch130.txt",
+  "json": "telugu/narration/ch130.json",
+  "textHash": "fnv1a64:6d07633889b54de7",
+  "jsonHash": "fnv1a64:db73afaecdf2ed50",
+  "findings": []
+}

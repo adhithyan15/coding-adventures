@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:b3c9bd0ea20bd4cf",
+  "lessonIds": [
+    "KA-C133-kappe",
+    "KA-C133-batukoli",
+    "KA-C133-handi",
+    "KA-C133-katte",
+    "KA-C133-onte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch133.txt",
+  "json": "kannada/narration/ch133.json",
+  "textHash": "fnv1a64:6fac80dc7660b18f",
+  "jsonHash": "fnv1a64:0f4a6a30ba7fb2f5",
+  "findings": []
+}

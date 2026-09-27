@@ -1,0 +1,11 @@
+{
+  "id": "TE-C130-phonu",
+  "pathSegment": "TE-PATH-130-THINGS130",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-130-THINGS130",
+      "order": 2
+    }
+  ]
+}

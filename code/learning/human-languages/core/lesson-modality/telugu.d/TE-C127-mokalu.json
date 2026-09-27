@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C127-mokalu",
+    "language": "telugu",
+    "chapter": 127,
+    "sequence": 5320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e540f6da1ae77f72"
+  },
+  "findings": []
+}

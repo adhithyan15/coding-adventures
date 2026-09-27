@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:6901b22c36f47fc8",
+  "lessonIds": [
+    "KA-C149-ili2",
+    "KA-C149-seru",
+    "KA-C149-todu",
+    "KA-C149-kare",
+    "KA-C149-enisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch149.txt",
+  "json": "kannada/narration/ch149.json",
+  "textHash": "fnv1a64:c5daf0d522ec5721",
+  "jsonHash": "fnv1a64:10fe293fe063017a",
+  "findings": []
+}

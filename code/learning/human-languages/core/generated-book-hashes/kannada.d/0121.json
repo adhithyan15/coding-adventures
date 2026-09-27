@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:bbf58fe853e9ea1a",
+  "lessonIds": [
+    "KA-C121-topi",
+    "KA-C121-ungura",
+    "KA-C121-bale",
+    "KA-C121-saru",
+    "KA-C121-sambaru"
+  ],
+  "tex": "kannada/book/chapters/ch121-cap-ring-bangle-rasam-sambar.tex"
+}

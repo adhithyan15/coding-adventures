@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Noon, Day before yesterday, Tonight, Last night, Time",
+  "label": "ch:fa-noon-day-before-yesterday-tonight-last-night-time",
+  "canDo": "I can say noon, the day before yesterday, tonight, last night and time.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C79-zaman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say noon, the day before yesterday, tonight, last night and time.",
+    "assesses": [
+      "FA-LEX-C79-TIME79-03",
+      "FA-LEX-C79-TIME79-04",
+      "FA-LEX-C79-TIME79-05"
+    ]
+  }
+}

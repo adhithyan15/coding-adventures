@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:8110451883fe6a40",
+  "lessonIds": [
+    "FA-C133-kashtan",
+    "FA-C133-chidan",
+    "FA-C133-pichidan",
+    "FA-C133-residan",
+    "FA-C133-geristan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch133.txt",
+  "json": "persian/narration/ch133.json",
+  "textHash": "fnv1a64:25b92d14b8459120",
+  "jsonHash": "fnv1a64:04d394b48dc283aa",
+  "findings": []
+}

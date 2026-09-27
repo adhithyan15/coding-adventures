@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C109-pust",
+    "language": "persian",
+    "chapter": 109,
+    "sequence": 5500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:823547e78d7c9e09"
+  },
+  "findings": []
+}

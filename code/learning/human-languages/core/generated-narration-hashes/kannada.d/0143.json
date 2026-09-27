@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:9ae4bf9353c2570a",
+  "lessonIds": [
+    "KA-C143-ona",
+    "KA-C143-bada",
+    "KA-C143-srimanta",
+    "KA-C143-prasiddha",
+    "KA-C143-suraksita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch143.txt",
+  "json": "kannada/narration/ch143.json",
+  "textHash": "fnv1a64:c058ab4bae2d7553",
+  "jsonHash": "fnv1a64:95d385bdba69c764",
+  "findings": []
+}

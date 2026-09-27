@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Bear, Monkey, Rabbit, Deer, Fox",
+  "label": "ch:ka-bear-monkey-rabbit-deer-fox",
+  "canDo": "I can say a bear, a monkey, a rabbit, a deer and a fox.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C130-nari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a bear, a monkey, a rabbit, a deer and a fox.",
+    "assesses": [
+      "KA-LEX-C130-THINGS130-03",
+      "KA-LEX-C130-THINGS130-04",
+      "KA-LEX-C130-THINGS130-05"
+    ]
+  }
+}

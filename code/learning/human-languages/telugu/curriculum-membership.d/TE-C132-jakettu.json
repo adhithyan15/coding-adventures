@@ -1,0 +1,11 @@
+{
+  "id": "TE-C132-jakettu",
+  "pathSegment": "TE-PATH-132-THINGS132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-132-THINGS132",
+      "order": 3
+    }
+  ]
+}

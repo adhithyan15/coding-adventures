@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To protect, To burn, To put out, To sing, To sell",
+  "label": "ch:te-to-protect-to-burn-to-put-out-to-sing-to-sell",
+  "canDo": "I can say to protect, to burn, to put out, to sing and to sell.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C148-ammu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say to protect, to burn, to put out, to sing and to sell.",
+    "assesses": [
+      "TE-LEX-C148-ACT148-03",
+      "TE-LEX-C148-ACT148-04",
+      "TE-LEX-C148-ACT148-05"
+    ]
+  }
+}

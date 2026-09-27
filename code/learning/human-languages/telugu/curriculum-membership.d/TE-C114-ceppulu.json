@@ -1,0 +1,11 @@
+{
+  "id": "TE-C114-ceppulu",
+  "pathSegment": "TE-PATH-114-THINGS114",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-114-THINGS114",
+      "order": 4
+    }
+  ]
+}

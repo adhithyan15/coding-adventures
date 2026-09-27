@@ -1,0 +1,11 @@
+{
+  "id": "KA-C114-yojane",
+  "pathSegment": "KA-PATH-114-WANT114",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-114-WANT114",
+      "order": 1
+    }
+  ]
+}

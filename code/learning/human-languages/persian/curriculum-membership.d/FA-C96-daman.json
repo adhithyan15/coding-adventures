@@ -1,0 +1,11 @@
+{
+  "id": "FA-C96-daman",
+  "pathSegment": "FA-PATH-96-THINGS96",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-96-THINGS96",
+      "order": 4
+    }
+  ]
+}

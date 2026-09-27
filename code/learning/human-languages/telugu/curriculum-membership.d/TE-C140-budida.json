@@ -1,0 +1,11 @@
+{
+  "id": "TE-C140-budida",
+  "pathSegment": "TE-PATH-140-QUAL140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-140-QUAL140",
+      "order": 2
+    }
+  ]
+}

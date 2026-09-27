@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R135-second-pass-nature-and-animals",
+    "language": "kannada",
+    "chapter": 135,
+    "sequence": 5820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd28ad90929d0b33"
+  },
+  "findings": []
+}

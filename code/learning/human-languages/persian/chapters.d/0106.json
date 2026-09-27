@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Parrot, Pigeon, Peacock, Duck, Bee",
+  "label": "ch:fa-parrot-pigeon-peacock-duck-bee",
+  "canDo": "I can say a parrot, a pigeon, a peacock, a duck and a bee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C106-zanbur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say a parrot, a pigeon, a peacock, a duck and a bee.",
+    "assesses": [
+      "FA-LEX-C106-THINGS106-03",
+      "FA-LEX-C106-THINGS106-04",
+      "FA-LEX-C106-THINGS106-05"
+    ]
+  }
+}

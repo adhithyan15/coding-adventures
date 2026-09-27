@@ -1,0 +1,11 @@
+{
+  "id": "TE-C142-telivaina",
+  "pathSegment": "TE-PATH-142-QUAL142",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-142-QUAL142",
+      "order": 1
+    }
+  ]
+}

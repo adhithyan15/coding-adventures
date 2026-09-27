@@ -1,0 +1,11 @@
+{
+  "id": "FA-C86-samt",
+  "pathSegment": "FA-PATH-86-LOC86",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-86-LOC86",
+      "order": 2
+    }
+  ]
+}

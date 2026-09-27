@@ -1,0 +1,11 @@
+{
+  "id": "TE-C103-badi",
+  "pathSegment": "TE-PATH-103-LOC103",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-103-LOC103",
+      "order": 1
+    }
+  ]
+}

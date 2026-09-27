@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R88-second-pass-this-and-that-and-places",
+    "language": "persian",
+    "chapter": 88,
+    "sequence": 4410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94a8335839f795b4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Chin, Cheek, Knee, Elbow, Wrist",
+  "label": "ch:ka-chin-cheek-knee-elbow-wrist",
+  "canDo": "I can say the chin, a cheek, a knee, an elbow and a wrist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-R135-second-pass-nature-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say the chin, a cheek, a knee, an elbow and a wrist.",
+    "assesses": [
+      "KA-LEX-C135-THINGS135-03",
+      "KA-LEX-C135-THINGS135-04",
+      "KA-LEX-C135-THINGS135-05"
+    ]
+  }
+}

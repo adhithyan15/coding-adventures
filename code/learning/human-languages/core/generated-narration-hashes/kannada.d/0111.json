@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:6ed5d661f6a14402",
+  "lessonIds": [
+    "KA-C111-hotel",
+    "KA-C111-railu",
+    "KA-C111-vimana",
+    "KA-C111-karu",
+    "KA-C111-saikal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch111.txt",
+  "json": "kannada/narration/ch111.json",
+  "textHash": "fnv1a64:f1c8f6d7422f05a0",
+  "jsonHash": "fnv1a64:02c18c7c69a4041a",
+  "findings": []
+}

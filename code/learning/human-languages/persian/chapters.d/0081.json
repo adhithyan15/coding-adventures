@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Saturday, Sunday, Monday, Wednesday, Thursday",
+  "label": "ch:fa-saturday-sunday-monday-wednesday-thursday",
+  "canDo": "I can say Saturday, Sunday, Monday, Wednesday and Thursday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C81-panjshanbe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say Saturday, Sunday, Monday, Wednesday and Thursday.",
+    "assesses": [
+      "FA-LEX-C81-TIME81-03",
+      "FA-LEX-C81-TIME81-04",
+      "FA-LEX-C81-TIME81-05"
+    ]
+  }
+}
