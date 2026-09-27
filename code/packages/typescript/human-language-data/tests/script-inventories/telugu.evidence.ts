@@ -144,6 +144,33 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("telugu.json")?.has("క") ?? false).toBe(false);
     expect(affected.get("క") ?? 0).toBe(0);
+    const teluguKha = scripts.telugu!.letters.find(
+      (entry) => entry.glyph === "ఖ",
+    )!;
+    expect(teluguKha.sound).toBe("kha");
+    expect(teluguKha.penLifts).toBe(1);
+    expect(teluguKha.strokeOrder).toEqual([
+      "circle up around the upper-left bowl",
+      "descend through the central curve",
+      "turn up around the left shoulder",
+      "sweep right and up around the broad outer bowl",
+      "return left along the crown",
+      "restart and draw the separate downward stem",
+    ]);
+    expect(teluguKha.strokeOrderNote).toMatch(
+      /six numbered movements.*two pen-down runs.*1.?5.*movement 6/i,
+    );
+    expect(teluguKha.strokeOrderSource?.url).toBe(
+      "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+    );
+    expect(teluguKha.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*ఖ.*dot_stroke_c_1_2_kha\.png.*movements 1.?6.*version 2\.6/i,
+    );
+    expect(teluguKha.strokeOrderSource?.variation).toMatch(
+      /six directional movements.*1.?5.*main body.*movement 6.*downward stem.*not uniform.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("ఖ") ?? false).toBe(false);
+    expect(affected.get("ఖ") ?? 0).toBe(0);
     const teluguAa = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఆ",
     )!;

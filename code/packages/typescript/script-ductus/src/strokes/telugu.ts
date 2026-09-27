@@ -22,6 +22,105 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:ఖ",
+    {
+      script: "telugu",
+      glyph: "ఖ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle up around the upper-left bowl",
+              path: [
+                { x: 285, y: 404 },
+                { x: 252, y: 446 },
+                { x: 198, y: 468 },
+                { x: 135, y: 455 },
+                { x: 82, y: 416 },
+                { x: 65, y: 365 },
+                { x: 86, y: 315 },
+                { x: 132, y: 275 },
+                { x: 188, y: 270 },
+                { x: 240, y: 298 },
+                { x: 276, y: 344 },
+                { x: 285, y: 404 },
+              ],
+            },
+            {
+              label: "descend through the central curve",
+              path: [
+                { x: 285, y: 404 },
+                { x: 325, y: 350 },
+                { x: 350, y: 290 },
+                { x: 360, y: 225 },
+                { x: 350, y: 165 },
+                { x: 320, y: 112 },
+              ],
+            },
+            {
+              label: "turn up around the left shoulder",
+              path: [
+                { x: 320, y: 112 },
+                { x: 270, y: 78 },
+                { x: 210, y: 58 },
+                { x: 150, y: 58 },
+                { x: 100, y: 78 },
+                { x: 68, y: 108 },
+                { x: 62, y: 140 },
+                { x: 78, y: 170 },
+                { x: 112, y: 188 },
+                { x: 158, y: 190 },
+              ],
+            },
+            {
+              label: "sweep right and up around the broad outer bowl",
+              path: [
+                { x: 158, y: 190 },
+                { x: 220, y: 178 },
+                { x: 285, y: 145 },
+                { x: 350, y: 105 },
+                { x: 420, y: 70 },
+                { x: 500, y: 42 },
+                { x: 570, y: 48 },
+                { x: 625, y: 82 },
+                { x: 665, y: 140 },
+                { x: 675, y: 210 },
+                { x: 658, y: 278 },
+                { x: 620, y: 338 },
+                { x: 565, y: 392 },
+                { x: 500, y: 438 },
+              ],
+            },
+            {
+              label: "return left along the crown",
+              path: [
+                { x: 500, y: 438 },
+                { x: 455, y: 460 },
+                { x: 410, y: 468 },
+                { x: 365, y: 456 },
+                { x: 325, y: 432 },
+                { x: 285, y: 404 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the separate downward stem",
+              path: [
+                { x: 343, y: 12 },
+                { x: 343, y: -48 },
+                { x: 343, y: -118 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఖ"),
+    },
+  ],
+  [
     "telugu:క",
     {
       script: "telugu",

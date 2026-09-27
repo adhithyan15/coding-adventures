@@ -107,6 +107,10 @@ That is about 380 filmstrips that could print today.
   fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson
   is the figure owner; the rest of the consonant inventory remains one-letter-
   at-a-time work under the same source gate.
+- **The next Telugu consonant, ఖ, now follows.** Its existing `TE-S137` lesson
+  owns a six-movement filmstrip: movements 1–5 draw the joined main body and
+  movement 6 restarts for the separate stem, again source-gated against the
+  packaged tracing guide and fitted to Noto Sans Telugu.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
