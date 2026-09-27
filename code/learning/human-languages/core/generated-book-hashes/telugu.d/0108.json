@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:363049779055448b",
+  "lessonIds": [
+    "TE-C108-koru",
+    "TE-C108-nirnayincu",
+    "TE-C108-karanam",
+    "TE-C108-anduvalla",
+    "TE-C108-valla"
+  ],
+  "tex": "telugu/book/chapters/ch108-to-wish-for-to-decide-reason-therefore-because-of.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C136-podavu",
+    "language": "telugu",
+    "chapter": 136,
+    "sequence": 5810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7b854c40e1c5cdb"
+  },
+  "findings": []
+}

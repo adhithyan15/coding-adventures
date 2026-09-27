@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C143-lecu",
+    "language": "telugu",
+    "chapter": 143,
+    "sequence": 6210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8089a934b0b2464a"
+  },
+  "findings": []
+}

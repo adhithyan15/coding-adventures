@@ -1,0 +1,11 @@
+{
+  "id": "TE-C125-nemali",
+  "pathSegment": "TE-PATH-125-THINGS125",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-125-THINGS125",
+      "order": 2
+    }
+  ]
+}

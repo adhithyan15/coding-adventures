@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C118-bangaladumpa",
+    "language": "telugu",
+    "chapter": 118,
+    "sequence": 4840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12e60aa01f669853"
+  },
+  "findings": []
+}

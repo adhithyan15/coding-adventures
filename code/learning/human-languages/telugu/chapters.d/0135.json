@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Black pepper, Cumin, Tamarind, Lemon, Grapes",
+  "label": "ch:te-black-pepper-cumin-tamarind-lemon-grapes",
+  "canDo": "I can say black pepper, cumin, tamarind, a lemon and grapes.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C135-draksa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say black pepper, cumin, tamarind, a lemon and grapes.",
+    "assesses": [
+      "TE-LEX-C135-THINGS135-03",
+      "TE-LEX-C135-THINGS135-04",
+      "TE-LEX-C135-THINGS135-05"
+    ]
+  }
+}

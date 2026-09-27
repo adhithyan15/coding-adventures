@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:e94ca7143281a453",
+  "lessonIds": [
+    "TE-C100-kudi",
+    "TE-C100-edama",
+    "TE-C100-tinnaga",
+    "TE-C100-daggara",
+    "TE-C100-duram"
+  ],
+  "tex": "telugu/book/chapters/ch100-right-left-straight-ahead-near-far.tex"
+}

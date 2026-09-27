@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:9a11e36664084f1c",
+  "lessonIds": [
+    "TE-C109-anduke",
+    "TE-C109-mancam",
+    "TE-C109-dindu",
+    "TE-C109-duppati",
+    "TE-C109-tera",
+    "TE-R109-first-pass-places-can-and-want",
+    "TE-R109-second-pass-want-why-and-the-house"
+  ],
+  "tex": "telugu/book/chapters/ch109-that-is-exactly-why-bed-pillow-blanket-curtain.tex"
+}

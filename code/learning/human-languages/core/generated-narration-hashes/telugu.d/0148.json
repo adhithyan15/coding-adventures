@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:dbb3dddf0a916079",
+  "lessonIds": [
+    "TE-C148-kapadu",
+    "TE-C148-kalcu",
+    "TE-C148-arpu",
+    "TE-C148-padu",
+    "TE-C148-ammu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch148.txt",
+  "json": "telugu/narration/ch148.json",
+  "textHash": "fnv1a64:8ffd52041df56142",
+  "jsonHash": "fnv1a64:3b9efbf74ba0e1e1",
+  "findings": []
+}

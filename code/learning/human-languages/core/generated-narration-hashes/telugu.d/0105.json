@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:0872c16fb25909bc",
+  "lessonIds": [
+    "TE-C105-stesan",
+    "TE-C105-bassu",
+    "TE-C105-samarthyam",
+    "TE-C105-naipunyam",
+    "TE-C105-hakku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch105.txt",
+  "json": "telugu/narration/ch105.json",
+  "textHash": "fnv1a64:b8e8c65ce8025c86",
+  "jsonHash": "fnv1a64:2435bbc3a9841cc4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C111-gadiyaram",
+  "pathSegment": "TE-PATH-111-THINGS111",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-111-THINGS111",
+      "order": 4
+    }
+  ]
+}

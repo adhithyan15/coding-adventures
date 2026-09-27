@@ -1,0 +1,11 @@
+{
+  "id": "TE-C113-bomma",
+  "pathSegment": "TE-PATH-113-THINGS113",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-113-THINGS113",
+      "order": 3
+    }
+  ]
+}

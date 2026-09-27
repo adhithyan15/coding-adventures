@@ -1,0 +1,11 @@
+{
+  "id": "TE-C135-draksa",
+  "pathSegment": "TE-PATH-135-THINGS135",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-135-THINGS135",
+      "order": 4
+    }
+  ]
+}

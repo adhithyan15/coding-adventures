@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:4ba509401e3f83ff",
+  "lessonIds": [
+    "TE-C118-tamata",
+    "TE-C118-bangaladumpa",
+    "TE-C118-vankaya",
+    "TE-C118-allam",
+    "TE-C118-vellulli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch118.txt",
+  "json": "telugu/narration/ch118.json",
+  "textHash": "fnv1a64:e2132e5b0e636a50",
+  "jsonHash": "fnv1a64:a1a9bb1fc995eeff",
+  "findings": []
+}

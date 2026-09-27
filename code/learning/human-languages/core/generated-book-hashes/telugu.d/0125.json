@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:f1871795bb7c979b",
+  "lessonIds": [
+    "TE-C125-pavuram",
+    "TE-C125-gudlaguba",
+    "TE-C125-nemali",
+    "TE-C125-sitakokacilaka",
+    "TE-C125-kaki"
+  ],
+  "tex": "telugu/book/chapters/ch125-pigeon-owl-peacock-butterfly-crow.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C103-gudi",
+    "language": "telugu",
+    "chapter": 103,
+    "sequence": 4050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3b34a20d1e5f1f5"
+  },
+  "findings": []
+}

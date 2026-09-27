@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C132-dhoti",
+    "language": "telugu",
+    "chapter": 132,
+    "sequence": 5610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:319ff5a3747f2f70"
+  },
+  "findings": []
+}

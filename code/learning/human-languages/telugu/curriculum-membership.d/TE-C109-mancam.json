@@ -1,0 +1,11 @@
+{
+  "id": "TE-C109-mancam",
+  "pathSegment": "TE-PATH-109-WHY109",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-109-WHY109",
+      "order": 1
+    }
+  ]
+}

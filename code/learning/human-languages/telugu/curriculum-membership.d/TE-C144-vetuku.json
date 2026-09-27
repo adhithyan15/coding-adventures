@@ -1,0 +1,11 @@
+{
+  "id": "TE-C144-vetuku",
+  "pathSegment": "TE-PATH-144-ACT144",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-144-ACT144",
+      "order": 4
+    }
+  ]
+}

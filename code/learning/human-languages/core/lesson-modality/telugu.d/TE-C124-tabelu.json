@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C124-tabelu",
+    "language": "telugu",
+    "chapter": 124,
+    "sequence": 5190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:191986d8b24ec257"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C127-naluka",
+    "language": "telugu",
+    "chapter": 127,
+    "sequence": 5310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1705e10a4634fccd"
+  },
+  "findings": []
+}

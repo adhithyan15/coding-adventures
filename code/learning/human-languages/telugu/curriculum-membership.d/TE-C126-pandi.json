@@ -1,0 +1,11 @@
+{
+  "id": "TE-C126-pandi",
+  "pathSegment": "TE-PATH-126-THINGS126",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-126-THINGS126",
+      "order": 1
+    }
+  ]
+}

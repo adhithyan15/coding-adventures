@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C109-anduke",
+    "language": "telugu",
+    "chapter": 109,
+    "sequence": 4350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82bef89700e92bc1"
+  },
+  "findings": []
+}

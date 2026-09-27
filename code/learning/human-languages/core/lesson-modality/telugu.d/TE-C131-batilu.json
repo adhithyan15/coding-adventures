@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C131-batilu",
+    "language": "telugu",
+    "chapter": 131,
+    "sequence": 5550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bf3d73ff97f5c20"
+  },
+  "findings": []
+}

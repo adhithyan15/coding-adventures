@@ -1,0 +1,11 @@
+{
+  "id": "TE-C106-balam",
+  "pathSegment": "TE-PATH-106-CAN106",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-106-CAN106",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C107-asa",
+  "pathSegment": "TE-PATH-107-WANT107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-107-WANT107",
+      "order": 1
+    }
+  ]
+}

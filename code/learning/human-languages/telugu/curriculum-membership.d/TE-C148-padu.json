@@ -1,0 +1,11 @@
+{
+  "id": "TE-C148-padu",
+  "pathSegment": "TE-PATH-148-ACT148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-148-ACT148",
+      "order": 3
+    }
+  ]
+}

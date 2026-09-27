@@ -1,0 +1,11 @@
+{
+  "id": "TE-C101-kinda",
+  "pathSegment": "TE-PATH-101-LOC101",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-101-LOC101",
+      "order": 1
+    }
+  ]
+}

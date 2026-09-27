@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:765e488511f7544e",
+  "lessonIds": [
+    "TE-C133-guddalu",
+    "TE-C133-misalu",
+    "TE-C133-kantiniru",
+    "TE-C133-padava",
+    "TE-C133-railu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch133.txt",
+  "json": "telugu/narration/ch133.json",
+  "textHash": "fnv1a64:848f9b640b364329",
+  "jsonHash": "fnv1a64:9ff1a9757671b85f",
+  "findings": []
+}

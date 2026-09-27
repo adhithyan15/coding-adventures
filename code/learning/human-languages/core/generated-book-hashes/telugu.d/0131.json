@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:886304f70a147eaf",
+  "lessonIds": [
+    "TE-C131-rupayi",
+    "TE-C131-batilu",
+    "TE-C131-langa",
+    "TE-C131-jebu",
+    "TE-C131-beltu"
+  ],
+  "tex": "telugu/book/chapters/ch131-rupee-bottle-long-skirt-pocket-belt.tex"
+}

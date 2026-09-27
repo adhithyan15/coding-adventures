@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:18557231c930f613",
+  "lessonIds": [
+    "TE-C106-avakasam",
+    "TE-C106-parikaram",
+    "TE-C106-asti",
+    "TE-C106-yajamani",
+    "TE-C106-balam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch106.txt",
+  "json": "telugu/narration/ch106.json",
+  "textHash": "fnv1a64:f6a39823d5d17aad",
+  "jsonHash": "fnv1a64:35ae50a383bd38e0",
+  "findings": []
+}

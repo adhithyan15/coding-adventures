@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:3bf6eb665eddbcbd",
+  "lessonIds": [
+    "TE-C113-poyyi",
+    "TE-C113-kovvotti",
+    "TE-C113-aggipette",
+    "TE-C113-bomma",
+    "TE-C113-banti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch113.txt",
+  "json": "telugu/narration/ch113.json",
+  "textHash": "fnv1a64:c493db848fdcb37c",
+  "jsonHash": "fnv1a64:6e8086c7fe4d0fc7",
+  "findings": []
+}

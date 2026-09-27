@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Sambar, Rasam, Egg, Fish, Meat",
+  "label": "ch:te-sambar-rasam-egg-fish-meat",
+  "canDo": "I can say sambar, rasam, an egg, a fish and meat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C116-mamsam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say sambar, rasam, an egg, a fish and meat.",
+    "assesses": [
+      "TE-LEX-C116-THINGS116-03",
+      "TE-LEX-C116-THINGS116-04",
+      "TE-LEX-C116-THINGS116-05"
+    ]
+  }
+}

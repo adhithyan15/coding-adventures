@@ -1,0 +1,11 @@
+{
+  "id": "TE-C141-dhairyam",
+  "pathSegment": "TE-PATH-141-QUAL141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-141-QUAL141",
+      "order": 3
+    }
+  ]
+}

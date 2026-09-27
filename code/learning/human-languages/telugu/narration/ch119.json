@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 119,
+  "title": "Honey, Idli, Dosa, Vada, Coffee",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ed3806f3072855ee",
+  "lessons": [
+    {
+      "id": "TE-C119-tene",
+      "sequence": 4880,
+      "title": "తేనె (tēne) — honey",
+      "headword": "తేనె",
+      "romanization": "tēne",
+      "gloss": "honey",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9a2e4563eb04c4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for ginger, then the Telugu for garlic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తేనె",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తేనె — tēne — \"honey\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tēne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for ginger, then the Telugu for garlic, then say tēne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for ginger, then the Telugu for garlic, then say *tēne* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తేనె (tēne) mean? (\"Honey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C119-idli",
+      "sequence": 4890,
+      "title": "ఇడ్లీ (iḍlī) — an idli",
+      "headword": "ఇడ్లీ",
+      "romanization": "iḍlī",
+      "gloss": "an idli",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cc652a48eed211c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for garlic, then the Telugu for honey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇడ్లీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇడ్లీ — iḍlī — \"an idli\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḍlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḍlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḍlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḍlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say iḍlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *iḍlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for garlic, then the Telugu for honey, then say iḍlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for garlic, then the Telugu for honey, then say *iḍlī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఇడ్లీ (iḍlī) mean? (\"An idli\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C119-dosa",
+      "sequence": 4900,
+      "title": "దోశ (dōsa) — a dosa",
+      "headword": "దోశ",
+      "romanization": "dōsa",
+      "gloss": "a dosa",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0335183205860abc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for honey, then the Telugu for an idli."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దోశ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దోశ — dōsa — \"a dosa\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dōsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dōsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for honey, then the Telugu for an idli, then say dōsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for honey, then the Telugu for an idli, then say *dōsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దోశ (dōsa) mean? (\"A dosa\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C119-vada",
+      "sequence": 4910,
+      "title": "వడ (vaḍa) — a vada",
+      "headword": "వడ",
+      "romanization": "vaḍa",
+      "gloss": "a vada",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2aef72063e7b3ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an idli, then the Telugu for a dosa."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వడ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వడ — vaḍa — \"a vada\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vaḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vaḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an idli, then the Telugu for a dosa, then say vaḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an idli, then the Telugu for a dosa, then say *vaḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వడ (vaḍa) mean? (\"A vada\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C119-kaphi",
+      "sequence": 4920,
+      "title": "కాఫీ (kāphī) — coffee",
+      "headword": "కాఫీ",
+      "romanization": "kāphī",
+      "gloss": "coffee",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79824daf34bdc1c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a dosa, then the Telugu for a vada."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కాఫీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కాఫీ — kāphī — \"coffee\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāphī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāphī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāphī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāphī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kāphī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kāphī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a dosa, then the Telugu for a vada, then say kāphī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a dosa, then the Telugu for a vada, then say *kāphī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కాఫీ (kāphī) mean? (\"Coffee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R119-first-pass-the-house-and-things-you-carry",
+      "sequence": 4930,
+      "title": "The house and things you carry — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 110-114",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16c68465e5dd41ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a vada and coffee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lock, a key, a rope, a nail, scissors",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lock, a key, a rope, a nail, scissors]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a comb, soap, a towel, glasses, a clock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a comb, soap, a towel, glasses, a clock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bag, a pen, paper, a drinking glass, a spoon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bag, a pen, paper, a drinking glass, a spoon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stove, a candle, a matchbox, a doll; a picture, a ball",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stove, a candle, a matchbox, a doll; a picture, a ball]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kite, a shirt, a sari, a dhoti, sandals",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kite, a shirt, a sari, a dhoti, sandals]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A lock? (తాళం, tāḷaṁ.) A key? (తాళంచెవి, tāḷaṁcevi.) A rope? (తాడు, tāḍu.) A nail? (మేకు, mēku.) Scissors? (కత్తెర, katterā.) A comb? (దువ్వెన, duvvena.) Soap? (సబ్బు, sabbu.) A towel? (తువ్వాలు, tuvvālu.) Glasses? (కళ్ళజోడు, kaḷḷajōḍu.) A clock? (గడియారం, gaḍiyāraṁ.) A bag? (సంచి, sañci.) A pen? (కలం, kalaṁ.) Paper? (కాగితం, kāgitaṁ.) A drinking glass? (గ్లాసు, glāsu.) A spoon? (చెంచా, cemcā.) A stove? (పొయ్యి, poyyi.) A candle? (కొవ్వొత్తి, kovvotti.) A matchbox? (అగ్గిపెట్టె, aggipeṭṭe.) A doll; a picture? (బొమ్మ, bomma.) A ball? (బంతి, banti.) A kite? (గాలిపటం, gālipaṭaṁ.) A shirt? (చొక్కా, cokkā.) A sari? (చీర, cīra.) A dhoti? (పంచె, pañce.) Sandals? (చెప్పులు, ceppulu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R119-second-pass-clothes-and-food",
+      "sequence": 4940,
+      "title": "Clothes and food — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 115-119",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6fa0dd6f0057088",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a cap and a ring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cap, a ring, bangles, a curry, dal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cap, a ring, bangles, a curry, dal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambar, rasam, an egg, a fish, meat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sambar, rasam, an egg, a fish, meat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vegetables, a banana, a mango, coconut, an onion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: vegetables, a banana, a mango, coconut, an onion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tomato, a potato, an aubergine, ginger, garlic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tomato, a potato, an aubergine, ginger, garlic]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honey, an idli, a dosa, a vada, coffee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: honey, an idli, a dosa, a vada, coffee]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A cap? (టోపీ, ṭōpī.) A ring? (ఉంగరం, uṅgaraṁ.) Bangles? (గాజులు, gājulu.) A curry? (కూర, kūra.) Dal? (పప్పు, pappu.) Sambar? (సాంబారు, sāmbāru.) Rasam? (రసం, rasaṁ.) An egg? (గుడ్డు, guḍḍu.) A fish? (చేప, cēpa.) Meat? (మాంసం, māṁsaṁ.) Vegetables? (కూరగాయలు, kūragāyalu.) A banana? (అరటిపండు, araṭipaṇḍu.) A mango? (మామిడిపండు, māmiḍipaṇḍu.) Coconut? (కొబ్బరి, kobbari.) An onion? (ఉల్లిపాయ, ullipāya.) A tomato? (టమాటా, ṭamāṭā.) A potato? (బంగాళాదుంప, baṅgāḷādumpa.) An aubergine? (వంకాయ, vaṅkāya.) Ginger? (అల్లం, allaṁ.) Garlic? (వెల్లుల్లి, vellulli.) Honey? (తేనె, tēne.) An idli? (ఇడ్లీ, iḍlī.) A dosa? (దోశ, dōsa.) A vada? (వడ, vaḍa.) Coffee? (కాఫీ, kāphī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C138-vedalpu",
+    "language": "telugu",
+    "chapter": 138,
+    "sequence": 5920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ec95ed61e4f4ad0"
+  },
+  "findings": []
+}

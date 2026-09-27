@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C145-nercuko",
+    "language": "telugu",
+    "chapter": 145,
+    "sequence": 6270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36f61b3a7471f6d2"
+  },
+  "findings": []
+}

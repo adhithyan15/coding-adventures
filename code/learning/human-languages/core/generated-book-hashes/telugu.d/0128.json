@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:1de0531ad491741e",
+  "lessonIds": [
+    "TE-C128-gaddam",
+    "TE-C128-manikattu",
+    "TE-C128-moceyi",
+    "TE-C128-carmam",
+    "TE-C128-raktam"
+  ],
+  "tex": "telugu/book/chapters/ch128-chin-wrist-elbow-skin-blood.tex"
+}

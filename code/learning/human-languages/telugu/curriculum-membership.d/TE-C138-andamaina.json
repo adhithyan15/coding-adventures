@@ -1,0 +1,11 @@
+{
+  "id": "TE-C138-andamaina",
+  "pathSegment": "TE-PATH-138-QUAL138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-138-QUAL138",
+      "order": 1
+    }
+  ]
+}

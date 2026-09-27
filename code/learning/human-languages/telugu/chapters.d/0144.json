@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "To cook, To cut, To break, To send, To look for",
+  "label": "ch:te-to-cook-to-cut-to-break-to-send-to-look-for",
+  "canDo": "I can say to cook, to cut, to break, to send and to look for.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C144-vetuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say to cook, to cut, to break, to send and to look for.",
+    "assesses": [
+      "TE-LEX-C144-ACT144-03",
+      "TE-LEX-C144-ACT144-04",
+      "TE-LEX-C144-ACT144-05"
+    ]
+  }
+}

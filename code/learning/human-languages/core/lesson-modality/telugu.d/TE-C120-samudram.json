@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C120-samudram",
+    "language": "telugu",
+    "chapter": 120,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b799a5e06c8dde9a"
+  },
+  "findings": []
+}

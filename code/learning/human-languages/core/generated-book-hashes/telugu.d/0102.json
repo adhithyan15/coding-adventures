@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:5782fad81348ab52",
+  "lessonIds": [
+    "TE-C102-madhyalo",
+    "TE-C102-vidhi",
+    "TE-C102-roddu",
+    "TE-C102-vantena",
+    "TE-C102-parku"
+  ],
+  "tex": "telugu/book/chapters/ch102-in-the-middle-street-road-bridge-park.tex"
+}

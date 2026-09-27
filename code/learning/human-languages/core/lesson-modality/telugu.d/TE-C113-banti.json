@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C113-banti",
+    "language": "telugu",
+    "chapter": 113,
+    "sequence": 4620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24799ec2687958ae"
+  },
+  "findings": []
+}

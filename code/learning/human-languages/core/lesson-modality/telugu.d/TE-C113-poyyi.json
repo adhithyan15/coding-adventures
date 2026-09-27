@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C113-poyyi",
+    "language": "telugu",
+    "chapter": 113,
+    "sequence": 4580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a87868bf2b8bd4d"
+  },
+  "findings": []
+}

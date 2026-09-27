@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Comb, Soap, Towel, Glasses, Clock",
+  "label": "ch:te-comb-soap-towel-glasses-clock",
+  "canDo": "I can say a comb, soap, a towel, glasses and a clock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C111-gadiyaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say a comb, soap, a towel, glasses and a clock.",
+    "assesses": [
+      "TE-LEX-C111-THINGS111-03",
+      "TE-LEX-C111-THINGS111-04",
+      "TE-LEX-C111-THINGS111-05"
+    ]
+  }
+}

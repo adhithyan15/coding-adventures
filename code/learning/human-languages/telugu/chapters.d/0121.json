@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Thunder, Lightning, Storm, Wave, Hill",
+  "label": "ch:te-thunder-lightning-storm-wave-hill",
+  "canDo": "I can say thunder, lightning, a storm, a wave and a hill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C121-konda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say thunder, lightning, a storm, a wave and a hill.",
+    "assesses": [
+      "TE-LEX-C121-THINGS121-03",
+      "TE-LEX-C121-THINGS121-04",
+      "TE-LEX-C121-THINGS121-05"
+    ]
+  }
+}

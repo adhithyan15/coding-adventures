@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:24724420564e767a",
+  "lessonIds": [
+    "TE-C109-anduke",
+    "TE-C109-mancam",
+    "TE-C109-dindu",
+    "TE-C109-duppati",
+    "TE-C109-tera",
+    "TE-R109-first-pass-places-can-and-want",
+    "TE-R109-second-pass-want-why-and-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch109.txt",
+  "json": "telugu/narration/ch109.json",
+  "textHash": "fnv1a64:390ed1f10079ecf3",
+  "jsonHash": "fnv1a64:dd2f58c2ee73c734",
+  "findings": []
+}

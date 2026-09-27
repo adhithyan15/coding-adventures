@@ -1,0 +1,11 @@
+{
+  "id": "TE-C133-guddalu",
+  "pathSegment": "TE-PATH-133-THINGS133",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-133-THINGS133",
+      "order": 0
+    }
+  ]
+}

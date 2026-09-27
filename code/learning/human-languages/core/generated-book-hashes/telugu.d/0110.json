@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:0cb6230bef270d71",
+  "lessonIds": [
+    "TE-C110-talam",
+    "TE-C110-talamcevi",
+    "TE-C110-tadu",
+    "TE-C110-meku",
+    "TE-C110-kattera"
+  ],
+  "tex": "telugu/book/chapters/ch110-lock-key-rope-nail-scissors.tex"
+}

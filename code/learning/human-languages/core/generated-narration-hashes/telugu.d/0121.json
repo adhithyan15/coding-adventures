@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:c3865f4c7c138e9b",
+  "lessonIds": [
+    "TE-C121-urumu",
+    "TE-C121-merupu",
+    "TE-C121-tupanu",
+    "TE-C121-ala",
+    "TE-C121-konda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch121.txt",
+  "json": "telugu/narration/ch121.json",
+  "textHash": "fnv1a64:bd3a37c4171069e6",
+  "jsonHash": "fnv1a64:f82da0d8d7933b2c",
+  "findings": []
+}

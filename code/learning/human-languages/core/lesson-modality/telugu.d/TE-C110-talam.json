@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C110-talam",
+    "language": "telugu",
+    "chapter": 110,
+    "sequence": 4430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df215e6d5510e497"
+  },
+  "findings": []
+}

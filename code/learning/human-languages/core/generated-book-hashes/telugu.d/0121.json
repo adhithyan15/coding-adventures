@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:7cb189624ad1041f",
+  "lessonIds": [
+    "TE-C121-urumu",
+    "TE-C121-merupu",
+    "TE-C121-tupanu",
+    "TE-C121-ala",
+    "TE-C121-konda"
+  ],
+  "tex": "telugu/book/chapters/ch121-thunder-lightning-storm-wave-hill.tex"
+}

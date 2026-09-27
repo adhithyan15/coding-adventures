@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:d31628edce922781",
+  "lessonIds": [
+    "TE-C114-galipatam",
+    "TE-C114-cokka",
+    "TE-C114-cira",
+    "TE-C114-pance",
+    "TE-C114-ceppulu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch114.txt",
+  "json": "telugu/narration/ch114.json",
+  "textHash": "fnv1a64:e516ed94a425c28d",
+  "jsonHash": "fnv1a64:1c21b72eac3adc47",
+  "findings": []
+}

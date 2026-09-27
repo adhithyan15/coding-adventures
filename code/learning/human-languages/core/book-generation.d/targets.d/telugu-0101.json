@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 101,
+  "output": "telugu/book/chapters/ch101-above-below-inside-outside-behind.tex",
+  "scriptSet": "telugu-comparisons"
+}

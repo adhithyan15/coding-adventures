@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C137-mettani",
+    "language": "telugu",
+    "chapter": 137,
+    "sequence": 5850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab112cbe109bf0d9"
+  },
+  "findings": []
+}

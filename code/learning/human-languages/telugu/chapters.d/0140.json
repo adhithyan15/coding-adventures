@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Safe, Lie, Grey, Golden, Spoiled",
+  "label": "ch:te-safe-lie-grey-golden-spoiled",
+  "canDo": "I can say safe, a lie, grey, golden and spoiled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C140-padaina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say safe, a lie, grey, golden and spoiled.",
+    "assesses": [
+      "TE-LEX-C140-QUAL140-03",
+      "TE-LEX-C140-QUAL140-04",
+      "TE-LEX-C140-QUAL140-05"
+    ]
+  }
+}

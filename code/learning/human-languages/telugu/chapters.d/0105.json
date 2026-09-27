@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Station, Bus, Ability, Skill, Right",
+  "label": "ch:te-station-bus-ability-skill-right",
+  "canDo": "I can say a station, a bus, ability, a skill and a right.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C105-hakku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say a station, a bus, ability, a skill and a right.",
+    "assesses": [
+      "TE-LEX-C105-LOC105-03",
+      "TE-LEX-C105-LOC105-04",
+      "TE-LEX-C105-LOC105-05"
+    ]
+  }
+}

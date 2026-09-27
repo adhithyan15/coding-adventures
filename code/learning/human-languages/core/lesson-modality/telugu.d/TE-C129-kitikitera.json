@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C129-kitikitera",
+    "language": "telugu",
+    "chapter": 129,
+    "sequence": 5410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:178bdaf4a6cbe1a9"
+  },
+  "findings": []
+}

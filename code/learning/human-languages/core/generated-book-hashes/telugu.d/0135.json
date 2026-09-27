@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:f61d689577f8faee",
+  "lessonIds": [
+    "TE-C135-miriyalu",
+    "TE-C135-jilakarra",
+    "TE-C135-cintapandu",
+    "TE-C135-nimmakaya",
+    "TE-C135-draksa"
+  ],
+  "tex": "telugu/book/chapters/ch135-black-pepper-cumin-tamarind-lemon-grapes.tex"
+}

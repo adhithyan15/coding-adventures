@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:9a57eaadca7130e0",
+  "lessonIds": [
+    "TE-C138-vegam",
+    "TE-C138-andamaina",
+    "TE-C138-lotu",
+    "TE-C138-vedalpu",
+    "TE-C138-iruku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch138.txt",
+  "json": "telugu/narration/ch138.json",
+  "textHash": "fnv1a64:3172ab115d0b4249",
+  "jsonHash": "fnv1a64:7bb44b865ae85907",
+  "findings": []
+}

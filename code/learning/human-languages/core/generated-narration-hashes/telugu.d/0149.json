@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:5d6620258cc42186",
+  "lessonIds": [
+    "TE-C149-naducu",
+    "TE-C149-muyu",
+    "TE-C149-teruvu",
+    "TE-C149-tagu",
+    "TE-C149-edcu",
+    "TE-R149-first-pass-describing-words-and-verbs",
+    "TE-R149-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch149.txt",
+  "json": "telugu/narration/ch149.json",
+  "textHash": "fnv1a64:98e0367370c3449b",
+  "jsonHash": "fnv1a64:1a509d11c96f7cf5",
+  "findings": []
+}

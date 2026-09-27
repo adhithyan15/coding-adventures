@@ -1,0 +1,11 @@
+{
+  "id": "TE-C130-kampyutar",
+  "pathSegment": "TE-PATH-130-THINGS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-130-THINGS130",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C148-arpu",
+  "pathSegment": "TE-PATH-148-ACT148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-148-ACT148",
+      "order": 2
+    }
+  ]
+}

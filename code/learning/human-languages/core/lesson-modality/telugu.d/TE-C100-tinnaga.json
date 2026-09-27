@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C100-tinnaga",
+    "language": "telugu",
+    "chapter": 100,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f48a663e24f4304"
+  },
+  "findings": []
+}

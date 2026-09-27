@@ -1,0 +1,11 @@
+{
+  "id": "TE-C130-tivi",
+  "pathSegment": "TE-PATH-130-THINGS130",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-130-THINGS130",
+      "order": 0
+    }
+  ]
+}

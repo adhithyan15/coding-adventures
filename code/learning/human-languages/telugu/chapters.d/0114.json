@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Kite, Shirt, Sari, Dhoti, Sandals",
+  "label": "ch:te-kite-shirt-sari-dhoti-sandals",
+  "canDo": "I can say a kite, a shirt, a sari, a dhoti and sandals.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C114-ceppulu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a kite, a shirt, a sari, a dhoti and sandals.",
+    "assesses": [
+      "TE-LEX-C114-THINGS114-03",
+      "TE-LEX-C114-THINGS114-04",
+      "TE-LEX-C114-THINGS114-05"
+    ]
+  }
+}

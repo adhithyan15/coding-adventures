@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Stove, Candle, Matchbox, Doll, Ball",
+  "label": "ch:te-stove-candle-matchbox-doll-ball",
+  "canDo": "I can say a stove, a candle, a matchbox, a doll and a ball.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C113-banti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a stove, a candle, a matchbox, a doll and a ball.",
+    "assesses": [
+      "TE-LEX-C113-THINGS113-03",
+      "TE-LEX-C113-THINGS113-04",
+      "TE-LEX-C113-THINGS113-05"
+    ]
+  }
+}

@@ -10,7 +10,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { loadEverything, loadModalityManifest, modalityManifestById } from "../src/loader.js";
 import {
   generatedModalityOutputs,
@@ -180,6 +180,27 @@ concept_tag: GRAMMAR-SER
 afterEach(() => {
   vi.restoreAllMocks();
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
+});
+
+// ---------------------------------------------------------------------------
+// One real curriculum per file
+// ---------------------------------------------------------------------------
+//
+// Parsing the whole corpus and building its manifest costs seconds, and the cost
+// grows with every content PR. The tests below that only READ the real curriculum
+// used to parse it afresh -- "keeps the committed manifest in step" did it twice
+// inside one test, on top of the CLI's own parse -- and that is how it crossed the
+// 30s budget under full-suite load on CI while passing in 19s locally. Raising the
+// budget would hide the next one (see vitest.config.ts); doing the work once does
+// not. The shared parse happens in a hook, which has its own budget.
+//
+// Nothing below mutates either value: every assertion filters, maps, or copies into
+// a new array before sorting.
+let realLessons: ParsedLesson[] = [];
+let realManifest: ReturnType<typeof buildModalityManifest>;
+beforeAll(() => {
+  realLessons = loadEverything().lessons;
+  realManifest = buildModalityManifest(realLessons);
 });
 
 // ---------------------------------------------------------------------------
@@ -499,9 +520,8 @@ describe("block-level modality", () => {
     // The structural invariant. `coreModality` is derived from a SUBSET of the blocks,
     // so it can only ever be weaker or equal. If this ever fails, the derivation has a
     // bug that would hand a driver a lesson needing a pen.
-    const { lessons } = loadEverything();
     const order = { voice: 0, sight: 1, pen: 2 } as const;
-    for (const row of buildModalityManifest(lessons).lessons) {
+    for (const row of realManifest.lessons) {
       expect(order[row.coreModality]).toBeLessThanOrEqual(order[row.modality]);
       if (row.coreDrivable) expect(row.coreModality).toBe("voice");
     }
@@ -819,13 +839,12 @@ describe("the script strand is declared, not inferred", () => {
   // Every assertion below runs through `buildModalityManifest`, not the frontmatter,
   // because the manifest is what a consumer reads. Reading `lesson.frontmatter.delivery`
   // here would pass even if the export were deleted or wired to the wrong field.
-  const built = () => buildModalityManifest(loadEverything().lessons);
+  const built = () => realManifest;
 
   it("never marks a lesson that is not a writing lesson, in any track", () => {
-    const { lessons } = loadEverything();
+    const lessons = realLessons;
     const type = new Map(lessons.map((l) => [l.realization.lessonId, l.realization.type]));
-    const misapplied = buildModalityManifest(lessons)
-      .lessons.filter((entry) => entry.delivery !== undefined)
+    const misapplied = realManifest.lessons.filter((entry) => entry.delivery !== undefined)
       .filter((entry) => type.get(entry.id) !== "writing")
       .map((entry) => entry.id);
     expect(misapplied).toEqual([]);
@@ -842,8 +861,8 @@ describe("the script strand is declared, not inferred", () => {
   });
 
   it("covers every writing lesson of every track that has adopted it", () => {
-    const { lessons } = loadEverything();
-    const manifest = buildModalityManifest(lessons);
+    const lessons = realLessons;
+    const manifest = realManifest;
     const marked = manifest.lessons.filter((entry) => entry.delivery === "script");
     expect(marked.length).toBeGreaterThan(0);
 
@@ -883,8 +902,8 @@ describe("corpus regression", () => {
   // Exact corpus state is checked per language in tests/corpus/*.test.ts.
   // This shared file keeps only size-independent manifest invariants.
   it("keeps every rollup internally consistent", () => {
-    const { lessons } = loadEverything();
-    const manifest = buildModalityManifest(lessons);
+    const lessons = realLessons;
+    const manifest = realManifest;
     expect(manifest.summary.totalLessons).toBe(manifest.lessons.length);
     let trackLessons = 0;
     for (const track of manifest.tracks) {
@@ -911,12 +930,10 @@ describe("corpus regression", () => {
     // `npm run generate:modality` and commit the result — exactly what CI will say.
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runModalityManifest(["--check"])).toBe(0);
-    const { lessons } = loadEverything();
-    expect(loadModalityManifest()).toEqual(buildModalityManifest(lessons));
+    expect(loadModalityManifest()).toEqual(realManifest);
   });
 
   it("carries no unexplained overrides", () => {
-    const { lessons } = loadEverything();
-    expect(buildModalityManifest(lessons).findings).toEqual([]);
+    expect(realManifest.findings).toEqual([]);
   });
 });

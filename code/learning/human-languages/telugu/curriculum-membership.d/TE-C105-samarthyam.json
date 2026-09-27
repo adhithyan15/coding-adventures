@@ -1,0 +1,11 @@
+{
+  "id": "TE-C105-samarthyam",
+  "pathSegment": "TE-PATH-105-LOC105",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-105-LOC105",
+      "order": 2
+    }
+  ]
+}

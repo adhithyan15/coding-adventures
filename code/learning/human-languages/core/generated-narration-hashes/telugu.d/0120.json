@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:4ca13e1504bcd125",
+  "lessonIds": [
+    "TE-C120-samudram",
+    "TE-C120-sarassu",
+    "TE-C120-adavi",
+    "TE-C120-aku",
+    "TE-C120-matti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch120.txt",
+  "json": "telugu/narration/ch120.json",
+  "textHash": "fnv1a64:deac801fc817b9f3",
+  "jsonHash": "fnv1a64:8e93c8d7ed96d6c6",
+  "findings": []
+}

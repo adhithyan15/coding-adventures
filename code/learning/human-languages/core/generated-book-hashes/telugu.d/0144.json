@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:15f834364232c3e1",
+  "lessonIds": [
+    "TE-C144-vandu",
+    "TE-C144-koyu",
+    "TE-C144-pagalagottu",
+    "TE-C144-pampu",
+    "TE-C144-vetuku"
+  ],
+  "tex": "telugu/book/chapters/ch144-to-cook-to-cut-to-break-to-send-to-look-for.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C112-kalam",
+    "language": "telugu",
+    "chapter": 112,
+    "sequence": 4540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f39e0fd1534c30f7"
+  },
+  "findings": []
+}
