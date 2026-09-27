@@ -11,12 +11,22 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16122,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16122",
+    "title": "fix(build-tool): bound Python glob matching",
+    "branch": "codex/parity-python-glob-hardening-20260927",
+    "item_id": "build-tool-python-glob-matcher-complexity-hardening",
+    "opened_at": "2026-09-27T06:59:37Z",
+    "head_revision": "8be21be3e4ea6a7716998f73d4931708ea935e04",
+    "checks_status": "pending",
+    "auto_merge_enabled": false
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-27T06:24:59Z",
-    "pr_number": 16112,
-    "status": "merged",
-    "notes": "All 49 final-head checks reached terminal acceptable conclusions: 19 successes and 30 expected path-gated skips. GitHub reported the reviewed head conflict-free, guarded squash auto-merge was enabled only after the final CI gate passed, and PR #16112 merged automatically as e461ab209875aedc1de15dd3282cefecda13cbfe without a plain manual merge command."
+    "observed_at": "2026-09-27T06:59:42Z",
+    "pr_number": 16122,
+    "status": "pending",
+    "notes": "Ready-for-review PR #16122 opened from validated implementation head 8be21be3e4ea6a7716998f73d4931708ea935e04 on exact base 4c2e2b99d327b530e070b265ebb46a6a41ebcc81. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "e461ab209875aedc1de15dd3282cefecda13cbfe",
@@ -1060,10 +1070,10 @@
     {
       "id": "build-tool-python-glob-matcher-complexity-hardening",
       "title": "Harden Python build-tool glob matcher complexity",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-python-glob-hardening-20260927",
-      "pr_number": null,
+      "pr_number": 16122,
       "selected_at": "2026-09-27T06:25:21Z",
       "selection_revision": "e461ab209875aedc1de15dd3282cefecda13cbfe",
       "validation_revision": "d658aaa0e3420d62e0c934eeb39ce201c53dd15f",
