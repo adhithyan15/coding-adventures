@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:e34b27379d562ca2",
+  "lessonIds": [
+    "JA-C114-hakusai",
+    "JA-C114-ninniku",
+    "JA-C114-anko",
+    "JA-C114-hachimitsu",
+    "JA-C114-ami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch114.txt",
+  "json": "japanese/narration/ch114.json",
+  "textHash": "fnv1a64:f51e5a1c7d3ba0ee",
+  "jsonHash": "fnv1a64:6bcdd0324e05fb7a",
+  "findings": []
+}

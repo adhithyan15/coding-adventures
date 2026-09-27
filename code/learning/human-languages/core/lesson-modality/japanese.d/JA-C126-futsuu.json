@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C126-futsuu",
+    "language": "japanese",
+    "chapter": 126,
+    "sequence": 7480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:360e5c34f9d8d724"
+  },
+  "findings": []
+}

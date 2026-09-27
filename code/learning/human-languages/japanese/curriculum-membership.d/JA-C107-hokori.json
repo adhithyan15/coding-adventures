@@ -1,0 +1,11 @@
+{
+  "id": "JA-C107-hokori",
+  "pathSegment": "JA-PATH-107-THINGS107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-107-THINGS107",
+      "order": 1
+    }
+  ]
+}

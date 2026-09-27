@@ -1,0 +1,11 @@
+{
+  "id": "JA-C92-negai",
+  "pathSegment": "JA-PATH-92-WANT92",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-92-WANT92",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:d3d247385ce6f045",
+  "lessonIds": [
+    "JA-C128-kashikoi",
+    "JA-C128-oroka",
+    "JA-C128-isamashii",
+    "JA-C128-komakai",
+    "JA-C128-minikui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch128.txt",
+  "json": "japanese/narration/ch128.json",
+  "textHash": "fnv1a64:b86042fd38933713",
+  "jsonHash": "fnv1a64:583934332c0a1c1c",
+  "findings": []
+}

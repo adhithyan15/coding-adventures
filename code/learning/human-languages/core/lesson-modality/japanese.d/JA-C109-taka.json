@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C109-taka",
+    "language": "japanese",
+    "chapter": 109,
+    "sequence": 6470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19bd885dabd0470d"
+  },
+  "findings": []
+}

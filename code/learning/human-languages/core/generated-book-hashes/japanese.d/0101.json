@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:1f9d46f0bc0ee82d",
+  "lessonIds": [
+    "JA-C101-hata",
+    "JA-C101-tansu",
+    "JA-C101-fusuma",
+    "JA-C101-kotatsu",
+    "JA-C101-danbou",
+    "JA-R101-first-pass-wanting-liking-and-having",
+    "JA-R101-second-pass-why-and-things-at-home"
+  ],
+  "tex": "japanese/book/chapters/ch101-flag-chest-of-drawers-sliding-door-heated-table-heating.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-80-LOC80",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "JA-EXT-80-LOC80"
+  ],
+  "after": []
+}

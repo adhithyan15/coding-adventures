@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C112-shigoto",
+    "language": "japanese",
+    "chapter": 112,
+    "sequence": 6730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d02031f27fa45674"
+  },
+  "findings": []
+}

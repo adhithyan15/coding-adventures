@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C111-hitai",
+    "language": "japanese",
+    "chapter": 111,
+    "sequence": 6550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec9c0946926104da"
+  },
+  "findings": []
+}

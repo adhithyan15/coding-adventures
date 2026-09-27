@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:fecce14deeca6dd4",
+  "lessonIds": [
+    "JA-C73-hinoiri",
+    "JA-C73-konya",
+    "JA-C73-asatte",
+    "JA-C73-ototoi",
+    "JA-C73-maiasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch73.txt",
+  "json": "japanese/narration/ch73.json",
+  "textHash": "fnv1a64:c19e916587e6d084",
+  "jsonHash": "fnv1a64:bdb7dc1baf1e023a",
+  "findings": []
+}

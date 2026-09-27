@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:874079f36a9391fa",
+  "lessonIds": [
+    "JA-C99-saifu",
+    "JA-C99-tsue",
+    "JA-C99-fukuro",
+    "JA-C99-tawashi",
+    "JA-C99-chiritori"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch99.txt",
+  "json": "japanese/narration/ch99.json",
+  "textHash": "fnv1a64:d76b579173817eb5",
+  "jsonHash": "fnv1a64:e72a6693538de54a",
+  "findings": []
+}

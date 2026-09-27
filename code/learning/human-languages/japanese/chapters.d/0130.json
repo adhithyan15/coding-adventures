@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Pure white, Pitch black, Bright red, Vague, Certain",
+  "label": "ch:ja-pure-white-pitch-black-bright-red-vague-certain",
+  "canDo": "I can say pure white, pitch black, bright red, vague and certain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "JA-R130-second-pass-describing-people-and-colours",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say pure white, pitch black, bright red, vague and certain.",
+    "assesses": [
+      "JA-LEX-C130-QUAL130-03",
+      "JA-LEX-C130-QUAL130-04",
+      "JA-LEX-C130-QUAL130-05"
+    ]
+  }
+}

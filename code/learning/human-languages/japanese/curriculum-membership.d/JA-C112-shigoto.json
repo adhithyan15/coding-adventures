@@ -1,0 +1,11 @@
+{
+  "id": "JA-C112-shigoto",
+  "pathSegment": "JA-PATH-112-THINGS112",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-112-THINGS112",
+      "order": 3
+    }
+  ]
+}

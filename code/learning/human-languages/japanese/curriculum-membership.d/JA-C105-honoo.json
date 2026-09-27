@@ -1,0 +1,11 @@
+{
+  "id": "JA-C105-honoo",
+  "pathSegment": "JA-PATH-105-THINGS105",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-105-THINGS105",
+      "order": 2
+    }
+  ]
+}

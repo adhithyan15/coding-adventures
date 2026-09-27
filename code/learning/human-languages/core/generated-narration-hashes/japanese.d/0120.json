@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:7f502a7f7117a404",
+  "lessonIds": [
+    "JA-C120-katai",
+    "JA-C120-tadashii",
+    "JA-C120-hima",
+    "JA-C120-shinsetsu",
+    "JA-C120-teinei",
+    "JA-R120-first-pass-animals-the-body-and-the-town",
+    "JA-R120-second-pass-shops-and-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch120.txt",
+  "json": "japanese/narration/ch120.json",
+  "textHash": "fnv1a64:a227d8c408e50279",
+  "jsonHash": "fnv1a64:25e65020a37a8cfb",
+  "findings": []
+}

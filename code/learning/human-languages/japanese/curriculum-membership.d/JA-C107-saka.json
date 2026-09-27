@@ -1,0 +1,11 @@
+{
+  "id": "JA-C107-saka",
+  "pathSegment": "JA-PATH-107-THINGS107",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-107-THINGS107",
+      "order": 4
+    }
+  ]
+}

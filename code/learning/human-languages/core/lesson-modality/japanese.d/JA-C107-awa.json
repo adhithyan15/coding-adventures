@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C107-awa",
+    "language": "japanese",
+    "chapter": 107,
+    "sequence": 6370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0c4dbfe9ecf1a99"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:f458a9b1f0cffc08",
+  "lessonIds": [
+    "JA-C104-tsutsumi",
+    "JA-C104-fuutou",
+    "JA-C104-okurimono",
+    "JA-C104-mari",
+    "JA-C104-kane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch104.txt",
+  "json": "japanese/narration/ch104.json",
+  "textHash": "fnv1a64:0ce9279c67a48309",
+  "jsonHash": "fnv1a64:b0c6ef3e8cccb4cd",
+  "findings": []
+}

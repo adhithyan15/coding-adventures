@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Florist, Fishmonger, Greengrocer, Barber, Butcher",
+  "label": "ch:ja-florist-fishmonger-greengrocer-barber-butcher",
+  "canDo": "I can say a florist, a fishmonger, a greengrocer, a barber and a butcher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C119-nikuya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a florist, a fishmonger, a greengrocer, a barber and a butcher.",
+    "assesses": [
+      "JA-LEX-C119-THINGS119-03",
+      "JA-LEX-C119-THINGS119-04",
+      "JA-LEX-C119-THINGS119-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C72-asahi",
+    "language": "japanese",
+    "chapter": 72,
+    "sequence": 4340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8acff1fe217422a5"
+  },
+  "findings": []
+}

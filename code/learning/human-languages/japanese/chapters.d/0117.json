@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Scallop, Flea, Bat, Japanese serow, Water flask",
+  "label": "ch:ja-scallop-flea-bat-japanese-serow-water-flask",
+  "canDo": "I can say a scallop, a flea, a bat, a Japanese serow and a water flask.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C117-suitou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a scallop, a flea, a bat, a Japanese serow and a water flask.",
+    "assesses": [
+      "JA-LEX-C117-THINGS117-03",
+      "JA-LEX-C117-THINGS117-04",
+      "JA-LEX-C117-THINGS117-05"
+    ]
+  }
+}

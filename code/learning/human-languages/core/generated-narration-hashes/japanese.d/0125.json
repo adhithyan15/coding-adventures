@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:7683964fbddc20cb",
+  "lessonIds": [
+    "JA-C125-sugoi",
+    "JA-C125-hidoi",
+    "JA-C125-wakai",
+    "JA-C125-osanai",
+    "JA-C125-yutaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch125.txt",
+  "json": "japanese/narration/ch125.json",
+  "textHash": "fnv1a64:174e4c28d7712cd8",
+  "jsonHash": "fnv1a64:1d68653cd327f6e0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C97-houhou",
+  "pathSegment": "JA-PATH-97-CAN97",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-97-CAN97",
+      "order": 3
+    }
+  ]
+}

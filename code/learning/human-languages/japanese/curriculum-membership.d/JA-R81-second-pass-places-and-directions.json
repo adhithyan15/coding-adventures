@@ -1,0 +1,11 @@
+{
+  "id": "JA-R81-second-pass-places-and-directions",
+  "pathSegment": "JA-PATH-81-LOC81",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "JA-EXT-81-LOC81",
+      "order": 6
+    }
+  ]
+}

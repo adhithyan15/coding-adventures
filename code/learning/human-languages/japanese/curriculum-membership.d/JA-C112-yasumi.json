@@ -1,0 +1,11 @@
+{
+  "id": "JA-C112-yasumi",
+  "pathSegment": "JA-PATH-112-THINGS112",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-112-THINGS112",
+      "order": 4
+    }
+  ]
+}

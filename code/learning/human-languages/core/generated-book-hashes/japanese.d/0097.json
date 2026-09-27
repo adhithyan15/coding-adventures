@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:a10c1dbd2d34a602",
+  "lessonIds": [
+    "JA-C97-zaisan",
+    "JA-C97-tsukaimichi",
+    "JA-C97-shudan",
+    "JA-C97-houhou",
+    "JA-C97-yarikata"
+  ],
+  "tex": "japanese/book/chapters/ch97-property-use-means-method-way-of-doing.tex"
+}

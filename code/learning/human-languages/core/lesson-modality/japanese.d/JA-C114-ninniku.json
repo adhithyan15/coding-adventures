@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C114-ninniku",
+    "language": "japanese",
+    "chapter": 114,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c45c430a67c7b14"
+  },
+  "findings": []
+}

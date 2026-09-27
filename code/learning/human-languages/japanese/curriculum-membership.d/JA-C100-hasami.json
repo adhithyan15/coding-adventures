@@ -1,0 +1,11 @@
+{
+  "id": "JA-C100-hasami",
+  "pathSegment": "JA-PATH-100-THINGS100",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-100-THINGS100",
+      "order": 3
+    }
+  ]
+}

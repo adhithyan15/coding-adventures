@@ -1,0 +1,11 @@
+{
+  "id": "JA-C119-sakanaya",
+  "pathSegment": "JA-PATH-119-THINGS119",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-119-THINGS119",
+      "order": 1
+    }
+  ]
+}

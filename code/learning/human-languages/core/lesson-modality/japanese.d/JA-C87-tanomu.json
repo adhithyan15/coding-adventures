@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C87-tanomu",
+    "language": "japanese",
+    "chapter": 87,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0394a5b5135e10f0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "To be surprised, To arrive, To receive, To go regularly, To wrap",
+  "label": "ch:ja-to-be-surprised-to-arrive-to-receive-to-go-regularly-to-wrap",
+  "canDo": "I can say to be surprised, to arrive, to receive, to go regularly and to wrap.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C90-tsutsumu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say to be surprised, to arrive, to receive, to go regularly and to wrap.",
+    "assesses": [
+      "JA-LEX-C90-ACT90-03",
+      "JA-LEX-C90-ACT90-04",
+      "JA-LEX-C90-ACT90-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:e7ae61217cde7dd8",
+  "lessonIds": [
+    "JA-C127-ooi",
+    "JA-C127-sukunai",
+    "JA-C127-sawayaka",
+    "JA-C127-odayaka",
+    "JA-C127-sunao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch127.txt",
+  "json": "japanese/narration/ch127.json",
+  "textHash": "fnv1a64:66da3db57c5d18b5",
+  "jsonHash": "fnv1a64:484cbd7e1750eef5",
+  "findings": []
+}

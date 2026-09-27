@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C77-mikka",
+    "language": "japanese",
+    "chapter": 77,
+    "sequence": 4560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50f86ad4602c8268"
+  },
+  "findings": []
+}

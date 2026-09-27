@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:e7374a4e4b71ac42",
+  "lessonIds": [
+    "JA-C123-otonashii",
+    "JA-C123-natsukashii",
+    "JA-C123-kuyashii",
+    "JA-C123-ayashii",
+    "JA-C123-kuwashii"
+  ],
+  "tex": "japanese/book/chapters/ch123-well-behaved-dear-frustrating-suspicious-detailed.tex"
+}

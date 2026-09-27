@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C91-mayou",
+    "language": "japanese",
+    "chapter": 91,
+    "sequence": 5390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:234562ca609d5f9c"
+  },
+  "findings": []
+}

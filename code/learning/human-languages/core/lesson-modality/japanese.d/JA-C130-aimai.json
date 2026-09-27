@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C130-aimai",
+    "language": "japanese",
+    "chapter": 130,
+    "sequence": 7680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92fbce1be63390c5"
+  },
+  "findings": []
+}

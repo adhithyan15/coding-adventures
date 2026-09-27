@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C77-muika",
+    "language": "japanese",
+    "chapter": 77,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a73d21cd10fd1263"
+  },
+  "findings": []
+}

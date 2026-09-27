@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Midnight, Whole week, One whole day, Half a day, First of the month",
+  "label": "ch:ja-midnight-whole-week-one-whole-day-half-a-day-first-of-the-month",
+  "canDo": "I can say midnight, a whole week, one whole day, half a day and the first of the month.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "JA-C76-tsuitachi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say midnight, a whole week, one whole day, half a day and the first of the month.",
+    "assesses": [
+      "JA-LEX-C76-TIME76-03",
+      "JA-LEX-C76-TIME76-04",
+      "JA-LEX-C76-TIME76-05"
+    ]
+  }
+}

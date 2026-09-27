@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C101-hata",
+    "language": "japanese",
+    "chapter": 101,
+    "sequence": 5950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be8c2f5c86471ae1"
+  },
+  "findings": []
+}

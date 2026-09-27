@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C74-shuumatsu",
+    "language": "japanese",
+    "chapter": 74,
+    "sequence": 4410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41fe9d3839f3fc50"
+  },
+  "findings": []
+}

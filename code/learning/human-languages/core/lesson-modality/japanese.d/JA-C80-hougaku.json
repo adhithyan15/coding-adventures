@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C80-hougaku",
+    "language": "japanese",
+    "chapter": 80,
+    "sequence": 4720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f01f102805fc83d9"
+  },
+  "findings": []
+}

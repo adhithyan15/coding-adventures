@@ -1,0 +1,11 @@
+{
+  "id": "JA-C123-ayashii",
+  "pathSegment": "JA-PATH-123-QUAL123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-123-QUAL123",
+      "order": 3
+    }
+  ]
+}

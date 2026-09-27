@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 77,
+  "title": "Second of the month, Third of the month, Fourth of the month, Fifth of the month, Sixth of the month",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3fcda44aaece8260",
+  "lessons": [
+    {
+      "id": "JA-C77-futsuka",
+      "sequence": 4550,
+      "title": "ふつか (futsuka) — the second of the month",
+      "headword": "ふつか",
+      "romanization": "futsuka",
+      "gloss": "the second of the month",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed583adf5ed0af35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for half a day, then the Japanese for the first of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふつか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふつか — futsuka — \"the second of the month\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futsuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futsuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futsuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futsuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say futsuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *futsuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for half a day, then the Japanese for the first of the month, then say futsuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for half a day, then the Japanese for the first of the month, then say *futsuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふつか (futsuka) mean? (\"The second of the month\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C77-futsuka-type",
+              "prompt": "Type the Japanese for 'the second of the month'.",
+              "assesses": [
+                "JA-LEX-C77-TIME77-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふつか",
+                "futsuka"
+              ],
+              "feedback": {
+                "correct": "Right: ふつか (futsuka) is 'the second of the month'.",
+                "incorrect": "'the second of the month' is ふつか (futsuka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C77-mikka",
+      "sequence": 4560,
+      "title": "みっか (mikka) — the third of the month",
+      "headword": "みっか",
+      "romanization": "mikka",
+      "gloss": "the third of the month",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50f86ad4602c8268",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the first of the month, then the Japanese for the second of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みっか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みっか — mikka — \"the third of the month\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mikka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mikka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the first of the month, then the Japanese for the second of the month, then say mikka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the first of the month, then the Japanese for the second of the month, then say *mikka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みっか (mikka) mean? (\"The third of the month\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C77-mikka-type",
+              "prompt": "Type the Japanese for 'the third of the month'.",
+              "assesses": [
+                "JA-LEX-C77-TIME77-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みっか",
+                "mikka"
+              ],
+              "feedback": {
+                "correct": "Right: みっか (mikka) is 'the third of the month'.",
+                "incorrect": "'the third of the month' is みっか (mikka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C77-yokka",
+      "sequence": 4570,
+      "title": "よっか (yokka) — the fourth of the month",
+      "headword": "よっか",
+      "romanization": "yokka",
+      "gloss": "the fourth of the month",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e4c2d0a18bef9f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the second of the month, then the Japanese for the third of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よっか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よっか — yokka — \"the fourth of the month\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yokka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yokka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the second of the month, then the Japanese for the third of the month, then say yokka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the second of the month, then the Japanese for the third of the month, then say *yokka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よっか (yokka) mean? (\"The fourth of the month\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C77-yokka-type",
+              "prompt": "Type the Japanese for 'the fourth of the month'.",
+              "assesses": [
+                "JA-LEX-C77-TIME77-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よっか",
+                "yokka"
+              ],
+              "feedback": {
+                "correct": "Right: よっか (yokka) is 'the fourth of the month'.",
+                "incorrect": "'the fourth of the month' is よっか (yokka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C77-itsuka",
+      "sequence": 4580,
+      "title": "いつか (itsuka) — the fifth of the month; some day",
+      "headword": "いつか",
+      "romanization": "itsuka",
+      "gloss": "the fifth of the month; some day",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c616093c3982113f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the third of the month, then the Japanese for the fourth of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いつか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いつか — itsuka — \"the fifth of the month; some day\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itsuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itsuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itsuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itsuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say itsuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *itsuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the third of the month, then the Japanese for the fourth of the month, then say itsuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the third of the month, then the Japanese for the fourth of the month, then say *itsuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いつか (itsuka) mean? (\"The fifth of the month; some day\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C77-itsuka-type",
+              "prompt": "Type the Japanese for 'the fifth of the month'.",
+              "assesses": [
+                "JA-LEX-C77-TIME77-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いつか",
+                "itsuka"
+              ],
+              "feedback": {
+                "correct": "Right: いつか (itsuka) is 'the fifth of the month'.",
+                "incorrect": "'the fifth of the month' is いつか (itsuka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C77-muika",
+      "sequence": 4590,
+      "title": "むいか (muika) — the sixth of the month",
+      "headword": "むいか",
+      "romanization": "muika",
+      "gloss": "the sixth of the month",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a73d21cd10fd1263",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the fourth of the month, then the Japanese for the fifth of the month; some day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むいか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むいか — muika — \"the sixth of the month\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say muika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *muika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the fourth of the month, then the Japanese for the fifth of the month; some day, then say muika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the fourth of the month, then the Japanese for the fifth of the month; some day, then say *muika* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むいか (muika) mean? (\"The sixth of the month\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C77-muika-type",
+              "prompt": "Type the Japanese for 'the sixth of the month'.",
+              "assesses": [
+                "JA-LEX-C77-TIME77-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むいか",
+                "muika"
+              ],
+              "feedback": {
+                "correct": "Right: むいか (muika) is 'the sixth of the month'.",
+                "incorrect": "'the sixth of the month' is むいか (muika)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

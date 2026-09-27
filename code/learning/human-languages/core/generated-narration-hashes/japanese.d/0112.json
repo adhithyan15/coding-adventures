@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:f53f87d33a09335a",
+  "lessonIds": [
+    "JA-C112-nouka",
+    "JA-C112-daiku",
+    "JA-C112-kashu",
+    "JA-C112-shigoto",
+    "JA-C112-yasumi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch112.txt",
+  "json": "japanese/narration/ch112.json",
+  "textHash": "fnv1a64:65c89e8e3d4c794a",
+  "jsonHash": "fnv1a64:921ef70624de24e8",
+  "findings": []
+}

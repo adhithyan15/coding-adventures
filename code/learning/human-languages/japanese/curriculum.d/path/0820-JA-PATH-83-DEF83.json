@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-83-DEF83",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-83-DEF83"
+  ],
+  "after": []
+}

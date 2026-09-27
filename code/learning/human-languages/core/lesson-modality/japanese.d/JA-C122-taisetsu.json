@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C122-taisetsu",
+    "language": "japanese",
+    "chapter": 122,
+    "sequence": 7260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c9ffbac292d985f"
+  },
+  "findings": []
+}

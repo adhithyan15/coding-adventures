@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C77-futsuka",
+    "language": "japanese",
+    "chapter": 77,
+    "sequence": 4550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed583adf5ed0af35"
+  },
+  "findings": []
+}

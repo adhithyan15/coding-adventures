@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C116-hamachi",
+    "language": "japanese",
+    "chapter": 116,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35715f348f0126d6"
+  },
+  "findings": []
+}

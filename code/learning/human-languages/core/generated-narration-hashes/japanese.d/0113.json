@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:3bf8bd32c1b64480",
+  "lessonIds": [
+    "JA-C113-hanko",
+    "JA-C113-dango",
+    "JA-C113-dashi",
+    "JA-C113-katsuo",
+    "JA-C113-wakame"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch113.txt",
+  "json": "japanese/narration/ch113.json",
+  "textHash": "fnv1a64:4eec923939760708",
+  "jsonHash": "fnv1a64:55df195b6bff1bad",
+  "findings": []
+}

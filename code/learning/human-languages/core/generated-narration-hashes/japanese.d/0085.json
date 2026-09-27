@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:457be1d332cb15fb",
+  "lessonIds": [
+    "JA-C85-utsu",
+    "JA-C85-suu",
+    "JA-C85-maku",
+    "JA-C85-taku",
+    "JA-C85-haku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch85.txt",
+  "json": "japanese/narration/ch85.json",
+  "textHash": "fnv1a64:119a0ec83bb8b2ea",
+  "jsonHash": "fnv1a64:b0c8cdb6c3016a64",
+  "findings": []
+}

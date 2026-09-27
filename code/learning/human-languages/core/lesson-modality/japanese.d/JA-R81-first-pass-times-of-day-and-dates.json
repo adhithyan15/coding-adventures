@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R81-first-pass-times-of-day-and-dates",
+    "language": "japanese",
+    "chapter": 81,
+    "sequence": 4800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0577995840b7befb"
+  },
+  "findings": []
+}

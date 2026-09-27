@@ -1,0 +1,11 @@
+{
+  "id": "JA-C105-yukata",
+  "pathSegment": "JA-PATH-105-THINGS105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-105-THINGS105",
+      "order": 1
+    }
+  ]
+}

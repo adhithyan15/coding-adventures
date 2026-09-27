@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:d34c1cb28871dec7",
+  "lessonIds": [
+    "JA-C83-kono",
+    "JA-C83-ano",
+    "JA-C83-dono",
+    "JA-C83-konna",
+    "JA-C83-anna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch83.txt",
+  "json": "japanese/narration/ch83.json",
+  "textHash": "fnv1a64:978a4a18829bad7e",
+  "jsonHash": "fnv1a64:be468b298aac1773",
+  "findings": []
+}

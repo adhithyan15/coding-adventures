@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:5d746d6bb38dd593",
+  "lessonIds": [
+    "JA-C129-kawaii",
+    "JA-C129-shitsukoi",
+    "JA-C129-yakamashii",
+    "JA-C129-atsukamashii",
+    "JA-C129-tanomoshii"
+  ],
+  "tex": "japanese/book/chapters/ch129-cute-persistent-noisy-shameless-reliable.tex"
+}

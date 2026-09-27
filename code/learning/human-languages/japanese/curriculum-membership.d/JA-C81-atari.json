@@ -1,0 +1,11 @@
+{
+  "id": "JA-C81-atari",
+  "pathSegment": "JA-PATH-81-LOC81",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-81-LOC81",
+      "order": 0
+    }
+  ]
+}

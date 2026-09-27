@@ -1,0 +1,6 @@
+{
+  "language": "japanese",
+  "chapter": 123,
+  "output": "japanese/book/chapters/ch123-well-behaved-dear-frustrating-suspicious-detailed.tex",
+  "scriptSet": "japanese-main"
+}

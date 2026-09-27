@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:61b05687dcdc40bf",
+  "lessonIds": [
+    "JA-C98-doushite",
+    "JA-C98-riyuu",
+    "JA-C98-tame",
+    "JA-C98-sei",
+    "JA-C98-yue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch98.txt",
+  "json": "japanese/narration/ch98.json",
+  "textHash": "fnv1a64:34aba91c5c5b42b0",
+  "jsonHash": "fnv1a64:51adf60f94621538",
+  "findings": []
+}

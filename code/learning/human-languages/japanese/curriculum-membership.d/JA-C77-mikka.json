@@ -1,0 +1,11 @@
+{
+  "id": "JA-C77-mikka",
+  "pathSegment": "JA-PATH-77-TIME77",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-77-TIME77",
+      "order": 1
+    }
+  ]
+}

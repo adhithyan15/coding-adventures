@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C103-yakan",
+    "language": "japanese",
+    "chapter": 103,
+    "sequence": 6170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8f6528a58f2ed4d"
+  },
+  "findings": []
+}

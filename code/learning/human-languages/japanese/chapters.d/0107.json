@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Mud, Dust, Foam, Dew, Slope",
+  "label": "ch:ja-mud-dust-foam-dew-slope",
+  "canDo": "I can say mud, dust, foam, dew and a slope.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C107-saka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say mud, dust, foam, dew and a slope.",
+    "assesses": [
+      "JA-LEX-C107-THINGS107-03",
+      "JA-LEX-C107-THINGS107-04",
+      "JA-LEX-C107-THINGS107-05"
+    ]
+  }
+}

@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 98,
+  "title": "Why, Reason, For the sake of, Fault, Reason",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:61b05687dcdc40bf",
+  "lessons": [
+    {
+      "id": "JA-C98-doushite",
+      "sequence": 5800,
+      "title": "どうして (doushite) — why",
+      "headword": "どうして",
+      "romanization": "doushite",
+      "gloss": "why",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62fe8859b4d3e51c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a method, then the Japanese for a way of doing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どうして",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうして — doushite — \"why\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doushite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doushite*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doushite, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doushite*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say doushite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *doushite*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a method, then the Japanese for a way of doing, then say doushite again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a method, then the Japanese for a way of doing, then say *doushite* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どうして (doushite) mean? (\"Why\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C98-doushite-type",
+              "prompt": "Type the Japanese for 'why'.",
+              "assesses": [
+                "JA-LEX-C98-WHY98-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どうして",
+                "doushite"
+              ],
+              "feedback": {
+                "correct": "Right: どうして (doushite) is 'why'.",
+                "incorrect": "'why' is どうして (doushite)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C98-riyuu",
+      "sequence": 5810,
+      "title": "りゆう (riyuu) — a reason",
+      "headword": "りゆう",
+      "romanization": "riyuu",
+      "gloss": "a reason",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d59fe7bc5df10d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a way of doing, then the Japanese for why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りゆう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りゆう — riyuu — \"a reason\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riyuu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riyuu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riyuu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riyuu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say riyuu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *riyuu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a way of doing, then the Japanese for why, then say riyuu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a way of doing, then the Japanese for why, then say *riyuu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りゆう (riyuu) mean? (\"A reason\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C98-riyuu-type",
+              "prompt": "Type the Japanese for 'a reason'.",
+              "assesses": [
+                "JA-LEX-C98-WHY98-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りゆう",
+                "riyuu"
+              ],
+              "feedback": {
+                "correct": "Right: りゆう (riyuu) is 'a reason'.",
+                "incorrect": "'a reason' is りゆう (riyuu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C98-tame",
+      "sequence": 5820,
+      "title": "ため (tame) — for the sake of; because of",
+      "headword": "ため",
+      "romanization": "tame",
+      "gloss": "for the sake of; because of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbd73090d1e605ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for why, then the Japanese for a reason."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ため",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ため — tame — \"for the sake of; because of\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tame, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tame*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for why, then the Japanese for a reason, then say tame again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for why, then the Japanese for a reason, then say *tame* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ため (tame) mean? (\"For the sake of; because of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C98-tame-type",
+              "prompt": "Type the Japanese for 'for the sake of'.",
+              "assesses": [
+                "JA-LEX-C98-WHY98-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ため",
+                "tame"
+              ],
+              "feedback": {
+                "correct": "Right: ため (tame) is 'for the sake of'.",
+                "incorrect": "'for the sake of' is ため (tame)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C98-sei",
+      "sequence": 5830,
+      "title": "せい (sei) — the fault, the cause",
+      "headword": "せい",
+      "romanization": "sei",
+      "gloss": "the fault, the cause",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:437836debb796b50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a reason, then the Japanese for for the sake of; because of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せい — sei — \"the fault, the cause\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a reason, then the Japanese for for the sake of; because of, then say sei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a reason, then the Japanese for for the sake of; because of, then say *sei* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せい (sei) mean? (\"The fault, the cause\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C98-sei-type",
+              "prompt": "Type the Japanese for 'the fault, the cause'.",
+              "assesses": [
+                "JA-LEX-C98-WHY98-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せい",
+                "sei"
+              ],
+              "feedback": {
+                "correct": "Right: せい (sei) is 'the fault, the cause'.",
+                "incorrect": "'the fault, the cause' is せい (sei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C98-yue",
+      "sequence": 5840,
+      "title": "ゆえ (yue) — a reason (formal)",
+      "headword": "ゆえ",
+      "romanization": "yue",
+      "gloss": "a reason (formal)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:155f600f41fd4f52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for for the sake of; because of, then the Japanese for the fault."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆえ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆえ — yue — \"a reason (formal)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yue, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yue*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for for the sake of; because of, then the Japanese for the fault, then say yue again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for for the sake of; because of, then the Japanese for the fault, then say *yue* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆえ (yue) mean? (\"A reason (formal)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C98-yue-type",
+              "prompt": "Type the Japanese for 'a reason (formal)'.",
+              "assesses": [
+                "JA-LEX-C98-WHY98-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆえ",
+                "yue"
+              ],
+              "feedback": {
+                "correct": "Right: ゆえ (yue) is 'a reason (formal)'.",
+                "incorrect": "'a reason (formal)' is ゆえ (yue)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

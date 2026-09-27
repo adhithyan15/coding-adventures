@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:325f00386c01beb3",
+  "lessonIds": [
+    "JA-C126-shiawase",
+    "JA-C126-nemutai",
+    "JA-C126-anshin",
+    "JA-C126-futsuu",
+    "JA-C126-umai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch126.txt",
+  "json": "japanese/narration/ch126.json",
+  "textHash": "fnv1a64:a6ab3971e3cc44c4",
+  "jsonHash": "fnv1a64:1b45d474ccb1ac75",
+  "findings": []
+}

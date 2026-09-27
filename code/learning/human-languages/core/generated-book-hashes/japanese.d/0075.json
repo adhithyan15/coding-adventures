@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:ca7234e13aba8055",
+  "lessonIds": [
+    "JA-C75-maitoshi",
+    "JA-C75-kotoshi",
+    "JA-C75-konshuu",
+    "JA-C75-ototoshi",
+    "JA-C75-asanebou"
+  ],
+  "tex": "japanese/book/chapters/ch75-every-year-this-year-this-week-year-before-last-oversleeping.tex"
+}

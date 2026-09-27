@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:316367ee95a948f1",
+  "lessonIds": [
+    "JA-C74-maishuu",
+    "JA-C74-shuumatsu",
+    "JA-C74-owari",
+    "JA-C74-tochuu",
+    "JA-C74-han"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch74.txt",
+  "json": "japanese/narration/ch74.json",
+  "textHash": "fnv1a64:0577eb72a25ffbd6",
+  "jsonHash": "fnv1a64:a39e04ae42564085",
+  "findings": []
+}

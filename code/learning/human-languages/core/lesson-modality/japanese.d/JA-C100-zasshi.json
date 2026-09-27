@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C100-zasshi",
+    "language": "japanese",
+    "chapter": 100,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0e0747366026e02"
+  },
+  "findings": []
+}

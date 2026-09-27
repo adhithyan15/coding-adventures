@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C73-maiasa",
+    "language": "japanese",
+    "chapter": 73,
+    "sequence": 4390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63350e52909e047c"
+  },
+  "findings": []
+}

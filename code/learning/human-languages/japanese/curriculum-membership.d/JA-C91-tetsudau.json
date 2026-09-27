@@ -1,0 +1,11 @@
+{
+  "id": "JA-C91-tetsudau",
+  "pathSegment": "JA-PATH-91-ACT91",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-91-ACT91",
+      "order": 3
+    }
+  ]
+}

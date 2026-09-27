@@ -1,0 +1,11 @@
+{
+  "id": "JA-C106-iwa",
+  "pathSegment": "JA-PATH-106-THINGS106",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-106-THINGS106",
+      "order": 3
+    }
+  ]
+}

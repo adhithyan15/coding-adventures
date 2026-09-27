@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:f5bd3f8e096cb0ae",
+  "lessonIds": [
+    "JA-C79-mukou",
+    "JA-C79-temae",
+    "JA-C79-kado",
+    "JA-C79-kaidan",
+    "JA-C79-rouka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch79.txt",
+  "json": "japanese/narration/ch79.json",
+  "textHash": "fnv1a64:dd6efd919bde853a",
+  "jsonHash": "fnv1a64:d11c862db8abc7f0",
+  "findings": []
+}

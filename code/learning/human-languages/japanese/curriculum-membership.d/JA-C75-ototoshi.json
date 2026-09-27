@@ -1,0 +1,11 @@
+{
+  "id": "JA-C75-ototoshi",
+  "pathSegment": "JA-PATH-75-TIME75",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-75-TIME75",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Fly, Snail, Tail, Heel, Shin",
+  "label": "ch:ja-fly-snail-tail-heel-shin",
+  "canDo": "I can say a fly, a snail, a tail, a heel and a shin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C110-sune",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a fly, a snail, a tail, a heel and a shin.",
+    "assesses": [
+      "JA-LEX-C110-THINGS110-03",
+      "JA-LEX-C110-THINGS110-04",
+      "JA-LEX-C110-THINGS110-05"
+    ]
+  }
+}
