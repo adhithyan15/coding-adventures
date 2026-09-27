@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.20.0
+
+- Resolve Mermaid Architecture icon and font size configuration into node geometry and service typography.
+
 ## 0.19.0
 
 - Route orthogonal structural relationships around unrelated node bounds with deterministic clearance.

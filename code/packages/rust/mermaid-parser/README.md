@@ -43,9 +43,12 @@ deterministic orthogonal polylines before backend-neutral PaintScene lowering.
 Named service and group icons lower to canonical backend-neutral glyph geometry.
 Namespaced icon identifiers survive typed IR and use a generic glyph when vendor
 artwork is unavailable. Orthogonal Architecture edges deterministically avoid
-unrelated service and junction bounds before backend-neutral lowering. Full vendor
-icon artwork, group-boundary obstacle avoidance, and configuration remain outside
-the partial compatibility claim.
+unrelated service and junction bounds before backend-neutral lowering. Mermaid
+`init` directives and YAML front matter preserve Architecture `iconSize` and
+`fontSize` as typed semantic configuration; layout resolves both into
+backend-neutral node geometry and service typography. Full vendor icon artwork,
+group-boundary obstacle avoidance, randomized layout, and the remaining
+fcose-specific tuning controls remain outside the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,
 including plain labels and explicit `id[label]` forms, in typed board IR.
