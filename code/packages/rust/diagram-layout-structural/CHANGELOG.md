@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.0
+
+- Route orthogonal structural relationships around unrelated node bounds with deterministic clearance.
+
 ## 0.18.0
 
 - Preserve typed Mermaid Architecture group icon names in layout IR.

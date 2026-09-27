@@ -1764,7 +1764,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "architecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway]\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}",
+            "architecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway]\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
@@ -1795,6 +1795,23 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(layout.relationships[1].start_arrow);
         assert!(layout.relationships[1].end_arrow);
         assert!(layout.relationships[1].to_group);
+        let obstacle_route = &layout.relationships[2].points;
+        assert!(obstacle_route.len() >= 4);
+        for obstacle in [&layout.nodes[1], &layout.nodes[2]] {
+            assert!(obstacle_route.windows(2).all(|segment| {
+                let horizontal_crossing = segment[0].y == segment[1].y
+                    && segment[0].y > obstacle.y
+                    && segment[0].y < obstacle.y + obstacle.height
+                    && segment[0].x.max(segment[1].x) > obstacle.x
+                    && segment[0].x.min(segment[1].x) < obstacle.x + obstacle.width;
+                let vertical_crossing = segment[0].x == segment[1].x
+                    && segment[0].x > obstacle.x
+                    && segment[0].x < obstacle.x + obstacle.width
+                    && segment[0].y.max(segment[1].y) > obstacle.y
+                    && segment[0].y.min(segment[1].y) < obstacle.y + obstacle.height;
+                !horizontal_crossing && !vertical_crossing
+            }));
+        }
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

@@ -14,7 +14,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.19.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -26,6 +26,8 @@ const COLS: usize = 3;
 const GROUP_PAD: f64 = 24.0;
 const GROUP_HEADER_H: f64 = 32.0;
 const TITLE_H: f64 = 44.0;
+const ROUTE_CLEARANCE: f64 = 12.0;
+const ROUTE_BEND_COST: f64 = 8.0;
 
 fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
     resolve_style_with_base(
@@ -478,12 +480,23 @@ fn find_node<'a>(
     nodes.iter().find(|n| n.id == id)
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 struct StructuralBounds {
     x: f64,
     y: f64,
     width: f64,
     height: f64,
+}
+
+impl StructuralBounds {
+    fn expanded(self, amount: f64) -> Self {
+        Self {
+            x: self.x - amount,
+            y: self.y - amount,
+            width: self.width + amount * 2.0,
+            height: self.height + amount * 2.0,
+        }
+    }
 }
 
 fn closest_sides(a: StructuralBounds, b: StructuralBounds) -> (Point, Point) {
@@ -566,6 +579,154 @@ fn push_distinct(points: &mut Vec<Point>, point: Point) {
     }
 }
 
+fn simplify_orthogonal_path(points: Vec<Point>) -> Vec<Point> {
+    let mut simplified = Vec::with_capacity(points.len());
+    for point in points {
+        push_distinct(&mut simplified, point);
+        while simplified.len() >= 3 {
+            let len = simplified.len();
+            let a = &simplified[len - 3];
+            let b = &simplified[len - 2];
+            let c = &simplified[len - 1];
+            if (a.x == b.x && b.x == c.x) || (a.y == b.y && b.y == c.y) {
+                simplified.remove(len - 2);
+            } else {
+                break;
+            }
+        }
+    }
+    simplified
+}
+
+fn segment_crosses_obstacle(from: &Point, to: &Point, obstacle: StructuralBounds) -> bool {
+    let right = obstacle.x + obstacle.width;
+    let bottom = obstacle.y + obstacle.height;
+    if from.y == to.y {
+        let min_x = from.x.min(to.x);
+        let max_x = from.x.max(to.x);
+        from.y > obstacle.y && from.y < bottom && max_x > obstacle.x && min_x < right
+    } else if from.x == to.x {
+        let min_y = from.y.min(to.y);
+        let max_y = from.y.max(to.y);
+        from.x > obstacle.x && from.x < right && max_y > obstacle.y && min_y < bottom
+    } else {
+        true
+    }
+}
+
+fn path_is_clear(points: &[Point], obstacles: &[StructuralBounds]) -> bool {
+    points.windows(2).all(|segment| {
+        obstacles
+            .iter()
+            .all(|obstacle| !segment_crosses_obstacle(&segment[0], &segment[1], *obstacle))
+    })
+}
+
+fn path_cost(points: &[Point]) -> f64 {
+    let distance = points
+        .windows(2)
+        .map(|segment| {
+            (segment[1].x - segment[0].x).abs() + (segment[1].y - segment[0].y).abs()
+        })
+        .sum::<f64>();
+    distance + points.len().saturating_sub(2) as f64 * ROUTE_BEND_COST
+}
+
+fn route_candidates(from: &Point, to: &Point, obstacles: &[StructuralBounds]) -> Vec<Vec<Point>> {
+    let mut xs = vec![from.x, to.x];
+    let mut ys = vec![from.y, to.y];
+    for obstacle in obstacles {
+        xs.extend([obstacle.x, obstacle.x + obstacle.width]);
+        ys.extend([obstacle.y, obstacle.y + obstacle.height]);
+    }
+    xs.sort_by(f64::total_cmp);
+    xs.dedup();
+    ys.sort_by(f64::total_cmp);
+    ys.dedup();
+
+    let mut candidates = vec![
+        vec![from.clone(), Point { x: to.x, y: from.y }, to.clone()],
+        vec![from.clone(), Point { x: from.x, y: to.y }, to.clone()],
+    ];
+    for x in &xs {
+        candidates.push(vec![
+            from.clone(),
+            Point { x: *x, y: from.y },
+            Point { x: *x, y: to.y },
+            to.clone(),
+        ]);
+    }
+    for y in &ys {
+        candidates.push(vec![
+            from.clone(),
+            Point { x: from.x, y: *y },
+            Point { x: to.x, y: *y },
+            to.clone(),
+        ]);
+    }
+    for x in &xs {
+        for y in &ys {
+            candidates.push(vec![
+                from.clone(),
+                Point { x: *x, y: from.y },
+                Point { x: *x, y: *y },
+                Point { x: to.x, y: *y },
+                to.clone(),
+            ]);
+            candidates.push(vec![
+                from.clone(),
+                Point { x: from.x, y: *y },
+                Point { x: *x, y: *y },
+                Point { x: *x, y: to.y },
+                to.clone(),
+            ]);
+        }
+    }
+    candidates
+}
+
+fn port_lead(point: &Point, port: StructuralPort) -> Point {
+    match port {
+        StructuralPort::Left => Point { x: point.x - ROUTE_CLEARANCE, y: point.y },
+        StructuralPort::Right => Point { x: point.x + ROUTE_CLEARANCE, y: point.y },
+        StructuralPort::Top => Point { x: point.x, y: point.y - ROUTE_CLEARANCE },
+        StructuralPort::Bottom => Point { x: point.x, y: point.y + ROUTE_CLEARANCE },
+    }
+}
+
+fn obstacle_avoiding_orthogonal_path(
+    from: Point,
+    to: Point,
+    from_port: StructuralPort,
+    to_port: StructuralPort,
+    obstacles: &[StructuralBounds],
+) -> Vec<Point> {
+    let direct = orthogonal_path(from.clone(), to.clone(), from_port, to_port);
+    if path_is_clear(&direct, obstacles) {
+        return direct;
+    }
+
+    let from_lead = port_lead(&from, from_port);
+    let to_lead = port_lead(&to, to_port);
+    let best = route_candidates(&from_lead, &to_lead, obstacles)
+        .into_iter()
+        .map(simplify_orthogonal_path)
+        .filter(|candidate| path_is_clear(candidate, obstacles))
+        .min_by(|a, b| path_cost(a).total_cmp(&path_cost(b)));
+    let Some(best) = best else {
+        return direct;
+    };
+
+    simplify_orthogonal_path(
+        std::iter::once(from)
+            .chain(std::iter::once(from_lead))
+            .chain(best)
+            .chain(std::iter::once(to_lead))
+            .chain(std::iter::once(to))
+            .collect(),
+    )
+}
+
 fn orthogonal_path(
     from: Point,
     to: Point,
@@ -597,10 +758,11 @@ fn relationship_path(
     routing: StructuralRouting,
     from_port: Option<StructuralPort>,
     to_port: Option<StructuralPort>,
+    obstacles: &[StructuralBounds],
 ) -> Vec<Point> {
     match (routing, from_port, to_port) {
         (StructuralRouting::Orthogonal, Some(from_port), Some(to_port)) => {
-            orthogonal_path(from, to, from_port, to_port)
+            obstacle_avoiding_orthogonal_path(from, to, from_port, to_port, obstacles)
         }
         _ => vec![from, to],
     }
@@ -648,7 +810,24 @@ fn layout_relationships(
             let (default_p0, default_p1) = closest_sides(a_bounds, b_bounds);
             let p0 = rel.from_port.map_or(default_p0, |port| point_on_port(a_bounds, port));
             let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
-            let points = relationship_path(p0, p1, rel.routing, rel.from_port, rel.to_port);
+            let obstacles = nodes
+                .iter()
+                .filter(|node| node.id != rel.from && node.id != rel.to)
+                .map(|node| StructuralBounds {
+                    x: node.x,
+                    y: node.y,
+                    width: node.width,
+                    height: node.height,
+                }.expanded(ROUTE_CLEARANCE))
+                .collect::<Vec<_>>();
+            let points = relationship_path(
+                p0,
+                p1,
+                rel.routing,
+                rel.from_port,
+                rel.to_port,
+                &obstacles,
+            );
             let label = rel.label.as_ref().map(|label| {
                 (path_midpoint(&points), label.clone())
             });
@@ -760,7 +939,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.18.0");
+        assert_eq!(crate::VERSION, "0.19.0");
     }
 
     #[test]
@@ -933,6 +1112,54 @@ mod tests {
         assert!(relationship.points.windows(2).all(|segment| {
             segment[0].x == segment[1].x || segment[0].y == segment[1].y
         }));
+    }
+
+    #[test]
+    fn orthogonal_routes_avoid_unrelated_node_bounds() {
+        let obstacle = StructuralBounds {
+            x: 80.0,
+            y: 40.0,
+            width: 40.0,
+            height: 40.0,
+        }
+        .expanded(ROUTE_CLEARANCE);
+        let points = obstacle_avoiding_orthogonal_path(
+            Point { x: 0.0, y: 60.0 },
+            Point { x: 200.0, y: 60.0 },
+            StructuralPort::Right,
+            StructuralPort::Left,
+            &[obstacle],
+        );
+
+        assert!(points.len() >= 4);
+        assert!(points.windows(2).all(|segment| {
+            segment[0].x == segment[1].x || segment[0].y == segment[1].y
+        }));
+        assert!(path_is_clear(&points, &[obstacle]));
+        assert_eq!(points[1], Point { x: ROUTE_CLEARANCE, y: 60.0 });
+        assert_eq!(
+            points[points.len() - 2],
+            Point {
+                x: 200.0 - ROUTE_CLEARANCE,
+                y: 60.0,
+            }
+        );
+    }
+
+    #[test]
+    fn obstacle_free_routes_keep_the_simple_orthogonal_path() {
+        let from = Point { x: 0.0, y: 20.0 };
+        let to = Point { x: 200.0, y: 80.0 };
+        assert_eq!(
+            obstacle_avoiding_orthogonal_path(
+                from.clone(),
+                to.clone(),
+                StructuralPort::Right,
+                StructuralPort::Left,
+                &[],
+            ),
+            orthogonal_path(from, to, StructuralPort::Right, StructuralPort::Left)
+        );
     }
 
     #[test]
