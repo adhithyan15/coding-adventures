@@ -1,0 +1,11 @@
+{
+  "id": "MW-C116-mauko",
+  "pathSegment": "MW-PATH-116-CAN116",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-116-CAN116",
+      "order": 4
+    }
+  ]
+}

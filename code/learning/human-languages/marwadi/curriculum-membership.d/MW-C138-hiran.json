@@ -1,0 +1,11 @@
+{
+  "id": "MW-C138-hiran",
+  "pathSegment": "MW-PATH-138-THINGS138",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-138-THINGS138",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C138-lukri",
+  "pathSegment": "MW-PATH-138-THINGS138",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-138-THINGS138",
+      "order": 3
+    }
+  ]
+}

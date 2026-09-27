@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Chickpeas, Mung beans, Moth beans, Sesame, Jaggery",
+  "label": "ch:mw-chickpeas-mung-beans-moth-beans-sesame-jaggery",
+  "canDo": "I can say chickpeas, mung beans, moth beans, sesame and jaggery.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C133-gur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say chickpeas, mung beans, moth beans, sesame and jaggery.",
+    "assesses": [
+      "MW-LEX-C133-THINGS133-03",
+      "MW-LEX-C133-THINGS133-04",
+      "MW-LEX-C133-THINGS133-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Spring, At daybreak, Time, Every day, Nowadays",
+  "label": "ch:mw-spring-at-daybreak-time-every-day-nowadays",
+  "canDo": "I can say spring, at daybreak, time, every day and nowadays.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MW-C95-ajkal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say spring, at daybreak, time, every day and nowadays.",
+    "assesses": [
+      "MW-LEX-C95-TIME95-03",
+      "MW-LEX-C95-TIME95-04",
+      "MW-LEX-C95-TIME95-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-135-THINGS135",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a watermelon, a cucumber, okra, an aubergine and spinach.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C109-marno",
+    "language": "marwadi",
+    "chapter": 109,
+    "sequence": 6990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5e7345d3a848096"
+  },
+  "findings": []
+}

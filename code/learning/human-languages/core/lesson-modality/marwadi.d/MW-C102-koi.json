@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C102-koi",
+    "language": "marwadi",
+    "chapter": 102,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa7e74072a0b87b3"
+  },
+  "findings": []
+}

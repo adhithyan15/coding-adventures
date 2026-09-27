@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Scissors, Lantern, Candle, Matches, Wood",
+  "label": "ch:mw-scissors-lantern-candle-matches-wood",
+  "canDo": "I can say scissors, a lantern, a candle, matches and wood.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C125-lakri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say scissors, a lantern, a candle, matches and wood.",
+    "assesses": [
+      "MW-LEX-C125-THINGS125-03",
+      "MW-LEX-C125-THINGS125-04",
+      "MW-LEX-C125-THINGS125-05"
+    ]
+  }
+}

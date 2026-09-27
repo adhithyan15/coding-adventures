@@ -1,0 +1,11 @@
+{
+  "id": "MW-C132-makki",
+  "pathSegment": "MW-PATH-132-THINGS132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-132-THINGS132",
+      "order": 3
+    }
+  ]
+}

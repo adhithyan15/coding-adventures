@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R139-second-pass-vegetables-spices-and-animals",
+    "language": "marwadi",
+    "chapter": 139,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:523781eec1349c0f"
+  },
+  "findings": []
+}

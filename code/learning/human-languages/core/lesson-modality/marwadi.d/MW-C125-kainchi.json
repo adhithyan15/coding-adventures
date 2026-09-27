@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C125-kainchi",
+    "language": "marwadi",
+    "chapter": 125,
+    "sequence": 7950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a7d5ce2f99e2deb"
+  },
+  "findings": []
+}

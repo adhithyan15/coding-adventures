@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:f46d7e9352b0e596",
+  "lessonIds": [
+    "MW-C143-tato",
+    "MW-C143-kharo",
+    "MW-C143-khato",
+    "MW-C143-karvo",
+    "MW-C143-tikho"
+  ],
+  "tex": "marwadi/book/chapters/ch143-hot-salty-sour-bitter-spicy.tex"
+}

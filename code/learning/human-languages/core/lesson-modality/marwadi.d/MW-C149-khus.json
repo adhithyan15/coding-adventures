@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C149-khus",
+    "language": "marwadi",
+    "chapter": 149,
+    "sequence": 9360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e327b0e98582cdf"
+  },
+  "findings": []
+}

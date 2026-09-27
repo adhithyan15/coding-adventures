@@ -1,0 +1,11 @@
+{
+  "id": "MW-C145-narangi",
+  "pathSegment": "MW-PATH-145-QUAL145",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-145-QUAL145",
+      "order": 4
+    }
+  ]
+}

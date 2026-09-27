@@ -1,0 +1,11 @@
+{
+  "id": "MW-C135-palak",
+  "pathSegment": "MW-PATH-135-THINGS135",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-135-THINGS135",
+      "order": 4
+    }
+  ]
+}

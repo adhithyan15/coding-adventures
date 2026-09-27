@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C106-sivno",
+    "language": "marwadi",
+    "chapter": 106,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9dea6eebec63ebe"
+  },
+  "findings": []
+}

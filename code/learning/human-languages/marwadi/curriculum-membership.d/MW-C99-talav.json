@@ -1,0 +1,11 @@
+{
+  "id": "MW-C99-talav",
+  "pathSegment": "MW-PATH-99-LOC99",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-99-LOC99",
+      "order": 4
+    }
+  ]
+}

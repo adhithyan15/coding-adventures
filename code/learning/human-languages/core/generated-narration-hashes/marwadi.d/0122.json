@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:03b6e7887197277d",
+  "lessonIds": [
+    "MW-C122-dabbo",
+    "MW-C122-peti",
+    "MW-C122-sanduk",
+    "MW-C122-rajai",
+    "MW-C122-gadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch122.txt",
+  "json": "marwadi/narration/ch122.json",
+  "textHash": "fnv1a64:720d694e21b70123",
+  "jsonHash": "fnv1a64:d797546b02a7fb60",
+  "findings": []
+}

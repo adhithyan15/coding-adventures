@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C95-bagat",
+    "language": "marwadi",
+    "chapter": 95,
+    "sequence": 6170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:623b7489fb4904e4"
+  },
+  "findings": []
+}

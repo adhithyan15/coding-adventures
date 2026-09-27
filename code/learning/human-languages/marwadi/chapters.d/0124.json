@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Comb, Soap, Towel, Needle, Thread",
+  "label": "ch:mw-comb-soap-towel-needle-thread",
+  "canDo": "I can say a comb, soap, a towel, a needle and thread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C124-doro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a comb, soap, a towel, a needle and thread.",
+    "assesses": [
+      "MW-LEX-C124-THINGS124-03",
+      "MW-LEX-C124-THINGS124-04",
+      "MW-LEX-C124-THINGS124-05"
+    ]
+  }
+}

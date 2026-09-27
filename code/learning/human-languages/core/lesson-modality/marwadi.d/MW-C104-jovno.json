@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C104-jovno",
+    "language": "marwadi",
+    "chapter": 104,
+    "sequence": 6740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa8ff71816f7b892"
+  },
+  "findings": []
+}

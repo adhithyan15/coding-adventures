@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Pillow, Sheet, Cotton rug, Curtain, Mirror",
+  "label": "ch:mw-pillow-sheet-cotton-rug-curtain-mirror",
+  "canDo": "I can say a pillow, a sheet, a cotton rug, a curtain and a mirror.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C123-arsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say a pillow, a sheet, a cotton rug, a curtain and a mirror.",
+    "assesses": [
+      "MW-LEX-C123-THINGS123-03",
+      "MW-LEX-C123-THINGS123-04",
+      "MW-LEX-C123-THINGS123-05"
+    ]
+  }
+}

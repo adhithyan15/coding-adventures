@@ -1,0 +1,11 @@
+{
+  "id": "MW-C93-kati",
+  "pathSegment": "MW-PATH-93-TIME93",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-93-TIME93",
+      "order": 3
+    }
+  ]
+}

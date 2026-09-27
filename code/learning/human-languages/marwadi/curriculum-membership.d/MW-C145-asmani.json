@@ -1,0 +1,11 @@
+{
+  "id": "MW-C145-asmani",
+  "pathSegment": "MW-PATH-145-QUAL145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-145-QUAL145",
+      "order": 2
+    }
+  ]
+}

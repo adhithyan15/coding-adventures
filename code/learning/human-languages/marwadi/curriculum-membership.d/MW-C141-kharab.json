@@ -1,0 +1,11 @@
+{
+  "id": "MW-C141-kharab",
+  "pathSegment": "MW-PATH-141-QUAL141",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-141-QUAL141",
+      "order": 1
+    }
+  ]
+}

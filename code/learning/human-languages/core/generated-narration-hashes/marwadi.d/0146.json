@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:527abb1c25848a9a",
+  "lessonIds": [
+    "MW-C146-chamkilo",
+    "MW-C146-sant",
+    "MW-C146-husiyar",
+    "MW-C146-bavalo",
+    "MW-C146-alsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch146.txt",
+  "json": "marwadi/narration/ch146.json",
+  "textHash": "fnv1a64:0118330941f83862",
+  "jsonHash": "fnv1a64:e21a200091cee6e8",
+  "findings": []
+}

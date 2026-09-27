@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:7cf2286639d6de00",
+  "lessonIds": [
+    "MW-C113-lagno",
+    "MW-C113-pasand",
+    "MW-C113-sauk",
+    "MW-C113-het",
+    "MW-C113-moh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch113.txt",
+  "json": "marwadi/narration/ch113.json",
+  "textHash": "fnv1a64:31be3a93698d54be",
+  "jsonHash": "fnv1a64:5b937c007db87d58",
+  "findings": []
+}

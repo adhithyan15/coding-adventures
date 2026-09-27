@@ -1,0 +1,726 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 90,
+  "title": "Midday, Evening, In the early morning, Dawn, Day after tomorrow",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b62a423eb320ca12",
+  "lessons": [
+    {
+      "id": "MW-C90-dopar",
+      "sequence": 5900,
+      "title": "दोपार (dopār) — midday, the afternoon",
+      "headword": "दोपार",
+      "romanization": "dopār",
+      "gloss": "midday, the afternoon",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59513f48719b2d75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a matter; talk, then the Marwadi for a language."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read without stopping: ये कपड़ा दिखावो। ये कितणे कू है?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दोपार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोपार — dopār — \"midday, the afternoon\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dopār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dopār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dopār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dopār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dopār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dopār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a matter; talk, then the Marwadi for a language, then say dopār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a matter; talk, then the Marwadi for a language, then say *dopār* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दोपार (dopār) mean? (\"Midday, the afternoon\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C90-dopar-type",
+              "prompt": "Type the Marwadi for 'midday, the afternoon'.",
+              "assesses": [
+                "MW-LEX-C90-TIME90-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दोपार",
+                "dopār"
+              ],
+              "feedback": {
+                "correct": "Right: दोपार (dopār) is 'midday, the afternoon'.",
+                "incorrect": "'midday, the afternoon' is दोपार (dopār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C90-athan",
+      "sequence": 5910,
+      "title": "आथण (āthaṇ) — the evening",
+      "headword": "आथण",
+      "romanization": "āthaṇ",
+      "gloss": "the evening",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce15d04604fd7fb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a language, then the Marwadi for midday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आथण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आथण — āthaṇ — \"the evening\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āthaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āthaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āthaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āthaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āthaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āthaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a language, then the Marwadi for midday, then say āthaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a language, then the Marwadi for midday, then say *āthaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आथण (āthaṇ) mean? (\"The evening\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C90-athan-type",
+              "prompt": "Type the Marwadi for 'the evening'.",
+              "assesses": [
+                "MW-LEX-C90-TIME90-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आथण",
+                "āthaṇ"
+              ],
+              "feedback": {
+                "correct": "Right: आथण (āthaṇ) is 'the evening'.",
+                "incorrect": "'the evening' is आथण (āthaṇ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C90-dinugai",
+      "sequence": 5920,
+      "title": "दिनूगै (dinūgai) — in the early morning",
+      "headword": "दिनूगै",
+      "romanization": "dinūgai",
+      "gloss": "in the early morning",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97ed9d62fa2d3dfd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for midday, then the Marwadi for the evening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दिनूगै",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दिनूगै — dinūgai — \"in the early morning\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinūgai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dinūgai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinūgai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dinūgai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dinūgai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dinūgai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for midday, then the Marwadi for the evening, then say dinūgai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for midday, then the Marwadi for the evening, then say *dinūgai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दिनूगै (dinūgai) mean? (\"In the early morning\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C90-dinugai-type",
+              "prompt": "Type the Marwadi for 'in the early morning'.",
+              "assesses": [
+                "MW-LEX-C90-TIME90-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दिनूगै",
+                "dinūgai"
+              ],
+              "feedback": {
+                "correct": "Right: दिनूगै (dinūgai) is 'in the early morning'.",
+                "incorrect": "'in the early morning' is दिनूगै (dinūgai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C90-parbhat",
+      "sequence": 5930,
+      "title": "परभात (parbhāt) — dawn",
+      "headword": "परभात",
+      "romanization": "parbhāt",
+      "gloss": "dawn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6b7e1e05d456c08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the evening, then the Marwadi for in the early morning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परभात",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परभात — parbhāt — \"dawn\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parbhāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parbhāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parbhāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parbhāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say parbhāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *parbhāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the evening, then the Marwadi for in the early morning, then say parbhāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the evening, then the Marwadi for in the early morning, then say *parbhāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परभात (parbhāt) mean? (\"Dawn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C90-parbhat-type",
+              "prompt": "Type the Marwadi for 'dawn'.",
+              "assesses": [
+                "MW-LEX-C90-TIME90-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "परभात",
+                "parbhāt"
+              ],
+              "feedback": {
+                "correct": "Right: परभात (parbhāt) is 'dawn'.",
+                "incorrect": "'dawn' is परभात (parbhāt)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C90-parsu",
+      "sequence": 5940,
+      "title": "परसूं (parsū̃) — the day after tomorrow; the day before yesterday",
+      "headword": "परसूं",
+      "romanization": "parsū̃",
+      "gloss": "the day after tomorrow; the day before yesterday",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f75bf450558674c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for in the early morning, then the Marwadi for dawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परसूं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परसूं — parsū̃ — \"the day after tomorrow; the day before yesterday\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parsū̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parsū̃*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parsū̃, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parsū̃*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say parsū̃",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *parsū̃*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for in the early morning, then the Marwadi for dawn, then say parsū̃ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for in the early morning, then the Marwadi for dawn, then say *parsū̃* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परसूं (parsū̃) mean? (\"The day after tomorrow; the day before yesterday\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C90-parsu-type",
+              "prompt": "Type the Marwadi for 'the day after tomorrow'.",
+              "assesses": [
+                "MW-LEX-C90-TIME90-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "परसूं",
+                "parsū̃"
+              ],
+              "feedback": {
+                "correct": "Right: परसूं (parsū̃) is 'the day after tomorrow'.",
+                "incorrect": "'the day after tomorrow' is परसूं (parsū̃)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

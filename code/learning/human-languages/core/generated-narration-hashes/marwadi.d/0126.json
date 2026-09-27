@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:1aa647366edecba1",
+  "lessonIds": [
+    "MW-C126-koylo",
+    "MW-C126-chhano",
+    "MW-C126-boro",
+    "MW-C126-rassi",
+    "MW-C126-khuti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch126.txt",
+  "json": "marwadi/narration/ch126.json",
+  "textHash": "fnv1a64:964c1f6647123b5e",
+  "jsonHash": "fnv1a64:481dfd462d9c6a5f",
+  "findings": []
+}

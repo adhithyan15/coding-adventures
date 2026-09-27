@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C127-khilo",
+    "language": "marwadi",
+    "chapter": 127,
+    "sequence": 8050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ee4100b3e84236a"
+  },
+  "findings": []
+}

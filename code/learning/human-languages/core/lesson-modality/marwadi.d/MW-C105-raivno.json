@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C105-raivno",
+    "language": "marwadi",
+    "chapter": 105,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb2a8c47cf649fc4"
+  },
+  "findings": []
+}

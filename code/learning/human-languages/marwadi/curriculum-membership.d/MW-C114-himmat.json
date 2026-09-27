@@ -1,0 +1,11 @@
+{
+  "id": "MW-C114-himmat",
+  "pathSegment": "MW-PATH-114-CAN114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-114-CAN114",
+      "order": 3
+    }
+  ]
+}

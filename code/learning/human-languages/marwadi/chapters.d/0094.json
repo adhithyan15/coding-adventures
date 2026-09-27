@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "Pos, Magh, Hot season, Cold season, Rainy season",
+  "label": "ch:mw-pos-magh-hot-season-cold-season-rainy-season",
+  "canDo": "I can say Pos, Magh, the hot season, the cold season and the rainy season.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MW-C94-chaumaso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can say Pos, Magh, the hot season, the cold season and the rainy season.",
+    "assesses": [
+      "MW-LEX-C94-TIME94-03",
+      "MW-LEX-C94-TIME94-04",
+      "MW-LEX-C94-TIME94-05"
+    ]
+  }
+}

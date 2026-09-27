@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:332c303bc57af2ed",
+  "lessonIds": [
+    "MW-C134-makkhan",
+    "MW-C134-chhachh",
+    "MW-C134-lassi",
+    "MW-C134-kachori",
+    "MW-C134-bhujiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch134.txt",
+  "json": "marwadi/narration/ch134.json",
+  "textHash": "fnv1a64:90f9f790eb272867",
+  "jsonHash": "fnv1a64:12f429d5d43c75dd",
+  "findings": []
+}

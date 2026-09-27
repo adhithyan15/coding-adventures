@@ -1,0 +1,11 @@
+{
+  "id": "MW-C137-papito",
+  "pathSegment": "MW-PATH-137-THINGS137",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-137-THINGS137",
+      "order": 1
+    }
+  ]
+}

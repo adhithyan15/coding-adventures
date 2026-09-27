@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:33505203af6d59f3",
+  "lessonIds": [
+    "MW-C116-gun",
+    "MW-C116-akal",
+    "MW-C116-gyan",
+    "MW-C116-hak",
+    "MW-C116-mauko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch116.txt",
+  "json": "marwadi/narration/ch116.json",
+  "textHash": "fnv1a64:2cf1513909383342",
+  "jsonHash": "fnv1a64:295d7004b68fe341",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C135-kakri",
+  "pathSegment": "MW-PATH-135-THINGS135",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-135-THINGS135",
+      "order": 1
+    }
+  ]
+}

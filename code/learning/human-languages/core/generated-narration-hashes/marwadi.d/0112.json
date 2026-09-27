@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:f1ea8ed02c8303b7",
+  "lessonIds": [
+    "MW-C112-jarurat",
+    "MW-C112-lalach",
+    "MW-C112-sapno",
+    "MW-C112-ummid",
+    "MW-C112-marji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch112.txt",
+  "json": "marwadi/narration/ch112.json",
+  "textHash": "fnv1a64:57c16fb27489fc41",
+  "jsonHash": "fnv1a64:6866354c97970179",
+  "findings": []
+}

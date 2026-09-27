@@ -1,0 +1,11 @@
+{
+  "id": "MW-C143-kharo",
+  "pathSegment": "MW-PATH-143-QUAL143",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-143-QUAL143",
+      "order": 1
+    }
+  ]
+}

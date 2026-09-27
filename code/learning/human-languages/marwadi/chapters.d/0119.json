@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Large clay pot, Small water vessel, Glass, Bucket, Broom",
+  "label": "ch:mw-large-clay-pot-small-water-vessel-glass-bucket-broom",
+  "canDo": "I can say a large clay pot, a small water vessel, a glass, a bucket and a broom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-R119-second-pass-why-and-the-kitchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a large clay pot, a small water vessel, a glass, a bucket and a broom.",
+    "assesses": [
+      "MW-LEX-C119-THINGS119-03",
+      "MW-LEX-C119-THINGS119-04",
+      "MW-LEX-C119-THINGS119-05"
+    ]
+  }
+}

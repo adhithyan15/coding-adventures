@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C97-sami",
+    "language": "marwadi",
+    "chapter": 97,
+    "sequence": 6280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73a2287b1ac380da"
+  },
+  "findings": []
+}

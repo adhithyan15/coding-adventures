@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:640a7710334af4ee",
+  "lessonIds": [
+    "MW-C115-jamin",
+    "MW-C115-jaydad",
+    "MW-C115-puji",
+    "MW-C115-kamai",
+    "MW-C115-naukri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch115.txt",
+  "json": "marwadi/narration/ch115.json",
+  "textHash": "fnv1a64:b8a7f88a4a7067f8",
+  "jsonHash": "fnv1a64:b6adbb2981cc1d4f",
+  "findings": []
+}

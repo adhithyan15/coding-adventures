@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Turban, Long skirt, Woman's wrap, Bodice, Long coat",
+  "label": "ch:mw-turban-long-skirt-woman-s-wrap-bodice-long-coat",
+  "canDo": "I can say a turban, a long skirt, a woman's wrap, a bodice and a long coat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C128-angarkhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say a turban, a long skirt, a woman's wrap, a bodice and a long coat.",
+    "assesses": [
+      "MW-LEX-C128-THINGS128-03",
+      "MW-LEX-C128-THINGS128-04",
+      "MW-LEX-C128-THINGS128-05"
+    ]
+  }
+}

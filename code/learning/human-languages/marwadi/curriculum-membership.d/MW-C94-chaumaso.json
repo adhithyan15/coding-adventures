@@ -1,0 +1,11 @@
+{
+  "id": "MW-C94-chaumaso",
+  "pathSegment": "MW-PATH-94-TIME94",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-94-TIME94",
+      "order": 4
+    }
+  ]
+}

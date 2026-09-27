@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C128-angarkhi",
+    "language": "marwadi",
+    "chapter": 128,
+    "sequence": 8140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5fe6ba00c7a9968"
+  },
+  "findings": []
+}

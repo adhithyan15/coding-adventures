@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C103-pakavno",
+    "language": "marwadi",
+    "chapter": 103,
+    "sequence": 6660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ce38df8664b4c6e"
+  },
+  "findings": []
+}

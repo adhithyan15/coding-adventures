@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:ab9f0409a62f28e7",
+  "lessonIds": [
+    "MW-C123-takiyo",
+    "MW-C123-chadar",
+    "MW-C123-dari",
+    "MW-C123-pardo",
+    "MW-C123-arsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch123.txt",
+  "json": "marwadi/narration/ch123.json",
+  "textHash": "fnv1a64:4c5308483dda2c40",
+  "jsonHash": "fnv1a64:fb514fb627d2882e",
+  "findings": []
+}

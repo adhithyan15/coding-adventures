@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C99-agano",
+    "language": "marwadi",
+    "chapter": 99,
+    "sequence": 6360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64ff9a6a35b3dbef"
+  },
+  "findings": []
+}

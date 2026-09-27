@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:b1e7776954d57221",
+  "lessonIds": [
+    "MW-C97-hethai",
+    "MW-C97-bichai",
+    "MW-C97-kanai",
+    "MW-C97-sami",
+    "MW-C97-davo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch97.txt",
+  "json": "marwadi/narration/ch97.json",
+  "textHash": "fnv1a64:c277f47cd4f29d25",
+  "jsonHash": "fnv1a64:0af110dcc53d6f14",
+  "findings": []
+}

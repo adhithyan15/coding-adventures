@@ -1,0 +1,11 @@
+{
+  "id": "MW-C95-tarkai",
+  "pathSegment": "MW-PATH-95-TIME95",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-95-TIME95",
+      "order": 1
+    }
+  ]
+}

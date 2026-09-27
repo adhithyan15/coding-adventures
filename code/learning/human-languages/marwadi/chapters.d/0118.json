@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Hearth, Griddle, Wok, Cooking pot, Water pot",
+  "label": "ch:mw-hearth-griddle-wok-cooking-pot-water-pot",
+  "canDo": "I can say a hearth, a griddle, a wok, a cooking pot and a water pot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C118-gharo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a hearth, a griddle, a wok, a cooking pot and a water pot.",
+    "assesses": [
+      "MW-LEX-C118-THINGS118-03",
+      "MW-LEX-C118-THINGS118-04",
+      "MW-LEX-C118-THINGS118-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C138-siyal",
+    "language": "marwadi",
+    "chapter": 138,
+    "sequence": 8740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:480a51049e040e66"
+  },
+  "findings": []
+}

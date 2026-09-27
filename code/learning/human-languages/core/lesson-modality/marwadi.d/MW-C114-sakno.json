@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C114-sakno",
+    "language": "marwadi",
+    "chapter": 114,
+    "sequence": 7300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0a53c2e8aef4c1a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Spice, Papaya, Pomegranate, Dates, Coconut",
+  "label": "ch:mw-spice-papaya-pomegranate-dates-coconut",
+  "canDo": "I can say spice, a papaya, a pomegranate, dates and a coconut.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C137-narel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say spice, a papaya, a pomegranate, dates and a coconut.",
+    "assesses": [
+      "MW-LEX-C137-THINGS137-03",
+      "MW-LEX-C137-THINGS137-04",
+      "MW-LEX-C137-THINGS137-05"
+    ]
+  }
+}

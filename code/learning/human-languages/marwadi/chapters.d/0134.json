@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Butter, Buttermilk, Lassi, Kachori, Bhujia",
+  "label": "ch:mw-butter-buttermilk-lassi-kachori-bhujia",
+  "canDo": "I can say butter, buttermilk, lassi, a kachori and bhujia.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C134-bhujiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say butter, buttermilk, lassi, a kachori and bhujia.",
+    "assesses": [
+      "MW-LEX-C134-THINGS134-03",
+      "MW-LEX-C134-THINGS134-04",
+      "MW-LEX-C134-THINGS134-05"
+    ]
+  }
+}

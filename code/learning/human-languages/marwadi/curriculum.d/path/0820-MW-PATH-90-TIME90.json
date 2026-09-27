@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-90-TIME90",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "MW-EXT-90-TIME90"
+  ],
+  "after": []
+}

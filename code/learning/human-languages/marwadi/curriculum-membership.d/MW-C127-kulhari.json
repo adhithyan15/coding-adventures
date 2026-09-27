@@ -1,0 +1,11 @@
+{
+  "id": "MW-C127-kulhari",
+  "pathSegment": "MW-PATH-127-THINGS127",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-127-THINGS127",
+      "order": 2
+    }
+  ]
+}

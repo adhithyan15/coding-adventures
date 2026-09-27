@@ -1,0 +1,11 @@
+{
+  "id": "MW-R129-second-pass-tools-and-clothes",
+  "pathSegment": "MW-PATH-129-THINGS129",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MW-EXT-129-THINGS129",
+      "order": 6
+    }
+  ]
+}

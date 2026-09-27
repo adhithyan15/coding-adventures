@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R139-first-pass-jewellery-and-food",
+    "language": "marwadi",
+    "chapter": 139,
+    "sequence": 8800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b0646f6646978b8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C97-bichai",
+  "pathSegment": "MW-PATH-97-LOC97",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-97-LOC97",
+      "order": 1
+    }
+  ]
+}

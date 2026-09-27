@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:a3e6860c25344242",
+  "lessonIds": [
+    "MW-C145-gulabi",
+    "MW-C145-kesariyo",
+    "MW-C145-asmani",
+    "MW-C145-baingni",
+    "MW-C145-narangi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch145.txt",
+  "json": "marwadi/narration/ch145.json",
+  "textHash": "fnv1a64:c42682a5ac85668c",
+  "jsonHash": "fnv1a64:291f6cd7fc63c5f0",
+  "findings": []
+}

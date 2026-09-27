@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R109-first-pass-places-this-and-that-and-actions",
+    "language": "marwadi",
+    "chapter": 109,
+    "sequence": 7000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c037870a3175e594"
+  },
+  "findings": []
+}
