@@ -14400,9 +14400,11 @@ missing and emerging OCaml still lacks its native engine. The neutral corpus has
 162 cases in 13 process-free domains but no execution-semantics cases, while
 every adapter remains unavailable. Preserve the dependency order: trusted
 platform execution authority, execution-semantics corpus, native
-current-contract engines, then the all-language adapter/CI closure. No
-established-lane exception has been approved; F# through the shared C# engine
-is still only a candidate pending final adapter evidence.
+current-contract engines, exact native adapter closures, then the all-language
+adapter/CI closure. C# and F# may share the reviewed C# engine, but both remain
+mandatory lanes: each needs a language-native facade and adapter, independent
+front-door invocation, and complete neutral-corpus evidence. Shared engine
+reuse is architecture, not a denominator exception.
 
 The dependency/leverage pass selects
 `x509-extension-portable-conformance` on fresh branch
@@ -14425,14 +14427,22 @@ The selected generic Extension tranche now implements the closed 48-case
 language-neutral profile in all 15 established lanes. Its collision-checked
 branch inventory contains 1,470 implementation identities, 4,737 slots, 178
 high-consensus packages, zero canonical collisions, and zero unknown buckets.
-The branch is rebased onto exact fetched `origin/main`
-`9a5df7b77ac3f7a4048f5c29d43e8449ac99b28a`. The intervening TaskApp and
-curriculum commits have no implementation-path overlap and add no package
-identity or newly eligible unowned parity gap. A final live open-PR audit did
-find one same-hunk publication collision with TaskApp PR #16100 in the Lua
-repository-boundary runner and aggregate digest fixture. Publication therefore
-waits for that unrelated PR to resolve, after which the branch must rebase and
-regenerate the collision-checked digest before opening its parity PR.
+TaskApp PR #16100 completed 68 successful and nine expected-skipped checks and
+merged through guarded squash auto-merge as
+`1b5b869a5ac2588a5251e314f04fafe6c47bec6c`. The parity branch then rebased
+onto exact fetched `origin/main`
+`d1afaf57915c1f9e2c813a13079034dfdefb5a44`; two intervening human-language
+merges are package-topology-neutral. Reconciliation covered the runner assertions,
+the aggregate repository-source boundary, and ten boundary-derived corpus cases.
+The combined Lua boundary keeps both the new `der_asn1` root from #16100 and
+this branch's `x509_extension` root: 18 boundaries, 21 inputs, 489 scopes, 492
+authorizations, and digest
+`252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3`. The
+disjoint official OCaml content-addressed archive mirror repair is preserved.
+The regenerated exact-main inventory is topology-neutral at 1,470 identities,
+4,723 slots, and zero collisions; the branch remains 1,470 identities, 4,737
+slots, 178 high-consensus packages, 805 Rust singletons, and zero collisions or
+unknown buckets.
 
 A pre-publication native review hardened the three weak boundaries without
 widening Extension semantics. Python OID and Extension values now use
@@ -14458,15 +14468,40 @@ validation uses a short drive mapping to avoid host-only .NET `MAX_PATH`
 failures and explicitly exposes the installed UV and Elixir toolchains; neither
 environment adjustment changes tracked package behavior.
 
-The audit also identified a distinct aggregate evidence improvement, now
-owned by pending `x509-extension-native-hardening-evidence`. It will record one
+The audit also identified a distinct aggregate evidence improvement, now owned
+by pending `x509-extension-native-hardening-evidence`. It will register one
 native test path and the language-neutral claims `validated-origin`,
-`alias-safe-value`, and `payload-redacted-diagnostics` for every lane, then
-close explicit evidence gaps in Haskell, Perl, Rust, Swift, and Dart before
-enabling the central ratchet. This follow-up depends on the selected Extension
+`alias-safe-value`, and `payload-redacted-diagnostics` for every lane, including
+the existing Haskell and Perl native-test paths and the final Dart, Swift, and
+Rust rendered-error evidence. This follow-up depends on the selected Extension
 owner and does not block publishing the complete portable behavior contract.
-The ownership graph therefore has 872 owners and 1,607 dependency edges: 224
-merged, 647 pending, and exactly the Extension owner in progress.
+
+The post-merge backlog refresh adds nine exact terminal native-adapter closure
+owners for shared C#/F#, Elixir, Go, Lua, Perl, Python, Ruby, Rust, and
+TypeScript. Each waits on the three neutral graph/diff corpus layers and its
+remaining native correctness children before requiring a real adapter and the
+complete versioned corpus with zero undeclared skips or failures. C and C++ are
+kept outside the established-lane aggregate: their bounded graduation owner
+must choose a separate full-corpus native child or a reviewed not-applicable
+decision before either lane is promoted. The Haskell completion umbrella now
+has the missing FNT00 reconciliation edge.
+
+A separate CT01 semantic audit found selector branches or ternaries in the ten
+existing established `ct-compare` lanes, a retained Go branch in optimized
+output, choice-specific copy loops in emerging C/C++, selected-pointer copying
+in Rust, and permissive TypeScript byte coercion. The new
+`ct-compare-existing-lane-conformance-adoption` owner requires all ten existing
+lanes to consume CT01 with exact-work and optimized-code evidence where
+meaningful; it makes no wall-clock or universal hardware-timing claim.
+
+The ownership graph therefore has 882 owners and 1,706 dependency edges: 224
+merged, 657 pending, and exactly the Extension owner in progress. After this
+Extension PR merges, the dependency/leverage pass ranks
+`build-tool-python-glob-matcher-complexity-hardening` first: its dependencies
+are merged, it unlocks nine transitive descendants, and it has a bounded
+iterative dynamic-programming implementation and validation plan. The
+`sha512-existing-lane-hf04-conformance-audit` remains the fallback. No second
+implementation item starts while the Extension PR is active.
 
 ## Autonomous Loop Protocol
 
