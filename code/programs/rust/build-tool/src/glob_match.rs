@@ -472,4 +472,103 @@ mod tests {
         assert!(match_path(pat, "src/lib/parser.rs"));
         assert!(!match_path(pat, "benches/bench.rs"));
     }
+
+    #[test]
+    fn question_and_classes_consume_unicode_scalars() {
+        assert!(try_match_path("?.txt", "🐍.txt").unwrap());
+        assert!(try_match_path("[🐀-🙏].txt", "🐍.txt").unwrap());
+        assert!(!try_match_path("[🐀-🙏].txt", "a.txt").unwrap());
+    }
+
+    #[test]
+    fn portable_character_class_edges_match_python_fnmatchcase() {
+        for (pattern, matching, nonmatching) in [
+            ("[^a].txt", "^.txt", "b.txt"),
+            ("[]a].txt", "].txt", "b.txt"),
+            ("[-a].txt", "-.txt", "b.txt"),
+            ("[a-].txt", "-.txt", "b.txt"),
+            ("[a-c].txt", "b.txt", "z.txt"),
+            ("[!a-c].txt", "z.txt", "b.txt"),
+        ] {
+            assert!(try_match_path(pattern, matching).unwrap(), "{pattern}");
+            assert!(!try_match_path(pattern, nonmatching).unwrap(), "{pattern}");
+        }
+
+        assert!(try_match_path("[^a].txt", "a.txt").unwrap());
+        assert!(try_match_path("[!]].txt", "a.txt").unwrap());
+        assert!(!try_match_path("[!]].txt", "].txt").unwrap());
+    }
+
+    #[test]
+    fn unmatched_opening_bracket_is_a_literal() {
+        for (pattern, path) in [
+            ("[", "["),
+            ("prefix[", "prefix["),
+            ("[]", "[]"),
+            ("[!]", "[!]"),
+        ] {
+            assert!(try_match_path(pattern, path).unwrap(), "{pattern}");
+        }
+        assert!(!try_match_path("prefix[", "prefixx").unwrap());
+    }
+
+    #[test]
+    fn rejected_classes_return_one_stable_typed_error() {
+        for pattern in [
+            "[z-a].txt",
+            "[a--b].txt",
+            "[a&&b].txt",
+            "[a~~b].txt",
+            "[a||b].txt",
+        ] {
+            assert_eq!(
+                validate_pattern(pattern),
+                Err(GlobPatternError::AmbiguousOrDescendingCharacterClass),
+                "{pattern}"
+            );
+            assert_eq!(
+                try_match_path(pattern, "a.txt"),
+                Err(GlobPatternError::AmbiguousOrDescendingCharacterClass),
+                "{pattern}"
+            );
+        }
+    }
+
+    #[test]
+    fn unmatched_bracket_parser_work_is_linear() {
+        let pattern = "[".repeat(16_384);
+        let (tokens, visited) = parse_segment_with_state_count(&pattern).unwrap();
+
+        assert_eq!(tokens.len(), pattern.chars().count());
+        assert_eq!(visited, 2 * pattern.chars().count());
+    }
+
+    #[test]
+    fn adversarial_globstar_near_miss_visits_each_path_state_once() {
+        let pattern = std::iter::repeat_n(["**", "a"], 12)
+            .flatten()
+            .chain(["z"])
+            .collect::<Vec<_>>()
+            .join("/");
+        let path = std::iter::repeat_n("a", 24)
+            .chain(["y"])
+            .collect::<Vec<_>>()
+            .join("/");
+
+        let (matched, visited) = match_path_with_state_count(&pattern, &path).unwrap();
+
+        assert!(!matched);
+        let pattern_states = pattern.split('/').count() + 1;
+        let path_states = path.split('/').count() + 1;
+        assert_eq!(visited, pattern_states * path_states);
+    }
+
+    #[test]
+    fn repeated_stars_and_globstars_collapse_without_semantic_drift() {
+        assert!(try_match_path("**/**/*.py", "a/b/main.py").unwrap());
+        assert!(try_match_path("**/**/**", "x/y/z").unwrap());
+        assert!(try_match_path("src/**", "src").unwrap());
+        assert!(try_match_path("src//main.py", "src/main.py").unwrap());
+        assert!(try_match_path("src/", "src").unwrap());
+    }
 }

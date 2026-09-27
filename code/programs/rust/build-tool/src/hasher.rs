@@ -909,4 +909,26 @@ mod tests {
 
         let _ = fs::remove_dir_all(&dir);
     }
+
+    #[test]
+    fn invalid_later_glob_fails_before_candidate_matching() {
+        let dir = fixture_temp_dir("glob_preflight");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("main.py"), "pass").unwrap();
+
+        let pkg = Package {
+            name: "python/glob-preflight".to_string(),
+            path: dir.clone(),
+            build_commands: vec!["pytest".to_string()],
+            language: "python".to_string(),
+        };
+        let patterns = vec!["*.py".to_string(), "[z-a].py".to_string()];
+
+        assert_eq!(
+            collect_source_files_with_patterns(&pkg, &patterns),
+            Err(glob_match::GlobPatternError::AmbiguousOrDescendingCharacterClass)
+        );
+
+        let _ = fs::remove_dir_all(&dir);
+    }
 }
