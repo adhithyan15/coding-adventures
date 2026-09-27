@@ -14683,6 +14683,56 @@ Unicode-scalar portable matching, strict character classes, linear parsing,
 bounded memoized-equivalent state evaluation, stable failures, and complete
 declared-list validation without new host authority.
 
+### PR #16139 merge, exact-main audit, and barcode contract selection
+
+All 47 final-head checks for PR #16139 reached terminal acceptable conclusions
+at `94cd6e8bfbd57fc11ecfa88f98fb46599ea54631`: 24 succeeded and 23 were
+expected path-gated skips. GitHub reported the reviewed head clean and
+mergeable. Guarded squash auto-merge was enabled only after that terminal
+state, and GitHub merged the Elixir glob hardening automatically at
+`2026-09-27T11:20:55Z` as
+`04bbbe63a9eb041cc6e7548b8b74ed0204ad7771`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+at 15 established lanes, 1,470 implementation identities, 4,737 implementation
+slots, and 1,512 all-reported identities. Its completion bands remain 178/265,
+123/934, 181/2,282, and 988/13,832. Rust retains 805 singleton identities,
+emerging OCaml remains at five packages, and canonical collisions and unknown
+language buckets remain zero.
+
+Parallel post-merge audits decomposed the 27 structurally unwatched package
+roots into thirteen collision-free dependency-shaped owners and retained the
+selection-blocked umbrella as a completion gate. A barcode reference audit
+also registered an existing-lane repair owner after finding Unicode digit and
+case-folding acceptance, unbounded variable inputs, unstable payload-bearing
+errors, Codabar guard ambiguity, and a Rust Unicode byte-slice panic risk. The
+six Java/Kotlin/Dart encoder owners now wait for that baseline reconciliation
+as well as their neutral contract and shared layout prerequisite.
+
+The dependency/leverage pass selected
+`barcode-symbologies-language-neutral-conformance`, the dependency-free leaf
+that directly gates seven barcode encoder/facade owners and twelve unfinished
+descendants. The fresh branch
+`codex/parity-barcode-symbologies-contract-20260927` starts from the exact merge
+commit. Its bounded scope is a pure ASCII-first contract, closed fixture schema,
+deterministic oracle, exact modules and runs, checksum/parity decisions,
+4,096-scalar ceiling, stable atomic errors, and CI metadata registration for
+ITF, Code 39, Codabar, Code 128-B, UPC-A, and EAN-13. Layout, rendering, files,
+fonts, devices, native paint, and current-lane repairs remain outside this
+owner.
+
+Before publication, `origin/main` advanced without overlap through the Mosaic
+host-environment merge at `99025bf353450e280eebba530b28f101001f2127`. The
+refreshed collision-free inventory is unchanged. The completed neutral tranche
+contains 91 closed cases, pins every required encoding-table entry and compact
+boundary digest, rejects lexical and JSON parser ambiguities, and writes
+byte-deterministic LF-only UTF-8. Its fixture, schema, state, inventory,
+Python, TypeScript coverage, Rust, Clippy, build-plan, audit, diff, and secret
+checks pass. The pre-existing missing TypeScript paint-instructions build
+dependency is assigned to the existing-lane repair owner rather than widened
+into this contract PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
