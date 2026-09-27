@@ -459,7 +459,7 @@ def _valid_portable_glob(value: str) -> bool:
         or _DRIVE_PREFIX.match(value)
         or "\\" in value
         or "//" in value
-        or any(ord(character) < 32 or character in '<>:"|' for character in value)
+        or any(ord(character) < 32 or character in '<>:"|?' for character in value)
     ):
         return False
     for segment in value.split("/"):

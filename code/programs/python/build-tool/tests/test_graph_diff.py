@@ -379,6 +379,19 @@ def test_diff_rejects_cycles_root_aliases_and_invalid_later_globs_before_matchin
             )
         )
 
+    with pytest.raises(ValueError, match="^DIFF_GLOB_INVALID$"):
+        evaluate_diff_selection(
+            DiffSelectionInput(
+                packages=(
+                    PackageSpec("fixture/a", "p", "strict_globs", ("src/?.py",)),
+                ),
+                edges=(),
+                forced_packages=(),
+                unknown_path_policy="error",
+                changed_paths=("p/src/a.py",),
+            )
+        )
+
 
 def test_graph_and_diff_inputs_are_immutable_snapshots() -> None:
     packages = ["python/base"]
