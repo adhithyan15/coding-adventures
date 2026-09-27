@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 7,
-  "sourceHash": "fnv1a64:44bf7ec0c2b393fc",
+  "sourceHash": "fnv1a64:5224321b28f03301",
   "lessonIds": [
     "SA-C07-asti",
     "SA-S207-letter-ca",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch07.txt",
   "json": "sanskrit/narration/ch07.json",
-  "textHash": "fnv1a64:8d0f7becc21baae9",
-  "jsonHash": "fnv1a64:e5bc6ddb17160028",
+  "textHash": "fnv1a64:936eccff2b74e3e2",
+  "jsonHash": "fnv1a64:3a5a99e8cb134b3c",
   "findings": []
 }

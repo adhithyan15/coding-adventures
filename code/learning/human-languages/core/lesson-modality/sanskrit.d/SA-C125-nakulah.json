@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C125-nakulah",
+    "language": "sanskrit",
+    "chapter": 125,
+    "sequence": 6140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3e0570f21d60692"
+  },
+  "findings": []
+}

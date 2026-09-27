@@ -1,14 +1,11 @@
 # closurec
 
 `closurec` is the CLI driver for the Closure Compiler clone.
-It tracks the upstream Java Closure Compiler's canonical command-line surface,
-so a script written against
-`java -jar closure-compiler.jar --js foo.js --js_output_file
-out.js --compilation_level ADVANCED` works unchanged when the
-`java -jar …` invocation is swapped for `closurec`. Per
+It tracks the upstream Java Closure Compiler's command-line flag names per
 [CLOC08](../../../specs/CLOC08-closurec-cli-surface.md). All canonical options
-and all seven upstream aliases in the pinned surface audit are accepted;
-semantic support still varies by flag and is tracked in the parity backlog.
+and all seven upstream aliases in the pinned surface audit are accepted.
+Semantic support still varies by flag, so accepting an invocation does not yet
+mean its output is a drop-in replacement for the Java compiler.
 
 The binary ties together every crate in Stages 1–4: lexer,
 parser, type sidecar, JSDoc extractor, type-checker, pass
@@ -129,24 +126,20 @@ cargo run --example cli_surface_audit -- \
 Compiler diagnostics are written to stderr. A failed SIMPLE/ADVANCED compile
 writes no JavaScript output and does not create the requested output file.
 
-## Scope (v1)
+## Current scope
 
-The whole pipeline is **identity** today — `javascript-ast`
-ships only `Program` / `SourceType` per CLOC02 Phase 1. v1 of
-`closurec`:
+`closurec` reads input files, expands `--js` globs, and emits JavaScript.
+`WHITESPACE_ONLY` uses a token path; `SIMPLE` and `ADVANCED` parse into the
+typed JavaScript AST, run the registered optimization passes, and emit from that
+AST. Source maps and correlation-vector traces are available. The typed levels
+fail with a stage-specific error when parsing, bridging, a pass, or emission
+cannot handle an input.
 
-- parses every Closure Compiler flag (validation, type
-  checking, repeatable handling, enum values),
-- returns clear errors on misuse (cli-builder collects every
-  error in a single pass and offers "did you mean?" suggestions),
-- on a valid invocation, prints
-  `closurec v0.1.0 - identity pipeline\n` and exits 0.
-
-The actual lex/parse/typecheck/passes/emit wiring lands when
-the AST grows nodes. **Pinning the Closure-compatible CLI
-surface now means scripts and CI configs that invoke the Java
-tool today can target `closurec` with no flag changes when the
-body fills in.**
+`BUNDLE` and `TRANSPILE_ONLY` remain identity passthroughs. The CLI surface is
+broader than the implemented semantics, and the [measured parity](#measured-parity)
+below shows substantial SIMPLE and ADVANCED gaps. Use the differential fixtures
+and divergence ledger to evaluate a specific feature before relying on it in a
+build.
 
 ## Compilation levels
 
@@ -159,16 +152,10 @@ body fills in.**
 | `ADVANCED` | Runs the SIMPLE passes plus closed-world `inline`, `remove-unused-vars`, `treeshake`, and `rename-globals`; `rename-properties` runs only with an explicit externs boundary. More advanced-only passes remain planned. |
 | `BUNDLE` / `TRANSPILE_ONLY` | Identity passthrough for now — module bundling and language down-levelling are orthogonal to the optimization pipeline and land separately. |
 
-Pass order, and what `--correlation_vector` reports, are the *scheduler's*,
-not the registration list's. `closure-pass-pipeline` topologically sorts on
-each pass's declared `depends_on`, and its ready queue is FIFO, so a pass with
-no declared dependencies is scheduled ahead of dependent passes wherever it was
-registered — `rename` is registered eighth and executes second. The pipeline
-then sweeps to a fixed point, so the final output does not depend on this, but
-the trace shows the true schedule rather than a tidied-up one. (That the
-scheduler ignores registration order as a tie-breaker, contrary to its own
-documented contract, is tracked in
-[#15829](https://github.com/adhithyan15/coding-adventures/issues/15829).)
+Pass order, and what `--correlation_vector` reports, are the *scheduler's*.
+`closure-pass-pipeline` topologically sorts on each pass's declared
+`depends_on` and uses registration order to break ties among ready passes.
+The trace records the schedule that actually ran.
 
 The `passes` field of a correlation-vector trace is taken directly from
 `PipelineOutput::execution_order`. A pass can appear there only by having run:
@@ -177,16 +164,16 @@ there is no second list that could disagree with the pipeline.
 ### Measured parity
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both
-`closurec` and the pinned Closure `v20260915` oracle. Agreement as of the
-2026-09-21 run over 52 rungs:
+`closurec` and the pinned Closure `v20260915` oracle. The fixture and
+divergence-ledger checks on 2026-09-26 cover 57 rungs:
 
 | Level | Rungs agreeing | |
 |-------|---------------:|---|
-| `WHITESPACE_ONLY` | 49 / 52 | 94% |
-| `SIMPLE` | 31 / 52 | 60% |
-| `ADVANCED` | 13 / 52 | 25% |
+| `WHITESPACE_ONLY` | 54 / 57 | 95% |
+| `SIMPLE` | 34 / 57 | 60% |
+| `ADVANCED` | 24 / 57 | 42% |
 
-All 52 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
+All 57 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
 figure flatters it: most of its agreements are rungs with nothing to optimize.
 Upstream `ADVANCED` reduces whole programs to their observable effect —
 `var o={a:1,b:2};console.log(o.a)` becomes `console.log(1)` — where `closurec`

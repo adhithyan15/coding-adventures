@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:acec5d795c484288",
+  "sourceHash": "fnv1a64:510b9f4b1fdd94fc",
   "lessons": [
     {
       "id": "SA-C05-vadami",
@@ -489,7 +489,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8db6ffb96dfe10ea",
+      "sourceHash": "fnv1a64:482aa6cb910add4d",
       "notice": null,
       "blocks": [
         {
@@ -506,6 +506,16 @@
             {
               "kind": "speech",
               "text": "A second verb, so you can say where you live — and it hides the English word was."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I speak Sanskrit\" and let the words run together: ahaṁ saṁskṛtam. That joining is sandhi."
             }
           ]
         },
@@ -779,7 +789,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bb9fcbfff7c22cc",
+      "sourceHash": "fnv1a64:1f63e70c58d53d61",
       "notice": null,
       "blocks": [
         {
@@ -796,6 +806,16 @@
             {
               "kind": "speech",
               "text": "The last verb of the chapter — from the single most productive root in Sanskrit, one you have met again and again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I speak Sanskrit.\" (Ahaṁ saṁskṛtam vadāmi.)"
             }
           ]
         },

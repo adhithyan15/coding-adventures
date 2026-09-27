@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R99-second-pass-places-why-and-the-house",
+    "language": "sanskrit",
+    "chapter": 99,
+    "sequence": 4810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ce0d686cfb6ab71"
+  },
+  "findings": []
+}

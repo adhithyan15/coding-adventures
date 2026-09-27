@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:a4c3f246056f650c",
+  "lessonIds": [
+    "SA-C127-daridrah",
+    "SA-C127-dhanikah",
+    "SA-C127-tarunah",
+    "SA-C127-prasiddhah",
+    "SA-C127-suraksitah"
+  ],
+  "tex": "sanskrit/book/chapters/ch127-poor-rich-young-famous-safe.tex"
+}

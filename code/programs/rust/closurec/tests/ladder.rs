@@ -8,10 +8,10 @@
 //! not regressed. It cannot tell us what we never supported, because nothing in
 //! it was chosen to find the edge.
 //!
-//! A deliberately ordered ladder does. Running the same pinned oracle over 52
-//! rungs ramped from trivial to hard found agreement of 49/52 at
-//! `WHITESPACE_ONLY`, 31/52 at `SIMPLE`, and 13/52 at `ADVANCED` — against a
-//! corpus simultaneously reporting 100%.
+//! A deliberately ordered ladder does. The committed oracle fixtures now cover
+//! 57 rungs ramped from trivial to hard. The divergence ledger records agreement
+//! of 54/57 at `WHITESPACE_ONLY`, 34/57 at `SIMPLE`, and 24/57 at `ADVANCED`,
+//! while the selected golden corpus reports 100%.
 //!
 //! # The ordering is the point
 //!

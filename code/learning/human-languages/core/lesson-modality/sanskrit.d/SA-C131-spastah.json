@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C131-spastah",
+    "language": "sanskrit",
+    "chapter": 131,
+    "sequence": 6500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99ad6b093b4e038b"
+  },
+  "findings": []
+}

@@ -16,6 +16,13 @@ export const DEFAULT_MAX_DEPTH = 32;
 export const DEFAULT_MAX_TOTAL_ELEMENTS = 16_384;
 export const DEFAULT_MAX_OID_ARCS = 128;
 const U64_MAX = (1n << 64n) - 1n;
+const DER_CURSOR_REMAINING = Object.getOwnPropertyDescriptor(DerCursor.prototype, "remaining")!.get!;
+const DER_CURSOR_READ = DerCursor.prototype.read;
+const DER_CURSOR_FINISH = DerCursor.prototype.finish;
+
+function trustedDerCursorRemaining(cursor: DerCursor): Uint8Array {
+  return DER_CURSOR_REMAINING.call(cursor) as Uint8Array;
+}
 
 export interface Asn1Limits {
   readonly der: DerLimits;
@@ -122,6 +129,8 @@ interface ElementState {
 }
 
 let inspectElement: (element: Asn1Element) => ElementState;
+let inspectDecoderLimits: (decoder: Asn1Decoder) => Asn1Limits;
+let openSequence: (decoder: Asn1Decoder, element: Asn1Element) => Asn1Cursor;
 
 export class Asn1Element {
   readonly #tag: DerTag;
@@ -168,20 +177,21 @@ function elementOf(element: DerElement, depth: number): Asn1Element {
 }
 
 export class Asn1Decoder {
-  readonly limits: Asn1Limits;
+  readonly #limits: Asn1Limits;
   #elementsRead = 0;
 
   constructor(limits: Asn1Limits = defaultAsn1Limits()) {
-    this.limits = normalizeLimits(limits);
+    this.#limits = normalizeLimits(limits);
   }
 
+  get limits(): Asn1Limits { return this.#limits; }
   get elementsRead(): number { return this.#elementsRead; }
 
   decodeExact(input: Uint8Array): Asn1Element {
-    if (this.limits.maxDepth === 0) fail(Asn1ErrorKind.DepthLimitExceeded, 0);
+    if (this.#limits.maxDepth === 0) fail(Asn1ErrorKind.DepthLimitExceeded, 0);
     this.requireCapacity(0);
     try {
-      const element = decodeDerExact(input, this.limits.der);
+      const element = decodeDerExact(input, this.#limits.der);
       this.#elementsRead += 1;
       return elementOf(element, 0);
     } catch (error: unknown) {
@@ -199,7 +209,7 @@ export class Asn1Decoder {
     const depth = this.childDepth(state);
     this.requireCapacity(state.valueOffset);
     try {
-      const child = decodeDerExact(state.value, this.limits.der);
+      const child = decodeDerExact(state.value, this.#limits.der);
       this.#elementsRead += 1;
       return elementOf(child, depth);
     } catch (error: unknown) {
@@ -212,7 +222,7 @@ export class Asn1Decoder {
   private constructed(element: Asn1Element, tagClass: DerTag["class"], number: number): Asn1Cursor {
     const state = expectTag(element, tagClass, true, number);
     const depth = this.childDepth(state);
-    try { return new Asn1Cursor(ELEMENT_TOKEN, new DerCursor(state.value, this.limits.der), depth, this.limits); }
+    try { return new Asn1Cursor(ELEMENT_TOKEN, new DerCursor(state.value, this.#limits.der), depth, this.#limits); }
     catch (error: unknown) {
       /* v8 ignore next 2 -- DerCursor documents DerError as its only failure */
       if (error instanceof DerError) throw framing(error);
@@ -222,12 +232,12 @@ export class Asn1Decoder {
 
   private childDepth(element: ElementState): number {
     const depth = element.depth + 1;
-    if (depth >= this.limits.maxDepth) fail(Asn1ErrorKind.DepthLimitExceeded, 0);
+    if (depth >= this.#limits.maxDepth) fail(Asn1ErrorKind.DepthLimitExceeded, 0);
     return depth;
   }
 
   private requireCapacity(offset: number): void {
-    if (this.#elementsRead >= this.limits.maxTotalElements) fail(Asn1ErrorKind.ElementLimitExceeded, offset);
+    if (this.#elementsRead >= this.#limits.maxTotalElements) fail(Asn1ErrorKind.ElementLimitExceeded, offset);
   }
 
   static readCursor(
@@ -238,11 +248,11 @@ export class Asn1Decoder {
     decoder: Asn1Decoder,
   ): Asn1Element | undefined {
     if (token !== ELEMENT_TOKEN) throw new TypeError("cursor authority is internal");
-    if (raw.remaining.length === 0) return undefined;
-    if (!limitsEqual(decoder.limits, limits)) fail(Asn1ErrorKind.DecoderLimitMismatch, 0);
+    if (trustedDerCursorRemaining(raw).length === 0) return undefined;
+    if (!limitsEqual(decoder.#limits, limits)) fail(Asn1ErrorKind.DecoderLimitMismatch, 0);
     decoder.requireCapacity(0);
     try {
-      const element = raw.read();
+      const element = DER_CURSOR_READ.call(raw);
       if (element === undefined) return undefined;
       decoder.#elementsRead += 1;
       return elementOf(element, childDepth);
@@ -252,7 +262,30 @@ export class Asn1Decoder {
       throw error;
     }
   }
+
+  static {
+    inspectDecoderLimits = (decoder: Asn1Decoder): Asn1Limits => {
+      if (typeof decoder !== "object" || decoder === null || !(#limits in decoder)) {
+        throw new TypeError("expected validated Asn1Decoder");
+      }
+      return decoder.#limits;
+    };
+    openSequence = (decoder: Asn1Decoder, element: Asn1Element): Asn1Cursor => {
+      if (typeof decoder !== "object" || decoder === null || !(#limits in decoder)) {
+        throw new TypeError("expected validated Asn1Decoder");
+      }
+      return decoder.constructed(element, "universal", 16);
+    };
+  }
 }
+
+interface CursorState {
+  readonly raw: DerCursor;
+  readonly childDepth: number;
+  readonly limits: Asn1Limits;
+}
+
+let inspectCursor: (cursor: Asn1Cursor) => CursorState;
 
 export class Asn1Cursor {
   readonly #raw: DerCursor;
@@ -266,18 +299,53 @@ export class Asn1Cursor {
     this.#limits = limits;
   }
 
-  get remaining(): Uint8Array { return this.#raw.remaining.slice(); }
+  get remaining(): Uint8Array { return trustedDerCursorRemaining(this.#raw).slice(); }
   read(decoder: Asn1Decoder): Asn1Element | undefined {
     return Asn1Decoder.readCursor(ELEMENT_TOKEN, this.#raw, this.#childDepth, this.#limits, decoder);
   }
   finish(): void {
-    try { this.#raw.finish(); }
+    try { DER_CURSOR_FINISH.call(this.#raw); }
     catch (error: unknown) {
       /* v8 ignore next 2 -- DerCursor documents DerError as its only failure */
       if (error instanceof DerError) throw framing(error);
       throw error;
     }
   }
+
+  static {
+    inspectCursor = (cursor: Asn1Cursor): CursorState => {
+      if (typeof cursor !== "object" || cursor === null || !(#raw in cursor)) {
+        throw new TypeError("expected validated Asn1Cursor");
+      }
+      return { raw: cursor.#raw, childDepth: cursor.#childDepth, limits: cursor.#limits };
+    };
+  }
+}
+
+export function trustedElementShape(element: Asn1Element): {
+  readonly tag: DerTag;
+  readonly headerLength: number;
+  readonly valueLength: number;
+} {
+  const state = inspectElement(element);
+  return { tag: state.tag, headerLength: state.header.length, valueLength: state.value.length };
+}
+
+export function trustedDecoderLimits(decoder: Asn1Decoder): Asn1Limits {
+  return inspectDecoderLimits(decoder);
+}
+
+export function trustedSequence(decoder: Asn1Decoder, element: Asn1Element): Asn1Cursor {
+  return openSequence(decoder, element);
+}
+
+export function trustedCursorRemainingLength(cursor: Asn1Cursor): number {
+  return trustedDerCursorRemaining(inspectCursor(cursor).raw).length;
+}
+
+export function trustedCursorRead(cursor: Asn1Cursor, decoder: Asn1Decoder): Asn1Element | undefined {
+  const state = inspectCursor(cursor);
+  return Asn1Decoder.readCursor(ELEMENT_TOKEN, state.raw, state.childDepth, state.limits, decoder);
 }
 
 const INTEGER_TOKEN = {};

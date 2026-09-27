@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C125-suddhah",
+    "language": "sanskrit",
+    "chapter": 125,
+    "sequence": 6170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:859a42b91934e4bd"
+  },
+  "findings": []
+}

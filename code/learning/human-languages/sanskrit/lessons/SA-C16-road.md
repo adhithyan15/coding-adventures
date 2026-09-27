@@ -12,17 +12,17 @@ headword: "मार्गः"
 gloss: "road, path"
 romanization: "mārgaḥ"
 concept_tag: SA-NOUN-ROAD
-prerequisites: [SA-C16-village]
+prerequisites: [SA-C16-village, SA-C15-old]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C16-PLACE-02]
+  knowledge: [SA-LEX-C16-PLACE-02, SA-LEX-C15-ADJ-05]
 introduces:
   knowledge: [SA-LEX-C16-PLACE-03]
 practises:
-  knowledge: [SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03]
+  knowledge: [SA-LEX-C16-PLACE-02, SA-LEX-C16-PLACE-03, SA-LEX-C15-ADJ-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C16-village]
 # मार्गः (mārgaḥ) — road, path
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-05] -->
 
 [PAUSE 2s] Two places, and no way between them. Here is the way.
+
+[PAUSE 1s] Say "old" — of a thing, not a person. (*Purātana*.)
 
 ## You'll want to know: मार्गः
 <!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-03]; assesses=[] -->

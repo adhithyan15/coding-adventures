@@ -1,0 +1,11 @@
+{
+  "id": "SA-C105-vyajanam",
+  "pathSegment": "SA-PATH-105-THINGS105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-105-THINGS105",
+      "order": 3
+    }
+  ]
+}

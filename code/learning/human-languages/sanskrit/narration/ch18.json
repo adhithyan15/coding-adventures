@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Asking --- Every Question Begins with K",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4364d1f5901569fa",
+  "sourceHash": "fnv1a64:11e1232a02f09d61",
   "lessons": [
     {
       "id": "SA-C18-when",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be33189c9ca44da4",
+      "sourceHash": "fnv1a64:1c5031dc040a857c",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You can say when. This chapter is for asking when."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which three words from the last chapter never change their ending? (Adya, hyaḥ, sadā — they say when and keep one shape.)"
             }
           ]
         },
@@ -397,7 +407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3e695609ba8fec7",
+      "sourceHash": "fnv1a64:5d1b9ac583e84e2e",
       "notice": null,
       "blocks": [
         {
@@ -414,6 +424,16 @@
             {
               "kind": "speech",
               "text": "You can ask where something is. This asks where it came from."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"where?\" (Kutra.) This lesson's word asks where from."
             }
           ]
         },

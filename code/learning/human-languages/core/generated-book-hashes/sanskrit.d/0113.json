@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:8c7ff0d6b2a6f58a",
+  "lessonIds": [
+    "SA-C113-sasakah",
+    "SA-C113-gardabhah",
+    "SA-C113-varahah",
+    "SA-C113-vrsabhah",
+    "SA-C113-mahisah"
+  ],
+  "tex": "sanskrit/book/chapters/ch113-rabbit-donkey-boar-bull-buffalo.tex"
+}

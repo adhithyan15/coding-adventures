@@ -20,15 +20,15 @@ sink(scale);
 ## What ADVANCED produces
 
 ```text
-function f(x){return x * 10};report(12,25,f(7));sink(f);
+function a(x){return x*10}report(12,25,a(7));sink(a);
 ```
 
 | pass                          | evidence                                       |
 |-------------------------------|------------------------------------------------|
 | dead-code elimination         | `unusedPerimeter` is gone                       |
 | single-use inline + fold      | `area(3,4)` → `12`, `hypotSq(3,4)` → `25`       |
-| global renaming (ADVANCED-only)| `scale` → `f` (SIMPLE keeps `scale`)           |
-| live-reference retention      | `f(7)` and `sink(f)` survive                    |
+| global renaming (ADVANCED-only)| `scale` → `a` (SIMPLE keeps `scale`)           |
+| live-reference retention      | `a(7)` and `sink(a)` survive                    |
 
 ## Runtime equivalence
 
@@ -38,7 +38,7 @@ The optimized program reports the **same observable values** as the original:
 |----------------|--------------------------|-----------------------------|
 | 1st            | `area(3,4)` = `3*4` = 12  | literal `12`                |
 | 2nd            | `hypotSq(3,4)` = `9+16` = 25 | literal `25`             |
-| 3rd            | `scale(7)` = `7*10` = 70  | `f(7)`, `f` ≡ `x*10`, = 70  |
+| 3rd            | `scale(7)` = `7*10` = 70  | `a(7)`, `a` ≡ `x*10`, = 70  |
 
 The two folded literals are asserted directly; the third is preserved
 structurally (identical body, renamed). `report` / `sink` are undeclared externs

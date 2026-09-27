@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Four Oldest Kinship Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:979cb44684cd6828",
+  "sourceHash": "fnv1a64:621b13538625c9b1",
   "lessons": [
     {
       "id": "SA-C23-father",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30ee4eeb964367c9",
+      "sourceHash": "fnv1a64:cad9e14ddc2c40f8",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: what did dahati mean?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The numbers lined up with Latin and English regularly, not by chance. Listen for the same regularity in pitā and father."
             }
           ]
         },

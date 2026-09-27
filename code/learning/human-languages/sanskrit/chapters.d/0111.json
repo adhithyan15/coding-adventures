@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Storm, Mist, Branch, Leaf, Flower",
+  "label": "ch:sa-storm-mist-branch-leaf-flower",
+  "canDo": "I can say a storm, mist, a branch, a leaf and a flower.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C111-kusumam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say a storm, mist, a branch, a leaf and a flower.",
+    "assesses": [
+      "SA-LEX-C111-THINGS111-03",
+      "SA-LEX-C111-THINGS111-04",
+      "SA-LEX-C111-THINGS111-05"
+    ]
+  }
+}

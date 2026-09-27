@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:cfe6ccbc46b51a04",
+  "lessonIds": [
+    "SA-C102-sthali",
+    "SA-C102-casakah",
+    "SA-C102-camasah",
+    "SA-C102-culli",
+    "SA-C102-vartika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch102.txt",
+  "json": "sanskrit/narration/ch102.json",
+  "textHash": "fnv1a64:700057494601d46d",
+  "jsonHash": "fnv1a64:96cf8975f720efbf",
+  "findings": []
+}

@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/x509-extension-v1.json",
+  "title": "RFC 5280 generic Extension v1 conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "upstream_fixture", "error_ids", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "rfc5280-x509-extension-v1" },
+    "upstream_fixture": { "const": "code/specs/fixtures/der-asn1-v1/cases.json" },
+    "error_ids": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/error_id" }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 30,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^x509-extension-v1-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "error_id": {
+      "enum": [
+        "structure",
+        "missing-extension-id",
+        "invalid-extension-id",
+        "invalid-critical",
+        "encoded-default-critical",
+        "missing-extension-value",
+        "invalid-extension-value",
+        "trailing-element"
+      ]
+    },
+    "value_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "extension_id_arcs_decimal", "critical", "extension_value_hex", "elements_read"],
+      "properties": {
+        "outcome": { "const": "value" },
+        "extension_id_arcs_decimal": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "pattern": "^(?:0|[1-9][0-9]*)$" }
+        },
+        "critical": { "type": "boolean" },
+        "extension_value_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})*$" },
+        "elements_read": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "error_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "error_id", "offset", "offset_scope", "elements_read"],
+      "properties": {
+        "outcome": { "const": "error" },
+        "error_id": { "$ref": "#/$defs/error_id" },
+        "asn1_error_id": { "$ref": "../der-asn1-v1/schema.json#/$defs/error_id" },
+        "framing_error_id": { "$ref": "../der-tlv-v1/schema.json#/$defs/error_id" },
+        "offset": { "type": "integer", "minimum": 0 },
+        "offset_scope": { "const": "extension-element" },
+        "elements_read": { "type": "integer", "minimum": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "error_id": { "const": "structure" } }, "required": ["error_id"] },
+          "then": {
+            "required": ["asn1_error_id"],
+            "properties": { "asn1_error_id": { "enum": ["framing", "unexpected-tag", "decoder-limit-mismatch", "depth-limit-exceeded", "element-limit-exceeded"] } }
+          }
+        },
+        {
+          "if": { "properties": { "error_id": { "const": "invalid-extension-id" } }, "required": ["error_id"] },
+          "then": {
+            "required": ["asn1_error_id"],
+            "properties": { "asn1_error_id": { "enum": ["unexpected-tag", "empty-object-identifier", "unterminated-object-identifier", "non-minimal-object-identifier", "object-identifier-overflow", "oid-arc-limit-exceeded"] } }
+          }
+        },
+        {
+          "if": { "properties": { "error_id": { "const": "invalid-critical" } }, "required": ["error_id"] },
+          "then": {
+            "required": ["asn1_error_id"],
+            "properties": { "asn1_error_id": { "enum": ["unexpected-tag", "invalid-boolean-length", "invalid-boolean-value"] } }
+          }
+        },
+        {
+          "if": { "properties": { "error_id": { "const": "invalid-extension-value" } }, "required": ["error_id"] },
+          "then": {
+            "required": ["asn1_error_id"],
+            "properties": { "asn1_error_id": { "const": "unexpected-tag" } }
+          }
+        },
+        {
+          "if": { "properties": { "asn1_error_id": { "const": "framing" } }, "required": ["asn1_error_id"] },
+          "then": { "required": ["framing_error_id"] },
+          "else": { "not": { "required": ["framing_error_id"] } }
+        },
+        {
+          "if": { "properties": { "error_id": { "enum": ["missing-extension-id", "encoded-default-critical", "missing-extension-value", "trailing-element"] } }, "required": ["error_id"] },
+          "then": { "not": { "anyOf": [{ "required": ["asn1_error_id"] }, { "required": ["framing_error_id"] }] } }
+        }
+      ]
+    },
+    "script_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "events"],
+      "properties": {
+        "outcome": { "const": "script" },
+        "events": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/value_result" },
+              { "$ref": "#/$defs/error_result" }
+            ]
+          }
+        }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "enum": ["decode-extension", "extension-script"] },
+        "input": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "../der-tlv-v1/schema.json#/$defs/input_segment" }
+        },
+        "limits": { "$ref": "../der-asn1-v1/schema.json#/$defs/limits_override" },
+        "actions": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "const": "decode" }
+        },
+        "redacted_input_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})+$" },
+        "expected": {
+          "oneOf": [
+            { "$ref": "#/$defs/value_result" },
+            { "$ref": "#/$defs/error_result" },
+            { "$ref": "#/$defs/script_result" }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "properties": { "operation": { "const": "decode-extension" } },
+          "not": { "required": ["actions"] }
+        },
+        {
+          "properties": { "operation": { "const": "extension-script" } },
+          "required": ["actions"]
+        }
+      ]
+    }
+  }
+}

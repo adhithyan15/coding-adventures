@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C126-sankirnah",
+    "language": "sanskrit",
+    "chapter": 126,
+    "sequence": 6200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a46a08bbbe3c682"
+  },
+  "findings": []
+}

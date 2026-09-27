@@ -417,17 +417,18 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-core, the capability-free deployment planner.
         # +1: der-tlv, the standalone portable DER framing lane.
         # +1: der-asn1, the portable typed ASN.1 DER value lane.
+        # +1: x509-extension, the portable generic RFC 5280 Extension lane.
         # +1: forme-deploy-runner-fs-adapter, the atomic publication boundary.
         # +1: forme-deploy-runner-github-pages-adapter, the hosted publication
         # boundary over GitHub's Git Data API.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 475)
+        self.assertEqual(summary.total_projects, 476)
         self.assertEqual(summary.shared_projects, 296)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
-        self.assertEqual(summary.standalone_emit_projects, 150)
-        self.assertEqual(summary.isolated_standalone_projects, 150)
+        self.assertEqual(summary.standalone_emit_projects, 151)
+        self.assertEqual(summary.isolated_standalone_projects, 151)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -514,11 +515,12 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-core commits its compiler and test lockfile.
         # +1: der-tlv commits its compiler and test dependency lockfile.
         # +1: der-asn1 commits its compiler and test dependency lockfile.
+        # +1: x509-extension commits its compiler and test dependency lockfile.
         # +1: forme-deploy-runner-fs-adapter locks its compiler and test graph.
         # +1: forme-deploy-runner-github-pages-adapter locks its compiler and
         # test graph.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 474)
+        self.assertEqual(summary.locked_compilers, 475)
 
 
 if __name__ == "__main__":

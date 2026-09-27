@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:a4cccb71328db602",
+  "lessonIds": [
+    "SA-C117-angusthah",
+    "SA-C117-vaksah",
+    "SA-C117-katih",
+    "SA-C117-bhruh",
+    "SA-C117-tvak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch117.txt",
+  "json": "sanskrit/narration/ch117.json",
+  "textHash": "fnv1a64:5f09f4d2bf4dd73d",
+  "jsonHash": "fnv1a64:0d4977428fe32d61",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-109-THINGS109",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pomegranate, grapes, a jackfruit, a lemon and a cake.",
+  "prerequisites": []
+}

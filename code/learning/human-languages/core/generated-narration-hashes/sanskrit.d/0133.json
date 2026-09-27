@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:07cc5fd3831fa330",
+  "lessonIds": [
+    "SA-C133-nicah",
+    "SA-C133-unnatah",
+    "SA-C133-uddayate",
+    "SA-C133-tarati",
+    "SA-C133-kurdati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch133.txt",
+  "json": "sanskrit/narration/ch133.json",
+  "textHash": "fnv1a64:0c892c724880b5c1",
+  "jsonHash": "fnv1a64:35c20d8e80a357f7",
+  "findings": []
+}

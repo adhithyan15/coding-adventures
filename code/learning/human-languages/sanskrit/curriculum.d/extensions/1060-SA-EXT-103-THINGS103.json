@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-103-THINGS103",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a ball, a toy, a ring, a bangle and a shawl.",
+  "prerequisites": []
+}

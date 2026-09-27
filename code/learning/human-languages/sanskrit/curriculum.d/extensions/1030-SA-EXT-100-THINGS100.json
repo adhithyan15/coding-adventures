@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-100-THINGS100",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a nail, a hammer, scissors, a needle and thread.",
+  "prerequisites": []
+}

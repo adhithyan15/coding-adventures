@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Thin, Crooked, Straight, Full, Empty",
+  "label": "ch:sa-thin-crooked-straight-full-empty",
+  "canDo": "I can say thin, crooked, straight, full and empty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C132-riktah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say thin, crooked, straight, full and empty.",
+    "assesses": [
+      "SA-LEX-C132-QUAL132-03",
+      "SA-LEX-C132-QUAL132-04",
+      "SA-LEX-C132-QUAL132-05"
+    ]
+  }
+}

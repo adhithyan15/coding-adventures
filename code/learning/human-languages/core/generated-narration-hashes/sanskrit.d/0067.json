@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 67,
-  "sourceHash": "fnv1a64:631fd2adcfe83e8a",
+  "sourceHash": "fnv1a64:5b7573b591d9bb7c",
   "lessonIds": [
     "SA-C67-sleep",
     "SA-C67-hunger",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch67.txt",
   "json": "sanskrit/narration/ch67.json",
-  "textHash": "fnv1a64:a6086c1ed4c28733",
-  "jsonHash": "fnv1a64:c0227f67336e24e4",
+  "textHash": "fnv1a64:844c1066c8756968",
+  "jsonHash": "fnv1a64:f5955e3ca4ef15d4",
   "findings": []
 }

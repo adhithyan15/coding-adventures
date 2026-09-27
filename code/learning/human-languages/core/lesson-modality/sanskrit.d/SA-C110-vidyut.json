@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C110-vidyut",
+    "language": "sanskrit",
+    "chapter": 110,
+    "sequence": 5390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:120a15e9181178e9"
+  },
+  "findings": []
+}

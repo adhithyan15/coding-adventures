@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:087b428688bcb3c1",
+  "lessonIds": [
+    "SA-C91-prabhatam",
+    "SA-C91-sandhya",
+    "SA-C91-hemantah",
+    "SA-C91-sisirah",
+    "SA-C91-sarad"
+  ],
+  "tex": "sanskrit/book/chapters/ch91-morning-twilight-early-winter-late-winter-autumn.tex"
+}

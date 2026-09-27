@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Time --- Day, Night, and When Things Happen",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:80d66c61a26a6fb1",
+  "sourceHash": "fnv1a64:bca8cf5a924f4f8a",
   "lessons": [
     {
       "id": "SA-C17-day",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e1e84535fef252b",
+      "sourceHash": "fnv1a64:64b0e41c88678f15",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You have places. Now you need times to put in them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nouns that end in -am — gṛham, vanam, nagaram — are neuter. Listen for the ending on this lesson's word."
             }
           ]
         },

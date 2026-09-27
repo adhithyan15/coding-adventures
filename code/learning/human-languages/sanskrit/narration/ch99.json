@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 99,
+  "title": "Bed, Pillow, Blanket, Curtain, Lock",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:eac96922bd06a884",
+  "lessons": [
+    {
+      "id": "SA-C99-mancah",
+      "sequence": 4750,
+      "title": "मञ्चः (mañcaḥ) — a bed, a platform",
+      "headword": "मञ्चः",
+      "romanization": "mañcaḥ",
+      "gloss": "a bed, a platform",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:075facc32a5d7443",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for for that reason, then the Sanskrit for because."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मञ्चः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मञ्चः — mañcaḥ — \"a bed, a platform\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mañcaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mañcaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mañcaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mañcaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for for that reason, then the Sanskrit for because, then say mañcaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for for that reason, then the Sanskrit for because, then say *mañcaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मञ्चः (mañcaḥ) mean? (\"A bed, a platform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C99-upadhanam",
+      "sequence": 4760,
+      "title": "उपधानम् (upadhānam) — a pillow",
+      "headword": "उपधानम्",
+      "romanization": "upadhānam",
+      "gloss": "a pillow",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f9d87ee860fc70b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for because, then the Sanskrit for a bed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपधानम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपधानम् — upadhānam — \"a pillow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upadhānam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upadhānam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upadhānam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upadhānam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say upadhānam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *upadhānam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for because, then the Sanskrit for a bed, then say upadhānam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for because, then the Sanskrit for a bed, then say *upadhānam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपधानम् (upadhānam) mean? (\"A pillow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C99-kambalah",
+      "sequence": 4770,
+      "title": "कम्बलः (kambalaḥ) — a blanket",
+      "headword": "कम्बलः",
+      "romanization": "kambalaḥ",
+      "gloss": "a blanket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:402d377781f04f36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a bed, then the Sanskrit for a pillow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कम्बलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कम्बलः — kambalaḥ — \"a blanket\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kambalaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kambalaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kambalaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kambalaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kambalaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kambalaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a bed, then the Sanskrit for a pillow, then say kambalaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a bed, then the Sanskrit for a pillow, then say *kambalaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कम्बलः (kambalaḥ) mean? (\"A blanket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C99-yavanika",
+      "sequence": 4780,
+      "title": "यवनिका (yavanikā) — a curtain",
+      "headword": "यवनिका",
+      "romanization": "yavanikā",
+      "gloss": "a curtain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acbeec903d05800e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pillow, then the Sanskrit for a blanket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यवनिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यवनिका — yavanikā — \"a curtain\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yavanikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yavanikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yavanikā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yavanikā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yavanikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yavanikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pillow, then the Sanskrit for a blanket, then say yavanikā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pillow, then the Sanskrit for a blanket, then say *yavanikā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does यवनिका (yavanikā) mean? (\"A curtain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C99-talakam",
+      "sequence": 4790,
+      "title": "तालकम् (tālakam) — a lock",
+      "headword": "तालकम्",
+      "romanization": "tālakam",
+      "gloss": "a lock",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c597351f3a8f0e4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a blanket, then the Sanskrit for a curtain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तालकम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तालकम् — tālakam — \"a lock\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tālakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tālakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a blanket, then the Sanskrit for a curtain, then say tālakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a blanket, then the Sanskrit for a curtain, then say *tālakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तालकम् (tālakam) mean? (\"A lock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R99-first-pass-time-and-places",
+      "sequence": 4800,
+      "title": "Time and places — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 90-94",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2778665ebbe33162",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a curtain and a lock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a day, early evening, afternoon, midnight, dawn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a day, early evening, afternoon, midnight, dawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "morning, twilight, early winter, late winter, autumn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: morning, twilight, early winter, late winter, autumn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a moment, before, after, now, always",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a moment, before, after, now, always]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ever, a delay, left, right; south, inside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ever, a delay, left, right; south, inside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "outside, above, below, in front, behind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: outside, above, below, in front, behind]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A day? (अहः, ahaḥ.) Early evening? (प्रदोषः, pradoṣaḥ.) Afternoon? (अपराह्णः, aparāhṇaḥ.) Midnight? (मध्यरात्रिः, madhyarātriḥ.) Dawn? (उषः, uṣaḥ.) Morning? (प्रभातम्, prabhātam.) Twilight? (सन्ध्या, sandhyā.) Early winter? (हेमन्तः, hemantaḥ.) Late winter? (शिशिरः, śiśiraḥ.) Autumn? (शरद्, śarad.) A moment? (निमेषः, nimeṣaḥ.) Before? (पूर्वम्, pūrvam.) After? (पश्चात्, paścāt.) Now? (अधुना, adhunā.) Always? (सर्वदा, sarvadā.) Ever? (कदापि, kadāpi.) A delay? (विलम्बः, vilambaḥ.) Left? (वामः, vāmaḥ.) Right; south? (दक्षिणः, dakṣiṇaḥ.) Inside? (अन्तः, antaḥ.) Outside? (बहिः, bahiḥ.) Above? (उपरि, upari.) Below? (अधः, adhaḥ.) In front? (अग्रे, agre.) Behind? (पृष्ठतः, pṛṣṭhataḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R99-second-pass-places-why-and-the-house",
+      "sequence": 4810,
+      "title": "Places, why and the house — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 95-99",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ce0d686cfb6ab71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for in the middle and beside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in the middle, beside, everywhere, elsewhere, a street",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in the middle, beside, everywhere, elsewhere, a street]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a main road, a crossroads, a corner, a library, a university",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a main road, a crossroads, a corner, a library, a university]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an office, a restaurant, a station, a reason, because",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an office, a restaurant, a station, a reason, because]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "therefore, so, a cause, for that reason, because",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: therefore, so, a cause, for that reason, because]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bed, a pillow, a blanket, a curtain, a lock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bed, a pillow, a blanket, a curtain, a lock]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In the middle? (मध्ये, madhye.) Beside? (पार्श्वे, pārśve.) Everywhere? (सर्वत्र, sarvatra.) Elsewhere? (अन्यत्र, anyatra.) A street? (वीथी, vīthī.) A main road? (राजमार्गः, rājamārgaḥ.) A crossroads? (चतुष्पथः, catuṣpathaḥ.) A corner? (कोणः, koṇaḥ.) A library? (पुस्तकालयः, pustakālayaḥ.) A university? (विश्वविद्यालयः, viśvavidyālayaḥ.) An office? (कार्यालयः, kāryālayaḥ.) A restaurant? (भोजनालयः, bhojanālayaḥ.) A station? (स्थानकम्, sthānakam.) A reason? (कारणम्, kāraṇam.) Because? (यतः, yataḥ.) Therefore? (अतः, ataḥ.) So? (तस्मात्, tasmāt.) A cause? (हेतुः, hetuḥ.) For that reason? (तदर्थम्, tadartham.) Because? (यस्मात्, yasmāt.) A bed? (मञ्चः, mañcaḥ.) A pillow? (उपधानम्, upadhānam.) A blanket? (कम्बलः, kambalaḥ.) A curtain? (यवनिका, yavanikā.) A lock? (तालकम्, tālakam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

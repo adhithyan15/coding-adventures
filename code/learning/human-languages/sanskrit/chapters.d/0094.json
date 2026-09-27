@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "Outside, Above, Below, In front, Behind",
+  "label": "ch:sa-outside-above-below-in-front-behind",
+  "canDo": "I can say outside, above, below, in front and behind.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "SA-C94-prsthatah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can say outside, above, below, in front and behind.",
+    "assesses": [
+      "SA-LEX-C94-LOC94-03",
+      "SA-LEX-C94-LOC94-04",
+      "SA-LEX-C94-LOC94-05"
+    ]
+  }
+}

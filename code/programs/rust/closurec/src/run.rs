@@ -6868,15 +6868,16 @@ mod tests {
         // "inline-variables","rename"]`, copied from the hand-maintained
         // `SIMPLE_PASS_NAMES` constant — so it could only ever prove the copy
         // was faithful. Both halves of it were wrong: `inline` is registered
-        // only under ADVANCED, and the scheduler does not execute in
-        // registration order.
+        // only under ADVANCED, and the scheduler then placed independent
+        // `rename` ahead of dependent passes registered earlier. The global
+        // registration-order tie-breaker now runs it last.
         assert!(
             !body.contains("\"inline\""),
             "SIMPLE must not report the ADVANCED-only `inline` pass: {body}"
         );
         assert!(
             body.contains(
-                "\"passes\":[\"constant-fold\",\"rename\",\"fold-control-flow\",\"dce\",\"inline-variables\"]"
+                "\"passes\":[\"constant-fold\",\"fold-control-flow\",\"dce\",\"inline-variables\",\"rename\"]"
             ),
             "expected SIMPLE (open-world) passes list in CV sidecar: {body}"
         );

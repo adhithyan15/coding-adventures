@@ -1,0 +1,6 @@
+packages: .
+          ../der-tlv
+          ../der-asn1
+
+package x509-extension
+  coverage: True

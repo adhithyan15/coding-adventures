@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d7d75167828b783d",
+  "sourceHash": "fnv1a64:68fcc12a0837104f",
   "lessons": [
     {
       "id": "SA-C11-mitram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:08188ccb93593c91",
+      "sourceHash": "fnv1a64:0c3bc8a564756714",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -45,6 +45,16 @@
             {
               "kind": "speech",
               "text": "Say \"food,\" and its gender. (Annam; neuter.) The last three words named things you would ask for. This one names someone you would introduce."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"dear to me.\" (Mama priyam.) A friend is someone who is."
             }
           ]
         },

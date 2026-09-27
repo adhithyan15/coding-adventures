@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 110,
+  "output": "sanskrit/book/chapters/ch110-mountain-waterfall-wave-lightning-thunder.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

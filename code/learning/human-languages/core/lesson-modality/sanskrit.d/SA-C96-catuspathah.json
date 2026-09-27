@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C96-catuspathah",
+    "language": "sanskrit",
+    "chapter": 96,
+    "sequence": 4610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8df8990d81f489b"
+  },
+  "findings": []
+}

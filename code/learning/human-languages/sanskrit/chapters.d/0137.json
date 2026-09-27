@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Sews, Wins, Hides, Protects, Burns",
+  "label": "ch:sa-sews-wins-hides-protects-burns",
+  "canDo": "I can say sews, wins, hides, protects and burns.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C137-jvalati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say sews, wins, hides, protects and burns.",
+    "assesses": [
+      "SA-LEX-C137-ACT137-03",
+      "SA-LEX-C137-ACT137-04",
+      "SA-LEX-C137-ACT137-05"
+    ]
+  }
+}

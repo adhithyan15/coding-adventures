@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Low, High, Flies, Swims, Jumps",
+  "label": "ch:sa-low-high-flies-swims-jumps",
+  "canDo": "I can say low, high, flies, swims and jumps.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C133-kurdati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say low, high, flies, swims and jumps.",
+    "assesses": [
+      "SA-LEX-C133-QUAL133-03",
+      "SA-LEX-C133-QUAL133-04",
+      "SA-LEX-C133-QUAL133-05"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@coding-adventures/x509-extension",
+  "version": "0.1.0",
+  "description": "Bounded generic RFC 5280 Extension decoding",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/der-asn1": "file:../der-asn1"
+  },
+  "devDependencies": {
+    "@coding-adventures/der-tlv": "file:../der-tlv",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

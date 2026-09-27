@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C137-jvalati",
+    "language": "sanskrit",
+    "chapter": 137,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd63764659ac8726"
+  },
+  "findings": []
+}

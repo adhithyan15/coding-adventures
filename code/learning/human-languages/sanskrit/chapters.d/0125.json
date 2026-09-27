@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Mongoose, Short, Soft, Clean, Dirty",
+  "label": "ch:sa-mongoose-short-soft-clean-dirty",
+  "canDo": "I can say a mongoose, short, soft, clean and dirty.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C125-malinah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say a mongoose, short, soft, clean and dirty.",
+    "assesses": [
+      "SA-LEX-C125-THINGS125-03",
+      "SA-LEX-C125-THINGS125-04",
+      "SA-LEX-C125-THINGS125-05"
+    ]
+  }
+}

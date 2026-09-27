@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:f99c5b054ea115a9",
+  "lessonIds": [
+    "SA-C121-vadyam",
+    "SA-C121-vina",
+    "SA-C121-pattah",
+    "SA-C121-ratnam",
+    "SA-C121-suvarnam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch121.txt",
+  "json": "sanskrit/narration/ch121.json",
+  "textHash": "fnv1a64:ad45ccaf7142f6df",
+  "jsonHash": "fnv1a64:6d438cb3aed799eb",
+  "findings": []
+}

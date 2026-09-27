@@ -1,0 +1,11 @@
+{
+  "id": "SA-C95-sarvatra",
+  "pathSegment": "SA-PATH-95-LOC95",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-95-LOC95",
+      "order": 2
+    }
+  ]
+}

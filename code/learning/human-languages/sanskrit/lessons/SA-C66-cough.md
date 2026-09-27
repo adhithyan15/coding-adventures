@@ -12,17 +12,17 @@ headword: "कासः"
 gloss: "a cough"
 romanization: "kāsaḥ"
 concept_tag: SA-UNWELL-COUGH
-prerequisites: [SA-C63-first, SA-C66-fever]
+prerequisites: [SA-C63-first, SA-C66-fever, SA-C64-lines]
 sounds: []
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [SA-LEX-C63-ORDINAL-07, SA-LEX-C66-UNWELL-01]
+  knowledge: [SA-LEX-C63-ORDINAL-07, SA-LEX-C66-UNWELL-01, SA-SKILL-READ-LINES]
 introduces:
   knowledge: [SA-LEX-C66-UNWELL-02]
 practises:
-  knowledge: [SA-LEX-C66-UNWELL-02, SA-LEX-C63-ORDINAL-07, SA-LEX-C66-UNWELL-01]
+  knowledge: [SA-LEX-C66-UNWELL-02, SA-LEX-C63-ORDINAL-07, SA-LEX-C66-UNWELL-01, SA-SKILL-READ-LINES]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C66-fever]
 # कासः (kāsaḥ) — a cough
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-07, SA-LEX-C66-UNWELL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-07, SA-LEX-C66-UNWELL-01, SA-SKILL-READ-LINES] -->
 
 [PAUSE 2s] Before the new one: say the Sanskrit for first, then the Sanskrit for a fever.
+
+[PAUSE 1s] Read a three-word line aloud, then say it with the words in another order — Sanskrit lets them move.
 
 ## You'll want to know: कासः
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-02]; assesses=[] -->

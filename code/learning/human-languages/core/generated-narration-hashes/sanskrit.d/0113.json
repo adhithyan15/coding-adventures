@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:6d8cb9f76f0a172a",
+  "lessonIds": [
+    "SA-C113-sasakah",
+    "SA-C113-gardabhah",
+    "SA-C113-varahah",
+    "SA-C113-vrsabhah",
+    "SA-C113-mahisah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch113.txt",
+  "json": "sanskrit/narration/ch113.json",
+  "textHash": "fnv1a64:cc66cd0c03b11b80",
+  "jsonHash": "fnv1a64:ea1138ffc55c2e22",
+  "findings": []
+}

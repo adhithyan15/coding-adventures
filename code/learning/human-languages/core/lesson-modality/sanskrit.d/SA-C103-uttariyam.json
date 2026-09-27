@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C103-uttariyam",
+    "language": "sanskrit",
+    "chapter": 103,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c140eca862abdb0b"
+  },
+  "findings": []
+}

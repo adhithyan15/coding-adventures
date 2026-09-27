@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:518213cdd85df4e2",
+  "lessonIds": [
+    "SA-C115-maksika",
+    "SA-C115-masakah",
+    "SA-C115-pipilika",
+    "SA-C115-citrapatangah",
+    "SA-C115-kukkutah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch115.txt",
+  "json": "sanskrit/narration/ch115.json",
+  "textHash": "fnv1a64:e3490c294047ccaa",
+  "jsonHash": "fnv1a64:6655231bc6afad22",
+  "findings": []
+}

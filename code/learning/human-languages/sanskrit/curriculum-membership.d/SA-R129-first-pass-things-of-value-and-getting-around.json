@@ -1,0 +1,11 @@
+{
+  "id": "SA-R129-first-pass-things-of-value-and-getting-around",
+  "pathSegment": "SA-PATH-129-QUAL129",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-129-QUAL129",
+      "order": 5
+    }
+  ]
+}

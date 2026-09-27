@@ -257,13 +257,32 @@ func (b DERBitString) BitLength() int    { return b.bitLength }
 type ObjectIdentifier struct {
 	encoded []byte
 	arcs    []uint64
+	valid   bool
 }
 
-func (o ObjectIdentifier) Encoded() []byte { return o.encoded }
-func (o ObjectIdentifier) Arcs() []uint64  { return append([]uint64(nil), o.arcs...) }
-func (o ObjectIdentifier) ArcCount() int   { return len(o.arcs) }
+func (o ObjectIdentifier) requireValid() {
+	if !o.valid {
+		panic("ObjectIdentifier is not a validated value")
+	}
+}
+
+func (o ObjectIdentifier) Encoded() []byte {
+	o.requireValid()
+	return append([]byte(nil), o.encoded...)
+}
+
+func (o ObjectIdentifier) Arcs() []uint64 {
+	o.requireValid()
+	return append([]uint64(nil), o.arcs...)
+}
+
+func (o ObjectIdentifier) ArcCount() int {
+	o.requireValid()
+	return len(o.arcs)
+}
 
 func (o ObjectIdentifier) Equals(expected []uint64) bool {
+	o.requireValid()
 	if len(o.arcs) != len(expected) {
 		return false
 	}
@@ -418,7 +437,7 @@ func decodeOIDContents(element ASN1Element, limits ASN1Limits) (ObjectIdentifier
 		}
 		offset = next
 	}
-	return ObjectIdentifier{encoded: encoded, arcs: arcs}, nil
+	return ObjectIdentifier{encoded: append([]byte(nil), encoded...), arcs: arcs, valid: true}, nil
 }
 
 func parseBase128(encoded []byte, start, valueOffset int) (uint64, int, error) {

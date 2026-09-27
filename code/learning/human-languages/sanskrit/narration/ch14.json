@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Pointing, and Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f217f10cf21de2b0",
+  "sourceHash": "fnv1a64:81187c0143397279",
   "lessons": [
     {
       "id": "SA-C14-this",
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:981b9658ad515534",
+      "sourceHash": "fnv1a64:0fa4eee53f962257",
       "notice": null,
       "blocks": [
         {
@@ -421,6 +421,16 @@
             {
               "kind": "speech",
               "text": "You can already name things. This is how you POINT at them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it is\" and \"it becomes.\" (Asti, bhavati.) You will want asti with this lesson's word."
             }
           ]
         },

@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Learns, Teaches, Forgets, Climbs, Climbs down",
+  "label": "ch:sa-learns-teaches-forgets-climbs-climbs-down",
+  "canDo": "I can say learns, teaches, forgets, climbs and climbs down.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C135-avarohati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say learns, teaches, forgets, climbs and climbs down.",
+    "assesses": [
+      "SA-LEX-C135-ACT135-03",
+      "SA-LEX-C135-ACT135-04",
+      "SA-LEX-C135-ACT135-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-90-TIME90",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a day, early evening, afternoon, midnight and dawn.",
+  "prerequisites": []
+}

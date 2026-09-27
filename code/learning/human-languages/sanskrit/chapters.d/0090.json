@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Day, Early evening, Afternoon, Midnight, Dawn",
+  "label": "ch:sa-day-early-evening-afternoon-midnight-dawn",
+  "canDo": "I can say a day, early evening, afternoon, midnight and dawn.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "SA-C90-usah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say a day, early evening, afternoon, midnight and dawn.",
+    "assesses": [
+      "SA-LEX-C90-TIME90-03",
+      "SA-LEX-C90-TIME90-04",
+      "SA-LEX-C90-TIME90-05"
+    ]
+  }
+}

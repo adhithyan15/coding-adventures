@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generatedFigureUrl } from "../src/figures.ts";
+import { generatedFigureUrl, generatedFilmstripUrl } from "../src/figures.ts";
 
 describe("generated lesson figures", () => {
   it("bundles the canonical SVG shared with the Spanish book", () => {
@@ -17,5 +17,17 @@ describe("generated lesson figures", () => {
       /unsafe/,
     );
     expect(() => generatedFigureUrl("spanish", "figures/missing.svg")).toThrow(/missing/);
+  });
+
+  it("loads a cited writing filmstrip through the lazy source map", async () => {
+    await expect(generatedFilmstripUrl("tamil", "TA-S01-va")).resolves.toMatch(
+      /^(?:data:image\/svg\+xml|\/.*\.svg)/,
+    );
+    await expect(generatedFilmstripUrl("tamil", "TA-W-without-ductus")).resolves.toBeNull();
+  });
+
+  it("rejects unsafe filmstrip lookup keys before loading the source map", async () => {
+    await expect(generatedFilmstripUrl("../tamil", "TA-S01-va")).rejects.toThrow(/unsafe/);
+    await expect(generatedFilmstripUrl("tamil", "../TA-S01-va")).rejects.toThrow(/unsafe/);
   });
 });

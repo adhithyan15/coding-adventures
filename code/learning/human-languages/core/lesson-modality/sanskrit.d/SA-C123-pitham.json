@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C123-pitham",
+    "language": "sanskrit",
+    "chapter": 123,
+    "sequence": 6040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:801b04aa6738c0e8"
+  },
+  "findings": []
+}

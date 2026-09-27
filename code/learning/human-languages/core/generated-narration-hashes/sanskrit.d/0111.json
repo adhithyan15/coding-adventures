@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:c7ff33adb0023fd6",
+  "lessonIds": [
+    "SA-C111-vatya",
+    "SA-C111-niharah",
+    "SA-C111-sakha",
+    "SA-C111-parnam",
+    "SA-C111-kusumam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch111.txt",
+  "json": "sanskrit/narration/ch111.json",
+  "textHash": "fnv1a64:73fadc6f6b457419",
+  "jsonHash": "fnv1a64:98c5d40a10a571ad",
+  "findings": []
+}

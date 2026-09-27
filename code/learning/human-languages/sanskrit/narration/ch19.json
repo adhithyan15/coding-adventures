@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Counting On --- Six to Ten, and What They Prove",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c4e324dcb73d0c60",
+  "sourceHash": "fnv1a64:8a90f932e1d84234",
   "lessons": [
     {
       "id": "SA-C19-six",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7796c2d4775216aa",
+      "sourceHash": "fnv1a64:e0d9b1da7d78b679",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You can count to five. The next five are where the family resemblance becomes impossible to miss."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why do the numbers still sound alike across Sanskrit, Latin and English? (One family inherited them, and numbers resist replacement.) Listen for it in \"six.\""
             }
           ]
         },
@@ -633,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10a794f5dd5d1ae0",
+      "sourceHash": "fnv1a64:d8ba1790c6d2e274",
       "notice": null,
       "blocks": [
         {
@@ -650,6 +660,16 @@
             {
               "kind": "speech",
               "text": "Ten numbers is enough to see something no single word could have shown you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is English four odd? (By the sound rule it should start hw-, like what; it took its f- from five.) And the rounded kʷ gave Latin qu-, Sanskrit c-, English wh-."
             }
           ]
         },

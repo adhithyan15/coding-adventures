@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Cool, New, Ancient, Brave, Clever",
+  "label": "ch:sa-cool-new-ancient-brave-clever",
+  "canDo": "I can say cool, new, ancient, brave and clever.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-R129-second-pass-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say cool, new, ancient, brave and clever.",
+    "assesses": [
+      "SA-LEX-C129-QUAL129-03",
+      "SA-LEX-C129-QUAL129-04",
+      "SA-LEX-C129-QUAL129-05"
+    ]
+  }
+}

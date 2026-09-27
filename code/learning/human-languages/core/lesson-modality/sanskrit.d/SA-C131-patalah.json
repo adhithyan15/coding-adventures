@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C131-patalah",
+    "language": "sanskrit",
+    "chapter": 131,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c75f050f61bb0fd9"
+  },
+  "findings": []
+}

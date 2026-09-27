@@ -83,7 +83,12 @@ it("pins Sanskrit lesson-content budgets", () =>
     // three content totals stay at 11 / 12 / 13. Re-measured against the tree.
     // 486 -> 487: HL-C443 anchor word मौन, placed before the ौ letter lesson so
     // the sign is taken from a word the reader already says.
-    lessons: 487,
+    // 487 -> 745: chapters 90-138, the A1 tranche. 245 word lessons and ten
+    // reviews, plus three chapter-6 continuation lessons (numbers-1-5-more,
+    // number-cognates-more, pancha-travels-more) split out to fit the atom
+    // budget. None introduces an idiom, sense or culture claim; the culture
+    // claim stays on pancha-travels. Re-measured against the tree.
+    lessons: 745,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

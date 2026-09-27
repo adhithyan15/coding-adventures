@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Morning, Twilight, Early winter, Late winter, Autumn",
+  "label": "ch:sa-morning-twilight-early-winter-late-winter-autumn",
+  "canDo": "I can say morning, twilight, early winter, late winter and autumn.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "SA-C91-sarad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say morning, twilight, early winter, late winter and autumn.",
+    "assesses": [
+      "SA-LEX-C91-TIME91-03",
+      "SA-LEX-C91-TIME91-04",
+      "SA-LEX-C91-TIME91-05"
+    ]
+  }
+}

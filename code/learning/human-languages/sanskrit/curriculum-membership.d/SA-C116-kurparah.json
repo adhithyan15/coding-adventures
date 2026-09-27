@@ -1,0 +1,11 @@
+{
+  "id": "SA-C116-kurparah",
+  "pathSegment": "SA-PATH-116-THINGS116",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-116-THINGS116",
+      "order": 3
+    }
+  ]
+}

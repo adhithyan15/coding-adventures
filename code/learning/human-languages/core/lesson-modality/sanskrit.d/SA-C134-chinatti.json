@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C134-chinatti",
+    "language": "sanskrit",
+    "chapter": 134,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:021d1b7d7bfbedc1"
+  },
+  "findings": []
+}

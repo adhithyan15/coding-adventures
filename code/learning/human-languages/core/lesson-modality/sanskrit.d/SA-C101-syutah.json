@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C101-syutah",
+    "language": "sanskrit",
+    "chapter": 101,
+    "sequence": 4920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2c0c1fe38b4ec34"
+  },
+  "findings": []
+}

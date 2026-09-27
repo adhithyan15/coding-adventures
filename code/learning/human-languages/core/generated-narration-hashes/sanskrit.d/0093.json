@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:5409c7a23d0e3f9a",
+  "lessonIds": [
+    "SA-C93-kadapi",
+    "SA-C93-vilambah",
+    "SA-C93-vamah",
+    "SA-C93-daksinah",
+    "SA-C93-antah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch93.txt",
+  "json": "sanskrit/narration/ch93.json",
+  "textHash": "fnv1a64:3f9a0c97541443d6",
+  "jsonHash": "fnv1a64:1d7d64ab83ce2ad1",
+  "findings": []
+}

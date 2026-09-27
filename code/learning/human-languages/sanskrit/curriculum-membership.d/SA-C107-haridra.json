@@ -1,0 +1,11 @@
+{
+  "id": "SA-C107-haridra",
+  "pathSegment": "SA-PATH-107-THINGS107",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-107-THINGS107",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C123-dvicakrika",
+    "language": "sanskrit",
+    "chapter": 123,
+    "sequence": 6050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f914af774ca05326"
+  },
+  "findings": []
+}

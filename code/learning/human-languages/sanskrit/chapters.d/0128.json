@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Terrible, False, Pungent, Sour, Bitter",
+  "label": "ch:sa-terrible-false-pungent-sour-bitter",
+  "canDo": "I can say terrible, false, pungent, sour and bitter.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C128-tiktah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say terrible, false, pungent, sour and bitter.",
+    "assesses": [
+      "SA-LEX-C128-QUAL128-03",
+      "SA-LEX-C128-QUAL128-04",
+      "SA-LEX-C128-QUAL128-05"
+    ]
+  }
+}

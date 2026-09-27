@@ -14,6 +14,9 @@ oid = decode_object_identifier(decoder.decode_exact(bytes.fromhex("06032a0304"))
 assert oid.arcs == (1, 2, 3, 4)
 ```
 
+Validated OBJECT IDENTIFIER values can only be created by the decoder and own
+an immutable copy of their encoded bytes.
+
 Failures contain only a stable error kind and local byte offset. Framing
 failures additionally retain the stable `der-tlv` error kind; none of the
 errors interpolate hostile payload bytes.

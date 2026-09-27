@@ -1,0 +1,11 @@
+{
+  "id": "SA-C108-vrntakam",
+  "pathSegment": "SA-PATH-108-THINGS108",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-108-THINGS108",
+      "order": 2
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Verbs of Mind and Motion",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:41bd00f1ca7762da",
+  "sourceHash": "fnv1a64:48493f6cce85c288",
   "lessons": [
     {
       "id": "SA-C22-hear",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5124e4d9a2f3f371",
+      "sourceHash": "fnv1a64:1c8c68cc773507f6",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "A short run of everyday verbs, one at a time."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"remembers.\" (Smarati.) Smṛti is what is remembered; this lesson's verb gives śruti, what is heard."
             }
           ]
         },
@@ -264,7 +274,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83d99fbbcd30ea2f",
+      "sourceHash": "fnv1a64:1bbcb3caa35c97dc",
       "notice": null,
       "blocks": [
         {
@@ -281,6 +291,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: what did nayati mean?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I do.\" (Karomi.) Playing is one more thing you do."
             }
           ]
         },

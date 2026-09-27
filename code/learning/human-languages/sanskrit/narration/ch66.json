@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Not Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ef2030db17b3af95",
+  "sourceHash": "fnv1a64:4cf1a01a8093c5b8",
   "lessons": [
     {
       "id": "SA-C66-fever",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40a29a1190d8d98d",
+      "sourceHash": "fnv1a64:18ca4e7586ffeed1",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: say the Sanskrit for second, then the Sanskrit for first."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: read a short line aloud word by word, then again as one breath, the way you read your first passage."
             }
           ]
         },
@@ -142,7 +152,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39047c61b81c1a98",
+      "sourceHash": "fnv1a64:f8e0b7cf9d91fc2e",
       "notice": null,
       "blocks": [
         {
@@ -159,6 +169,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: say the Sanskrit for first, then the Sanskrit for a fever."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read a three-word line aloud, then say it with the words in another order — Sanskrit lets them move."
             }
           ]
         },
@@ -265,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3d981b078bfddcb",
+      "sourceHash": "fnv1a64:0c6246adb8aed4e5",
       "notice": null,
       "blocks": [
         {
@@ -282,6 +302,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: say the Sanskrit for a fever, then the Sanskrit for a cough."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before you hear today's word, read it aloud from the page, one letter-group at a time."
             }
           ]
         },

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-106-THINGS106",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a rope, wheat, rice, mung beans and dal.",
+  "prerequisites": []
+}

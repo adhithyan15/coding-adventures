@@ -1,0 +1,11 @@
+{
+  "id": "SA-C122-sakatam",
+  "pathSegment": "SA-PATH-122-THINGS122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-122-THINGS122",
+      "order": 2
+    }
+  ]
+}

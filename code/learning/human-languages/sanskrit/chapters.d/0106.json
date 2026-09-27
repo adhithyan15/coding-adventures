@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Rope, Wheat, Rice, Mung beans, Dal",
+  "label": "ch:sa-rope-wheat-rice-mung-beans-dal",
+  "canDo": "I can say a rope, wheat, rice, mung beans and dal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C106-supah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say a rope, wheat, rice, mung beans and dal.",
+    "assesses": [
+      "SA-LEX-C106-THINGS106-03",
+      "SA-LEX-C106-THINGS106-04",
+      "SA-LEX-C106-THINGS106-05"
+    ]
+  }
+}

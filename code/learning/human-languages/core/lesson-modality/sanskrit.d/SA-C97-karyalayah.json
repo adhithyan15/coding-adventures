@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C97-karyalayah",
+    "language": "sanskrit",
+    "chapter": 97,
+    "sequence": 4650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:583aac60764d4216"
+  },
+  "findings": []
+}

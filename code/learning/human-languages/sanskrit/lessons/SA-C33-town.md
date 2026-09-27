@@ -12,17 +12,17 @@ headword: "पुरम्"
 gloss: "a town, a walled town"
 romanization: "puram"
 concept_tag: SA-LAND-PURA
-prerequisites: [SA-C33-mountain, SA-C31-wind, SA-C32-vine]
+prerequisites: [SA-C33-mountain, SA-C31-wind, SA-C32-vine, SA-C16-city]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C33-LAND-03]
+  knowledge: [SA-LEX-C33-LAND-03, SA-LEX-C16-PLACE-05]
 introduces:
   knowledge: [SA-LEX-C33-LAND-04]
 practises:
-  knowledge: [SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C31-SKY-04, SA-LEX-C32-TREE-04]
+  knowledge: [SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C33-LAND-04, SA-LEX-C31-SKY-04, SA-LEX-C32-TREE-04, SA-LEX-C16-PLACE-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C33-mountain]
 # पुरम् (puram) — a town, a walled town
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C33-LAND-02, SA-LEX-C33-LAND-03, SA-LEX-C16-PLACE-05] -->
 
 [PAUSE 2s] Before the new word: what did *parvataḥ* mean?
+
+[PAUSE 1s] Say "city." (*Nagaram*.) This lesson has another word for a place where people live together.
 
 ## You'll want to know: पुरम्
 <!-- hl-knowledge: introduces=[SA-LEX-C33-LAND-04]; assesses=[] -->

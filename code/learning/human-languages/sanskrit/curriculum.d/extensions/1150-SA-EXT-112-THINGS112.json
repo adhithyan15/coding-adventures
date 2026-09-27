@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-112-THINGS112",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lotus, a star, the sun, a bear and a jackal.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:8ef7c836a73ff73e",
+  "lessonIds": [
+    "SA-C123-pitham",
+    "SA-C123-dvicakrika",
+    "SA-C123-yanam",
+    "SA-C123-nauyanam",
+    "SA-C123-dhumayanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch123.txt",
+  "json": "sanskrit/narration/ch123.json",
+  "textHash": "fnv1a64:c71494236551b3c4",
+  "jsonHash": "fnv1a64:6201b54490e81e8a",
+  "findings": []
+}

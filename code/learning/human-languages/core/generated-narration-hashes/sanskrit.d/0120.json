@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:6b19f0d00d3c20e6",
+  "lessonIds": [
+    "SA-C120-mudra",
+    "SA-C120-patralayah",
+    "SA-C120-lekhah",
+    "SA-C120-granthah",
+    "SA-C120-citram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch120.txt",
+  "json": "sanskrit/narration/ch120.json",
+  "textHash": "fnv1a64:007720624a632457",
+  "jsonHash": "fnv1a64:0217b33c65ef54f3",
+  "findings": []
+}

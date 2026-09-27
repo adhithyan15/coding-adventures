@@ -1,0 +1,12 @@
+BUILD
+BUILD_windows
+CHANGELOG.md
+cpanfile
+lib/CodingAdventures/X509Extension.pm
+Makefile.PL
+MANIFEST
+README.md
+required_capabilities.json
+t/00-load.t
+t/01-basic.t
+t/portable-conformance.t

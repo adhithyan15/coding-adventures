@@ -1,0 +1,11 @@
+{
+  "id": "SA-C126-sankirnah",
+  "pathSegment": "SA-PATH-126-QUAL126",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-126-QUAL126",
+      "order": 1
+    }
+  ]
+}

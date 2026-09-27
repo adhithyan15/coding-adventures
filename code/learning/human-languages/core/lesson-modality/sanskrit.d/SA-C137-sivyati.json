@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C137-sivyati",
+    "language": "sanskrit",
+    "chapter": 137,
+    "sequence": 6770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:512fc1446ae3e5fa"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C93-vamah",
+    "language": "sanskrit",
+    "chapter": 93,
+    "sequence": 4470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25f8704bc02c59af"
+  },
+  "findings": []
+}

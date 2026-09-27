@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-105-THINGS105",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a television, a computer, a machine, a fan and a box.",
+  "prerequisites": []
+}

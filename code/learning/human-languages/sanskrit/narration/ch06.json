@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:83be714a9beb7ef0",
+  "sourceHash": "fnv1a64:8346a5111a36ba96",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:0236934e5513189e",
+      "sourceHash": "fnv1a64:c62d35ead398bbde",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -47,6 +47,16 @@
             {
               "kind": "speech",
               "text": "This chapter does something the other Indic chapters can't do alone. Sanskrit preserves the Old Indo-Aryan forms behind the Hindi, Marathi, Bengali, Gujarati and Punjabi ones — and, at the same time, these forms are cousins of the English ones. Learn five and you get a foothold in both directions."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many numbers does a Sanskrit verb count in? (Three: singular, dual for exactly two, and plural.)"
             }
           ]
         },
@@ -70,7 +80,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three notes, and the third one matters more than it looks."
+              "text": "Two notes first. A third, about the last column, follows in the next lesson."
             },
             {
               "kind": "speech",
@@ -79,10 +89,6 @@
             {
               "kind": "speech",
               "text": "Pañca barely inflects in the nominative and accusative. It is also the one you already half-know."
-            },
-            {
-              "kind": "speech",
-              "text": "And Sanskrit numbers have gender. Look at the last column. These same words, in Hindi, Marathi, Bengali, Gujarati, and Punjabi, mostly descend from the neuter forms — trī́ṇi and catvā́ri, not tráyaḥ and catvā́raḥ. Keep that column in view; the daughter languages inherit from it."
             }
           ]
         },
@@ -125,15 +131,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the exactly-two category — dual]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the daughter-language column — neuter",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the daughter-language column — neuter]"
             }
           ]
         },
@@ -150,7 +147,119 @@
             },
             {
               "kind": "speech",
-              "text": "Give one to five in Sanskrit. (Eka, dva, tri, catur, pañca.) Why does \"two\" look unusual? (Sanskrit has a dual — a form for exactly two.) Which column will the modern languages mostly descend from? (The neuter — trī́ṇi, catvā́ri.) Which number barely changes across gender in this table? (Pañca.) Next: connect the Sanskrit forms west to Latin and English."
+              "text": "Give one to five in Sanskrit. (Eka, dva, tri, catur, pañca.) Why does \"two\" look unusual? (Sanskrit has a dual — a form for exactly two.) Which number barely inflects in this table? (Pañca.) Next: connect the Sanskrit forms west to Latin and English."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C06-numbers-1-5-more",
+      "sequence": 315,
+      "title": "(एक द्व त्रि चतुर् पञ्च, continued) ((eka dva tri catur pañca, continued)) — numbers have gender",
+      "headword": "(एक द्व त्रि चतुर् पञ्च, continued)",
+      "romanization": "(eka dva tri catur pañca, continued)",
+      "gloss": "numbers have gender",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:214af4f1214dadca",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: count one to five again — एक द्व त्रि चतुर् पञ्च (eka dva tri catur pañca)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the letter from the last lesson: say the sound of अ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "From the goodbyes: which English word is a cousin of gam \"to go\"? (Come.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: numbers have gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Sanskrit numbers have gender. Look back at the last column of the table in the last lesson. These same words, in Hindi, Marathi, Bengali, Gujarati, and Punjabi, mostly descend from the neuter forms — trī́ṇi and catvā́ri, not tráyaḥ and catvā́raḥ. Keep that column in view; the daughter languages inherit from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to एक द्व त्रि चतुर् पञ्च (eka dva tri catur pañca), in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **एक द्व त्रि चतुर् पञ्च**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to एक द्व त्रि चतुर् पञ्च (eka dva tri catur pañca)? Say it once more, without looking."
             }
           ]
         }
@@ -169,7 +278,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:073f669b84372ee7",
+      "sourceHash": "fnv1a64:ad9bed014b8afeaf",
       "notice": null,
       "blocks": [
         {
@@ -223,51 +332,6 @@
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — rounded k goes three ways",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "PIE kʷ was a k with rounded lips. In kʷetwóres “four,” three branches treated it differently:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "branch",
-                "outcome",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "branch: Latin. outcome: kept qu-. example: quattuor.",
-                "branch: Indo-Iranian. outcome: merged it with k, then palatalised before front vowels. example: catvāri.",
-                "branch: Germanic. outcome: shifted it to hw-. example: what, who."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Sanskrit c- is therefore a regular result, not a random replacement. The same sequence helps explain pañca's ñc."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — two different English f stories",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The f- of five does not come from kʷ. It comes from initial p, changed to f by Grimm's law, as in pater becomes father and pēs becomes foot."
-            },
-            {
-              "kind": "speech",
-              "text": "English four is irregular. By the sound rule it should begin hw- like what. Its f- is usually explained as analogy with neighbouring five. Counting words can reshape one another."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -289,24 +353,6 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "rounded k — quattuor, catvāri, what",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: rounded *k* — *quattuor, catvāri, what*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "initial p becomes f — pañca/five",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: initial *p → f* — *pañca/five*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "regular inheritance or borrowing — inheritance",
               "spoken": true,
               "scored": false,
@@ -316,7 +362,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -328,7 +374,7 @@
             },
             {
               "kind": "speech",
-              "text": "Are the Latin and Sanskrit forms borrowed from one another? (No: they are inherited cousins.) What are the three outcomes of kʷ? (Latin qu-, Indo-Iranian c- after merger and palatalisation, Germanic hw-.) Where does five's initial f come from? (PIE p by Grimm's law.) What is the usual explanation for four also beginning with f? (Analogy with neighbouring five.)"
+              "text": "Are the Latin and Sanskrit forms borrowed from one another? (No: they are inherited cousins.) Next: the sound laws that pulled the cousins apart."
             },
             {
               "kind": "activity",
@@ -556,19 +602,147 @@
       ]
     },
     {
-      "id": "SA-C06-pancha-travels",
-      "sequence": 330,
-      "title": "Pañca hiding in familiar words",
-      "headword": "पञ्च",
-      "romanization": "pañca",
-      "gloss": "five inside Punjab, pentagon, and the debated history of punch",
+      "id": "SA-C06-number-cognates-more",
+      "sequence": 325,
+      "title": "(एक, द्व, त्रि, चतुर्, पञ्च (pañca), continued) — The word, taken apart — rounded k goes three ways",
+      "headword": "(एक · द्व · त्रि · चतुर् · पञ्च, continued)",
+      "romanization": "(eka · dva · tri · catur · pañca, continued)",
+      "gloss": "The word, taken apart — rounded k goes three ways",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6fef3eab0243b98",
+      "sourceHash": "fnv1a64:a126afaced88431a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say एक, द्व, त्रि, चतुर्, पञ्च (pañca) again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart — rounded k goes three ways",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PIE kʷ was a k with rounded lips. In kʷetwóres “four,” three branches treated it differently:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "branch",
+                "outcome",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "branch: Latin. outcome: kept qu-. example: quattuor.",
+                "branch: Indo-Iranian. outcome: merged it with k, then palatalised before front vowels. example: catvāri.",
+                "branch: Germanic. outcome: shifted it to hw-. example: what, who."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit c- is therefore a regular result, not a random replacement. The same sequence helps explain pañca's ñc."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — two different English f stories",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The f- of five does not come from kʷ. It comes from initial p, changed to f by Grimm's law, as in pater becomes father and pēs becomes foot."
+            },
+            {
+              "kind": "speech",
+              "text": "English four is irregular. By the sound rule it should begin hw- like what. Its f- is usually explained as analogy with neighbouring five. Counting words can reshape one another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rounded k — quattuor, catvāri, what",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rounded *k* — *quattuor, catvāri, what*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "initial p becomes f — pañca/five",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: initial *p → f* — *pañca/five*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the three outcomes of kʷ? (Latin qu-, Indo-Iranian c- after merger and palatalisation, Germanic hw-.) Where does five's initial f come from? (PIE p by Grimm's law.) What is the usual explanation for four also beginning with f? (Analogy with neighbouring five.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C06-pancha-travels",
+      "sequence": 330,
+      "title": "Pañca hiding in familiar words",
+      "headword": "पञ्च",
+      "romanization": "pañca",
+      "gloss": "five inside Punjab and pentagon, with the debated punch story next",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9026c0188c99ef88",
       "notice": null,
       "blocks": [
         {
@@ -616,21 +790,6 @@
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — the qualified punch story",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The usual account derives punch, the drink, from Hindi pāṁch from Sanskrit pañca, because the drink was said to contain five ingredients."
-            },
-            {
-              "kind": "speech",
-              "text": "That origin is not unanimous. A rival derives the word from puncheon, a type of cask. Keep the useful connection with a label: “the common five-ingredients account,” not an unquestioned fact."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -657,20 +816,11 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: Greek *pente* — pentagon, pentathlon]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "punch — common account, not certain",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *punch* — common account, not certain]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -682,7 +832,105 @@
             },
             {
               "kind": "speech",
-              "text": "What does Punjab mean? (“Five waters.”) Is Persian panj borrowed from Sanskrit? (No: it is an Iranian cousin.) Which Greek form hides in pentagon? (Pente.) What caution belongs with the drink punch? (The five-ingredients derivation is common, but puncheon is a rival account.)"
+              "text": "What does Punjab mean? (“Five waters.”) Is Persian panj borrowed from Sanskrit? (No: it is an Iranian cousin.) Which Greek form hides in pentagon? (Pente.) Next: the drink punch, and why its story comes with a caution."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C06-pancha-travels-more",
+      "sequence": 333,
+      "title": "(पञ्च, continued) ((pañca, continued)) — The word, taken apart — the qualified punch story",
+      "headword": "(पञ्च, continued)",
+      "romanization": "(pañca, continued)",
+      "gloss": "The word, taken apart — the qualified punch story",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fa98eaa2c82f5bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say पञ्च (pañca) again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart — the qualified punch story",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The usual account derives punch, the drink, from Hindi pāṁch from Sanskrit pañca, because the drink was said to contain five ingredients."
+            },
+            {
+              "kind": "speech",
+              "text": "That origin is not unanimous. A rival derives the word from puncheon, a type of cask. Keep the useful connection with a label: “the common five-ingredients account,” not an unquestioned fact."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "punch — common account, not certain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *punch* — common account, not certain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rival: puncheon, a cask",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rival: *puncheon*, a cask]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What caution belongs with the drink punch? (The five-ingredients derivation is common, but puncheon is a rival account.)"
             }
           ]
         }
@@ -701,7 +949,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3f22fed70fd4d479",
+      "sourceHash": "fnv1a64:59942fd23ee95a2d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -725,6 +973,16 @@
             {
               "kind": "speech",
               "text": "Say the longer of the two greetings. Then say what its last breath — the soft -ḥ — is telling you about the word."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit numbers have gender. Which forms of \"three\" and \"four\" do the modern languages mostly inherit? (The neuter ones, trīṇi and catvāri.)"
             }
           ]
         },

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:cc860892e543dff4",
+  "lessonIds": [
+    "SA-C101-kankatika",
+    "SA-C101-phenakam",
+    "SA-C101-pronchanam",
+    "SA-C101-upanetram",
+    "SA-C101-syutah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch101.txt",
+  "json": "sanskrit/narration/ch101.json",
+  "textHash": "fnv1a64:7c3f269ba530b67a",
+  "jsonHash": "fnv1a64:5286ff469562bde7",
+  "findings": []
+}

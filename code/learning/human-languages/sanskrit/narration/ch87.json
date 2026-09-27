@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Eleven to a Thousand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:97238d9373d90deb",
+  "sourceHash": "fnv1a64:2eb519c4ea3ef597",
   "lessons": [
     {
       "id": "SA-C87-eleven",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:223fd4da2b588486",
+      "sourceHash": "fnv1a64:fee312987991df77",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: say the Sanskrit for time, then the Sanskrit for a moment."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say six to ten again — ṣaṭ, sapta, aṣṭa, nava, daśa — and hear their English partners: six, seven, eight, nine, ten."
             }
           ]
         },

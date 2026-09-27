@@ -12,17 +12,17 @@ headword: "क्रीडति"
 gloss: "he, she or it plays"
 romanization: "krīḍati"
 concept_tag: SA-VERB-PLAY
-prerequisites: [SA-C22-lead, SA-C20-old-person]
+prerequisites: [SA-C22-lead, SA-C20-old-person, SA-C05-karomi]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-LEAD]
+  knowledge: [SA-LEX-LEAD, SA-LEX-KAROMI]
 introduces:
   knowledge: [SA-LEX-PLAY]
 practises:
-  knowledge: [SA-LEX-LEAD, SA-LEX-PLAY, SA-LEX-C20-PERSON-04]
+  knowledge: [SA-LEX-LEAD, SA-LEX-PLAY, SA-LEX-C20-PERSON-04, SA-LEX-KAROMI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C22-lead]
 # क्रीडति (krīḍati) — he, she or it plays
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-LEAD] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-LEAD, SA-LEX-KAROMI] -->
 
 [PAUSE 2s] Before the new one: what did *nayati* mean?
+
+[PAUSE 1s] Say "I do." (*Karomi*.) Playing is one more thing you do.
 
 ## You'll want to know: क्रीडति
 <!-- hl-knowledge: introduces=[SA-LEX-PLAY]; assesses=[] -->

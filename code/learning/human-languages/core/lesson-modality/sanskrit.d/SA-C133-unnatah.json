@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C133-unnatah",
+    "language": "sanskrit",
+    "chapter": 133,
+    "sequence": 6580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24a986c06b6658c6"
+  },
+  "findings": []
+}

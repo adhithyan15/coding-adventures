@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:dc4972e11abdb741",
+  "lessonIds": [
+    "SA-C95-madhye",
+    "SA-C95-parsve",
+    "SA-C95-sarvatra",
+    "SA-C95-anyatra",
+    "SA-C95-vithi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch95.txt",
+  "json": "sanskrit/narration/ch95.json",
+  "textHash": "fnv1a64:e3b9cd1c0d02c65f",
+  "jsonHash": "fnv1a64:9596cf18b5c24ad5",
+  "findings": []
+}

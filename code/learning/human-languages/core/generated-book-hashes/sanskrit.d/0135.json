@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:5998ab0d42bdc08e",
+  "lessonIds": [
+    "SA-C135-siksate",
+    "SA-C135-pathayati",
+    "SA-C135-vismarati",
+    "SA-C135-arohati",
+    "SA-C135-avarohati"
+  ],
+  "tex": "sanskrit/book/chapters/ch135-learns-teaches-forgets-climbs-climbs-down.tex"
+}

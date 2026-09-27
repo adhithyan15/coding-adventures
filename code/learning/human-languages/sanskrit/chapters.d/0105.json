@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Television, Computer, Machine, Fan, Box",
+  "label": "ch:sa-television-computer-machine-fan-box",
+  "canDo": "I can say a television, a computer, a machine, a fan and a box.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C105-petika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say a television, a computer, a machine, a fan and a box.",
+    "assesses": [
+      "SA-LEX-C105-THINGS105-03",
+      "SA-LEX-C105-THINGS105-04",
+      "SA-LEX-C105-THINGS105-05"
+    ]
+  }
+}

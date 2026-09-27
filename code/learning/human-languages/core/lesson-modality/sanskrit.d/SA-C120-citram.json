@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C120-citram",
+    "language": "sanskrit",
+    "chapter": 120,
+    "sequence": 5930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59002f2402594f61"
+  },
+  "findings": []
+}

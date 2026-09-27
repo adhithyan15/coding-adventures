@@ -6,6 +6,9 @@ STRING, IA5String, NULL, OBJECT IDENTIFIER, context-specific implicit values,
 SEQUENCE, SET, and explicit wrappers while preserving one shared depth and
 total-element budget.
 
+Validated OBJECT IDENTIFIER values reject zero-value use and return defensive
+copies of their encoded bytes and arcs.
+
 Errors expose only a stable kind and local offset. Framing failures retain the
 stable upstream DER error kind without interpolating hostile payload bytes.
 

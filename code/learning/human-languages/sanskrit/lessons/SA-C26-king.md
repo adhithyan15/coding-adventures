@@ -12,17 +12,17 @@ headword: "राजा"
 gloss: "a king"
 romanization: "rājā"
 concept_tag: SA-PERSON-KING
-prerequisites: [SA-C26-student, SA-C24-fruit, SA-C25-head]
+prerequisites: [SA-C26-student, SA-C24-fruit, SA-C25-head, SA-C20-people]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C26-ROLE-02]
+  knowledge: [SA-LEX-C26-ROLE-02, SA-LEX-C20-PERSON-05]
 introduces:
   knowledge: [SA-LEX-C26-ROLE-03]
 practises:
-  knowledge: [SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C24-ASK-03, SA-LEX-C25-BODY-03]
+  knowledge: [SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C24-ASK-03, SA-LEX-C25-BODY-03, SA-LEX-C20-PERSON-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C26-student]
 # राजा (rājā) — a king
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-01, SA-LEX-C26-ROLE-02, SA-LEX-C20-PERSON-05] -->
 
 [PAUSE 2s] Before the new word: what did *śiṣyaḥ* mean?
+
+[PAUSE 1s] Say "people." (*Janaḥ*, from the root *jan* "to be born.") A king rules over them.
 
 ## You'll want to know: राजा
 <!-- hl-knowledge: introduces=[SA-LEX-C26-ROLE-03]; assesses=[] -->

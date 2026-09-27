@@ -1,0 +1,11 @@
+{
+  "id": "SA-C102-culli",
+  "pathSegment": "SA-PATH-102-THINGS102",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-102-THINGS102",
+      "order": 3
+    }
+  ]
+}

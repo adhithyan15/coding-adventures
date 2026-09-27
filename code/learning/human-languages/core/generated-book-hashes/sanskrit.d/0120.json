@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:eb89087113503a1b",
+  "lessonIds": [
+    "SA-C120-mudra",
+    "SA-C120-patralayah",
+    "SA-C120-lekhah",
+    "SA-C120-granthah",
+    "SA-C120-citram"
+  ],
+  "tex": "sanskrit/book/chapters/ch120-coin-post-office-letter-book-picture.tex"
+}

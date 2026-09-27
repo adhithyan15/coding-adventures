@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.17] - 2026-09-27
+
+### Fixed
+
+- **Bounded portable glob matching**: path and segment matching now use
+  iterative dynamic programming, so alternating globstar near misses visit
+  each path-state pair once instead of recursively revisiting suffixes.
+- **Host-independent character classes**: the matcher now parses Unicode
+  scalar literals, negation, ranges, and bracket/hyphen edge cases directly.
+  Descending ranges and ambiguous class operators fail closed without
+  inheriting host regular-expression behavior.
+- **Whole-list validation**: diff selection and source hashing now validate
+  every declared glob before inspecting candidates, so a matching earlier
+  pattern or an empty candidate set cannot mask a rejected later pattern.
+- **Linear unmatched-bracket parsing**: closing bracket positions are indexed
+  once, preventing literal `[` runs from repeatedly scanning the same suffix.
+
 ## [0.3.16] - 2026-08-30
 
 ### Fixed

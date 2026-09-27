@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:baff90b8664cf175",
+  "lessonIds": [
+    "SA-C132-krsah",
+    "SA-C132-vakrah",
+    "SA-C132-rjuh",
+    "SA-C132-purnah",
+    "SA-C132-riktah"
+  ],
+  "tex": "sanskrit/book/chapters/ch132-thin-crooked-straight-full-empty.tex"
+}

@@ -12,18 +12,18 @@ headword: वसामि
 gloss: I live, I dwell (from vas, to dwell)
 romanization: "vasāmi"
 concept_tag: SA-VERB-VAS
-prerequisites: [SA-C05-vadami]
+prerequisites: [SA-C05-vadami, SA-C05-aham-samskritam-vadami]
 sounds: [inherent-a, long-aa]
 roots: [vas-dwell]
 reviews_of: [SA-C05-vadami, SA-C05-aham-samskritam-vadami]
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-VADAMI]
+  knowledge: [SA-LEX-VADAMI, SA-GRAMMAR-SANDHI-JOINS-WORDS]
 introduces:
   knowledge: [SA-LEX-VASAMI, SA-ETYMON-VAS-TO-DWELL, SA-GRAMMAR-LOCATIVE-CASE]
 practises:
-  knowledge: [SA-LEX-VADAMI, SA-LEX-VASAMI, SA-ETYMON-VAS-TO-DWELL, SA-GRAMMAR-LOCATIVE-CASE]
+  knowledge: [SA-LEX-VADAMI, SA-LEX-VASAMI, SA-ETYMON-VAS-TO-DWELL, SA-GRAMMAR-LOCATIVE-CASE, SA-GRAMMAR-SANDHI-JOINS-WORDS]
 skills: [listening, speaking]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
@@ -35,10 +35,12 @@ variety: classical
 
 ## Warm-up
 
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-VADAMI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-VADAMI, SA-GRAMMAR-SANDHI-JOINS-WORDS] -->
 
 [PAUSE 2s] A second verb, so you can say where you live — and it hides the English
 word *was*.
+
+[PAUSE 1s] Say "I speak Sanskrit" and let the words run together: *ahaṁ saṁskṛtam*. That joining is sandhi.
 
 ## Sounds you'll need
 

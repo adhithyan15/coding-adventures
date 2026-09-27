@@ -1,0 +1,11 @@
+{
+  "id": "SA-C115-pipilika",
+  "pathSegment": "SA-PATH-115-THINGS115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-115-THINGS115",
+      "order": 2
+    }
+  ]
+}

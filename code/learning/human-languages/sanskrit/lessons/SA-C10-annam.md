@@ -12,7 +12,7 @@ headword: अन्नम्
 romanization: annam
 gloss: food, grain — literally "the eaten thing," built on the very root खादति left uneaten
 concept_tag: SA-FOOD-GRAIN
-prerequisites: [SA-C10-kshiram]
+prerequisites: [SA-C10-kshiram, SA-C06-numbers-1-5-more]
 sounds: [conjunct-nna, inherent-a]
 roots: [ad-eat, pie-ed]
 etymology_hook: "अन्नम् is the old passive participle of अद्, 'to eat' — PIE *h1ed-nos*, 'eaten' — the very root Chapter 7 named as खादति's untaken cousin, अद् becoming अत्ति. The participle suffix -न fuses straight onto द्, giving the doubled न्न you see here: food, in Sanskrit, is grammatically just 'the eaten thing'"

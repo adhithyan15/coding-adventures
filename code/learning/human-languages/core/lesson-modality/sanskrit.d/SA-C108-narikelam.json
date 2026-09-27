@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C108-narikelam",
+    "language": "sanskrit",
+    "chapter": 108,
+    "sequence": 5270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32e62b5268037989"
+  },
+  "findings": []
+}

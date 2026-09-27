@@ -1,0 +1,11 @@
+{
+  "id": "SA-C109-draksa",
+  "pathSegment": "SA-PATH-109-THINGS109",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-109-THINGS109",
+      "order": 1
+    }
+  ]
+}

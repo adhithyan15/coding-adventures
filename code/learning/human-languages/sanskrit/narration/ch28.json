@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Taking Your Leave",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:05c8856e6b3c34ff",
+  "sourceHash": "fnv1a64:7de6aed1a1794b68",
   "lessons": [
     {
       "id": "SA-C28-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f4f084a7e11eba5",
+      "sourceHash": "fnv1a64:a978baa033f5b15b",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Before the new word: what did evam mean?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Remember the time words that keep one shape wherever they land (adya, hyaḥ, sadā). Today's word is another of them."
             }
           ]
         },

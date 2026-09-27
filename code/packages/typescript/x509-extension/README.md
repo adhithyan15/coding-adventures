@@ -1,0 +1,9 @@
+# x509-extension (TypeScript)
+
+Decodes the generic RFC 5280 `Extension` container with shared `der-asn1`
+budgets, omitted-default critical handling, opaque defensive value bytes, and
+stable payload-free errors. It owns no registry, policy, trust, or crypto.
+Composition reads brand-checked private DER state rather than overridable
+public accessors.
+
+The native suite consumes all 48 language-neutral v1 cases.
