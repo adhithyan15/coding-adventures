@@ -24,7 +24,14 @@ Tests are grouped by the glob feature being tested:
 
 from __future__ import annotations
 
-from build_tool.glob_match import match_path
+import pytest
+
+from build_tool.glob_match import (
+    GlobPatternError,
+    _match_path_with_state_count,
+    _parse_segment_with_state_count,
+    match_path,
+)
 
 # =========================================================================
 # 1. Literal matching -- no wildcards
@@ -160,6 +167,73 @@ class TestCharacterClasses:
         assert match_path("[0-9].txt", "5.txt") is True
         assert match_path("[0-9].txt", "a.txt") is False
 
+    @pytest.mark.parametrize(
+        ("pattern", "matching", "nonmatching"),
+        [
+            ("[^a].txt", "^.txt", "b.txt"),
+            ("[]a].txt", "].txt", "b.txt"),
+            ("[-a].txt", "-.txt", "b.txt"),
+            ("[a-].txt", "-.txt", "b.txt"),
+            ("[a-c].txt", "b.txt", "z.txt"),
+            ("[!a-c].txt", "z.txt", "b.txt"),
+        ],
+    )
+    def test_portable_character_class_boundaries(
+        self,
+        pattern: str,
+        matching: str,
+        nonmatching: str,
+    ):
+        """Portable classes keep Python-fnmatch literals and ascending ranges."""
+        assert match_path(pattern, matching) is True
+        assert match_path(pattern, nonmatching) is False
+
+    def test_unmatched_opening_bracket_is_literal(self):
+        """An unmatched ``[`` remains a literal rather than an error."""
+        assert match_path("[", "[") is True
+        assert match_path("prefix[", "prefix[") is True
+        assert match_path("prefix[", "prefixx") is False
+        assert match_path("[]", "[]") is True
+        assert match_path("[!]", "[!]") is True
+
+    def test_unmatched_bracket_parser_visits_linear_states(self):
+        """Many unmatched brackets cannot trigger repeated suffix scans."""
+        pattern = "[" * 16_384
+
+        tokens, visited = _parse_segment_with_state_count(pattern)
+
+        assert len(tokens) == len(pattern)
+        assert visited == 2 * len(pattern)
+
+    def test_caret_and_negated_leading_bracket_follow_portable_grammar(self):
+        """Only ``!`` negates, and a leading class ``]`` stays literal."""
+        assert match_path("[^a].txt", "a.txt") is True
+        assert match_path("[!]].txt", "a.txt") is True
+        assert match_path("[!]].txt", "].txt") is False
+
+    def test_braces_are_literals(self):
+        """The portable matcher does not perform host brace expansion."""
+        assert match_path("{a,b}.txt", "{a,b}.txt") is True
+        assert match_path("{a,b}.txt", "a.txt") is False
+
+    def test_unicode_wildcards_count_scalars(self):
+        """Question marks and classes consume one Unicode scalar value."""
+        assert match_path("?.txt", "🐍.txt") is True
+        assert match_path("[🐀-🙏].txt", "🐍.txt") is True
+        assert match_path("[🐀-🙏].txt", "a.txt") is False
+
+    @pytest.mark.parametrize(
+        "pattern",
+        ["[z-a].txt", "[a--b].txt", "[a&&b].txt", "[a~~b].txt", "[a||b].txt"],
+    )
+    def test_ambiguous_or_descending_classes_are_rejected(self, pattern: str):
+        """Invalid portable classes fail before matching host-specific syntax."""
+        with pytest.raises(
+            GlobPatternError,
+            match="ambiguous or descending character class",
+        ):
+            match_path(pattern, "a.txt")
+
 
 # =========================================================================
 # 5. Double-star (**) -- recursive matching
@@ -221,6 +295,18 @@ class TestDoubleStar:
         """``**`` alone matches any path at any depth."""
         assert match_path("**", "anything") is True
         assert match_path("**", "a/b/c") is True
+
+    def test_adversarial_near_miss_visits_each_path_state_once(self):
+        """Alternating globstars cannot trigger recursive suffix revisits."""
+        pattern = "/".join(["**", "a"] * 12 + ["z"])
+        path = "/".join(["a"] * 24 + ["y"])
+
+        matched, visited = _match_path_with_state_count(pattern, path)
+
+        assert matched is False
+        pattern_states = len(pattern.split("/")) + 1
+        path_states = len(path.split("/")) + 1
+        assert visited == pattern_states * path_states
 
 
 # =========================================================================

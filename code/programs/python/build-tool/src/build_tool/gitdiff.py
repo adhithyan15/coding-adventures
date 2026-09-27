@@ -34,7 +34,7 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from build_tool.glob_match import match_path
+from build_tool.glob_match import match_path, validate_pattern
 
 
 def get_changed_files(
@@ -141,6 +141,9 @@ def map_files_to_packages(
     if packages is not None:
         for pkg in packages:
             pkg_by_name[pkg.name] = pkg
+            if pkg.is_starlark and pkg.declared_srcs:
+                for pattern in pkg.declared_srcs:
+                    validate_pattern(pattern)
 
     # Convert package paths to relative strings for prefix matching.
     # We normalize to forward slashes because git diff always outputs

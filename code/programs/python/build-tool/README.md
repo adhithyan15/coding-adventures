@@ -28,6 +28,19 @@ declared-source matching. Component names are exact and case-sensitive, so
 Directory and file symlinks plus Windows junction/reparse attributes are
 excluded before source matching or file reads.
 
+Declared-source globs are matched by a pure, host-independent engine. An
+entire `**` path segment spans zero or more segments; `*`, `?`, and portable
+character classes operate on Unicode scalar values within one segment. Both
+levels use iterative dynamic programming, which bounds adversarial near-miss
+work by their state grids. Character classes preserve leading `!` negation,
+ascending ranges, literal bracket/hyphen edge cases, and unmatched `[` while
+rejecting descending ranges and ambiguous `--`, `&&`, `~~`, or `||`
+operators before matching. Diff selection and source hashing validate the
+complete declared-glob list before visiting candidates, preventing an earlier
+match or an empty candidate set from hiding an invalid later pattern. Closing
+bracket positions are indexed once, so unmatched literal `[` runs remain
+linear-time to validate.
+
 The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the
 exact `.ocamlformat`, `dune`, and `dune-project` metadata names in extension
 and declared-source modes; applicable `.opam` manifests remain inputs even

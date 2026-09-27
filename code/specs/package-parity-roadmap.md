@@ -14498,10 +14498,51 @@ The ownership graph therefore has 882 owners and 1,706 dependency edges: 224
 merged, 657 pending, and exactly the Extension owner in progress. After this
 Extension PR merges, the dependency/leverage pass ranks
 `build-tool-python-glob-matcher-complexity-hardening` first: its dependencies
-are merged, it unlocks nine transitive descendants, and it has a bounded
+are merged, it unlocks ten transitive descendants after the native Python
+adapter closure was added, and it has a bounded
 iterative dynamic-programming implementation and validation plan. The
 `sha512-existing-lane-hf04-conformance-audit` remains the fallback. No second
 implementation item starts while the Extension PR is active.
+
+### PR #16112 merge, exact-main refresh, and Python glob selection
+
+All 49 final-head checks for PR #16112 reached terminal acceptable conclusions
+at `bd82a1227b866fa4e7bc8e5cf0b9378f0cc52dd0`: 19 successes and 30 expected
+path-gated skips. GitHub reported the reviewed head clean and mergeable.
+Guarded squash auto-merge was enabled only after the final aggregate CI gate
+passed, and GitHub merged X.509 Extension automatically at
+`2026-09-27T06:24:59Z` as
+`e461ab209875aedc1de15dd3282cefecda13cbfe`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory generated from that exact merged main
+contains 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, and 1,512 all-reported identities. Its completion bands
+are 178/265, 123/934, 181/2,282, and 988/13,832. Rust has 805 singleton
+identities, emerging OCaml remains at five packages, and canonical collisions
+and unknown language buckets remain zero. The post-merge audit found no newly
+eligible unowned portable identity.
+
+The dependency/leverage pass selects
+`build-tool-python-glob-matcher-complexity-hardening` on fresh branch
+`codex/parity-python-glob-hardening-20260927`. Both neutral graph/diff
+dependencies are merged, no live implementation PR overlaps its Python source,
+tests, or package documentation, and it now unlocks ten unfinished descendants.
+The read-only preparation measured exponential revisits in recursive globstar
+matching, host-specific `fnmatch` behavior for the portable character-class
+grammar, and missing deterministic state-bound evidence. The bounded tranche
+replaces those paths with an explicit Unicode-code-point tokenizer and
+iterative dynamic programming while preserving validated-input path
+normalization, stable failure boundaries, and zero host authority. The larger
+operation-wide 50,000,000-unit preflight and full diff-selection adapter remain
+owned by `build-tool-python-diff-selection-match-work-ceiling-adoption`.
+
+The fallback SHA-512 audit remains separately owned. It confirms twelve current
+established lanes, missing Java/Kotlin/Dart parity already covered by the
+dependent owner, and a coherent HF04 follow-up for shared streaming, copy,
+bounded buffering, and two-word length accounting. It found no additional
+owner or live path collision, so it does not displace the smaller ready Python
+glob hardening slice.
 
 ## Autonomous Loop Protocol
 

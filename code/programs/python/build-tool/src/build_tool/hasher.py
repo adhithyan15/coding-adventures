@@ -42,7 +42,7 @@ from pathlib import Path
 from typing import Protocol
 
 from build_tool.discovery import Package
-from build_tool.glob_match import match_path
+from build_tool.glob_match import match_path, validate_pattern
 from build_tool.resolver import DirectedGraph
 
 # Source file extensions that matter for each language.
@@ -180,6 +180,9 @@ def _collect_source_files(package: Package) -> list[Path]:
     )
 
     if package.is_starlark and package.declared_srcs:
+        for pattern in package.declared_srcs:
+            validate_pattern(pattern)
+
         # Starlark mode: use os.walk + glob_match for precise source matching.
         #
         # os.walk gives us (dirpath, dirnames, filenames) tuples. We compute
