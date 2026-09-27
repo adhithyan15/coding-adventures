@@ -6,6 +6,7 @@ require_relative "coding_adventures/x509_extension/version"
 module CodingAdventures
   # Bounded, payload-blind decoding for the generic RFC 5280 Extension shape.
   module X509Extension
+    Decoder = DerAsn1::Decoder
     construction_capability = Object.new.freeze
     extension_provenance = ObjectSpace::WeakMap.new
 

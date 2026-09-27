@@ -87,6 +87,8 @@ my $decode_typed = sub {
 
 sub decode_x509_extension {
     my ($decoder, $root) = @_;
+    die 'decoder must be a CodingAdventures::DerAsn1::Decoder'
+        if !blessed($decoder) || !$decoder->isa('CodingAdventures::DerAsn1::Decoder');
     my ($opened, $cursor) = $capture->(sub { return $decoder->sequence($root); });
     $fail->('structure', $cursor->offset, $cursor->kind, $cursor->framing_kind) if !$opened;
 
