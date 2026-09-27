@@ -13,7 +13,7 @@
 //                      original would compute at runtime.
 //   scale            — called once *and* passed by value to `sink`  →  the
 //                      value-use keeps it alive (the inliner declines it), so it
-//                      survives and is GLOBAL-RENAMED to a short name (`f`).
+//                      survives and is GLOBAL-RENAMED to a short name (`a`).
 //                      Under SIMPLE the name `scale` is kept; the rename is the
 //                      ADVANCED-only behaviour this fixture pins.
 //
@@ -23,7 +23,7 @@
 //   area(3, 4)     = 3 * 4         = 12
 //   hypotSq(3, 4)  = 3*3 + 4*4     = 9 + 16 = 25
 //   scale(7)       = 7 * 10        = 70
-// The optimized output reports `12, 25, f(7)` where `f(7) = 7 * 10 = 70` — the
+// The optimized output reports `12, 25, a(7)` where `a(7) = 7 * 10 = 70` — the
 // identical observable behaviour, at ~18% of the original byte size.
 function unusedPerimeter(w, h) {
   return 2 * (w + h);

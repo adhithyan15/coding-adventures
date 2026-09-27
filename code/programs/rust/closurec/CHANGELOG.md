@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - pass schedule follows registration order when dependencies permit
+
+`closure-pass-pipeline` now chooses the earliest registered ready pass at each
+step. `rename` therefore runs after the structural passes, as `run.rs` intended,
+and the correlation-vector trace records the corrected schedule. The README's
+identity-pipeline description was replaced with the current compiler scope.
+
 ### Fixed - the `advanced-try-catch-rename` fixture claimed a soundness rule upstream contradicts (CCR-022)
 
 The fixture's input comment opened "ADVANCED-level renaming SOUNDNESS across a

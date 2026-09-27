@@ -9,7 +9,7 @@
 //! values. At `--compilation_level ADVANCED` it collapses to:
 //!
 //! ```text
-//! function f(x){return x * 10};report(12,25,f(7));sink(f);
+//! function a(x){return x * 10};report(12,25,a(7));sink(a);
 //! ```
 //!
 //! Four distinct passes are visible in that single line:
@@ -18,8 +18,8 @@
 //! |----------------------------|-----------------------------------------------|
 //! | dead-code elimination      | `unusedPerimeter` is gone                      |
 //! | single-use inline + fold   | `area(3,4)`→`12`, `hypotSq(3,4)`→`25`          |
-//! | global renaming (ADV-only) | `scale` → `f` (SIMPLE keeps the name `scale`)  |
-//! | live-reference retention   | `f(7)` and `sink(f)` survive                   |
+//! | global renaming (ADV-only) | `scale` → `a` (SIMPLE keeps the name `scale`)  |
+//! | live-reference retention   | `a(7)` and `sink(a)` survive                   |
 //!
 //! ## Runtime equivalence (the point of the proof)
 //!
@@ -28,7 +28,7 @@
 //!
 //! * original `area(3,4)` = `3*4` = **12**     → output literal `12`
 //! * original `hypotSq(3,4)` = `9+16` = **25** → output literal `25`
-//! * original `scale(7)` = `7*10` = **70**     → output `f(7)`, `f` ≡ `x*10`, so `70`
+//! * original `scale(7)` = `7*10` = **70**     → output `a(7)`, `a` ≡ `x*10`, so `70`
 //!
 //! The two folded literals are asserted directly; the third value is preserved
 //! structurally (same body, renamed). Same observable behaviour, ~29% of the

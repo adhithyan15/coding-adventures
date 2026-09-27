@@ -2,15 +2,9 @@
 //!
 //! Exercises CLOC12.161 — `--compilation_level ADVANCED` now runs the
 //! typed optimization pipeline instead of being a literal no-op (it used
-//! to return the source verbatim). ADVANCED is specified to be at least
-//! as aggressive as SIMPLE, so it currently reuses the SIMPLE pipeline:
-//! constant-folding, dead-code elimination, unused-binding removal, and
-//! local renaming all apply. Advanced-only passes (aggressive
-//! property/global renaming, cross-module tree-shaking) layer on as they
-//! are implemented.
-//!
-//! The companion `advanced_matches_simple_*` unit test in `src/run.rs`
-//! pins that ADVANCED and SIMPLE produce identical output today.
+//! to return the source verbatim). ADVANCED runs the SIMPLE passes plus
+//! closed-world inlining, unused-binding removal, tree shaking, and global
+//! renaming. The fixture pins their combined byte output.
 
 use std::process::Command;
 
