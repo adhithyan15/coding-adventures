@@ -10,6 +10,42 @@ roadmap is reconciled.
 
 ## Prioritization run — 2026-09-27
 
+PR #16169 delivered VM-074 and merged as `3afc8bf0c805fbfce535bef0bde4e2b3cf9a08c0`
+after all required checks passed. The Oct/8080 compatibility premise is now
+corrected before selecting the next language design.
+
+VM-072 selects one cross-target language, **Word**, rather than separate Z80
+and 8086 frontends. Fixed `u8`/`u16` source types make the same program compare
+pair-based Z80 work with native 8086 word work without implying compatible
+machine code. Portable memory is a 16-bit logical offset (flat on Z80, near
+`DS:offset` on 8086), portable I/O is byte-wide, and architecture-only features
+remain namespaced. The detailed contract and proof ladder are in
+`WORD00-word-language.md`.
+
+The next shared-platform queue is:
+
+1. **WORD01 / VM-072 (selected implementation):** establish the fixed-width
+   result ABI in both Rust backends. Execute `const_u16 0x1234; ret_u16` as
+   `HL == 0x1234` on Z80 and `AX == 0x1234` on 8086 while retaining the
+   single-live-value restriction.
+2. **WORD02 / VM-072:** add two-live-value allocation plus wrapping `u8`/`u16`
+   arithmetic and bitwise execution on both targets.
+3. **VM-067:** add a useful Rust generated-grammar regeneration guard scoped
+   against issue #14202's existing drift.
+4. **VM-073:** audit ets-backed `array_set` extent checks and add a real-Erlang
+   regression if an out-of-range insertion is reachable.
+5. **VM-069 / PREP01:** continue the bounded preprocessor ladder with
+   expansion-definition provenance and `defined()` operand expansion.
+6. **Remaining semantic/runtime work:** VM-013 Oct intrinsics, VM-028 4004
+   fidelity, VM-029/031 platform acceptance/native GC proofs, and AOT00.
+
+WORD03 through WORD05 then add control flow, static memory/I/O/direct calls,
+and finally the frontend plus same-source acceptance. Do not scaffold the
+frontend before the backend proof ladder works; simulator ISA coverage is not
+backend coverage.
+
+## Prioritization run before VM-072 selection
+
 PR #16126 delivered VM-071/BEAM11 and merged as `624b6ffe2807abaec0c9e12e3d9a6a23df227108`
 after push and PR CI passed. Its `ets:lookup_element/4` default reads preserve
 typed zero for unwritten cells while explicit guards enforce the declared
