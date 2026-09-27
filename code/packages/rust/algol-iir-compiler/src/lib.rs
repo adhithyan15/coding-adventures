@@ -3383,59 +3383,78 @@ impl Compiler {
                 .any(|child| self.contains_conditional_expression(child))
     }
 
-    fn conditional_expression_selectors_are_cycle_stable(
+    fn conditional_expression_selectors_are_cycle_exact(
         &self,
         node: &GrammarASTNode,
         actions: &[StaticBodyAction<'_>],
         target_name: &str,
+        visiting: &mut HashSet<String>,
     ) -> bool {
         if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
-            return self.recurrence_selector_is_cycle_stable(
+            return self.recurrence_selector_is_cycle_exact(
                 condition,
                 actions,
                 target_name,
+                visiting,
             )
-                && self.conditional_expression_selectors_are_cycle_stable(
+                && self.conditional_expression_selectors_are_cycle_exact(
                     then_node,
                     actions,
                     target_name,
+                    visiting,
                 )
-                && self.conditional_expression_selectors_are_cycle_stable(
+                && self.conditional_expression_selectors_are_cycle_exact(
                     else_node,
                     actions,
                     target_name,
+                    visiting,
                 );
         }
         direct_nodes(node).into_iter().all(|child| {
-            self.conditional_expression_selectors_are_cycle_stable(child, actions, target_name)
+            self.conditional_expression_selectors_are_cycle_exact(
+                child,
+                actions,
+                target_name,
+                visiting,
+            )
         })
     }
 
-    fn recurrence_selector_is_cycle_stable(
+    fn recurrence_selector_is_cycle_exact(
         &self,
         selector: &GrammarASTNode,
         actions: &[StaticBodyAction<'_>],
         target_name: &str,
+        visiting: &mut HashSet<String>,
     ) -> bool {
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(selector, target_name, &mut dependencies);
         dependencies.iter().all(|name| {
-            !Self::static_body_actions_write_name(actions, name)
-                && self.require_var(name).is_ok_and(|binding| {
-                    !binding.is_global
-                        && binding.array.is_none()
-                        && self.active_by_name_binding(name).is_none()
-                        && match binding.ty {
-                            ScalarType::Integer => {
-                                self.static_integer_slots.contains_key(&binding.slot)
-                            }
-                            ScalarType::Real => self.static_real_slots.contains_key(&binding.slot),
-                            ScalarType::Boolean => {
-                                self.static_boolean_slots.contains_key(&binding.slot)
-                            }
-                            ScalarType::String => false,
+            let exact_local = self.require_var(name).is_ok_and(|binding| {
+                !binding.is_global
+                    && binding.array.is_none()
+                    && self.active_by_name_binding(name).is_none()
+                    && match binding.ty {
+                        ScalarType::Integer => {
+                            self.static_integer_slots.contains_key(&binding.slot)
                         }
-                })
+                        ScalarType::Real => self.static_real_slots.contains_key(&binding.slot),
+                        ScalarType::Boolean => {
+                            self.static_boolean_slots.contains_key(&binding.slot)
+                        }
+                        ScalarType::String => false,
+                    }
+            });
+            exact_local
+                && (!Self::static_body_actions_write_name(actions, name)
+                    || (!visiting.contains(name)
+                        && self.static_body_actions_have_supported_dependency_recurrence_inner(
+                            actions,
+                            name,
+                            target_name,
+                            visiting,
+                            false,
+                        )))
         })
     }
 
@@ -6924,20 +6943,21 @@ impl Compiler {
                         {
                             return None;
                         }
+                        let selectors_are_exact = !self
+                            .contains_conditional_expression(assignment.expression)
+                            || self.conditional_expression_selectors_are_cycle_exact(
+                                assignment.expression,
+                                all_actions,
+                                target_name,
+                                visiting,
+                            );
                         if Self::static_body_actions_write_name(all_actions, &dependency)
                             && !self.static_body_actions_have_supported_dependency_recurrence_inner(
                                 all_actions,
                                 &dependency,
                                 target_name,
                                 visiting,
-                                conditional_path
-                                    || (self.contains_conditional_expression(
-                                        assignment.expression,
-                                    ) && !self.conditional_expression_selectors_are_cycle_stable(
-                                        assignment.expression,
-                                        all_actions,
-                                        target_name,
-                                    )),
+                                conditional_path || !selectors_are_exact,
                             )
                         {
                             return None;
@@ -6951,10 +6971,11 @@ impl Compiler {
                     else_actions,
                 } => {
                     let conditional_path = conditional_path
-                        || !self.recurrence_selector_is_cycle_stable(
+                        || !self.recurrence_selector_is_cycle_exact(
                             condition,
                             all_actions,
                             target_name,
+                            visiting,
                         );
                     let then_found = self
                         .static_body_actions_have_supported_dependency_recurrence_in_actions(
@@ -14753,6 +14774,54 @@ mod tests {
             "test",
         )
         .expect("the exact loop control may select statements in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_evolving_statement_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := i < 2; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an acyclic exact recurrence may select statements in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_evolving_expression_selected_assignment_dependency_cycle_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := i < 2; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an acyclic exact recurrence may select leaves in a cross-assigned cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "0.5", "-0.75"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_cycle_dependent_statement_selector_tracks_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := n > 0; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact selector recurrence may consume earlier writes from its selected cycle");
         let main = module.get_function("main").expect("has main");
         for expected in ["3.25", "0.5", "-0.75"] {
             assert!(main.instructions.iter().any(|instr| {
