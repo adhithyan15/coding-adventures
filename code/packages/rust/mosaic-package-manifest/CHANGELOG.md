@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added — `EnvironmentAxis::wire_name` (UI48 §7.5)
+
+The camelCase key each layout-rule axis has in the host environment the
+runtime and generated shells exchange (`size-class` → `sizeClass`). The
+Compose selector tests rules against the shell's environment report under
+these names. A test pins the six to `mosaic-app-runtime`'s `Environment` keys
+(new dev-dependencies: `mosaic-app-runtime`, `serde_json`).
+
 ### Added — app identity in `[app]` (UI32, UI89 §2.2)
 
 `display-name` (1 to 64 characters, no control characters) and

@@ -3981,11 +3981,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 written.push(p);
             }
 
+            let layout_choices = compose_layout_choices(src_dir, component, layouts)?;
             let sources = build_compose_main_kt(
                 component,
                 &mosmodel_out.component.slots,
                 require_runtime,
                 initial_window_size,
+                &layout_choices,
             );
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
             let main_kt = compose_main_with_host_effects(&sources.main, host_effects)?;
@@ -4012,6 +4014,22 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     backend_dir.join(format!("src/main/kotlin/{exported_component}.kt"));
                 write_file(&component_nested, component_source.as_bytes())?;
                 written.push(component_nested);
+                // Every layout variant too (UI48 §7.5): the root's are selected
+                // at run time, and every export's is compiled, for the same
+                // reason as above.
+                for variant in discover_variants(src_dir, exported_component)?
+                    .into_iter()
+                    .flatten()
+                {
+                    let variant_file = format!("{exported_component}.{variant}.kt");
+                    let variant_source = backend_dir.join(&variant_file);
+                    if variant_source.is_file() {
+                        let variant_nested =
+                            backend_dir.join(format!("src/main/kotlin/{variant_file}"));
+                        write_file(&variant_nested, read_to_string(&variant_source)?.as_bytes())?;
+                        written.push(variant_nested);
+                    }
+                }
             }
 
             let host_nested = backend_dir.join("src/main/kotlin/MosaicRuntimeHost.kt");
@@ -4672,6 +4690,59 @@ fn swiftui_layout_choices(
                     .into_iter()
                     .map(|(axis, value)| (axis.key().to_string(), value))
                     .collect(),
+            })
+        })
+        .collect()
+}
+
+/// One layout a Compose shell can switch to (UI48 §7.5): the variant, its
+/// root composable, and the environment it needs, keyed by the wire names the
+/// shell's `environmentReport` uses.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ComposeLayoutChoice {
+    variant: String,
+    root: String,
+    conditions: Vec<(&'static str, String)>,
+}
+
+/// The layout variants a Compose shell switches between: the same rules as
+/// SwiftUI's (`[[app.layouts]]`, or the conventions), each with its
+/// composable. A rule for a variant with no `.mll`, or one whose name cannot
+/// become a Kotlin identifier, fails the build.
+fn compose_layout_choices(
+    src_dir: &Path,
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+) -> Result<Vec<ComposeLayoutChoice>, BuildError> {
+    let variants: Vec<String> = discover_variants(src_dir, component)?
+        .into_iter()
+        .flatten()
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            if !variants.contains(&rule.variant) {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            }
+            let root = mosaic_emit_compose::pipeline::variant_composable_name(component, &rule.variant)
+                .ok_or_else(|| {
+                    BuildError::Io(format!(
+                        "layout variant `{}` of {component} cannot name a Kotlin composable",
+                        rule.variant
+                    ))
+                })?;
+            Ok(ComposeLayoutChoice {
+                root,
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.wire_name(), value))
+                    .collect(),
+                variant: rule.variant,
             })
         })
         .collect()
@@ -5704,8 +5775,29 @@ fn build_compose_main_kt(
     slots: &[SlotDecl],
     require_runtime: bool,
     initial_window_size: Option<&WindowSize>,
+    layouts: &[ComposeLayoutChoice],
 ) -> ComposeShellSources {
-    let root = build_compose_root_invocation(component_name, slots, require_runtime);
+    // UI48 §7.5 (ENV3): with layout variants, the root is chosen from the
+    // observed environment -- the first rule that matches, else the default.
+    let root = if layouts.is_empty() {
+        build_compose_root_invocation(component_name, component_name, slots, require_runtime)
+    } else {
+        let mut chooser = String::from("            when (mosaicLayoutVariant(environmentReport)) {\n");
+        for layout in layouts {
+            let call = build_compose_root_invocation(component_name, &layout.root, slots, require_runtime);
+            writeln!(chooser, "                \"{}\" -> {}", layout.variant, call.trim_start())
+                .expect("write layout branch");
+        }
+        let default_call =
+            build_compose_root_invocation(component_name, component_name, slots, require_runtime);
+        writeln!(chooser, "                else -> {}", default_call.trim_start())
+            .expect("write default layout branch");
+        chooser.push_str("            }");
+        chooser
+    };
+    // A sample shell has no runtime to report to, but with variants it still
+    // measures the window to choose one.
+    let observes = require_runtime || !layouts.is_empty();
     let component_label = escape_kotlin_string(component_name);
     let host_loader = if require_runtime {
         "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
@@ -5732,6 +5824,16 @@ fn build_compose_main_kt(
             "import androidx.compose.ui.unit.dp\n",
             "import kotlinx.coroutines.Dispatchers\n",
             "import kotlinx.coroutines.withContext\n",
+        )
+    } else {
+        ""
+    };
+    let layout_import = if !require_runtime && !layouts.is_empty() {
+        concat!(
+            "import androidx.compose.foundation.isSystemInDarkTheme\n",
+            "import androidx.compose.foundation.layout.BoxWithConstraints\n",
+            "import androidx.compose.ui.unit.Dp\n",
+            "import androidx.compose.ui.unit.dp\n",
         )
     } else {
         ""
@@ -5796,7 +5898,17 @@ fn build_compose_main_kt(
     // `LaunchedEffect` is keyed on the six reported values, so a resize sends
     // nothing until it crosses a threshold. A sample shell has no runtime to
     // tell, and does not observe.
-    let root_body = if require_runtime {
+    let root_body = if !require_runtime && observes {
+        format!(
+            concat!(
+                "        BoxWithConstraints {{\n",
+                "            val environmentReport = mosaicEnvironmentReport(maxWidth, maxHeight, isSystemInDarkTheme())\n",
+                "{root}\n",
+                "        }}",
+            ),
+            root = root,
+        )
+    } else if require_runtime {
         format!(
             concat!(
                 "        BoxWithConstraints {{\n",
@@ -5819,7 +5931,7 @@ fn build_compose_main_kt(
     } else {
         root
     };
-    let environment_helper = if require_runtime {
+    let environment_helper = if observes {
         concat!(
             "/**\n",
             " * The six UI48 §4 values, under mosaic-app-runtime's wire names (ENV4).\n",
@@ -5840,6 +5952,40 @@ fn build_compose_main_kt(
         )
     } else {
         ""
+    };
+    // The selector (UI48 §7.5): the rules as data, in order, keyed by the
+    // wire names `environmentReport` uses -- `select_variant`'s semantics:
+    // the first rule whose conditions all hold, else the default (null).
+    // Variant names are `[A-Za-z0-9_-]` and values a closed set, so both are
+    // safe as Kotlin string literals.
+    let layout_selector = if layouts.is_empty() {
+        String::new()
+    } else {
+        let mut rules = String::new();
+        for layout in layouts {
+            let conditions = layout
+                .conditions
+                .iter()
+                .map(|(axis, value)| format!("\"{axis}\" to \"{value}\""))
+                .collect::<Vec<_>>()
+                .join(", ");
+            writeln!(rules, "    \"{}\" to mapOf<String, String>({conditions}),", layout.variant)
+                .expect("write layout rule");
+        }
+        format!(
+            concat!(
+                "/** Which layout variant the environment selects, in rule order (UI48 §7.5). */\n",
+                "private val mosaicLayoutRules: List<Pair<String, Map<String, String>>> = listOf(\n",
+                "{rules}",
+                ")\n\n",
+                "/** The first variant whose conditions all hold, or null for the default layout. */\n",
+                "private fun mosaicLayoutVariant(environment: Map<String, String>): String? =\n",
+                "    mosaicLayoutRules.firstOrNull {{ (_, conditions) ->\n",
+                "        conditions.all {{ (axis, value) -> environment[axis] == value }}\n",
+                "    }}?.first\n\n",
+            ),
+            rules = rules,
+        )
     };
     let main_host = if require_runtime {
         ""
@@ -6006,6 +6152,7 @@ fn build_compose_main_kt(
             "// The app shell shared by every Compose platform (UI89 §3.4).\n",
             "import androidx.compose.material.MaterialTheme\n",
             "{startup_import}",
+            "{layout_import}",
             "import androidx.compose.runtime.Composable\n",
             "import androidx.compose.runtime.DisposableEffect\n",
             "import androidx.compose.runtime.LaunchedEffect\n",
@@ -6038,6 +6185,7 @@ fn build_compose_main_kt(
             "}}\n\n",
             "{legacy_bridge}",
             "{environment_helper}",
+            "{layout_selector}",
             "private fun mosaicMap(value: Any?): Map<String, Any?> {{\n",
             "    val source = value as? Map<*, *> ?: return emptyMap()\n",
             "    return source.entries.mapNotNull {{ entry ->\n",
@@ -6094,6 +6242,7 @@ fn build_compose_main_kt(
             "    props[name] as? (@Composable () -> Unit) ?: fallback\n",
         ),
         startup_import = startup_import,
+        layout_import = layout_import,
         strict_startup = strict_startup,
         app_signature = app_signature,
         initial_props_decl = initial_props_decl,
@@ -6102,6 +6251,7 @@ fn build_compose_main_kt(
         root_body = root_body,
         legacy_bridge = legacy_bridge,
         environment_helper = environment_helper,
+        layout_selector = layout_selector,
         required_helpers = required_helpers,
     );
     ComposeShellSources { main, shell }
@@ -6159,6 +6309,7 @@ fn build_compose_required_prop_helpers() -> &'static str {
 
 fn build_compose_root_invocation(
     component_name: &str,
+    root_composable: &str,
     slots: &[SlotDecl],
     require_runtime: bool,
 ) -> String {
@@ -6169,7 +6320,7 @@ fn build_compose_root_invocation(
     // function -- if they disagree, the generated project does not compile,
     // which is a loud failure rather than a subtle one.
     let grouped = mosaic_emit_compose::needs_props_object(slots);
-    let mut out = format!("            {component_name}(\n");
+    let mut out = format!("            {root_composable}(\n");
     if grouped {
         // The props object is chunked into groups, because a constructor is a
         // method signature too and one flat class would overflow its own. The
@@ -6690,11 +6841,22 @@ fn compile_one_component(
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
-        Backend::Compose => mosaic_emit_compose::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant shares one app with the default (UI48 §7.5): it
+        // reuses the default's event and props types rather than redeclaring
+        // them, and names its own root composable.
+        Backend::Compose => match variant {
+            Some(variant) => mosaic_emit_compose::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+            None => mosaic_emit_compose::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
     };
@@ -11123,6 +11285,81 @@ layout NativeEvents {
         build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
         let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
         assert!(!app.contains("MosaicLayoutSelector"), "{app}");
+    }
+
+    // UI48 §7.5: the same on Compose -- every variant in one app, and a
+    // selector generated from the same rules.
+
+    #[test]
+    fn a_compose_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let kotlin = out.path().join("compose/src/main/kotlin");
+        let variant = fs::read_to_string(kotlin.join("Card.touch.kt")).unwrap();
+        assert!(variant.contains("\nfun CardTouch(\n"), "{variant}");
+        // The interface is the default's: no second event type to collide.
+        assert!(!variant.contains("sealed class CardEvent"), "{variant}");
+        assert!(variant.contains("(CardEvent) -> Unit"), "{variant}");
+        let default = fs::read_to_string(kotlin.join("Card.kt")).unwrap();
+        assert!(default.contains("sealed class CardEvent"), "{default}");
+        assert!(default.contains("\nfun Card(\n"), "{default}");
+        let shell = fs::read_to_string(kotlin.join("MosaicAppShell.kt")).unwrap();
+        assert!(shell.contains("when (mosaicLayoutVariant(environmentReport)) {"), "{shell}");
+        assert!(shell.contains("\"touch\" -> CardTouch("), "{shell}");
+        assert!(shell.contains("else -> Card("), "{shell}");
+        // Keyed by the wire name the environment report uses.
+        assert!(
+            shell.contains("\"touch\" to mapOf<String, String>(\"pointer\" to \"coarse\"),"),
+            "{shell}"
+        );
+        // A sample shell still measures, to choose, but reports to nobody.
+        assert!(shell.contains("BoxWithConstraints {"), "{shell}");
+        assert!(!shell.contains("reportEnvironment"), "{shell}");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_compose_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let shell =
+            fs::read_to_string(out.path().join("compose/src/main/kotlin/MosaicAppShell.kt")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(
+            shell.contains("\"touch\" to mapOf<String, String>(\"sizeClass\" to \"compact\"),"),
+            "{shell}"
+        );
+        assert!(!shell.contains("\"pointer\" to \"coarse\""), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_compose_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Compose)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_compose_app_without_variants_is_unchanged() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let shell =
+            fs::read_to_string(out.path().join("compose/src/main/kotlin/MosaicAppShell.kt")).unwrap();
+        assert!(!shell.contains("mosaicLayoutVariant"), "{shell}");
+        // A sample shell without variants does not observe at all.
+        assert!(!shell.contains("BoxWithConstraints"), "{shell}");
+        assert!(shell.contains("            Card(\n"), "{shell}");
     }
 
     #[test]
@@ -17108,7 +17345,7 @@ handlers = [
             required: false,
             default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
         }];
-        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None);
+        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None, &[]);
         // The anchor is in Main.kt, which is what the installer edits.
         let generated = sources.main.clone();
 
@@ -17147,7 +17384,7 @@ handlers = [
     #[test]
     fn the_anchor_matches_a_genuinely_emitted_compose_main() {
         for require_runtime in [false, true] {
-            let generated = build_compose_main_kt("Probe", &[], require_runtime, None).main;
+            let generated = build_compose_main_kt("Probe", &[], require_runtime, None, &[]).main;
             assert_eq!(
                 generated.contains("requireNotNull(MosaicRuntimeHost.load())"),
                 require_runtime,
@@ -18178,7 +18415,7 @@ mod compose_environment_report_tests {
     use super::*;
 
     fn shell(require_runtime: bool) -> String {
-        build_compose_main_kt("Probe", &[], require_runtime, None).shell
+        build_compose_main_kt("Probe", &[], require_runtime, None, &[]).shell
     }
 
     #[test]

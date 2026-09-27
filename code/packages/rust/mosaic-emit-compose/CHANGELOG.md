@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-27 (layout variants share one app)
+
+- **A layout variant compiles beside the default (UI48 §7.5, ENV2).** `from_pipeline_variant(interface, layout, style, variant)` emits a variant's composable as `<Component><Variant>` (`EngramApp.touch.mll` → `fun EngramAppTouch(`), named by the new `variant_composable_name` (`-` and `_` separate words; anything else is refused). A variant file declares none of the component's interface -- no `<C>Event` sealed class, no `<C>Props` classes, no `Immutable` import -- and its composable takes and dispatches the default file's types, so the two no longer redeclare each other. Everything else a generated file declares at top level is `private`, and so file-scoped. `from_pipeline` is unchanged.
+
 ## 2026-09-25 (checkbox row index)
 
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
