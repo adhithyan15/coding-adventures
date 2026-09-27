@@ -14544,6 +14544,34 @@ bounded buffering, and two-word length accounting. It found no additional
 owner or live path collision, so it does not displace the smaller ready Python
 glob hardening slice.
 
+### PR #16122 merge, exact-main refresh, and Python diff-selection selection
+
+All 47 final-head checks for PR #16122 reached terminal acceptable conclusions
+at `cb05d053fb499f52bbb675b7e92b1a6e2f3438d4`: 24 successes, 22 expected
+path-gated skips, and one neutral CodeQL result. GitHub reported the reviewed
+head clean and mergeable. Guarded squash auto-merge was enabled only after all
+checks completed, and GitHub merged the Python glob hardening automatically at
+`2026-09-27T07:33:07Z` as
+`ac8abbfd2b594dcc5572cbad7a44570a4911d14b`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains at
+15 established lanes, 1,470 implementation identities, 4,737 implementation
+slots, and 1,512 all-reported identities. Its completion bands remain 178/265,
+123/934, 181/2,282, and 988/13,832. Rust has 805 singleton identities,
+emerging OCaml remains at five packages, and canonical collisions and unknown
+language buckets remain zero. No eligible identity lacks an owner.
+
+The post-merge dependency pass found exactly three newly ready Python
+build-tool children. `build-tool-python-diff-selection-match-work-ceiling-adoption`
+has five unfinished transitive descendants, compared with four for source-input
+registry adoption and three for CI-gate selection. It is selected on fresh
+branch `codex/parity-python-diff-selection-20260927`. The coherent slice
+dynamically consumes all eight graph and eleven diff-selection neutral cases,
+including the 50,000,000-unit preflight ceiling, exact closures, cycle handling,
+stable failures, and the separately hardened portable matcher. A live file-list
+audit found no competing open-PR overlap.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

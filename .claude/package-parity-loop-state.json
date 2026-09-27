@@ -11,25 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16122,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16122",
-    "title": "fix(build-tool): bound Python glob matching",
-    "branch": "codex/parity-python-glob-hardening-20260927",
-    "item_id": "build-tool-python-glob-matcher-complexity-hardening",
-    "opened_at": "2026-09-27T06:59:37Z",
-    "head_revision": "8be21be3e4ea6a7716998f73d4931708ea935e04",
-    "checks_status": "pending",
-    "auto_merge_enabled": false
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-27T06:59:42Z",
+    "observed_at": "2026-09-27T07:33:07Z",
     "pr_number": 16122,
-    "status": "pending",
-    "notes": "Ready-for-review PR #16122 opened from validated implementation head 8be21be3e4ea6a7716998f73d4931708ea935e04 on exact base 4c2e2b99d327b530e070b265ebb46a6a41ebcc81. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 47 final-head checks reached terminal acceptable conclusions: 24 successes, 22 expected path-gated skips, and one neutral CodeQL result. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and PR #16122 merged automatically as ac8abbfd2b594dcc5572cbad7a44570a4911d14b without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "e461ab209875aedc1de15dd3282cefecda13cbfe",
+    "revision": "ac8abbfd2b594dcc5572cbad7a44570a4911d14b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -1070,10 +1060,14 @@
     {
       "id": "build-tool-python-glob-matcher-complexity-hardening",
       "title": "Harden Python build-tool glob matcher complexity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-python-glob-hardening-20260927",
       "pr_number": 16122,
+      "merged_head_revision": "cb05d053fb499f52bbb675b7e92b1a6e2f3438d4",
+      "merged_at": "2026-09-27T07:33:07Z",
+      "merge_commit": "ac8abbfd2b594dcc5572cbad7a44570a4911d14b",
+      "merge_notes": "All 47 final-head checks reached terminal acceptable conclusions, GitHub reported the reviewed head conflict-free, guarded squash auto-merge was enabled, and GitHub merged the PR without a plain manual merge command.",
       "selected_at": "2026-09-27T06:25:21Z",
       "selection_revision": "e461ab209875aedc1de15dd3282cefecda13cbfe",
       "validation_revision": "d658aaa0e3420d62e0c934eeb39ce201c53dd15f",
@@ -1189,10 +1183,13 @@
     {
       "id": "build-tool-python-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 19-case process-free graph and diff-selection contract in the Python build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-python-glob-matcher-complexity-hardening"],
-      "branch": null,
+      "branch": "codex/parity-python-diff-selection-20260927",
       "pr_number": null,
+      "selected_at": "2026-09-27T07:33:20Z",
+      "selection_revision": "ac8abbfd2b594dcc5572cbad7a44570a4911d14b",
+      "selection_notes": "Selected after PR #16122 completed 47 terminal acceptable checks and merged through guarded squash auto-merge, followed by an exact-main collision-checked schema-3 inventory refresh. The inventory remains at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. A read-only dependency pass found exactly three Python build-tool children newly ready; this 19-case graph/diff-selection adoption ranks first with five unfinished transitive descendants, ahead of source-input registry adoption with four and CI-gate selection with three. Live open-PR file lists have no overlap with the Python build-tool, neutral build-tool fixtures/specs, or parity state beyond the now-merged PR.",
       "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with exact stable results, closures, boundary behavior, and the separately hardened portable matcher."
     },
     {
