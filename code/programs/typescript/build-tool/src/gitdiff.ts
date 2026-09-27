@@ -35,7 +35,11 @@
 
 import { execSync } from "node:child_process";
 import * as path from "node:path";
-import { matchPath } from "./glob-match.js";
+import {
+  compilePatterns,
+  matchCompiledPath,
+  type CompiledPattern,
+} from "./glob-match.js";
 
 /**
  * Get the list of files changed between diffBase and HEAD.
@@ -140,6 +144,14 @@ export function mapFilesToPackages(
   declaredSrcs?: Map<string, string[]>,
 ): Set<string> {
   const changed = new Set<string>();
+  const compiledDeclaredSrcs = declaredSrcs
+    ? new Map<string, readonly CompiledPattern[]>(
+        [...declaredSrcs].map(([name, patterns]) => [
+          name,
+          compilePatterns(patterns),
+        ]),
+      )
+    : undefined;
 
   // Convert package paths to relative strings for prefix matching.
   const relativePkgPaths = new Map<string, string>();
@@ -164,7 +176,7 @@ export function mapFilesToPackages(
       //
       // The declared srcs patterns are relative to the package directory,
       // so we need the file path relative to the package directory too.
-      const patterns = declaredSrcs?.get(pkgName);
+      const patterns = compiledDeclaredSrcs?.get(pkgName);
       if (patterns && patterns.length > 0) {
         const relToPackage = filepath.slice(pkgRelPath.length + 1);
 
@@ -179,8 +191,8 @@ export function mapFilesToPackages(
 
         if (!isBuildFile) {
           // Check if the file matches any declared source pattern.
-          const matchesAny = patterns.some((pat) =>
-            matchPath(pat, relToPackage),
+          const matchesAny = patterns.some((pattern) =>
+            matchCompiledPath(pattern, relToPackage),
           );
           if (!matchesAny) {
             continue; // File changed but doesn't match any declared src.
