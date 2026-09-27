@@ -156,7 +156,7 @@ and are the seams to cut:
 | today | desktop-only because | seam |
 |---|---|---|
 | `Main.kt` holds both `fun main() = application { Window(…) }` and the shared `MosaicApp(host)` composable | `application`/`Window` exist only on desktop | split: `MosaicAppShell.kt` (shared: `MosaicApp`, `MosaicComposeHost`, the prop helpers) and `Main.kt` (desktop `main`) |
-| components with drag and drop read `event.awtTransferable` | AWT | the component calls two platform functions, `mosaicDragText(event)` and `mosaicDragTransfer(text)`, defined in `MosaicPlatform.kt`, one per platform (desktop: AWT; Android: `ClipData`) |
+| components with drag and drop read `event.awtTransferable` | AWT | the component calls platform functions -- `mosaicDragText(event)`, `mosaicDragPosition(event)`, `mosaicDragTransfer(text, onCompleted)` and `mosaicDragEnded(event)` -- defined in `MosaicPlatform.kt`, one per platform (desktop: AWT; Android: `ClipData`, see §3.5) |
 | `MosaicPlatformEffects.kt` opens `java.awt.FileDialog` | AWT | desktop-only file; Android gets its own library later (§3.3, step 6) and installs nothing until then |
 | `MosaicRuntimeHost` finds its state under `user.home`, its library through `compose.application.resources.dir` | JVM desktop properties | `MosaicRuntimeHost.load(stateDirectory = …)`: the Android activity passes `filesDir`; JNA loads `libmosaic_app.so` from `jniLibs` by name |
 
@@ -169,9 +169,9 @@ the moved code (PR A). Then:
   with `com.android.application`, Kotlin Android and the Compose compiler
   plugin, `src/main/AndroidManifest.xml`, and one activity,
   `MosaicActivity`, whose `onCreate` calls `setContent { MosaicApp(host) }`.
-  Its source sets name the shared files in `../src/main/kotlin` explicitly and
-  never `Main.kt` or `MosaicPlatformEffects.kt`; its own
-  `MosaicPlatform.kt` supplies the Android side of each seam. The
+  Its source set holds copies of the shared files (§3.5), never `Main.kt` or
+  `MosaicPlatformEffects.kt`; its own `MosaicPlatform.kt` supplies the
+  Android side of each seam. The
   application id and label come from `[app] bundle-identifier` /
   `display-name` (UI32), as on iOS.
 - **The runtime.** `code/scripts/build-mosaic-android-libs.sh <cargo package>
@@ -187,6 +187,53 @@ the moved code (PR A). Then:
   checks every ABI's `libmosaic_app.so` exports `mosaic_app_create`, boots an
   x86_64 emulator, installs, launches `MosaicActivity`, and requires the
   process to be alive ten seconds later — the iOS gate's shape.
+
+### 3.5 Android, as built (step 4)
+
+What step 4 changed from §3.4, and why:
+
+- **Copies, not references.** An Android source set takes directories and
+  cannot leave out the desktop-only files that sit beside the shared ones in
+  `src/main/kotlin`, so the builder copies the shared ones into
+  `android/src/main/kotlin`: `MosaicAppShell.kt`, `MosaicRuntimeHost.kt`, and
+  every exported component with its layout variants. It writes the Android
+  project last, after `[host_assets]` and `[host_effects]` are installed (the
+  iOS project's rule), so a replaced shared file reaches Android too. Package
+  effect handlers stay desktop-only until step 6.
+- **The activity lives in a package.** A manifest cannot name a class in the
+  root package, and the shared sources live there. `MosaicActivity` is
+  `mosaic.android.MosaicActivity`, and imports the root-package shell, which
+  Kotlin (unlike Java) allows. It sets `MosaicRuntimeHost.stateDirectory` to
+  `filesDir` before loading the host, and handles its own configuration
+  changes, so a rotation re-lays out the tree instead of destroying the host.
+- **Identity.** The application id is `[app] bundle-identifier` (or the iOS
+  default) made legal for Android: `-` becomes `_`, a part that does not start
+  with a letter gets an `x`, and a Java keyword part gets a trailing `_`. The
+  label is `display-name` (or the root component) in `res/values/strings.xml`,
+  escaped for Android's string syntax and XML; a literal in the manifest would
+  read a leading `@` or `?` as a reference. Backup is off, and the app asks for
+  no permissions.
+- **Drag and drop on Android.** Android hands a drop target the `clipData`
+  only with the drop, and never tells the source its drag ended. The Android
+  half therefore also puts the text in `localState` (every event of an in-app
+  drag carries it), so a target accepts, enters and hovers as on desktop; and
+  a fourth seam, `mosaicDragEnded(event)`, which every target's `onEnded`
+  calls, runs the source's completion once (desktop: nothing to do -- AWT
+  reports the end itself). A drag no target was interested in never reports
+  its end; nothing was dropped.
+- **Dependencies.** Compose through the same JetBrains coordinates the desktop
+  build resolves (each is an `androidx.compose` artifact on Android), so both
+  compile against one API; JNA from its `aar`. Pinned: Android Gradle Plugin
+  8.13.0, Gradle 8.14.3 (named in `gradle-wrapper.properties`; the wrapper's
+  jar and scripts are not generated), Kotlin 2.3.21, compile/target SDK 36,
+  min SDK 26 (where `java.nio.file` and `java.util.Base64`, which the runtime
+  host uses, arrive). The NDK pin belongs to step 5's runtime script.
+- **The gate.** CI builds TaskApp's debug APK and checks its package name,
+  label, launchable activity and SDK levels (`aapt2 dump badging`), that the
+  shared sources, the activity and the Android seams are in the dex, and that
+  JNA's `libjnidispatch.so` is there for x86_64. Without the runtime (step 5)
+  a native-complete app shows its startup failure screen; the emulator run
+  belongs to step 5.
 
 ## 4. CI
 
@@ -207,7 +254,8 @@ lanes are green, as their own PRs.
    static runtime; TaskApp builds and launches on the simulator in CI.
 3. **iOS behaviour:** sandbox state path, restore test, iPad size classes.
 4. **Android project:** `--target android` Gradle project and the desktop-only
-   seam; Trestle builds an APK.
+   seam; Trestle builds an APK. *Done (§3.5): every Compose `--emit-project`
+   build writes `android/`; there is no separate target flag.*
 5. **Android runtime:** `cargo-ndk` ABIs, JNA on Android, `filesDir`; the
    emulator test.
 6. **Mobile host effects** through UI87's shared libraries.

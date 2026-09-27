@@ -2103,14 +2103,16 @@ jobs:
         shell: bash
         env:
           NEEDS_KOTLIN: ${{ needs.detect.outputs.needs_kotlin }}
+          NEEDS_MOSAIC_COMPOSE: ${{ needs.detect.outputs.needs_mosaic_compose_runtime }}
         run: |
           set -euo pipefail
           echo "Disk before cleanup:"
           df -h /
           # Keep the pre-installed Android SDK when Kotlin (Android) builds are
           # needed — deleting it forces a full re-download later, wasting several
-          # minutes and ~5 GB of bandwidth per shard.
-          if [ "$NEEDS_KOTLIN" != "true" ]; then
+          # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
+          # builds an Android APK too (UI89 §3.4).
+          if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
             sudo rm -rf /usr/local/lib/android || true
           fi
           docker system prune --all --force || true
@@ -2126,7 +2128,7 @@ jobs:
       # Windows the action downloads a fresh SDK. Gradle then auto-downloads
       # the specific platform (API 35 / 36) on first build.
       - name: Set up Android SDK
-        if: needs.detect.outputs.needs_kotlin == 'true'
+        if: needs.detect.outputs.needs_kotlin == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
         uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
         with:
           packages: 'platform-tools'
@@ -3261,6 +3263,67 @@ jobs:
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
           gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
+
+      # UI89 step 4: the Compose build of TaskApp above also wrote
+      # compose/android/, an Android project over the same shared Kotlin, with
+      # its own activity and the Android half of the platform seams. Gate: it
+      # builds a debug APK that carries the app's identity, launches
+      # MosaicActivity, and compiled the shared sources. The Rust runtime
+      # joins in step 5, and the emulator with it.
+      - name: Build Trestle for Android (UI89 step 4)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 25
+        run: |
+          set -euo pipefail
+          android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"
+          test -f "$android_project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
+          test -f "$android_project/src/main/kotlin/TaskApp.kt"
+          test ! -e "$android_project/src/main/kotlin/Main.kt"
+          test ! -e "$android_project/src/main/kotlin/MosaicPlatformEffects.kt"
+          if grep -rl 'java\.awt' "$android_project/src"; then
+            echo "::error::desktop-only AWT reached the Android sources"
+            exit 1
+          fi
+
+          # The project names its Gradle in gradle-wrapper.properties. Write
+          # the wrapper's jar and script with whatever Gradle is installed, in
+          # an empty directory so that Gradle never configures the Android
+          # plugin it may not support.
+          gradle_version="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$android_project/gradle/wrapper/gradle-wrapper.properties")"
+          test -n "$gradle_version"
+          wrapper_seed="$RUNNER_TEMP/mosaic-android-gradle-wrapper"
+          rm -rf "$wrapper_seed"
+          mkdir -p "$wrapper_seed"
+          touch "$wrapper_seed/settings.gradle.kts"
+          gradle --no-daemon -q -p "$wrapper_seed" wrapper --gradle-version "$gradle_version"
+          cp "$wrapper_seed/gradlew" "$android_project/gradlew"
+          cp "$wrapper_seed/gradle/wrapper/gradle-wrapper.jar" "$android_project/gradle/wrapper/gradle-wrapper.jar"
+          (
+            cd "$android_project"
+            ./gradlew --no-daemon --stacktrace assembleDebug
+          )
+
+          apk="$(find "$android_project/build/outputs/apk/debug" -name '*.apk' -print -quit)"
+          test -n "$apk"
+          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
+          test -n "$aapt2"
+          badging="$RUNNER_TEMP/mosaic-trestle-android-badging.txt"
+          "$aapt2" dump badging "$apk" > "$badging"
+          grep -q "^package: name='dev.codingadventures.trestle'" "$badging"
+          grep -q "^application-label:'Trestle'" "$badging"
+          grep -q "^launchable-activity: name='mosaic.android.MosaicActivity'" "$badging"
+          grep -q "^sdkVersion:'26'" "$badging"
+          grep -q "^targetSdkVersion:'36'" "$badging"
+          # The shared sources and the Android seams are in the dex, and JNA
+          # brought its dispatcher for the emulator's ABI.
+          dex="$RUNNER_TEMP/mosaic-trestle-android-dex"
+          rm -rf "$dex"
+          unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$dex"
+          for class in 'Lmosaic/android/MosaicActivity;' 'LTaskAppKt;' 'LMosaicAppShellKt;' 'LMosaicRuntimeHost;' 'LMosaicPlatformKt;'; do
+            grep -a -q -F "$class" "$dex"/classes*.dex
+          done
+          test -f "$dex/lib/x86_64/libjnidispatch.so"
 
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'

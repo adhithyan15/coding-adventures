@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-27 (the Android half of the platform seams)
+
+- **`ANDROID_PLATFORM_KT` (UI89 §3.4, §3.5).** The Android `MosaicPlatform.kt`: the same functions as the desktop one over Android's `DragEvent`. Android gives a drop target the `clipData` only with the drop, so the text also rides in `localState`, which every event of an in-app drag carries -- a target accepts, enters and hovers as on desktop. Android never tells a drag source its drag ended, so the transfer's `onCompleted` runs, once, when a target reports the end.
+- **A fourth seam, `mosaicDragEnded(event)`.** Every drop target's `onEnded` now calls it. The desktop half does nothing (AWT reports the end through `onTransferCompleted`); the Android half runs the source's completion. A test pins that both halves define the same functions.
+
 ## 2026-09-27 (layout variants share one app)
 
 - **A layout variant compiles beside the default (UI48 §7.5, ENV2).** `from_pipeline_variant(interface, layout, style, variant)` emits a variant's composable as `<Component><Variant>` (`EngramApp.touch.mll` → `fun EngramAppTouch(`), named by the new `variant_composable_name` (`-` and `_` separate words; anything else is refused). A variant file declares none of the component's interface -- no `<C>Event` sealed class, no `<C>Props` classes, no `Immutable` import -- and its composable takes and dispatches the default file's types, so the two no longer redeclare each other. Everything else a generated file declares at top level is `private`, and so file-scoped. `from_pipeline` is unchanged.

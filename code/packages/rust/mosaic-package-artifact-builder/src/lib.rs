@@ -2865,11 +2865,441 @@ fn build_package_inner(
         }
     }
 
+    // Android (UI89 §3.4): a second Gradle project beside the desktop one,
+    // in `android/`. Last, for the iOS project's reason: it takes the shared
+    // sources as the installers above left them.
+    if opts.emit_project && matches!(opts.backend, Backend::Compose) {
+        if let Some(root_component) = components_built.first() {
+            artifacts.extend(write_android_app_project(AndroidProject {
+                manifest: &manifest,
+                backend_dir: &backend_dir,
+                src_dir: &src_dir,
+                root_component,
+                components: &components_built,
+                require_runtime: project_shell_requires_runtime(profile, runtime_library),
+            })?);
+        }
+    }
+
     Ok(BuildResult {
         artifacts,
         components_built,
         replaced_generated_files,
     })
+}
+
+// ---------------------------------------------------------------------------
+// Android (UI89 §3.4)
+// ---------------------------------------------------------------------------
+//
+// A Compose build with `--emit-project` writes a second Gradle project beside
+// the desktop one, the way a SwiftUI build with a static runtime writes
+// `iOS/`:
+//
+//   compose/
+//     src/main/kotlin/       desktop: Main.kt, MosaicPlatform.kt (AWT), the
+//                            platform library -- and the shared sources
+//     android/
+//       settings.gradle.kts, build.gradle.kts, gradle.properties
+//       gradle/wrapper/gradle-wrapper.properties
+//       src/main/AndroidManifest.xml
+//       src/main/res/values/strings.xml       the app's label
+//       src/main/kotlin/mosaic/android/MosaicActivity.kt
+//       src/main/kotlin/MosaicPlatform.kt     the Android half of the seams
+//       src/main/kotlin/<shared sources>      copied from ../src/main/kotlin
+//
+// The shared sources are COPIED, not named from `../src/main/kotlin`: an
+// Android source set takes directories and cannot leave out the desktop-only
+// files that sit beside the shared ones. The copies are taken after the
+// installers, so a `[host_assets]` replacement of a shared file reaches
+// Android too. What stays desktop-only: `Main.kt` (the window), the AWT
+// `MosaicPlatform.kt`, the platform library (`MosaicPlatformEffects.kt`,
+// `java.awt.FileDialog`) and any package effect handler -- Android gets its
+// own host effects in UI89 step 6 and, until then, installs none.
+
+/// The Android Gradle Plugin the generated project applies.
+const ANDROID_GRADLE_PLUGIN_VERSION: &str = "8.13.0";
+/// The Gradle its wrapper names (AGP 8.13 needs 8.13 or later).
+const ANDROID_GRADLE_VERSION: &str = "8.14.3";
+/// compileSdk and targetSdk: Android 16.
+const ANDROID_TARGET_SDK: u32 = 36;
+/// minSdk: Android 8.0, where `java.nio.file` and `java.util.Base64` -- both
+/// used by the shared runtime host -- arrive.
+const ANDROID_MIN_SDK: u32 = 26;
+/// Compose for Android through the same JetBrains coordinates the desktop
+/// build resolves, so both platforms compile against one API. Each resolves
+/// to its `androidx.compose` artifact on Android.
+const ANDROID_COMPOSE_MATERIAL3_ADAPTIVE_VERSION: &str = "1.9.0";
+const ANDROID_ACTIVITY_COMPOSE_VERSION: &str = "1.10.1";
+
+/// Where the Android project lives inside the Compose output.
+pub const ANDROID_PROJECT_DIR: &str = "android";
+
+struct AndroidProject<'a> {
+    manifest: &'a MosaicPackage,
+    backend_dir: &'a Path,
+    src_dir: &'a Path,
+    root_component: &'a str,
+    components: &'a [String],
+    require_runtime: bool,
+}
+
+fn write_android_app_project(project: AndroidProject<'_>) -> Result<Vec<PathBuf>, BuildError> {
+    let AndroidProject {
+        manifest,
+        backend_dir,
+        src_dir,
+        root_component,
+        components,
+        require_runtime,
+    } = project;
+    let android_dir = backend_dir.join(ANDROID_PROJECT_DIR);
+    let application_id = android_application_id(
+        &manifest
+            .app
+            .bundle_identifier
+            .clone()
+            .unwrap_or_else(|| mosaic_ios_project::default_bundle_identifier(&manifest.package.name)),
+    );
+    let label = manifest
+        .app
+        .display_name
+        .clone()
+        .unwrap_or_else(|| root_component.to_string());
+
+    let mut files: Vec<(String, String)> = vec![
+        (
+            "settings.gradle.kts".to_string(),
+            build_compose_settings_gradle_kts(&format!("{}-android", manifest.package.name)),
+        ),
+        (
+            "build.gradle.kts".to_string(),
+            build_android_build_gradle_kts(&application_id, &manifest.package.version),
+        ),
+        ("gradle.properties".to_string(), ANDROID_GRADLE_PROPERTIES.to_string()),
+        (
+            "gradle/wrapper/gradle-wrapper.properties".to_string(),
+            android_gradle_wrapper_properties(),
+        ),
+        ("src/main/AndroidManifest.xml".to_string(), ANDROID_MANIFEST_XML.to_string()),
+        ("src/main/res/values/strings.xml".to_string(), android_strings_xml(&label)),
+        (
+            "src/main/kotlin/mosaic/android/MosaicActivity.kt".to_string(),
+            build_android_activity_kt(require_runtime),
+        ),
+        (
+            "src/main/kotlin/MosaicPlatform.kt".to_string(),
+            mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT.to_string(),
+        ),
+        ("README.md".to_string(), android_readme(&application_id)),
+    ];
+    for shared in android_shared_sources(src_dir, components)? {
+        let source = backend_dir.join("src/main/kotlin").join(&shared);
+        files.push((format!("src/main/kotlin/{shared}"), read_to_string(&source)?));
+    }
+
+    let mut written = Vec::with_capacity(files.len());
+    for (relative, body) in files {
+        let path = android_dir.join(relative);
+        if let Some(parent) = path.parent() {
+            create_dir_all(parent)?;
+        }
+        write_file(&path, body.as_bytes())?;
+        written.push(path);
+    }
+    Ok(written)
+}
+
+/// The desktop project's Kotlin files that Android compiles too: the app
+/// shell, the runtime host, and every exported component with its layout
+/// variants (UI48 §7.5).
+fn android_shared_sources(src_dir: &Path, components: &[String]) -> Result<Vec<String>, BuildError> {
+    let mut shared = vec!["MosaicAppShell.kt".to_string(), "MosaicRuntimeHost.kt".to_string()];
+    for component in components {
+        shared.push(format!("{component}.kt"));
+        for variant in discover_variants(src_dir, component)?.into_iter().flatten() {
+            shared.push(format!("{component}.{variant}.kt"));
+        }
+    }
+    Ok(shared)
+}
+
+/// An Android application id from a reverse-DNS bundle identifier.
+///
+/// The manifest accepts what Apple accepts (letters, digits and `-`); Android
+/// is stricter, and the id doubles as the Java package of the generated `R`
+/// class:
+///
+/// | rule | example | becomes |
+/// |---|---|---|
+/// | `-` is not allowed | `dev.example.task-app` | `dev.example.task_app` |
+/// | a part starts with a letter | `dev.example.2048` | `dev.example.x2048` |
+/// | a part is not a Java keyword | `dev.new.app` | `dev.new_.app` |
+fn android_application_id(bundle_identifier: &str) -> String {
+    const JAVA_RESERVED: &[&str] = &[
+        "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class",
+        "const", "continue", "default", "do", "double", "else", "enum", "extends", "false",
+        "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof",
+        "int", "interface", "long", "native", "new", "null", "package", "private", "protected",
+        "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized",
+        "this", "throw", "throws", "transient", "true", "try", "void", "volatile", "while",
+    ];
+    let parts: Vec<String> = bundle_identifier
+        .split('.')
+        .filter(|part| !part.is_empty())
+        .map(|part| {
+            let mut part: String = part
+                .chars()
+                .map(|c| if c.is_ascii_alphanumeric() { c } else { '_' })
+                .collect();
+            if !part.starts_with(|c: char| c.is_ascii_alphabetic()) {
+                part.insert(0, 'x');
+            }
+            if JAVA_RESERVED.contains(&part.as_str()) {
+                part.push('_');
+            }
+            part
+        })
+        .collect();
+    if parts.len() >= 2 {
+        parts.join(".")
+    } else {
+        // The manifest refuses a one-part identifier; this is a backstop.
+        format!("dev.codingadventures.{}", parts.first().map_or("app", String::as_str))
+    }
+}
+
+fn build_android_build_gradle_kts(application_id: &str, package_version: &str) -> String {
+    format!(
+        concat!(
+            "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "// The Android app (UI89 §3.4). Its Kotlin is the desktop app's shared\n",
+            "// sources plus MosaicActivity and the Android MosaicPlatform.kt.\n",
+            "plugins {{\n",
+            "    id(\"com.android.application\") version \"{agp}\"\n",
+            "    kotlin(\"android\") version \"{kotlin}\"\n",
+            "    id(\"org.jetbrains.kotlin.plugin.compose\") version \"{kotlin}\"\n",
+            "}}\n\n",
+            "android {{\n",
+            "    namespace = \"{application_id}\"\n",
+            "    compileSdk = {sdk}\n\n",
+            "    defaultConfig {{\n",
+            "        applicationId = \"{application_id}\"\n",
+            "        minSdk = {min_sdk}\n",
+            "        targetSdk = {sdk}\n",
+            "        versionCode = 1\n",
+            "        versionName = \"{version}\"\n",
+            "    }}\n\n",
+            "    compileOptions {{\n",
+            "        sourceCompatibility = JavaVersion.VERSION_17\n",
+            "        targetCompatibility = JavaVersion.VERSION_17\n",
+            "    }}\n\n",
+            "    buildFeatures {{\n",
+            "        compose = true\n",
+            "    }}\n",
+            "}}\n\n",
+            "kotlin {{\n",
+            "    compilerOptions {{\n",
+            "        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)\n",
+            "    }}\n",
+            "}}\n\n",
+            "dependencies {{\n",
+            "    implementation(\"androidx.activity:activity-compose:{activity}\")\n",
+            "    implementation(\"org.jetbrains.compose.runtime:runtime:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.foundation:foundation:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.ui:ui:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.material:material:{compose}\")\n",
+            "    implementation(\"org.jetbrains.compose.material3:material3-adaptive-navigation-suite:{adaptive}\")\n",
+            "    // JNA's Android archive carries libjnidispatch for every ABI; the\n",
+            "    // binding code is the desktop's (UI89 §3.2).\n",
+            "    implementation(\"net.java.dev.jna:jna:{jna}@aar\")\n",
+            "    implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:{serialization}\")\n",
+            "}}\n",
+        ),
+        agp = ANDROID_GRADLE_PLUGIN_VERSION,
+        kotlin = COMPOSE_KOTLIN_PLUGIN_VERSION,
+        application_id = application_id,
+        sdk = ANDROID_TARGET_SDK,
+        min_sdk = ANDROID_MIN_SDK,
+        // The package version is validated semver: digits, dots, `-`, `+`
+        // and ASCII letters, all safe inside a Kotlin string.
+        version = escape_kotlin_string(package_version),
+        activity = ANDROID_ACTIVITY_COMPOSE_VERSION,
+        compose = COMPOSE_GRADLE_PLUGIN_VERSION,
+        adaptive = ANDROID_COMPOSE_MATERIAL3_ADAPTIVE_VERSION,
+        jna = COMPOSE_JNA_VERSION,
+        serialization = COMPOSE_SERIALIZATION_JSON_VERSION,
+    )
+}
+
+const ANDROID_GRADLE_PROPERTIES: &str = concat!(
+    "# AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+    "android.useAndroidX=true\n",
+    "org.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8\n",
+    "kotlin.code.style=official\n",
+);
+
+/// The wrapper's properties only: Android Studio and `gradle wrapper` both
+/// read them, and the wrapper's jar and scripts are binary or platform
+/// files a generator should not carry.
+fn android_gradle_wrapper_properties() -> String {
+    format!(
+        concat!(
+            "# AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "distributionBase=GRADLE_USER_HOME\n",
+            "distributionPath=wrapper/dists\n",
+            "distributionUrl=https\\://services.gradle.org/distributions/gradle-{}-bin.zip\n",
+            "networkTimeout=10000\n",
+            "validateDistributionUrl=true\n",
+            "zipStoreBase=GRADLE_USER_HOME\n",
+            "zipStorePath=wrapper/dists\n",
+        ),
+        ANDROID_GRADLE_VERSION
+    )
+}
+
+/// One activity, launched from the home screen. It handles its own
+/// configuration changes -- a rotation or a resize re-lays out the Compose
+/// tree (UI48's environment reporting sees the new size) instead of
+/// destroying the activity and, with it, the runtime host. Backup is off:
+/// the app's state file is the user's data, and leaves the device only when
+/// a later version decides how.
+const ANDROID_MANIFEST_XML: &str = r#"<?xml version="1.0" encoding="utf-8"?>
+<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
+        android:allowBackup="false"
+        android:label="@string/mosaic_app_label"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <activity
+            android:name="mosaic.android.MosaicActivity"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|density|uiMode|fontScale|layoutDirection|locale"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+"#;
+
+/// `res/values/strings.xml` holding the app's label.
+///
+/// A string resource, not a literal in the manifest, because a manifest
+/// attribute starting with `@` or `?` is a reference. Two layers of escaping,
+/// in this order: Android's string syntax (`\`, `'`, `"`, and a leading `@`
+/// or `?`), then XML (`&`, `<`, `>`). The manifest already refused control
+/// characters in a display name.
+fn android_strings_xml(label: &str) -> String {
+    let mut android = String::new();
+    for (index, c) in label.chars().enumerate() {
+        match c {
+            '\\' | '\'' | '"' => {
+                android.push('\\');
+                android.push(c);
+            }
+            '@' | '?' if index == 0 => {
+                android.push('\\');
+                android.push(c);
+            }
+            c => android.push(c),
+        }
+    }
+    let xml = android
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;");
+    format!(
+        concat!(
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n",
+            "<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->\n",
+            "<resources>\n",
+            "    <string name=\"mosaic_app_label\">{}</string>\n",
+            "</resources>\n",
+        ),
+        xml
+    )
+}
+
+/// The Android half of the app, the counterpart of the desktop `Main.kt`:
+/// the activity and the host loader. It lives in a package because a manifest
+/// cannot name a class in the root one; the shared sources stay in the root
+/// package, which Kotlin (unlike Java) can import from.
+fn build_android_activity_kt(require_runtime: bool) -> String {
+    let (imports, content, loader) = if require_runtime {
+        (
+            "import MosaicComposeHost\nimport MosaicRuntimeHost\nimport MosaicStartup\n",
+            "        setContent { MosaicStartup(::loadMosaicHost) }\n",
+            concat!(
+                "\nprivate fun loadMosaicHost(): MosaicComposeHost =\n",
+                "    requireNotNull(MosaicRuntimeHost.load()) {\n",
+                "        \"native-complete requires the Mosaic Rust application runtime\"\n",
+                "    }\n",
+            ),
+        )
+    } else {
+        (
+            "import MosaicApp\nimport MosaicComposeHostBridge\nimport MosaicRuntimeHost\nimport androidx.compose.runtime.remember\n",
+            concat!(
+                "        setContent {\n",
+                "            val mosaicHost = remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }\n",
+                "            MosaicApp(mosaicHost)\n",
+                "        }\n",
+            ),
+            "",
+        )
+    };
+    format!(
+        concat!(
+            "// AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit.\n",
+            "// The Android half of the app (UI89 §3.4): the activity and the host\n",
+            "// loader, as Main.kt is the desktop's. Everything else is shared.\n",
+            "package mosaic.android\n\n",
+            "{imports}",
+            "import android.os.Bundle\n",
+            "import androidx.activity.ComponentActivity\n",
+            "import androidx.activity.compose.setContent\n\n",
+            "class MosaicActivity : ComponentActivity() {{\n",
+            "    override fun onCreate(savedInstanceState: Bundle?) {{\n",
+            "        super.onCreate(savedInstanceState)\n",
+            "        // State lives in the app's own storage, not a home directory\n",
+            "        // (UI89 §3.3). Set before the host loads, which reads it.\n",
+            "        MosaicRuntimeHost.stateDirectory = filesDir\n",
+            "{content}",
+            "    }}\n",
+            "}}\n",
+            "{loader}",
+        ),
+        imports = imports,
+        content = content,
+        loader = loader,
+    )
+}
+
+fn android_readme(application_id: &str) -> String {
+    format!(
+        concat!(
+            "<!-- AUTO-GENERATED by mosaic-compile pkg --backend compose --emit-project. Edits will be overwritten on next emit. -->\n",
+            "# Android app\n\n",
+            "The Android build of this Compose app (UI89 §3.4), application id\n",
+            "`{application_id}`. Its Kotlin is the desktop app's shared sources, copied\n",
+            "here, plus `MosaicActivity` and the Android half of `MosaicPlatform.kt`.\n\n",
+            "Open this directory in Android Studio, or build the debug APK with a\n",
+            "Gradle wrapper and the Android SDK (`ANDROID_HOME`):\n\n",
+            "```sh\n",
+            "gradle wrapper --gradle-version {gradle}   # once; any Gradle can write the wrapper\n",
+            "./gradlew assembleDebug\n",
+            "```\n\n",
+            "The Rust runtime is not bundled yet (UI89 step 5): an app that needs it\n",
+            "shows its startup failure screen, and a sample app runs on sample props.\n",
+            "Host effects (files, photos) arrive in UI89 step 6.\n",
+        ),
+        application_id = application_id,
+        gradle = ANDROID_GRADLE_VERSION,
+    )
 }
 
 /// Write `iOS/App.xcodeproj/project.pbxproj` for a SwiftUI package built with a
@@ -11582,6 +12012,130 @@ layout NativeEvents {
             fs::read_to_string(out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj")).unwrap();
         assert!(project.contains("INFOPLIST_KEY_CFBundleDisplayName = \"Card Studio\";"));
         assert!(project.contains("PRODUCT_BUNDLE_IDENTIFIER = \"com.example.cards\";"));
+    }
+
+    // UI89 §3.4: a Compose project also writes an Android project.
+
+    #[test]
+    fn a_compose_project_writes_an_android_project_beside_it() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let android = out.path().join("compose/android");
+        let kotlin = android.join("src/main/kotlin");
+
+        // The shared sources, as the desktop project has them.
+        for shared in ["MosaicAppShell.kt", "MosaicRuntimeHost.kt", "Card.kt", "Card.touch.kt"] {
+            assert_eq!(
+                fs::read_to_string(kotlin.join(shared)).unwrap(),
+                fs::read_to_string(out.path().join("compose/src/main/kotlin").join(shared)).unwrap(),
+                "{shared} is the desktop's"
+            );
+        }
+        // Never the desktop-only ones: the window, AWT, the file dialogs.
+        assert!(!kotlin.join("Main.kt").exists());
+        assert!(!kotlin.join("MosaicPlatformEffects.kt").exists());
+        assert_eq!(
+            fs::read_to_string(kotlin.join("MosaicPlatform.kt")).unwrap(),
+            mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT
+        );
+
+        // A sample app: the activity loads whatever host there is.
+        let activity = fs::read_to_string(kotlin.join("mosaic/android/MosaicActivity.kt")).unwrap();
+        assert!(activity.starts_with("// AUTO-GENERATED"), "{activity}");
+        assert!(activity.contains("package mosaic.android\n"), "{activity}");
+        assert!(activity.contains("MosaicRuntimeHost.stateDirectory = filesDir\n"), "{activity}");
+        assert!(
+            activity.contains("remember { MosaicRuntimeHost.load() ?: MosaicComposeHostBridge.load() }"),
+            "{activity}"
+        );
+        assert!(activity.find("stateDirectory").unwrap() < activity.find("load()").unwrap());
+
+        let manifest = fs::read_to_string(android.join("src/main/AndroidManifest.xml")).unwrap();
+        assert!(manifest.contains("android:name=\"mosaic.android.MosaicActivity\""));
+        assert!(manifest.contains("android.intent.category.LAUNCHER"));
+        assert!(manifest.contains("android:label=\"@string/mosaic_app_label\""));
+        assert!(!manifest.contains("uses-permission"), "{manifest}");
+
+        // Identity: the component name and the default bundle identifier.
+        let strings = fs::read_to_string(android.join("src/main/res/values/strings.xml")).unwrap();
+        assert!(strings.contains("<string name=\"mosaic_app_label\">Card</string>"), "{strings}");
+        let gradle = fs::read_to_string(android.join("build.gradle.kts")).unwrap();
+        assert!(gradle.contains("id(\"com.android.application\") version \"8.13.0\""), "{gradle}");
+        assert!(gradle.contains("applicationId = \"dev.codingadventures.mosaicpkgcard\""), "{gradle}");
+        assert!(gradle.contains("namespace = \"dev.codingadventures.mosaicpkgcard\""), "{gradle}");
+        assert!(gradle.contains("compileSdk = 36\n"), "{gradle}");
+        assert!(gradle.contains("minSdk = 26\n"), "{gradle}");
+        assert!(gradle.contains("\"net.java.dev.jna:jna:5.19.1@aar\""), "{gradle}");
+        let wrapper =
+            fs::read_to_string(android.join("gradle/wrapper/gradle-wrapper.properties")).unwrap();
+        assert!(wrapper.contains("gradle-8.14.3-bin.zip"), "{wrapper}");
+        let settings = fs::read_to_string(android.join("settings.gradle.kts")).unwrap();
+        assert!(settings.contains("rootProject.name = \"mosaic-pkg-card-android\""), "{settings}");
+    }
+
+    #[test]
+    fn a_native_complete_android_activity_requires_the_runtime() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str(
+            "\n[app]\ndisplay-name = \"@Tom's <Cards> & \\\"more\\\"\"\nbundle-identifier = \"com.example.new.2048-cards\"\n",
+        );
+        fs::write(&manifest, text).unwrap();
+        let runtime = pkg.path().join("libcard.so");
+        fs::write(&runtime, b"runtime").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("strict Compose shell");
+        let android = out.path().join("compose/android");
+        let activity =
+            fs::read_to_string(android.join("src/main/kotlin/mosaic/android/MosaicActivity.kt")).unwrap();
+        assert!(activity.contains("setContent { MosaicStartup(::loadMosaicHost) }"), "{activity}");
+        assert!(activity.contains("requireNotNull(MosaicRuntimeHost.load())"), "{activity}");
+        assert!(!activity.contains("MosaicComposeHostBridge"), "{activity}");
+        // The strict shell defines what the activity calls.
+        let shell = fs::read_to_string(android.join("src/main/kotlin/MosaicAppShell.kt")).unwrap();
+        assert!(shell.contains("fun MosaicStartup("), "{shell}");
+
+        let gradle = fs::read_to_string(android.join("build.gradle.kts")).unwrap();
+        assert!(gradle.contains("applicationId = \"com.example.new_.x2048_cards\""), "{gradle}");
+        let strings = fs::read_to_string(android.join("src/main/res/values/strings.xml")).unwrap();
+        assert!(
+            strings.contains(
+                "<string name=\"mosaic_app_label\">\\@Tom\\'s &lt;Cards&gt; &amp; \\\"more\\\"</string>"
+            ),
+            "{strings}"
+        );
+    }
+
+    #[test]
+    fn android_application_ids_follow_android_rules() {
+        assert_eq!(android_application_id("dev.codingadventures.trestle"), "dev.codingadventures.trestle");
+        assert_eq!(android_application_id("dev.example.task-app"), "dev.example.task_app");
+        assert_eq!(android_application_id("dev.example.2048"), "dev.example.x2048");
+        assert_eq!(android_application_id("dev.new.app"), "dev.new_.app");
+        assert_eq!(android_application_id("dev.-x.app"), "dev.x_x.app");
+        assert_eq!(android_application_id("solo"), "dev.codingadventures.solo");
+    }
+
+    #[test]
+    fn android_labels_escape_references_quotes_and_markup() {
+        let label = |name: &str| {
+            let xml = android_strings_xml(name);
+            let start = xml.find("\">").unwrap() + 2;
+            let end = xml.find("</string>").unwrap();
+            xml[start..end].to_string()
+        };
+        assert_eq!(label("Trestle"), "Trestle");
+        assert_eq!(label("?attr"), "\\?attr");
+        assert_eq!(label("a@b?c"), "a@b?c");
+        assert_eq!(label("back\\slash"), "back\\\\slash");
+        assert_eq!(label("</string><x>"), "&lt;/string&gt;&lt;x&gt;");
     }
 
     #[test]

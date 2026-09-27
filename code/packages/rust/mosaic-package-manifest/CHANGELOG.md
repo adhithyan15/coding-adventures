@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed — `bundle-identifier` documentation (UI89 §3.5)
+
+The comment on `is_bundle_identifier` said Android accepts what it accepts;
+Android does not (no `-`, and each part starts with a letter). It now says
+the artifact builder derives the Android application id. No behaviour change.
+
 ### Added — `EnvironmentAxis::wire_name` (UI48 §7.5)
 
 The camelCase key each layout-rule axis has in the host environment the

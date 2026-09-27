@@ -149,6 +149,28 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("test --tests MosaicPlatformEffectsTest", block)
 
+    def test_trestle_builds_an_android_apk(self) -> None:
+        """UI89 step 4: the Compose lane keeps the Android SDK, builds
+        TaskApp's generated Android project, and checks what the APK is."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for Android (UI89 step 4)")
+        block = workflow[start:workflow.index("\n      - name:", start)]
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn('android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"', block)
+        self.assertIn('test ! -e "$android_project/src/main/kotlin/Main.kt"', block)
+        self.assertIn("./gradlew --no-daemon --stacktrace assembleDebug", block)
+        self.assertIn("launchable-activity: name='mosaic.android.MosaicActivity'", block)
+        self.assertIn("package: name='dev.codingadventures.trestle'", block)
+        self.assertIn('test -f "$dex/lib/x86_64/libjnidispatch.so"', block)
+        # The SDK survives the disk reclaim and is set up for this lane.
+        self.assertIn('[ "$NEEDS_MOSAIC_COMPOSE" != "true" ]', workflow)
+        setup = workflow.index("- name: Set up Android SDK")
+        self.assertIn(
+            "(needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')",
+            workflow[setup:workflow.index("\n", setup + 40)],
+        )
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime(
