@@ -1,0 +1,11 @@
+{
+  "id": "SA-C112-srgalah",
+  "pathSegment": "SA-PATH-112-THINGS112",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-112-THINGS112",
+      "order": 4
+    }
+  ]
+}

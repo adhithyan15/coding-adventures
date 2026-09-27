@@ -12,17 +12,17 @@ headword: "ज्वरः"
 gloss: "a fever"
 romanization: "jvaraḥ"
 concept_tag: SA-UNWELL-FEVER
-prerequisites: [SA-C63-second, SA-C63-first]
+prerequisites: [SA-C63-second, SA-C63-first, SA-C64-prathama-pathanam]
 sounds: []
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [SA-LEX-C63-ORDINAL-06, SA-LEX-C63-ORDINAL-07]
+  knowledge: [SA-LEX-C63-ORDINAL-06, SA-LEX-C63-ORDINAL-07, SA-SKILL-CONNECTED-READING]
 introduces:
   knowledge: [SA-LEX-C66-UNWELL-01]
 practises:
-  knowledge: [SA-LEX-C66-UNWELL-01, SA-LEX-C63-ORDINAL-06, SA-LEX-C63-ORDINAL-07]
+  knowledge: [SA-LEX-C66-UNWELL-01, SA-LEX-C63-ORDINAL-06, SA-LEX-C63-ORDINAL-07, SA-SKILL-CONNECTED-READING]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C63-first]
 # ज्वरः (jvaraḥ) — a fever
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-06, SA-LEX-C63-ORDINAL-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-06, SA-LEX-C63-ORDINAL-07, SA-SKILL-CONNECTED-READING] -->
 
 [PAUSE 2s] Before the new one: say the Sanskrit for second, then the Sanskrit for first.
+
+[PAUSE 1s] Before the new word: read a short line aloud word by word, then again as one breath, the way you read your first passage.
 
 ## You'll want to know: ज्वरः
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-01]; assesses=[] -->

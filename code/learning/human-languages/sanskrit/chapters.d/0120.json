@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Coin, Post office, Letter, Book, Picture",
+  "label": "ch:sa-coin-post-office-letter-book-picture",
+  "canDo": "I can say a coin, a post office, a letter, a book and a picture.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C120-citram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a coin, a post office, a letter, a book and a picture.",
+    "assesses": [
+      "SA-LEX-C120-THINGS120-03",
+      "SA-LEX-C120-THINGS120-04",
+      "SA-LEX-C120-THINGS120-05"
+    ]
+  }
+}

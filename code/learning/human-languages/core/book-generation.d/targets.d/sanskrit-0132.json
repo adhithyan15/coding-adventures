@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 132,
+  "output": "sanskrit/book/chapters/ch132-thin-crooked-straight-full-empty.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

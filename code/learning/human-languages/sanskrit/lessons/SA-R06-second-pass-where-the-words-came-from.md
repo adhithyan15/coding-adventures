@@ -9,20 +9,20 @@ headword: "नमस्कारः"
 romanization: "namaskāraḥ"
 gloss: second pass over the four claims about where these words come from, and the ending that marks a masculine singular
 concept_tag: SA-SECOND-PASS-ORIGINS
-prerequisites: [SA-C01-namaskara, SA-C01-practice, SA-C02-practice, SA-C03-practice, SA-C04-practice]
+prerequisites: [SA-C01-namaskara, SA-C01-practice, SA-C02-practice, SA-C03-practice, SA-C04-practice, SA-C06-numbers-1-5-more, SA-C06-numbers-1-5-more]
 sounds: []
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [SA-LEX-NAMASKARA, SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR, SA-HISTORY-JONES-1786, SA-HISTORY-CH2-SOURCE-WORDS, SA-HISTORY-ROOTS-EAST-AND-WEST, SA-HISTORY-LEAVE-TAKING-ROOTS]
+  knowledge: [SA-LEX-NAMASKARA, SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR, SA-HISTORY-JONES-1786, SA-HISTORY-CH2-SOURCE-WORDS, SA-HISTORY-ROOTS-EAST-AND-WEST, SA-HISTORY-LEAVE-TAKING-ROOTS, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [SA-LEX-NAMASKARA, SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR, SA-HISTORY-JONES-1786, SA-HISTORY-CH2-SOURCE-WORDS, SA-HISTORY-ROOTS-EAST-AND-WEST, SA-HISTORY-LEAVE-TAKING-ROOTS]
+  knowledge: [SA-LEX-NAMASKARA, SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR, SA-HISTORY-JONES-1786, SA-HISTORY-CH2-SOURCE-WORDS, SA-HISTORY-ROOTS-EAST-AND-WEST, SA-HISTORY-LEAVE-TAKING-ROOTS, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,10 +33,12 @@ reviews_of: [SA-C01-namaskara, SA-C01-practice, SA-C02-practice, SA-C03-practice
 # नमस्कारः — the ending you can hear, and four claims you were told once
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASKARA, SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-NAMASKARA, SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR, SA-GRAMMAR-NUMERAL-GENDER, SA-HISTORY-INDO-ARYAN-NEUTER-FORMS] -->
 
 [PAUSE 3s] Say the longer of the two greetings. Then say what its last
 breath — the soft *-ḥ* — is telling you about the word.
+
+[PAUSE 1s] Sanskrit numbers have gender. Which forms of "three" and "four" do the modern languages mostly inherit? (The neuter ones, *trīṇi* and *catvāri*.)
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-VISARGA-MASCULINE-SINGULAR, SA-LEX-NAMASKARA] -->

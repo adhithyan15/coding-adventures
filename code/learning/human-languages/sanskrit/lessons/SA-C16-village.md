@@ -12,17 +12,17 @@ headword: "ग्रामः"
 gloss: "village"
 romanization: "grāmaḥ"
 concept_tag: SA-NOUN-VILLAGE
-prerequisites: [SA-C16-house]
+prerequisites: [SA-C16-house, SA-C05-vasami]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C16-PLACE-01]
+  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-VASAMI]
 introduces:
   knowledge: [SA-LEX-C16-PLACE-02]
 practises:
-  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-02]
+  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-C16-PLACE-02, SA-LEX-VASAMI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C16-house]
 # ग्रामः (grāmaḥ) — village
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-VASAMI] -->
 
 [PAUSE 2s] One house is a home. Many of them together are this.
+
+[PAUSE 1s] Say "I live." (*Vasāmi*.) Where you live may be this lesson's word.
 
 ## You'll want to know: ग्रामः
 <!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-02]; assesses=[] -->

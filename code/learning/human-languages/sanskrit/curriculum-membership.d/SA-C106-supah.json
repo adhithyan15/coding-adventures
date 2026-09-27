@@ -1,0 +1,11 @@
+{
+  "id": "SA-C106-supah",
+  "pathSegment": "SA-PATH-106-THINGS106",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-106-THINGS106",
+      "order": 4
+    }
+  ]
+}

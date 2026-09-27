@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:96712e35ffcf53f4",
+  "sourceHash": "fnv1a64:80032cd66d21d4af",
   "lessons": [
     {
       "id": "SA-C09-grhnati",
@@ -376,7 +376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86937ed3c41bdcac",
+      "sourceHash": "fnv1a64:5a89fcb801cdbcf6",
       "notice": null,
       "blocks": [
         {
@@ -393,6 +393,16 @@
             {
               "kind": "speech",
               "text": "Say \"it takes\" and its English kin. (Gṛhṇāti; grab.) Say \"it goes.\" (Gacchati.) Listen to the middle of that one — it comes back here."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four ways to build a present stem: add nothing, add a vowel, plant a syllable, or add -aya-. Which verb took -aya-? (Cintayati.)"
             }
           ]
         },
@@ -536,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b22ac8868f8e5b17",
+      "sourceHash": "fnv1a64:3ab102d3ee66fdd8",
       "notice": null,
       "blocks": [
         {
@@ -553,6 +563,16 @@
             {
               "kind": "speech",
               "text": "Say \"it asks\" and \"it takes.\" (Pṛcchati, gṛhṇāti.) Helping is not built like either of them. It takes two words."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Listen for sandhi today: sāhāyyam + karoti runs together as sāhāyyaṁ karoti, the way aham did before saṁskṛtam."
             }
           ]
         },
@@ -856,7 +876,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ebf7f3c25ede260",
+      "sourceHash": "fnv1a64:5410e213b79cc673",
       "notice": null,
       "blocks": [
         {

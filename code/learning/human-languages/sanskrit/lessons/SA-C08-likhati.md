@@ -12,7 +12,7 @@ headword: लिखति
 romanization: likhati
 gloss: he, she, or it writes — a root that means "scratch," and the chapter's four verbs gathered up
 concept_tag: VERB-WRITE
-prerequisites: [SA-C08-pathati]
+prerequisites: [SA-C08-pathati, SA-C06-pancha-travels-more, SA-C08-cintayati]
 sounds: [inherent-a, aspirated-kha]
 roots: [likh-scratch, pie-reyk]
 etymology_hook: "लिख् means to scratch, scrape and furrow before it means to write, because writing was scratching — on palm leaf and bark; the same root shows up inside Sanskrit as रेखा 'a line', and its clearest outside relatives are Greek ereikō 'to tear' and Lithuanian riekti 'to slice', with no secure English cousin at all"
@@ -35,11 +35,13 @@ reviews_of: [SA-C08-pathati, SA-C08-cintayati, SA-C08-avagacchati]
 # लिखति (likhati) — "writes," and the scratch it started as
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PATHATI-READ, SA-HISTORY-TATSAMA-TADBHAVA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PATHATI-READ, SA-HISTORY-TATSAMA-TADBHAVA, SA-GRAMMAR-GANA-TEN-AYA] -->
 
 [PAUSE 2s] Say "it reads." (*Paṭhati*.) Name a language that still reads with
 that word. (Hindi *paṛhnā*, Bengali *poṛa*, Marathi *paḍhṇe* — any one.) Now the
 other half of literacy.
+
+[PAUSE 1s] Say "thinks." (*Cintayati* — the root with *-aya-* added, the fourth way to build a present stem.)
 
 ## You'll want to know: लिखति
 <!-- hl-knowledge: introduces=[SA-LEX-LIKHATI-WRITE]; assesses=[SA-GRAMMAR-DHATU-GANA] -->

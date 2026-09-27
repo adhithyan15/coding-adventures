@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C103-anguliyakam",
+    "language": "sanskrit",
+    "chapter": 103,
+    "sequence": 5000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4aaaf80079d0c4eb"
+  },
+  "findings": []
+}

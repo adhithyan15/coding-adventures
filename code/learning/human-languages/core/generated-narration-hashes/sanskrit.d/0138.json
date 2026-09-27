@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:d95aafb7eb20ed88",
+  "lessonIds": [
+    "SA-C138-vikrinati",
+    "SA-C138-karsati",
+    "SA-C138-nudati",
+    "SA-C138-bhramati",
+    "SA-C138-vardhate",
+    "SA-R138-first-pass-describing-words",
+    "SA-R138-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch138.txt",
+  "json": "sanskrit/narration/ch138.json",
+  "textHash": "fnv1a64:4b082996aad9db7c",
+  "jsonHash": "fnv1a64:2474ce65a9b23b7f",
+  "findings": []
+}

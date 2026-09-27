@@ -12,17 +12,17 @@ headword: "निद्रा"
 gloss: "sleep"
 romanization: "nidrā"
 concept_tag: SA-NEEDS-SLEEP
-prerequisites: [SA-C66-illness, SA-C66-health]
+prerequisites: [SA-C66-illness, SA-C66-health, SA-C64-prathama-pathanam]
 sounds: []
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [SA-LEX-C66-UNWELL-04, SA-LEX-C66-UNWELL-05]
+  knowledge: [SA-LEX-C66-UNWELL-04, SA-LEX-C66-UNWELL-05, SA-SKILL-CONNECTED-READING]
 introduces:
   knowledge: [SA-LEX-C67-NEEDS-01]
 practises:
-  knowledge: [SA-LEX-C67-NEEDS-01, SA-LEX-C66-UNWELL-04, SA-LEX-C66-UNWELL-05]
+  knowledge: [SA-LEX-C67-NEEDS-01, SA-LEX-C66-UNWELL-04, SA-LEX-C66-UNWELL-05, SA-SKILL-CONNECTED-READING]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C66-health]
 # निद्रा (nidrā) — sleep
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C66-UNWELL-04, SA-LEX-C66-UNWELL-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C66-UNWELL-04, SA-LEX-C66-UNWELL-05, SA-SKILL-CONNECTED-READING] -->
 
 [PAUSE 2s] Before the new one: say the Sanskrit for an illness, then the Sanskrit for health.
+
+[PAUSE 1s] Read a few lines aloud as a passage, not as a list: let each line lead into the next.
 
 ## You'll want to know: निद्रा
 <!-- hl-knowledge: introduces=[SA-LEX-C67-NEEDS-01]; assesses=[] -->

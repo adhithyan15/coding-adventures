@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:5f1d744051b95d58",
+  "lessonIds": [
+    "SA-C118-gulphah",
+    "SA-C118-angulih",
+    "SA-C118-kaksah",
+    "SA-C118-asandi",
+    "SA-C118-phalakam"
+  ],
+  "tex": "sanskrit/book/chapters/ch118-ankle-finger-room-chair-board.tex"
+}

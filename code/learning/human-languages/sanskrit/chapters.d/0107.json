@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Jaggery, Pepper, Turmeric, Ginger, Garlic",
+  "label": "ch:sa-jaggery-pepper-turmeric-ginger-garlic",
+  "canDo": "I can say jaggery, pepper, turmeric, ginger and garlic.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C107-lasunam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say jaggery, pepper, turmeric, ginger and garlic.",
+    "assesses": [
+      "SA-LEX-C107-THINGS107-03",
+      "SA-LEX-C107-THINGS107-04",
+      "SA-LEX-C107-THINGS107-05"
+    ]
+  }
+}

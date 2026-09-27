@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:66e0a772e7e96534",
+  "lessonIds": [
+    "SA-C137-sivyati",
+    "SA-C137-jayati",
+    "SA-C137-guhati",
+    "SA-C137-raksati",
+    "SA-C137-jvalati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch137.txt",
+  "json": "sanskrit/narration/ch137.json",
+  "textHash": "fnv1a64:de867f2ef2a0d135",
+  "jsonHash": "fnv1a64:4b09df51bca13551",
+  "findings": []
+}

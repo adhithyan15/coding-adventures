@@ -1,0 +1,11 @@
+{
+  "id": "SA-C133-tarati",
+  "pathSegment": "SA-PATH-133-QUAL133",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-133-QUAL133",
+      "order": 3
+    }
+  ]
+}

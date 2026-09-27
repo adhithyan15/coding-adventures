@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C120-patralayah",
+    "language": "sanskrit",
+    "chapter": 120,
+    "sequence": 5900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a777fb44ffa1fd8a"
+  },
+  "findings": []
+}

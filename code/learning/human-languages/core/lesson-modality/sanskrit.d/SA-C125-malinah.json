@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C125-malinah",
+    "language": "sanskrit",
+    "chapter": 125,
+    "sequence": 6180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8718860be2fcb73a"
+  },
+  "findings": []
+}

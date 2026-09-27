@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C104-kancukah",
+    "language": "sanskrit",
+    "chapter": 104,
+    "sequence": 5060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d261b5fbd9b263a4"
+  },
+  "findings": []
+}

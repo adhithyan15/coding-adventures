@@ -12,18 +12,18 @@ headword: करोमि
 gloss: I do, I make (kāryaṁ karomi, "I work")
 romanization: "karomi"
 concept_tag: SA-VERB-KR
-prerequisites: [SA-C05-vadami]
+prerequisites: [SA-C05-vadami, SA-C05-aham-samskritam-vadami]
 sounds: [inherent-a, long-o]
 roots: [kr-do]
 reviews_of: [SA-C05-vadami, SA-C05-vasami]
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-VADAMI]
+  knowledge: [SA-LEX-VADAMI, SA-PATTERN-I-SPEAK-SANSKRIT]
 introduces:
   knowledge: [SA-LEX-KAROMI, SA-ETYMON-KR-TO-DO]
 practises:
-  knowledge: [SA-LEX-VADAMI, SA-LEX-KAROMI, SA-ETYMON-KR-TO-DO]
+  knowledge: [SA-LEX-VADAMI, SA-LEX-KAROMI, SA-ETYMON-KR-TO-DO, SA-PATTERN-I-SPEAK-SANSKRIT]
 skills: [listening, speaking]
 modes: [interpersonal, interpretive]
 strands: [meaning-input, meaning-output]
@@ -35,10 +35,12 @@ variety: classical
 
 ## Warm-up
 
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-VADAMI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-VADAMI, SA-PATTERN-I-SPEAK-SANSKRIT] -->
 
 [PAUSE 2s] The last verb of the chapter — from the single most productive root in
 Sanskrit, one you have met again and again.
+
+[PAUSE 1s] Say "I speak Sanskrit." (*Ahaṁ saṁskṛtam vadāmi*.)
 
 ## Sounds you'll need
 

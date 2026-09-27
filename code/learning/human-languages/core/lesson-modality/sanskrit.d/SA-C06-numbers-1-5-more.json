@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C06-numbers-1-5-more",
+    "language": "sanskrit",
+    "chapter": 6,
+    "sequence": 315,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:214af4f1214dadca"
+  },
+  "findings": []
+}

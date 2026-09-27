@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C129-virah",
+    "language": "sanskrit",
+    "chapter": 129,
+    "sequence": 6370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c157013adfd1fdf9"
+  },
+  "findings": []
+}

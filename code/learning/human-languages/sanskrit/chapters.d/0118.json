@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Ankle, Finger, Room, Chair, Board",
+  "label": "ch:sa-ankle-finger-room-chair-board",
+  "canDo": "I can say an ankle, a finger, a room, a chair and a board.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C118-phalakam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say an ankle, a finger, a room, a chair and a board.",
+    "assesses": [
+      "SA-LEX-C118-THINGS118-03",
+      "SA-LEX-C118-THINGS118-04",
+      "SA-LEX-C118-THINGS118-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:b33096110aa096cb",
+  "lessonIds": [
+    "SA-C90-ahah",
+    "SA-C90-pradosah",
+    "SA-C90-aparahnah",
+    "SA-C90-madhyaratrih",
+    "SA-C90-usah"
+  ],
+  "tex": "sanskrit/book/chapters/ch90-day-early-evening-afternoon-midnight-dawn.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:31908bf8e2746f85",
+  "lessonIds": [
+    "SA-C111-vatya",
+    "SA-C111-niharah",
+    "SA-C111-sakha",
+    "SA-C111-parnam",
+    "SA-C111-kusumam"
+  ],
+  "tex": "sanskrit/book/chapters/ch111-storm-mist-branch-leaf-flower.tex"
+}

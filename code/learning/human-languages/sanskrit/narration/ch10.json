@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "What You'd Ask For",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:24ba37e51757f491",
+  "sourceHash": "fnv1a64:b6e189881231b8de",
   "lessons": [
     {
       "id": "SA-C10-paniyam",
@@ -540,7 +540,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8853c2d6965dcd7d",
+      "sourceHash": "fnv1a64:19e646f40d864988",
       "notice": {
         "modality": "sight",
         "needs": [

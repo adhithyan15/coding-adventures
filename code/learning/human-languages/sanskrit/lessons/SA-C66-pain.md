@@ -12,17 +12,17 @@ headword: "पीडा"
 gloss: "pain"
 romanization: "pīḍā"
 concept_tag: SA-UNWELL-PAIN
-prerequisites: [SA-C66-fever, SA-C66-cough]
+prerequisites: [SA-C66-fever, SA-C66-cough, SA-C64-words]
 sounds: []
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [SA-LEX-C66-UNWELL-01, SA-LEX-C66-UNWELL-02]
+  knowledge: [SA-LEX-C66-UNWELL-01, SA-LEX-C66-UNWELL-02, SA-SKILL-READ-WORDS]
 introduces:
   knowledge: [SA-LEX-C66-UNWELL-03]
 practises:
-  knowledge: [SA-LEX-C66-UNWELL-03, SA-LEX-C66-UNWELL-01, SA-LEX-C66-UNWELL-02]
+  knowledge: [SA-LEX-C66-UNWELL-03, SA-LEX-C66-UNWELL-01, SA-LEX-C66-UNWELL-02, SA-SKILL-READ-WORDS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C66-cough]
 # पीडा (pīḍā) — pain
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C66-UNWELL-01, SA-LEX-C66-UNWELL-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C66-UNWELL-01, SA-LEX-C66-UNWELL-02, SA-SKILL-READ-WORDS] -->
 
 [PAUSE 2s] Before the new one: say the Sanskrit for a fever, then the Sanskrit for a cough.
+
+[PAUSE 1s] Before you hear today's word, read it aloud from the page, one letter-group at a time.
 
 ## You'll want to know: पीडा
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-03]; assesses=[] -->

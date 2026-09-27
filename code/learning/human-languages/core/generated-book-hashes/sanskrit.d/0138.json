@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:082db5967c7c2705",
+  "lessonIds": [
+    "SA-C138-vikrinati",
+    "SA-C138-karsati",
+    "SA-C138-nudati",
+    "SA-C138-bhramati",
+    "SA-C138-vardhate",
+    "SA-R138-first-pass-describing-words",
+    "SA-R138-second-pass-verbs"
+  ],
+  "tex": "sanskrit/book/chapters/ch138-sells-pulls-pushes-wanders-grows.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:6ef389f1f8dcfdfa",
+  "lessonIds": [
+    "SA-C131-krsnah",
+    "SA-C131-dhusarah",
+    "SA-C131-patalah",
+    "SA-C131-spastah",
+    "SA-C131-sthulah"
+  ],
+  "tex": "sanskrit/book/chapters/ch131-black-grey-pink-clear-thick.tex"
+}

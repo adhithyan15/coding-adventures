@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-108-THINGS108",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an onion, a potato, an aubergine, a pumpkin and a coconut.",
+  "prerequisites": []
+}

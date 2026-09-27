@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C118-angulih",
+    "language": "sanskrit",
+    "chapter": 118,
+    "sequence": 5770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:570a725bef646e9c"
+  },
+  "findings": []
+}

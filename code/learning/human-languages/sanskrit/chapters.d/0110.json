@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Mountain, Waterfall, Wave, Lightning, Thunder",
+  "label": "ch:sa-mountain-waterfall-wave-lightning-thunder",
+  "canDo": "I can say a mountain, a waterfall, a wave, lightning and thunder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C110-garjanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a mountain, a waterfall, a wave, lightning and thunder.",
+    "assesses": [
+      "SA-LEX-C110-THINGS110-03",
+      "SA-LEX-C110-THINGS110-04",
+      "SA-LEX-C110-THINGS110-05"
+    ]
+  }
+}

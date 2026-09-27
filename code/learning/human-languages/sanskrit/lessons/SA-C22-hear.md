@@ -12,17 +12,17 @@ headword: "शृणोति"
 gloss: "he, she or it hears"
 romanization: "śṛṇoti"
 concept_tag: SA-VERB-HEAR
-prerequisites: [SA-C20-man, SA-C20-woman]
+prerequisites: [SA-C20-man, SA-C20-woman, SA-C21-remember]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [SA-LEX-REMEMBER]
 introduces:
   knowledge: [SA-LEX-HEAR]
 practises:
-  knowledge: [SA-LEX-HEAR, SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02]
+  knowledge: [SA-LEX-HEAR, SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02, SA-LEX-REMEMBER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: []
 # शृणोति (śṛṇoti) — he, she or it hears
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-REMEMBER] -->
 
 [PAUSE 2s] A short run of everyday verbs, one at a time.
+
+[PAUSE 1s] Say "remembers." (*Smarati*.) *Smṛti* is what is remembered; this lesson's verb gives *śruti*, what is heard.
 
 ## You'll want to know: शृणोति
 <!-- hl-knowledge: introduces=[SA-LEX-HEAR]; assesses=[] -->

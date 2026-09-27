@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:351414bb56b4af39",
+  "lessonIds": [
+    "SA-C94-bahih",
+    "SA-C94-upari",
+    "SA-C94-adhah",
+    "SA-C94-agre",
+    "SA-C94-prsthatah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch94.txt",
+  "json": "sanskrit/narration/ch94.json",
+  "textHash": "fnv1a64:b97066a39f234eb2",
+  "jsonHash": "fnv1a64:b547342d406b701a",
+  "findings": []
+}

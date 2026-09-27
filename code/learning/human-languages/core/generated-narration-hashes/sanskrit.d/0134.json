@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:7ea4e3805fcfe28a",
+  "lessonIds": [
+    "SA-C134-chinatti",
+    "SA-C134-bhinatti",
+    "SA-C134-sthapayati",
+    "SA-C134-presayati",
+    "SA-C134-anvisyati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch134.txt",
+  "json": "sanskrit/narration/ch134.json",
+  "textHash": "fnv1a64:b05cf5ef062eb5c5",
+  "jsonHash": "fnv1a64:7b2d6484bda211be",
+  "findings": []
+}

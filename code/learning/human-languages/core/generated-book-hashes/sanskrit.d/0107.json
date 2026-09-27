@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:1e1b5d905970d5d1",
+  "lessonIds": [
+    "SA-C107-gudah",
+    "SA-C107-maricam",
+    "SA-C107-haridra",
+    "SA-C107-ardrakam",
+    "SA-C107-lasunam"
+  ],
+  "tex": "sanskrit/book/chapters/ch107-jaggery-pepper-turmeric-ginger-garlic.tex"
+}

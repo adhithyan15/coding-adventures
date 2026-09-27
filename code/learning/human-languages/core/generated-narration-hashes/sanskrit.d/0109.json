@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:eff7510b963c8472",
+  "lessonIds": [
+    "SA-C109-dadimam",
+    "SA-C109-draksa",
+    "SA-C109-panasam",
+    "SA-C109-nimbukam",
+    "SA-C109-apupah",
+    "SA-R109-first-pass-tools-and-things-you-use",
+    "SA-R109-second-pass-machines-the-house-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch109.txt",
+  "json": "sanskrit/narration/ch109.json",
+  "textHash": "fnv1a64:83d0ed39a20a3c24",
+  "jsonHash": "fnv1a64:e64c7aa37198bb09",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C130-murkhah",
+    "language": "sanskrit",
+    "chapter": 130,
+    "sequence": 6420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4772efe71148c4e"
+  },
+  "findings": []
+}

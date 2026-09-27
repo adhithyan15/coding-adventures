@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:bfaf028be12e4dd8",
+  "lessonIds": [
+    "SA-C93-kadapi",
+    "SA-C93-vilambah",
+    "SA-C93-vamah",
+    "SA-C93-daksinah",
+    "SA-C93-antah"
+  ],
+  "tex": "sanskrit/book/chapters/ch93-ever-delay-left-right-inside.tex"
+}

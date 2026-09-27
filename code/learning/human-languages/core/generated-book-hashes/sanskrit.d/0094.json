@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:7b8c82a7432ad6bc",
+  "lessonIds": [
+    "SA-C94-bahih",
+    "SA-C94-upari",
+    "SA-C94-adhah",
+    "SA-C94-agre",
+    "SA-C94-prsthatah"
+  ],
+  "tex": "sanskrit/book/chapters/ch94-outside-above-below-in-front-behind.tex"
+}

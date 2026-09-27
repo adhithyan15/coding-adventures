@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C115-masakah",
+    "language": "sanskrit",
+    "chapter": 115,
+    "sequence": 5620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c30835ee088bd5c0"
+  },
+  "findings": []
+}

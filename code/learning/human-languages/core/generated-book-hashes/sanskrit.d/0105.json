@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:225f07ec0aec8d85",
+  "lessonIds": [
+    "SA-C105-duradarsanam",
+    "SA-C105-sanganakam",
+    "SA-C105-yantram",
+    "SA-C105-vyajanam",
+    "SA-C105-petika"
+  ],
+  "tex": "sanskrit/book/chapters/ch105-television-computer-machine-fan-box.tex"
+}

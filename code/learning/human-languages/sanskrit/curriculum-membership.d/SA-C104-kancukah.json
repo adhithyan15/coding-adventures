@@ -1,0 +1,11 @@
+{
+  "id": "SA-C104-kancukah",
+  "pathSegment": "SA-PATH-104-THINGS104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-104-THINGS104",
+      "order": 3
+    }
+  ]
+}

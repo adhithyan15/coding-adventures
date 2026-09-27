@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:7eb5459a5ef069e8",
+  "lessonIds": [
+    "SA-C123-pitham",
+    "SA-C123-dvicakrika",
+    "SA-C123-yanam",
+    "SA-C123-nauyanam",
+    "SA-C123-dhumayanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch123-seat-bicycle-vehicle-ship-train.tex"
+}

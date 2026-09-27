@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:c26665c241e55798",
+  "lessonIds": [
+    "SA-C104-satika",
+    "SA-C104-padatranam",
+    "SA-C104-usnisam",
+    "SA-C104-kancukah",
+    "SA-C104-durabhasah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch104.txt",
+  "json": "sanskrit/narration/ch104.json",
+  "textHash": "fnv1a64:5c48d2eaa5103fa1",
+  "jsonHash": "fnv1a64:307e0d8059eec1b6",
+  "findings": []
+}

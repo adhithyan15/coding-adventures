@@ -1,0 +1,11 @@
+{
+  "id": "SA-C124-kokilah",
+  "pathSegment": "SA-PATH-124-THINGS124",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-124-THINGS124",
+      "order": 3
+    }
+  ]
+}

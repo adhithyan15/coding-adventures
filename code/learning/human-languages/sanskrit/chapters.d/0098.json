@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Therefore, So, Cause, For that reason, Because",
+  "label": "ch:sa-therefore-so-cause-for-that-reason-because",
+  "canDo": "I can say therefore, so, a cause, for that reason and because.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "SA-C98-yasmat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say therefore, so, a cause, for that reason and because.",
+    "assesses": [
+      "SA-LEX-C98-WHY98-03",
+      "SA-LEX-C98-WHY98-04",
+      "SA-LEX-C98-WHY98-05"
+    ]
+  }
+}

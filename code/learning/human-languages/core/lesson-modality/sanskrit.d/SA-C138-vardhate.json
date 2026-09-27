@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C138-vardhate",
+    "language": "sanskrit",
+    "chapter": 138,
+    "sequence": 6860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:897f0f2263df7803"
+  },
+  "findings": []
+}

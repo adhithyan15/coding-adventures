@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C104-usnisam",
+    "language": "sanskrit",
+    "chapter": 104,
+    "sequence": 5050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78e46bcc042f3967"
+  },
+  "findings": []
+}

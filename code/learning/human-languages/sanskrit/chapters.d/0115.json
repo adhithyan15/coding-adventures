@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Fly, Mosquito, Ant, Butterfly, Rooster",
+  "label": "ch:sa-fly-mosquito-ant-butterfly-rooster",
+  "canDo": "I can say a fly, a mosquito, an ant, a butterfly and a rooster.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C115-kukkutah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a fly, a mosquito, an ant, a butterfly and a rooster.",
+    "assesses": [
+      "SA-LEX-C115-THINGS115-03",
+      "SA-LEX-C115-THINGS115-04",
+      "SA-LEX-C115-THINGS115-05"
+    ]
+  }
+}

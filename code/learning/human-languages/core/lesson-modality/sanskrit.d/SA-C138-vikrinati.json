@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C138-vikrinati",
+    "language": "sanskrit",
+    "chapter": 138,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00a269f0b54305aa"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C95-madhye",
+    "language": "sanskrit",
+    "chapter": 95,
+    "sequence": 4550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc4a71eccac3c95f"
+  },
+  "findings": []
+}

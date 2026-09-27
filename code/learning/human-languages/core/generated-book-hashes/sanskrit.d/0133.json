@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:12b8c9427a301f77",
+  "lessonIds": [
+    "SA-C133-nicah",
+    "SA-C133-unnatah",
+    "SA-C133-uddayate",
+    "SA-C133-tarati",
+    "SA-C133-kurdati"
+  ],
+  "tex": "sanskrit/book/chapters/ch133-low-high-flies-swims-jumps.tex"
+}

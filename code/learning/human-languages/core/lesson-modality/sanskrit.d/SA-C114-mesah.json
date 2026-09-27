@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C114-mesah",
+    "language": "sanskrit",
+    "chapter": 114,
+    "sequence": 5560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:778da90974b4620f"
+  },
+  "findings": []
+}

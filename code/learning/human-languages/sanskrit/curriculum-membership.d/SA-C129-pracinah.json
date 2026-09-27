@@ -1,0 +1,11 @@
+{
+  "id": "SA-C129-pracinah",
+  "pathSegment": "SA-PATH-129-QUAL129",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-129-QUAL129",
+      "order": 2
+    }
+  ]
+}

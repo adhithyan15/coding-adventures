@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 101,
+  "output": "sanskrit/book/chapters/ch101-comb-soap-towel-glasses-bag.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

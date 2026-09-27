@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "The River and the Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e76962896e08ef8b",
+  "sourceHash": "fnv1a64:c335a2d878d33740",
   "lessons": [
     {
       "id": "SA-C33-river",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bf72209d14b67b1",
+      "sourceHash": "fnv1a64:1b771d579070b4d4",
       "notice": null,
       "blocks": [
         {
@@ -429,6 +429,16 @@
             {
               "kind": "speech",
               "text": "Before the new word: what did parvataḥ mean?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"city.\" (Nagaram.) This lesson has another word for a place where people live together."
             }
           ]
         },

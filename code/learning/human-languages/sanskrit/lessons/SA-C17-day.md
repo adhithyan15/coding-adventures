@@ -18,11 +18,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [SA-GRAMMAR-C16-NOUN-FAMILIES]
 introduces:
   knowledge: [SA-LEX-C17-TIME-01]
 practises:
-  knowledge: [SA-LEX-C17-TIME-01]
+  knowledge: [SA-LEX-C17-TIME-01, SA-GRAMMAR-C16-NOUN-FAMILIES]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C16-noun-families]
 # दिनम् (dinam) — day
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C16-NOUN-FAMILIES] -->
 
 [PAUSE 2s] You have places. Now you need times to put in them.
+
+[PAUSE 1s] Nouns that end in *-am* — *gṛham, vanam, nagaram* — are neuter. Listen for the ending on this lesson's word.
 
 ## You'll want to know: दिनम्
 <!-- hl-knowledge: introduces=[SA-LEX-C17-TIME-01]; assesses=[] -->

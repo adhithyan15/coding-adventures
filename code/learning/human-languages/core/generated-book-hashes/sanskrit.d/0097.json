@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:e6e4346740ca8f4c",
+  "lessonIds": [
+    "SA-C97-karyalayah",
+    "SA-C97-bhojanalayah",
+    "SA-C97-sthanakam",
+    "SA-C97-karanam",
+    "SA-C97-yatah"
+  ],
+  "tex": "sanskrit/book/chapters/ch97-office-restaurant-station-reason-because.tex"
+}

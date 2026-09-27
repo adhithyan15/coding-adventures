@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Naming Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7118d0b9041ee2a6",
+  "sourceHash": "fnv1a64:f065e6ed6bab50ba",
   "lessons": [
     {
       "id": "SA-C26-teacher",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c379f21ea249a9a",
+      "sourceHash": "fnv1a64:e9c29355812e9bbe",
       "notice": null,
       "blocks": [
         {
@@ -298,6 +298,16 @@
             {
               "kind": "speech",
               "text": "Before the new word: what did śiṣyaḥ mean?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"people.\" (Janaḥ, from the root jan \"to be born.\") A king rules over them."
             }
           ]
         },
@@ -412,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b3c4db4725f0ea2",
+      "sourceHash": "fnv1a64:8d96f1e49f337369",
       "notice": null,
       "blocks": [
         {
@@ -429,6 +439,16 @@
             {
               "kind": "speech",
               "text": "Before the new word: what did rājā mean, and what did guruḥ mean?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a guest \"from where?\" and \"how?\" (Kutaḥ? Katham?) — two more of the k- questions."
             }
           ]
         },

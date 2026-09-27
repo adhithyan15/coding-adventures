@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:1f06d8c5ef15327a",
+  "lessonIds": [
+    "SA-C125-nakulah",
+    "SA-C125-hrasvah",
+    "SA-C125-mrduh",
+    "SA-C125-suddhah",
+    "SA-C125-malinah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch125.txt",
+  "json": "sanskrit/narration/ch125.json",
+  "textHash": "fnv1a64:18bd1fdee6e692a9",
+  "jsonHash": "fnv1a64:24311536312d0216",
+  "findings": []
+}

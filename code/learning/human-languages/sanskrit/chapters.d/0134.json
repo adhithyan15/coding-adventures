@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Cuts, Breaks, Places, Sends, Searches",
+  "label": "ch:sa-cuts-breaks-places-sends-searches",
+  "canDo": "I can say cuts, breaks, places, sends and searches.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C134-anvisyati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say cuts, breaks, places, sends and searches.",
+    "assesses": [
+      "SA-LEX-C134-ACT134-03",
+      "SA-LEX-C134-ACT134-04",
+      "SA-LEX-C134-ACT134-05"
+    ]
+  }
+}

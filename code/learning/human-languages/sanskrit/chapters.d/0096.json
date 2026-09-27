@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Main road, Crossroads, Corner, Library, University",
+  "label": "ch:sa-main-road-crossroads-corner-library-university",
+  "canDo": "I can say a main road, a crossroads, a corner, a library and a university.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "SA-C96-visvavidyalayah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say a main road, a crossroads, a corner, a library and a university.",
+    "assesses": [
+      "SA-LEX-C96-LOC96-03",
+      "SA-LEX-C96-LOC96-04",
+      "SA-LEX-C96-LOC96-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-104-THINGS104",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a sari, a shoe, a turban, a shirt and a telephone.",
+  "prerequisites": []
+}

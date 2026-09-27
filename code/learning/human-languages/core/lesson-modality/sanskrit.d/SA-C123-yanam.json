@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C123-yanam",
+    "language": "sanskrit",
+    "chapter": 123,
+    "sequence": 6060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:395bf9452037d5ee"
+  },
+  "findings": []
+}

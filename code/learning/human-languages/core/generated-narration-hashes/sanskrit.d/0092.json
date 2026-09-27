@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:9648b7a10e154023",
+  "lessonIds": [
+    "SA-C92-nimesah",
+    "SA-C92-purvam",
+    "SA-C92-pascat",
+    "SA-C92-adhuna",
+    "SA-C92-sarvada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch92.txt",
+  "json": "sanskrit/narration/ch92.json",
+  "textHash": "fnv1a64:afc9148789d17302",
+  "jsonHash": "fnv1a64:caa4f8e5b80e7d46",
+  "findings": []
+}

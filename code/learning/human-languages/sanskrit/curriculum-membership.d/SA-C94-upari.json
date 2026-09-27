@@ -1,0 +1,11 @@
+{
+  "id": "SA-C94-upari",
+  "pathSegment": "SA-PATH-94-LOC94",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-94-LOC94",
+      "order": 1
+    }
+  ]
+}

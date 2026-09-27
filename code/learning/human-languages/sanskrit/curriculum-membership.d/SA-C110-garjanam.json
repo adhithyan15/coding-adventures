@@ -1,0 +1,11 @@
+{
+  "id": "SA-C110-garjanam",
+  "pathSegment": "SA-PATH-110-THINGS110",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-110-THINGS110",
+      "order": 4
+    }
+  ]
+}

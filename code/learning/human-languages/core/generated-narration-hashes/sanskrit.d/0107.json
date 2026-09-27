@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:6696f1cd9df16f0f",
+  "lessonIds": [
+    "SA-C107-gudah",
+    "SA-C107-maricam",
+    "SA-C107-haridra",
+    "SA-C107-ardrakam",
+    "SA-C107-lasunam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch107.txt",
+  "json": "sanskrit/narration/ch107.json",
+  "textHash": "fnv1a64:4d876f227d07a951",
+  "jsonHash": "fnv1a64:e71754fd25d2d0a4",
+  "findings": []
+}

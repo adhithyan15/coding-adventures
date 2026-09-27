@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Crane, Cheek, Chin, Elbow, Wrist",
+  "label": "ch:sa-crane-cheek-chin-elbow-wrist",
+  "canDo": "I can say a crane, a cheek, the chin, an elbow and a wrist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C116-manibandhah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a crane, a cheek, the chin, an elbow and a wrist.",
+    "assesses": [
+      "SA-LEX-C116-THINGS116-03",
+      "SA-LEX-C116-THINGS116-04",
+      "SA-LEX-C116-THINGS116-05"
+    ]
+  }
+}
