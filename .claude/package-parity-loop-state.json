@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16181,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16181",
+    "branch": "codex/parity-ruby-glob-hardening-20260927",
+    "implementation_revision": "12c9919083805bcc9758856c3cfdd04373540243",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-27T20:34:14Z",
-    "pr_number": 16171,
-    "status": "merged",
-    "notes": "All 48 final-head checks reached terminal acceptable conclusions: 13 successes and 35 expected path-gated skips. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge was enabled, and PR #16171 merged automatically as 96c35742c97202b04e81cc8da8391f932356fcb3 without a plain manual merge command."
+    "observed_at": "2026-09-27T20:56:44Z",
+    "pr_number": 16181,
+    "status": "checks-pending",
+    "notes": "PR #16181 is open and ready for review at implementation revision 12c9919083805bcc9758856c3cfdd04373540243. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued; auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "96c35742c97202b04e81cc8da8391f932356fcb3",
@@ -1091,13 +1097,18 @@
     {
       "id": "build-tool-ruby-glob-matcher-complexity-hardening",
       "title": "Harden Ruby build-tool glob matcher complexity",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-ruby-glob-hardening-20260927",
-      "pr_number": null,
+      "pr_number": 16181,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16181",
+      "opened_at": "2026-09-27T20:56:40Z",
+      "opened_revision": "12c9919083805bcc9758856c3cfdd04373540243",
+      "implementation_revision": "12c9919083805bcc9758856c3cfdd04373540243",
       "selected_at": "2026-09-27T20:37:01Z",
       "selection_revision": "96c35742c97202b04e81cc8da8391f932356fcb3",
       "selection_notes": "Selected only after PR #16171 completed all 48 final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 inventory remains collision-free and unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Both formal prerequisites are merged; no live open PR overlaps the Ruby build-tool matcher paths; and the dependency refresh ranks this item above the matching TypeScript hardening and Perl diff-selection adoption because it closes both recursive-suffix complexity and host File.fnmatch semantic drift while unlocking five direct and ten transitive unfinished children.",
+      "progress_notes": "Replaced recursive suffix slicing and File.fnmatch with an explicit Unicode-scalar parser and rolling-row dynamic programs. Strict character classes now match the portable Python-fnmatchcase contract, ambiguous or descending classes raise one stable typed error, and Hasher plus GitDiff validate and compile complete declared lists before enumeration or short-circuiting. The canonical BUILD front passes 376 tests with 923 assertions, four platform skips, 91.48% line coverage, and 76.77% branch coverage. Focused Go oracle tests, trimpath build, exact-diff downstream planning, conformance schema and corpus validation, collision-clean parity checks, bundle audit, diff checks, and independent security review pass; the inherited Windows syscall.Mkfifo vet boundary and repository CRLF/style baseline remain disclosed.",
       "notes": "Eliminate recursive suffix slicing and host-matcher divergence with bounded memoized portable-glob semantics, strict character classes, and stable failures."
     },
     {
