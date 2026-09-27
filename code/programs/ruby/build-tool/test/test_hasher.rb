@@ -576,6 +576,21 @@ class TestHasher < Minitest::Test
     FileUtils.rm_rf(dir)
   end
 
+  def test_invalid_later_glob_fails_before_filesystem_enumeration
+    missing = Pathname(Dir.tmpdir) / "build_tool_missing_glob_preflight_#{Process.pid}"
+    FileUtils.rm_rf(missing)
+    pkg = GlobPackage.new(
+      name: "python/missing", path: missing,
+      build_commands: [], language: "python",
+      declared_srcs: ["**/*.py", "[z-a].py"]
+    )
+
+    error = assert_raises(BuildTool::GlobMatch::InvalidPatternError) do
+      BuildTool::Hasher.collect_source_files_glob(pkg, pkg.declared_srcs)
+    end
+    assert_equal "ambiguous or descending character class in glob pattern", error.message
+  end
+
   def test_collect_source_files_falls_back_without_declared_srcs
     # A package without declared_srcs should use extension-based filtering.
     dir = create_temp_dir
