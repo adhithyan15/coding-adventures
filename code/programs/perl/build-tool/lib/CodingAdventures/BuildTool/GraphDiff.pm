@@ -11,6 +11,15 @@ use CodingAdventures::BuildTool::TrackedArtifactUnicode17 ();
 
 our $VERSION = '0.1.0';
 
+package CodingAdventures::BuildTool::GraphDiff::Error {
+    use overload '""' => sub { $_[0]->{code} }, fallback => 1;
+
+    sub new {
+        my ($class, $code) = @_;
+        return bless {code => $code}, $class;
+    }
+}
+
 use constant MAX_PACKAGES        => 4_096;
 use constant MAX_EDGES           => 16_384;
 use constant MAX_SOURCE_GLOBS    => 256;
@@ -207,7 +216,7 @@ sub _validate_diff_input {
                 'DIFF_GLOB_INVALID');
             my $compiled_pattern;
             eval { $compiled_pattern = _compile_pattern($pattern); 1 }
-                or die 'DIFF_GLOB_INVALID';
+                or _fail('DIFF_GLOB_INVALID');
             push @{$compiled{$name}}, $compiled_pattern;
         }
         _require($package->{source_mode} eq 'strict_globs' || !@{$globs},
@@ -527,7 +536,12 @@ sub _diff_error {
 
 sub _require {
     my ($condition, $code) = @_;
-    die $code if !$condition;
+    _fail($code) if !$condition;
+}
+
+sub _fail {
+    my ($code) = @_;
+    die CodingAdventures::BuildTool::GraphDiff::Error->new($code);
 }
 
 1;
