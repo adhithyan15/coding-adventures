@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added — recoverable SwiftUI runtime loading
+
+`MosaicRuntimeHost.loadRecoverable()` returns the strict runtime load as a
+`Result`, allowing generated SwiftUI windows to report a loader failure and
+retry instead of terminating through `loadRequired()`.
+
 ### Added — the Compose host knows Android (UI89 §3.4)
 
 `mosaicPlatform()` reports `android` on Android's runtime, and
