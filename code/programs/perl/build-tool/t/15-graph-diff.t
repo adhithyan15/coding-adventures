@@ -227,6 +227,28 @@ subtest 'structural graph failures are stable and bounded' => sub {
         'GRAPH_PACKAGE_LIMIT_EXCEEDED',
         'package ceiling rejects only above the bound',
     );
+
+    my @edge_packages = map { "fixture/e-$_" } 0 .. 4095;
+    my @exact_edges;
+    for my $offset (1 .. 4) {
+        push @exact_edges, map {
+            ["fixture/e-$_", 'fixture/e-' . (($_ + $offset) % 4096)]
+        } 0 .. 4095;
+    }
+    my $edge_result = CodingAdventures::BuildTool::GraphDiff::evaluate_graph({
+        packages => \@edge_packages, edges => \@exact_edges,
+    });
+    is($edge_result->{error_code}, 'GRAPH_CYCLE', 'exact edge ceiling validates and proceeds');
+    push @exact_edges, ['fixture/e-0', 'fixture/e-5'];
+    is(
+        capture_error(sub {
+            CodingAdventures::BuildTool::GraphDiff::evaluate_graph({
+                packages => \@edge_packages, edges => \@exact_edges,
+            });
+        }),
+        'GRAPH_EDGE_LIMIT_EXCEEDED',
+        'edge ceiling rejects before inspecting the extra edge',
+    );
 };
 
 subtest 'diff validation precedence is stable' => sub {
@@ -288,6 +310,67 @@ subtest 'diff validation precedence is stable' => sub {
         }),
         'DIFF_BOUNDARY_DIGEST_MISMATCH',
         'boundary mismatch precedes match-work preflight',
+    );
+};
+
+subtest 'diff preflight prevents premature matching' => sub {
+    my $original_matcher = \&CodingAdventures::BuildTool::GraphDiff::_match_path;
+    my $calls = 0;
+    no warnings 'redefine';
+    local *CodingAdventures::BuildTool::GraphDiff::_match_path = sub {
+        $calls++;
+        return $original_matcher->(@_);
+    };
+
+    my $exact = load_case('diff-selection-match-work-at-limit.json')->{input};
+    my $exact_result = CodingAdventures::BuildTool::GraphDiff::evaluate_diff_selection($exact);
+    is($exact_result->{error_code}, '', 'exact ceiling proceeds');
+    ok($calls > 0, 'exact ceiling reaches the matcher');
+
+    $calls = 0;
+    my $over = load_case('diff-selection-match-work-over-limit.json')->{input};
+    my $over_result = CodingAdventures::BuildTool::GraphDiff::evaluate_diff_selection($over);
+    is($over_result->{error_code}, 'DIFF_MATCH_LIMIT_EXCEEDED', 'over ceiling is rejected');
+    is($calls, 0, 'over ceiling never reaches the matcher');
+};
+
+subtest 'portable roots and glob grammar are validated before selection' => sub {
+    my $nested_alias = {
+        operation => 'diff_selection',
+        options => {
+            packages => [
+                {name => 'fixture/a', rel_path => 'Code/Package', source_mode => 'package_prefix'},
+                {name => 'fixture/b', rel_path => 'code/package/child', source_mode => 'package_prefix'},
+            ],
+            edges => [], forced_packages => [], unknown_path_policy => 'error',
+        },
+        changed_paths => [],
+    };
+    is(
+        capture_error(sub {
+            CodingAdventures::BuildTool::GraphDiff::evaluate_diff_selection($nested_alias);
+        }),
+        'DIFF_PATH_INVALID',
+        'case-folded nested roots are rejected',
+    );
+
+    my $question_glob = {
+        operation => 'diff_selection',
+        options => {
+            packages => [{
+                name => 'fixture/a', rel_path => 'package-a', source_mode => 'strict_globs',
+                source_globs => ['src/?.pm'],
+            }],
+            edges => [], forced_packages => [], unknown_path_policy => 'error',
+        },
+        changed_paths => [],
+    };
+    is(
+        capture_error(sub {
+            CodingAdventures::BuildTool::GraphDiff::evaluate_diff_selection($question_glob);
+        }),
+        'DIFF_GLOB_INVALID',
+        'forbidden question-mark glob is rejected',
     );
 };
 
