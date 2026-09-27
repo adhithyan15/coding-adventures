@@ -213,7 +213,8 @@ V1 normalization rules:
 
 - accept string input
 - preserve spaces
-- convert lowercase letters to uppercase before validation
+- convert ASCII lowercase `a` through `z` to uppercase before validation;
+  reject Unicode and locale-dependent case-folding substitutes
 - reject characters outside the Code 39 alphabet
 - reject `*` in user input because it is reserved for start/stop
 
