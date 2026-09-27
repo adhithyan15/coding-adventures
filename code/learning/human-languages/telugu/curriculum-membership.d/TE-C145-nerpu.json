@@ -1,0 +1,11 @@
+{
+  "id": "TE-C145-nerpu",
+  "pathSegment": "TE-PATH-145-ACT145",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-145-ACT145",
+      "order": 1
+    }
+  ]
+}

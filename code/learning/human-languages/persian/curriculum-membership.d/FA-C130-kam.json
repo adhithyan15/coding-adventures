@@ -1,0 +1,11 @@
+{
+  "id": "FA-C130-kam",
+  "pathSegment": "FA-PATH-130-QUAL130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-130-QUAL130",
+      "order": 3
+    }
+  ]
+}

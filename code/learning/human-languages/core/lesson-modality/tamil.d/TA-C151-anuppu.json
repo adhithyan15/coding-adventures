@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C151-anuppu",
+    "language": "tamil",
+    "chapter": 151,
+    "sequence": 7020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba5d29830b3791a8"
+  },
+  "findings": []
+}

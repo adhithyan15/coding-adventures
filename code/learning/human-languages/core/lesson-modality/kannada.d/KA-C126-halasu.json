@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C126-halasu",
+    "language": "kannada",
+    "chapter": 126,
+    "sequence": 5300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83bbd01216e021a0"
+  },
+  "findings": []
+}

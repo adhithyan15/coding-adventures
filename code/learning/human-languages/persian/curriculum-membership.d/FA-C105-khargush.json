@@ -1,0 +1,11 @@
+{
+  "id": "FA-C105-khargush",
+  "pathSegment": "FA-PATH-105-THINGS105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-105-THINGS105",
+      "order": 1
+    }
+  ]
+}

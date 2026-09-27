@@ -1,0 +1,11 @@
+{
+  "id": "FA-C96-badbadak",
+  "pathSegment": "FA-PATH-96-THINGS96",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-96-THINGS96",
+      "order": 3
+    }
+  ]
+}

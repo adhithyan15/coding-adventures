@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:0e612f8aaf6ccdcc",
+  "lessonIds": [
+    "TE-C111-duvvena",
+    "TE-C111-sabbu",
+    "TE-C111-tuvvalu",
+    "TE-C111-kallajodu",
+    "TE-C111-gadiyaram"
+  ],
+  "tex": "telugu/book/chapters/ch111-comb-soap-towel-glasses-clock.tex"
+}

@@ -136,7 +136,8 @@ fn the_emitted_swiftui_host_answers_effects() {
             .env("MOSAIC_PROBE_STATE_C", project.join("state-c.json"))
             .env("MOSAIC_PROBE_STATE_D", project.join("state-d.json"))
             .env("MOSAIC_PROBE_STATE_E", project.join("state-e.json"))
-            .env("MOSAIC_PROBE_STATE_F", project.join("state-f.json")),
+            .env("MOSAIC_PROBE_STATE_F", project.join("state-f.json"))
+            .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json")),
         "swift effect driver",
     );
 
@@ -164,6 +165,14 @@ fn the_emitted_swiftui_host_answers_effects() {
         "the UI is told on the main thread, not the answering one",
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",
+        "an environment report reaches the runtime",
+        "an ignored environment keeps the props showing",
+        "the view still has props after the report",
+        "an unchanged environment is not sent again",
+        "a changed size class is sent",
+        "a malformed environment is refused, not applied",
+        "a refused environment leaves the props showing",
+        "a macOS app starts with a fine, hovering pointer",
     ] {
         assert!(
             stdout.contains(expected),

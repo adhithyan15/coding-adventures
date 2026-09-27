@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C122-divi",
+    "language": "telugu",
+    "chapter": 122,
+    "sequence": 5070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:196fbc55ab5c43f0"
+  },
+  "findings": []
+}

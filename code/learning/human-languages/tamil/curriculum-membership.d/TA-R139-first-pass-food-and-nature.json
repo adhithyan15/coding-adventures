@@ -1,0 +1,11 @@
+{
+  "id": "TA-R139-first-pass-food-and-nature",
+  "pathSegment": "TA-PATH-139-THINGS139",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-139-THINGS139",
+      "order": 5
+    }
+  ]
+}

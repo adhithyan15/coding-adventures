@@ -1,0 +1,11 @@
+{
+  "id": "TA-C116-tiramai",
+  "pathSegment": "TA-PATH-116-LOC116",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-116-LOC116",
+      "order": 4
+    }
+  ]
+}

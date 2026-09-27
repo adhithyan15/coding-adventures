@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:4451c2cf94529d41",
+  "lessonIds": [
+    "TE-C143-errati",
+    "TE-C143-egiru",
+    "TE-C143-parigettu",
+    "TE-C143-nidrapo",
+    "TE-C143-lecu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch143.txt",
+  "json": "telugu/narration/ch143.json",
+  "textHash": "fnv1a64:8f986f6e4ed74078",
+  "jsonHash": "fnv1a64:a361327b37780e96",
+  "findings": []
+}

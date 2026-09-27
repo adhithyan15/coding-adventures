@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C116-keshavarz",
+    "language": "persian",
+    "chapter": 116,
+    "sequence": 5840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c3fdd2ef8d1d233"
+  },
+  "findings": []
+}

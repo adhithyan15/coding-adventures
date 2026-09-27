@@ -1,0 +1,11 @@
+{
+  "id": "KA-C110-tota",
+  "pathSegment": "KA-PATH-110-LOC110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-110-LOC110",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:8276fac4bfbeb28e",
+  "lessonIds": [
+    "FA-C119-lubiya",
+    "FA-C119-nokhod",
+    "FA-C119-sekke",
+    "FA-C119-dastband",
+    "FA-C119-keravat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch119.txt",
+  "json": "persian/narration/ch119.json",
+  "textHash": "fnv1a64:0a2a59aebab96752",
+  "jsonHash": "fnv1a64:cfb3d44e6cddb66d",
+  "findings": []
+}

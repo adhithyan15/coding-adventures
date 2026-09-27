@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-142-QUAL142",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "TE-EXT-142-QUAL142"
+  ],
+  "after": []
+}

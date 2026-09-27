@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:18e8e473ff2d5a89",
+  "lessonIds": [
+    "TE-C125-pavuram",
+    "TE-C125-gudlaguba",
+    "TE-C125-nemali",
+    "TE-C125-sitakokacilaka",
+    "TE-C125-kaki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch125.txt",
+  "json": "telugu/narration/ch125.json",
+  "textHash": "fnv1a64:ee551c2df64750dc",
+  "jsonHash": "fnv1a64:0d395ea0279c5514",
+  "findings": []
+}

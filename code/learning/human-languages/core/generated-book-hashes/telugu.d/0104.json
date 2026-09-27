@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:4f7ee7e211bf9969",
+  "lessonIds": [
+    "TE-C104-tiram",
+    "TE-C104-karyalayam",
+    "TE-C104-tota",
+    "TE-C104-mula",
+    "TE-C104-malupu"
+  ],
+  "tex": "telugu/book/chapters/ch104-shore-office-garden-corner-turn.tex"
+}

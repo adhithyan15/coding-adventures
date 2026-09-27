@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Cap, Ring, Bangles, Curry, Dal",
+  "label": "ch:te-cap-ring-bangles-curry-dal",
+  "canDo": "I can say a cap, a ring, bangles, a curry and dal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C115-pappu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a cap, a ring, bangles, a curry and dal.",
+    "assesses": [
+      "TE-LEX-C115-THINGS115-03",
+      "TE-LEX-C115-THINGS115-04",
+      "TE-LEX-C115-THINGS115-05"
+    ]
+  }
+}

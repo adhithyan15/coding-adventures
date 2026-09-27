@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-101-THINGS101",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an almond, a pistachio, a cucumber, an aubergine and garlic.",
+  "prerequisites": []
+}

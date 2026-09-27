@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:e12464b81d64a8cf",
+  "lessonIds": [
+    "KA-C127-samudra",
+    "KA-C127-kadu",
+    "KA-C127-mannu",
+    "KA-C127-kallu",
+    "KA-C127-gudugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch127.txt",
+  "json": "kannada/narration/ch127.json",
+  "textHash": "fnv1a64:47d15710fec0370d",
+  "jsonHash": "fnv1a64:ddfe2df5037d353b",
+  "findings": []
+}

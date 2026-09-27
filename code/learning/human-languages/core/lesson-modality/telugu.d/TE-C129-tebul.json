@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C129-tebul",
+    "language": "telugu",
+    "chapter": 129,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffc30f19a3a3cee2"
+  },
+  "findings": []
+}

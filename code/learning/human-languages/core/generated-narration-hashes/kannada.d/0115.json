@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:3d1a847a845f5246",
+  "lessonIds": [
+    "KA-C115-karana",
+    "KA-C115-adudarinda",
+    "KA-C115-adakke",
+    "KA-C115-yakendare",
+    "KA-C115-mamca"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch115.txt",
+  "json": "kannada/narration/ch115.json",
+  "textHash": "fnv1a64:716e94d0f5a11b14",
+  "jsonHash": "fnv1a64:c04ec27f594394ad",
+  "findings": []
+}

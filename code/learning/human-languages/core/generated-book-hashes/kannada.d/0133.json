@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:07338d9168398001",
+  "lessonIds": [
+    "KA-C133-kappe",
+    "KA-C133-batukoli",
+    "KA-C133-handi",
+    "KA-C133-katte",
+    "KA-C133-onte"
+  ],
+  "tex": "kannada/book/chapters/ch133-frog-duck-pig-donkey-camel.tex"
+}

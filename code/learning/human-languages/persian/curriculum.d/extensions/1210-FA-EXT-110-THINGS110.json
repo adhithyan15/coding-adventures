@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-110-THINGS110",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a light bulb, a telephone, a computer, a television and a jug.",
+  "prerequisites": []
+}

@@ -1,0 +1,5 @@
+packages: .
+          ../der-tlv
+
+package der-asn1
+  coverage: True

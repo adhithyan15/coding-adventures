@@ -1,0 +1,11 @@
+{
+  "id": "TE-C124-pamu",
+  "pathSegment": "TE-PATH-124-THINGS124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-124-THINGS124",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Sea, Forest, Soil, Stone, Thunder",
+  "label": "ch:ka-sea-forest-soil-stone-thunder",
+  "canDo": "I can say the sea, a forest, soil, a stone and thunder.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C127-gudugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say the sea, a forest, soil, a stone and thunder.",
+    "assesses": [
+      "KA-LEX-C127-THINGS127-03",
+      "KA-LEX-C127-THINGS127-04",
+      "KA-LEX-C127-THINGS127-05"
+    ]
+  }
+}

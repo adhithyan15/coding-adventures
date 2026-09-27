@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Why?, Because, Because, Reason, Cause",
+  "label": "ch:fa-why-because-because-reason-cause",
+  "canDo": "I can say why?, because, because, a reason and a cause.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C92-sabab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say why?, because, because, a reason and a cause.",
+    "assesses": [
+      "FA-LEX-C92-WHY92-03",
+      "FA-LEX-C92-WHY92-04",
+      "FA-LEX-C92-WHY92-05"
+    ]
+  }
+}

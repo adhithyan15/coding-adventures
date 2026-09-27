@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:2c30cb4edaa6282b",
+  "lessonIds": [
+    "KA-C146-ketta",
+    "KA-C146-bhayankara",
+    "KA-C146-dhairyavanta",
+    "KA-C146-cinnada",
+    "KA-C146-belliya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch146.txt",
+  "json": "kannada/narration/ch146.json",
+  "textHash": "fnv1a64:67875e23d6e51f7a",
+  "jsonHash": "fnv1a64:c69410f71e2682d4",
+  "findings": []
+}

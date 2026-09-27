@@ -1,0 +1,11 @@
+{
+  "id": "TE-C149-edcu",
+  "pathSegment": "TE-PATH-149-ACT149",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-149-ACT149",
+      "order": 4
+    }
+  ]
+}

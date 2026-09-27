@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "To wish for, To decide, Reason, Therefore, Because of",
+  "label": "ch:te-to-wish-for-to-decide-reason-therefore-because-of",
+  "canDo": "I can say to wish for, to decide, a reason, therefore and because of.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "TE-C108-valla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say to wish for, to decide, a reason, therefore and because of.",
+    "assesses": [
+      "TE-LEX-C108-WANT108-03",
+      "TE-LEX-C108-WANT108-04",
+      "TE-LEX-C108-WANT108-05"
+    ]
+  }
+}

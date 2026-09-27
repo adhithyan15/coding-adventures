@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 123,
+  "output": "kannada/book/chapters/ch123-vegetables-banana-mango-coconut-onion.tex",
+  "scriptSet": "kannada-comparisons"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "To wipe, To sweep, To learn, To win, To find",
+  "label": "ch:ta-to-wipe-to-sweep-to-learn-to-win-to-find",
+  "canDo": "I can say to wipe, to sweep, to learn, to win and to find.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C156-kantupiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: i can say to wipe, to sweep, to learn, to win and to find.",
+    "assesses": [
+      "TA-LEX-C156-ACT156-03",
+      "TA-LEX-C156-ACT156-04",
+      "TA-LEX-C156-ACT156-05"
+    ]
+  }
+}

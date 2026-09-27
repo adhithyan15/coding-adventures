@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:2537eef6d5b10461",
+  "lessonIds": [
+    "TE-C102-madhyalo",
+    "TE-C102-vidhi",
+    "TE-C102-roddu",
+    "TE-C102-vantena",
+    "TE-C102-parku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch102.txt",
+  "json": "telugu/narration/ch102.json",
+  "textHash": "fnv1a64:7de08cb62c4fb0e3",
+  "jsonHash": "fnv1a64:0c4ac8daee11753f",
+  "findings": []
+}

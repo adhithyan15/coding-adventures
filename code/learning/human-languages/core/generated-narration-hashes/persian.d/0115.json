@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:d0d85a84ef7e8f3c",
+  "lessonIds": [
+    "FA-C115-shagerd",
+    "FA-C115-doktor",
+    "FA-C115-parastar",
+    "FA-C115-ashpaz",
+    "FA-C115-kargar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch115.txt",
+  "json": "persian/narration/ch115.json",
+  "textHash": "fnv1a64:14908e15bdcc097d",
+  "jsonHash": "fnv1a64:025cd122bbd7c155",
+  "findings": []
+}

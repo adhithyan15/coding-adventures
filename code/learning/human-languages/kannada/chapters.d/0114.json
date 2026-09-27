@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Intention, Plan, Need, Decision, To wish for",
+  "label": "ch:ka-intention-plan-need-decision-to-wish-for",
+  "canDo": "I can say an intention, a plan, a need, a decision and to wish for.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "KA-C114-bayasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say an intention, a plan, a need, a decision and to wish for.",
+    "assesses": [
+      "KA-LEX-C114-WANT114-03",
+      "KA-LEX-C114-WANT114-04",
+      "KA-LEX-C114-WANT114-05"
+    ]
+  }
+}

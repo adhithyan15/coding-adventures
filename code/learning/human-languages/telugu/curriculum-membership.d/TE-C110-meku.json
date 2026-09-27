@@ -1,0 +1,11 @@
+{
+  "id": "TE-C110-meku",
+  "pathSegment": "TE-PATH-110-THINGS110",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-110-THINGS110",
+      "order": 3
+    }
+  ]
+}

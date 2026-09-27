@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:b4daa29ac0124372",
+  "lessonIds": [
+    "KA-C140-gadda",
+    "KA-C140-pada",
+    "KA-C140-udda",
+    "KA-C140-gidda",
+    "KA-C140-bhara"
+  ],
+  "tex": "kannada/book/chapters/ch140-beard-foot-long-short-heavy.tex"
+}

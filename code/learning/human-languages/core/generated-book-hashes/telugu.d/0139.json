@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:41c40da74bea0e53",
+  "lessonIds": [
+    "TE-C139-tadi",
+    "TE-C139-podi",
+    "TE-C139-peda",
+    "TE-C139-musali",
+    "TE-C139-prasiddha",
+    "TE-R139-first-pass-animals-the-body-and-more-things",
+    "TE-R139-second-pass-describing-words"
+  ],
+  "tex": "telugu/book/chapters/ch139-wet-dry-poor-old-famous.tex"
+}

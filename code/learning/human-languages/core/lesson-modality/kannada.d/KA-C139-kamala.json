@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C139-kamala",
+    "language": "kannada",
+    "chapter": 139,
+    "sequence": 5990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:052fe3588e5a3db8"
+  },
+  "findings": []
+}

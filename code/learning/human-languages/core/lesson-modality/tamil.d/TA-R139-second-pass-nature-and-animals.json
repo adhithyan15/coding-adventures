@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R139-second-pass-nature-and-animals",
+    "language": "tamil",
+    "chapter": 139,
+    "sequence": 6360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02687cb7189222f8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:7b20eab9eefdfaac",
+  "lessonIds": [
+    "TA-C145-menmaiyana",
+    "TA-C145-katinamana",
+    "TA-C145-cuttamana",
+    "TA-C145-alukkana",
+    "TA-C145-vekamana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch145.txt",
+  "json": "tamil/narration/ch145.json",
+  "textHash": "fnv1a64:6e58097604adb313",
+  "jsonHash": "fnv1a64:8409eb6c29e052cc",
+  "findings": []
+}

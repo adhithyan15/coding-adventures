@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R148-second-pass-the-body-and-describing-words",
+    "language": "tamil",
+    "chapter": 148,
+    "sequence": 6860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:629ae4cba01e18f1"
+  },
+  "findings": []
+}

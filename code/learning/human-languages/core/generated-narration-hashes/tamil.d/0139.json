@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:228389393f32a19f",
+  "lessonIds": [
+    "TA-C139-cirakam",
+    "TA-C139-kirai",
+    "TA-C139-palappalam",
+    "TA-C139-koyya",
+    "TA-C139-elumiccai",
+    "TA-R139-first-pass-food-and-nature",
+    "TA-R139-second-pass-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch139.txt",
+  "json": "tamil/narration/ch139.json",
+  "textHash": "fnv1a64:0b13205a071b1fe5",
+  "jsonHash": "fnv1a64:916e21cbf2c3e9b4",
+  "findings": []
+}

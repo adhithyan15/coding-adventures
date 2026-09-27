@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:3d274c5012879ef7",
+  "lessonIds": [
+    "TE-C136-jamapandu",
+    "TE-C136-pancadara",
+    "TE-C136-podavu",
+    "TE-C136-potti",
+    "TE-C136-baruvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch136.txt",
+  "json": "telugu/narration/ch136.json",
+  "textHash": "fnv1a64:aa0026cd8d93ff81",
+  "jsonHash": "fnv1a64:eacabfe2a6556e97",
+  "findings": []
+}

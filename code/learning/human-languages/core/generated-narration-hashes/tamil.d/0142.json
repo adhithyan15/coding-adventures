@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:17a1e92852eaf7a4",
+  "lessonIds": [
+    "TA-C142-ottakam",
+    "TA-C142-vattu",
+    "TA-C142-kannam",
+    "TA-C142-manikkattu",
+    "TA-C142-mulankai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch142.txt",
+  "json": "tamil/narration/ch142.json",
+  "textHash": "fnv1a64:51eb8ba9c231ad8c",
+  "jsonHash": "fnv1a64:d76ad5d635e5d05c",
+  "findings": []
+}

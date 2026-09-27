@@ -1,0 +1,11 @@
+{
+  "id": "KA-C136-sonta",
+  "pathSegment": "KA-PATH-136-THINGS136",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-136-THINGS136",
+      "order": 3
+    }
+  ]
+}

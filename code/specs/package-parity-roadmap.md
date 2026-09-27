@@ -14135,6 +14135,232 @@ coverage evidence. The 19 implementation commits rebased conflict-free onto
 current `origin/main` before publication preparation, while the state remains
 `in-progress` until the ready-for-review PR actually exists.
 
+### PR #15761 merge, exact-main inventory, and DER ASN.1 selection
+
+Every required and advisory check on PR #15761 reached a terminal acceptable
+conclusion, including both protected CI gates, CodeQL, and all three OCaml
+fresh-solve and locked-fixture platforms. GitHub reported the reviewed head
+clean and mergeable. Guarded squash auto-merge was enabled only after that
+evidence was complete, and GitHub merged it automatically at
+`2026-09-20T14:33:51Z` as
+`f280bdbd4df120379afe96a17dfba49251c161b5`; no plain manual merge command was
+used.
+
+The fresh parity worktree was then rebased cleanly to exact current
+`origin/main` `82f851dc277b5f1931a3e64276466cd1d742e3d0`. The collision-checked schema-3
+inventory at that revision contains 15 established lanes, 1,454 implementation
+identities, 4,693 implementation slots, and 1,494 all-reported identities.
+Completion bands are 176/265, 123/934, 181/2,282, and 974/13,636; Rust has 793
+singleton identities, OCaml remains an emerging five-package lane, and
+canonical collisions and unknown language buckets remain zero.
+
+Five newly merged Rust X.509 identities now have explicit portable pending
+owners. Singular `x509-extension` depends on typed DER ASN.1; plural
+`x509-extensions`, Basic Constraints, Key Usage, and Extended Key Usage each
+depend on DER ASN.1 plus the singular generic Extension contract. Basic
+Constraints, Key Usage, and Extended Key Usage are sibling semantic decoders,
+not dependencies of plural Extensions. The newly merged TypeScript
+`forme-deploy-runner-core` stays under the existing Forme family-classification
+owner, which separates deterministic manifest, planning, injected-content, and
+reporting behavior from filesystem, network, credential, and CLI adapters.
+Emerging OCaml receives explicit DER TLV then DER ASN.1 consumer owners behind
+its current-contract build tool without changing the established denominator.
+Open PR #15798 remains prospective, so no Subject Alternative Name owner is
+added yet.
+
+The dependency/leverage pass selects `der-asn1-portable-conformance` on branch
+`codex/parity-der-asn1-portable-conformance-20260920`. It is the direct payoff
+from merged DER TLV and gates nine confirmed Rust X.509 consumers plus the five
+new extension-family owners. The selected tranche reuses the neutral DER TLV
+framing corpus by reference, freezes semantic BOOLEAN, INTEGER, BIT STRING,
+OCTET STRING, IA5String, NULL, OID, implicit primitive, container, budget,
+transactional-failure, local-offset, and redaction behavior, then delivers the
+typed layer independently in all 15 established lanes. X.509 schema and policy,
+cryptography, trust, TLS, transport, credentials, and ambient authority remain
+outside it. The reconciled graph has 859 owners and 1,593 dependency edges: 223
+merged, 635 pending, and exactly this owner in progress.
+
+### Post-selection exact-main refresh through PR #15798
+
+While DER ASN.1 remained the sole in-progress parity item, `origin/main`
+advanced to `346be10b6e86467693e064eb9eba433d61fe3e60`. The dedicated worktree
+rebased cleanly onto that revision. A collision-checked exact-main inventory
+now contains 1,455 implementation identities, 4,694 implementation slots, and
+1,495 all-reported identities across the same 15 established lanes. Completion
+bands are 176/265, 123/934, 181/2,282, and 975/13,650; Rust has 794 singleton
+identities, OCaml remains an emerging five-package lane, and canonical
+collisions and unknown language buckets remain zero.
+
+Merged PR #15798 adds the Rust-only `x509-subject-alt-name` identity, so the
+backlog now explicitly owns its portable contract. It depends on typed DER
+ASN.1 plus the singular generic X.509 Extension owner and covers a non-empty
+bounded GeneralNames sequence, typed IA5String, IP-address, and registered-ID
+choices, counted opaque constructed alternatives, shared work budgets, local
+offsets, transactional failures, and redacted errors. DNS syntax,
+server-identity matching, certificate policy, path validation, signatures,
+trust, TLS, transport, and ambient authority remain outside that owner. The
+graph therefore has 860 owners and 1,595 dependency edges: 223 merged, 636
+pending, and exactly DER ASN.1 in progress.
+
+### Live-main refresh and serial-number ownership
+
+`origin/main` subsequently advanced through two package-internal Mosaic and
+Venture repairs to `21ae2446feb19174412ce36caaeafa6a5cfd9829`; neither commit
+adds or removes a package identity. PR #15806 reached 21 successful
+checks, 27 path-gated skips, and no failure, cancellation, or pending result,
+then merged through guarded auto-merge as
+`f24c2e8c6a17ed4dd08f5c26a2e34291fe87fbf7`. The collision-checked exact-main
+inventory now contains 1,457 implementation identities, 4,696 implementation
+slots, and 1,497 all-reported identities. Completion bands are 176/265,
+123/934, 181/2,282, and 977/13,678; Rust has 795 singleton identities, OCaml
+remains an emerging five-package lane, and collisions and unknown language
+buckets remain zero. The merged Rust `x509-serial-number` identity already has
+a pending portable owner, so no eligible unowned gap was introduced. It
+depends on typed DER ASN.1 and covers canonical positive nonzero certificate
+serial-number INTEGERs, the twenty-content-octet ceiling, exact and normalized
+magnitude views, bounded work, stable local offsets, and redacted diagnostics.
+Serial generation, issuer uniqueness, certificate parsing, path validation,
+signatures, trust, TLS, transport, clocks, entropy, credentials, and ambient
+authority remain outside it. The graph now has 861 owners and 1,596 dependency
+edges: 223 merged, 637 pending, and exactly DER ASN.1 in progress.
+
+### Post-#15812 certificate-version inventory refresh
+
+PR #15812 completed 21 successful checks with 27 path-gated skips and no
+failure, cancellation, or pending result, then merged through guarded
+auto-merge as `52f428eb5135e7abc746cf199cd04ad2091f23b1`. Its new Rust-only
+`x509-certificate-version` identity advances the collision-checked exact-main
+inventory to 1,458 implementation identities, 4,697 implementation slots, and
+1,498 all-reported identities. Completion bands are 176/265, 123/934,
+181/2,282, and 978/13,692; Rust has 796 singleton identities, OCaml remains an
+emerging five-package lane, and collisions and unknown language buckets remain
+zero.
+
+The backlog now explicitly owns the portable RFC 5280 Certificate Version
+contract above typed DER ASN.1: omitted v1 default, accepted explicit v2 and
+v3, DER rejection of explicit-default v1 and unsupported values, exact
+constructed context-specific tag zero with one canonical INTEGER child,
+shared budgets, local offsets, transactional failure, and redacted
+diagnostics. Complete `TBSCertificate` parsing, version-dependent field policy,
+paths, signatures, trust, revocation, clocks, TLS, transport, and ambient
+authority remain outside that owner. The graph has 862 owners and 1,597
+dependency edges: 223 merged, 638 pending, and exactly DER ASN.1 in progress.
+
+### Live-main inventory and ownership refresh through PR #16076
+
+Exact `origin/main` advanced from
+`351361030127f89964e78a565d73f29e4eba8600` to
+`b166fc1951a4b06dd1590f5f1bdc63061f66b8f0` through PR #16076, and the DER
+ASN.1 branch rebased cleanly onto that revision. The collision-checked schema-3
+inventory now contains 15 established lanes, 1,470 implementation identities,
+4,709 implementation slots, and 1,512 all-reported identities. Completion
+bands are 176/265, 123/934, 181/2,282, and 990/13,860. Rust has 807 singleton
+identities, emerging OCaml remains at five packages, and canonical collisions
+and unknown buckets remain zero. The delta is eleven Rust singletons, one
+TypeScript singleton, and two Mosaic-domain identities.
+
+Every new identity is now owned without displacing the sole in-progress DER
+ASN.1 item. The existing Forme family owns the effectful GitHub Pages adapter,
+the HTML frontend owner now includes `html-tree-builder`, and the generated
+Mosaic binding review includes target-specific `mosaic-ios-project`. New
+portable pending owners cover pure `journal-core`, generic
+`source-preprocessor`, the two-package MacroOct frontend, deterministic PDP-8
+simulation, and `x509-name` above DER ASN.1. Journal's WASM boundary and Mosaic
+workbench have separate portable/native applicability reviews; the latter must
+reconcile production clock reads with its empty capability claim. The Test262
+runner remains selection-blocked behind a core-versus-host audit rather than
+becoming an automatic fifteen-lane gap. Mosaic-domain checklist and draft
+editor components stay with the Journal/workbench classification rather than
+entering the established-language denominator.
+
+### DER ASN.1 portable implementation progress
+
+The closed 122-case, 22-error language-neutral contract now has complete
+package-native consumers in all fifteen established lanes: Rust, Python,
+Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, Elixir,
+and Lua. Every consumer executes all
+46 referenced DER TLV framing cases rather than treating delegated rows as
+automatic success. The refined
+corpus adds unsigned-64 OID boundaries, implicit-OID failures, exact explicit
+tag rejection, nested depth boundaries, and shared nested element budgets;
+an independent oracle proves that `bit-length-overflow` is the only reserved
+host-size error not safely executable by the bounded neutral corpus. Python
+passes 123 tests at 97.17 percent line coverage; Rust passes its full suite,
+Clippy, and formatting; Go passes race, vet, trimpath build, and 91.2 percent
+coverage;
+Dart passes fatal analysis and its coverage gate with 96.97 percent line and
+98.18 percent function coverage; Java passes Java 21 warnings-as-errors and
+JaCoCo with 96.25 percent line and 94.44 percent branch coverage. TypeScript
+passes its production build, 133 Vitest tests, a zero-high-vulnerability npm
+audit, and coverage at 97.27 percent statements, 93.75 percent branches, 98.33
+percent functions, and 98.29 percent lines. Kotlin passes Java 21
+warnings-as-errors, its full 129-test JUnit suite, and its JaCoCo gate at 95.26
+percent line coverage. C# passes 126 xUnit tests with 95.66 percent line, 95.93 percent
+branch, and 98.57 percent method coverage, plus warning-clean Release build and
+pack, format verification, and a zero-vulnerability NuGet audit. Ruby passes
+the complete portable suite plus native immutability, sealed-wrapper, limit,
+OID equality, and redaction checks at 98.36 percent line and 95.79 percent
+branch coverage; StandardRB, gem packaging, both direct build fronts, and the
+real Go build-tool dependency plan pass. F# passes the complete 122-case suite
+and all 46 delegated framing cases plus all 22 error identifiers, native
+private-constructor, immutable-snapshot, bounded OID equality, limit, helper,
+and redaction checks at 96.55 percent line and 91.03 percent branch coverage;
+packaging, dependency audit, the Windows build front, and the real Go
+build-tool two-package dependency plan pass. Swift passes the complete 122-case
+suite and all 46 delegated framing cases plus all 22 error identifiers,
+immutable snapshots, exact-owner shared budgets, bounded UInt64 OID equality,
+limit, helper, and redaction checks at 97.87 percent source line coverage;
+formatter lint, release warnings-as-errors, package description, both build
+fronts, and the real Go build-tool two-package dependency plan pass. Haskell
+passes the complete 122-case suite and all 46 delegated framing cases plus
+native ownership, budget, transactionality, concurrency, limit, wrapper, and
+redaction checks at 95 percent expression and alternative coverage; Cabal
+check and source packaging, warnings-as-errors, both build fronts, and the real
+Go build-tool two-package dependency plan pass. Perl passes the complete
+122-case suite and all 46 delegated framing cases plus native provenance,
+owner, budget, transactionality, exact-u64, tag, finite-limit, packaging, and
+redaction checks at 98.7 percent statement and 96.3 percent subroutine
+coverage; Perl::Critic, POD, distribution testing, both build fronts,
+capability-schema validation, and the real Go build-tool two-package
+dependency plan pass. Elixir passes the complete 122-case suite and all 46
+delegated framing cases plus native sealed-wrapper, exact-owner, shared-budget,
+transactionality, exact-u64, OID equality, tag, finite-limit, and redaction
+checks at 96.89 percent line coverage; formatting, warnings-as-errors compilation,
+both build fronts, Windows-front validation, capability-schema validation, and
+the real Go build-tool two-package dependency plan pass. Its post-review
+hardening routes delegated rows through the typed layer, keeps opaque and typed
+payloads behind private immutable handle processes, keeps mutable budgets and
+cursor progress in a private decoder state process across stale
+decoder/cursor aliases, admits the exact first combined OID u64-plus-80
+boundary, and keeps OID work linear. Lua passes the complete 122-case suite and
+all 46 delegated framing cases plus private-registry, owner, transactional
+budget, exact two-limb u64/OID, tag, limit, equality, and redaction checks at
+98.30 percent production line coverage; LuaCheck, bytecode syntax, LuaRocks
+installation and metadata, both build fronts, capability-schema validation,
+and the real Go build-tool dependency plan pass. All fifteen use empty capability
+manifests, structural limits, shared work budgets,
+transactional cursors, unsigned-width-safe integer and OID handling, and
+payload-free diagnostics. No parity PR is open yet. Independent security review made validated element and primitive
+wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir, hid raw DER
+framing helpers from typed package surfaces, and added adversarial zero-value,
+runtime-token, immutable-snapshot, and redaction tests. Swift cursors additionally
+retain their originating decoder so a same-limit foreign decoder cannot reset
+the shared total-element budget. Perl keeps wrapper state and construction
+helpers lexical, rejects non-u32 schema tags and host-oversized limits before
+numeric conversion, and retains exact unsigned arithmetic through Math::BigInt.
+Elixir uses private library-process identities for immutable decoder, element,
+cursor, and typed-value handles, keeps canonical limits, shared budgets, and
+cursor progress behind a restricted decoder state process, and rejects non-u32
+tags plus non-finite or host-oversized limits before binary arithmetic.
+
+A bounded pre-next-lane audit closed the neutral-corpus holes before multiplying
+implementations. The prose now keeps allocation and ownership strategy
+non-normative instead of requiring every language to expose Rust's borrowed,
+`Copy`, or native `u64` representation. The consumer registry is explicitly a
+15-lane target denominator rather than a completion assertion. All fourteen
+implemented lanes execute the refined corpus; this refinement remains part of
+the same serial work item and no second PR was opened.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

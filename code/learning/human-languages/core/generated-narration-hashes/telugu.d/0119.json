@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:ed3806f3072855ee",
+  "lessonIds": [
+    "TE-C119-tene",
+    "TE-C119-idli",
+    "TE-C119-dosa",
+    "TE-C119-vada",
+    "TE-C119-kaphi",
+    "TE-R119-first-pass-the-house-and-things-you-carry",
+    "TE-R119-second-pass-clothes-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch119.txt",
+  "json": "telugu/narration/ch119.json",
+  "textHash": "fnv1a64:ad30e9f3c1515551",
+  "jsonHash": "fnv1a64:13048a4a87dc5291",
+  "findings": []
+}

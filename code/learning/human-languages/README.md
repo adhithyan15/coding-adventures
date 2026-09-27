@@ -69,7 +69,7 @@ core/lesson-modality/<language>.d/*.json generated voice/sight/pen, one owner pe
 core/generated-book-hashes/<language>.d/ generated book hashes, one JSON owner per chapter
 core/generated-narration-hashes/<language>.d/ generated narration hashes, one JSON owner per chapter
 core/figure-generation.json     configured canonical-data SVG figures and safe book targets
-core/generated-figure-hashes.json generated: figure source/SVG drift fingerprints
+core/generated-figure-hashes.d/ generated: per-track figure source/SVG drift fingerprints
 concepts/taxonomy.json          cross-language semantic join keys
 data/scripts/*.json             writing-system inventories and teaching metadata
 ```

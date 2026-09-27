@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C144-nerale",
+    "language": "kannada",
+    "chapter": 144,
+    "sequence": 6260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05611ff2070eeb38"
+  },
+  "findings": []
+}

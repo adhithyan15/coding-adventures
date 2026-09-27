@@ -1,0 +1,11 @@
+{
+  "id": "KA-C115-yakendare",
+  "pathSegment": "KA-PATH-115-WHY115",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-115-WHY115",
+      "order": 3
+    }
+  ]
+}

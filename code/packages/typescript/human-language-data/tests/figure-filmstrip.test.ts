@@ -9,7 +9,7 @@ import {
   indexFilmstripLedger,
   renderScriptFilmstripFigure,
   wrapFigureText,
-  FILMSTRIP_LEDGER_PATH,
+  loadFilmstripLedger,
   type FilmstripEntry,
   type FilmstripLedger,
 } from "../src/figure-filmstrip.js";
@@ -328,9 +328,7 @@ describe("the fragment allowlist", () => {
 });
 
 describe("the committed ledger", () => {
-  const ledger = JSON.parse(
-    readFileSync(join(defaultCurriculumRoot(), FILMSTRIP_LEDGER_PATH), "utf8"),
-  ) as FilmstripLedger;
+  const ledger = loadFilmstripLedger(defaultCurriculumRoot());
 
   it("is a version-1 file with unique, citable entries", () => {
     const index = indexFilmstripLedger(ledger);

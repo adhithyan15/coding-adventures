@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C109-ostokhan",
+    "language": "persian",
+    "chapter": 109,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c47da394aa53fd9"
+  },
+  "findings": []
+}

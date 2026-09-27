@@ -1,0 +1,11 @@
+{
+  "id": "TE-C135-nimmakaya",
+  "pathSegment": "TE-PATH-135-THINGS135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-135-THINGS135",
+      "order": 3
+    }
+  ]
+}

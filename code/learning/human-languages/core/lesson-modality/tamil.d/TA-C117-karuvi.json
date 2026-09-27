@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C117-karuvi",
+    "language": "tamil",
+    "chapter": 117,
+    "sequence": 5130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8ba1f251b07c6eb"
+  },
+  "findings": []
+}

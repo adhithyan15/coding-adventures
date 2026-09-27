@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C135-jilakarra",
+    "language": "telugu",
+    "chapter": 135,
+    "sequence": 5750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dca636ed4d08d9d2"
+  },
+  "findings": []
+}

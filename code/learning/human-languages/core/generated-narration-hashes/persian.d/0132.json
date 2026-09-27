@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:cd926b4193929d0d",
+  "lessonIds": [
+    "FA-C132-shekastan",
+    "FA-C132-dukhtan",
+    "FA-C132-keshidan",
+    "FA-C132-rikhtan",
+    "FA-C132-sukhtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch132.txt",
+  "json": "persian/narration/ch132.json",
+  "textHash": "fnv1a64:3bc226da85f8733e",
+  "jsonHash": "fnv1a64:160624b7325cb9df",
+  "findings": []
+}

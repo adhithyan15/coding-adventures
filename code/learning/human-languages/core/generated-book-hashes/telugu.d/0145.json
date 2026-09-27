@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:da29f7557fdb62b0",
+  "lessonIds": [
+    "TE-C145-nercuko",
+    "TE-C145-nerpu",
+    "TE-C145-maracipo",
+    "TE-C145-duku",
+    "TE-C145-digu"
+  ],
+  "tex": "telugu/book/chapters/ch145-to-learn-to-teach-to-forget-to-jump-to-get-down.tex"
+}

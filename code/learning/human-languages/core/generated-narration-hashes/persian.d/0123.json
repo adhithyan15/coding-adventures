@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:1f8dfc98f061a45a",
+  "lessonIds": [
+    "FA-C123-pishani",
+    "FA-C123-rish",
+    "FA-C123-sebil",
+    "FA-C123-deraz",
+    "FA-C123-pahn"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch123.txt",
+  "json": "persian/narration/ch123.json",
+  "textHash": "fnv1a64:77f621143e638708",
+  "jsonHash": "fnv1a64:7108dcd1fd65d226",
+  "findings": []
+}

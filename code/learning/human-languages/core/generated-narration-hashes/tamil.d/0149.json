@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:cfa1830cdc33500b",
+  "lessonIds": [
+    "TA-C149-pirapalamana",
+    "TA-C149-apattana",
+    "TA-C149-patukappana",
+    "TA-C149-unmaiyana",
+    "TA-C149-poyyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch149.txt",
+  "json": "tamil/narration/ch149.json",
+  "textHash": "fnv1a64:398b83c71d35ad03",
+  "jsonHash": "fnv1a64:b3aed3ac1137540c",
+  "findings": []
+}

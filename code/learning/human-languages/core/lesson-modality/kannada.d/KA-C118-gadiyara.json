@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C118-gadiyara",
+    "language": "kannada",
+    "chapter": 118,
+    "sequence": 4890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b611a7f83efa424c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Vegetables, Banana, Mango, Coconut, Onion",
+  "label": "ch:te-vegetables-banana-mango-coconut-onion",
+  "canDo": "I can say vegetables, a banana, a mango, coconut and an onion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C117-ullipaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say vegetables, a banana, a mango, coconut and an onion.",
+    "assesses": [
+      "TE-LEX-C117-THINGS117-03",
+      "TE-LEX-C117-THINGS117-04",
+      "TE-LEX-C117-THINGS117-05"
+    ]
+  }
+}

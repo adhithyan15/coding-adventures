@@ -1,0 +1,11 @@
+{
+  "id": "TE-C140-abaddham",
+  "pathSegment": "TE-PATH-140-QUAL140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-140-QUAL140",
+      "order": 1
+    }
+  ]
+}

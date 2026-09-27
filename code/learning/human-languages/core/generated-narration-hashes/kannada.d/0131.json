@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:6c4e279d9ef38112",
+  "lessonIds": [
+    "KA-C131-havu",
+    "KA-C131-ame",
+    "KA-C131-gili",
+    "KA-C131-parivala",
+    "KA-C131-gube"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch131.txt",
+  "json": "kannada/narration/ch131.json",
+  "textHash": "fnv1a64:fb64481873be0de7",
+  "jsonHash": "fnv1a64:742645e69a7d7e58",
+  "findings": []
+}

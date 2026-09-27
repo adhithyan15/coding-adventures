@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C134-godhumalu",
+    "language": "telugu",
+    "chapter": 134,
+    "sequence": 5730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3abcbd2747aeaa73"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C108-karanam",
+  "pathSegment": "TE-PATH-108-WANT108",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-108-WANT108",
+      "order": 2
+    }
+  ]
+}

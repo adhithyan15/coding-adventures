@@ -1,0 +1,11 @@
+{
+  "id": "TE-C123-simham",
+  "pathSegment": "TE-PATH-123-THINGS123",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-123-THINGS123",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-131-THINGS131",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a parrot, a pigeon, an owl, a peacock and an ant.",
+  "prerequisites": []
+}

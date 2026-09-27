@@ -483,28 +483,41 @@ fn build_app_swift(
             slot_values,
         )
     };
-    let root_view = if layout_variants.is_empty() {
+    // UI48: a runtime-backed shell observes the environment to tell the
+    // runtime (ENV4); a shell with layout variants observes it to choose one
+    // (ENV3). A sample-props shell with one layout has no use for it.
+    let observes = require_runtime || !layout_variants.is_empty();
+    let root_view = if !observes {
         view(&format!("{component_name}View"))
     } else {
-        // UI48 ENV3: every variant takes the same arguments (the interface is
-        // shared), so the choice is a switch over the selector's answer.
-        let mut chooser = String::from(
-            "MosaicEnvironmentReader { environment in
-        switch MosaicLayoutSelector.variant(environment) {
-",
-        );
-        for choice in layout_variants {
-            let view_type = variant_view_type(component_name, &choice.variant)
-                .expect("validated in build_swiftui_project_files");
-            writeln!(chooser, "        case \"{}\":", choice.variant).unwrap();
-            writeln!(chooser, "      {}", view(&view_type)).unwrap();
+        let mut reader = String::from("MosaicEnvironmentReader { environment in\n        Group {\n");
+        if layout_variants.is_empty() {
+            writeln!(reader, "      {}", view(&format!("{component_name}View"))).unwrap();
+        } else {
+            // UI48 ENV3: every variant takes the same arguments (the interface
+            // is shared), so the choice is a switch over the selector's answer.
+            reader.push_str("        switch MosaicLayoutSelector.variant(environment) {\n");
+            for choice in layout_variants {
+                let view_type = variant_view_type(component_name, &choice.variant)
+                    .expect("validated in build_swiftui_project_files");
+                writeln!(reader, "        case \"{}\":", choice.variant).unwrap();
+                writeln!(reader, "      {}", view(&view_type)).unwrap();
+            }
+            reader.push_str("        default:\n");
+            writeln!(reader, "      {}", view(&format!("{component_name}View"))).unwrap();
+            reader.push_str("        }\n");
         }
-        chooser.push_str("        default:
-");
-        writeln!(chooser, "      {}", view(&format!("{component_name}View"))).unwrap();
-        chooser.push_str("        }
-      }");
-        chooser
+        reader.push_str("        }\n");
+        if require_runtime {
+            // UI48 ENV4: `.task(id:)` runs when the window first appears and
+            // again only when one of the six values changes, so a resize
+            // reports nothing until it crosses a size-class threshold.
+            reader.push_str(
+                "        .task(id: environment.report) {\n          host.reportEnvironment(environment)\n        }\n",
+            );
+        }
+        reader.push_str("      }");
+        reader
     };
     let mut out = String::new();
     write!(
@@ -518,10 +531,16 @@ fn build_app_swift(
     writeln!(out).unwrap();
     writeln!(out, "  var body: some Scene {{").unwrap();
     writeln!(out, "    WindowGroup(\"{component_name}\") {{").unwrap();
-    writeln!(out, "      {root_view}").unwrap();
-    writeln!(out, "      .onAppear {{").unwrap();
-    writeln!(out, "        host.runInteractionAcceptanceIfRequested()").unwrap();
-    writeln!(out, "      }}").unwrap();
+    if require_runtime {
+        writeln!(out, "      MosaicStartupView(host: host) {{").unwrap();
+        writeln!(out, "        {root_view}").unwrap();
+        writeln!(out, "      }}").unwrap();
+    } else {
+        writeln!(out, "      {root_view}").unwrap();
+        writeln!(out, "      .onAppear {{").unwrap();
+        writeln!(out, "        host.runInteractionAcceptanceIfRequested()").unwrap();
+        writeln!(out, "      }}").unwrap();
+    }
     writeln!(out, "    }}").unwrap();
     writeln!(out, "  }}").unwrap();
     writeln!(out, "}}").unwrap();
@@ -531,47 +550,32 @@ fn build_app_swift(
     } else {
         out.push_str(&build_mosaic_host_state(component_name));
     }
+    if observes {
+        out.push_str(ENVIRONMENT_READER_SWIFT);
+    }
     if !layout_variants.is_empty() {
         out.push_str(&build_layout_selector_swift(layout_variants));
     }
-    out
+    out.replace("__COMPONENT_NAME__", component_name)
 }
 
-/// The run-time half of UI48 ENV3 for SwiftUI: observe the environment,
-/// then pick a layout with the package's rules.
+/// The environment observer every observing shell carries (UI48 ENV3, ENV4).
 ///
 /// Size class comes from the window's width with UI48's default thresholds
 /// (compact below 600 points, regular below 1024, expanded above), measured
 /// the same way on iPhone, iPad split view and a macOS window.
 /// `horizontalSizeClass` would say `regular` for a narrow Mac window and
-/// does not exist there at all. The rules are the manifest's, in order;
-/// first match wins, and no match is the default layout.
-fn build_layout_selector_swift(layout_variants: &[LayoutChoice]) -> String {
-    let mut rules = String::new();
-    for choice in layout_variants {
-        let test = if choice.conditions.is_empty() {
-            "true".to_string()
-        } else {
-            choice
-                .conditions
-                .iter()
-                .map(|(axis, value)| format!("environment.value(\"{axis}\") == \"{value}\""))
-                .collect::<Vec<_>>()
-                .join(" && ")
-        };
-        writeln!(rules, "    if {test} {{ return \"{}\" }}", choice.variant).unwrap();
-    }
-    format!(
-        r#"
+/// does not exist there at all.
+const ENVIRONMENT_READER_SWIFT: &str = r#"
 /// The host environment as UI48 describes it, observed from SwiftUI.
-struct MosaicObservedEnvironment {{
+struct MosaicObservedEnvironment {
   let width: CGFloat
   let height: CGFloat
   let colorScheme: ColorScheme
   let reduceMotion: Bool
 
-  func value(_ axis: String) -> String {{
-    switch axis {{
+  func value(_ axis: String) -> String {
+    switch axis {
     case "size-class":
       return width < 600 ? "compact" : (width < 1024 ? "regular" : "expanded")
     case "pointer":
@@ -594,23 +598,37 @@ struct MosaicObservedEnvironment {{
       return reduceMotion ? "reduce" : "no-preference"
     default:
       return ""
-    }}
-  }}
-}}
+    }
+  }
+
+  /// The six UI48 values under `mosaic-app-runtime`'s wire names: the
+  /// `environmentChanged` payload, and the key `.task(id:)` watches, so it
+  /// changes only when a bucket does.
+  var report: [String: String] {
+    [
+      "colorScheme": value("color-scheme"),
+      "sizeClass": value("size-class"),
+      "pointer": value("pointer"),
+      "hover": value("hover"),
+      "orientation": value("orientation"),
+      "reducedMotion": value("reduced-motion"),
+    ]
+  }
+}
 
 /// Measures the window and hands the environment to its content, which
 /// fills the window as the root view did before.
-struct MosaicEnvironmentReader<Content: View>: View {{
+struct MosaicEnvironmentReader<Content: View>: View {
   @Environment(\.colorScheme) private var colorScheme
   @Environment(\.accessibilityReduceMotion) private var reduceMotion
   private let content: (MosaicObservedEnvironment) -> Content
 
-  init(@ViewBuilder content: @escaping (MosaicObservedEnvironment) -> Content) {{
+  init(@ViewBuilder content: @escaping (MosaicObservedEnvironment) -> Content) {
     self.content = content
-  }}
+  }
 
-  var body: some View {{
-    GeometryReader {{ geometry in
+  var body: some View {
+    GeometryReader { geometry in
       content(
         MosaicObservedEnvironment(
           width: geometry.size.width,
@@ -620,10 +638,33 @@ struct MosaicEnvironmentReader<Content: View>: View {{
         )
       )
       .frame(width: geometry.size.width, height: geometry.size.height)
-    }}
-  }}
-}}
+    }
+  }
+}
 
+"#;
+
+/// The run-time half of UI48 ENV3 for SwiftUI: pick a layout from the
+/// observed environment ([`ENVIRONMENT_READER_SWIFT`]) with the package's
+/// rules. The rules are the manifest's, in order; first match wins, and no
+/// match is the default layout.
+fn build_layout_selector_swift(layout_variants: &[LayoutChoice]) -> String {
+    let mut rules = String::new();
+    for choice in layout_variants {
+        let test = if choice.conditions.is_empty() {
+            "true".to_string()
+        } else {
+            choice
+                .conditions
+                .iter()
+                .map(|(axis, value)| format!("environment.value(\"{axis}\") == \"{value}\""))
+                .collect::<Vec<_>>()
+                .join(" && ")
+        };
+        writeln!(rules, "    if {test} {{ return \"{}\" }}", choice.variant).unwrap();
+    }
+    format!(
+        r#"
 /// The package's `[[app.layouts]]` rules (UI48 §7.2), generated.
 enum MosaicLayoutSelector {{
   static func variant(_ environment: MosaicObservedEnvironment) -> String? {{
@@ -811,23 +852,66 @@ fn build_mosaic_host_state(component_name: &str) -> String {
 fn build_runtime_required_mosaic_host_state(component_name: &str) -> String {
     let mut out = String::new();
     out.push_str(
-        r#"private final class MosaicHostState: ObservableObject {
+        r#"private enum MosaicStartupPhase {
+  case loading
+  case failure(String)
+  case ready
+}
+
+private struct MosaicStartupFailure: LocalizedError {
+  let message: String
+  var errorDescription: String? { message }
+}
+
+private final class MosaicHostState: ObservableObject {
+  typealias Loader = () -> Result<MosaicRuntimeHost, Error>
+
+  @Published private(set) var startupPhase: MosaicStartupPhase = .loading
   @Published private(set) var props: [String: Any] = [:]
   @Published private(set) var lastHostIntent: [String: Any]? = nil
-  private let bridge: MosaicHostBridgeObject
+  private var bridge: MosaicHostBridgeObject?
+  private let loader: Loader
 
-  init() {
-    self.bridge = MosaicRuntimeHost.loadRequired()
-    bridge.setPropsChangedHandler? { [weak self] in
-      DispatchQueue.main.async {
-        self?.refreshProps()
+  init(loader: @escaping Loader = { MosaicRuntimeHost.loadRecoverable() }) {
+    self.loader = loader
+  }
+
+  func startIfNeeded() {
+    guard case .loading = startupPhase, bridge == nil else { return }
+    switch loader() {
+    case .success(let candidate):
+      self.bridge = candidate
+      candidate.setPropsChangedHandler { [weak self] in
+        DispatchQueue.main.async {
+          self?.refreshProps()
+        }
       }
+      do {
+        self.props = try requiredProps(candidate.applyProps() as? [String: Any])
+        self.startupPhase = .ready
+      } catch {
+        candidate.close()
+        self.bridge = nil
+        self.startupPhase = .failure(error.localizedDescription)
+      }
+    case .failure(let error):
+      self.startupPhase = .failure(error.localizedDescription)
     }
-    refreshProps()
+  }
+
+  func retryStartup() {
+    bridge?.close?()
+    bridge = nil
+    props = [:]
+    lastHostIntent = nil
+    startupPhase = .loading
+    DispatchQueue.main.async { [weak self] in
+      self?.startIfNeeded()
+    }
   }
 
   func optionalNode(named name: String) -> AnyView? {
-    guard let object = bridge.node?(named: name as NSString) else { return nil }
+    guard let object = bridge?.node?(named: name as NSString) else { return nil }
 #if os(macOS)
     guard let view = object as? NSView else {
       preconditionFailure("Mosaic runtime node '\(name)' is not an NSView")
@@ -854,15 +938,38 @@ fn build_runtime_required_mosaic_host_state(component_name: &str) -> String {
     );
     writeln!(out, "  func dispatch(_ event: {component_name}Event) {{").unwrap();
     out.push_str(
-        r#"    applyHostResponse(bridge.handleEvent(["payload": event.mosaicPayload] as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])
+        r#"    applyHostResponse(bridge?.handleEvent(["payload": event.mosaicPayload] as NSDictionary, name: event.mosaicName as NSString) as? [String: Any])
   }
 
   func runInteractionAcceptanceIfRequested() {
-    bridge.runInteractionAcceptance?()
+    bridge?.runInteractionAcceptance?()
+  }
+
+  /// Tell the runtime the environment the window is in (UI48 ENV4). The
+  /// host drops a report equal to the last one and answers nil; an app that
+  /// does not react answers with the props already showing.
+  func reportEnvironment(_ environment: MosaicObservedEnvironment) {
+    guard let response = bridge?.reportEnvironment?(environment.report as NSDictionary) else {
+      return
+    }
+    applyHostResponse(response as? [String: Any])
   }
 
   private func refreshProps() {
-    applyHostResponse(bridge.applyProps() as? [String: Any])
+    applyHostResponse(bridge?.applyProps() as? [String: Any])
+  }
+
+  private func requiredProps(_ response: [String: Any]?) throws -> [String: Any] {
+    guard let response else {
+      throw MosaicStartupFailure(message: "Mosaic runtime returned no startup update")
+    }
+    if let error = response["error"] {
+      throw MosaicStartupFailure(message: "Mosaic runtime failed: \(error)")
+    }
+    guard let next = response["props"] as? [String: Any] else {
+      throw MosaicStartupFailure(message: "Mosaic runtime startup update omitted props")
+    }
+    return next
   }
 
   private func applyHostResponse(_ response: [String: Any]?) {
@@ -875,6 +982,9 @@ fn build_runtime_required_mosaic_host_state(component_name: &str) -> String {
     if let intent = response["hostIntent"] as? [String: Any] {
       self.lastHostIntent = intent
     }
+    // UI48 §7.1: an update without props (an environment the app did not
+    // react to) means nothing new to render; keep what is showing.
+    if response["props"] is NSNull { return }
     guard let next = response["props"] as? [String: Any] else {
       preconditionFailure("Mosaic runtime update omitted props")
     }
@@ -885,9 +995,58 @@ fn build_runtime_required_mosaic_host_state(component_name: &str) -> String {
 @objc protocol MosaicHostBridgeObject {
   func applyProps() -> NSDictionary?
   func handleEvent(_ envelope: NSDictionary, name: NSString) -> NSDictionary?
+  @objc optional func reportEnvironment(_ environment: NSDictionary) -> NSDictionary?
   @objc optional func node(named name: NSString) -> NSObject?
   @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)
   @objc optional func runInteractionAcceptance()
+  @objc optional func close()
+}
+
+private struct MosaicStartupView<Content: View>: View {
+  @ObservedObject var host: MosaicHostState
+  private let content: () -> Content
+
+  init(host: MosaicHostState, @ViewBuilder content: @escaping () -> Content) {
+    self.host = host
+    self.content = content
+  }
+
+  var body: some View {
+    Group {
+      switch host.startupPhase {
+      case .loading:
+        VStack(spacing: 12) {
+          ProgressView()
+          Text("Starting __COMPONENT_NAME__…")
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("mosaic-startup-loading")
+      case .failure(let detail):
+        VStack(alignment: .leading, spacing: 12) {
+          Text("__COMPONENT_NAME__ could not start")
+            .font(.headline)
+          Text(detail)
+            .textSelection(.enabled)
+          Text("Your saved tasks have not been changed. Retrying is safe.")
+          Button("Try again") { host.retryStartup() }
+            .accessibilityIdentifier("mosaic-startup-retry")
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("mosaic-startup-failure")
+      case .ready:
+        content()
+          .onAppear { host.runInteractionAcceptanceIfRequested() }
+      }
+    }
+    .onAppear {
+      // Defer the synchronous dynamic-library probe until SwiftUI has mounted
+      // the loading view, so startup work never happens before a window exists.
+      DispatchQueue.main.async { host.startIfNeeded() }
+    }
+  }
 }
 
 #if os(macOS)
@@ -1114,7 +1273,7 @@ fn kebab_to_pascal_case_for_label(s: &str) -> String {
 fn build_swiftui_platform_readme(component_name: &str, require_runtime: bool) -> String {
     if require_runtime {
         return format!(
-            "{BANNER_MD}# {component_name} - SwiftUI native-complete app shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project --profile native-complete`.\n\nThis shell requires Mosaic's standard Rust application runtime at startup. It applies the initial runtime props before mounting `{component_name}` and never substitutes preview/sample values for missing required props.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13+ for `swift run`, or Xcode 15.3+ for an iOS 16+ target.\n- A built Mosaic Rust application library supplied through `MOSAIC_APP_LIBRARY` or packaged as `libmosaic_app.dylib`.\n\n## Run on macOS\n\n```sh\nMOSAIC_APP_LIBRARY=/absolute/path/to/libmosaic_app.dylib swift run\n```\n\nStartup fails explicitly when the Rust runtime cannot be loaded or does not provide a props envelope.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `Sources/App/{component_name}.swift` | The Mosaic-compiled SwiftUI component. |\n| `Sources/App/App.swift` | Runtime-required app shell that mounts the component and forwards Mosaic event envelopes. |\n| `Sources/App/MosaicRuntimeHost.swift` | Standard package-independent Foundation binding to the Mosaic C ABI. |\n| `Sources/CMosaicRuntime/` | Dynamic C loader and public bridge header. |\n| `Package.swift` | SwiftPM manifest with pinned deployment targets. |\n| `README.md` | This file. |\n\n## Editing\n\nGenerated files carry an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
+            "{BANNER_MD}# {component_name} - SwiftUI native-complete app shell\n\nAuto-generated by `mosaic-compile --backend swiftui --emit-project --profile native-complete`.\n\nThis shell requires Mosaic's standard Rust application runtime at startup. It applies the initial runtime props before mounting `{component_name}` and never substitutes preview/sample values for missing required props.\n\n## Prerequisites\n\n- Swift 5.10+ (Xcode 15.3+ or the standalone Swift toolchain).\n- macOS 13+ for `swift run`, or Xcode 15.3+ for an iOS 16+ target.\n- A built Mosaic Rust application library supplied through `MOSAIC_APP_LIBRARY` or packaged as `libmosaic_app.dylib`.\n\n## Run on macOS\n\n```sh\nMOSAIC_APP_LIBRARY=/absolute/path/to/libmosaic_app.dylib swift run\n```\n\nThe first window shows a loading state before probing the runtime. A load or initial-props failure stays visible with diagnostic detail and an in-place retry that creates a fresh host.\n\n## What's in this directory\n\n| File | Purpose |\n|---|---|\n| `Sources/App/{component_name}.swift` | The Mosaic-compiled SwiftUI component. |\n| `Sources/App/App.swift` | Runtime-required app shell that mounts the component and forwards Mosaic event envelopes. |\n| `Sources/App/MosaicRuntimeHost.swift` | Standard package-independent Foundation binding to the Mosaic C ABI. |\n| `Sources/CMosaicRuntime/` | Dynamic C loader and public bridge header. |\n| `Package.swift` | SwiftPM manifest with pinned deployment targets. |\n| `README.md` | This file. |\n\n## Editing\n\nGenerated files carry an AUTO-GENERATED banner. Re-running `mosaic-compile --emit-project` will overwrite them. To customise the shell, remove the banner from a file and rename or relocate it; the next `--emit-project` run will recreate the original at its original name without touching your forked copy.\n"
         );
     }
     format!(
@@ -12958,6 +13117,87 @@ mod tests {
         assert!(app.find("enum MosaicLayoutSelector").unwrap() > host_state);
     }
 
+    fn runtime_shell(variants: Vec<LayoutChoice>) -> String {
+        let m = component("Hello", vec![], vec![]);
+        let l = layout_with("Hello", container_node("Box", vec![]));
+        let options = EmitOptions {
+            emit_project: true,
+            require_runtime: true,
+            layout_variants: variants,
+            ..EmitOptions::default()
+        };
+        from_pipeline_with_options(&m, &l, &empty_style("Hello"), &options)
+            .unwrap()
+            .project
+            .expect("project")
+            .app_swift
+    }
+
+    #[test]
+    fn a_runtime_backed_shell_reports_its_environment() {
+        // UI48 ENV4: observed even with a single layout, and reported through
+        // `.task(id:)` keyed on the six values, so only a bucket change resends.
+        let app = runtime_shell(vec![]);
+        assert!(app.contains("MosaicEnvironmentReader { environment in"), "{app}");
+        assert!(
+            app.contains(".task(id: environment.report) {\n          host.reportEnvironment(environment)"),
+            "{app}"
+        );
+        assert!(app.contains("func reportEnvironment(_ environment: MosaicObservedEnvironment)"), "{app}");
+        assert!(
+            app.contains("@objc optional func reportEnvironment(_ environment: NSDictionary) -> NSDictionary?"),
+            "{app}"
+        );
+        // A props-less update (an environment the app ignored) keeps the view.
+        assert!(app.contains("if response[\"props\"] is NSNull { return }"), "{app}");
+        // No variants, so no selector.
+        assert!(!app.contains("enum MosaicLayoutSelector"), "{app}");
+    }
+
+    #[test]
+    fn the_environment_report_uses_the_runtime_wire_names() {
+        // `mosaic-app-runtime`'s `Environment::from_payload` requires exactly
+        // these keys, camelCase, with the reader's kebab-case values.
+        let app = runtime_shell(vec![]);
+        for (key, axis) in [
+            ("colorScheme", "color-scheme"),
+            ("sizeClass", "size-class"),
+            ("pointer", "pointer"),
+            ("hover", "hover"),
+            ("orientation", "orientation"),
+            ("reducedMotion", "reduced-motion"),
+        ] {
+            assert!(
+                app.contains(&format!("\"{key}\": value(\"{axis}\")")),
+                "missing {key}:\n{app}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_runtime_backed_shell_with_variants_selects_and_reports() {
+        let app = runtime_shell(vec![LayoutChoice {
+            variant: "compact".into(),
+            conditions: vec![("size-class".into(), "compact".into())],
+        }]);
+        assert!(app.contains("case \"compact\":\n      HelloCompactView("), "{app}");
+        assert!(app.contains("enum MosaicLayoutSelector"), "{app}");
+        assert!(app.contains(".task(id: environment.report)"), "{app}");
+        assert_eq!(app.matches("struct MosaicEnvironmentReader").count(), 1, "{app}");
+    }
+
+    #[test]
+    fn a_sample_shell_with_variants_selects_without_reporting() {
+        // No runtime to tell: the shell still observes, to choose a layout.
+        let app = shell_with_variants(vec![LayoutChoice {
+            variant: "compact".into(),
+            conditions: vec![("size-class".into(), "compact".into())],
+        }])
+        .unwrap();
+        assert!(app.contains("MosaicEnvironmentReader { environment in"), "{app}");
+        assert!(!app.contains("reportEnvironment"), "{app}");
+    }
+
     #[test]
     fn a_shell_refuses_variant_data_it_cannot_write_safely() {
         let bad = |variant: &str, axis: &str, value: &str| {
@@ -13316,10 +13556,30 @@ mod tests {
 
         assert!(proj
             .app_swift
-            .contains("self.bridge = MosaicRuntimeHost.loadRequired()"));
+            .contains("init(loader: @escaping Loader = { MosaicRuntimeHost.loadRecoverable() })"));
         assert!(proj
             .app_swift
-            .contains("private let bridge: MosaicHostBridgeObject"));
+            .contains("private var bridge: MosaicHostBridgeObject?"));
+        assert!(proj.app_swift.contains("MosaicStartupView(host: host)"));
+        assert!(proj
+            .app_swift
+            .contains(".accessibilityIdentifier(\"mosaic-startup-loading\")"));
+        assert!(proj
+            .app_swift
+            .contains(".accessibilityIdentifier(\"mosaic-startup-failure\")"));
+        assert!(proj
+            .app_swift
+            .contains("Text(\"Hostable could not start\")"));
+        assert!(proj.app_swift.contains(
+            "Text(\"Your saved tasks have not been changed. Retrying is safe.\")"
+        ));
+        assert!(proj
+            .app_swift
+            .contains("Button(\"Try again\") { host.retryStartup() }"));
+        assert!(proj.app_swift.contains("candidate.close()"));
+        assert!(proj
+            .app_swift
+            .contains("candidate.setPropsChangedHandler { [weak self] in"));
         assert!(proj.app_swift.contains(
             "title: MosaicHostValue.optionalString(host.props, \"title\") ?? \"Authored title\","
         ));
@@ -13337,11 +13597,9 @@ mod tests {
             .contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
         assert!(proj
             .app_swift
-            .contains("applyHostResponse(bridge.handleEvent([\"payload\": event.mosaicPayload] as NSDictionary"));
+            .contains("applyHostResponse(bridge?.handleEvent([\"payload\": event.mosaicPayload] as NSDictionary"));
         assert!(!proj.app_swift.contains("MosaicHostBridge.load()"));
         assert!(!proj.app_swift.contains("NSClassFromString"));
-        assert!(!proj.app_swift.contains("MosaicHostBridgeObject?"));
-        assert!(!proj.app_swift.contains("bridge?."));
         assert!(!proj.app_swift.contains("print(\"Mosaic dispatch:"));
         assert!(!proj.app_swift.contains("Sample Count"));
         assert!(proj

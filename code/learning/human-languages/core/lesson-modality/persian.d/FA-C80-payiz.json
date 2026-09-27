@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C80-payiz",
+    "language": "persian",
+    "chapter": 80,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bea3db6f1db1a354"
+  },
+  "findings": []
+}

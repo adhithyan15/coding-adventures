@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C121-saru",
+    "language": "kannada",
+    "chapter": 121,
+    "sequence": 5060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1ab5da9b3d4c119"
+  },
+  "findings": []
+}

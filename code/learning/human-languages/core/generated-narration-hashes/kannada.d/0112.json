@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:d63c13fe1b23f7f1",
+  "lessonIds": [
+    "KA-C112-samarthya",
+    "KA-C112-kausalya",
+    "KA-C112-hakku",
+    "KA-C112-avakasa",
+    "KA-C112-sadhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch112.txt",
+  "json": "kannada/narration/ch112.json",
+  "textHash": "fnv1a64:65d6b76ae9844f61",
+  "jsonHash": "fnv1a64:a9493155418a1697",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C148-kalcu",
+  "pathSegment": "TE-PATH-148-ACT148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-148-ACT148",
+      "order": 1
+    }
+  ]
+}

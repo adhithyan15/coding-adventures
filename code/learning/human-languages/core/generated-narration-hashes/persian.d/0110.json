@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:0ad3ec7bcf30baf1",
+  "lessonIds": [
+    "FA-C110-lamp",
+    "FA-C110-telefon",
+    "FA-C110-kampyuter",
+    "FA-C110-televiziyon",
+    "FA-C110-parch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch110.txt",
+  "json": "persian/narration/ch110.json",
+  "textHash": "fnv1a64:811b5570ecb0214d",
+  "jsonHash": "fnv1a64:cf796ee3db12975f",
+  "findings": []
+}

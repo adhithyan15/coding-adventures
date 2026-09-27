@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Idli, Dosa, Vadai, Coffee, Sea",
+  "label": "ch:ta-idli-dosa-vadai-coffee-sea",
+  "canDo": "I can say an idli, a dosa, a vadai, coffee and the sea.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C125-katal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say an idli, a dosa, a vadai, coffee and the sea.",
+    "assesses": [
+      "TA-LEX-C125-THINGS125-03",
+      "TA-LEX-C125-THINGS125-04",
+      "TA-LEX-C125-THINGS125-05"
+    ]
+  }
+}

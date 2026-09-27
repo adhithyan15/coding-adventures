@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Temple, School, Library, Bank, Market",
+  "label": "ch:te-temple-school-library-bank-market",
+  "canDo": "I can say a temple, a school, a library, a bank and a market.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C103-santa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say a temple, a school, a library, a bank and a market.",
+    "assesses": [
+      "TE-LEX-C103-LOC103-03",
+      "TE-LEX-C103-LOC103-04",
+      "TE-LEX-C103-LOC103-05"
+    ]
+  }
+}

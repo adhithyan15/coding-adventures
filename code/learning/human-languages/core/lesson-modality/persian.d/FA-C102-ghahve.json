@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C102-ghahve",
+    "language": "persian",
+    "chapter": 102,
+    "sequence": 5130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6293c3f3e0a51d10"
+  },
+  "findings": []
+}

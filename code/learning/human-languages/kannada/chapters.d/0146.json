@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Bad, Terrible, Brave, Golden, Silver",
+  "label": "ch:ka-bad-terrible-brave-golden-silver",
+  "canDo": "I can say bad, terrible, brave, golden and silver.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C146-belliya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say bad, terrible, brave, golden and silver.",
+    "assesses": [
+      "KA-LEX-C146-QUAL146-03",
+      "KA-LEX-C146-QUAL146-04",
+      "KA-LEX-C146-QUAL146-05"
+    ]
+  }
+}

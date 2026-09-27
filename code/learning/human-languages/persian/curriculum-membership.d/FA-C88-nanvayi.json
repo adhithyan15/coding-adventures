@@ -1,0 +1,11 @@
+{
+  "id": "FA-C88-nanvayi",
+  "pathSegment": "FA-PATH-88-LOC88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-88-LOC88",
+      "order": 2
+    }
+  ]
+}

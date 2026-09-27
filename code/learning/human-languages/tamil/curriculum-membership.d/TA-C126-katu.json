@@ -1,0 +1,11 @@
+{
+  "id": "TA-C126-katu",
+  "pathSegment": "TA-PATH-126-THINGS126",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-126-THINGS126",
+      "order": 2
+    }
+  ]
+}

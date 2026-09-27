@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "To reach, To put on, To call, To count, To wash",
+  "label": "ch:te-to-reach-to-put-on-to-call-to-count-to-wash",
+  "canDo": "I can say to reach, to put on, to call, to count and to wash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C146-kadugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say to reach, to put on, to call, to count and to wash.",
+    "assesses": [
+      "TE-LEX-C146-ACT146-03",
+      "TE-LEX-C146-ACT146-04",
+      "TE-LEX-C146-ACT146-05"
+    ]
+  }
+}

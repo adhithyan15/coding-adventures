@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-R139-first-pass-animals-the-body-and-more-things",
+    "language": "telugu",
+    "chapter": 139,
+    "sequence": 5990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3445b5fe3b16c66b"
+  },
+  "findings": []
+}

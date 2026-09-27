@@ -1,0 +1,11 @@
+{
+  "id": "FA-R135-first-pass-describing-words-and-verbs",
+  "pathSegment": "FA-PATH-135-ACT135",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-135-ACT135",
+      "order": 5
+    }
+  ]
+}

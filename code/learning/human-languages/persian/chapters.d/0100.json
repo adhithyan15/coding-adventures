@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Apricot, Cherries, Date, Pomegranate, Walnut",
+  "label": "ch:fa-apricot-cherries-date-pomegranate-walnut",
+  "canDo": "I can say an apricot, cherries, a date, a pomegranate and a walnut.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C100-gerdu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say an apricot, cherries, a date, a pomegranate and a walnut.",
+    "assesses": [
+      "FA-LEX-C100-THINGS100-03",
+      "FA-LEX-C100-THINGS100-04",
+      "FA-LEX-C100-THINGS100-05"
+    ]
+  }
+}

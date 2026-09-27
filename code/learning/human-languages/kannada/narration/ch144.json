@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 144,
+  "title": "Dangerous, Lie, Purple, Grey, Spicy",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b548145af8f2ac77",
+  "lessons": [
+    {
+      "id": "KA-C144-apayakari",
+      "sequence": 6240,
+      "title": "ಅಪಾಯಕಾರಿ (apāyakāri) — dangerous",
+      "headword": "ಅಪಾಯಕಾರಿ",
+      "romanization": "apāyakāri",
+      "gloss": "dangerous",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5443a3c9b821611e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for famous, then the Kannada for safe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಪಾಯಕಾರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಪಾಯಕಾರಿ — apāyakāri — \"dangerous\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apāyakāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apāyakāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apāyakāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apāyakāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say apāyakāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *apāyakāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for famous, then the Kannada for safe, then say apāyakāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for famous, then the Kannada for safe, then say *apāyakāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಪಾಯಕಾರಿ (apāyakāri) mean? (\"Dangerous\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C144-sullu",
+      "sequence": 6250,
+      "title": "ಸುಳ್ಳು (suḷḷu) — a lie; false",
+      "headword": "ಸುಳ್ಳು",
+      "romanization": "suḷḷu",
+      "gloss": "a lie; false",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a540a22c3bc345dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for safe, then the Kannada for dangerous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸುಳ್ಳು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುಳ್ಳು — suḷḷu — \"a lie; false\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suḷḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suḷḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suḷḷu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suḷḷu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say suḷḷu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *suḷḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for safe, then the Kannada for dangerous, then say suḷḷu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for safe, then the Kannada for dangerous, then say *suḷḷu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸುಳ್ಳು (suḷḷu) mean? (\"A lie; false\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C144-nerale",
+      "sequence": 6260,
+      "title": "ನೇರಳೆ (nēraḷe) — purple",
+      "headword": "ನೇರಳೆ",
+      "romanization": "nēraḷe",
+      "gloss": "purple",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05611ff2070eeb38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for dangerous, then the Kannada for a lie; false."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನೇರಳೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೇರಳೆ — nēraḷe — \"purple\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēraḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēraḷe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēraḷe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēraḷe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nēraḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nēraḷe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for dangerous, then the Kannada for a lie; false, then say nēraḷe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for dangerous, then the Kannada for a lie; false, then say *nēraḷe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನೇರಳೆ (nēraḷe) mean? (\"Purple\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C144-budu",
+      "sequence": 6270,
+      "title": "ಬೂದು (būdu) — grey",
+      "headword": "ಬೂದು",
+      "romanization": "būdu",
+      "gloss": "grey",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00674d908b84b689",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a lie; false, then the Kannada for purple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೂದು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೂದು — būdu — \"grey\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "būdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *būdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "būdu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *būdu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say būdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *būdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a lie; false, then the Kannada for purple, then say būdu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a lie; false, then the Kannada for purple, then say *būdu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೂದು (būdu) mean? (\"Grey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C144-khara",
+      "sequence": 6280,
+      "title": "ಖಾರ (khāra) — spicy",
+      "headword": "ಖಾರ",
+      "romanization": "khāra",
+      "gloss": "spicy",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b06260d1d4d36842",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for purple, then the Kannada for grey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಖಾರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಾರ — khāra — \"spicy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for purple, then the Kannada for grey, then say khāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for purple, then the Kannada for grey, then say *khāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಖಾರ (khāra) mean? (\"Spicy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R144-first-pass-animals-and-the-body",
+      "sequence": 6290,
+      "title": "Animals and the body — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 136-139",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8e4706bdfe1b935",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for grey and spicy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thumb, a fingernail, the chest, the waist, an eyebrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thumb, a fingernail, the chest, the waist, an eyebrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a table, a window, a mirror, a television, a computer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a table, a window, a mirror, a television, a computer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rupee, a bottle, a pocket, socks, a coat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rupee, a bottle, a pocket, socks, a coat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lotus, wheat, a boat, tears, a moustache",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lotus, wheat, a boat, tears, a moustache]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A thumb? (ಹೆಬ್ಬೆರಳು, hebberaḷu.) A fingernail? (ಉಗುರು, uguru.) The chest? (ಎದೆ, ede.) The waist? (ಸೊಂಟ, soṇṭa.) An eyebrow? (ಹುಬ್ಬು, hubbu.) A table? (ಮೇಜು, mēju.) A window? (ಕಿಟಕಿ, kiṭaki.) A mirror? (ಕನ್ನಡಿ, kannaḍi.) A television? (ಟೀವಿ, ṭīvi.) A computer? (ಕಂಪ್ಯೂಟರ್, kampyūṭar.) A rupee? (ರೂಪಾಯಿ, rūpāyi.) A bottle? (ಬಾಟಲಿ, bāṭali.) A pocket? (ಜೇಬು, jēbu.) Socks? (ಸಾಕ್ಸ್, sāks.) A coat? (ಕೋಟು, kōṭu.) A lotus? (ಕಮಲ, kamala.) Wheat? (ಗೋಧಿ, gōdhi.) A boat? (ದೋಣಿ, dōṇi.) Tears? (ಕಣ್ಣೀರು, kaṇṇīru.) A moustache? (ಮೀಸೆ, mīse.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R144-second-pass-the-body-and-describing-words",
+      "sequence": 6300,
+      "title": "The body and describing words — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 140-144",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a317bde97ae802d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a beard and a foot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a beard, a foot, long, short, heavy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a beard, a foot, long, short, heavy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "light, soft, hard, dirty, speed; fast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: light, soft, hard, dirty, speed; fast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beautiful, deep; depth, wide, narrow, wet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: beautiful, deep; depth, wide, narrow, wet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dry, poor, rich, famous, safe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dry, poor, rich, famous, safe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dangerous, a lie; false, purple, grey, spicy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dangerous, a lie; false, purple, grey, spicy]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A beard? (ಗಡ್ಡ, gaḍḍa.) A foot? (ಪಾದ, pāda.) Long? (ಉದ್ದ, udda.) Short? (ಗಿಡ್ಡ, giḍḍa.) Heavy? (ಭಾರ, bhāra.) Light? (ಹಗುರ, hagura.) Soft? (ಮೃದು, mṛdu.) Hard? (ಗಟ್ಟಿ, gaṭṭi.) Dirty? (ಕೊಳಕು, koḷaku.) Speed; fast? (ವೇಗ, vēga.) Beautiful? (ಸುಂದರ, sundara.) Deep; depth? (ಆಳ, āḷa.) Wide? (ಅಗಲ, agala.) Narrow? (ಕಿರಿದು, kiridu.) Wet? (ಒದ್ದೆ, odde.) Dry? (ಒಣ, oṇa.) Poor? (ಬಡ, baḍa.) Rich? (ಶ್ರೀಮಂತ, śrīmanta.) Famous? (ಪ್ರಸಿದ್ಧ, prasiddha.) Safe? (ಸುರಕ್ಷಿತ, surakṣita.) Dangerous? (ಅಪಾಯಕಾರಿ, apāyakāri.) A lie; false? (ಸುಳ್ಳು, suḷḷu.) Purple? (ನೇರಳೆ, nēraḷe.) Grey? (ಬೂದು, būdu.) Spicy? (ಖಾರ, khāra.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

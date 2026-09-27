@@ -1,0 +1,11 @@
+{
+  "id": "TA-R139-second-pass-nature-and-animals",
+  "pathSegment": "TA-PATH-139-THINGS139",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TA-EXT-139-THINGS139",
+      "order": 6
+    }
+  ]
+}

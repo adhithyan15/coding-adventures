@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Rice pilaf, Thick soup, Watermelon, Melon, Peach",
+  "label": "ch:fa-rice-pilaf-thick-soup-watermelon-melon-peach",
+  "canDo": "I can say rice pilaf, a thick soup, a watermelon, a melon and a peach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C99-holu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say rice pilaf, a thick soup, a watermelon, a melon and a peach.",
+    "assesses": [
+      "FA-LEX-C99-THINGS99-03",
+      "FA-LEX-C99-THINGS99-04",
+      "FA-LEX-C99-THINGS99-05"
+    ]
+  }
+}

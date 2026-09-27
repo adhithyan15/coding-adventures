@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Vegetables, Banana, Mango, Coconut, Onion",
+  "label": "ch:ta-vegetables-banana-mango-coconut-onion",
+  "canDo": "I can say vegetables, a banana, a mango, a coconut and an onion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C123-venkayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say vegetables, a banana, a mango, a coconut and an onion.",
+    "assesses": [
+      "TA-LEX-C123-THINGS123-03",
+      "TA-LEX-C123-THINGS123-04",
+      "TA-LEX-C123-THINGS123-05"
+    ]
+  }
+}

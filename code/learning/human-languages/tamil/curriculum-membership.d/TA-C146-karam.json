@@ -1,0 +1,11 @@
+{
+  "id": "TA-C146-karam",
+  "pathSegment": "TA-PATH-146-QUAL146",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-146-QUAL146",
+      "order": 2
+    }
+  ]
+}

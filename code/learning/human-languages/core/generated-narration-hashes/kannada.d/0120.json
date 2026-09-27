@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:9a801cff60d2cae7",
+  "lessonIds": [
+    "KA-C120-galipata",
+    "KA-C120-angi",
+    "KA-C120-sire",
+    "KA-C120-pamce",
+    "KA-C120-cappali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch120.txt",
+  "json": "kannada/narration/ch120.json",
+  "textHash": "fnv1a64:d276d4d2aaf2c6fd",
+  "jsonHash": "fnv1a64:218abb344bd4236c",
+  "findings": []
+}

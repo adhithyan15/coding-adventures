@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:465753beac510426",
+  "lessonIds": [
+    "TE-C101-paina",
+    "TE-C101-kinda",
+    "TE-C101-lopala",
+    "TE-C101-bayata",
+    "TE-C101-venaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch101.txt",
+  "json": "telugu/narration/ch101.json",
+  "textHash": "fnv1a64:47821409fd10d57e",
+  "jsonHash": "fnv1a64:a2d4f634aaba4df3",
+  "findings": []
+}

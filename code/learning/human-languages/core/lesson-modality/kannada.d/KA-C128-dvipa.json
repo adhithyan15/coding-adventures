@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C128-dvipa",
+    "language": "kannada",
+    "chapter": 128,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7469c5c0365bb54e"
+  },
+  "findings": []
+}

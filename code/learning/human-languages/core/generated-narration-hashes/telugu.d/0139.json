@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:21248bbc6ce6701c",
+  "lessonIds": [
+    "TE-C139-tadi",
+    "TE-C139-podi",
+    "TE-C139-peda",
+    "TE-C139-musali",
+    "TE-C139-prasiddha",
+    "TE-R139-first-pass-animals-the-body-and-more-things",
+    "TE-R139-second-pass-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch139.txt",
+  "json": "telugu/narration/ch139.json",
+  "textHash": "fnv1a64:effd47eff605d194",
+  "jsonHash": "fnv1a64:7b09bb0fe8ecbf47",
+  "findings": []
+}

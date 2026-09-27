@@ -1,0 +1,11 @@
+{
+  "id": "TE-C145-duku",
+  "pathSegment": "TE-PATH-145-ACT145",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-145-ACT145",
+      "order": 3
+    }
+  ]
+}

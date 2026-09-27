@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:353455baa53b9485",
+  "lessonIds": [
+    "FA-C100-zardalu",
+    "FA-C100-gilas",
+    "FA-C100-khorma",
+    "FA-C100-anar",
+    "FA-C100-gerdu"
+  ],
+  "tex": "persian/book/chapters/ch100-apricot-cherries-date-pomegranate-walnut.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:71f5478353380c81",
+  "lessonIds": [
+    "TE-C146-ceru",
+    "TE-C146-vesuko",
+    "TE-C146-pilucu",
+    "TE-C146-lekkapettu",
+    "TE-C146-kadugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch146.txt",
+  "json": "telugu/narration/ch146.json",
+  "textHash": "fnv1a64:eab331783917365f",
+  "jsonHash": "fnv1a64:a87c7619d30e24a2",
+  "findings": []
+}

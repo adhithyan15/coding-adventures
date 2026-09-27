@@ -1,0 +1,11 @@
+{
+  "id": "FA-C118-parking",
+  "pathSegment": "FA-PATH-118-THINGS118",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-118-THINGS118",
+      "order": 1
+    }
+  ]
+}

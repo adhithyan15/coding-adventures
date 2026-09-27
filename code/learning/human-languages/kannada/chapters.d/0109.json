@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Bridge, Park, Temple, Library, Bank",
+  "label": "ch:ka-bridge-park-temple-library-bank",
+  "canDo": "I can say a bridge, a park, a temple, a library and a bank.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C109-byanku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a bridge, a park, a temple, a library and a bank.",
+    "assesses": [
+      "KA-LEX-C109-LOC109-03",
+      "KA-LEX-C109-LOC109-04",
+      "KA-LEX-C109-LOC109-05"
+    ]
+  }
+}

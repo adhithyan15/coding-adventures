@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C138-katuku",
+    "language": "tamil",
+    "chapter": 138,
+    "sequence": 6290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ed0a515c75203be"
+  },
+  "findings": []
+}

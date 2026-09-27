@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Wet, Dry, Poor, Old, Famous",
+  "label": "ch:te-wet-dry-poor-old-famous",
+  "canDo": "I can say wet, dry, poor, old and famous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-R139-second-pass-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say wet, dry, poor, old and famous.",
+    "assesses": [
+      "TE-LEX-C139-QUAL139-03",
+      "TE-LEX-C139-QUAL139-04",
+      "TE-LEX-C139-QUAL139-05"
+    ]
+  }
+}

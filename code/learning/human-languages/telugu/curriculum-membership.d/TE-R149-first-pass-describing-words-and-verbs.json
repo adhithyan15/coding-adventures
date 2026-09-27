@@ -1,0 +1,11 @@
+{
+  "id": "TE-R149-first-pass-describing-words-and-verbs",
+  "pathSegment": "TE-PATH-149-ACT149",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TE-EXT-149-ACT149",
+      "order": 5
+    }
+  ]
+}

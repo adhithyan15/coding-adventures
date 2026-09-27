@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:c482d5a9ce1cc48a",
+  "lessonIds": [
+    "TA-C133-tol",
+    "TA-C133-marpu",
+    "TA-C133-mulankal",
+    "TA-C133-muti",
+    "TA-C133-tol2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch133.txt",
+  "json": "tamil/narration/ch133.json",
+  "textHash": "fnv1a64:38dd6963cdd6b83c",
+  "jsonHash": "fnv1a64:d31e47a1ffa88370",
+  "findings": []
+}

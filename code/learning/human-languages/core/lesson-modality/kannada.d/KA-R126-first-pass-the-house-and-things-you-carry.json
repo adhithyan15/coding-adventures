@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R126-first-pass-the-house-and-things-you-carry",
+    "language": "kannada",
+    "chapter": 126,
+    "sequence": 5330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e6d3a5cfa8d8513"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "In the middle, Street, Road, Bridge, Park",
+  "label": "ch:te-in-the-middle-street-road-bridge-park",
+  "canDo": "I can say in the middle, a street, a road, a bridge and a park.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C102-parku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say in the middle, a street, a road, a bridge and a park.",
+    "assesses": [
+      "TE-LEX-C102-LOC102-03",
+      "TE-LEX-C102-LOC102-04",
+      "TE-LEX-C102-LOC102-05"
+    ]
+  }
+}

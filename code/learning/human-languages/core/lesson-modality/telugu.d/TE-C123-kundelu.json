@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C123-kundelu",
+    "language": "telugu",
+    "chapter": 123,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8a4700beac60626"
+  },
+  "findings": []
+}

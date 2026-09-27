@@ -1,0 +1,299 @@
+{
+  "track": "marathi",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W01-ha",
+      "sourceHash": "fnv1a64:d39d5aab421c70a7",
+      "svgHash": "fnv1a64:e5ea38624efa2e1f",
+      "svg": "marathi/book/figures/MR-W01-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W01-ka",
+      "sourceHash": "fnv1a64:b6b46c47b56a9618",
+      "svgHash": "fnv1a64:b80af52019f4a24c",
+      "svg": "marathi/book/figures/MR-W01-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W01-ma",
+      "sourceHash": "fnv1a64:ae390ebbf4093463",
+      "svgHash": "fnv1a64:4507a2a0b3bb2cb0",
+      "svg": "marathi/book/figures/MR-W01-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W01-na",
+      "sourceHash": "fnv1a64:e9afd988e1b4b73e",
+      "svgHash": "fnv1a64:e6220d8d2b425914",
+      "svg": "marathi/book/figures/MR-W01-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W01-ra",
+      "sourceHash": "fnv1a64:525d9ebce212317f",
+      "svgHash": "fnv1a64:5f8d465475c7dd70",
+      "svg": "marathi/book/figures/MR-W01-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W01-sa",
+      "sourceHash": "fnv1a64:18183776beecc9cc",
+      "svgHash": "fnv1a64:748c3fc8be8e135b",
+      "svg": "marathi/book/figures/MR-W01-sa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W02-aa-independent",
+      "sourceHash": "fnv1a64:f8c9826570521d69",
+      "svgHash": "fnv1a64:49c6eba32dd15841",
+      "svg": "marathi/book/figures/MR-W02-aa-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W02-bha",
+      "sourceHash": "fnv1a64:afb4809cf5e21ec9",
+      "svgHash": "fnv1a64:04b72ee03485209b",
+      "svg": "marathi/book/figures/MR-W02-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W02-ta",
+      "sourceHash": "fnv1a64:a7b8c691aee98f7a",
+      "svgHash": "fnv1a64:48b17816105f19f2",
+      "svg": "marathi/book/figures/MR-W02-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W03-ba",
+      "sourceHash": "fnv1a64:45ed5bd572c578ad",
+      "svgHash": "fnv1a64:0619fb9d392539e3",
+      "svg": "marathi/book/figures/MR-W03-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W03-da",
+      "sourceHash": "fnv1a64:3b6c6fa3461357cb",
+      "svgHash": "fnv1a64:4bad59c61ab19ba8",
+      "svg": "marathi/book/figures/MR-W03-da-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W03-dha",
+      "sourceHash": "fnv1a64:0156fcd97418c3fe",
+      "svgHash": "fnv1a64:3c9a47541608d5e4",
+      "svg": "marathi/book/figures/MR-W03-dha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W03-lla",
+      "sourceHash": "fnv1a64:31d88912bdb40d32",
+      "svgHash": "fnv1a64:24fcbfce544ebe84",
+      "svg": "marathi/book/figures/MR-W03-lla-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W03-va",
+      "sourceHash": "fnv1a64:beee2efa5229e7aa",
+      "svgHash": "fnv1a64:fef7f3a98a7a9ef4",
+      "svg": "marathi/book/figures/MR-W03-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W03-ya",
+      "sourceHash": "fnv1a64:096128ba687fe798",
+      "svgHash": "fnv1a64:26ddfa520f4a00ed",
+      "svg": "marathi/book/figures/MR-W03-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W05-a-independent",
+      "sourceHash": "fnv1a64:7e1ac9b3d1fd5c92",
+      "svgHash": "fnv1a64:761e0abe1e706d0d",
+      "svg": "marathi/book/figures/MR-W05-a-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W06-ca",
+      "sourceHash": "fnv1a64:bc754106b596ac04",
+      "svgHash": "fnv1a64:82881181639f43ca",
+      "svg": "marathi/book/figures/MR-W06-ca-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W06-cha",
+      "sourceHash": "fnv1a64:4188a756a34e7be7",
+      "svgHash": "fnv1a64:974f9e98ebafd92e",
+      "svg": "marathi/book/figures/MR-W06-cha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W06-ga",
+      "sourceHash": "fnv1a64:4d28dbe2d2032164",
+      "svgHash": "fnv1a64:dab40168a9b2dac7",
+      "svg": "marathi/book/figures/MR-W06-ga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W06-gha",
+      "sourceHash": "fnv1a64:77d5493192b88370",
+      "svgHash": "fnv1a64:136ca633b9c1fd76",
+      "svg": "marathi/book/figures/MR-W06-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W06-ja",
+      "sourceHash": "fnv1a64:221d4e64872f9179",
+      "svgHash": "fnv1a64:4bb6bb071e9a444e",
+      "svg": "marathi/book/figures/MR-W06-ja-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W06-jha",
+      "sourceHash": "fnv1a64:06e16c1bdda5318c",
+      "svgHash": "fnv1a64:39e26c629448abcf",
+      "svg": "marathi/book/figures/MR-W06-jha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W06-kha",
+      "sourceHash": "fnv1a64:e480ed6e844d45dd",
+      "svgHash": "fnv1a64:e369ceee36886404",
+      "svg": "marathi/book/figures/MR-W06-kha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W07-dda",
+      "sourceHash": "fnv1a64:8a09813e5487b94e",
+      "svgHash": "fnv1a64:d358105e8226e6c6",
+      "svg": "marathi/book/figures/MR-W07-dda-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W07-nna",
+      "sourceHash": "fnv1a64:56b7fe46609f3229",
+      "svgHash": "fnv1a64:44b61b02c27dc360",
+      "svg": "marathi/book/figures/MR-W07-nna-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W07-pa",
+      "sourceHash": "fnv1a64:d3a4fdce6dce2521",
+      "svgHash": "fnv1a64:de616690902187ca",
+      "svg": "marathi/book/figures/MR-W07-pa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W07-tta",
+      "sourceHash": "fnv1a64:12096ff5e12f1764",
+      "svgHash": "fnv1a64:d4ea35897f05debf",
+      "svg": "marathi/book/figures/MR-W07-tta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W07-ttha",
+      "sourceHash": "fnv1a64:82f5c9350244200b",
+      "svgHash": "fnv1a64:51d2fc22531641db",
+      "svg": "marathi/book/figures/MR-W07-ttha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W08-e-independent",
+      "sourceHash": "fnv1a64:7c0ed43894558f2a",
+      "svgHash": "fnv1a64:d8f9c88f516b36bc",
+      "svg": "marathi/book/figures/MR-W08-e-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W08-la",
+      "sourceHash": "fnv1a64:90a96cb7fc4d191e",
+      "svgHash": "fnv1a64:6c712e21db2f3e27",
+      "svg": "marathi/book/figures/MR-W08-la-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W08-sha",
+      "sourceHash": "fnv1a64:c301e2282493ad6a",
+      "svgHash": "fnv1a64:4b75e0601c28ee4c",
+      "svg": "marathi/book/figures/MR-W08-sha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W08-ssa",
+      "sourceHash": "fnv1a64:cc1ae1c076b2cdca",
+      "svgHash": "fnv1a64:3ffcfcea51b86579",
+      "svg": "marathi/book/figures/MR-W08-ssa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W08-u-independent",
+      "sourceHash": "fnv1a64:bd945fccd0b2a4cd",
+      "svgHash": "fnv1a64:a4f8c2948c51c5bb",
+      "svg": "marathi/book/figures/MR-W08-u-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W08-uu-independent",
+      "sourceHash": "fnv1a64:665c2797cef51825",
+      "svgHash": "fnv1a64:3913e2ad8f55e7c3",
+      "svg": "marathi/book/figures/MR-W08-uu-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W39-tha",
+      "sourceHash": "fnv1a64:435b9368e66cdc30",
+      "svgHash": "fnv1a64:dd9410549e4ed2c1",
+      "svg": "marathi/book/figures/MR-W39-tha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W40-i-independent",
+      "sourceHash": "fnv1a64:7d8883af79832431",
+      "svgHash": "fnv1a64:a7656f8c223c4a53",
+      "svg": "marathi/book/figures/MR-W40-i-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W64-ddha",
+      "sourceHash": "fnv1a64:c4383c7383ef0b53",
+      "svgHash": "fnv1a64:a267b5912cbc6d7d",
+      "svg": "marathi/book/figures/MR-W64-ddha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W64-pha",
+      "sourceHash": "fnv1a64:4b7f9fa4bc269c1c",
+      "svgHash": "fnv1a64:40c11ac8f4645cfc",
+      "svg": "marathi/book/figures/MR-W64-pha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W65-ai-independent",
+      "sourceHash": "fnv1a64:11503a1ac2473ffa",
+      "svgHash": "fnv1a64:0b538e3d5c450506",
+      "svg": "marathi/book/figures/MR-W65-ai-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W65-au-independent",
+      "sourceHash": "fnv1a64:d817c9d9ddb1dedc",
+      "svgHash": "fnv1a64:13fd32bf8e4201d8",
+      "svg": "marathi/book/figures/MR-W65-au-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W65-ii-independent",
+      "sourceHash": "fnv1a64:ecc043ab3f2997c9",
+      "svgHash": "fnv1a64:504604978631bbca",
+      "svg": "marathi/book/figures/MR-W65-ii-independent-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "MR-W65-o-independent",
+      "sourceHash": "fnv1a64:8a35f5f8dc3dde00",
+      "svgHash": "fnv1a64:ab50b5106dd7f3bf",
+      "svg": "marathi/book/figures/MR-W65-o-independent-filmstrip.svg"
+    }
+  ]
+}

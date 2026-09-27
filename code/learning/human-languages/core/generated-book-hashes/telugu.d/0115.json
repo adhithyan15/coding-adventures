@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:9943febc27906111",
+  "lessonIds": [
+    "TE-C115-topi",
+    "TE-C115-ungaram",
+    "TE-C115-gajulu",
+    "TE-C115-kura",
+    "TE-C115-pappu"
+  ],
+  "tex": "telugu/book/chapters/ch115-cap-ring-bangles-curry-dal.tex"
+}

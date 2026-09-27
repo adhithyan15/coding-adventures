@@ -1,0 +1,11 @@
+{
+  "id": "FA-C118-kishmish",
+  "pathSegment": "FA-PATH-118-THINGS118",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-118-THINGS118",
+      "order": 2
+    }
+  ]
+}

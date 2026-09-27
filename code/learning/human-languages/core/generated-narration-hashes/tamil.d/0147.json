@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:03fc9a7b73e4588f",
+  "lessonIds": [
+    "TA-C147-ilaiya",
+    "TA-C147-vayatana",
+    "TA-C147-putticali",
+    "TA-C147-comperi",
+    "TA-C147-tairiyamana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch147.txt",
+  "json": "tamil/narration/ch147.json",
+  "textHash": "fnv1a64:b803037ff368e1b2",
+  "jsonHash": "fnv1a64:fe02af4e79911947",
+  "findings": []
+}

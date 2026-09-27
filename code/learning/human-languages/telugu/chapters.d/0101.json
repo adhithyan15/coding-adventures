@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Above, Below, Inside, Outside, Behind",
+  "label": "ch:te-above-below-inside-outside-behind",
+  "canDo": "I can say above, below, inside, outside and behind.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TE-C101-venaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say above, below, inside, outside and behind.",
+    "assesses": [
+      "TE-LEX-C101-LOC101-03",
+      "TE-LEX-C101-LOC101-04",
+      "TE-LEX-C101-LOC101-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:21b0f149479e76b5",
+  "lessonIds": [
+    "FA-C90-abzar",
+    "FA-C90-saheb",
+    "FA-C90-ghodrat",
+    "FA-C90-arezu",
+    "FA-C90-omid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch90.txt",
+  "json": "persian/narration/ch90.json",
+  "textHash": "fnv1a64:c7b527db3ccf0075",
+  "jsonHash": "fnv1a64:7e1fda16ce9ca496",
+  "findings": []
+}

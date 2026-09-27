@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C128-birugali",
+    "language": "kannada",
+    "chapter": 128,
+    "sequence": 5420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e3f735fc955d27c"
+  },
+  "findings": []
+}

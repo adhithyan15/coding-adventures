@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:f0e0ffb5e52f191a",
+  "lessonIds": [
+    "TE-C111-duvvena",
+    "TE-C111-sabbu",
+    "TE-C111-tuvvalu",
+    "TE-C111-kallajodu",
+    "TE-C111-gadiyaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch111.txt",
+  "json": "telugu/narration/ch111.json",
+  "textHash": "fnv1a64:1e755eef8aee8d03",
+  "jsonHash": "fnv1a64:06aa7b87753698e3",
+  "findings": []
+}

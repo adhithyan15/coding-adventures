@@ -13,6 +13,7 @@ import Foundation
   @objc optional func node(named name: NSString) -> NSObject?
   @objc optional func setPropsChangedHandler(_ handler: @escaping () -> Void)
   @objc optional func runInteractionAcceptance()
+  @objc optional func reportEnvironment(_ environment: NSDictionary) -> NSDictionary?
 }
 
 var failures = 0
@@ -200,6 +201,34 @@ if let host = makeHost("MOSAIC_PROBE_STATE_F") {
   let snapshot = host.snapshot() as? [String: Any]
   check(snapshot != nil && snapshot?["error"] == nil,
         "snapshot works again once the deferred effect is answered")
+}
+
+// UI48 ENV4: the window reports its environment. The conformance app does not
+// react to it, so the runtime answers with no props; the host must keep what
+// is showing rather than hand the view nothing.
+if let host = makeHost("MOSAIC_PROBE_STATE_G") {
+  let before = props(host.applyProps())
+  let phone: NSDictionary = [
+    "colorScheme": "light", "sizeClass": "compact", "pointer": "coarse",
+    "hover": "none", "orientation": "portrait", "reducedMotion": "no-preference",
+  ]
+  let reported = host.reportEnvironment(phone)
+  check(reported != nil && (reported as? [String: Any])?["error"] == nil,
+        "an environment report reaches the runtime")
+  check(!props(reported).isEmpty && NSDictionary(dictionary: props(reported)).isEqual(to: before),
+        "an ignored environment keeps the props showing")
+  check(!props(host.applyProps()).isEmpty, "the view still has props after the report")
+  check(host.reportEnvironment(phone) == nil, "an unchanged environment is not sent again")
+  let tablet = NSMutableDictionary(dictionary: phone)
+  tablet["sizeClass"] = "regular"
+  check(host.reportEnvironment(tablet) != nil, "a changed size class is sent")
+  let bad: NSDictionary = ["colorScheme": "sepia"]
+  let refused = host.reportEnvironment(bad) as? [String: Any]
+  check(refused?["error"] != nil, "a malformed environment is refused, not applied")
+  check(!props(host.applyProps()).isEmpty, "a refused environment leaves the props showing")
+  let start = MosaicRuntimeHost.initialEnvironment()
+  check(start["pointer"] == "fine" && start["hover"] == "hover",
+        "a macOS app starts with a fine, hovering pointer")
 }
 
 print(failures == 0 ? "\nall checks passed" : "\n\(failures) check(s) failed")

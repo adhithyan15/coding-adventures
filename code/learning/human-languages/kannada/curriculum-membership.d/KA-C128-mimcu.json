@@ -1,0 +1,11 @@
+{
+  "id": "KA-C128-mimcu",
+  "pathSegment": "KA-PATH-128-THINGS128",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-128-THINGS128",
+      "order": 0
+    }
+  ]
+}

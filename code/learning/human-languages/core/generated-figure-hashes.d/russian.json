@@ -1,0 +1,159 @@
+{
+  "track": "russian",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-ch",
+      "sourceHash": "fnv1a64:64f77c69a7465450",
+      "svgHash": "fnv1a64:8a973425d3ba3450",
+      "svg": "russian/book/figures/RU-W06-ch-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-k",
+      "sourceHash": "fnv1a64:1f2a6a600b52c634",
+      "svgHash": "fnv1a64:8990fd64aa6bd835",
+      "svg": "russian/book/figures/RU-W06-k-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-l",
+      "sourceHash": "fnv1a64:5744c5c4bdcc3be5",
+      "svgHash": "fnv1a64:55837bd27236ffa4",
+      "svg": "russian/book/figures/RU-W06-l-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-m",
+      "sourceHash": "fnv1a64:e599032727f81762",
+      "svgHash": "fnv1a64:0e5b8e9d20d98306",
+      "svg": "russian/book/figures/RU-W06-m-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-sh",
+      "sourceHash": "fnv1a64:e127d2f4a141e2cb",
+      "svgHash": "fnv1a64:1fb590b89aa43c5b",
+      "svg": "russian/book/figures/RU-W06-sh-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-soft-sign",
+      "sourceHash": "fnv1a64:4861a35506aeaca8",
+      "svgHash": "fnv1a64:bf60b1a57d197f71",
+      "svg": "russian/book/figures/RU-W06-soft-sign-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-u",
+      "sourceHash": "fnv1a64:792d8461c428c532",
+      "svgHash": "fnv1a64:3b915f3091e665d7",
+      "svg": "russian/book/figures/RU-W06-u-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-y",
+      "sourceHash": "fnv1a64:ba42e078016c8359",
+      "svgHash": "fnv1a64:c45e182570c44a24",
+      "svg": "russian/book/figures/RU-W06-y-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-z",
+      "sourceHash": "fnv1a64:9e20be07de995de5",
+      "svgHash": "fnv1a64:abe62483212425f9",
+      "svg": "russian/book/figures/RU-W06-z-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W06-zh",
+      "sourceHash": "fnv1a64:2bb2475b0b086602",
+      "svgHash": "fnv1a64:0f3a400ff5419629",
+      "svg": "russian/book/figures/RU-W06-zh-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-a",
+      "sourceHash": "fnv1a64:c3d4efe957f29d85",
+      "svgHash": "fnv1a64:d62282eddfd65db1",
+      "svg": "russian/book/figures/RU-W07-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-f",
+      "sourceHash": "fnv1a64:a1562e9cb18893f0",
+      "svgHash": "fnv1a64:b395708dfea0de8b",
+      "svg": "russian/book/figures/RU-W07-f-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-g",
+      "sourceHash": "fnv1a64:662a9768f31c4c56",
+      "svgHash": "fnv1a64:10a235ab1109e058",
+      "svg": "russian/book/figures/RU-W07-g-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-kh",
+      "sourceHash": "fnv1a64:794307ffd3cb5a9b",
+      "svgHash": "fnv1a64:985482e98fc5ead7",
+      "svg": "russian/book/figures/RU-W07-kh-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-o",
+      "sourceHash": "fnv1a64:17198e0852cb6468",
+      "svgHash": "fnv1a64:39f7fb88f338d286",
+      "svg": "russian/book/figures/RU-W07-o-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-ts",
+      "sourceHash": "fnv1a64:3d3c501d3eef9bd8",
+      "svgHash": "fnv1a64:e2caae86660a241a",
+      "svg": "russian/book/figures/RU-W07-ts-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-y-short",
+      "sourceHash": "fnv1a64:287f98e5bf2fb693",
+      "svgHash": "fnv1a64:d8cb680ba3071452",
+      "svg": "russian/book/figures/RU-W07-y-short-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W07-yu",
+      "sourceHash": "fnv1a64:4d3866c3d65e5883",
+      "svgHash": "fnv1a64:ef2626b7396e30f0",
+      "svg": "russian/book/figures/RU-W07-yu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W28-ya-small",
+      "sourceHash": "fnv1a64:da6f7fbdc35483b5",
+      "svgHash": "fnv1a64:3fd121460f438a21",
+      "svg": "russian/book/figures/RU-W28-ya-small-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W81-yo",
+      "sourceHash": "fnv1a64:66b4f20e78f70acf",
+      "svgHash": "fnv1a64:e8e74faae55e6089",
+      "svg": "russian/book/figures/RU-W81-yo-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W93-e",
+      "sourceHash": "fnv1a64:8e0b36a119ceeea9",
+      "svgHash": "fnv1a64:aeebf4c10c692927",
+      "svg": "russian/book/figures/RU-W93-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W93-shcha",
+      "sourceHash": "fnv1a64:5455768079d8e75e",
+      "svgHash": "fnv1a64:6b2f75173614201c",
+      "svg": "russian/book/figures/RU-W93-shcha-filmstrip.svg"
+    }
+  ]
+}

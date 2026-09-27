@@ -1,0 +1,11 @@
+{
+  "id": "TA-C134-mettai",
+  "pathSegment": "TA-PATH-134-THINGS134",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-134-THINGS134",
+      "order": 1
+    }
+  ]
+}

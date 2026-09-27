@@ -9,6 +9,7 @@ on:
       - .github/workflows/release-task-app.yml
       - code/scripts/taskapp_release.py
       - code/scripts/taskapp-xaml-smoke.ps1
+      - code/scripts/taskapp-xaml-startup-smoke.ps1
       - code/programs/mosaic/task-app/**
       - code/packages/rust/task-mosaic-app/**
       - code/packages/rust/task-wasm/**
@@ -529,6 +530,28 @@ jobs:
           test -x "$executable"
           test -n "$runtime"
           cmp "$expected" "$runtime"
+
+          # Release validation treats the in-window startup failure as a gate,
+          # not merely a source assertion. A missing bundled runtime must leave
+          # the app alive so its detail and retry control remain usable.
+          missing_runtime="$runtime.startup-acceptance"
+          mv "$runtime" "$missing_runtime"
+          startup_failure_log="$PWD/release-work/swiftui-startup-failure.log"
+          (
+            cd /
+            env -u MOSAIC_APP_LIBRARY "$executable" \
+              >"$startup_failure_log" 2>&1 &
+            startup_pid=$!
+            trap 'kill "$startup_pid" 2>/dev/null || true; mv "$missing_runtime" "$runtime" 2>/dev/null || true' EXIT
+            sleep 5
+            kill -0 "$startup_pid"
+            kill "$startup_pid"
+            wait "$startup_pid" || true
+            mv "$missing_runtime" "$runtime"
+            trap - EXIT
+          )
+          cmp "$expected" "$runtime"
+
           python code/scripts/taskapp_release.py archive-macos-app \
             --version "$RELEASE_VERSION" \
             --commit "$RELEASE_COMMIT" \
@@ -792,6 +815,12 @@ jobs:
           Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
           $state = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) `
             'task-app/mosaic-state.v1.json'
+          Remove-Item $state, "$state.corrupt", "$state.tmp" -Force -ErrorAction SilentlyContinue
+          pwsh -NoProfile -ExecutionPolicy Bypass `
+            -File code/scripts/taskapp-xaml-startup-smoke.ps1 `
+            -ExePath $replacementExecutable `
+            -RuntimePath $replacementRuntime
+          if ($LASTEXITCODE -ne 0) { throw 'Packaged Windows recoverable-startup lifecycle failed' }
           Remove-Item $state, "$state.corrupt", "$state.tmp" -Force -ErrorAction SilentlyContinue
           python code/scripts/taskapp_release.py materialize-upgrade-fixture `
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json `

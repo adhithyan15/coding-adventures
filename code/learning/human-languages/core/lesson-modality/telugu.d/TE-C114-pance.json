@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C114-pance",
+    "language": "telugu",
+    "chapter": 114,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:614dd1e062aa9797"
+  },
+  "findings": []
+}

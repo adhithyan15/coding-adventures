@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R127-first-pass-food-clothes-and-animals",
+    "language": "persian",
+    "chapter": 127,
+    "sequence": 6470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2bbce71ac0b7e84"
+  },
+  "findings": []
+}

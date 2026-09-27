@@ -1,0 +1,11 @@
+{
+  "id": "KA-C132-citte",
+  "pathSegment": "KA-PATH-132-THINGS132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-132-THINGS132",
+      "order": 1
+    }
+  ]
+}

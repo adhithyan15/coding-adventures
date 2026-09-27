@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:e91454df7fb7b5f7",
+  "lessonIds": [
+    "TA-C151-utai",
+    "TA-C151-vai",
+    "TA-C151-anuppu",
+    "TA-C151-tetu",
+    "TA-C151-karpi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch151.txt",
+  "json": "tamil/narration/ch151.json",
+  "textHash": "fnv1a64:1cb84ce9beacc0ec",
+  "jsonHash": "fnv1a64:7481de3d8f25237b",
+  "findings": []
+}

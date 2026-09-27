@@ -1,0 +1,11 @@
+{
+  "id": "FA-C127-shur",
+  "pathSegment": "FA-PATH-127-QUAL127",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-127-QUAL127",
+      "order": 2
+    }
+  ]
+}

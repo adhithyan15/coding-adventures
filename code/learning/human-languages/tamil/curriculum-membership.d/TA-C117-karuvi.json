@@ -1,0 +1,11 @@
+{
+  "id": "TA-C117-karuvi",
+  "pathSegment": "TA-PATH-117-CAN117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-117-CAN117",
+      "order": 3
+    }
+  ]
+}

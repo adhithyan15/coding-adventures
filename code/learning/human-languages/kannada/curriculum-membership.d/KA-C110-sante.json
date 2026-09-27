@@ -1,0 +1,11 @@
+{
+  "id": "KA-C110-sante",
+  "pathSegment": "KA-PATH-110-LOC110",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-110-LOC110",
+      "order": 0
+    }
+  ]
+}

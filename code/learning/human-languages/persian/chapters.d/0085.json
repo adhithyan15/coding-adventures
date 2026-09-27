@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Which?, Where?, Beside, Middle, Under",
+  "label": "ch:fa-which-where-beside-middle-under",
+  "canDo": "I can say which?, where?, beside, the middle and under.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C85-zir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say which?, where?, beside, the middle and under.",
+    "assesses": [
+      "FA-LEX-C85-DEF85-03",
+      "FA-LEX-C85-DEF85-04",
+      "FA-LEX-C85-DEF85-05"
+    ]
+  }
+}

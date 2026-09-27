@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R153-second-pass-verbs",
+    "language": "kannada",
+    "chapter": 153,
+    "sequence": 6780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7c297938382bf73"
+  },
+  "findings": []
+}

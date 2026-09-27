@@ -1,0 +1,11 @@
+{
+  "id": "KA-C110-tiruvu",
+  "pathSegment": "KA-PATH-110-LOC110",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-110-LOC110",
+      "order": 4
+    }
+  ]
+}

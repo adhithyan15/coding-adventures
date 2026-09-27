@@ -1,0 +1,11 @@
+{
+  "id": "KA-C128-jalapata",
+  "pathSegment": "KA-PATH-128-THINGS128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-128-THINGS128",
+      "order": 3
+    }
+  ]
+}

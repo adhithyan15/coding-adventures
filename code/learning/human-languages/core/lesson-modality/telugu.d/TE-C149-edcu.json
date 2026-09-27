@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C149-edcu",
+    "language": "telugu",
+    "chapter": 149,
+    "sequence": 6510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9dd6be3ef28f0bee"
+  },
+  "findings": []
+}

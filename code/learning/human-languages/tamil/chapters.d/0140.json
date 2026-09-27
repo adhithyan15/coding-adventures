@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Grapes, Pomegranate, Pickle, Waterfall, Hill",
+  "label": "ch:ta-grapes-pomegranate-pickle-waterfall-hill",
+  "canDo": "I can say grapes, a pomegranate, a pickle, a waterfall and a hill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C140-kunru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say grapes, a pomegranate, a pickle, a waterfall and a hill.",
+    "assesses": [
+      "TA-LEX-C140-THINGS140-03",
+      "TA-LEX-C140-THINGS140-04",
+      "TA-LEX-C140-THINGS140-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C134-kanini",
+  "pathSegment": "TA-PATH-134-THINGS134",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-134-THINGS134",
+      "order": 4
+    }
+  ]
+}

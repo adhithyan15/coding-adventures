@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Ginger, Pepper, Coffee, Sweet drink, Plain",
+  "label": "ch:fa-ginger-pepper-coffee-sweet-drink-plain",
+  "canDo": "I can say ginger, pepper, coffee, a sweet drink and a plain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C102-dasht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say ginger, pepper, coffee, a sweet drink and a plain.",
+    "assesses": [
+      "FA-LEX-C102-THINGS102-03",
+      "FA-LEX-C102-THINGS102-04",
+      "FA-LEX-C102-THINGS102-05"
+    ]
+  }
+}

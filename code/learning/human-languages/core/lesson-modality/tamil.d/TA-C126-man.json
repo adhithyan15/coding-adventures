@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C126-man",
+    "language": "tamil",
+    "chapter": 126,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba0396375f7afbd8"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:deaaff4e74b77080",
+  "lessonIds": [
+    "KA-C130-karadi",
+    "KA-C130-koti",
+    "KA-C130-mola",
+    "KA-C130-jinke",
+    "KA-C130-nari"
+  ],
+  "tex": "kannada/book/chapters/ch130-bear-monkey-rabbit-deer-fox.tex"
+}

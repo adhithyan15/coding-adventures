@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:b3c25e5d6fa4a7d7",
+  "lessonIds": [
+    "TA-C140-tiratcai",
+    "TA-C140-matulai",
+    "TA-C140-urukay",
+    "TA-C140-aruvi",
+    "TA-C140-kunru"
+  ],
+  "tex": "tamil/book/chapters/ch140-grapes-pomegranate-pickle-waterfall-hill.tex"
+}

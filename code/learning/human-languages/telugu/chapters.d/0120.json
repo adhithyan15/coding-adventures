@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Sea, Lake, Forest, Leaf, Soil",
+  "label": "ch:te-sea-lake-forest-leaf-soil",
+  "canDo": "I can say the sea, a lake, a forest, a leaf and soil.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C120-matti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say the sea, a lake, a forest, a leaf and soil.",
+    "assesses": [
+      "TE-LEX-C120-THINGS120-03",
+      "TE-LEX-C120-THINGS120-04",
+      "TE-LEX-C120-THINGS120-05"
+    ]
+  }
+}

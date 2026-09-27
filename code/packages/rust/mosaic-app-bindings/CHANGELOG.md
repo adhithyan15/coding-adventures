@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Added — retryable XAML runtime loading
+
+The XAML runtime host now records loader detail and can retry after `Close()`
+instead of caching an unavailable runtime for the life of the process. Strict
+generated WinUI startup can therefore report a missing DLL, restore it, and
+recover in place (#16097).
+
+### Added — recoverable SwiftUI runtime loading
+
+`MosaicRuntimeHost.loadRecoverable()` returns the strict runtime load as a
+`Result`, allowing generated SwiftUI windows to report a loader failure and
+retry instead of terminating through `loadRequired()`.
+
 ### Added — the Compose host knows Android (UI89 §3.4)
 
 `mosaicPlatform()` reports `android` on Android's runtime, and

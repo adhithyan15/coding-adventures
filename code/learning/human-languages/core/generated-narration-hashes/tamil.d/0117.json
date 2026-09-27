@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:c7ce67ace1271415",
+  "lessonIds": [
+    "TA-C117-vallamai",
+    "TA-C117-urimai",
+    "TA-C117-vayppu",
+    "TA-C117-karuvi",
+    "TA-C117-utaimai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch117.txt",
+  "json": "tamil/narration/ch117.json",
+  "textHash": "fnv1a64:f1011f602fa2b300",
+  "jsonHash": "fnv1a64:bfc95474d2b1116a",
+  "findings": []
+}

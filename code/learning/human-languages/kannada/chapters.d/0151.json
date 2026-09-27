@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "To win, To lose, To hide, To protect, To burn",
+  "label": "ch:ka-to-win-to-lose-to-hide-to-protect-to-burn",
+  "canDo": "I can say to win, to lose, to hide, to protect and to burn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C151-sudu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: i can say to win, to lose, to hide, to protect and to burn.",
+    "assesses": [
+      "KA-LEX-C151-ACT151-03",
+      "KA-LEX-C151-ACT151-04",
+      "KA-LEX-C151-ACT151-05"
+    ]
+  }
+}

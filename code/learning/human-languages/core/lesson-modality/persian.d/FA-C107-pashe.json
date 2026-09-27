@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C107-pashe",
+    "language": "persian",
+    "chapter": 107,
+    "sequence": 5360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:064a5241dcc36409"
+  },
+  "findings": []
+}

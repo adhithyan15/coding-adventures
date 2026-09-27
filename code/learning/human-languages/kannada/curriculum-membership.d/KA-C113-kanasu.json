@@ -1,0 +1,11 @@
+{
+  "id": "KA-C113-kanasu",
+  "pathSegment": "KA-PATH-113-CAN113",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-113-CAN113",
+      "order": 4
+    }
+  ]
+}

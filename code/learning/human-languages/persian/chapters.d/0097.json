@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Shawl, Gloves, Earring, Necklace, Boots",
+  "label": "ch:fa-shawl-gloves-earring-necklace-boots",
+  "canDo": "I can say a shawl, gloves, an earring, a necklace and boots.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C97-chakme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say a shawl, gloves, an earring, a necklace and boots.",
+    "assesses": [
+      "FA-LEX-C97-THINGS97-03",
+      "FA-LEX-C97-THINGS97-04",
+      "FA-LEX-C97-THINGS97-05"
+    ]
+  }
+}

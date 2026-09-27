@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:9f31d0ea4d9a3e57",
+  "lessonIds": [
+    "KA-C109-setuve",
+    "KA-C109-udyana",
+    "KA-C109-devasthana",
+    "KA-C109-granthalaya",
+    "KA-C109-byanku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch109.txt",
+  "json": "kannada/narration/ch109.json",
+  "textHash": "fnv1a64:6bec6d1a5996465d",
+  "jsonHash": "fnv1a64:90a2a8bd120831b2",
+  "findings": []
+}

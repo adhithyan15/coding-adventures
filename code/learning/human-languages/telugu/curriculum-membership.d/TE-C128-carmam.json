@@ -1,0 +1,11 @@
+{
+  "id": "TE-C128-carmam",
+  "pathSegment": "TE-PATH-128-THINGS128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-128-THINGS128",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C147-putticali",
+  "pathSegment": "TA-PATH-147-QUAL147",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-147-QUAL147",
+      "order": 2
+    }
+  ]
+}

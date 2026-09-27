@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:4a0233098e691b1e",
+  "lessonIds": [
+    "TE-C120-samudram",
+    "TE-C120-sarassu",
+    "TE-C120-adavi",
+    "TE-C120-aku",
+    "TE-C120-matti"
+  ],
+  "tex": "telugu/book/chapters/ch120-sea-lake-forest-leaf-soil.tex"
+}

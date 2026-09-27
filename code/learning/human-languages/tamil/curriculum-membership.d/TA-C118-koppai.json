@@ -1,0 +1,11 @@
+{
+  "id": "TA-C118-koppai",
+  "pathSegment": "TA-PATH-118-THINGS118",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-118-THINGS118",
+      "order": 3
+    }
+  ]
+}

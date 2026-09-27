@@ -1,0 +1,11 @@
+{
+  "id": "TE-C104-mula",
+  "pathSegment": "TE-PATH-104-LOC104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-104-LOC104",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C122-venney",
+    "language": "tamil",
+    "chapter": 122,
+    "sequence": 5410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:613de8d11adc3008"
+  },
+  "findings": []
+}

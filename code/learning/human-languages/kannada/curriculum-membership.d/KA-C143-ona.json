@@ -1,0 +1,11 @@
+{
+  "id": "KA-C143-ona",
+  "pathSegment": "KA-PATH-143-QUAL143",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-143-QUAL143",
+      "order": 0
+    }
+  ]
+}

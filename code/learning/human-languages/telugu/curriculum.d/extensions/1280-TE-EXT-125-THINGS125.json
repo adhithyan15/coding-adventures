@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-125-THINGS125",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pigeon, an owl, a peacock, a butterfly and a crow.",
+  "prerequisites": []
+}

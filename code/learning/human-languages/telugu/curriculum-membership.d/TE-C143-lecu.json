@@ -1,0 +1,11 @@
+{
+  "id": "TE-C143-lecu",
+  "pathSegment": "TE-PATH-143-QUAL143",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-143-QUAL143",
+      "order": 4
+    }
+  ]
+}

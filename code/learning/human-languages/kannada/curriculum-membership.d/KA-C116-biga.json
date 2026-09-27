@@ -1,0 +1,11 @@
+{
+  "id": "KA-C116-biga",
+  "pathSegment": "KA-PATH-116-THINGS116",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-116-THINGS116",
+      "order": 3
+    }
+  ]
+}

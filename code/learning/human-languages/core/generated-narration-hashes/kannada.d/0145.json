@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:00188384056dcbb4",
+  "lessonIds": [
+    "KA-C145-kahi",
+    "KA-C145-huli2",
+    "KA-C145-sihi",
+    "KA-C145-somari",
+    "KA-C145-jana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch145.txt",
+  "json": "kannada/narration/ch145.json",
+  "textHash": "fnv1a64:271da7048baffc44",
+  "jsonHash": "fnv1a64:fe4c827aeac5c1d2",
+  "findings": []
+}

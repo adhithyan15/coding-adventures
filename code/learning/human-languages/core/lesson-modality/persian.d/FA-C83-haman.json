@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C83-haman",
+    "language": "persian",
+    "chapter": 83,
+    "sequence": 4120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:248f9e0b57266bf3"
+  },
+  "findings": []
+}

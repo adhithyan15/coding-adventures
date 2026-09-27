@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "To break, To sew, To pull, To pour, To burn",
+  "label": "ch:fa-to-break-to-sew-to-pull-to-pour-to-burn",
+  "canDo": "I can say to break, to sew, to pull, to pour and to burn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C132-sukhtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say to break, to sew, to pull, to pour and to burn.",
+    "assesses": [
+      "FA-LEX-C132-ACT132-03",
+      "FA-LEX-C132-ACT132-04",
+      "FA-LEX-C132-ACT132-05"
+    ]
+  }
+}

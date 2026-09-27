@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C106-parikaram",
+    "language": "telugu",
+    "chapter": 106,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e129a4c53c28c18c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:603cb06ccdb96ace",
+  "lessonIds": [
+    "FA-C107-pashe",
+    "FA-C107-magas",
+    "FA-C107-chane",
+    "FA-C107-gune",
+    "FA-C107-aranj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch107.txt",
+  "json": "persian/narration/ch107.json",
+  "textHash": "fnv1a64:c8143cd9980658b4",
+  "jsonHash": "fnv1a64:38d624989e18484a",
+  "findings": []
+}

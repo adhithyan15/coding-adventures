@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C124-puntu",
+    "language": "tamil",
+    "chapter": 124,
+    "sequence": 5530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13eebf7f4233ed88"
+  },
+  "findings": []
+}

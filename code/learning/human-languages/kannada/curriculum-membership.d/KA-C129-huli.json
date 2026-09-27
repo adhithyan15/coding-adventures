@@ -1,0 +1,11 @@
+{
+  "id": "KA-C129-huli",
+  "pathSegment": "KA-PATH-129-THINGS129",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-129-THINGS129",
+      "order": 3
+    }
+  ]
+}

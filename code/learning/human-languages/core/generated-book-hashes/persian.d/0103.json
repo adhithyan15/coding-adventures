@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:eeafd79b43d35dbc",
+  "lessonIds": [
+    "FA-C103-tappe",
+    "FA-C103-jazire",
+    "FA-C103-abshar",
+    "FA-C103-mowj",
+    "FA-C103-rishe"
+  ],
+  "tex": "persian/book/chapters/ch103-hill-island-waterfall-wave-root.tex"
+}

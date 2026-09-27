@@ -1,0 +1,11 @@
+{
+  "id": "KA-C121-saru",
+  "pathSegment": "KA-PATH-121-THINGS121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-121-THINGS121",
+      "order": 3
+    }
+  ]
+}

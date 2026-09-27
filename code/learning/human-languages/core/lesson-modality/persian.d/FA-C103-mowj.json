@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C103-mowj",
+    "language": "persian",
+    "chapter": 103,
+    "sequence": 5190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a2cf39652f840d1"
+  },
+  "findings": []
+}

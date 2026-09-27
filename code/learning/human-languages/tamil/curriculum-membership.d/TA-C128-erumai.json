@@ -1,0 +1,11 @@
+{
+  "id": "TA-C128-erumai",
+  "pathSegment": "TA-PATH-128-THINGS128",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-128-THINGS128",
+      "order": 1
+    }
+  ]
+}

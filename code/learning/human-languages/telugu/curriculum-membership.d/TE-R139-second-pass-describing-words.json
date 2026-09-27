@@ -1,0 +1,11 @@
+{
+  "id": "TE-R139-second-pass-describing-words",
+  "pathSegment": "TE-PATH-139-QUAL139",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TE-EXT-139-QUAL139",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "track": "telugu",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S122-letter-u",
+      "sourceHash": "fnv1a64:a631fd3a8a2e22a7",
+      "svgHash": "fnv1a64:ed93fe80d2fc4db4",
+      "svg": "telugu/book/figures/TE-S122-letter-u-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S124-letter-e",
+      "sourceHash": "fnv1a64:e705b13c9aa4d541",
+      "svgHash": "fnv1a64:3781327c48fe445d",
+      "svg": "telugu/book/figures/TE-S124-letter-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S129-letter-vocalic-r",
+      "sourceHash": "fnv1a64:0509a703050de2ae",
+      "svgHash": "fnv1a64:08fb5cacf36f46dc",
+      "svg": "telugu/book/figures/TE-S129-letter-vocalic-r-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S135-letter-i",
+      "sourceHash": "fnv1a64:64de34822471aeb6",
+      "svgHash": "fnv1a64:c5428c86b33d8ea6",
+      "svg": "telugu/book/figures/TE-S135-letter-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S162-letter-a",
+      "sourceHash": "fnv1a64:4ebabc1fbbe7ba7d",
+      "svgHash": "fnv1a64:44599aad39a27900",
+      "svg": "telugu/book/figures/TE-S162-letter-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S163-letter-ee",
+      "sourceHash": "fnv1a64:3bdb36b84571c68a",
+      "svgHash": "fnv1a64:597d200ef942ea53",
+      "svg": "telugu/book/figures/TE-S163-letter-ee-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S164-letter-ai",
+      "sourceHash": "fnv1a64:79a17d865f60dc03",
+      "svgHash": "fnv1a64:af4429dab34ec5ca",
+      "svg": "telugu/book/figures/TE-S164-letter-ai-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S165-letter-o",
+      "sourceHash": "fnv1a64:0f3b210ec39b4c8a",
+      "svgHash": "fnv1a64:836fcee09b888d1a",
+      "svg": "telugu/book/figures/TE-S165-letter-o-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S166-letter-aa",
+      "sourceHash": "fnv1a64:df10977773d8ec10",
+      "svgHash": "fnv1a64:e67d7b2254dd41cd",
+      "svg": "telugu/book/figures/TE-S166-letter-aa-filmstrip.svg"
+    }
+  ]
+}

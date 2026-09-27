@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Hammer, Scissors, Comb, Soap, Towel",
+  "label": "ch:ka-hammer-scissors-comb-soap-towel",
+  "canDo": "I can say a hammer, scissors, a comb, soap and a towel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C117-tavel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a hammer, scissors, a comb, soap and a towel.",
+    "assesses": [
+      "KA-LEX-C117-THINGS117-03",
+      "KA-LEX-C117-THINGS117-04",
+      "KA-LEX-C117-THINGS117-05"
+    ]
+  }
+}

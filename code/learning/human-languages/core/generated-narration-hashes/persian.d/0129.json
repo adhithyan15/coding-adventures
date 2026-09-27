@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:e057d97b69b7ffed",
+  "lessonIds": [
+    "FA-C129-khaste",
+    "FA-C129-sakat",
+    "FA-C129-shad",
+    "FA-C129-dana",
+    "FA-C129-nadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch129.txt",
+  "json": "persian/narration/ch129.json",
+  "textHash": "fnv1a64:8f9894ea0e4303d3",
+  "jsonHash": "fnv1a64:625ba864404919e1",
+  "findings": []
+}

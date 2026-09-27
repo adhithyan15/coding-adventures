@@ -1,0 +1,11 @@
+{
+  "id": "TE-C147-dacu",
+  "pathSegment": "TE-PATH-147-ACT147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-147-ACT147",
+      "order": 4
+    }
+  ]
+}

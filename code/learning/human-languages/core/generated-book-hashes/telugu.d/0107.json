@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:77d3fdab26a61550",
+  "lessonIds": [
+    "TE-C107-korika",
+    "TE-C107-asa",
+    "TE-C107-kala",
+    "TE-C107-uddesam",
+    "TE-C107-pranalika"
+  ],
+  "tex": "telugu/book/chapters/ch107-wish-hope-dream-intention-plan.tex"
+}

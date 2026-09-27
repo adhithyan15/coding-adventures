@@ -1,0 +1,11 @@
+{
+  "id": "FA-C98-kabab",
+  "pathSegment": "FA-PATH-98-THINGS98",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-98-THINGS98",
+      "order": 4
+    }
+  ]
+}

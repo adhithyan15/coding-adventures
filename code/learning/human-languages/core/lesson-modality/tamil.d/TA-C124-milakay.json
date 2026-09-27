@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C124-milakay",
+    "language": "tamil",
+    "chapter": 124,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:143580508a0255e1"
+  },
+  "findings": []
+}

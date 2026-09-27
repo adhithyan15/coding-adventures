@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:281e823cc5d08dc9",
+  "lessonIds": [
+    "FA-C126-zerang",
+    "FA-C126-tarsu",
+    "FA-C126-mashhur",
+    "FA-C126-khatarnak",
+    "FA-C126-amn"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch126.txt",
+  "json": "persian/narration/ch126.json",
+  "textHash": "fnv1a64:76e51d5adb86d100",
+  "jsonHash": "fnv1a64:31c1ed0a2ab964e6",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C108-valla",
+  "pathSegment": "TE-PATH-108-WANT108",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-108-WANT108",
+      "order": 4
+    }
+  ]
+}

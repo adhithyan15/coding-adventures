@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:026d3ae322b6f60c",
+  "lessonIds": [
+    "TE-C124-jinka",
+    "TE-C124-nakka",
+    "TE-C124-pamu",
+    "TE-C124-tabelu",
+    "TE-C124-cilaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch124.txt",
+  "json": "telugu/narration/ch124.json",
+  "textHash": "fnv1a64:e207cd8f297bf16a",
+  "jsonHash": "fnv1a64:a67b1789fa703714",
+  "findings": []
+}

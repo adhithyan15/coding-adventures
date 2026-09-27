@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:c8abd7c3f87cd21b",
+  "lessonIds": [
+    "KA-C128-mimcu",
+    "KA-C128-birugali",
+    "KA-C128-ale",
+    "KA-C128-jalapata",
+    "KA-C128-dvipa"
+  ],
+  "tex": "kannada/book/chapters/ch128-lightning-storm-wave-waterfall-island.tex"
+}

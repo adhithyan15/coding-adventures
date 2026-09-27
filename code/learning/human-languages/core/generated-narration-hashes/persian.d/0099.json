@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:6c1e547ccf0fa407",
+  "lessonIds": [
+    "FA-C99-polow",
+    "FA-C99-ash",
+    "FA-C99-hendevane",
+    "FA-C99-kharboze",
+    "FA-C99-holu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch99.txt",
+  "json": "persian/narration/ch99.json",
+  "textHash": "fnv1a64:60b8bc9334a0102e",
+  "jsonHash": "fnv1a64:fa9e26264f3be4a6",
+  "findings": []
+}

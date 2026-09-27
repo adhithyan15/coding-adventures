@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C144-apayakari",
+    "language": "kannada",
+    "chapter": 144,
+    "sequence": 6240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5443a3c9b821611e"
+  },
+  "findings": []
+}

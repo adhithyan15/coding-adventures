@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:36f5407fe8b68386",
+  "lessonIds": [
+    "TA-C130-nari",
+    "TA-C130-pampu",
+    "TA-C130-eli",
+    "TA-C130-tavalai",
+    "TA-C130-amai",
+    "TA-R130-first-pass-the-house-things-you-carry-and-school",
+    "TA-R130-second-pass-food"
+  ],
+  "tex": "tamil/book/chapters/ch130-fox-snake-rat-frog-tortoise.tex"
+}

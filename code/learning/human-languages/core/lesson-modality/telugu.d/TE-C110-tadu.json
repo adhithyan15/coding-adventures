@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C110-tadu",
+    "language": "telugu",
+    "chapter": 110,
+    "sequence": 4450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73895b6ed8466b85"
+  },
+  "findings": []
+}

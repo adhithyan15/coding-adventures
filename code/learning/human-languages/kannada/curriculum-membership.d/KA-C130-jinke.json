@@ -1,0 +1,11 @@
+{
+  "id": "KA-C130-jinke",
+  "pathSegment": "KA-PATH-130-THINGS130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-130-THINGS130",
+      "order": 3
+    }
+  ]
+}

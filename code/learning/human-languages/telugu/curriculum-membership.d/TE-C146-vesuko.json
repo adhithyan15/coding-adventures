@@ -1,0 +1,11 @@
+{
+  "id": "TE-C146-vesuko",
+  "pathSegment": "TE-PATH-146-ACT146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-146-ACT146",
+      "order": 1
+    }
+  ]
+}

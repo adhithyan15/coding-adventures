@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Lane, Square, Park, Coast, Church",
+  "label": "ch:fa-lane-square-park-coast-church",
+  "canDo": "I can say a lane, a square, a park, a coast and a church.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C87-kelisa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say a lane, a square, a park, a coast and a church.",
+    "assesses": [
+      "FA-LEX-C87-LOC87-03",
+      "FA-LEX-C87-LOC87-04",
+      "FA-LEX-C87-LOC87-05"
+    ]
+  }
+}

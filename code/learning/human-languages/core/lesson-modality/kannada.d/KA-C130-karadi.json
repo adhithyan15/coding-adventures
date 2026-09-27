@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C130-karadi",
+    "language": "kannada",
+    "chapter": 130,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58d7513a00f5f5ff"
+  },
+  "findings": []
+}

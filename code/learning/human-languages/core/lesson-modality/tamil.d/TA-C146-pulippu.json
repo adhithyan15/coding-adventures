@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C146-pulippu",
+    "language": "tamil",
+    "chapter": 146,
+    "sequence": 6710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0d13ae09c834164"
+  },
+  "findings": []
+}

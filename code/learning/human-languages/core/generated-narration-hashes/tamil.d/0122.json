@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:1c1acd5103a1070a",
+  "lessonIds": [
+    "TA-C122-rasam",
+    "TA-C122-venney",
+    "TA-C122-muttai",
+    "TA-C122-min",
+    "TA-C122-iraicci"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch122.txt",
+  "json": "tamil/narration/ch122.json",
+  "textHash": "fnv1a64:33078dc2a426f6b2",
+  "jsonHash": "fnv1a64:7e9a1651db6333a3",
+  "findings": []
+}

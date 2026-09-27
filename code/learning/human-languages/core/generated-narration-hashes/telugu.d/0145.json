@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:ee8bae6545e729e9",
+  "lessonIds": [
+    "TE-C145-nercuko",
+    "TE-C145-nerpu",
+    "TE-C145-maracipo",
+    "TE-C145-duku",
+    "TE-C145-digu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch145.txt",
+  "json": "telugu/narration/ch145.json",
+  "textHash": "fnv1a64:78f085bb350e0a0d",
+  "jsonHash": "fnv1a64:dcfa00430b614e5b",
+  "findings": []
+}

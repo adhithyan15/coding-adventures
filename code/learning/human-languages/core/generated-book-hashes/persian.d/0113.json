@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:778b0c06b4861543",
+  "lessonIds": [
+    "FA-C113-kart",
+    "FA-C113-bilit",
+    "FA-C113-tamr",
+    "FA-C113-pakat",
+    "FA-C113-medadtarash"
+  ],
+  "tex": "persian/book/chapters/ch113-card-ticket-stamp-envelope-pencil-sharpener.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C117-taksi",
+    "language": "persian",
+    "chapter": 117,
+    "sequence": 5900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:069901252d54dc9b"
+  },
+  "findings": []
+}

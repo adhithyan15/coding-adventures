@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C118-allam",
+    "language": "telugu",
+    "chapter": 118,
+    "sequence": 4860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:734d361e97c6a068"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:c20188bc02c60a43",
+  "lessonIds": [
+    "TE-C116-sambaru",
+    "TE-C116-rasam",
+    "TE-C116-guddu",
+    "TE-C116-cepa",
+    "TE-C116-mamsam"
+  ],
+  "tex": "telugu/book/chapters/ch116-sambar-rasam-egg-fish-meat.tex"
+}

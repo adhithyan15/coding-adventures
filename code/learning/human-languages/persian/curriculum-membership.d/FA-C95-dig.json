@@ -1,0 +1,11 @@
+{
+  "id": "FA-C95-dig",
+  "pathSegment": "FA-PATH-95-THINGS95",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-95-THINGS95",
+      "order": 2
+    }
+  ]
+}

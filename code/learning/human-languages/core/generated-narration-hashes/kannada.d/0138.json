@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:74cdb33ba437043c",
+  "lessonIds": [
+    "KA-C138-rupayi",
+    "KA-C138-batali",
+    "KA-C138-jebu",
+    "KA-C138-saks",
+    "KA-C138-kotu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch138.txt",
+  "json": "kannada/narration/ch138.json",
+  "textHash": "fnv1a64:6c5c1b727b368169",
+  "jsonHash": "fnv1a64:9326eeace0f2eb54",
+  "findings": []
+}

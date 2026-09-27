@@ -1,0 +1,11 @@
+{
+  "id": "FA-C96-kebrit",
+  "pathSegment": "FA-PATH-96-THINGS96",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-96-THINGS96",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+# Runtime dependencies
+requires 'coding-adventures-der-tlv';
+# Math::BigInt, Hash::Util::FieldHash, JSON::PP, and Test::More are Perl core
+# modules for every supported interpreter.

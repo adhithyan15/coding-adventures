@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C116-mole",
+    "language": "kannada",
+    "chapter": 116,
+    "sequence": 4790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74859c031c9f0592"
+  },
+  "findings": []
+}

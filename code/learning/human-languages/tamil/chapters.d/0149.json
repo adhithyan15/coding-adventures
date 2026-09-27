@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Famous, Dangerous, Safe, True, False",
+  "label": "ch:ta-famous-dangerous-safe-true-false",
+  "canDo": "I can say famous, dangerous, safe, true and false.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C149-poyyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say famous, dangerous, safe, true and false.",
+    "assesses": [
+      "TA-LEX-C149-QUAL149-03",
+      "TA-LEX-C149-QUAL149-04",
+      "TA-LEX-C149-QUAL149-05"
+    ]
+  }
+}

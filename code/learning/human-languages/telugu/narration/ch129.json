@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 129,
+  "title": "Window curtain, Clay pot, Water pot, Cupboard, Table",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:5a7f626e25049b84",
+  "lessons": [
+    {
+      "id": "TE-C129-kitikitera",
+      "sequence": 5410,
+      "title": "కిటికీతెర (kiṭikītera) — a window curtain",
+      "headword": "కిటికీతెర",
+      "romanization": "kiṭikītera",
+      "gloss": "a window curtain",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:178bdaf4a6cbe1a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for the skin, then the Telugu for blood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కిటికీతెర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కిటికీతెర — kiṭikītera — \"a window curtain\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṭikītera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṭikītera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṭikītera, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṭikītera*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kiṭikītera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kiṭikītera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for the skin, then the Telugu for blood, then say kiṭikītera again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for the skin, then the Telugu for blood, then say *kiṭikītera* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కిటికీతెర (kiṭikītera) mean? (\"A window curtain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C129-catti",
+      "sequence": 5420,
+      "title": "చట్టి (caṭṭi) — a clay pot",
+      "headword": "చట్టి",
+      "romanization": "caṭṭi",
+      "gloss": "a clay pot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f34425fd2bae24a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for blood, then the Telugu for a window curtain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చట్టి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చట్టి — caṭṭi — \"a clay pot\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṭṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṭṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say caṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *caṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for blood, then the Telugu for a window curtain, then say caṭṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for blood, then the Telugu for a window curtain, then say *caṭṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చట్టి (caṭṭi) mean? (\"A clay pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C129-binde",
+      "sequence": 5430,
+      "title": "బిందె (bindē) — a water pot",
+      "headword": "బిందె",
+      "romanization": "bindē",
+      "gloss": "a water pot",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76e563c9b05d0201",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a window curtain, then the Telugu for a clay pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బిందె",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బిందె — bindē — \"a water pot\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bindē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bindē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bindē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bindē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bindē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bindē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a window curtain, then the Telugu for a clay pot, then say bindē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a window curtain, then the Telugu for a clay pot, then say *bindē* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బిందె (bindē) mean? (\"A water pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C129-biruva",
+      "sequence": 5440,
+      "title": "బీరువా (bīruvā) — a cupboard",
+      "headword": "బీరువా",
+      "romanization": "bīruvā",
+      "gloss": "a cupboard",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f02139939ebc3e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a clay pot, then the Telugu for a water pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బీరువా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బీరువా — bīruvā — \"a cupboard\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīruvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīruvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīruvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīruvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bīruvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bīruvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a clay pot, then the Telugu for a water pot, then say bīruvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a clay pot, then the Telugu for a water pot, then say *bīruvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బీరువా (bīruvā) mean? (\"A cupboard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C129-tebul",
+      "sequence": 5450,
+      "title": "టేబుల్ (ṭēbul) — a table",
+      "headword": "టేబుల్",
+      "romanization": "ṭēbul",
+      "gloss": "a table",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ffc30f19a3a3cee2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a water pot, then the Telugu for a cupboard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: టేబుల్",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "టేబుల్ — ṭēbul — \"a table\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭēbul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭēbul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭēbul, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭēbul*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ṭēbul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ṭēbul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a water pot, then the Telugu for a cupboard, then say ṭēbul again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a water pot, then the Telugu for a cupboard, then say *ṭēbul* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does టేబుల్ (ṭēbul) mean? (\"A table\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R129-first-pass-food-and-nature",
+      "sequence": 5460,
+      "title": "Food and nature — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 120-124",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e253367cd5627e53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a cupboard and a table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sea, a lake, a forest, a leaf, soil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sea, a lake, a forest, a leaf, soil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thunder, lightning, a storm, a wave, a hill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thunder, lightning, a storm, a wave, a hill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a waterfall, an island, a cow, a horse, an elephant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a waterfall, an island, a cow, a horse, an elephant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tiger, a lion, a bear, a monkey, a rabbit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tiger, a lion, a bear, a monkey, a rabbit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a deer, a fox, a snake, a tortoise, a parrot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a deer, a fox, a snake, a tortoise, a parrot]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sea? (సముద్రం, samudraṁ.) A lake? (సరస్సు, sarassu.) A forest? (అడవి, aḍavi.) A leaf? (ఆకు, āku.) Soil? (మట్టి, maṭṭi.) Thunder? (ఉరుము, urumu.) Lightning? (మెరుపు, merupu.) A storm? (తుపాను, tupānu.) A wave? (అల, ala.) A hill? (కొండ, koṇḍa.) A waterfall? (జలపాతం, jalapātaṁ.) An island? (దీవి, dīvi.) A cow? (ఆవు, āvu.) A horse? (గుర్రం, gurraṁ.) An elephant? (ఏనుగు, ēnugu.) A tiger? (పులి, puli.) A lion? (సింహం, siṁhaṁ.) A bear? (ఎలుగుబంటి, elugubaṇṭi.) A monkey? (కోతి, kōti.) A rabbit? (కుందేలు, kundēlu.) A deer? (జింక, jiṅka.) A fox? (నక్క, nakka.) A snake? (పాము, pāmu.) A tortoise? (తాబేలు, tābēlu.) A parrot? (చిలక, cilaka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R129-second-pass-nature-and-animals",
+      "sequence": 5470,
+      "title": "Nature and animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 125-129",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d4785d789f615c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a pigeon and an owl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pigeon, an owl, a peacock, a butterfly, a crow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pigeon, an owl, a peacock, a butterfly, a crow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a duck, a pig, a donkey, a camel, the face",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a duck, a pig, a donkey, a camel, the face]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tongue, a knee, a shoulder, an eyebrow, a cheek",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tongue, a knee, a shoulder, an eyebrow, a cheek]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chin; a beard, a wrist, an elbow, the skin, blood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chin; a beard, a wrist, an elbow, the skin, blood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a window curtain, a clay pot, a water pot, a cupboard, a table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a window curtain, a clay pot, a water pot, a cupboard, a table]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A pigeon? (పావురం, pāvuraṁ.) An owl? (గుడ్లగూబ, guḍlagūba.) A peacock? (నెమలి, nemali.) A butterfly? (సీతాకోకచిలుక, sītākōkacilaka.) A crow? (కాకి, kāki.) A duck? (బాతు, bātu.) A pig? (పంది, pandi.) A donkey? (గాడిద, gāḍida.) A camel? (ఒంటె, oṇṭe.) The face? (ముఖం, mukhaṁ.) The tongue? (నాలుక, nāluka.) A knee? (మోకాలు, mōkālu.) A shoulder? (భుజం, bhujaṁ.) An eyebrow? (కనుబొమ్మ, kanubomma.) A cheek? (బుగ్గ, bugga.) The chin; a beard? (గడ్డం, gaḍḍaṁ.) A wrist? (మణికట్టు, maṇikaṭṭu.) An elbow? (మోచేయి, mōcēyi.) The skin? (చర్మం, carmaṁ.) Blood? (రక్తం, raktaṁ.) A window curtain? (కిటికీతెర, kiṭikītera.) A clay pot? (చట్టి, caṭṭi.) A water pot? (బిందె, bindē.) A cupboard? (బీరువా, bīruvā.) A table? (టేబుల్, ṭēbul.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

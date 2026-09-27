@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Sweet, Bitter-tasting, Spicy, Courage, Lazy",
+  "label": "ch:te-sweet-bitter-tasting-spicy-courage-lazy",
+  "canDo": "I can say sweet, bitter-tasting, spicy, courage and lazy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TE-C141-somari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can say sweet, bitter-tasting, spicy, courage and lazy.",
+    "assesses": [
+      "TE-LEX-C141-QUAL141-03",
+      "TE-LEX-C141-QUAL141-04",
+      "TE-LEX-C141-QUAL141-05"
+    ]
+  }
+}

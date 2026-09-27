@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Lake, Pond, Forest, Leaf, Soil",
+  "label": "ch:ta-lake-pond-forest-leaf-soil",
+  "canDo": "I can say a lake, a pond, a forest, a leaf and soil.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C126-man",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say a lake, a pond, a forest, a leaf and soil.",
+    "assesses": [
+      "TA-LEX-C126-THINGS126-03",
+      "TA-LEX-C126-THINGS126-04",
+      "TA-LEX-C126-THINGS126-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:0effb5b1bb5359fb",
+  "lessonIds": [
+    "FA-C111-sini",
+    "FA-C111-kase",
+    "FA-C111-jaru",
+    "FA-C111-satl",
+    "FA-C111-tanab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch111.txt",
+  "json": "persian/narration/ch111.json",
+  "textHash": "fnv1a64:2becaa29c5490fa0",
+  "jsonHash": "fnv1a64:28f58b63220e489a",
+  "findings": []
+}

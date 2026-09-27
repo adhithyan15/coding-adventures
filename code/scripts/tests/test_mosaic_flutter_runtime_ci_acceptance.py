@@ -181,6 +181,13 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("flutter test", workflow)
         self.assertIn("flutter build linux --debug", workflow)
         self.assertIn("MOSAIC_APP_LIBRARY", workflow)
+        self.assertIn('assign = text.index("_mosaicHost = host;")', workflow)
+        self.assertIn(
+            'install = text.index("installEngramEffects(host);")', workflow
+        )
+        self.assertNotIn(
+            'assign = text.index("_mosaicHost = widget.mosaicHost")', workflow
+        )
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
         self.assertTrue(

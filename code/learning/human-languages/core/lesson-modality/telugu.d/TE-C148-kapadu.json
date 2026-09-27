@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C148-kapadu",
+    "language": "telugu",
+    "chapter": 148,
+    "sequence": 6420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14d33f965671c2a4"
+  },
+  "findings": []
+}

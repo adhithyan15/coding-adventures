@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C111-duvvena",
+    "language": "telugu",
+    "chapter": 111,
+    "sequence": 4480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f3397b43ef3f6e4"
+  },
+  "findings": []
+}

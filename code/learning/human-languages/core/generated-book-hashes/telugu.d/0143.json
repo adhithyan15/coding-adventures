@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:fea7f9e6a50ba376",
+  "lessonIds": [
+    "TE-C143-errati",
+    "TE-C143-egiru",
+    "TE-C143-parigettu",
+    "TE-C143-nidrapo",
+    "TE-C143-lecu"
+  ],
+  "tex": "telugu/book/chapters/ch143-red-to-fly-to-run-to-sleep-to-get-up.tex"
+}

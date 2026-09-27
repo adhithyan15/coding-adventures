@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C144-khara",
+    "language": "kannada",
+    "chapter": 144,
+    "sequence": 6280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b06260d1d4d36842"
+  },
+  "findings": []
+}

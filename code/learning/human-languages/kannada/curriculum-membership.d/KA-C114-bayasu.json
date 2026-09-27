@@ -1,0 +1,11 @@
+{
+  "id": "KA-C114-bayasu",
+  "pathSegment": "KA-PATH-114-WANT114",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-114-WANT114",
+      "order": 4
+    }
+  ]
+}

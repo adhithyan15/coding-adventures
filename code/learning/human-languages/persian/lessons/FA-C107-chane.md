@@ -1,0 +1,63 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-C107-chane
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 5380
+chapter: 107
+type: word
+headword: "چانه"
+gloss: "the chin"
+romanization: "châne"
+concept_tag: FA-THINGS107-CHANE
+prerequisites: [FA-C107-pashe, FA-C107-magas]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [FA-LEX-C107-THINGS107-01, FA-LEX-C107-THINGS107-02]
+introduces:
+  knowledge: [FA-LEX-C107-THINGS107-03]
+practises:
+  knowledge: [FA-LEX-C107-THINGS107-03, FA-LEX-C107-THINGS107-01, FA-LEX-C107-THINGS107-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: contemporary-iranian-persian
+reviews_of: [FA-C107-magas]
+---
+
+# چانه (châne) — the chin
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C107-THINGS107-01, FA-LEX-C107-THINGS107-02] -->
+
+[PAUSE 2s] Before the new one: say the Persian for a mosquito, then the Persian for a fly.
+
+## You'll want to know: چانه
+<!-- hl-knowledge: introduces=[FA-LEX-C107-THINGS107-03]; assesses=[] -->
+
+**چانه** — *châne* — "the chin".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C107-THINGS107-03, FA-LEX-C107-THINGS107-01, FA-LEX-C107-THINGS107-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *châne*]
+- [YOU SAY: *châne*, once more]
+- [YOU SAY: say *châne*]
+- [YOU RECALL: say the Persian for a mosquito, then the Persian for a fly, then say *châne* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C107-THINGS107-03, FA-LEX-C107-THINGS107-01, FA-LEX-C107-THINGS107-02] -->
+
+[PAUSE 3s] What does چانه mean? ("The chin".) Say it once more.

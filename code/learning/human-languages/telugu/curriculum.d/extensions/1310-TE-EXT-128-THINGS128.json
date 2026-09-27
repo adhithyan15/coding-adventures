@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-128-THINGS128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the chin, a wrist, an elbow, the skin and blood.",
+  "prerequisites": []
+}

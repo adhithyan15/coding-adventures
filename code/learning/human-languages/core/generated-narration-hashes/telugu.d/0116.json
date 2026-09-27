@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:1aa6050d41fe39b4",
+  "lessonIds": [
+    "TE-C116-sambaru",
+    "TE-C116-rasam",
+    "TE-C116-guddu",
+    "TE-C116-cepa",
+    "TE-C116-mamsam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch116.txt",
+  "json": "telugu/narration/ch116.json",
+  "textHash": "fnv1a64:d09b3133de8c3e82",
+  "jsonHash": "fnv1a64:8737e376d163d198",
+  "findings": []
+}

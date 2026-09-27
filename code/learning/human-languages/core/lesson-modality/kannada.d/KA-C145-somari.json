@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C145-somari",
+    "language": "kannada",
+    "chapter": 145,
+    "sequence": 6350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4c6a5f7b190a7ef"
+  },
+  "findings": []
+}

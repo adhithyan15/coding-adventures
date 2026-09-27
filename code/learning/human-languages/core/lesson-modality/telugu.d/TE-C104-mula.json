@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C104-mula",
+    "language": "telugu",
+    "chapter": 104,
+    "sequence": 4130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e7e30f31fac05b1"
+  },
+  "findings": []
+}

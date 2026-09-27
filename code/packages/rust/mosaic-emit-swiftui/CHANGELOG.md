@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-26 (recoverable strict startup)
+
+- Native-complete shells mount a loading view before probing the runtime, keep
+  runtime and initial-props failures visible with selectable detail and
+  saved-data reassurance, and retry with a fresh host after closing any prior
+  instance. Stable accessibility identifiers cover loading, failure, and retry.
+
 ## 2026-09-25 (layout variants in one app, UI48 ENV2/ENV3)
 
 - `from_pipeline_variant` emits a layout variant as `<Component><Variant>View`

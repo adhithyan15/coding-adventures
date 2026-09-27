@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C88-nanvayi",
+    "language": "persian",
+    "chapter": 88,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5695e4dbf0c6153c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C127-samudra",
+  "pathSegment": "KA-PATH-127-THINGS127",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-127-THINGS127",
+      "order": 0
+    }
+  ]
+}

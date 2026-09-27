@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C139-peda",
+    "language": "telugu",
+    "chapter": 139,
+    "sequence": 5960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fabe736fea76ae43"
+  },
+  "findings": []
+}

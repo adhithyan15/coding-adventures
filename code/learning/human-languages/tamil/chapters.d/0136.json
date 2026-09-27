@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Bottle, Ball, Kite, Doll, Purse",
+  "label": "ch:ta-bottle-ball-kite-doll-purse",
+  "canDo": "I can say a bottle, a ball, a kite, a doll and a purse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C136-panappai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say a bottle, a ball, a kite, a doll and a purse.",
+    "assesses": [
+      "TA-LEX-C136-THINGS136-03",
+      "TA-LEX-C136-THINGS136-04",
+      "TA-LEX-C136-THINGS136-05"
+    ]
+  }
+}

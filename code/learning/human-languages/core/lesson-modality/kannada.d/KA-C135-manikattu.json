@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C135-manikattu",
+    "language": "kannada",
+    "chapter": 135,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45ff5021589ecb4d"
+  },
+  "findings": []
+}

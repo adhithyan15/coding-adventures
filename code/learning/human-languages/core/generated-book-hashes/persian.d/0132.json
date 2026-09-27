@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:2d02a00114cca3eb",
+  "lessonIds": [
+    "FA-C132-shekastan",
+    "FA-C132-dukhtan",
+    "FA-C132-keshidan",
+    "FA-C132-rikhtan",
+    "FA-C132-sukhtan"
+  ],
+  "tex": "persian/book/chapters/ch132-to-break-to-sew-to-pull-to-pour-to-burn.tex"
+}

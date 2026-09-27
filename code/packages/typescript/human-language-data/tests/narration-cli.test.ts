@@ -382,7 +382,9 @@ gloss: a grid
 describe("the committed corpus export", () => {
   // The gate itself. If this fails, someone edited a lesson without re-running
   // `npm run generate:narration`, and the committed script no longer matches it.
-  it("is in sync with the lessons it came from", () => {
+  // The full export now covers more than 1,500 authored lessons, so retain a
+  // file-local integration budget instead of relying on Vitest's 30s default.
+  it("is in sync with the lessons it came from", { timeout: 60_000 }, () => {
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runNarrationGeneration(["--check"])).toBe(0);
   });

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C127-pani",
+  "pathSegment": "TA-PATH-127-THINGS127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-127-THINGS127",
+      "order": 1
+    }
+  ]
+}

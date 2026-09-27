@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C148-kurukiya",
+    "language": "tamil",
+    "chapter": 148,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8033f7e41cb96876"
+  },
+  "findings": []
+}

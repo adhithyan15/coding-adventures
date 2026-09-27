@@ -1,0 +1,11 @@
+{
+  "id": "FA-C130-ziyad",
+  "pathSegment": "FA-PATH-130-QUAL130",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-130-QUAL130",
+      "order": 4
+    }
+  ]
+}

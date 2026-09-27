@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Buffalo, Beetle, Worm, Insect, Giraffe",
+  "label": "ch:fa-buffalo-beetle-worm-insect-giraffe",
+  "canDo": "I can say a buffalo, a beetle, a worm, an insect and a giraffe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C121-zarafe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say a buffalo, a beetle, a worm, an insect and a giraffe.",
+    "assesses": [
+      "FA-LEX-C121-THINGS121-03",
+      "FA-LEX-C121-THINGS121-04",
+      "FA-LEX-C121-THINGS121-05"
+    ]
+  }
+}

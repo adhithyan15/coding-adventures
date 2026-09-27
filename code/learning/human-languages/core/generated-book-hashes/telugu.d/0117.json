@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:e54b660b6ae11f6a",
+  "lessonIds": [
+    "TE-C117-kuragayalu",
+    "TE-C117-aratipandu",
+    "TE-C117-mamidipandu",
+    "TE-C117-kobbari",
+    "TE-C117-ullipaya"
+  ],
+  "tex": "telugu/book/chapters/ch117-vegetables-banana-mango-coconut-onion.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C147-putticali",
+    "language": "tamil",
+    "chapter": 147,
+    "sequence": 6770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:715616a44bb50550"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:09e6f67dd19f9dab",
+  "lessonIds": [
+    "TE-C122-jalapatam",
+    "TE-C122-divi",
+    "TE-C122-avu",
+    "TE-C122-gurram",
+    "TE-C122-enugu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch122.txt",
+  "json": "telugu/narration/ch122.json",
+  "textHash": "fnv1a64:a339f4555f39958e",
+  "jsonHash": "fnv1a64:63cd31b245e72bdc",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C132-iruve",
+  "pathSegment": "KA-PATH-132-THINGS132",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-132-THINGS132",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C106-parikaram",
+  "pathSegment": "TE-PATH-106-CAN106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-106-CAN106",
+      "order": 1
+    }
+  ]
+}

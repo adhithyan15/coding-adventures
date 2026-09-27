@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C120-kapshan",
+    "language": "persian",
+    "chapter": 120,
+    "sequence": 6070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec000696f891468c"
+  },
+  "findings": []
+}

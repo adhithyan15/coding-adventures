@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:c5681c3db2d7dc01",
+  "lessonIds": [
+    "KA-C125-idli",
+    "KA-C125-dose",
+    "KA-C125-vade",
+    "KA-C125-uppittu",
+    "KA-C125-ragi"
+  ],
+  "tex": "kannada/book/chapters/ch125-idli-dosa-vada-upma-finger-millet.tex"
+}

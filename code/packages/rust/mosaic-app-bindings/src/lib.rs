@@ -88,6 +88,10 @@ pub fn swift_app_with_runtime_binding(app_swift: &str, bundle_runtime: bool) -> 
     let runtime_path = "Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path";
     with_binding
         .replace(
+            "MosaicRuntimeHost.loadRecoverable()",
+            &format!("MosaicRuntimeHost.loadRecoverable(libraryPath: {runtime_path})"),
+        )
+        .replace(
             "MosaicRuntimeHost.loadRequired()",
             &format!("MosaicRuntimeHost.loadRequired(libraryPath: {runtime_path})"),
         )
@@ -493,6 +497,8 @@ mod tests {
         );
         assert!(source
             .contains("static func loadRequired(libraryPath: String? = nil) -> MosaicRuntimeHost"));
+        assert!(source.contains("static func loadRecoverable("));
+        assert!(source.contains("Result<MosaicRuntimeHost, Error>"));
         assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));
     }
 
@@ -515,11 +521,11 @@ mod tests {
     #[test]
     fn swift_shell_patches_resolve_a_bundled_runtime_resource() {
         let strict_app = swift_app_with_runtime_binding(
-            "init() {\n    self.bridge = MosaicRuntimeHost.loadRequired()\n  }",
+            "init() {\n    self.loader = { MosaicRuntimeHost.loadRecoverable() }\n  }",
             true,
         );
         assert!(strict_app.contains(
-            "MosaicRuntimeHost.loadRequired(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
+            "MosaicRuntimeHost.loadRecoverable(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
         ));
 
         let package = swift_package_with_runtime_binding(
@@ -595,6 +601,10 @@ mod tests {
             "sequence must commit only after dispatch succeeds"
         );
         assert!(source.contains("public static void LoadRequired()"));
+        assert!(source.contains("State ??= Load();"));
+        assert!(source.contains("Loader detail:"));
+        assert!(source.contains("State = null;"));
+        assert!(source.contains("ProcessExit += (_, _) => State?.Dispose();"));
         assert!(source.contains("public static string ApplyRequiredProps("));
         assert!(source.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
         assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));

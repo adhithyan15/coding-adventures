@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:40a04eaecd9ff8d8",
+  "lessonIds": [
+    "TE-C112-sanci",
+    "TE-C112-kalam",
+    "TE-C112-kagitam",
+    "TE-C112-glasu",
+    "TE-C112-cemca"
+  ],
+  "tex": "telugu/book/chapters/ch112-bag-pen-paper-drinking-glass-spoon.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C144-kulirnta",
+  "pathSegment": "TA-PATH-144-QUAL144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-144-QUAL144",
+      "order": 2
+    }
+  ]
+}

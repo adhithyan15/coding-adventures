@@ -1,0 +1,11 @@
+{
+  "id": "KA-C145-huli2",
+  "pathSegment": "KA-PATH-145-QUAL145",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-145-QUAL145",
+      "order": 1
+    }
+  ]
+}

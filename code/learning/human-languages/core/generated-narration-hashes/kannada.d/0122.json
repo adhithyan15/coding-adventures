@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:afcab500b0ee172e",
+  "lessonIds": [
+    "KA-C122-palya",
+    "KA-C122-uppinakayi",
+    "KA-C122-motte",
+    "KA-C122-minu",
+    "KA-C122-mamsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch122.txt",
+  "json": "kannada/narration/ch122.json",
+  "textHash": "fnv1a64:e7725e066d1a9ab7",
+  "jsonHash": "fnv1a64:58595c745393fd8e",
+  "findings": []
+}

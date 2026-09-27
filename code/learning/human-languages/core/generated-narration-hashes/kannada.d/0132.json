@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:699a90d7d435d4a9",
+  "lessonIds": [
+    "KA-C132-navilu",
+    "KA-C132-citte",
+    "KA-C132-iruve",
+    "KA-C132-solle",
+    "KA-C132-jeda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch132.txt",
+  "json": "kannada/narration/ch132.json",
+  "textHash": "fnv1a64:5597b9fd6aa7105e",
+  "jsonHash": "fnv1a64:f1fed60e9fb0503d",
+  "findings": []
+}

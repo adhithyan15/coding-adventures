@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Light, Soft, Hard, Dirty, Speed",
+  "label": "ch:ka-light-soft-hard-dirty-speed",
+  "canDo": "I can say light, soft, hard, dirty and speed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C141-vega",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can say light, soft, hard, dirty and speed.",
+    "assesses": [
+      "KA-LEX-C141-QUAL141-03",
+      "KA-LEX-C141-QUAL141-04",
+      "KA-LEX-C141-QUAL141-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Guava, Sugar, Tall, Short, Heavy",
+  "label": "ch:te-guava-sugar-tall-short-heavy",
+  "canDo": "I can say a guava, sugar, tall, short and heavy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C136-baruvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say a guava, sugar, tall, short and heavy.",
+    "assesses": [
+      "TE-LEX-C136-THINGS136-03",
+      "TE-LEX-C136-THINGS136-04",
+      "TE-LEX-C136-THINGS136-05"
+    ]
+  }
+}
