@@ -176,6 +176,10 @@ class TestGlobMatch < Minitest::Test
     assert BuildTool::GlobMatch.match_path?("??", decomposed)
   end
 
+  def test_star_matches_leading_dot
+    assert BuildTool::GlobMatch.match_path?("*.rb", ".hidden.rb")
+  end
+
   def test_portable_character_class_edges_match_python_fnmatchcase
     cases = [
       ["[^a].txt", "^.txt", "b.txt"],

@@ -180,6 +180,43 @@ class TestGitDiff < Minitest::Test
     assert changed["python/foo"]
   end
 
+  def test_starlark_invalid_later_glob_fails_before_matching
+    packages = [
+      SimplePackage.new(
+        name: "python/foo",
+        path: Pathname("/repo/code/packages/python/foo"),
+        language: "python",
+        is_starlark: true,
+        declared_srcs: ["*.py", "[z-a].py"]
+      )
+    ]
+
+    error = assert_raises(BuildTool::GlobMatch::InvalidPatternError) do
+      BuildTool::GitDiff.map_files_to_packages(
+        ["code/packages/python/foo/a.py"],
+        packages, Pathname("/repo")
+      )
+    end
+
+    assert_equal BuildTool::GlobMatch::INVALID_PATTERN_MESSAGE, error.message
+  end
+
+  def test_starlark_invalid_glob_fails_before_changed_file_enumeration
+    packages = [
+      SimplePackage.new(
+        name: "python/foo",
+        path: Pathname("/repo/code/packages/python/foo"),
+        language: "python",
+        is_starlark: true,
+        declared_srcs: ["[z-a].py"]
+      )
+    ]
+
+    assert_raises(BuildTool::GlobMatch::InvalidPatternError) do
+      BuildTool::GitDiff.map_files_to_packages([], packages, Pathname("/repo"))
+    end
+  end
+
   def test_starlark_readme_does_not_trigger
     # This is the key behavior: README.md edits should NOT trigger
     # rebuilds for Starlark packages with declared srcs.
