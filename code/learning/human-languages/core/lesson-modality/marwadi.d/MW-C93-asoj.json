@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C93-asoj",
+    "language": "marwadi",
+    "chapter": 93,
+    "sequence": 6070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e57340955bc49ac9"
+  },
+  "findings": []
+}

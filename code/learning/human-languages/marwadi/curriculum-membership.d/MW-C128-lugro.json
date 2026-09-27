@@ -1,0 +1,11 @@
+{
+  "id": "MW-C128-lugro",
+  "pathSegment": "MW-PATH-128-THINGS128",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-128-THINGS128",
+      "order": 2
+    }
+  ]
+}

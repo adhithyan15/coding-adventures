@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Nail, Hammer, Axe, Plough, Bullock cart",
+  "label": "ch:mw-nail-hammer-axe-plough-bullock-cart",
+  "canDo": "I can say a nail, a hammer, an axe, a plough and a bullock cart.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C127-bailgari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say a nail, a hammer, an axe, a plough and a bullock cart.",
+    "assesses": [
+      "MW-LEX-C127-THINGS127-03",
+      "MW-LEX-C127-THINGS127-04",
+      "MW-LEX-C127-THINGS127-05"
+    ]
+  }
+}

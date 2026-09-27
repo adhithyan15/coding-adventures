@@ -1,0 +1,11 @@
+{
+  "id": "MW-C128-kachali",
+  "pathSegment": "MW-PATH-128-THINGS128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-128-THINGS128",
+      "order": 3
+    }
+  ]
+}

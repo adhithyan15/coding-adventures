@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Watermelon, Cucumber, Okra, Aubergine, Spinach",
+  "label": "ch:mw-watermelon-cucumber-okra-aubergine-spinach",
+  "canDo": "I can say a watermelon, a cucumber, okra, an aubergine and spinach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C135-palak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say a watermelon, a cucumber, okra, an aubergine and spinach.",
+    "assesses": [
+      "MW-LEX-C135-THINGS135-03",
+      "MW-LEX-C135-THINGS135-04",
+      "MW-LEX-C135-THINGS135-05"
+    ]
+  }
+}

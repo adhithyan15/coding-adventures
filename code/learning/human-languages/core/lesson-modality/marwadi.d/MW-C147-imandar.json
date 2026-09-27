@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C147-imandar",
+    "language": "marwadi",
+    "chapter": 147,
+    "sequence": 9260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcc9e7b3c18f2e0b"
+  },
+  "findings": []
+}

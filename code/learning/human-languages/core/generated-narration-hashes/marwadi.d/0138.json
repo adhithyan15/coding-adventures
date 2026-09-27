@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:42235c1414f5a16e",
+  "lessonIds": [
+    "MW-C138-balad",
+    "MW-C138-bachhro",
+    "MW-C138-hiran",
+    "MW-C138-lukri",
+    "MW-C138-siyal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch138.txt",
+  "json": "marwadi/narration/ch138.json",
+  "textHash": "fnv1a64:5c8b8ff58db96bbf",
+  "jsonHash": "fnv1a64:22704e9b8e500642",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C148-jaruri",
+    "language": "marwadi",
+    "chapter": 148,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fba324dc1266b5f2"
+  },
+  "findings": []
+}

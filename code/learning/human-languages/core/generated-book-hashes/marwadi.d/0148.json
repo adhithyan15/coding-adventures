@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:bf2b8994c65d0d42",
+  "lessonIds": [
+    "MW-C148-buro",
+    "MW-C148-jaruri",
+    "MW-C148-khas",
+    "MW-C148-sado",
+    "MW-C148-anokho"
+  ],
+  "tex": "marwadi/book/chapters/ch148-wicked-necessary-special-plain-unusual.tex"
+}

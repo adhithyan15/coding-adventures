@@ -1,0 +1,11 @@
+{
+  "id": "MW-C127-hathoro",
+  "pathSegment": "MW-PATH-127-THINGS127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-127-THINGS127",
+      "order": 1
+    }
+  ]
+}

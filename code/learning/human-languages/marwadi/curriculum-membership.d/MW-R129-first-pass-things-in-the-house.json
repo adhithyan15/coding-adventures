@@ -1,0 +1,11 @@
+{
+  "id": "MW-R129-first-pass-things-in-the-house",
+  "pathSegment": "MW-PATH-129-THINGS129",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-129-THINGS129",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C131-sagri",
+  "pathSegment": "MW-PATH-131-THINGS131",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-131-THINGS131",
+      "order": 2
+    }
+  ]
+}

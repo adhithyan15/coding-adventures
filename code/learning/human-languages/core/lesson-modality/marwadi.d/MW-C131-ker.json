@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C131-ker",
+    "language": "marwadi",
+    "chapter": 131,
+    "sequence": 8360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf1483156cbd39ec"
+  },
+  "findings": []
+}

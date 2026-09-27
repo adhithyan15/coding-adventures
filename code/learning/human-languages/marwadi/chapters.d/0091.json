@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Afterwards, Monday, Tuesday, Thursday, Friday",
+  "label": "ch:mw-afterwards-monday-tuesday-thursday-friday",
+  "canDo": "I can say afterwards, Monday, Tuesday, Thursday and Friday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MW-C91-sukarvar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say afterwards, Monday, Tuesday, Thursday and Friday.",
+    "assesses": [
+      "MW-LEX-C91-TIME91-03",
+      "MW-LEX-C91-TIME91-04",
+      "MW-LEX-C91-TIME91-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C131-papar",
+    "language": "marwadi",
+    "chapter": 131,
+    "sequence": 8390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1ed3f541d89cf4e"
+  },
+  "findings": []
+}

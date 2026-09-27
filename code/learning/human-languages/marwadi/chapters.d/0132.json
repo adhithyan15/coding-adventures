@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Pickle, Sweet wheat dish, Honeycomb sweet, Maize, Wheat",
+  "label": "ch:mw-pickle-sweet-wheat-dish-honeycomb-sweet-maize-wheat",
+  "canDo": "I can say pickle, a sweet wheat dish, a honeycomb sweet, maize and wheat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C132-gehu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say pickle, a sweet wheat dish, a honeycomb sweet, maize and wheat.",
+    "assesses": [
+      "MW-LEX-C132-THINGS132-03",
+      "MW-LEX-C132-THINGS132-04",
+      "MW-LEX-C132-THINGS132-05"
+    ]
+  }
+}

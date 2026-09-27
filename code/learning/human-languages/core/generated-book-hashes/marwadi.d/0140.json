@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:57e6545a63b7ea5a",
+  "lessonIds": [
+    "MW-C140-undro",
+    "MW-C140-makhi",
+    "MW-C140-machchhar",
+    "MW-C140-kiri",
+    "MW-C140-bichhu"
+  ],
+  "tex": "marwadi/book/chapters/ch140-mouse-fly-mosquito-ant-scorpion.tex"
+}

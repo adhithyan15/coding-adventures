@@ -1,0 +1,11 @@
+{
+  "id": "MW-C147-kanjus",
+  "pathSegment": "MW-PATH-147-QUAL147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-147-QUAL147",
+      "order": 3
+    }
+  ]
+}

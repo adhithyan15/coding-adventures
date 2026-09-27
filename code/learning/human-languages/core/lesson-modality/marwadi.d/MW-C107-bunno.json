@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C107-bunno",
+    "language": "marwadi",
+    "chapter": 107,
+    "sequence": 6850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:954874c719a14432"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:176a444df94cca77",
+  "lessonIds": [
+    "MW-C102-sagla",
+    "MW-C102-dujo",
+    "MW-C102-apno",
+    "MW-C102-koi",
+    "MW-C102-harek"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch102.txt",
+  "json": "marwadi/narration/ch102.json",
+  "textHash": "fnv1a64:737d4e92d591b1dc",
+  "jsonHash": "fnv1a64:d4237d0a554c4b7e",
+  "findings": []
+}

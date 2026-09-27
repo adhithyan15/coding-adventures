@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C132-achar",
+    "language": "marwadi",
+    "chapter": 132,
+    "sequence": 8400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:054a45365aea1977"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C149-gailo",
+  "pathSegment": "MW-PATH-149-QUAL149",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-149-QUAL149",
+      "order": 4
+    }
+  ]
+}

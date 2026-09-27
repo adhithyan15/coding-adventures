@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C114-malak",
+    "language": "marwadi",
+    "chapter": 114,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c88350722c555ac7"
+  },
+  "findings": []
+}

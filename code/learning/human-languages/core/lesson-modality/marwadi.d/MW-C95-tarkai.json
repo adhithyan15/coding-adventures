@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C95-tarkai",
+    "language": "marwadi",
+    "chapter": 95,
+    "sequence": 6160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd3f1cd2e712012d"
+  },
+  "findings": []
+}

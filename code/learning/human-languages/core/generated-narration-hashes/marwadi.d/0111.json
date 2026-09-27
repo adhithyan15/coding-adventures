@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:70643d56382d6575",
+  "lessonIds": [
+    "MW-C111-chavno",
+    "MW-C111-ichchha",
+    "MW-C111-man",
+    "MW-C111-as",
+    "MW-C111-mag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch111.txt",
+  "json": "marwadi/narration/ch111.json",
+  "textHash": "fnv1a64:7ad6455d55426ad8",
+  "jsonHash": "fnv1a64:b617f79346fd0166",
+  "findings": []
+}

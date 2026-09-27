@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C127-kulhari",
+    "language": "marwadi",
+    "chapter": 127,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e84fb20e8b2b448b"
+  },
+  "findings": []
+}

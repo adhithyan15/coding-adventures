@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 130,
+  "title": "Forehead ornament, Nose ring, Anklet, Millet, Millet porridge",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8eda140aebe4533a",
+  "lessons": [
+    {
+      "id": "MW-C130-borlo",
+      "sequence": 8300,
+      "title": "बोरलो (borlo) — a forehead ornament",
+      "headword": "बोरलो",
+      "romanization": "borlo",
+      "gloss": "a forehead ornament",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd6aa455100e829c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a thick bangle, then the Marwadi for a bangle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बोरलो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोरलो — borlo — \"a forehead ornament\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "borlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *borlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "borlo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *borlo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say borlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *borlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a thick bangle, then the Marwadi for a bangle, then say borlo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a thick bangle, then the Marwadi for a bangle, then say *borlo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बोरलो (borlo) mean? (\"A forehead ornament\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C130-borlo-type",
+              "prompt": "Type the Marwadi for 'a forehead ornament'.",
+              "assesses": [
+                "MW-LEX-C130-THINGS130-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बोरलो",
+                "borlo"
+              ],
+              "feedback": {
+                "correct": "Right: बोरलो (borlo) is 'a forehead ornament'.",
+                "incorrect": "'a forehead ornament' is बोरलो (borlo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C130-nath",
+      "sequence": 8310,
+      "title": "नथ (nath) — a nose ring",
+      "headword": "नथ",
+      "romanization": "nath",
+      "gloss": "a nose ring",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b6db4caf90c28c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a bangle, then the Marwadi for a forehead ornament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नथ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नथ — nath — \"a nose ring\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nath*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nath, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nath*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nath*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a bangle, then the Marwadi for a forehead ornament, then say nath again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a bangle, then the Marwadi for a forehead ornament, then say *nath* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नथ (nath) mean? (\"A nose ring\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C130-nath-type",
+              "prompt": "Type the Marwadi for 'a nose ring'.",
+              "assesses": [
+                "MW-LEX-C130-THINGS130-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नथ",
+                "nath"
+              ],
+              "feedback": {
+                "correct": "Right: नथ (nath) is 'a nose ring'.",
+                "incorrect": "'a nose ring' is नथ (nath)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C130-payal",
+      "sequence": 8320,
+      "title": "पायल (pāyal) — an anklet",
+      "headword": "पायल",
+      "romanization": "pāyal",
+      "gloss": "an anklet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2cbb185e0c394da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a forehead ornament, then the Marwadi for a nose ring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पायल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पायल — pāyal — \"an anklet\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāyal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāyal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāyal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāyal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pāyal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pāyal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a forehead ornament, then the Marwadi for a nose ring, then say pāyal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a forehead ornament, then the Marwadi for a nose ring, then say *pāyal* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पायल (pāyal) mean? (\"An anklet\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C130-payal-type",
+              "prompt": "Type the Marwadi for 'an anklet'.",
+              "assesses": [
+                "MW-LEX-C130-THINGS130-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पायल",
+                "pāyal"
+              ],
+              "feedback": {
+                "correct": "Right: पायल (pāyal) is 'an anklet'.",
+                "incorrect": "'an anklet' is पायल (pāyal)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C130-bajro",
+      "sequence": 8330,
+      "title": "बाजरो (bājro) — millet",
+      "headword": "बाजरो",
+      "romanization": "bājro",
+      "gloss": "millet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1485dcff540a0e6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a nose ring, then the Marwadi for an anklet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाजरो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाजरो — bājro — \"millet\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bājro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bājro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bājro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bājro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a nose ring, then the Marwadi for an anklet, then say bājro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a nose ring, then the Marwadi for an anklet, then say *bājro* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाजरो (bājro) mean? (\"Millet\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C130-bajro-type",
+              "prompt": "Type the Marwadi for 'millet'.",
+              "assesses": [
+                "MW-LEX-C130-THINGS130-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बाजरो",
+                "bājro"
+              ],
+              "feedback": {
+                "correct": "Right: बाजरो (bājro) is 'millet'.",
+                "incorrect": "'millet' is बाजरो (bājro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C130-rabri",
+      "sequence": 8340,
+      "title": "राबड़ी (rābṛī) — a millet porridge",
+      "headword": "राबड़ी",
+      "romanization": "rābṛī",
+      "gloss": "a millet porridge",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:add8c7fc25c68d2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an anklet, then the Marwadi for millet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: राबड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "राबड़ी — rābṛī — \"a millet porridge\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rābṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rābṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rābṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rābṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rābṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rābṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an anklet, then the Marwadi for millet, then say rābṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an anklet, then the Marwadi for millet, then say *rābṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does राबड़ी (rābṛī) mean? (\"A millet porridge\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C130-rabri-type",
+              "prompt": "Type the Marwadi for 'a millet porridge'.",
+              "assesses": [
+                "MW-LEX-C130-THINGS130-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "राबड़ी",
+                "rābṛī"
+              ],
+              "feedback": {
+                "correct": "Right: राबड़ी (rābṛī) is 'a millet porridge'.",
+                "incorrect": "'a millet porridge' is राबड़ी (rābṛī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C95-basant",
+    "language": "marwadi",
+    "chapter": 95,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1d18da504f51fd4"
+  },
+  "findings": []
+}

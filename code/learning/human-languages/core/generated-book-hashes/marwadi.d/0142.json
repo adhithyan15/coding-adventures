@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:035189cdc4c00881",
+  "lessonIds": [
+    "MW-C142-halko",
+    "MW-C142-karak",
+    "MW-C142-naram",
+    "MW-C142-gilo",
+    "MW-C142-suko"
+  ],
+  "tex": "marwadi/book/chapters/ch142-light-hard-soft-wet-dry.tex"
+}

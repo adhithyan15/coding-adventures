@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C134-bhujiya",
+    "language": "marwadi",
+    "chapter": 134,
+    "sequence": 8540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0afd8ce0ce803356"
+  },
+  "findings": []
+}

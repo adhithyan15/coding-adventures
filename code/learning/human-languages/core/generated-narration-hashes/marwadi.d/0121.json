@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:a05ff8dfb4231a01",
+  "lessonIds": [
+    "MW-C121-chaklo",
+    "MW-C121-parat",
+    "MW-C121-katoro",
+    "MW-C121-chimto",
+    "MW-C121-talo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch121.txt",
+  "json": "marwadi/narration/ch121.json",
+  "textHash": "fnv1a64:c15d644bea34ce48",
+  "jsonHash": "fnv1a64:0a4e214643e76af6",
+  "findings": []
+}

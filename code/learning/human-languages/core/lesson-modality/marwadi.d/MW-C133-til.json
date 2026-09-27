@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C133-til",
+    "language": "marwadi",
+    "chapter": 133,
+    "sequence": 8480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c47c3f03227dc1b4"
+  },
+  "findings": []
+}

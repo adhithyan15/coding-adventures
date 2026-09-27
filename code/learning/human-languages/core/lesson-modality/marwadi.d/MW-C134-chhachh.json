@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C134-chhachh",
+    "language": "marwadi",
+    "chapter": 134,
+    "sequence": 8510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ade429dcd47041f8"
+  },
+  "findings": []
+}

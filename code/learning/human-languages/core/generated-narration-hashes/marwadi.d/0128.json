@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:fe266ce89c37f3b4",
+  "lessonIds": [
+    "MW-C128-pagri",
+    "MW-C128-ghaghro",
+    "MW-C128-lugro",
+    "MW-C128-kachali",
+    "MW-C128-angarkhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch128.txt",
+  "json": "marwadi/narration/ch128.json",
+  "textHash": "fnv1a64:e28573ccce91d018",
+  "jsonHash": "fnv1a64:f77f28bfe2d42e1b",
+  "findings": []
+}

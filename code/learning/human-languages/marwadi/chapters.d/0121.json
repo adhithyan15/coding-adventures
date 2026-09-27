@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Rolling board, Wide platter, Bowl, Tongs, Lock",
+  "label": "ch:mw-rolling-board-wide-platter-bowl-tongs-lock",
+  "canDo": "I can say a rolling board, a wide platter, a bowl, tongs and a lock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C121-talo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say a rolling board, a wide platter, a bowl, tongs and a lock.",
+    "assesses": [
+      "MW-LEX-C121-THINGS121-03",
+      "MW-LEX-C121-THINGS121-04",
+      "MW-LEX-C121-THINGS121-05"
+    ]
+  }
+}

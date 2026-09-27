@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:3387f9e203874ef6",
+  "lessonIds": [
+    "MW-C117-kyu",
+    "MW-C117-karan",
+    "MW-C117-vastai",
+    "MW-C117-khatar",
+    "MW-C117-kyukai"
+  ],
+  "tex": "marwadi/book/chapters/ch117-why-reason-for-because-of-because.tex"
+}

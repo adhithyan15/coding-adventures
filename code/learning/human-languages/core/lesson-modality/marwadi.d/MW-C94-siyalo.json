@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C94-siyalo",
+    "language": "marwadi",
+    "chapter": 94,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7185fa1331712798"
+  },
+  "findings": []
+}

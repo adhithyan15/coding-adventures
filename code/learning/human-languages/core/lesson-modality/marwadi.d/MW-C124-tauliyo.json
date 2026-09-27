@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C124-tauliyo",
+    "language": "marwadi",
+    "chapter": 124,
+    "sequence": 7920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33759e5fcea11f06"
+  },
+  "findings": []
+}

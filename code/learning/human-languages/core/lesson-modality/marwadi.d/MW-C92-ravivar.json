@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C92-ravivar",
+    "language": "marwadi",
+    "chapter": 92,
+    "sequence": 6010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a03b0c52870ae51"
+  },
+  "findings": []
+}

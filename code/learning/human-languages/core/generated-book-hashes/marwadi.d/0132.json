@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:e359b96c10b0f4f8",
+  "lessonIds": [
+    "MW-C132-achar",
+    "MW-C132-lapsi",
+    "MW-C132-ghevar",
+    "MW-C132-makki",
+    "MW-C132-gehu"
+  ],
+  "tex": "marwadi/book/chapters/ch132-pickle-sweet-wheat-dish-honeycomb-sweet-maize-wheat.tex"
+}

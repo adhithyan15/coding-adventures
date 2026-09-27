@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C122-rajai",
+    "language": "marwadi",
+    "chapter": 122,
+    "sequence": 7830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87bc2d64d3abbfc2"
+  },
+  "findings": []
+}

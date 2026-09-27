@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Midday, Evening, In the early morning, Dawn, Day after tomorrow",
+  "label": "ch:mw-midday-evening-in-the-early-morning-dawn-day-after-tomorrow",
+  "canDo": "I can say midday, the evening, in the early morning, dawn and the day after tomorrow.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MW-C90-parsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say midday, the evening, in the early morning, dawn and the day after tomorrow.",
+    "assesses": [
+      "MW-LEX-C90-TIME90-03",
+      "MW-LEX-C90-TIME90-04",
+      "MW-LEX-C90-TIME90-05"
+    ]
+  }
+}

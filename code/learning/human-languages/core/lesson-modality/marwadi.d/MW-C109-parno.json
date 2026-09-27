@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C109-parno",
+    "language": "marwadi",
+    "chapter": 109,
+    "sequence": 6950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f66d68b6740297fb"
+  },
+  "findings": []
+}

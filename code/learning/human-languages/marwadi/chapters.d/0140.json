@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Mouse, Fly, Mosquito, Ant, Scorpion",
+  "label": "ch:mw-mouse-fly-mosquito-ant-scorpion",
+  "canDo": "I can say a mouse, a fly, a mosquito, an ant and a scorpion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C140-bichhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say a mouse, a fly, a mosquito, an ant and a scorpion.",
+    "assesses": [
+      "MW-LEX-C140-THINGS140-03",
+      "MW-LEX-C140-THINGS140-04",
+      "MW-LEX-C140-THINGS140-05"
+    ]
+  }
+}

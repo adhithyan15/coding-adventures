@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C138-balad",
+    "language": "marwadi",
+    "chapter": 138,
+    "sequence": 8700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cee81eca23ab71d"
+  },
+  "findings": []
+}

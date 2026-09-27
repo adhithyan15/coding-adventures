@@ -1,0 +1,11 @@
+{
+  "id": "MW-C134-bhujiya",
+  "pathSegment": "MW-PATH-134-THINGS134",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-134-THINGS134",
+      "order": 4
+    }
+  ]
+}

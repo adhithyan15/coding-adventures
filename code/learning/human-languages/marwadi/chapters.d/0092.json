@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Saturday, Sunday, Chait, Baisakh, Jeth",
+  "label": "ch:mw-saturday-sunday-chait-baisakh-jeth",
+  "canDo": "I can say Saturday, Sunday, Chait, Baisakh and Jeth.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MW-C92-jeth",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say Saturday, Sunday, Chait, Baisakh and Jeth.",
+    "assesses": [
+      "MW-LEX-C92-TIME92-03",
+      "MW-LEX-C92-TIME92-04",
+      "MW-LEX-C92-TIME92-05"
+    ]
+  }
+}

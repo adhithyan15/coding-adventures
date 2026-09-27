@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Beautiful, Good-looking, Young, Thin, Short",
+  "label": "ch:mw-beautiful-good-looking-young-thin-short",
+  "canDo": "I can say beautiful, good-looking, young, thin and short.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C144-thigno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say beautiful, good-looking, young, thin and short.",
+    "assesses": [
+      "MW-LEX-C144-QUAL144-03",
+      "MW-LEX-C144-QUAL144-04",
+      "MW-LEX-C144-QUAL144-05"
+    ]
+  }
+}

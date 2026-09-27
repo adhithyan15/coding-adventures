@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C132-ghevar",
+    "language": "marwadi",
+    "chapter": 132,
+    "sequence": 8420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89b1b27939257f39"
+  },
+  "findings": []
+}

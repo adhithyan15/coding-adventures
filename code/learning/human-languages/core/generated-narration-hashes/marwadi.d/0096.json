@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:09f761ba48e8275b",
+  "lessonIds": [
+    "MW-C96-kathai",
+    "MW-C96-uthai",
+    "MW-C96-agai",
+    "MW-C96-larai",
+    "MW-C96-mathai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch96.txt",
+  "json": "marwadi/narration/ch96.json",
+  "textHash": "fnv1a64:b6d89ea321eba9d7",
+  "jsonHash": "fnv1a64:2d0bc7eef1aed4f9",
+  "findings": []
+}

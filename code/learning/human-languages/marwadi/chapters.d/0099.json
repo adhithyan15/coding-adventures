@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Route, Courtyard, Enclosure, Stepwell, Pond",
+  "label": "ch:mw-route-courtyard-enclosure-stepwell-pond",
+  "canDo": "I can say a route, a courtyard, an enclosure, a stepwell and a pond.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-R99-second-pass-where-things-are",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say a route, a courtyard, an enclosure, a stepwell and a pond.",
+    "assesses": [
+      "MW-LEX-C99-LOC99-03",
+      "MW-LEX-C99-LOC99-04",
+      "MW-LEX-C99-LOC99-05"
+    ]
+  }
+}

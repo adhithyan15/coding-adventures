@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C90-parsu",
+    "language": "marwadi",
+    "chapter": 90,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f75bf450558674c0"
+  },
+  "findings": []
+}

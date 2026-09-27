@@ -27,7 +27,10 @@ it("pins Marwadi lesson-content budgets", () =>
     // 347 -> 350: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
     // 350 -> 584: chapters 44-89, 230 word lessons and four reviews. None
     // introduces an idiom, a sense or a culture claim.
-    lessons: 584,
+    // 584 -> 896: chapters 90-149, 300 word lessons and twelve reviews carry
+    // Marwadi to A1. RE-MEASURED against the tree; none introduces an idiom, a
+    // sense or a culture claim.
+    lessons: 896,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,

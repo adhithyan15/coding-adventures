@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "All, Another, Our own, Someone, Each",
+  "label": "ch:mw-all-another-our-own-someone-each",
+  "canDo": "I can say all, another, our own, someone and each.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "MW-C102-harek",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say all, another, our own, someone and each.",
+    "assesses": [
+      "MW-LEX-C102-DEF102-03",
+      "MW-LEX-C102-DEF102-04",
+      "MW-LEX-C102-DEF102-05"
+    ]
+  }
+}

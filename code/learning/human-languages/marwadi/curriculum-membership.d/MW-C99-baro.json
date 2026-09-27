@@ -1,0 +1,11 @@
+{
+  "id": "MW-C99-baro",
+  "pathSegment": "MW-PATH-99-LOC99",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-99-LOC99",
+      "order": 2
+    }
+  ]
+}

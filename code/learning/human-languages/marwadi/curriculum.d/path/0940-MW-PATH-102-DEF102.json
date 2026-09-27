@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-102-DEF102",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "MW-EXT-102-DEF102"
+  ],
+  "after": []
+}

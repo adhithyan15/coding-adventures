@@ -1,0 +1,11 @@
+{
+  "id": "MW-C108-tairno",
+  "pathSegment": "MW-PATH-108-ACT108",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-108-ACT108",
+      "order": 3
+    }
+  ]
+}

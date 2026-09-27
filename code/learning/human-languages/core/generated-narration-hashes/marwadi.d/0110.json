@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:a6e124136f0ad9ef",
+  "lessonIds": [
+    "MW-C110-batno",
+    "MW-C110-gamavno",
+    "MW-C110-pugno",
+    "MW-C110-urno",
+    "MW-C110-tolno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch110.txt",
+  "json": "marwadi/narration/ch110.json",
+  "textHash": "fnv1a64:c4e6adbcbf2e2da4",
+  "jsonHash": "fnv1a64:a914f719e6a09291",
+  "findings": []
+}

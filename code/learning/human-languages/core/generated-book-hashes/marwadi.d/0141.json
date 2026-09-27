@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:8bd46f6d21d48a0c",
+  "lessonIds": [
+    "MW-C141-chokho",
+    "MW-C141-kharab",
+    "MW-C141-sakro",
+    "MW-C141-chauro",
+    "MW-C141-gairo"
+  ],
+  "tex": "marwadi/book/chapters/ch141-good-bad-narrow-wide-deep.tex"
+}

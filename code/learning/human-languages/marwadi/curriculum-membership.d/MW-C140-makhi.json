@@ -1,0 +1,11 @@
+{
+  "id": "MW-C140-makhi",
+  "pathSegment": "MW-PATH-140-THINGS140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-140-THINGS140",
+      "order": 1
+    }
+  ]
+}

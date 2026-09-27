@@ -1,0 +1,11 @@
+{
+  "id": "MW-C134-chhachh",
+  "pathSegment": "MW-PATH-134-THINGS134",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-134-THINGS134",
+      "order": 1
+    }
+  ]
+}

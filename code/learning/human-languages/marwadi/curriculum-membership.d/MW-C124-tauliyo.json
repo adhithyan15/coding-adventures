@@ -1,0 +1,11 @@
+{
+  "id": "MW-C124-tauliyo",
+  "pathSegment": "MW-PATH-124-THINGS124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-124-THINGS124",
+      "order": 2
+    }
+  ]
+}

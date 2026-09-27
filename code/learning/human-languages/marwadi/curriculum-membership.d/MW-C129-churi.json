@@ -1,0 +1,11 @@
+{
+  "id": "MW-C129-churi",
+  "pathSegment": "MW-PATH-129-THINGS129",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-129-THINGS129",
+      "order": 4
+    }
+  ]
+}

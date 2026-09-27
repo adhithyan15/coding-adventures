@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:2e3124fbea3d9dbe",
+  "lessonIds": [
+    "MW-C98-jimano",
+    "MW-C98-chauk",
+    "MW-C98-chauraho",
+    "MW-C98-mor",
+    "MW-C98-gelo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch98.txt",
+  "json": "marwadi/narration/ch98.json",
+  "textHash": "fnv1a64:48542d61177b0479",
+  "jsonHash": "fnv1a64:6787da154816eed1",
+  "findings": []
+}

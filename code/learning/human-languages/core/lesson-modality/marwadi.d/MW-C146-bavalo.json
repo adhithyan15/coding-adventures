@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C146-bavalo",
+    "language": "marwadi",
+    "chapter": 146,
+    "sequence": 9230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ddf3bcac508df05"
+  },
+  "findings": []
+}

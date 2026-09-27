@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:bdd2c88959ec4a24",
+  "lessonIds": [
+    "MW-C100-darvajo",
+    "MW-C100-pol",
+    "MW-C100-haveli",
+    "MW-C100-melo",
+    "MW-C100-hat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch100.txt",
+  "json": "marwadi/narration/ch100.json",
+  "textHash": "fnv1a64:cd1dc8e50efd302c",
+  "jsonHash": "fnv1a64:752dea978f1e0d72",
+  "findings": []
+}

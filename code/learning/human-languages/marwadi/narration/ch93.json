@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 93,
+  "title": "Savan, Bhadvo, Asoj, Kati, Migsar",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9d97e22760b0ca23",
+  "lessons": [
+    {
+      "id": "MW-C93-savan",
+      "sequence": 6050,
+      "title": "सावण (sāvaṇ) — Savan (July-August)",
+      "headword": "सावण",
+      "romanization": "sāvaṇ",
+      "gloss": "Savan (July-August)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6f1864aefa6c811",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Baisakh, then the Marwadi for Jeth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सावण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सावण — sāvaṇ — \"Savan (July-August)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāvaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāvaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sāvaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sāvaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Baisakh, then the Marwadi for Jeth, then say sāvaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Baisakh, then the Marwadi for Jeth, then say *sāvaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सावण (sāvaṇ) mean? (\"Savan (July-August)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C93-savan-type",
+              "prompt": "Type the Marwadi for 'Savan (July-August)'.",
+              "assesses": [
+                "MW-LEX-C93-TIME93-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सावण",
+                "sāvaṇ"
+              ],
+              "feedback": {
+                "correct": "Right: सावण (sāvaṇ) is 'Savan (July-August)'.",
+                "incorrect": "'Savan (July-August)' is सावण (sāvaṇ)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C93-bhadvo",
+      "sequence": 6060,
+      "title": "भादवो (bhādvo) — Bhadvo (August-September)",
+      "headword": "भादवो",
+      "romanization": "bhādvo",
+      "gloss": "Bhadvo (August-September)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfa8b43dee6ad7de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Jeth, then the Marwadi for Savan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भादवो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भादवो — bhādvo — \"Bhadvo (August-September)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhādvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhādvo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhādvo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhādvo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bhādvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bhādvo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Jeth, then the Marwadi for Savan, then say bhādvo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Jeth, then the Marwadi for Savan, then say *bhādvo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भादवो (bhādvo) mean? (\"Bhadvo (August-September)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C93-bhadvo-type",
+              "prompt": "Type the Marwadi for 'Bhadvo (August-September)'.",
+              "assesses": [
+                "MW-LEX-C93-TIME93-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "भादवो",
+                "bhādvo"
+              ],
+              "feedback": {
+                "correct": "Right: भादवो (bhādvo) is 'Bhadvo (August-September)'.",
+                "incorrect": "'Bhadvo (August-September)' is भादवो (bhādvo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C93-asoj",
+      "sequence": 6070,
+      "title": "आसोज (āsoj) — Asoj (September-October)",
+      "headword": "आसोज",
+      "romanization": "āsoj",
+      "gloss": "Asoj (September-October)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e57340955bc49ac9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Savan, then the Marwadi for Bhadvo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आसोज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसोज — āsoj — \"Asoj (September-October)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsoj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsoj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsoj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsoj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āsoj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āsoj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Savan, then the Marwadi for Bhadvo, then say āsoj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Savan, then the Marwadi for Bhadvo, then say *āsoj* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आसोज (āsoj) mean? (\"Asoj (September-October)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C93-asoj-type",
+              "prompt": "Type the Marwadi for 'Asoj (September-October)'.",
+              "assesses": [
+                "MW-LEX-C93-TIME93-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आसोज",
+                "āsoj"
+              ],
+              "feedback": {
+                "correct": "Right: आसोज (āsoj) is 'Asoj (September-October)'.",
+                "incorrect": "'Asoj (September-October)' is आसोज (āsoj)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C93-kati",
+      "sequence": 6080,
+      "title": "काती (kātī) — Kati (October-November)",
+      "headword": "काती",
+      "romanization": "kātī",
+      "gloss": "Kati (October-November)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f4c764b0f05df88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Bhadvo, then the Marwadi for Asoj."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: काती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काती — kātī — \"Kati (October-November)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kātī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kātī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kātī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kātī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kātī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kātī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Bhadvo, then the Marwadi for Asoj, then say kātī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Bhadvo, then the Marwadi for Asoj, then say *kātī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does काती (kātī) mean? (\"Kati (October-November)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C93-kati-type",
+              "prompt": "Type the Marwadi for 'Kati (October-November)'.",
+              "assesses": [
+                "MW-LEX-C93-TIME93-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "काती",
+                "kātī"
+              ],
+              "feedback": {
+                "correct": "Right: काती (kātī) is 'Kati (October-November)'.",
+                "incorrect": "'Kati (October-November)' is काती (kātī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C93-migsar",
+      "sequence": 6090,
+      "title": "मिगसर (migsar) — Migsar (November-December)",
+      "headword": "मिगसर",
+      "romanization": "migsar",
+      "gloss": "Migsar (November-December)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c56d99411ba9abd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Asoj, then the Marwadi for Kati."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिगसर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिगसर — migsar — \"Migsar (November-December)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migsar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *migsar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migsar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *migsar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say migsar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *migsar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Asoj, then the Marwadi for Kati, then say migsar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Asoj, then the Marwadi for Kati, then say *migsar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मिगसर (migsar) mean? (\"Migsar (November-December)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C93-migsar-type",
+              "prompt": "Type the Marwadi for 'Migsar (November-December)'.",
+              "assesses": [
+                "MW-LEX-C93-TIME93-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मिगसर",
+                "migsar"
+              ],
+              "feedback": {
+                "correct": "Right: मिगसर (migsar) is 'Migsar (November-December)'.",
+                "incorrect": "'Migsar (November-December)' is मिगसर (migsar)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

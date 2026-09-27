@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C111-as",
+    "language": "marwadi",
+    "chapter": 111,
+    "sequence": 7180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5a38a80d8139f1c"
+  },
+  "findings": []
+}

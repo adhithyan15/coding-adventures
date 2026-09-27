@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C129-kamij",
+    "language": "marwadi",
+    "chapter": 129,
+    "sequence": 8150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:809bc29b870defec"
+  },
+  "findings": []
+}

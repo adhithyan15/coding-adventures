@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:e672172b57db216b",
+  "lessonIds": [
+    "MW-C114-sakno",
+    "MW-C114-hunar",
+    "MW-C114-takat",
+    "MW-C114-himmat",
+    "MW-C114-malak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch114.txt",
+  "json": "marwadi/narration/ch114.json",
+  "textHash": "fnv1a64:1efd464a34d1c6ca",
+  "jsonHash": "fnv1a64:ec7c4e6bcb12378f",
+  "findings": []
+}

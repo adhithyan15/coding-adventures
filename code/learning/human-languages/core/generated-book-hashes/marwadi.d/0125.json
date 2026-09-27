@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:cd3c8b8b07211b75",
+  "lessonIds": [
+    "MW-C125-kainchi",
+    "MW-C125-lalten",
+    "MW-C125-mombatti",
+    "MW-C125-machis",
+    "MW-C125-lakri"
+  ],
+  "tex": "marwadi/book/chapters/ch125-scissors-lantern-candle-matches-wood.tex"
+}

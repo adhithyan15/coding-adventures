@@ -1,0 +1,11 @@
+{
+  "id": "MW-C99-agano",
+  "pathSegment": "MW-PATH-99-LOC99",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-99-LOC99",
+      "order": 1
+    }
+  ]
+}

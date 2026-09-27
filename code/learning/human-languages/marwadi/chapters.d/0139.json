@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Crow, Pigeon, Parrot, Koel, Kite",
+  "label": "ch:mw-crow-pigeon-parrot-koel-kite",
+  "canDo": "I can say a crow, a pigeon, a parrot, a koel and a kite.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-R139-second-pass-vegetables-spices-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say a crow, a pigeon, a parrot, a koel and a kite.",
+    "assesses": [
+      "MW-LEX-C139-THINGS139-03",
+      "MW-LEX-C139-THINGS139-04",
+      "MW-LEX-C139-THINGS139-05"
+    ]
+  }
+}
