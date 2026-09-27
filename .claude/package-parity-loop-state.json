@@ -18,15 +18,15 @@
     "branch": "codex/parity-x509-extension-portable-conformance-20260926",
     "item_id": "x509-extension-portable-conformance",
     "opened_at": "2026-09-27T04:28:40Z",
-    "head_revision": "814e1e38d494b8065863fcbc61bb19a911f210d3",
+    "head_revision": "a2de2b1cd5b4c551c62cda016cb499645c1ffac0",
     "checks_status": "pending",
     "auto_merge_enabled": false
   },
   "last_ci_action": {
-    "observed_at": "2026-09-27T04:29:05Z",
+    "observed_at": "2026-09-27T05:00:25Z",
     "pr_number": 16112,
     "status": "pending",
-    "notes": "Ready-for-review PR #16112 opened from validated implementation head 814e1e38d494b8065863fcbc61bb19a911f210d3 on exact base d1afaf57915c1f9e2c813a13079034dfdefb5a44. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "notes": "Ubuntu CI exposed Rust 1.98's chunks_exact_to_as_chunks lint in the portable X.509 conformance test. The fixture helper now uses chunks(2) behind its existing even-length assertion; local cargo test and cargo clippy --all-targets -- -D warnings passed, and remediation head a2de2b1cd5b4c551c62cda016cb499645c1ffac0 was pushed to PR #16112. Replacement checks are queued, so auto-merge remains disabled."
   },
   "last_inventory": {
     "revision": "d1afaf57915c1f9e2c813a13079034dfdefb5a44",
