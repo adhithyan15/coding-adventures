@@ -19,6 +19,7 @@ const TELUGU_KA = DUCTUS[ductusKey("telugu", "క")];
 const TELUGU_KHA = DUCTUS[ductusKey("telugu", "ఖ")];
 const TELUGU_GA = DUCTUS[ductusKey("telugu", "గ")];
 const TELUGU_GHA = DUCTUS[ductusKey("telugu", "ఘ")];
+const TELUGU_NGA = DUCTUS[ductusKey("telugu", "ఙ")];
 const TELUGU_CA = DUCTUS[ductusKey("telugu", "చ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
@@ -35,12 +36,13 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క route and five-run pedagogical ఐ route cross narrow printed
-  // counter transitions while still covering their complete outlines.
+  // The sourced క and ఙ routes and five-run pedagogical ఐ route cross narrow
+  // printed counter transitions while still covering their complete outlines.
   registerStrokeHonestyTests(letters, {
     అ: 0.96,
     క: 0.93,
     ఖ: 0.93,
+    ఙ: 0.9,
     ఐ: 0.59,
     ఒ: 0.84,
     ఋ: 0.84,
@@ -57,6 +59,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఘ", TELUGU_GHA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఙ", TELUGU_NGA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("చ", TELUGU_CA.source.url)).toBe(
@@ -174,6 +179,24 @@ describe("handwriting ductus", () => {
         "sweep right and up around the outer bowl",
       ],
       ["restart and cup through the upper flourish"],
+    ]);
+  });
+
+  it("Telugu ఙ groups five source-verified movements into three pen-down runs", () => {
+    expect(penLifts(TELUGU_NGA)).toBe(2);
+    expect(TELUGU_NGA.strokes).toHaveLength(3);
+    expect(
+      TELUGU_NGA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "turn around the compact upper-left lobe",
+        "continue down and around the broad lower bowl",
+        "curl upward around the rounded right lobe",
+      ],
+      ["lift and draw the inner horizontal bar from left to right"],
+      ["lift again and draw the short upper headstroke downward"],
     ]);
   });
 

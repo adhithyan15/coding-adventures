@@ -202,12 +202,16 @@ describe("stroke ownership migration baseline", () => {
       // Telugu చ starts the next consonant row with a four-movement, two-run
       // path. Keys move 382 -> 383 and Telugu 13 -> 14; Tamil and both
       // shared-identity values remain unchanged.
+      //
+      // Telugu ఙ fills the word-first gap before చ with a five-movement,
+      // three-run path. Keys move 383 -> 384 and Telugu 14 -> 15; Tamil and
+      // both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 383,
+      keys: 384,
       keyHash:
-        "f3089b577fbce2053d97c920308e5bdd91349ccf43ba7c47bb555bcd4d8df6d7",
+        "880abfb8e81d1987e2d65cf28798c8a5e59a07c272910328a018a1a09b644ef0",
       nonTamilDataHash:
-        "06b7330e66e26b51787c634c6f3ce96dcfe40311245a7792fd896b22c68f50e9",
+        "fbd75df75afad5d3dbc15ee8be17b53dd8d898e8959e60ae01338846fe018cd8",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -223,7 +227,7 @@ describe("stroke ownership migration baseline", () => {
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
-        telugu: 14,
+        telugu: 15,
         "urdu-nastaliq": 31,
       },
     });

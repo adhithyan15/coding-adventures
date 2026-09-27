@@ -33,14 +33,16 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
   // *gnya* into shapes with nothing on the page to copy, which is the same
-  // stage exercised on a harder pair. A rung may repeat; the ORDER assertion
-  // below still forbids one arriving before its prerequisite stages.
+  // stage exercised on a harder pair. `TE-S171` then returns to observe-and-
+  // trace for a newly introduced rare letter. A rung may repeat; the ORDER
+  // assertion below still forbids one arriving before its prerequisite stages.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["TE-S01-letter-ta", "observe-trace"],
     ["TE-S01-copy-in-a-word", "guided-copy"],
     ["TE-S01-delayed-copy", "delayed-copy"],
     ["TE-S01-dictation", "dictation-transcription"],
     ["TE-S170-script-dictation-courtesy-letters", "dictation-transcription"],
+    ["TE-S171-letter-nga", "observe-trace"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

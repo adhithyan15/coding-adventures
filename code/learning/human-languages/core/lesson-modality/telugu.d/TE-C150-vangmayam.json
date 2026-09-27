@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C150-vangmayam",
+    "language": "telugu",
+    "chapter": 150,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e24b6b35452fe052"
+  },
+  "findings": []
+}

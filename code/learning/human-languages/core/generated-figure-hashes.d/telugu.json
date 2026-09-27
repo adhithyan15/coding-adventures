@@ -98,6 +98,13 @@
       "sourceHash": "fnv1a64:df10977773d8ec10",
       "svgHash": "fnv1a64:e67d7b2254dd41cd",
       "svg": "telugu/book/figures/TE-S166-letter-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S171-letter-nga",
+      "sourceHash": "fnv1a64:0941ff45929fbd8a",
+      "svgHash": "fnv1a64:d6d61fa3c824ebe8",
+      "svg": "telugu/book/figures/TE-S171-letter-nga-filmstrip.svg"
     }
   ]
 }
