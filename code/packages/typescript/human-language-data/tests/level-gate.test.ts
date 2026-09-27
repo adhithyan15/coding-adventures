@@ -40,11 +40,14 @@ const HELD = Object.fromEntries(
 // (~900ms) and the level gate on top of everything else, so rebuilding an identical
 // report five times cost ~18s and timed out the 5s default on CI. Memoising is also
 // simply correct: every test wants the same report.
-let cached: ReturnType<typeof buildCurriculumGapReport> | undefined;
-function realReport() {
-  if (cached) return cached;
+//
+// And built at IMPORT, not lazily inside the first test that asks. A lazy memo still
+// charges the whole load-and-build to that one test's budget: "separates what a
+// track TOUCHES" took 22.8s locally with ~20s of it this build, one heavy CI runner
+// away from its 30s limit. Import time carries no per-test budget.
+const REAL_REPORT = (() => {
   const e = loadEverything();
-  cached = buildCurriculumGapReport({
+  return buildCurriculumGapReport({
     registry: e.registry,
     lessons: e.lessons,
     books: e.books,
@@ -53,7 +56,9 @@ function realReport() {
     trackChapters: loadTrackChapters(),
     chapterPolicy: loadChapterPolicy(),
   });
-  return cached;
+})();
+function realReport() {
+  return REAL_REPORT;
 }
 
 describe("level-gate attainment owner discovery", () => {

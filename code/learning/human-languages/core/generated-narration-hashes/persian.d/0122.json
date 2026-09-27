@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:75a346318a3bb633",
+  "lessonIds": [
+    "FA-C122-nahang",
+    "FA-C122-delfin",
+    "FA-C122-kuse",
+    "FA-C122-sanjab",
+    "FA-C122-khofash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch122.txt",
+  "json": "persian/narration/ch122.json",
+  "textHash": "fnv1a64:9dafdc632d26630b",
+  "jsonHash": "fnv1a64:a2092614950b8951",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C100-gilas",
+  "pathSegment": "FA-PATH-100-THINGS100",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-100-THINGS100",
+      "order": 1
+    }
+  ]
+}

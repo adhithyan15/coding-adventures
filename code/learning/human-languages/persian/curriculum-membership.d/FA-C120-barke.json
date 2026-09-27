@@ -1,0 +1,11 @@
+{
+  "id": "FA-C120-barke",
+  "pathSegment": "FA-PATH-120-THINGS120",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-120-THINGS120",
+      "order": 2
+    }
+  ]
+}

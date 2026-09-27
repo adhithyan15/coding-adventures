@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:1cc7817c210d4f00",
+  "lessonIds": [
+    "FA-C106-tuti",
+    "FA-C106-kabutar",
+    "FA-C106-tavus",
+    "FA-C106-ordak",
+    "FA-C106-zanbur"
+  ],
+  "tex": "persian/book/chapters/ch106-parrot-pigeon-peacock-duck-bee.tex"
+}

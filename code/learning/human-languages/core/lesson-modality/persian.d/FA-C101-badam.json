@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C101-badam",
+    "language": "persian",
+    "chapter": 101,
+    "sequence": 5060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4103d4741ed70e4d"
+  },
+  "findings": []
+}

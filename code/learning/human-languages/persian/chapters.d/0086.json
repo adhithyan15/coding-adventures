@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "On, Between, Direction, Side, Corner",
+  "label": "ch:fa-on-between-direction-side-corner",
+  "canDo": "I can say on, between, a direction, a side and a corner.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-C86-gushe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say on, between, a direction, a side and a corner.",
+    "assesses": [
+      "FA-LEX-C86-LOC86-03",
+      "FA-LEX-C86-LOC86-04",
+      "FA-LEX-C86-LOC86-05"
+    ]
+  }
+}

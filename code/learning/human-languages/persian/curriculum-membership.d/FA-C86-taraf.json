@@ -1,0 +1,11 @@
+{
+  "id": "FA-C86-taraf",
+  "pathSegment": "FA-PATH-86-LOC86",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-86-LOC86",
+      "order": 3
+    }
+  ]
+}

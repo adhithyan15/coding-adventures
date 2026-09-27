@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-129-QUAL129",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "FA-EXT-129-QUAL129"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-105-THINGS105",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a leopard, a rabbit, a deer, a fox and a pig.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:06d64537a108d036",
+  "lessonIds": [
+    "FA-C108-moch",
+    "FA-C108-shast",
+    "FA-C108-nakhon",
+    "FA-C108-sine",
+    "FA-C108-kamar",
+    "FA-R108-first-pass-food-and-nature",
+    "FA-R108-second-pass-nature-animals-and-the-body"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch108.txt",
+  "json": "persian/narration/ch108.json",
+  "textHash": "fnv1a64:32660a71180a4794",
+  "jsonHash": "fnv1a64:32f417a49f2be548",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C112-kuleposhti",
+    "language": "persian",
+    "chapter": 112,
+    "sequence": 5670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:183beb8f7f767c21"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Pupil, Doctor, Nurse, Cook, Worker",
+  "label": "ch:fa-pupil-doctor-nurse-cook-worker",
+  "canDo": "I can say a pupil, a doctor, a nurse, a cook and a worker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C115-kargar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a pupil, a doctor, a nurse, a cook and a worker.",
+    "assesses": [
+      "FA-LEX-C115-THINGS115-03",
+      "FA-LEX-C115-THINGS115-04",
+      "FA-LEX-C115-THINGS115-05"
+    ]
+  }
+}

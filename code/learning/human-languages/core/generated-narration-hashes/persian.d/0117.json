@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:2cfe60adeb992b2b",
+  "lessonIds": [
+    "FA-C117-nave",
+    "FA-C117-taksi",
+    "FA-C117-metro",
+    "FA-C117-kashti",
+    "FA-C117-havapeyma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch117.txt",
+  "json": "persian/narration/ch117.json",
+  "textHash": "fnv1a64:1cb87771aef05600",
+  "jsonHash": "fnv1a64:c3dd3eb46e44e0f2",
+  "findings": []
+}

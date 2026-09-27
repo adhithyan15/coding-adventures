@@ -1,0 +1,11 @@
+{
+  "id": "FA-C88-muze",
+  "pathSegment": "FA-PATH-88-LOC88",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-88-LOC88",
+      "order": 4
+    }
+  ]
+}

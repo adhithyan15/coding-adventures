@@ -1,0 +1,11 @@
+{
+  "id": "FA-C83-hamin",
+  "pathSegment": "FA-PATH-83-DEF83",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-83-DEF83",
+      "order": 1
+    }
+  ]
+}

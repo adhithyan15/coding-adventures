@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Now, Never, This, That, These",
+  "label": "ch:fa-now-never-this-that-these",
+  "canDo": "I can say now, never, this, that and these.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FA-C82-inha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say now, never, this, that and these.",
+    "assesses": [
+      "FA-LEX-C82-TIME82-03",
+      "FA-LEX-C82-TIME82-04",
+      "FA-LEX-C82-TIME82-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Ruler, Board, Class, Exam, Teacher",
+  "label": "ch:fa-ruler-board-class-exam-teacher",
+  "canDo": "I can say a ruler, a board, a class, an exam and a teacher.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C114-amuzgar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a ruler, a board, a class, an exam and a teacher.",
+    "assesses": [
+      "FA-LEX-C114-THINGS114-03",
+      "FA-LEX-C114-THINGS114-04",
+      "FA-LEX-C114-THINGS114-05"
+    ]
+  }
+}

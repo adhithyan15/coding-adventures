@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:cd61ef54952b6430",
+  "lessonIds": [
+    "FA-C120-kapshan",
+    "FA-C120-dampayi",
+    "FA-C120-barke",
+    "FA-C120-cheshme",
+    "FA-C120-kavir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch120.txt",
+  "json": "persian/narration/ch120.json",
+  "textHash": "fnv1a64:74508a401f361963",
+  "jsonHash": "fnv1a64:72d98a73cfd84865",
+  "findings": []
+}

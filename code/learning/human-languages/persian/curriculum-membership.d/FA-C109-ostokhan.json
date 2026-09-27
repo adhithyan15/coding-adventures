@@ -1,0 +1,11 @@
+{
+  "id": "FA-C109-ostokhan",
+  "pathSegment": "FA-PATH-109-THINGS109",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-109-THINGS109",
+      "order": 2
+    }
+  ]
+}

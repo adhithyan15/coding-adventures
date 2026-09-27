@@ -1,0 +1,11 @@
+{
+  "id": "FA-C122-delfin",
+  "pathSegment": "FA-PATH-122-THINGS122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-122-THINGS122",
+      "order": 1
+    }
+  ]
+}

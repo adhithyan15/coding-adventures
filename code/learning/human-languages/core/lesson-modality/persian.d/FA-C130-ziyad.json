@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C130-ziyad",
+    "language": "persian",
+    "chapter": 130,
+    "sequence": 6640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab6ba131b9922a5a"
+  },
+  "findings": []
+}

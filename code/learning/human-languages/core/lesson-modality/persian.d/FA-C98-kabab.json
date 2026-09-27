@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C98-kabab",
+    "language": "persian",
+    "chapter": 98,
+    "sequence": 4920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37c86a7f5319656d"
+  },
+  "findings": []
+}

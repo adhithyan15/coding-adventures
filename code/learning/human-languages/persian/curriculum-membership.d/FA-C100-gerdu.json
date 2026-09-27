@@ -1,0 +1,11 @@
+{
+  "id": "FA-C100-gerdu",
+  "pathSegment": "FA-PATH-100-THINGS100",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-100-THINGS100",
+      "order": 4
+    }
+  ]
+}

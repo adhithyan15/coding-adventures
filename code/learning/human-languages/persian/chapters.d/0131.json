@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Popular, To pay, To learn, To jump, To fall",
+  "label": "ch:fa-popular-to-pay-to-learn-to-jump-to-fall",
+  "canDo": "I can say popular, to pay, to learn, to jump and to fall.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C131-oftadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say popular, to pay, to learn, to jump and to fall.",
+    "assesses": [
+      "FA-LEX-C131-QUAL131-03",
+      "FA-LEX-C131-QUAL131-04",
+      "FA-LEX-C131-QUAL131-05"
+    ]
+  }
+}

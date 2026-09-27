@@ -1,0 +1,11 @@
+{
+  "id": "FA-C89-maharat",
+  "pathSegment": "FA-PATH-89-CAN89",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-89-CAN89",
+      "order": 1
+    }
+  ]
+}

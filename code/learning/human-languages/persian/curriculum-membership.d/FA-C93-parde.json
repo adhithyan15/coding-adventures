@@ -1,0 +1,11 @@
+{
+  "id": "FA-C93-parde",
+  "pathSegment": "FA-PATH-93-WHY93",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-93-WHY93",
+      "order": 3
+    }
+  ]
+}

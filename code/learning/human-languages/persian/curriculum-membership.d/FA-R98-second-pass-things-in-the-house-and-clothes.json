@@ -1,0 +1,11 @@
+{
+  "id": "FA-R98-second-pass-things-in-the-house-and-clothes",
+  "pathSegment": "FA-PATH-98-THINGS98",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FA-EXT-98-THINGS98",
+      "order": 6
+    }
+  ]
+}

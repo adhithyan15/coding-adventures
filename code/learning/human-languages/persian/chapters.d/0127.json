@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Bitter, Sour, Salty, Purple, Grey",
+  "label": "ch:fa-bitter-sour-salty-purple-grey",
+  "canDo": "I can say bitter, sour, salty, purple and grey.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-R127-second-pass-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say bitter, sour, salty, purple and grey.",
+    "assesses": [
+      "FA-LEX-C127-QUAL127-03",
+      "FA-LEX-C127-QUAL127-04",
+      "FA-LEX-C127-QUAL127-05"
+    ]
+  }
+}

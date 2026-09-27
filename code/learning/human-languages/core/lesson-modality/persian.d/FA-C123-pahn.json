@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C123-pahn",
+    "language": "persian",
+    "chapter": 123,
+    "sequence": 6260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f83eb512ab4bf9e8"
+  },
+  "findings": []
+}

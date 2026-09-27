@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C79-zaman",
+    "language": "persian",
+    "chapter": 79,
+    "sequence": 3940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0bf2e602986ea8a"
+  },
+  "findings": []
+}

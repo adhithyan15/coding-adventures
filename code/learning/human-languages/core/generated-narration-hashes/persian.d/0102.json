@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:c603a88ef113de45",
+  "lessonIds": [
+    "FA-C102-zanjabil",
+    "FA-C102-felfel",
+    "FA-C102-ghahve",
+    "FA-C102-sharbat",
+    "FA-C102-dasht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch102.txt",
+  "json": "persian/narration/ch102.json",
+  "textHash": "fnv1a64:dc05f868dc7648ad",
+  "jsonHash": "fnv1a64:76d4ea648134c6fe",
+  "findings": []
+}

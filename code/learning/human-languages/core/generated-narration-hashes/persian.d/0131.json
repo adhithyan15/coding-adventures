@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:7667ff58eba966e2",
+  "lessonIds": [
+    "FA-C131-mahbub",
+    "FA-C131-pardakhtan",
+    "FA-C131-amukhtan",
+    "FA-C131-paridan",
+    "FA-C131-oftadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch131.txt",
+  "json": "persian/narration/ch131.json",
+  "textHash": "fnv1a64:b6db55936b978b42",
+  "jsonHash": "fnv1a64:786e79e683112e3c",
+  "findings": []
+}

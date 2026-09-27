@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:c978edba155bb85f",
+  "lessonIds": [
+    "FA-C91-barname",
+    "FA-C91-niyaz",
+    "FA-C91-tasmim",
+    "FA-C91-hadaf",
+    "FA-C91-khahesh"
+  ],
+  "tex": "persian/book/chapters/ch91-plan-need-decision-goal-request.tex"
+}

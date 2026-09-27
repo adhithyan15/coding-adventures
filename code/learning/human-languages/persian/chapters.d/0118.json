@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Road, Car park, Raisins, Plum, Squash",
+  "label": "ch:fa-road-car-park-raisins-plum-squash",
+  "canDo": "I can say a road, a car park, raisins, a plum and a squash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-R118-second-pass-school-work-and-getting-around",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a road, a car park, raisins, a plum and a squash.",
+    "assesses": [
+      "FA-LEX-C118-THINGS118-03",
+      "FA-LEX-C118-THINGS118-04",
+      "FA-LEX-C118-THINGS118-05"
+    ]
+  }
+}

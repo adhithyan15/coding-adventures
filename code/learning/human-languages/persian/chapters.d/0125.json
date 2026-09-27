@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Hard, Ugly, Young, Old, Lazy",
+  "label": "ch:fa-hard-ugly-young-old-lazy",
+  "canDo": "I can say hard, ugly, young, old and lazy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FA-C125-tanbal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say hard, ugly, young, old and lazy.",
+    "assesses": [
+      "FA-LEX-C125-QUAL125-03",
+      "FA-LEX-C125-QUAL125-04",
+      "FA-LEX-C125-QUAL125-05"
+    ]
+  }
+}

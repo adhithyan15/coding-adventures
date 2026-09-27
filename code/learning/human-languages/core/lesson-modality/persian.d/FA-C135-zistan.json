@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C135-zistan",
+    "language": "persian",
+    "chapter": 135,
+    "sequence": 6870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b7d39506b0a579c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "To drive, To stay, To live, To stick, To spin",
+  "label": "ch:fa-to-drive-to-stay-to-live-to-stick-to-spin",
+  "canDo": "I can say to drive, to stay, to live, to stick and to spin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R135-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say to drive, to stay, to live, to stick and to spin.",
+    "assesses": [
+      "FA-LEX-C135-ACT135-03",
+      "FA-LEX-C135-ACT135-04",
+      "FA-LEX-C135-ACT135-05"
+    ]
+  }
+}

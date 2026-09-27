@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-88-LOC88",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a library, a pharmacy, a bakery, a cinema and a museum.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C124-khoshk",
+  "pathSegment": "FA-PATH-124-QUAL124",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-124-QUAL124",
+      "order": 3
+    }
+  ]
+}

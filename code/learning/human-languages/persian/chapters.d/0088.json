@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Library, Pharmacy, Bakery, Cinema, Museum",
+  "label": "ch:fa-library-pharmacy-bakery-cinema-museum",
+  "canDo": "I can say a library, a pharmacy, a bakery, a cinema and a museum.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FA-R88-second-pass-this-and-that-and-places",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say a library, a pharmacy, a bakery, a cinema and a museum.",
+    "assesses": [
+      "FA-LEX-C88-LOC88-03",
+      "FA-LEX-C88-LOC88-04",
+      "FA-LEX-C88-LOC88-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Those, This very, That very, Such, Every",
+  "label": "ch:fa-those-this-very-that-very-such-every",
+  "canDo": "I can say those, this very, that very, such and every.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C83-har",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say those, this very, that very, such and every.",
+    "assesses": [
+      "FA-LEX-C83-DEF83-03",
+      "FA-LEX-C83-DEF83-04",
+      "FA-LEX-C83-DEF83-05"
+    ]
+  }
+}

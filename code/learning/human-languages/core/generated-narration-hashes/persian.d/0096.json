@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:1281d9ca42936fde",
+  "lessonIds": [
+    "FA-C96-yakhchal",
+    "FA-C96-kebrit",
+    "FA-C96-tup",
+    "FA-C96-badbadak",
+    "FA-C96-daman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch96.txt",
+  "json": "persian/narration/ch96.json",
+  "textHash": "fnv1a64:76afa168d45c3630",
+  "jsonHash": "fnv1a64:7641aeebc3601edf",
+  "findings": []
+}

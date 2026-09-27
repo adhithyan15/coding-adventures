@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Fridge, Matches, Ball, Kite, Skirt",
+  "label": "ch:fa-fridge-matches-ball-kite-skirt",
+  "canDo": "I can say a fridge, matches, a ball, a kite and a skirt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C96-daman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say a fridge, matches, a ball, a kite and a skirt.",
+    "assesses": [
+      "FA-LEX-C96-THINGS96-03",
+      "FA-LEX-C96-THINGS96-04",
+      "FA-LEX-C96-THINGS96-05"
+    ]
+  }
+}

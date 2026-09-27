@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "Hammer, Scissors, Needle, Thread, Soap",
+  "label": "ch:fa-hammer-scissors-needle-thread-soap",
+  "canDo": "I can say a hammer, scissors, a needle, thread and soap.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C94-sabun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can say a hammer, scissors, a needle, thread and soap.",
+    "assesses": [
+      "FA-LEX-C94-THINGS94-03",
+      "FA-LEX-C94-THINGS94-04",
+      "FA-LEX-C94-THINGS94-05"
+    ]
+  }
+}

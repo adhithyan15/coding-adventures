@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:aff6370eebbfe017",
+  "lessonIds": [
+    "FA-C91-barname",
+    "FA-C91-niyaz",
+    "FA-C91-tasmim",
+    "FA-C91-hadaf",
+    "FA-C91-khahesh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch91.txt",
+  "json": "persian/narration/ch91.json",
+  "textHash": "fnv1a64:4d77ec5a5f9de5ce",
+  "jsonHash": "fnv1a64:50be71b9139ef013",
+  "findings": []
+}

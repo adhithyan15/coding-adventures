@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Mosquito, Fly, Chin, Cheek, Elbow",
+  "label": "ch:fa-mosquito-fly-chin-cheek-elbow",
+  "canDo": "I can say a mosquito, a fly, the chin, a cheek and an elbow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C107-aranj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say a mosquito, a fly, the chin, a cheek and an elbow.",
+    "assesses": [
+      "FA-LEX-C107-THINGS107-03",
+      "FA-LEX-C107-THINGS107-04",
+      "FA-LEX-C107-THINGS107-05"
+    ]
+  }
+}

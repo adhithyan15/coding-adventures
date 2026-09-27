@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Grandchild, Taxi, Metro, Ship, Aeroplane",
+  "label": "ch:fa-grandchild-taxi-metro-ship-aeroplane",
+  "canDo": "I can say a grandchild, a taxi, the metro, a ship and an aeroplane.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C117-havapeyma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a grandchild, a taxi, the metro, a ship and an aeroplane.",
+    "assesses": [
+      "FA-LEX-C117-THINGS117-03",
+      "FA-LEX-C117-THINGS117-04",
+      "FA-LEX-C117-THINGS117-05"
+    ]
+  }
+}

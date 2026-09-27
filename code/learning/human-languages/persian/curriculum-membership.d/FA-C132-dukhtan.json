@@ -1,0 +1,11 @@
+{
+  "id": "FA-C132-dukhtan",
+  "pathSegment": "FA-PATH-132-ACT132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-132-ACT132",
+      "order": 1
+    }
+  ]
+}

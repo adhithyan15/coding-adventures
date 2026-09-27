@@ -1,0 +1,11 @@
+{
+  "id": "FA-C96-tup",
+  "pathSegment": "FA-PATH-96-THINGS96",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-96-THINGS96",
+      "order": 2
+    }
+  ]
+}

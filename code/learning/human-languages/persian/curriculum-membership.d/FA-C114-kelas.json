@@ -1,0 +1,11 @@
+{
+  "id": "FA-C114-kelas",
+  "pathSegment": "FA-PATH-114-THINGS114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-114-THINGS114",
+      "order": 2
+    }
+  ]
+}

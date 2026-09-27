@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Farmer, Driver, Shopkeeper, Baker, Small child",
+  "label": "ch:fa-farmer-driver-shopkeeper-baker-small-child",
+  "canDo": "I can say a farmer, a driver, a shopkeeper, a baker and a small child.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C116-kudak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a farmer, a driver, a shopkeeper, a baker and a small child.",
+    "assesses": [
+      "FA-LEX-C116-THINGS116-03",
+      "FA-LEX-C116-THINGS116-04",
+      "FA-LEX-C116-THINGS116-05"
+    ]
+  }
+}

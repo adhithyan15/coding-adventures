@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C123-rish",
+    "language": "persian",
+    "chapter": 123,
+    "sequence": 6230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec0a78da7405a11e"
+  },
+  "findings": []
+}

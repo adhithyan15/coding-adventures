@@ -1,0 +1,11 @@
+{
+  "id": "FA-C106-kabutar",
+  "pathSegment": "FA-PATH-106-THINGS106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-106-THINGS106",
+      "order": 1
+    }
+  ]
+}

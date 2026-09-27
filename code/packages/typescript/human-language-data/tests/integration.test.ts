@@ -234,7 +234,10 @@ describe("real curriculum", () => {
       // never written -- eighteen letters in chapters 22-26, each from its word.
       // 26 -> 78: the pre-A1 vocabulary tranche, fifty-two chapters of five
       // words in three runs, each run closed by two reviews.
-    ).toEqual(Array.from({ length: 78 }, (_, i) => i + 1));
+      // 78 -> 135: the A1 tranche, fifty-seven chapters of five words in six
+      // runs (time, this and that, places, can, want, why, things, describing
+      // words and verbs), each run closed by two reviews.
+    ).toEqual(Array.from({ length: 135 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")

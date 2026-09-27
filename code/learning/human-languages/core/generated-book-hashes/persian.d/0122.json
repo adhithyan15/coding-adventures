@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:8eb82b79f78b0548",
+  "lessonIds": [
+    "FA-C122-nahang",
+    "FA-C122-delfin",
+    "FA-C122-kuse",
+    "FA-C122-sanjab",
+    "FA-C122-khofash"
+  ],
+  "tex": "persian/book/chapters/ch122-whale-dolphin-shark-squirrel-bat.tex"
+}

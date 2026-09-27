@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:01ac25c973959ee6",
+  "lessonIds": [
+    "FA-C126-zerang",
+    "FA-C126-tarsu",
+    "FA-C126-mashhur",
+    "FA-C126-khatarnak",
+    "FA-C126-amn"
+  ],
+  "tex": "persian/book/chapters/ch126-clever-timid-famous-dangerous-safe.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R98-second-pass-things-in-the-house-and-clothes",
+    "language": "persian",
+    "chapter": 98,
+    "sequence": 4940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af2693e59eea14ca"
+  },
+  "findings": []
+}

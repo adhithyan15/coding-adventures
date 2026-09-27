@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C134-chashidan",
+    "language": "persian",
+    "chapter": 134,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e124b28ed1f0c0b"
+  },
+  "findings": []
+}

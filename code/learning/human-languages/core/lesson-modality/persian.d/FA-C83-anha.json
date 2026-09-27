@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C83-anha",
+    "language": "persian",
+    "chapter": 83,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d5a3be0d2364c68"
+  },
+  "findings": []
+}

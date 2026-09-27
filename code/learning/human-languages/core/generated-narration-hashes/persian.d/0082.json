@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:f05cea44ded223f9",
+  "lessonIds": [
+    "FA-C82-aknun",
+    "FA-C82-hargez",
+    "FA-C82-in",
+    "FA-C82-an",
+    "FA-C82-inha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch82.txt",
+  "json": "persian/narration/ch82.json",
+  "textHash": "fnv1a64:b0f1acea096f2aed",
+  "jsonHash": "fnv1a64:a9b82c85516b7392",
+  "findings": []
+}

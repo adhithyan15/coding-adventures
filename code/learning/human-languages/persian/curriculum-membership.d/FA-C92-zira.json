@@ -1,0 +1,11 @@
+{
+  "id": "FA-C92-zira",
+  "pathSegment": "FA-PATH-92-WHY92",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-92-WHY92",
+      "order": 1
+    }
+  ]
+}

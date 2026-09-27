@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-90-CAN90",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "FA-EXT-90-CAN90"
+  ],
+  "after": []
+}

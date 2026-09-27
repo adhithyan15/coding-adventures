@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:8c11045ea5d35337",
+  "lessonIds": [
+    "FA-C87-kuche",
+    "FA-C87-meydan",
+    "FA-C87-park",
+    "FA-C87-sahel",
+    "FA-C87-kelisa"
+  ],
+  "tex": "persian/book/chapters/ch87-lane-square-park-coast-church.tex"
+}

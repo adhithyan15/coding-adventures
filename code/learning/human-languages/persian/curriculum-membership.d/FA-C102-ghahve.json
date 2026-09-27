@@ -1,0 +1,11 @@
+{
+  "id": "FA-C102-ghahve",
+  "pathSegment": "FA-PATH-102-THINGS102",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-102-THINGS102",
+      "order": 2
+    }
+  ]
+}

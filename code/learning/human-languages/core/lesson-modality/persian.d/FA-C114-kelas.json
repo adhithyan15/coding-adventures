@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C114-kelas",
+    "language": "persian",
+    "chapter": 114,
+    "sequence": 5760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e199d4a458c0429e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C123-deraz",
+    "language": "persian",
+    "chapter": 123,
+    "sequence": 6250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a8581781547bc0d"
+  },
+  "findings": []
+}

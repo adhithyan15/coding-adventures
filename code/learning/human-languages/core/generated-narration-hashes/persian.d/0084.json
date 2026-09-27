@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:bb3011a3a0f97848",
+  "lessonIds": [
+    "FA-C84-hame",
+    "FA-C84-kasi",
+    "FA-C84-chizi",
+    "FA-C84-hich",
+    "FA-C84-khod"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch84.txt",
+  "json": "persian/narration/ch84.json",
+  "textHash": "fnv1a64:70901d20d2e15575",
+  "jsonHash": "fnv1a64:55e4f66d4d4a8da8",
+  "findings": []
+}

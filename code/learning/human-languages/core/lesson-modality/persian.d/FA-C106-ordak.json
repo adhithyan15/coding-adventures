@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C106-ordak",
+    "language": "persian",
+    "chapter": 106,
+    "sequence": 5340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52e6415a6a9878e0"
+  },
+  "findings": []
+}

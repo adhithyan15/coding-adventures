@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:949d32d41baf19bd",
+  "lessonIds": [
+    "FA-C95-hule",
+    "FA-C95-fenjan",
+    "FA-C95-dig",
+    "FA-C95-mahitabe",
+    "FA-C95-ojagh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch95.txt",
+  "json": "persian/narration/ch95.json",
+  "textHash": "fnv1a64:c2507ec0d11c5fb2",
+  "jsonHash": "fnv1a64:042d76b9e349a8dd",
+  "findings": []
+}
