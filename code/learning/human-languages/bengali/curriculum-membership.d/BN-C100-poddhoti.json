@@ -1,0 +1,11 @@
+{
+  "id": "BN-C100-poddhoti",
+  "pathSegment": "BN-PATH-100-CAN100",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-100-CAN100",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C105-bhaja",
+    "language": "bengali",
+    "chapter": 105,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42a46832dedb04b9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C100-jontro",
+    "language": "bengali",
+    "chapter": 100,
+    "sequence": 5320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f2e9bbfb86cefd4"
+  },
+  "findings": []
+}

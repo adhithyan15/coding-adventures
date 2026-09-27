@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:44589011e9faeea3",
+  "lessonIds": [
+    "BN-C96-ichchha",
+    "BN-C96-asha",
+    "BN-C96-shopno",
+    "BN-C96-dorkar",
+    "BN-C96-proyojon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch96.txt",
+  "json": "bengali/narration/ch96.json",
+  "textHash": "fnv1a64:2227225bc7be33d1",
+  "jsonHash": "fnv1a64:f7b2e7b10536c27f",
+  "findings": []
+}

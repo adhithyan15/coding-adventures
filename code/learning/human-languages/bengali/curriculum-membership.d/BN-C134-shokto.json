@@ -1,0 +1,11 @@
+{
+  "id": "BN-C134-shokto",
+  "pathSegment": "BN-PATH-134-QUAL134",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-134-QUAL134",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:77795bce7c7263cc",
+  "lessonIds": [
+    "BN-C129-mosjid",
+    "BN-C129-girja",
+    "BN-C129-pensil",
+    "BN-C129-robar",
+    "BN-C129-byag",
+    "BN-R129-first-pass-fruit-vegetables-and-food",
+    "BN-R129-second-pass-clothes-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch129.txt",
+  "json": "bengali/narration/ch129.json",
+  "textHash": "fnv1a64:ee6dfd9d792b4a1c",
+  "jsonHash": "fnv1a64:6995e102a8803703",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C106-tepa",
+  "pathSegment": "BN-PATH-106-ACT106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-106-ACT106",
+      "order": 1
+    }
+  ]
+}

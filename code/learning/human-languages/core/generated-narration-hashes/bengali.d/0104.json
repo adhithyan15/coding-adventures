@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:6b2a50bc00f70059",
+  "lessonIds": [
+    "BN-C104-mapa",
+    "BN-C104-darano",
+    "BN-C104-shoya",
+    "BN-C104-bondho",
+    "BN-C104-mochha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch104.txt",
+  "json": "bengali/narration/ch104.json",
+  "textHash": "fnv1a64:9bed810d70629bec",
+  "jsonHash": "fnv1a64:680bbe8e99c7ef6e",
+  "findings": []
+}

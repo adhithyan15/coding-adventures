@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Wet, Dry, Full, Fast, Slow",
+  "label": "ch:bn-wet-dry-full-fast-slow",
+  "canDo": "I can say wet, dry, full, fast and slow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C135-dhir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say wet, dry, full, fast and slow.",
+    "assesses": [
+      "BN-LEX-C135-QUAL135-03",
+      "BN-LEX-C135-QUAL135-04",
+      "BN-LEX-C135-QUAL135-05"
+    ]
+  }
+}

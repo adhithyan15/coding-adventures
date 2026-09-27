@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C96-dorkar",
+    "language": "bengali",
+    "chapter": 96,
+    "sequence": 5030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8826b9e74adf17c7"
+  },
+  "findings": []
+}

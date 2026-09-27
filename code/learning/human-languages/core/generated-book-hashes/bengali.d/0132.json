@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:777ed161172f4e05",
+  "lessonIds": [
+    "BN-C132-phon",
+    "BN-C132-rediyo",
+    "BN-C132-alo",
+    "BN-C132-khat",
+    "BN-C132-toshok"
+  ],
+  "tex": "bengali/book/chapters/ch132-phone-radio-light-bed-mattress.tex"
+}

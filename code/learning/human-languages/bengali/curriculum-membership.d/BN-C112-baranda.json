@@ -1,0 +1,11 @@
+{
+  "id": "BN-C112-baranda",
+  "pathSegment": "BN-PATH-112-THINGS112",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-112-THINGS112",
+      "order": 3
+    }
+  ]
+}

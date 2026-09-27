@@ -1,0 +1,11 @@
+{
+  "id": "BN-C93-sekend",
+  "pathSegment": "BN-PATH-93-TIME93",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-93-TIME93",
+      "order": 2
+    }
+  ]
+}

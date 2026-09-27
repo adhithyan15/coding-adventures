@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Spring, Late autumn, Second, Beginning, Nowadays",
+  "label": "ch:bn-spring-late-autumn-second-beginning-nowadays",
+  "canDo": "I can say spring, late autumn, a second, the beginning and nowadays.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "BN-C93-ajkal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say spring, late autumn, a second, the beginning and nowadays.",
+    "assesses": [
+      "BN-LEX-C93-TIME93-03",
+      "BN-LEX-C93-TIME93-04",
+      "BN-LEX-C93-TIME93-05"
+    ]
+  }
+}

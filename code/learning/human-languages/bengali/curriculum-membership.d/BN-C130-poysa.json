@@ -1,0 +1,11 @@
+{
+  "id": "BN-C130-poysa",
+  "pathSegment": "BN-PATH-130-THINGS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-130-THINGS130",
+      "order": 1
+    }
+  ]
+}

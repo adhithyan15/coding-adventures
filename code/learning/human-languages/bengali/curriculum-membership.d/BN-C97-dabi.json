@@ -1,0 +1,11 @@
+{
+  "id": "BN-C97-dabi",
+  "pathSegment": "BN-PATH-97-WANT97",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-97-WANT97",
+      "order": 4
+    }
+  ]
+}

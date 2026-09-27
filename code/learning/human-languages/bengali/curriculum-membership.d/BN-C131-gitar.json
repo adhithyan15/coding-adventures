@@ -1,0 +1,11 @@
+{
+  "id": "BN-C131-gitar",
+  "pathSegment": "BN-PATH-131-THINGS131",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-131-THINGS131",
+      "order": 3
+    }
+  ]
+}

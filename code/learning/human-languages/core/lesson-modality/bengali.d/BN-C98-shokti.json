@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C98-shokti",
+    "language": "bengali",
+    "chapter": 98,
+    "sequence": 5110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c072c77f6bdf9031"
+  },
+  "findings": []
+}

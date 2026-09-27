@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C124-bhuru",
+    "language": "bengali",
+    "chapter": 124,
+    "sequence": 6730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c00c0ef01ffbbc7"
+  },
+  "findings": []
+}

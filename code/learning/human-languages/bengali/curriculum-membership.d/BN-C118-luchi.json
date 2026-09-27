@@ -1,0 +1,11 @@
+{
+  "id": "BN-C118-luchi",
+  "pathSegment": "BN-PATH-118-THINGS118",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-118-THINGS118",
+      "order": 2
+    }
+  ]
+}

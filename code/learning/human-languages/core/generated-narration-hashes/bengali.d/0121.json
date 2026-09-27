@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:3d53052324f47103",
+  "lessonIds": [
+    "BN-C121-pyacha",
+    "BN-C121-tiya",
+    "BN-C121-kobutor",
+    "BN-C121-chorui",
+    "BN-C121-bok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch121.txt",
+  "json": "bengali/narration/ch121.json",
+  "textHash": "fnv1a64:24ad3910f673205b",
+  "jsonHash": "fnv1a64:baf84b4f0720014c",
+  "findings": []
+}

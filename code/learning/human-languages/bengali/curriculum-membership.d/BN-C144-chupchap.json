@@ -1,0 +1,11 @@
+{
+  "id": "BN-C144-chupchap",
+  "pathSegment": "BN-PATH-144-QUAL144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-144-QUAL144",
+      "order": 2
+    }
+  ]
+}

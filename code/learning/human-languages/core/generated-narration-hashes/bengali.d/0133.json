@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:12c51fb5e42a92cf",
+  "lessonIds": [
+    "BN-C133-moshari",
+    "BN-C133-kombol",
+    "BN-C133-porda",
+    "BN-C133-phuldani",
+    "BN-C133-kap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch133.txt",
+  "json": "bengali/narration/ch133.json",
+  "textHash": "fnv1a64:f656ad63fe909a61",
+  "jsonHash": "fnv1a64:c52dfdaa30214278",
+  "findings": []
+}

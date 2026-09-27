@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Comb, Soap, Thin towel, Needle, Thread",
+  "label": "ch:bn-comb-soap-thin-towel-needle-thread",
+  "canDo": "I can say a comb, soap, a thin towel, a needle and thread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-R109-second-pass-things-in-the-kitchen-and-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a comb, soap, a thin towel, a needle and thread.",
+    "assesses": [
+      "BN-LEX-C109-THINGS109-03",
+      "BN-LEX-C109-THINGS109-04",
+      "BN-LEX-C109-THINGS109-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:d3c356c3adfb14ef",
+  "lessonIds": [
+    "BN-C128-maine",
+    "BN-C128-bondor",
+    "BN-C128-jahaj",
+    "BN-C128-tren",
+    "BN-C128-tikit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch128.txt",
+  "json": "bengali/narration/ch128.json",
+  "textHash": "fnv1a64:35348313f1d4087e",
+  "jsonHash": "fnv1a64:60a57f699b105106",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:1a7e6b86c8e86dd3",
+  "lessonIds": [
+    "BN-C119-sorbot",
+    "BN-C119-halua",
+    "BN-C119-biskut",
+    "BN-C119-dhuti",
+    "BN-C119-panjabi",
+    "BN-R119-first-pass-things-in-the-house",
+    "BN-R119-second-pass-nature-and-food"
+  ],
+  "tex": "bengali/book/chapters/ch119-sherbet-halwa-biscuit-dhoti-long-shirt.tex"
+}

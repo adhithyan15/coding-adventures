@@ -1,0 +1,11 @@
+{
+  "id": "BN-C115-amgachh",
+  "pathSegment": "BN-PATH-115-THINGS115",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-115-THINGS115",
+      "order": 1
+    }
+  ]
+}

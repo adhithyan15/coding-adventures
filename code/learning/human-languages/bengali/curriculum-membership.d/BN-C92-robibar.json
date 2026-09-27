@@ -1,0 +1,11 @@
+{
+  "id": "BN-C92-robibar",
+  "pathSegment": "BN-PATH-92-TIME92",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-92-TIME92",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C132-khat",
+  "pathSegment": "BN-PATH-132-THINGS132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-132-THINGS132",
+      "order": 3
+    }
+  ]
+}

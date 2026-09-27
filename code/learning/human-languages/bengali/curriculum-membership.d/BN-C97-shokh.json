@@ -1,0 +1,11 @@
+{
+  "id": "BN-C97-shokh",
+  "pathSegment": "BN-PATH-97-WANT97",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-97-WANT97",
+      "order": 2
+    }
+  ]
+}

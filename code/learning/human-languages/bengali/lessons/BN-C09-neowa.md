@@ -9,7 +9,7 @@ headword: নেওয়া
 romanization: neowā
 gloss: to take — and the verb that finishes other verbs
 concept_tag: VERB-TAKE
-prerequisites: [BN-C08-lekha, BN-C06-numbers-1-5, BN-C07-howa]
+prerequisites: [BN-C08-lekha, BN-C06-numbers-1-5, BN-C07-howa, BN-C06-numbers-1-5-dui]
 sounds: [wa-ending, long-e]
 roots: [ni-lead]
 etymology_hook: "নেওয়া is Sanskrit √nī 'to lead, to carry away' — a root with no living English descendant, which is said plainly rather than papered over; its working life in Bengali is as the verb that ends a compound, so লিখে নেওয়া is 'write it down' and নিয়ে আসা is 'bring'"

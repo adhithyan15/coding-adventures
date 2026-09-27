@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:1ee3f79fca1c23bc",
+  "lessonIds": [
+    "BN-C123-beral",
+    "BN-C123-konui",
+    "BN-C123-buk",
+    "BN-C123-komor",
+    "BN-C123-gorali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch123.txt",
+  "json": "bengali/narration/ch123.json",
+  "textHash": "fnv1a64:863d6f8fed4a27f4",
+  "jsonHash": "fnv1a64:fafd3ae85b821f04",
+  "findings": []
+}

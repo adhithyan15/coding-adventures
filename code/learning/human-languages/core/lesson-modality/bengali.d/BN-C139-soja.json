@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C139-soja",
+    "language": "bengali",
+    "chapter": 139,
+    "sequence": 7680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:110e05bcc5878d4f"
+  },
+  "findings": []
+}

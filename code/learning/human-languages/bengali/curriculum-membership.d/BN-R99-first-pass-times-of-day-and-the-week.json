@@ -1,0 +1,11 @@
+{
+  "id": "BN-R99-first-pass-times-of-day-and-the-week",
+  "pathSegment": "BN-PATH-99-CAN99",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "BN-EXT-99-CAN99",
+      "order": 5
+    }
+  ]
+}

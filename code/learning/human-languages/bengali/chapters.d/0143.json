@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Powerful, Tasty, Fairly big, Small, Cheerful",
+  "label": "ch:bn-powerful-tasty-fairly-big-small-cheerful",
+  "canDo": "I can say powerful, tasty, fairly big, small and cheerful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C143-hasikhushi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say powerful, tasty, fairly big, small and cheerful.",
+    "assesses": [
+      "BN-LEX-C143-QUAL143-03",
+      "BN-LEX-C143-QUAL143-04",
+      "BN-LEX-C143-QUAL143-05"
+    ]
+  }
+}

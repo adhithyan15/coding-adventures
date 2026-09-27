@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C122-tiktiki",
+    "language": "bengali",
+    "chapter": 122,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:561659dfb143320f"
+  },
+  "findings": []
+}

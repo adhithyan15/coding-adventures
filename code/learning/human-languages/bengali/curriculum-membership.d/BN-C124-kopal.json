@@ -1,0 +1,11 @@
+{
+  "id": "BN-C124-kopal",
+  "pathSegment": "BN-PATH-124-THINGS124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-124-THINGS124",
+      "order": 2
+    }
+  ]
+}

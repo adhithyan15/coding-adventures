@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C117-chal",
+    "language": "bengali",
+    "chapter": 117,
+    "sequence": 6290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76702ad2c08c2f8f"
+  },
+  "findings": []
+}

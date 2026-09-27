@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:62c14140fefb4346",
+  "lessonIds": [
+    "BN-C118-rosogolla",
+    "BN-C118-payes",
+    "BN-C118-luchi",
+    "BN-C118-muri",
+    "BN-C118-kophi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch118.txt",
+  "json": "bengali/narration/ch118.json",
+  "textHash": "fnv1a64:215994466379ee74",
+  "jsonHash": "fnv1a64:b1e3f9960e44da93",
+  "findings": []
+}

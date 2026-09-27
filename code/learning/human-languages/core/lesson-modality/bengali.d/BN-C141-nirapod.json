@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C141-nirapod",
+    "language": "bengali",
+    "chapter": 141,
+    "sequence": 7790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b43e852ff82e71df"
+  },
+  "findings": []
+}

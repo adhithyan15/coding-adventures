@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:bca04d7b34e8cebf",
+  "lessonIds": [
+    "BN-C119-sorbot",
+    "BN-C119-halua",
+    "BN-C119-biskut",
+    "BN-C119-dhuti",
+    "BN-C119-panjabi",
+    "BN-R119-first-pass-things-in-the-house",
+    "BN-R119-second-pass-nature-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch119.txt",
+  "json": "bengali/narration/ch119.json",
+  "textHash": "fnv1a64:bf56d9b6b0e21913",
+  "jsonHash": "fnv1a64:1318c03468df3a51",
+  "findings": []
+}

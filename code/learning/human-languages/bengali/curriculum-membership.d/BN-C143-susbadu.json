@@ -1,0 +1,11 @@
+{
+  "id": "BN-C143-susbadu",
+  "pathSegment": "BN-PATH-143-QUAL143",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-143-QUAL143",
+      "order": 1
+    }
+  ]
+}

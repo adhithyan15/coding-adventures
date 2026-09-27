@@ -1,0 +1,11 @@
+{
+  "id": "BN-C109-gamchha",
+  "pathSegment": "BN-PATH-109-THINGS109",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-109-THINGS109",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:2310d3e86582451b",
+  "lessonIds": [
+    "BN-C130-manibyag",
+    "BN-C130-poysa",
+    "BN-C130-kham",
+    "BN-C130-daktikit",
+    "BN-C130-putul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch130.txt",
+  "json": "bengali/narration/ch130.json",
+  "textHash": "fnv1a64:b6c54376079bfab0",
+  "jsonHash": "fnv1a64:7417474239109a24",
+  "findings": []
+}

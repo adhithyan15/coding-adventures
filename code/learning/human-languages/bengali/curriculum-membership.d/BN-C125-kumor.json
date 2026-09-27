@@ -1,0 +1,11 @@
+{
+  "id": "BN-C125-kumor",
+  "pathSegment": "BN-PATH-125-THINGS125",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-125-THINGS125",
+      "order": 3
+    }
+  ]
+}

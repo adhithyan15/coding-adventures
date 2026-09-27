@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:ff9db2d3d2b25bee",
+  "lessonIds": [
+    "BN-C112-bakso",
+    "BN-C112-tak",
+    "BN-C112-deoyal",
+    "BN-C112-baranda",
+    "BN-C112-bagan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch112.txt",
+  "json": "bengali/narration/ch112.json",
+  "textHash": "fnv1a64:c358d265d99d4884",
+  "jsonHash": "fnv1a64:6fc8b77237111832",
+  "findings": []
+}

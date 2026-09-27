@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:6e6ab8e3c85f9cea",
+  "lessonIds": [
+    "BN-C138-byasto",
+    "BN-C138-chalak",
+    "BN-C138-boka",
+    "BN-C138-doyalu",
+    "BN-C138-sahosi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch138.txt",
+  "json": "bengali/narration/ch138.json",
+  "textHash": "fnv1a64:72d34bc68531f8dd",
+  "jsonHash": "fnv1a64:0fa62ce8b81279ee",
+  "findings": []
+}

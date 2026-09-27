@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C136-beguni",
+    "language": "bengali",
+    "chapter": 136,
+    "sequence": 7440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc65de5728f2063e"
+  },
+  "findings": []
+}

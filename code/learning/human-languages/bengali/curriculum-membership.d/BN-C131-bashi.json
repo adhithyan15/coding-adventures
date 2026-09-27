@@ -1,0 +1,11 @@
+{
+  "id": "BN-C131-bashi",
+  "pathSegment": "BN-PATH-131-THINGS131",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-131-THINGS131",
+      "order": 1
+    }
+  ]
+}

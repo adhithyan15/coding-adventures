@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:08bb50cfea89376b",
+  "lessonIds": [
+    "BN-C106-chhora",
+    "BN-C106-tepa",
+    "BN-C106-aka",
+    "BN-C106-phera",
+    "BN-C106-chalano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch106.txt",
+  "json": "bengali/narration/ch106.json",
+  "textHash": "fnv1a64:2f9e9dccd2ed9449",
+  "jsonHash": "fnv1a64:d80c64022fcc27fa",
+  "findings": []
+}

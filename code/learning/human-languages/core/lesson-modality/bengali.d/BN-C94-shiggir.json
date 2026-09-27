@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C94-shiggir",
+    "language": "bengali",
+    "chapter": 94,
+    "sequence": 4940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c66f1c3c973187f7"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:22fde9b25f41acf6",
+  "lessonIds": [
+    "BN-C125-chamra",
+    "BN-C125-jele",
+    "BN-C125-kamar",
+    "BN-C125-kumor",
+    "BN-C125-tati"
+  ],
+  "tex": "bengali/book/chapters/ch125-skin-fisherman-blacksmith-potter-weaver.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C120-shiyal",
+    "language": "bengali",
+    "chapter": 120,
+    "sequence": 6530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:415e7c52fc041c14"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Fly, Mosquito, Earthworm, Gecko, Turtle",
+  "label": "ch:bn-fly-mosquito-earthworm-gecko-turtle",
+  "canDo": "I can say a fly, a mosquito, an earthworm, a gecko and a turtle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C122-kochchhop",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a fly, a mosquito, an earthworm, a gecko and a turtle.",
+    "assesses": [
+      "BN-LEX-C122-THINGS122-03",
+      "BN-LEX-C122-THINGS122-04",
+      "BN-LEX-C122-THINGS122-05"
+    ]
+  }
+}

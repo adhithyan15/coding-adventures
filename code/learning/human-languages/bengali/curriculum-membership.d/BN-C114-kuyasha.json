@@ -1,0 +1,11 @@
+{
+  "id": "BN-C114-kuyasha",
+  "pathSegment": "BN-PATH-114-THINGS114",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "BN-EXT-114-THINGS114",
+      "order": 0
+    }
+  ]
+}

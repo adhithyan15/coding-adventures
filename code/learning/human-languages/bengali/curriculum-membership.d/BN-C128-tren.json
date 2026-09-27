@@ -1,0 +1,11 @@
+{
+  "id": "BN-C128-tren",
+  "pathSegment": "BN-PATH-128-THINGS128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-128-THINGS128",
+      "order": 3
+    }
+  ]
+}
