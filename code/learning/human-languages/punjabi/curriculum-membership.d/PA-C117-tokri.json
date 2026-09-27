@@ -1,0 +1,11 @@
+{
+  "id": "PA-C117-tokri",
+  "pathSegment": "PA-PATH-117-THINGS117",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-117-THINGS117",
+      "order": 1
+    }
+  ]
+}

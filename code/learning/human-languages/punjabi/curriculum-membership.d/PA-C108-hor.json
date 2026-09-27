@@ -1,0 +1,11 @@
+{
+  "id": "PA-C108-hor",
+  "pathSegment": "PA-PATH-108-DEF108",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-108-DEF108",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C136-addi",
+    "language": "punjabi",
+    "chapter": 136,
+    "sequence": 7380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d03916240fe87470"
+  },
+  "findings": []
+}

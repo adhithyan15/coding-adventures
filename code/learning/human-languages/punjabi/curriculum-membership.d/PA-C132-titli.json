@@ -1,0 +1,11 @@
+{
+  "id": "PA-C132-titli",
+  "pathSegment": "PA-PATH-132-THINGS132",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-132-THINGS132",
+      "order": 2
+    }
+  ]
+}

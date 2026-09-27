@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:c198124e893ead1f",
+  "lessonIds": [
+    "PA-C117-kura",
+    "PA-C117-tokri",
+    "PA-C117-dabba",
+    "PA-C117-ghara",
+    "PA-C117-mombatti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch117.txt",
+  "json": "punjabi/narration/ch117.json",
+  "textHash": "fnv1a64:6d3c65feb844a50f",
+  "jsonHash": "fnv1a64:fcae2e2a3e3011cd",
+  "findings": []
+}

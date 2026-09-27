@@ -1,0 +1,11 @@
+{
+  "id": "PA-C117-dabba",
+  "pathSegment": "PA-PATH-117-THINGS117",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-117-THINGS117",
+      "order": 2
+    }
+  ]
+}

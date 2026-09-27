@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Halwa, Spice, Turmeric, Cumin, Fritter",
+  "label": "ch:pa-halwa-spice-turmeric-cumin-fritter",
+  "canDo": "I can say halwa, spice, turmeric, cumin and a fritter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-R125-second-pass-clothes-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say halwa, spice, turmeric, cumin and a fritter.",
+    "assesses": [
+      "PA-LEX-C125-THINGS125-03",
+      "PA-LEX-C125-THINGS125-04",
+      "PA-LEX-C125-THINGS125-05"
+    ]
+  }
+}

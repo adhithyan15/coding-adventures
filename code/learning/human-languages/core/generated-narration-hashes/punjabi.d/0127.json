@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:df27aa027a97a2dc",
+  "lessonIds": [
+    "PA-C127-kinara",
+    "PA-C127-jharna",
+    "PA-C127-gufa",
+    "PA-C127-vadi",
+    "PA-C127-tibba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch127.txt",
+  "json": "punjabi/narration/ch127.json",
+  "textHash": "fnv1a64:0b4a9695ec92f050",
+  "jsonHash": "fnv1a64:bb5a8b6f75e7c7a7",
+  "findings": []
+}

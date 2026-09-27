@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:b811cea72f931ac9",
+  "lessonIds": [
+    "PA-C121-vali",
+    "PA-C121-kara",
+    "PA-C121-gur",
+    "PA-C121-chole",
+    "PA-C121-mugi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch121.txt",
+  "json": "punjabi/narration/ch121.json",
+  "textHash": "fnv1a64:93887c71505f794c",
+  "jsonHash": "fnv1a64:90722a46bc74a58c",
+  "findings": []
+}

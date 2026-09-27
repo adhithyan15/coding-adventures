@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C142-caura",
+    "language": "punjabi",
+    "chapter": 142,
+    "sequence": 7670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adde60545b398739"
+  },
+  "findings": []
+}

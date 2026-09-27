@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:533ca5f1507619d1",
+  "lessonIds": [
+    "PA-C131-battakh",
+    "PA-C131-kirli",
+    "PA-C131-kacchu",
+    "PA-C131-magarmacch",
+    "PA-C131-macchar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch131.txt",
+  "json": "punjabi/narration/ch131.json",
+  "textHash": "fnv1a64:9ecac5850684582b",
+  "jsonHash": "fnv1a64:a90babae222e2512",
+  "findings": []
+}

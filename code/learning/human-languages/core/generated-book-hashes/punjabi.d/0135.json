@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:346cd65a3a7d798b",
+  "lessonIds": [
+    "PA-C135-gardan",
+    "PA-C135-chati",
+    "PA-C135-pitth",
+    "PA-C135-lakk",
+    "PA-C135-kuhni"
+  ],
+  "tex": "punjabi/book/chapters/ch135-neck-chest-back-waist-elbow.tex"
+}

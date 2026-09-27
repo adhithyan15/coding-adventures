@@ -9,7 +9,7 @@ headword: ਕੰਨ
 romanization: kann
 gloss: ear — a word that looks like it hides "to do" inside it, and does not
 concept_tag: PA-BODY-EAR
-prerequisites: [PA-C12-akkh, PA-S10-addak-dhadda]
+prerequisites: [PA-C12-akkh, PA-S10-addak-dhadda, PA-C06-numbers-1-5-more]
 sounds: [tippi-nasal, addak-doubling]
 roots: [sanskrit-karna]
 etymology_hook: ਕੰਨ is inherited from Apabhramsha kaṇṇa, from Prakrit kaṇṇa, from Sanskrit karṇa, "ear" — a noun whose own root beyond Sanskrit is not securely traced, and which is NOT related to karnā, "to do," despite the two words sharing every consonant.

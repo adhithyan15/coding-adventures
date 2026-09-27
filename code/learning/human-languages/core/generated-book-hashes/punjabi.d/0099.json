@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:6d3491ff77fda522",
+  "lessonIds": [
+    "PA-C99-adhirat",
+    "PA-C99-tarka",
+    "PA-C99-parso",
+    "PA-C99-garmi",
+    "PA-C99-sardi"
+  ],
+  "tex": "punjabi/book/chapters/ch99-midnight-daybreak-day-after-tomorrow-summer-winter.tex"
+}

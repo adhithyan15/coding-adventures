@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C116-jharu",
+    "language": "punjabi",
+    "chapter": 116,
+    "sequence": 6240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2c41b7e5dc010a5"
+  },
+  "findings": []
+}

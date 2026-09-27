@@ -1,0 +1,11 @@
+{
+  "id": "PA-C113-galas",
+  "pathSegment": "PA-PATH-113-THINGS113",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-113-THINGS113",
+      "order": 2
+    }
+  ]
+}

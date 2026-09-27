@@ -1,0 +1,11 @@
+{
+  "id": "PA-C148-cukkna",
+  "pathSegment": "PA-PATH-148-ACT148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-148-ACT148",
+      "order": 3
+    }
+  ]
+}

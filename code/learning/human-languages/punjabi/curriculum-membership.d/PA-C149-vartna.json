@@ -1,0 +1,11 @@
+{
+  "id": "PA-C149-vartna",
+  "pathSegment": "PA-PATH-149-ACT149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-149-ACT149",
+      "order": 3
+    }
+  ]
+}

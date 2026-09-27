@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "To say, To live, To spend, To save, To sow",
+  "label": "ch:pa-to-say-to-live-to-spend-to-save-to-sow",
+  "canDo": "I can say to say, to live, to spend, to save and to sow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C151-bijna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: i can say to say, to live, to spend, to save and to sow.",
+    "assesses": [
+      "PA-LEX-C151-ACT151-03",
+      "PA-LEX-C151-ACT151-04",
+      "PA-LEX-C151-ACT151-05"
+    ]
+  }
+}

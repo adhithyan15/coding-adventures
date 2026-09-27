@@ -9,7 +9,7 @@ headword: ਪੰਜਵਾਂ
 romanization: "panjvāṁ"
 gloss: fifth - an inherited word that came to look like a rule, and then became one
 concept_tag: PA-ORDINAL-FIFTH
-prerequisites: [PA-C44-pahila, PA-C43-kinne, PA-C40-kyunki, PA-W07-age-spacing, PA-C06-numbers-1-5]
+prerequisites: [PA-C44-pahila, PA-C43-kinne, PA-C40-kyunki, PA-W07-age-spacing, PA-C06-numbers-1-5, PA-C06-numbers-1-5-more]
 sounds: []
 roots: []
 etymology_hook: Wiktionary says two things about ਪੰਜਵਾਂ at once - inherited from Sanskrit pañcama, and "by surface analysis" ਪੰਜ plus -ਵਾਂ - which is exactly what a reanalysis looks like written down

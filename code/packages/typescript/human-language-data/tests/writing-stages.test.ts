@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { loadAssessmentPolicy, loadEverything } from "../src/loader.js";
+import {
+  loadAssessmentPolicy,
+  loadCurriculumSpine,
+  loadLanguageCurricula,
+  loadLanguageRegistry,
+  loadLessons,
+} from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import { measureWritingStages, writingStagePrerequisites } from "../src/writing-stages.js";
 import type { CurriculumSpine, LanguageCurriculum } from "../src/types.js";
@@ -50,6 +56,15 @@ function curriculum(ids: string[]): LanguageCurriculum {
   };
 }
 
+const liveRegistry = loadLanguageRegistry();
+const liveReport = measureWritingStages(
+  loadAssessmentPolicy(),
+  liveRegistry.languages.map((track) => track.id),
+  loadLessons(),
+  loadLanguageCurricula(),
+  loadCurriculumSpine(),
+);
+
 describe("cumulative writing-stage evidence (HL19)", () => {
   it("parses one explicit stage at its evidence block and removes authoring metadata from learner copy", () => {
     const lesson = stagedLesson("AA-W01", 10, "guided-copy");
@@ -93,14 +108,7 @@ Learner copy comes first.
   });
 
   it("aggregates every live track without a cross-language exact ledger", () => {
-    const { registry, lessons, curricula, spine: realSpine } = loadEverything();
-    const report = measureWritingStages(
-      loadAssessmentPolicy(),
-      registry.languages.map((track) => track.id),
-      lessons,
-      curricula,
-      realSpine,
-    );
+    const report = liveReport;
     expect(report.summary).toEqual({
       tracks: report.tracks.length,
       tracksWithAnyEvidence: report.tracks.filter((track) => track.evidence.length > 0).length,
@@ -115,7 +123,7 @@ Learner copy comes first.
         0,
       ),
     });
-    expect(report.summary.tracks).toBe(registry.languages.length);
+    expect(report.summary.tracks).toBe(liveRegistry.languages.length);
     expect(report.summary.invalidEvidenceBlocks).toBe(0);
   }, 30_000);
 
@@ -131,14 +139,7 @@ Learner copy comes first.
   // one track while regressing another leaves the count untouched.
   // ---------------------------------------------------------------------------
   it("keeps EVERY registered track proving the pre-A1 writing ladder", () => {
-    const { registry, lessons, curricula, spine: realSpine } = loadEverything();
-    const report = measureWritingStages(
-      loadAssessmentPolicy(),
-      registry.languages.map((track) => track.id),
-      lessons,
-      curricula,
-      realSpine,
-    );
+    const report = liveReport;
 
     const incomplete = report.tracks
       .filter((track) => !track.levels[0]?.complete)
@@ -161,7 +162,7 @@ Learner copy comes first.
     // point of the gate is that the corpus-wide property holds, not that some
     // number was true once.
     expect(incomplete).toEqual([]);
-    expect(report.summary.tracksCompleteAtPreA1).toBe(registry.languages.length);
+    expect(report.summary.tracksCompleteAtPreA1).toBe(liveRegistry.languages.length);
   }, 30_000);
 
   // ---------------------------------------------------------------------------
@@ -184,14 +185,7 @@ Learner copy comes first.
   // reach the top cannot quietly fall back off it.
   // ---------------------------------------------------------------------------
   it("keeps Spanish proving every writing stage at every level", () => {
-    const { registry, lessons, curricula, spine: realSpine } = loadEverything();
-    const report = measureWritingStages(
-      loadAssessmentPolicy(),
-      registry.languages.map((track) => track.id),
-      lessons,
-      curricula,
-      realSpine,
-    );
+    const report = liveReport;
     const spanish = report.tracks.find((track) => track.language === "spanish");
     expect(spanish?.levels.filter((level) => !level.complete)).toEqual([]);
     expect(spanish?.defects).toEqual([]);
@@ -206,14 +200,6 @@ Learner copy comes first.
   }, 30_000);
 
   it("never grows the remaining writing-stage debt above A1", () => {
-    const { registry, lessons, curricula, spine: realSpine } = loadEverything();
-    const report = measureWritingStages(
-      loadAssessmentPolicy(),
-      registry.languages.map((track) => track.id),
-      lessons,
-      curricula,
-      realSpine,
-    );
-    expect(report.summary.missingTrackLevelStages).toBeLessThanOrEqual(346);
+    expect(liveReport.summary.missingTrackLevelStages).toBeLessThanOrEqual(346);
   }, 30_000);
 });

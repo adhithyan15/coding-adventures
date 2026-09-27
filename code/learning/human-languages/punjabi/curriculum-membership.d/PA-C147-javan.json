@@ -1,0 +1,11 @@
+{
+  "id": "PA-C147-javan",
+  "pathSegment": "PA-PATH-147-QUAL147",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-147-QUAL147",
+      "order": 2
+    }
+  ]
+}

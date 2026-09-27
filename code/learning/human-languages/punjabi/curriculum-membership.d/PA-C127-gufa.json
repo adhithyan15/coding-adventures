@@ -1,0 +1,11 @@
+{
+  "id": "PA-C127-gufa",
+  "pathSegment": "PA-PATH-127-THINGS127",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-127-THINGS127",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:2de4e317ce2ad081",
+  "lessonIds": [
+    "PA-C126-ghah",
+    "PA-C126-bij",
+    "PA-C126-jarh",
+    "PA-C126-kali",
+    "PA-C126-tapu"
+  ],
+  "tex": "punjabi/book/chapters/ch126-grass-seed-root-bud-island.tex"
+}

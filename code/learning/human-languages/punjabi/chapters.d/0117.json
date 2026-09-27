@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Rubbish, Basket, Box, Clay water pot, Candle",
+  "label": "ch:pa-rubbish-basket-box-clay-water-pot-candle",
+  "canDo": "I can say rubbish, a basket, a box, a clay water pot and a candle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C117-mombatti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say rubbish, a basket, a box, a clay water pot and a candle.",
+    "assesses": [
+      "PA-LEX-C117-THINGS117-03",
+      "PA-LEX-C117-THINGS117-04",
+      "PA-LEX-C117-THINGS117-05"
+    ]
+  }
+}

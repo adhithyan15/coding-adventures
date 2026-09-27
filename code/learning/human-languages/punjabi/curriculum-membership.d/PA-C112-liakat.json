@@ -1,0 +1,11 @@
+{
+  "id": "PA-C112-liakat",
+  "pathSegment": "PA-PATH-112-CAN112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-112-CAN112",
+      "order": 2
+    }
+  ]
+}

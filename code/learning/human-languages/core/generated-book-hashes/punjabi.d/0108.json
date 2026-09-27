@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:d53888f5a19bba71",
+  "lessonIds": [
+    "PA-C108-inna",
+    "PA-C108-unna",
+    "PA-C108-ive",
+    "PA-C108-uve",
+    "PA-C108-hor"
+  ],
+  "tex": "punjabi/book/chapters/ch108-this-much-that-much-like-this-like-that-other.tex"
+}

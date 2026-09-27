@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C135-kuhni",
+    "language": "punjabi",
+    "chapter": 135,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91924db5ed6d29d3"
+  },
+  "findings": []
+}

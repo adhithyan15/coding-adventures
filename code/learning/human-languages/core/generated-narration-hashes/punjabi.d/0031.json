@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 31,
-  "sourceHash": "fnv1a64:94e61cd852b353a9",
+  "sourceHash": "fnv1a64:5c6cbdc3f1e177d4",
   "lessonIds": [
     "PA-C31-ji",
     "PA-C31-achchha",
@@ -13,6 +13,6 @@
   "text": "punjabi/narration/ch31.txt",
   "json": "punjabi/narration/ch31.json",
   "textHash": "fnv1a64:516a69191ac72084",
-  "jsonHash": "fnv1a64:5c716ac812e3814d",
+  "jsonHash": "fnv1a64:407473a9fe86316e",
   "findings": []
 }

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:778006ab7b1a72b8",
+  "lessonIds": [
+    "PA-C132-makkhi",
+    "PA-C132-madhumakkhi",
+    "PA-C132-titli",
+    "PA-C132-makkari",
+    "PA-C132-galhar"
+  ],
+  "tex": "punjabi/book/chapters/ch132-fly-bee-butterfly-spider-squirrel.tex"
+}

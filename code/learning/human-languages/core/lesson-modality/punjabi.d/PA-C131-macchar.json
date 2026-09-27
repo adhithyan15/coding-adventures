@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C131-macchar",
+    "language": "punjabi",
+    "chapter": 131,
+    "sequence": 7090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3497da2c259e39f"
+  },
+  "findings": []
+}

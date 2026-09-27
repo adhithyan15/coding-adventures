@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:af7d9a5c520bb44a",
+  "lessonIds": [
+    "PA-C103-aktubar",
+    "PA-C103-navambar",
+    "PA-C103-dasambar",
+    "PA-C103-cet",
+    "PA-C103-visakh"
+  ],
+  "tex": "punjabi/book/chapters/ch103-october-november-december-chet-visakh.tex"
+}

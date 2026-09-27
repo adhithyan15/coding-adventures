@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:ac4f43b2e785bab9",
+  "lessonIds": [
+    "PA-C121-vali",
+    "PA-C121-kara",
+    "PA-C121-gur",
+    "PA-C121-chole",
+    "PA-C121-mugi"
+  ],
+  "tex": "punjabi/book/chapters/ch121-earring-steel-bracelet-jaggery-chickpeas-mung-beans.tex"
+}

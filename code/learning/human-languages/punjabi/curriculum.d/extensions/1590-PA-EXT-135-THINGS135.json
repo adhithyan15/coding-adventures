@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-135-THINGS135",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a neck, a chest, a back, a waist and an elbow.",
+  "prerequisites": []
+}

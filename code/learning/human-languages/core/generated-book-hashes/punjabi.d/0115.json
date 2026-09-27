@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:11df1c4f47cd0c82",
+  "lessonIds": [
+    "PA-C115-rajai",
+    "PA-C115-cullha",
+    "PA-C115-bhada",
+    "PA-C115-kaici",
+    "PA-C115-sui"
+  ],
+  "tex": "punjabi/book/chapters/ch115-quilt-stove-vessel-scissors-needle.tex"
+}

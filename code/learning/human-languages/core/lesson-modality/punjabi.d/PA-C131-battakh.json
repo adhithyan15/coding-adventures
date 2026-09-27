@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C131-battakh",
+    "language": "punjabi",
+    "chapter": 131,
+    "sequence": 7050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9484e2427d64eae6"
+  },
+  "findings": []
+}

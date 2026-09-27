@@ -1,0 +1,11 @@
+{
+  "id": "PA-C136-dimag",
+  "pathSegment": "PA-PATH-136-THINGS136",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-136-THINGS136",
+      "order": 2
+    }
+  ]
+}

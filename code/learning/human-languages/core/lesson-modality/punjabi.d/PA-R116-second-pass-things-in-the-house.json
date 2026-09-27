@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R116-second-pass-things-in-the-house",
+    "language": "punjabi",
+    "chapter": 116,
+    "sequence": 6260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c0a1e0e9c261b13"
+  },
+  "findings": []
+}

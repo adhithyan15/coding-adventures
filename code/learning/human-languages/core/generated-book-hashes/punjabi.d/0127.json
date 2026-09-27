@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:1c474a93ab6701db",
+  "lessonIds": [
+    "PA-C127-kinara",
+    "PA-C127-jharna",
+    "PA-C127-gufa",
+    "PA-C127-vadi",
+    "PA-C127-tibba"
+  ],
+  "tex": "punjabi/book/chapters/ch127-shore-waterfall-cave-valley-sand-hill.tex"
+}

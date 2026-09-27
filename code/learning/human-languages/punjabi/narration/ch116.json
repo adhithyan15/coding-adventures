@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 116,
+  "title": "Thread, Button, Nail, Bucket, Broom",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0493d4ecbc50f4d7",
+  "lessons": [
+    {
+      "id": "PA-C116-dhaga",
+      "sequence": 6200,
+      "title": "ਧਾਗਾ (dhāgā) — a thread",
+      "headword": "ਧਾਗਾ",
+      "romanization": "dhāgā",
+      "gloss": "a thread",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3294a2075f476102",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for scissors, then the Punjabi for a needle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਧਾਗਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਧਾਗਾ — dhāgā — \"a thread\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāgā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāgā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dhāgā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dhāgā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for scissors, then the Punjabi for a needle, then say dhāgā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for scissors, then the Punjabi for a needle, then say *dhāgā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਧਾਗਾ (dhāgā) mean? (\"A thread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C116-batan",
+      "sequence": 6210,
+      "title": "ਬਟਨ (baṭan) — a button",
+      "headword": "ਬਟਨ",
+      "romanization": "baṭan",
+      "gloss": "a button",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4735c110ab640b56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a needle, then the Punjabi for a thread."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬਟਨ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਟਨ — baṭan — \"a button\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baṭan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baṭan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say baṭan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *baṭan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a needle, then the Punjabi for a thread, then say baṭan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a needle, then the Punjabi for a thread, then say *baṭan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬਟਨ (baṭan) mean? (\"A button\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C116-kill",
+      "sequence": 6220,
+      "title": "ਕਿੱਲ (kill) — a nail",
+      "headword": "ਕਿੱਲ",
+      "romanization": "kill",
+      "gloss": "a nail",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a11c6c0e63bab80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a thread, then the Punjabi for a button."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਿੱਲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿੱਲ — kill — \"a nail\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kill*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kill, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kill*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kill*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a thread, then the Punjabi for a button, then say kill again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a thread, then the Punjabi for a button, then say *kill* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਿੱਲ (kill) mean? (\"A nail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C116-balti",
+      "sequence": 6230,
+      "title": "ਬਾਲਟੀ (bālṭī) — a bucket",
+      "headword": "ਬਾਲਟੀ",
+      "romanization": "bālṭī",
+      "gloss": "a bucket",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90d7d47c362304cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a button, then the Punjabi for a nail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬਾਲਟੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਲਟੀ — bālṭī — \"a bucket\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bālṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bālṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a button, then the Punjabi for a nail, then say bālṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a button, then the Punjabi for a nail, then say *bālṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬਾਲਟੀ (bālṭī) mean? (\"A bucket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C116-jharu",
+      "sequence": 6240,
+      "title": "ਝਾੜੂ (jhāṛū) — a broom",
+      "headword": "ਝਾੜੂ",
+      "romanization": "jhāṛū",
+      "gloss": "a broom",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2c41b7e5dc010a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a nail, then the Punjabi for a bucket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਝਾੜੂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਝਾੜੂ — jhāṛū — \"a broom\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāṛū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāṛū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāṛū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāṛū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jhāṛū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jhāṛū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a nail, then the Punjabi for a bucket, then say jhāṛū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a nail, then the Punjabi for a bucket, then say *jhāṛū* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਝਾੜੂ (jhāṛū) mean? (\"A broom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R116-first-pass-owning-and-being-able",
+      "sequence": 6250,
+      "title": "Owning and being able — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 108-111",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbd4c922de8dc681",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a bucket and a broom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "this much, that much, like this, like that, other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: this much, that much, like this, like that, other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an expert, knowledge, to be able to, near, strength",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an expert, knowledge, to be able to, near, strength]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "power, a right, authority, a chance, property",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: power, a right, authority, a chance, property]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wealth, an owner, experience, a habit, a skill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wealth, an owner, experience, a habit, a skill]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This much? (ਇੰਨਾ, innā.) That much? (ਉੰਨਾ, unnā.) Like this? (ਇਵੇਂ, ivẽ.) Like that? (ਉਵੇਂ, uvẽ.) Other? (ਹੋਰ, hor.) An expert? (ਮਾਹਰ, māhar.) Knowledge? (ਜਾਣਕਾਰੀ, jāṇkārī.) To be able to? (ਸਕਣਾ, sakṇā.) Near? (ਕੋਲ, kol.) Strength? (ਤਾਕਤ, tākat.) Power? (ਸ਼ਕਤੀ, shaktī.) A right? (ਹੱਕ, hakk.) Authority? (ਅਧਿਕਾਰ, adhikār.) A chance? (ਮੌਕਾ, maukā.) Property? (ਜਾਇਦਾਦ, jāidād.) Wealth? (ਦੌਲਤ, daulat.) An owner? (ਮਾਲਕ, mālak.) Experience? (ਤਜਰਬਾ, tajarbā.) A habit? (ਆਦਤ, ādat.) A skill? (ਹੁਨਰ, hunar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R116-second-pass-things-in-the-house",
+      "sequence": 6260,
+      "title": "Things in the house — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 112-116",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c0a1e0e9c261b13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an art and a tool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an art, a tool, ability, to win, to lose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an art, a tool, ability, to win, to lose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an umbrella, a bowl, a glass, a cooking pot, a comb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an umbrella, a bowl, a glass, a cooking pot, a comb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soap, a towel, a mattress, a bedsheet, a blanket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: soap, a towel, a mattress, a bedsheet, a blanket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a quilt, a stove, a vessel, scissors, a needle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a quilt, a stove, a vessel, scissors, a needle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thread, a button, a nail, a bucket, a broom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thread, a button, a nail, a bucket, a broom]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An art? (ਕਲਾ, kalā.) A tool? (ਸੰਦ, sand.) Ability? (ਲਿਆਕਤ, liākat.) To win? (ਜਿੱਤਣਾ, jittṇā.) To lose? (ਹਾਰਨਾ, hārnā.) An umbrella? (ਛਤਰੀ, chatrī.) A bowl? (ਕੌਲੀ, kaulī.) A glass? (ਗਲਾਸ, galās.) A cooking pot? (ਪਤੀਲਾ, patīlā.) A comb? (ਕੰਘੀ, kanghī.) Soap? (ਸਾਬਣ, sābaṇ.) A towel? (ਤੌਲੀਆ, tauliā.) A mattress? (ਗੱਦਾ, gaddā.) A bedsheet? (ਚਾਦਰ, cādar.) A blanket? (ਕੰਬਲ, kambal.) A quilt? (ਰਜਾਈ, rajāī.) A stove? (ਚੁੱਲ੍ਹਾ, cullhā.) A vessel? (ਭਾਂਡਾ, bhā̃ḍā.) Scissors? (ਕੈਂਚੀ, kaĩcī.) A needle? (ਸੂਈ, sūī.) A thread? (ਧਾਗਾ, dhāgā.) A button? (ਬਟਨ, baṭan.) A nail? (ਕਿੱਲ, kill.) A bucket? (ਬਾਲਟੀ, bālṭī.) A broom? (ਝਾੜੂ, jhāṛū.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

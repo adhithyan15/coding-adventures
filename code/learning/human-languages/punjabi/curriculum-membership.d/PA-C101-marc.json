@@ -1,0 +1,11 @@
+{
+  "id": "PA-C101-marc",
+  "pathSegment": "PA-PATH-101-TIME101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-101-TIME101",
+      "order": 3
+    }
+  ]
+}

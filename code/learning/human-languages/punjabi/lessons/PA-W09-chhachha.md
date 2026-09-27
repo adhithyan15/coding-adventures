@@ -9,7 +9,7 @@ type: writing
 headword: "ਛ"
 romanization: "chha"
 gloss: "trace the Gurmukhi letter chhachha"
-prerequisites: [PA-C31-achchha, PA-S05-babba-lalla-hora, PA-S10-addak-dhadda]
+prerequisites: [PA-C31-achchha, PA-S05-babba-lalla-hora, PA-S10-addak-dhadda, PA-C06-numbers-1-5-more]
 sounds: []
 roots: []
 duration:

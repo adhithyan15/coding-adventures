@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Brave, Calm, Hungry, Thirsty, Fresh",
+  "label": "ch:pa-brave-calm-hungry-thirsty-fresh",
+  "canDo": "I can say brave, calm, hungry, thirsty and fresh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C145-taza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: i can say brave, calm, hungry, thirsty and fresh.",
+    "assesses": [
+      "PA-LEX-C145-QUAL145-03",
+      "PA-LEX-C145-QUAL145-04",
+      "PA-LEX-C145-QUAL145-05"
+    ]
+  }
+}

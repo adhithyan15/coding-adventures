@@ -9,7 +9,7 @@ headword: ਅੱਖ
 romanization: akkh
 gloss: eye — a doubled consonant that survived whole, so it never had a tone to lose
 concept_tag: PA-BODY-EYE
-prerequisites: [PA-C11-bhain, PA-S10-addak-dhadda, PA-S11-bhabbha, PA-S05-babba-lalla-hora]
+prerequisites: [PA-C11-bhain, PA-S10-addak-dhadda, PA-S11-bhabbha, PA-S05-babba-lalla-hora, PA-C06-numbers-1-5-more]
 sounds: [addak-doubling, aspirate-kh]
 roots: [sanskrit-akshi, pie-h3okws]
 etymology_hook: ਅੱਖ is inherited from Prakrit akkhi, from Sanskrit akṣi, "eye," from Proto-Indo-Iranian *Hákši, from Proto-Indo-European *h3ókʷs — unbroken in English eye itself, and Punjabi keeps the Middle Indo-Aryan doubled kk that Hindi's āṅkh smoothed away into a nasal.

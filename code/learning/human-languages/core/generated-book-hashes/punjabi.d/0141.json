@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:692f9e170d2359cc",
+  "lessonIds": [
+    "PA-C141-calak",
+    "PA-C141-siana",
+    "PA-C141-bhola",
+    "PA-C141-gol",
+    "PA-C141-siddha"
+  ],
+  "tex": "punjabi/book/chapters/ch141-cunning-wise-innocent-round-straight.tex"
+}

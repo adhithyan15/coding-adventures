@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:5c4931b364ed2c2e",
+  "lessonIds": [
+    "PA-C99-adhirat",
+    "PA-C99-tarka",
+    "PA-C99-parso",
+    "PA-C99-garmi",
+    "PA-C99-sardi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch99.txt",
+  "json": "punjabi/narration/ch99.json",
+  "textHash": "fnv1a64:9b8c0116d5d54e81",
+  "jsonHash": "fnv1a64:3fe2372eac757624",
+  "findings": []
+}

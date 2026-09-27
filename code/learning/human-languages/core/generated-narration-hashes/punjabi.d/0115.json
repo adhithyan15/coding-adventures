@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:9f36c659e1546dc9",
+  "lessonIds": [
+    "PA-C115-rajai",
+    "PA-C115-cullha",
+    "PA-C115-bhada",
+    "PA-C115-kaici",
+    "PA-C115-sui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch115.txt",
+  "json": "punjabi/narration/ch115.json",
+  "textHash": "fnv1a64:1e0e72ec134e0de2",
+  "jsonHash": "fnv1a64:1356d2b419cbbcf0",
+  "findings": []
+}

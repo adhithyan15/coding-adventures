@@ -9,7 +9,7 @@ headword: ਪੁੱਛਣਾ
 romanization: puchhṇā
 gloss: to ask — cousin to the Persian word for asking, and neither borrowed it from the other
 concept_tag: VERB-ASK
-prerequisites: [PA-C09-laina, PA-S08-pappa]
+prerequisites: [PA-C09-laina, PA-S08-pappa, PA-C06-numbers-1-5-more, PA-C06-panj-convergence-homegrown, PA-C06-panj-convergence-homegrown-persian]
 sounds: [aunkar-u, addak-doubling, retroflex-na]
 roots: [sanskrit-prcchati, prakrit-pucchai, pie-prek]
 etymology_hook: puchhṇā comes through Prakrit pucchaï from Sanskrit pṛcchati “asks”, on PIE *preḱ- — Latin precārī and poscere behind English pray, prayer, precarious and postulate, German fragen, and Persian porsīdan, which is a cousin rather than a loan.

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:ab25f9f820645259",
+  "lessonIds": [
+    "PA-C106-kite",
+    "PA-C106-kade",
+    "PA-C106-harek",
+    "PA-C106-ajiha",
+    "PA-C106-har2"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch106.txt",
+  "json": "punjabi/narration/ch106.json",
+  "textHash": "fnv1a64:c8980794ae48dded",
+  "jsonHash": "fnv1a64:926c2922b518fd2a",
+  "findings": []
+}

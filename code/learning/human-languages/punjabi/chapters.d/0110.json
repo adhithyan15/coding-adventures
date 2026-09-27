@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Power, Right, Authority, Chance, Property",
+  "label": "ch:pa-power-right-authority-chance-property",
+  "canDo": "I can say power, a right, authority, a chance and property.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C110-jaidad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say power, a right, authority, a chance and property.",
+    "assesses": [
+      "PA-LEX-C110-CAN110-03",
+      "PA-LEX-C110-CAN110-04",
+      "PA-LEX-C110-CAN110-05"
+    ]
+  }
+}

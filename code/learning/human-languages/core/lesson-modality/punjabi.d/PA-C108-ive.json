@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C108-ive",
+    "language": "punjabi",
+    "chapter": 108,
+    "sequence": 5820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2d6a90d4fe132bc"
+  },
+  "findings": []
+}

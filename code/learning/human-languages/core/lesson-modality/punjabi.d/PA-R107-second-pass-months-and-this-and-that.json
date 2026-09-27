@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R107-second-pass-months-and-this-and-that",
+    "language": "punjabi",
+    "chapter": 107,
+    "sequence": 5760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2a92cb52d5bff22"
+  },
+  "findings": []
+}

@@ -68,7 +68,10 @@ it("pins Punjabi lesson-content budgets", () =>
     // introduces an idiom, a sense or a culture claim.
     // 532 -> 533: HL-C443, ਮੌਸਮ (mausam) before the chapter-20 ੌ lesson. No idiom,
     // sense or culture claim.
-    lessons: 533,
+    // 533 -> 818: Punjabi A1. Chapters 99-152, 270 word lessons (28 verbs) and
+    // twelve reviews, plus three chapter-6 -more continuations that split the
+    // two over-budget number lessons. No idiom, sense or culture claim.
+    lessons: 818,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

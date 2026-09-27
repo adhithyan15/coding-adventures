@@ -1,0 +1,11 @@
+{
+  "id": "PA-C140-dugha",
+  "pathSegment": "PA-PATH-140-QUAL140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-140-QUAL140",
+      "order": 2
+    }
+  ]
+}

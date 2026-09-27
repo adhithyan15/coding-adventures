@@ -1,0 +1,11 @@
+{
+  "id": "PA-R125-first-pass-the-house-and-clothes",
+  "pathSegment": "PA-PATH-125-THINGS125",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-125-THINGS125",
+      "order": 5
+    }
+  ]
+}

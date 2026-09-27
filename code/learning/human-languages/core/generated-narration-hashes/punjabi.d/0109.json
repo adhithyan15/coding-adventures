@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:4220c26a897bc819",
+  "lessonIds": [
+    "PA-C109-mahar",
+    "PA-C109-jankari",
+    "PA-C109-sakna",
+    "PA-C109-kol",
+    "PA-C109-takat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch109.txt",
+  "json": "punjabi/narration/ch109.json",
+  "textHash": "fnv1a64:da6c3e0c1fea1666",
+  "jsonHash": "fnv1a64:3ccbdc254e474afb",
+  "findings": []
+}

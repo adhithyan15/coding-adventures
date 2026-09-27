@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:d73f82baeaf627c5",
+  "lessonIds": [
+    "PA-C145-bahadar",
+    "PA-C145-shat",
+    "PA-C145-bhukkha",
+    "PA-C145-piasa",
+    "PA-C145-taza"
+  ],
+  "tex": "punjabi/book/chapters/ch145-brave-calm-hungry-thirsty-fresh.tex"
+}

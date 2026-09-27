@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:1bc051fe1fdb38cc",
+  "lessonIds": [
+    "PA-C108-inna",
+    "PA-C108-unna",
+    "PA-C108-ive",
+    "PA-C108-uve",
+    "PA-C108-hor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch108.txt",
+  "json": "punjabi/narration/ch108.json",
+  "textHash": "fnv1a64:93a7831db8916a05",
+  "jsonHash": "fnv1a64:3029129f7789b759",
+  "findings": []
+}

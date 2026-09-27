@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C145-bahadar",
+    "language": "punjabi",
+    "chapter": 145,
+    "sequence": 7850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a48ac74ce0d8fb79"
+  },
+  "findings": []
+}

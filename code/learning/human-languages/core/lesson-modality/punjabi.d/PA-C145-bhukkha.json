@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C145-bhukkha",
+    "language": "punjabi",
+    "chapter": 145,
+    "sequence": 7870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4130a0398ed597d"
+  },
+  "findings": []
+}

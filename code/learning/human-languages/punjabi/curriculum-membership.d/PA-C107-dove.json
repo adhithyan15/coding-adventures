@@ -1,0 +1,11 @@
+{
+  "id": "PA-C107-dove",
+  "pathSegment": "PA-PATH-107-DEF107",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-107-DEF107",
+      "order": 3
+    }
+  ]
+}

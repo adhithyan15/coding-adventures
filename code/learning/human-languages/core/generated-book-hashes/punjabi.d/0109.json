@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:700c1a6cd6f1832d",
+  "lessonIds": [
+    "PA-C109-mahar",
+    "PA-C109-jankari",
+    "PA-C109-sakna",
+    "PA-C109-kol",
+    "PA-C109-takat"
+  ],
+  "tex": "punjabi/book/chapters/ch109-expert-knowledge-to-be-able-to-near-strength.tex"
+}

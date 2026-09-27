@@ -1,0 +1,11 @@
+{
+  "id": "PA-C99-adhirat",
+  "pathSegment": "PA-PATH-99-TIME99",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-99-TIME99",
+      "order": 0
+    }
+  ]
+}
