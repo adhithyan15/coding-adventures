@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Thin, Fat, Wet, Dry, Dirty",
+  "label": "ch:ar-thin-fat-wet-dry-dirty",
+  "canDo": "I can say thin, fat, wet, dry and dirty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C151-mutassikh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: i can say thin, fat, wet, dry and dirty.",
+    "assesses": [
+      "AR-LEX-C151-QUAL151-03",
+      "AR-LEX-C151-QUAL151-04",
+      "AR-LEX-C151-QUAL151-05"
+    ]
+  }
+}

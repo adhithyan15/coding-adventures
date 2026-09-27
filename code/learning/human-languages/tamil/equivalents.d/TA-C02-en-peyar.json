@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C02-en-peyar",
+  "english": "my name is…",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನನ್ನ ಹೆಸರು …",
+      "romanization": "nanna hesaru …"
+    },
+    {
+      "language": "telugu",
+      "form": "నా పేరు …",
+      "romanization": "nā pēru …"
+    },
+    {
+      "language": "malayalam",
+      "form": "എന്റെ പേര് … ആണ്",
+      "romanization": "enṟe pēr … āṇŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मेरा नाम … है",
+      "romanization": "merā nām … hai"
+    }
+  ],
+  "source": "cross-track match: KA-C02-nanna-hesaru, TE-C02-naa-peru, ML-C02-enre-peru-aanu, HI-C02-mera-naam-hai; sameRoot judged by the author, awaiting native review"
+}

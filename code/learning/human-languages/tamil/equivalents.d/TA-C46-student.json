@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C46-student",
+  "english": "a student",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ವಿದ್ಯಾರ್ಥಿ",
+      "romanization": "vidyārthi"
+    },
+    {
+      "language": "telugu",
+      "form": "విద్యార్థి",
+      "romanization": "vidyārthi"
+    },
+    {
+      "language": "malayalam",
+      "form": "വിദ്യാർത്ഥി",
+      "romanization": "vidyārtthi"
+    },
+    {
+      "language": "hindi",
+      "form": "छात्र",
+      "romanization": "chātra"
+    }
+  ],
+  "source": "cross-track match: KA-C48-student, TE-C48-student, ML-C48-student, HI-C47-student"
+}

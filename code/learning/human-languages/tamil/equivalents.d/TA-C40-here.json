@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C40-here",
+  "english": "here",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇಲ್ಲಿ",
+      "romanization": "illi"
+    },
+    {
+      "language": "telugu",
+      "form": "ఇక్కడ",
+      "romanization": "ikkaḍa"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇവിടെ",
+      "romanization": "iviṭe"
+    },
+    {
+      "language": "hindi",
+      "form": "यहाँ",
+      "romanization": "yahā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C41-here, TE-C41-here, ML-C41-here, HI-C40-here"
+}

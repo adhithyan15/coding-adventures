@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C49-respect",
+  "english": "respect",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗೌರವ",
+      "romanization": "gaurava"
+    },
+    {
+      "language": "telugu",
+      "form": "గౌరవం",
+      "romanization": "gauravaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "ബഹുമാനം",
+      "romanization": "bahumānaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "आदर",
+      "romanization": "ādar",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C51-respect, TE-C51-respect, ML-C51-respect, HI-C50-respect; sameRoot judged by the author, awaiting native review"
+}

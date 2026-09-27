@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C142-saha",
+    "language": "arabic",
+    "chapter": 142,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20992fc6c5278db7"
+  },
+  "findings": []
+}

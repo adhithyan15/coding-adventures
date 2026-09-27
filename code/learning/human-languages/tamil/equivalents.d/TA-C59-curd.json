@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C59-curd",
+  "english": "curd",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊಸರು",
+      "romanization": "mosaru"
+    },
+    {
+      "language": "telugu",
+      "form": "పెరుగు",
+      "romanization": "perugu"
+    },
+    {
+      "language": "malayalam",
+      "form": "തൈര്",
+      "romanization": "tairŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C61-curd, TE-C61-curd, ML-C61-curd; sameRoot judged by the author, awaiting native review"
+}

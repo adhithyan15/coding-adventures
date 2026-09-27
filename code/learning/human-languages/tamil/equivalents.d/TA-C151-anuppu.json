@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C151-anuppu",
+  "english": "to send",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಳಿಸು",
+      "romanization": "kaḷisu"
+    },
+    {
+      "language": "telugu",
+      "form": "పంపు",
+      "romanization": "pampu"
+    },
+    {
+      "language": "malayalam",
+      "form": "അയയ്ക്കുക",
+      "romanization": "ayaykkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "भेजना",
+      "romanization": "bhejnā"
+    }
+  ],
+  "source": "cross-track match: KA-C148-kalisu, TE-C144-pampu, ML-C175-ayaykkuka, HI-C160-bhejna"
+}

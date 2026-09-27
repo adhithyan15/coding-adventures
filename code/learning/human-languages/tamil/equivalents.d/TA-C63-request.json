@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C63-request",
+  "english": "a request",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ವಿನಂತಿ",
+      "romanization": "vinanti"
+    },
+    {
+      "language": "telugu",
+      "form": "మనవి",
+      "romanization": "manavi"
+    },
+    {
+      "language": "malayalam",
+      "form": "അപേക്ഷ",
+      "romanization": "apēkṣa"
+    }
+  ],
+  "source": "cross-track match: KA-C65-request, TE-C65-request, ML-C65-request"
+}

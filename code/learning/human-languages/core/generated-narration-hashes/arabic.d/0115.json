@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:5c76c7d55e75697c",
+  "lessonIds": [
+    "AR-C115-qarar",
+    "AR-C115-ikhtara",
+    "AR-C115-faddala",
+    "AR-C115-talaba",
+    "AR-C115-niyya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch115.txt",
+  "json": "arabic/narration/ch115.json",
+  "textHash": "fnv1a64:6e6cc07135a9c5d4",
+  "jsonHash": "fnv1a64:b346bedfcb7e43a7",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C116-tiruppam",
+  "english": "a turn",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತಿರುವು",
+      "romanization": "tiruvu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మలుపు",
+      "romanization": "malupu"
+    }
+  ],
+  "source": "cross-track match: KA-C110-tiruvu, TE-C104-malupu; sameRoot judged by the author, awaiting native review"
+}

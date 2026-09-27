@@ -1,0 +1,11 @@
+{
+  "id": "AR-C124-ibra",
+  "pathSegment": "AR-PATH-124-THINGS124",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-124-THINGS124",
+      "order": 1
+    }
+  ]
+}

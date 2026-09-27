@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C149-unmaiyana",
+  "english": "true",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಿಜ",
+      "romanization": "nija"
+    },
+    {
+      "language": "telugu",
+      "form": "నిజం",
+      "romanization": "nijaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "സത്യം",
+      "romanization": "satyaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "सच",
+      "romanization": "sac"
+    }
+  ],
+  "source": "cross-track match: KA-C49-true, TE-C49-true, ML-C49-true, HI-C48-true"
+}

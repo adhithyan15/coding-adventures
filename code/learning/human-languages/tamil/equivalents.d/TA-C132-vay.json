@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C132-vay",
+  "english": "the mouth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾಯಿ",
+      "romanization": "bāyi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నోరు",
+      "romanization": "nōru"
+    },
+    {
+      "language": "malayalam",
+      "form": "വായ്",
+      "romanization": "vāy",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C37-baayi, TE-C37-noru, ML-C37-vaay; sameRoot judged by the author, awaiting native review"
+}

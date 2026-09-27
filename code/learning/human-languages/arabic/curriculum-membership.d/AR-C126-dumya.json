@@ -1,0 +1,11 @@
+{
+  "id": "AR-C126-dumya",
+  "pathSegment": "AR-PATH-126-THINGS126",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-126-THINGS126",
+      "order": 2
+    }
+  ]
+}

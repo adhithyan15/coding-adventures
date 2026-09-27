@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C149-pirapalamana",
+  "english": "famous",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪ್ರಸಿದ್ಧ",
+      "romanization": "prasiddha"
+    },
+    {
+      "language": "telugu",
+      "form": "ప్రసిద్ధ",
+      "romanization": "prasiddha"
+    }
+  ],
+  "source": "cross-track match: KA-C143-prasiddha, TE-C139-prasiddha"
+}

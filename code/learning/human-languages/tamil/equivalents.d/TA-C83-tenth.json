@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C83-tenth",
+  "english": "tenth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹತ್ತನೆಯ",
+      "romanization": "hattaneya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పదవ",
+      "romanization": "padava",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പത്താം",
+      "romanization": "pathāṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "दसवाँ",
+      "romanization": "dasvā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C75-tenth, TE-C82-tenth, ML-C68-tenth, HI-C76-tenth; sameRoot judged by the author, awaiting native review"
+}

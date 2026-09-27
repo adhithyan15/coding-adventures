@@ -1,0 +1,11 @@
+{
+  "id": "AR-C101-hayy",
+  "pathSegment": "AR-PATH-101-LOC101",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-101-LOC101",
+      "order": 0
+    }
+  ]
+}

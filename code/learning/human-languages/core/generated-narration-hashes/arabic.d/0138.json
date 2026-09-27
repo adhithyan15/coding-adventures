@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:c18cbec86b50bab6",
+  "lessonIds": [
+    "AR-C138-nasr",
+    "AR-C138-difda",
+    "AR-C138-khadd",
+    "AR-C138-jabin",
+    "AR-C138-hajib"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch138.txt",
+  "json": "arabic/narration/ch138.json",
+  "textHash": "fnv1a64:cf6b723194348b76",
+  "jsonHash": "fnv1a64:e3948cc609c2b8ff",
+  "findings": []
+}

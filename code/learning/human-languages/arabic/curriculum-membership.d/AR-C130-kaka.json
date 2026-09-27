@@ -1,0 +1,11 @@
+{
+  "id": "AR-C130-kaka",
+  "pathSegment": "AR-PATH-130-THINGS130",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-130-THINGS130",
+      "order": 4
+    }
+  ]
+}

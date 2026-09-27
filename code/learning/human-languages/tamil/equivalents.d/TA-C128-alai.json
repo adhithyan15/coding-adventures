@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C128-alai",
+  "english": "a wave",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಲೆ",
+      "romanization": "ale",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "అల",
+      "romanization": "ala",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "लहर",
+      "romanization": "lahar",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C128-ale, TE-C121-ala, HI-C144-lahar; sameRoot judged by the author, awaiting native review"
+}

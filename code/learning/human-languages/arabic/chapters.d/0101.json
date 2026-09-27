@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Neighbourhood, Alley, Building, Bathroom, Balcony",
+  "label": "ch:ar-neighbourhood-alley-building-bathroom-balcony",
+  "canDo": "I can say a neighbourhood, an alley, a building, a bathroom and a balcony.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C101-shurfa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say a neighbourhood, an alley, a building, a bathroom and a balcony.",
+    "assesses": [
+      "AR-LEX-C101-LOC101-03",
+      "AR-LEX-C101-LOC101-04",
+      "AR-LEX-C101-LOC101-05"
+    ]
+  }
+}

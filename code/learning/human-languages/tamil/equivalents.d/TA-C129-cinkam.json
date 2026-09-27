@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C129-cinkam",
+  "english": "a lion",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಿಂಹ",
+      "romanization": "siṁha"
+    },
+    {
+      "language": "telugu",
+      "form": "సింహం",
+      "romanization": "siṁhaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "സിംഹം",
+      "romanization": "simhaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "शेर",
+      "romanization": "śer"
+    }
+  ],
+  "source": "cross-track match: KA-C129-simha, TE-C123-simham, ML-C151-simham, HI-C145-ser"
+}

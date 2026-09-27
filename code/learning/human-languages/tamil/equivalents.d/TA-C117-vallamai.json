@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C117-vallamai",
+  "english": "ability, strength",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಾಮರ್ಥ್ಯ",
+      "romanization": "sāmarthya"
+    },
+    {
+      "language": "telugu",
+      "form": "సామర్థ్యం",
+      "romanization": "sāmarthyaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "കഴിവ്",
+      "romanization": "kaḻivŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C112-samarthya, TE-C105-samarthyam, ML-C142-kalivu"
+}

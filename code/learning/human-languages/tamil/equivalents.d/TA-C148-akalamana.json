@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C148-akalamana",
+  "english": "wide",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಗಲ",
+      "romanization": "agala",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "వెడల్పు",
+      "romanization": "veḍalpu"
+    },
+    {
+      "language": "malayalam",
+      "form": "വീതിയുള്ള",
+      "romanization": "vītiyuḷḷa"
+    },
+    {
+      "language": "hindi",
+      "form": "चौड़ा",
+      "romanization": "cauṛā"
+    }
+  ],
+  "source": "cross-track match: KA-C142-agala, TE-C138-vedalpu, ML-C168-vitiyulla, HI-C158-caura; sameRoot judged by the author, awaiting native review"
+}

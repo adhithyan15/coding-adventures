@@ -1,0 +1,11 @@
+{
+  "id": "AR-C117-majalla",
+  "pathSegment": "AR-PATH-117-THINGS117",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-117-THINGS117",
+      "order": 2
+    }
+  ]
+}

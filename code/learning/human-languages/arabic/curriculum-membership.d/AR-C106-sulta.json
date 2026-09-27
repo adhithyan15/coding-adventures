@@ -1,0 +1,11 @@
+{
+  "id": "AR-C106-sulta",
+  "pathSegment": "AR-PATH-106-CAN106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-106-CAN106",
+      "order": 1
+    }
+  ]
+}

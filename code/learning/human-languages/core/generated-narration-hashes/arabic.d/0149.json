@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:d90c4a856a1936a0",
+  "lessonIds": [
+    "AR-C149-muzlim",
+    "AR-C149-mulawwan",
+    "AR-C149-aniq",
+    "AR-C149-gharib",
+    "AR-C149-mumti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch149.txt",
+  "json": "arabic/narration/ch149.json",
+  "textHash": "fnv1a64:ffd09fd6ff215f12",
+  "jsonHash": "fnv1a64:59e2c9a7aa0bd53a",
+  "findings": []
+}

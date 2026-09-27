@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C04-poy-varugiren",
+  "english": "goodbye",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೋಗಿ ಬರುತ್ತೇನೆ",
+      "romanization": "hōgi baruttēne",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "వెళ్ళి వస్తాను",
+      "romanization": "veḷḷi vastānu"
+    },
+    {
+      "language": "malayalam",
+      "form": "പോയി വരാം",
+      "romanization": "pōyi varāṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "अलविदा",
+      "romanization": "alvidā"
+    }
+  ],
+  "source": "cross-track match: KA-C04-hoogi-baruttene, TE-C04-velli-vastaanu, ML-C04-poyi-varaam, HI-C01-alvida; sameRoot judged by the author, awaiting native review"
+}

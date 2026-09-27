@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:b6abae03f1d25aeb",
+  "lessonIds": [
+    "AR-C141-lisan",
+    "AR-C141-batn",
+    "AR-C141-saq",
+    "AR-C141-jild",
+    "AR-C141-azm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch141.txt",
+  "json": "arabic/narration/ch141.json",
+  "textHash": "fnv1a64:228af770b348e56d",
+  "jsonHash": "fnv1a64:b06d18da8f7112d6",
+  "findings": []
+}

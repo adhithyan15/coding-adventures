@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C50-flower",
+  "english": "a flower",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "పువ్వు",
+      "romanization": "puvvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "പൂവ്",
+      "romanization": "pūvŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "फूल",
+      "romanization": "phūl"
+    }
+  ],
+  "source": "cross-track match: TE-C52-flower, ML-C52-flower, HI-C51-flower"
+}

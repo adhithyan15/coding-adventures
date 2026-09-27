@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C143-alakana",
+  "english": "beautiful",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸುಂದರ",
+      "romanization": "sundara"
+    },
+    {
+      "language": "telugu",
+      "form": "అందమైన",
+      "romanization": "andamaina"
+    },
+    {
+      "language": "malayalam",
+      "form": "സുന്ദരം",
+      "romanization": "sundaraṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C142-sundara, TE-C138-andamaina, ML-C97-sundaram"
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C53-river",
+  "english": "a river",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನದಿ",
+      "romanization": "nadi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నది",
+      "romanization": "nadi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പുഴ",
+      "romanization": "puḻa"
+    },
+    {
+      "language": "hindi",
+      "form": "नदी",
+      "romanization": "nadī",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C55-river, TE-C55-river, ML-C55-river, HI-C142-nadi; sameRoot judged by the author, awaiting native review"
+}

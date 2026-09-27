@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C144-cutana",
+  "english": "hot",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "ചൂടുള്ള",
+      "romanization": "cūṭuḷḷa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गरम",
+      "romanization": "garam"
+    }
+  ],
+  "source": "cross-track match: ML-C164-cutulla, HI-C154-garam; sameRoot judged by the author, awaiting native review"
+}

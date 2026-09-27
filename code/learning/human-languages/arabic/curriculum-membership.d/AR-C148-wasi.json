@@ -1,0 +1,11 @@
+{
+  "id": "AR-C148-wasi",
+  "pathSegment": "AR-PATH-148-QUAL148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-148-QUAL148",
+      "order": 1
+    }
+  ]
+}

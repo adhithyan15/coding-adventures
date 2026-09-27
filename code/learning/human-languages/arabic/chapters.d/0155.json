@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Necessary, Ugly, Precious, Hot, Crowded",
+  "label": "ch:ar-necessary-ugly-precious-hot-crowded",
+  "canDo": "I can say necessary, ugly, precious, hot and crowded.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-R155-second-pass-more-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: i can say necessary, ugly, precious, hot and crowded.",
+    "assesses": [
+      "AR-LEX-C155-QUAL155-03",
+      "AR-LEX-C155-QUAL155-04",
+      "AR-LEX-C155-QUAL155-05"
+    ]
+  }
+}

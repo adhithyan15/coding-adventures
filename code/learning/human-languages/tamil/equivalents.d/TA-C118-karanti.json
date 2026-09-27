@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C118-karanti",
+  "english": "a spoon",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚಮಚ",
+      "romanization": "camaca"
+    },
+    {
+      "language": "telugu",
+      "form": "చెంచా",
+      "romanization": "cemcā"
+    },
+    {
+      "language": "malayalam",
+      "form": "സ്പൂൺ",
+      "romanization": "spūṇ"
+    },
+    {
+      "language": "hindi",
+      "form": "चम्मच",
+      "romanization": "chammach"
+    }
+  ],
+  "source": "cross-track match: KA-C94-spoon, TE-C112-cemca, ML-C134-spoon, HI-C61-spoon"
+}

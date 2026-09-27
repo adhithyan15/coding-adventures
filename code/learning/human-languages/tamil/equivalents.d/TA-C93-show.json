@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C93-show",
+  "english": "please show me",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತೋರಿಸಿ",
+      "romanization": "tōrisi"
+    },
+    {
+      "language": "telugu",
+      "form": "చూపించండి",
+      "romanization": "cūpiñcaṇḍi"
+    },
+    {
+      "language": "hindi",
+      "form": "दिखाइए",
+      "romanization": "dikhāie"
+    }
+  ],
+  "source": "cross-track match: KA-C86-show, TE-C95-show, HI-C111-dikhaie"
+}

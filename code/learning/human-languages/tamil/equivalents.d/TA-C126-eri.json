@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C126-eri",
+  "english": "a lake",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "సరస్సు",
+      "romanization": "sarassu"
+    },
+    {
+      "language": "malayalam",
+      "form": "തടാകം",
+      "romanization": "taṭākaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "झील",
+      "romanization": "jhīl"
+    }
+  ],
+  "source": "cross-track match: TE-C120-sarassu, ML-C148-tatakam, HI-C143-jhil"
+}

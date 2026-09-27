@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Competence, Certificate, Ownership, To be able to, To be able to",
+  "label": "ch:ar-competence-certificate-ownership-to-be-able-to-to-be-able-to",
+  "canDo": "I can say competence, a certificate, ownership, to be able to and to be able to.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C107-qadara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say competence, a certificate, ownership, to be able to and to be able to.",
+    "assesses": [
+      "AR-LEX-C107-CAN107-03",
+      "AR-LEX-C107-CAN107-04",
+      "AR-LEX-C107-CAN107-05"
+    ]
+  }
+}

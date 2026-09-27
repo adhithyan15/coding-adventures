@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C106-takecare",
+  "english": "take care",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹುಷಾರು",
+      "romanization": "huṣāru"
+    },
+    {
+      "language": "malayalam",
+      "form": "സൂക്ഷിക്കണേ",
+      "romanization": "sūkṣikkaṇē"
+    },
+    {
+      "language": "hindi",
+      "form": "ध्यान रखिए",
+      "romanization": "dhyān rakhie"
+    }
+  ],
+  "source": "cross-track match: KA-C89-takecare, ML-C127-takecare, HI-C121-dhyanrakhie"
+}

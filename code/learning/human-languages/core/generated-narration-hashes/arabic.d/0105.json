@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:943b10f5a88e4a69",
+  "lessonIds": [
+    "AR-C105-madkhal",
+    "AR-C105-makhraj",
+    "AR-C105-mustaqim",
+    "AR-C105-hawla",
+    "AR-C105-inda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch105.txt",
+  "json": "arabic/narration/ch105.json",
+  "textHash": "fnv1a64:efed915d43353ee7",
+  "jsonHash": "fnv1a64:02f2f354b25c8c73",
+  "findings": []
+}

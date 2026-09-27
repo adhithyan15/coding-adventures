@@ -1,0 +1,11 @@
+{
+  "id": "AR-C138-jabin",
+  "pathSegment": "AR-PATH-138-THINGS138",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-138-THINGS138",
+      "order": 3
+    }
+  ]
+}

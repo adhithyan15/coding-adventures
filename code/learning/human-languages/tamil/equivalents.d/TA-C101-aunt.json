@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C101-aunt",
+  "english": "aunt, the father's sister",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "అత్త",
+      "romanization": "atta",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: TE-C71-aunt; sameRoot judged by the author, awaiting native review"
+}

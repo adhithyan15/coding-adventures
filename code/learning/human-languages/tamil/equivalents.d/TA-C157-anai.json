@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C157-anai",
+  "english": "to put out",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆರಿಸು",
+      "romanization": "ārisu"
+    },
+    {
+      "language": "telugu",
+      "form": "ఆర్పు",
+      "romanization": "ārpu"
+    }
+  ],
+  "source": "cross-track match: KA-C152-arisu, TE-C148-arpu"
+}

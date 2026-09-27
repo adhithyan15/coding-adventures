@@ -1,0 +1,11 @@
+{
+  "id": "AR-C106-itqan",
+  "pathSegment": "AR-PATH-106-CAN106",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-106-CAN106",
+      "order": 3
+    }
+  ]
+}

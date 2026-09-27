@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C134-tiraiccilai",
+  "english": "a curtain",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪರದೆ",
+      "romanization": "parade"
+    },
+    {
+      "language": "telugu",
+      "form": "తెర",
+      "romanization": "tera"
+    },
+    {
+      "language": "hindi",
+      "form": "परदा",
+      "romanization": "pardā"
+    }
+  ],
+  "source": "cross-track match: KA-C116-parade, TE-C109-tera, HI-C129-parda"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Busy, Tired, Active, Kind, Angry",
+  "label": "ch:ar-busy-tired-active-kind-angry",
+  "canDo": "I can say busy, tired, active, kind and angry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-R147-second-pass-town-school-and-work",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say busy, tired, active, kind and angry.",
+    "assesses": [
+      "AR-LEX-C147-QUAL147-03",
+      "AR-LEX-C147-QUAL147-04",
+      "AR-LEX-C147-QUAL147-05"
+    ]
+  }
+}

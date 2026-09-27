@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C104-language",
+  "english": "a language",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಭಾಷೆ",
+      "romanization": "bhāṣe"
+    },
+    {
+      "language": "telugu",
+      "form": "భాష",
+      "romanization": "bhāṣa"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഭാഷ",
+      "romanization": "bhāṣa"
+    },
+    {
+      "language": "hindi",
+      "form": "भाषा",
+      "romanization": "bhāshā"
+    }
+  ],
+  "source": "cross-track match: KA-C91-language, TE-C89-language, ML-C126-language, HI-C68-language"
+}

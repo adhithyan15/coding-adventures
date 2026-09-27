@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C54-basket",
+  "english": "a basket",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬುಟ್ಟಿ",
+      "romanization": "buṭṭi",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "బుట్ట",
+      "romanization": "buṭṭa",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "കൊട്ട",
+      "romanization": "koṭṭa"
+    },
+    {
+      "language": "hindi",
+      "form": "टोकरी",
+      "romanization": "ṭokrī"
+    }
+  ],
+  "source": "cross-track match: KA-C56-basket, TE-C56-basket, ML-C56-basket, HI-C62-basket; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C137-motiram",
+  "english": "a ring",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಉಂಗುರ",
+      "romanization": "uṅgura"
+    },
+    {
+      "language": "telugu",
+      "form": "ఉంగరం",
+      "romanization": "uṅgaraṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "മോതിരം",
+      "romanization": "mōtiraṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "अंगूठी",
+      "romanization": "aṅgūṭhī"
+    }
+  ],
+  "source": "cross-track match: KA-C121-ungura, TE-C115-ungaram, ML-C156-motiram, HI-C134-anguthi; sameRoot judged by the author, awaiting native review"
+}

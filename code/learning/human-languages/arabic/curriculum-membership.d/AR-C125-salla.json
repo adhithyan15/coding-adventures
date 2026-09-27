@@ -1,0 +1,11 @@
+{
+  "id": "AR-C125-salla",
+  "pathSegment": "AR-PATH-125-THINGS125",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-125-THINGS125",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C142-vattu",
+  "english": "a duck",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾತುಕೋಳಿ",
+      "romanization": "bātukōḷi"
+    },
+    {
+      "language": "telugu",
+      "form": "బాతు",
+      "romanization": "bātu"
+    },
+    {
+      "language": "malayalam",
+      "form": "താറാവ്",
+      "romanization": "tāṟāvŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C133-batukoli, TE-C126-batu, ML-C162-taravu"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C109-khibra",
+  "pathSegment": "AR-PATH-109-CAN109",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-109-CAN109",
+      "order": 1
+    }
+  ]
+}

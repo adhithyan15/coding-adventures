@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C73-month",
+  "english": "a month",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "മാസം",
+      "romanization": "māsaṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: ML-C139-month; sameRoot judged by the author, awaiting native review"
+}

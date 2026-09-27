@@ -1,0 +1,11 @@
+{
+  "id": "AR-C153-atshan",
+  "pathSegment": "AR-PATH-153-QUAL153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-153-QUAL153",
+      "order": 2
+    }
+  ]
+}

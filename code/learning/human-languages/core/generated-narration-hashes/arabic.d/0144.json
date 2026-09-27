@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:c6a69f6963ad6962",
+  "lessonIds": [
+    "AR-C144-khayyat",
+    "AR-C144-najjar",
+    "AR-C144-khabbaz",
+    "AR-C144-muzari",
+    "AR-C144-jamia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch144.txt",
+  "json": "arabic/narration/ch144.json",
+  "textHash": "fnv1a64:5bc746e57ddc1b49",
+  "jsonHash": "fnv1a64:d0ac30a594acf7f5",
+  "findings": []
+}

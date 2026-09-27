@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C03-nalam",
+  "english": "well, wellness, good",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚೆನ್ನಾಗಿ",
+      "romanization": "cennāgi"
+    },
+    {
+      "language": "telugu",
+      "form": "బాగా",
+      "romanization": "bāgā"
+    },
+    {
+      "language": "malayalam",
+      "form": "സുഖം",
+      "romanization": "sukhaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "ठीक",
+      "romanization": "ṭhīk"
+    }
+  ],
+  "source": "cross-track match: KA-C03-cennaagi, TE-C03-baagaa, ML-C03-sukham, HI-C03-thik"
+}

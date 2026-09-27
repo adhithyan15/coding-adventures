@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:ea128b13503a423f",
+  "lessonIds": [
+    "AR-C125-dalw",
+    "AR-C125-miknasa",
+    "AR-C125-qumama",
+    "AR-C125-salla",
+    "AR-C125-sunduq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch125.txt",
+  "json": "arabic/narration/ch125.json",
+  "textHash": "fnv1a64:54702d2d1b3db21f",
+  "jsonHash": "fnv1a64:ef232294026cf4c0",
+  "findings": []
+}

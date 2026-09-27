@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C137-valaiyal",
+  "english": "a bangle",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಳೆ",
+      "romanization": "baḷe",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "വള",
+      "romanization": "vaḷa",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C121-bale, ML-C156-vala; sameRoot judged by the author, awaiting native review"
+}

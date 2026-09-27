@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C69-train",
+  "english": "a train",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ರೈಲು",
+      "romanization": "railu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "రైలు",
+      "romanization": "railu",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "ट्रेन",
+      "romanization": "ṭren"
+    }
+  ],
+  "source": "cross-track match: KA-C111-railu, TE-C133-railu, HI-C94-train; sameRoot judged by the author, awaiting native review"
+}

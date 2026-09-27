@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C93-howsay",
+  "english": "how do you say it?",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "ఎలా అంటారు?",
+      "romanization": "elā aṇṭāru?"
+    },
+    {
+      "language": "hindi",
+      "form": "कैसे कहते हैं?",
+      "romanization": "kaise kahte haiṁ?"
+    }
+  ],
+  "source": "cross-track match: TE-C95-howsay, HI-C111-kaisekahte"
+}

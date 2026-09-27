@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C09-mannikkavum",
+  "english": "please forgive (maṉṉikkavum",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕ್ಷಮಿಸಿ",
+      "romanization": "kṣamisi"
+    },
+    {
+      "language": "telugu",
+      "form": "క్షమించండి",
+      "romanization": "kṣamin̄caṇḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ക്ഷമിക്കണം",
+      "romanization": "kṣamikkaṇaṁ",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "माफ़ कीजिए",
+      "romanization": "māf kījiye"
+    }
+  ],
+  "source": "cross-track match: KA-C09-kshamisi, TE-C09-kshaminchandi, ML-C09-kshamikkanam, HI-C09-maaf-kijiye; sameRoot judged by the author, awaiting native review"
+}

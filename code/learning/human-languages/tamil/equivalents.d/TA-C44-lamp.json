@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C44-lamp",
+  "english": "a lamp",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದೀಪ",
+      "romanization": "dīpa"
+    },
+    {
+      "language": "telugu",
+      "form": "దీపం",
+      "romanization": "dīpaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "വിളക്ക്",
+      "romanization": "viḷakkŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "दीया",
+      "romanization": "dīyā"
+    }
+  ],
+  "source": "cross-track match: KA-C46-lamp, TE-C46-lamp, ML-C46-lamp, HI-C45-lamp; sameRoot judged by the author, awaiting native review"
+}

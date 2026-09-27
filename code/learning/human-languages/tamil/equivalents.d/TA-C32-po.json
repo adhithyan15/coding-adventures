@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C32-po",
+  "english": "to go",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೋಗು",
+      "romanization": "hōgu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "వెళ్ళు",
+      "romanization": "veḷḷu"
+    },
+    {
+      "language": "malayalam",
+      "form": "പോകുക",
+      "romanization": "pōkuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "जाना",
+      "romanization": "jānā"
+    }
+  ],
+  "source": "cross-track match: KA-C32-hoogu, TE-C32-vellu, ML-C32-pokuka, HI-C69-go; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C08-tayavuseytu",
+  "english": "please (tayavu seytu",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದಯವಿಟ್ಟು",
+      "romanization": "dayaviṭṭu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "దయచేసి",
+      "romanization": "dayacēsi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ദയവായി",
+      "romanization": "dayavāyi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कृपया",
+      "romanization": "kṛpayā"
+    }
+  ],
+  "source": "cross-track match: KA-C08-dayavittu, TE-C08-dayachesi, ML-C08-dayavayi, HI-C08-kripaya; sameRoot judged by the author, awaiting native review"
+}

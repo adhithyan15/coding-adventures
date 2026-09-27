@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C45-tooth",
+  "english": "a tooth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಲ್ಲು",
+      "romanization": "hallu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పన్ను",
+      "romanization": "pannu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പല്ല്",
+      "romanization": "pallŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "दाँत",
+      "romanization": "danta"
+    }
+  ],
+  "source": "cross-track match: KA-C47-tooth, TE-C47-tooth, ML-C47-tooth, HI-C38-daant; sameRoot judged by the author, awaiting native review"
+}

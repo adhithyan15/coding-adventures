@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Palm, Fingernail, Brain, Heel, Lip",
+  "label": "ch:ar-palm-fingernail-brain-heel-lip",
+  "canDo": "I can say a palm, a fingernail, a brain, a heel and a lip.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C140-shafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say a palm, a fingernail, a brain, a heel and a lip.",
+    "assesses": [
+      "AR-LEX-C140-THINGS140-03",
+      "AR-LEX-C140-THINGS140-04",
+      "AR-LEX-C140-THINGS140-05"
+    ]
+  }
+}

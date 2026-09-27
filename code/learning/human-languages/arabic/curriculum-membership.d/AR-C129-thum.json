@@ -1,0 +1,11 @@
+{
+  "id": "AR-C129-thum",
+  "pathSegment": "AR-PATH-129-THINGS129",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-129-THINGS129",
+      "order": 1
+    }
+  ]
+}

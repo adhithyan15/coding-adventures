@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C142-safina",
+    "language": "arabic",
+    "chapter": 142,
+    "sequence": 6510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94f407eed3c64b9c"
+  },
+  "findings": []
+}

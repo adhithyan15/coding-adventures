@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C109-khibra",
+    "language": "arabic",
+    "chapter": 109,
+    "sequence": 4460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:329840795d037b76"
+  },
+  "findings": []
+}

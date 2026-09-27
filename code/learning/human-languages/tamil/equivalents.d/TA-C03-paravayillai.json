@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C03-paravayillai",
+  "english": "it's okay / no problem / you're welcome",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪರವಾಗಿಲ್ಲ",
+      "romanization": "paravāgilla",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పరవాలేదు",
+      "romanization": "paravālēdu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "സാരമില്ല",
+      "romanization": "sāramilla",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "आपका स्वागत है",
+      "romanization": "āpkā svāgat hai"
+    }
+  ],
+  "source": "cross-track match: KA-C03-paravaagilla, TE-C03-paravaaledu, ML-C03-saaramilla, HI-C03-aapka-swagat-hai; sameRoot judged by the author, awaiting native review"
+}

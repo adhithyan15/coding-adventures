@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Lazy, Brave, Thirsty, Fresh, Ripe",
+  "label": "ch:ar-lazy-brave-thirsty-fresh-ripe",
+  "canDo": "I can say lazy, brave, thirsty, fresh and ripe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C153-nadij",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: i can say lazy, brave, thirsty, fresh and ripe.",
+    "assesses": [
+      "AR-LEX-C153-QUAL153-03",
+      "AR-LEX-C153-QUAL153-04",
+      "AR-LEX-C153-QUAL153-05"
+    ]
+  }
+}

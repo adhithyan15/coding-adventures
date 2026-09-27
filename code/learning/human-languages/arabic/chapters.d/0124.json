@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Scissors, Needle, Thread, Button, Nail",
+  "label": "ch:ar-scissors-needle-thread-button-nail",
+  "canDo": "I can say scissors, a needle, a thread, a button and a nail.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C124-mismar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say scissors, a needle, a thread, a button and a nail.",
+    "assesses": [
+      "AR-LEX-C124-THINGS124-03",
+      "AR-LEX-C124-THINGS124-04",
+      "AR-LEX-C124-THINGS124-05"
+    ]
+  }
+}

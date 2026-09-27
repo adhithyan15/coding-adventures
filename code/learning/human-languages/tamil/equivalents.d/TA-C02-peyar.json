@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C02-peyar",
+  "english": "name",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೆಸರು",
+      "romanization": "hesaru",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పేరు",
+      "romanization": "pēru",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പേര്",
+      "romanization": "pēr",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "नाम",
+      "romanization": "nām"
+    }
+  ],
+  "source": "cross-track match: KA-C02-hesaru, TE-C02-peru, ML-C02-peru, HI-C02-naam; sameRoot judged by the author, awaiting native review"
+}

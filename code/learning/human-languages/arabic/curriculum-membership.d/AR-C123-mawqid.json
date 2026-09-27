@@ -1,0 +1,11 @@
+{
+  "id": "AR-C123-mawqid",
+  "pathSegment": "AR-PATH-123-THINGS123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-123-THINGS123",
+      "order": 3
+    }
+  ]
+}

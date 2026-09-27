@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C65-drink",
+  "english": "drink",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕುಡಿ",
+      "romanization": "kuḍi",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C147-kudi; sameRoot judged by the author, awaiting native review"
+}

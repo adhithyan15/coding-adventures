@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:e2e27b4443b20437",
+  "lessonIds": [
+    "AR-C100-misad",
+    "AR-C100-mamarr",
+    "AR-C100-maydan",
+    "AR-C100-matar",
+    "AR-C100-mina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch100.txt",
+  "json": "arabic/narration/ch100.json",
+  "textHash": "fnv1a64:b4daad76bf8f2134",
+  "jsonHash": "fnv1a64:5f32947ebcc9b6bd",
+  "findings": []
+}

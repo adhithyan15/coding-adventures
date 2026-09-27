@@ -1,0 +1,11 @@
+{
+  "id": "AR-C152-dhaki",
+  "pathSegment": "AR-PATH-152-QUAL152",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-152-QUAL152",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C130-pampu",
+  "english": "a snake",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಾವು",
+      "romanization": "hāvu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పాము",
+      "romanization": "pāmu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പാമ്പ്",
+      "romanization": "pāmpŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "साँप",
+      "romanization": "sā̃p"
+    }
+  ],
+  "source": "cross-track match: KA-C131-havu, TE-C124-pamu, ML-C138-snake, HI-C60-snake; sameRoot judged by the author, awaiting native review"
+}

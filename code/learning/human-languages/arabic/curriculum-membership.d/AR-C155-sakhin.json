@@ -1,0 +1,11 @@
+{
+  "id": "AR-C155-sakhin",
+  "pathSegment": "AR-PATH-155-QUAL155",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-155-QUAL155",
+      "order": 3
+    }
+  ]
+}

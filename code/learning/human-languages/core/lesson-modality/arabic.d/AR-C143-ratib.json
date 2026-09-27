@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C143-ratib",
+    "language": "arabic",
+    "chapter": 143,
+    "sequence": 6590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:375af62a81963129"
+  },
+  "findings": []
+}

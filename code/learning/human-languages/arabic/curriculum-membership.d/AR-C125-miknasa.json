@@ -1,0 +1,11 @@
+{
+  "id": "AR-C125-miknasa",
+  "pathSegment": "AR-PATH-125-THINGS125",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-125-THINGS125",
+      "order": 1
+    }
+  ]
+}

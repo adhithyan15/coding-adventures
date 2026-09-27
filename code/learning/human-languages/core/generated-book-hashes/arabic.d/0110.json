@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:3424d5f64812f93c",
+  "lessonIds": [
+    "AR-C110-adat",
+    "AR-C110-malaka",
+    "AR-C110-khasira",
+    "AR-C110-hafiza",
+    "AR-C110-mawhiba"
+  ],
+  "tex": "arabic/book/chapters/ch110-tool-to-own-to-lose-to-keep-talent.tex"
+}

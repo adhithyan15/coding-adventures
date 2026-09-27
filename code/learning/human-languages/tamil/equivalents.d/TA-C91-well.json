@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C91-well",
+  "english": "well, fine",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚೆನ್ನಾಗಿ",
+      "romanization": "cennāgi"
+    },
+    {
+      "language": "telugu",
+      "form": "బాగా",
+      "romanization": "bāgā"
+    },
+    {
+      "language": "hindi",
+      "form": "कुआँ",
+      "romanization": "kuā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C03-cennaagi, TE-C03-baagaa, HI-C66-well"
+}

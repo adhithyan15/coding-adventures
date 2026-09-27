@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:7a5d4e82e257aca2",
+  "lessonIds": [
+    "AR-C123-battaniyya",
+    "AR-C123-wisada",
+    "AR-C123-sullam",
+    "AR-C123-mawqid",
+    "AR-C123-ina"
+  ],
+  "tex": "arabic/book/chapters/ch123-blanket-pillow-ladder-stove-vessel.tex"
+}

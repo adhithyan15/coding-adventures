@@ -1,0 +1,11 @@
+{
+  "id": "AR-C105-hawla",
+  "pathSegment": "AR-PATH-105-LOC105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-105-LOC105",
+      "order": 3
+    }
+  ]
+}

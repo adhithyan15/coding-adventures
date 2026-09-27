@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C24-iravu",
+  "english": "night",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ರಾತ್ರಿ",
+      "romanization": "rātri",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "రాత్రి",
+      "romanization": "rātri",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "രാത്രി",
+      "romanization": "rātri",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "रात",
+      "romanization": "raat",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C24-ratri, TE-C24-ratri, ML-C24-rathri, HI-C26-raat; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C115-aluvalakam",
+  "english": "an office",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಚೇರಿ",
+      "romanization": "kacēri"
+    },
+    {
+      "language": "telugu",
+      "form": "కార్యాలయం",
+      "romanization": "kāryālayaṁ",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "ഓഫീസ്",
+      "romanization": "ōphīs"
+    },
+    {
+      "language": "hindi",
+      "form": "दफ़्तर",
+      "romanization": "daftar"
+    }
+  ],
+  "source": "cross-track match: KA-C92-office, TE-C104-karyalayam, ML-C126-office, HI-C153-daftar; sameRoot judged by the author, awaiting native review"
+}

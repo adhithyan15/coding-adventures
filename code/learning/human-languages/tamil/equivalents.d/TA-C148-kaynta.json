@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C148-kaynta",
+  "english": "dry",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒಣ",
+      "romanization": "oṇa"
+    },
+    {
+      "language": "telugu",
+      "form": "పొడి",
+      "romanization": "poḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉണങ്ങിയ",
+      "romanization": "uṇaṅṅiya"
+    },
+    {
+      "language": "hindi",
+      "form": "सूखा",
+      "romanization": "sūkhā"
+    }
+  ],
+  "source": "cross-track match: KA-C143-ona, TE-C139-podi, ML-C167-unanniya, HI-C154-sukha"
+}

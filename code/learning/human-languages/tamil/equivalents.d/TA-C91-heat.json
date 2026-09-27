@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C91-heat",
+  "english": "heat",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "వేడి",
+      "romanization": "vēḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചൂട്",
+      "romanization": "cūṭŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: TE-C85-heat, ML-C118-heat; sameRoot judged by the author, awaiting native review"
+}

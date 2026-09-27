@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R129-first-pass-the-house-clothes-and-food",
+    "language": "arabic",
+    "chapter": 129,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15e9274b9b8f3b27"
+  },
+  "findings": []
+}

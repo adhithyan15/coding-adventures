@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C126-katu",
+  "english": "a forest",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಾಡು",
+      "romanization": "kāḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "అడవి",
+      "romanization": "aḍavi"
+    },
+    {
+      "language": "hindi",
+      "form": "जंगल",
+      "romanization": "jaṅgal"
+    }
+  ],
+  "source": "cross-track match: KA-C127-kadu, TE-C120-adavi, HI-C143-jangal; sameRoot judged by the author, awaiting native review"
+}

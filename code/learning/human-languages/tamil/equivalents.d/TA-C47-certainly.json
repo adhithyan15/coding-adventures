@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C47-certainly",
+  "english": "certainly",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "తప్పకుండా",
+      "romanization": "tappakuṇḍā"
+    },
+    {
+      "language": "malayalam",
+      "form": "തീർച്ചയായും",
+      "romanization": "tīrccayāyuṁ",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "ज़रूर",
+      "romanization": "zarūr"
+    }
+  ],
+  "source": "cross-track match: TE-C49-certainly, ML-C49-certainly, HI-C48-certainly; sameRoot judged by the author, awaiting native review"
+}

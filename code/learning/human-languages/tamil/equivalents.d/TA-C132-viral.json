@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C132-viral",
+  "english": "a finger",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆರಳು",
+      "romanization": "beraḷu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "వేలు",
+      "romanization": "vēlu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "വിരൽ",
+      "romanization": "viral",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "उँगली",
+      "romanization": "uṅglī"
+    }
+  ],
+  "source": "cross-track match: KA-C47-finger, TE-C47-finger, ML-C47-finger, HI-C46-finger; sameRoot judged by the author, awaiting native review"
+}

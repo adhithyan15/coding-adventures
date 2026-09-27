@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C119-cavi",
+  "english": "a key",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "తాళంచెవి",
+      "romanization": "tāḷaṁcevi"
+    },
+    {
+      "language": "malayalam",
+      "form": "താക്കോൽ",
+      "romanization": "tākkōl"
+    }
+  ],
+  "source": "cross-track match: TE-C110-talamcevi, ML-C129-key"
+}

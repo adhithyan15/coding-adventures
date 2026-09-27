@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C59-oil",
+  "english": "oil",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎಣ್ಣೆ",
+      "romanization": "eṇṇe",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నూనె",
+      "romanization": "nūne",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "എണ്ണ",
+      "romanization": "eṇṇa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "तेल",
+      "romanization": "tel"
+    }
+  ],
+  "source": "cross-track match: KA-C61-oil, TE-C61-oil, ML-C61-oil, HI-C52-oil; sameRoot judged by the author, awaiting native review"
+}

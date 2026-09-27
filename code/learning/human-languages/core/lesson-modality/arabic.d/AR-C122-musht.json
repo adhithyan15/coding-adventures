@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C122-musht",
+    "language": "arabic",
+    "chapter": 122,
+    "sequence": 5310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:861fad6504aac42c"
+  },
+  "findings": []
+}

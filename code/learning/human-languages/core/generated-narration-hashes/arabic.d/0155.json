@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:460faa07badcb1bb",
+  "lessonIds": [
+    "AR-C155-daruri",
+    "AR-C155-qabih",
+    "AR-C155-thamin",
+    "AR-C155-sakhin",
+    "AR-C155-muzdahim",
+    "AR-R155-first-pass-describing-words",
+    "AR-R155-second-pass-more-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch155.txt",
+  "json": "arabic/narration/ch155.json",
+  "textHash": "fnv1a64:288283af8d760eec",
+  "jsonHash": "fnv1a64:8bbbabd7deb25334",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "South, East, West, Place, Address",
+  "label": "ch:ar-south-east-west-place-address",
+  "canDo": "I can say south, east, west, a place and an address.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C104-unwan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say south, east, west, a place and an address.",
+    "assesses": [
+      "AR-LEX-C104-LOC104-03",
+      "AR-LEX-C104-LOC104-04",
+      "AR-LEX-C104-LOC104-05"
+    ]
+  }
+}

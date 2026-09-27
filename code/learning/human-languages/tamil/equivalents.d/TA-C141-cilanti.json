@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C141-cilanti",
+  "english": "a spider",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜೇಡ",
+      "romanization": "jēḍa"
+    },
+    {
+      "language": "telugu",
+      "form": "సాలీడు",
+      "romanization": "sālīḍu"
+    }
+  ],
+  "source": "cross-track match: KA-C132-jeda, TE-C70-spider"
+}

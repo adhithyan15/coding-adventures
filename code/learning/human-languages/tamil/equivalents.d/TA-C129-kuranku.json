@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C129-kuranku",
+  "english": "a monkey",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೋತಿ",
+      "romanization": "kōti"
+    },
+    {
+      "language": "telugu",
+      "form": "కోతి",
+      "romanization": "kōti"
+    },
+    {
+      "language": "malayalam",
+      "form": "കുരങ്ങ്",
+      "romanization": "kuraṅṅŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बंदर",
+      "romanization": "bandar"
+    }
+  ],
+  "source": "cross-track match: KA-C130-koti, TE-C123-koti, ML-C138-monkey, HI-C60-monkey; sameRoot judged by the author, awaiting native review"
+}

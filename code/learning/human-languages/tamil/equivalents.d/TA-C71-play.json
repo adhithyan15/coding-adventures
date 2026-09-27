@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C71-play",
+  "english": "to play",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆಡು",
+      "romanization": "āḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കളിക്കുക",
+      "romanization": "kaḷikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "बजाना",
+      "romanization": "bajānā"
+    }
+  ],
+  "source": "cross-track match: KA-C152-adu, ML-C98-kalikkuka, HI-C165-bajana"
+}

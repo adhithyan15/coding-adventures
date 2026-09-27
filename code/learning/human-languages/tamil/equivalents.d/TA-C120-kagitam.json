@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C120-kagitam",
+  "english": "paper",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಾಗದ",
+      "romanization": "kāgada",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కాగితం",
+      "romanization": "kāgitaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കടലാസ്",
+      "romanization": "kaṭalās",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C118-kagada, TE-C112-kagitam, ML-C140-paper; sameRoot judged by the author, awaiting native review"
+}

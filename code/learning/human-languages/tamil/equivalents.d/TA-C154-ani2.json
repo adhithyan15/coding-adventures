@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C154-ani2",
+  "english": "to wear",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತೊಡು",
+      "romanization": "toḍu"
+    },
+    {
+      "language": "hindi",
+      "form": "पहनना",
+      "romanization": "pahannā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C149-todu, HI-C163-pahanna; sameRoot judged by the author, awaiting native review"
+}

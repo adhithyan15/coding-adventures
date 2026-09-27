@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C117-urimai",
+  "english": "a right",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "അവകാശം",
+      "romanization": "avakāśaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "सही",
+      "romanization": "sahī"
+    }
+  ],
+  "source": "cross-track match: ML-C142-avakasam, HI-C112-sahi"
+}

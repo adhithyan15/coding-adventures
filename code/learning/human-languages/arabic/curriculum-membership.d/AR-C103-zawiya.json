@@ -1,0 +1,11 @@
+{
+  "id": "AR-C103-zawiya",
+  "pathSegment": "AR-PATH-103-LOC103",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-103-LOC103",
+      "order": 3
+    }
+  ]
+}

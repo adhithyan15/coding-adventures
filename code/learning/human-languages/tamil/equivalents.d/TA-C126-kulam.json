@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C126-kulam",
+  "english": "a pond",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "കുളം",
+      "romanization": "kuḷaṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: ML-C136-pond; sameRoot judged by the author, awaiting native review"
+}

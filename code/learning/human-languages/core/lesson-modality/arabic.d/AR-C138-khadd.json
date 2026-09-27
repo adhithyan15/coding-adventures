@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C138-khadd",
+    "language": "arabic",
+    "chapter": 138,
+    "sequence": 6220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29f5d3a92c6b6270"
+  },
+  "findings": []
+}

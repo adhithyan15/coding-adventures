@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C13-udal-uruppugal",
+  "english": "head and hand",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತಲೆ ಕೈ",
+      "romanization": "tale kai",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "తల చెయ్యి",
+      "romanization": "tala ceyyi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "തല കൈ",
+      "romanization": "tala kai",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C13-dehada-bhagagalu, TE-C13-sharira-bhagalu, ML-C13-shareera-bhaagangal; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C83-seventh",
+  "english": "seventh",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಏಳನೆಯ",
+      "romanization": "ēḷaneya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఏడవ",
+      "romanization": "ēḍava",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "सातवाँ",
+      "romanization": "sātvā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C75-seventh, TE-C82-seventh, HI-C76-seventh; sameRoot judged by the author, awaiting native review"
+}

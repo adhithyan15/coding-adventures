@@ -1,0 +1,11 @@
+{
+  "id": "AR-C112-ghaya",
+  "pathSegment": "AR-PATH-112-WANT112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-112-WANT112",
+      "order": 2
+    }
+  ]
+}

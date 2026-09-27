@@ -1,0 +1,11 @@
+{
+  "id": "AR-C144-khabbaz",
+  "pathSegment": "AR-PATH-144-THINGS144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-144-THINGS144",
+      "order": 2
+    }
+  ]
+}

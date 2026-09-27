@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C125-itli",
+  "english": "an idli, a steamed rice cake",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇಡ್ಲಿ",
+      "romanization": "iḍli",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఇడ్లీ",
+      "romanization": "iḍlī",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C125-idli, TE-C119-idli; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C114-ihtaja",
+  "pathSegment": "AR-PATH-114-WANT114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-114-WANT114",
+      "order": 3
+    }
+  ]
+}

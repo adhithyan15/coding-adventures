@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C106-imkaniyya",
+    "language": "arabic",
+    "chapter": 106,
+    "sequence": 4300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f851f5933573c30c"
+  },
+  "findings": []
+}

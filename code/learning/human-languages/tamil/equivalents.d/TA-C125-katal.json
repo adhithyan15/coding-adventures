@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C125-katal",
+  "english": "the sea",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಮುದ್ರ",
+      "romanization": "samudra"
+    },
+    {
+      "language": "telugu",
+      "form": "సముద్రం",
+      "romanization": "samudraṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "കടൽ",
+      "romanization": "kaṭal",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "समुद्र",
+      "romanization": "samudra"
+    }
+  ],
+  "source": "cross-track match: KA-C127-samudra, TE-C120-samudram, ML-C136-sea, HI-C143-samudra; sameRoot judged by the author, awaiting native review"
+}

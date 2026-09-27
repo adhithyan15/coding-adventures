@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "It is possible, With, Strength, Right, Owner",
+  "label": "ch:ar-it-is-possible-with-strength-right-owner",
+  "canDo": "I can say it is possible, with, strength, a right and an owner.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C108-malik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say it is possible, with, strength, a right and an owner.",
+    "assesses": [
+      "AR-LEX-C108-CAN108-03",
+      "AR-LEX-C108-CAN108-04",
+      "AR-LEX-C108-CAN108-05"
+    ]
+  }
+}

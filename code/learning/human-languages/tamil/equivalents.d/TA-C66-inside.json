@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C66-inside",
+  "english": "inside, in",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "లోపల",
+      "romanization": "lōpala",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "അകത്ത്",
+      "romanization": "akattŭ"
+    }
+  ],
+  "source": "cross-track match: TE-C101-lopala, ML-C95-akathu-purathu; sameRoot judged by the author, awaiting native review"
+}

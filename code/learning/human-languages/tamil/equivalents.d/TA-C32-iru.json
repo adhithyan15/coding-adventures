@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C32-iru",
+  "english": "to be, to exist, to stay",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇರು",
+      "romanization": "iru",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఉండు",
+      "romanization": "uṇḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉണ്ട്",
+      "romanization": "uṇṭŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "हूँ",
+      "romanization": "hūṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C32-iru, TE-C32-undu, ML-C32-undu, HI-C03-hun; sameRoot judged by the author, awaiting native review"
+}

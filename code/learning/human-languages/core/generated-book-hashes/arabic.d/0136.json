@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:f0680810ad1a6191",
+  "lessonIds": [
+    "AR-C136-timsah",
+    "AR-C136-bauda",
+    "AR-C136-dhubaba",
+    "AR-C136-nahla",
+    "AR-C136-farasha"
+  ],
+  "tex": "arabic/book/chapters/ch136-crocodile-mosquito-fly-bee-butterfly.tex"
+}

@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C123-valaippalam",
+  "english": "a banana",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾಳೆಹಣ್ಣು",
+      "romanization": "bāḷehaṇṇu"
+    },
+    {
+      "language": "telugu",
+      "form": "అరటిపండు",
+      "romanization": "araṭipaṇḍu",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "വാഴപ്പഴം",
+      "romanization": "vāḻappaḻaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "केला",
+      "romanization": "kelā"
+    }
+  ],
+  "source": "cross-track match: KA-C123-balehannu, TE-C117-aratipandu, ML-C149-valappalam, HI-C139-kela; sameRoot judged by the author, awaiting native review"
+}

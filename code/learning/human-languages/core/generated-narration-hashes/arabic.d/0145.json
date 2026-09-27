@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:db34a8b4c89f488e",
+  "lessonIds": [
+    "AR-C145-malih",
+    "AR-C145-fakhm",
+    "AR-C145-basit",
+    "AR-C145-murih",
+    "AR-C145-mashhur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch145.txt",
+  "json": "arabic/narration/ch145.json",
+  "textHash": "fnv1a64:2ae73448b1302975",
+  "jsonHash": "fnv1a64:a5c86a01cb371a10",
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C126-ilai",
+  "english": "a leaf",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎಲೆ",
+      "romanization": "ele"
+    },
+    {
+      "language": "telugu",
+      "form": "ఆకు",
+      "romanization": "āku"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇല",
+      "romanization": "ila",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C54-leaf, TE-C120-aku, ML-C149-ila; sameRoot judged by the author, awaiting native review"
+}

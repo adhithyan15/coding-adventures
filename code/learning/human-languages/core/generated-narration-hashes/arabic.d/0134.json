@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:d1886b5c55e4c16a",
+  "lessonIds": [
+    "AR-C134-daw",
+    "AR-C134-zill",
+    "AR-C134-zalam",
+    "AR-C134-ghayma",
+    "AR-C134-arnab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch134.txt",
+  "json": "arabic/narration/ch134.json",
+  "textHash": "fnv1a64:b3236a7df1902581",
+  "jsonHash": "fnv1a64:65ece71590e8d372",
+  "findings": []
+}

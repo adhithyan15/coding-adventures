@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C82-second",
+  "english": "second",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎರಡನೆಯ",
+      "romanization": "eraḍaneya"
+    },
+    {
+      "language": "telugu",
+      "form": "రెండవ",
+      "romanization": "reṇḍava",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "രണ്ടാം",
+      "romanization": "raṇṭāṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "दूसरा",
+      "romanization": "dūsrā"
+    }
+  ],
+  "source": "cross-track match: KA-C74-second, TE-C81-second, ML-C67-second, HI-C75-second; sameRoot judged by the author, awaiting native review"
+}

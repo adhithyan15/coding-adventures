@@ -186,12 +186,16 @@ describe("stroke ownership migration baseline", () => {
       // Telugu క starts the consonant pass with its five-movement, two-run
       // source-backed path. Keys move 378 -> 379 and Telugu 9 -> 10; Tamil and
       // both shared-identity values remain unchanged.
+      //
+      // Telugu ఖ continues that pass with its six-movement, two-run path.
+      // Keys move 379 -> 380 and Telugu 10 -> 11; Tamil and both
+      // shared-identity values remain unchanged.
     }).toEqual({
-      keys: 379,
+      keys: 380,
       keyHash:
-        "cf17a63a98d9fcb2e6951e310b9f80d0e552ce0f0343d21bdc5a90364bcffcdd",
+        "ad9e99528dad3652b42e5336fc0c6125c73810b33c68dee8f93cfc26ff895b38",
       nonTamilDataHash:
-        "2d0e8f627256cd88af8e3aded0a558c90346e1df9990dde97082ce0f7befd183",
+        "31d9099418ec70ed68be948036a6aa38acdff209d26a02ea1f7fb7faed85ec1c",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -207,7 +211,7 @@ describe("stroke ownership migration baseline", () => {
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
-        telugu: 10,
+        telugu: 11,
         "urdu-nastaliq": 31,
       },
     });

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C32-teri",
+  "english": "to know, to be apparent",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗೊತ್ತು",
+      "romanization": "gottu"
+    },
+    {
+      "language": "telugu",
+      "form": "తెలుసు",
+      "romanization": "telusu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "അറിയുക",
+      "romanization": "aṟiyuka"
+    },
+    {
+      "language": "hindi",
+      "form": "मैं जानता हूँ",
+      "romanization": "maiṁ jāntā hūṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C32-gottu, TE-C32-telusu, ML-C32-ariyuka, HI-C95-jaanta-hun; sameRoot judged by the author, awaiting native review"
+}

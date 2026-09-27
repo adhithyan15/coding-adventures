@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C146-pulippu",
+  "english": "sour",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹುಳಿ",
+      "romanization": "huḷi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పులుపు",
+      "romanization": "pulupu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പുളിയുള്ള",
+      "romanization": "puḷiyuḷḷa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "खट्टा",
+      "romanization": "khaṭṭā"
+    }
+  ],
+  "source": "cross-track match: KA-C145-huli2, TE-C73-sour, ML-C165-puliyulla, HI-C156-khatta; sameRoot judged by the author, awaiting native review"
+}

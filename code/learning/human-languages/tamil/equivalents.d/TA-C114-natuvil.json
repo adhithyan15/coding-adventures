@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C114-natuvil",
+  "english": "in the middle",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಡುವೆ",
+      "romanization": "naḍuve",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మధ్యలో",
+      "romanization": "madhyalō"
+    }
+  ],
+  "source": "cross-track match: KA-C108-naduve, TE-C102-madhyalo; sameRoot judged by the author, awaiting native review"
+}

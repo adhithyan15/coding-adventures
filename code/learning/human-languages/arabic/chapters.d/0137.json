@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Spider, Rooster, Cat, Owl, Crow",
+  "label": "ch:ar-spider-rooster-cat-owl-crow",
+  "canDo": "I can say a spider, a rooster, a cat, an owl and a crow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C137-ghurab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say a spider, a rooster, a cat, an owl and a crow.",
+    "assesses": [
+      "AR-LEX-C137-THINGS137-03",
+      "AR-LEX-C137-THINGS137-04",
+      "AR-LEX-C137-THINGS137-05"
+    ]
+  }
+}

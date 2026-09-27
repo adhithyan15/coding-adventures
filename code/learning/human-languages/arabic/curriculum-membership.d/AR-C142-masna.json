@@ -1,0 +1,11 @@
+{
+  "id": "AR-C142-masna",
+  "pathSegment": "AR-PATH-142-THINGS142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-142-THINGS142",
+      "order": 3
+    }
+  ]
+}

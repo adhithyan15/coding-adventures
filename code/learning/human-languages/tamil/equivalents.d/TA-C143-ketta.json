@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C143-ketta",
+  "english": "bad",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೆಟ್ಟ",
+      "romanization": "keṭṭa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "చెడ్డ",
+      "romanization": "ceḍḍa"
+    },
+    {
+      "language": "malayalam",
+      "form": "മോശം",
+      "romanization": "mōśaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "बुरा",
+      "romanization": "burā"
+    }
+  ],
+  "source": "cross-track match: KA-C146-ketta, TE-C76-bad, ML-C89-mosham, HI-C83-buraa; sameRoot judged by the author, awaiting native review"
+}

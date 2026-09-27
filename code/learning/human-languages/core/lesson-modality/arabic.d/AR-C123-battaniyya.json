@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C123-battaniyya",
+    "language": "arabic",
+    "chapter": 123,
+    "sequence": 5350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30f31fcf796d6d80"
+  },
+  "findings": []
+}

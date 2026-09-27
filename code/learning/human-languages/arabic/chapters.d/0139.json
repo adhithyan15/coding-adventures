@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Beard, Moustache, Chest, Waist, Elbow",
+  "label": "ch:ar-beard-moustache-chest-waist-elbow",
+  "canDo": "I can say a beard, a moustache, a chest, a waist and an elbow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R139-second-pass-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say a beard, a moustache, a chest, a waist and an elbow.",
+    "assesses": [
+      "AR-LEX-C139-THINGS139-03",
+      "AR-LEX-C139-THINGS139-04",
+      "AR-LEX-C139-THINGS139-05"
+    ]
+  }
+}

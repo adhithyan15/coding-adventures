@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 123,
+  "output": "arabic/book/chapters/ch123-blanket-pillow-ladder-stove-vessel.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

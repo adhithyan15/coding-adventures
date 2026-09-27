@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C56-a-lot",
+  "english": "a lot",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "ഒരുപാട്",
+      "romanization": "orupāṭŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "ज़्यादा",
+      "romanization": "zyādā"
+    }
+  ],
+  "source": "cross-track match: ML-C79-orupadu, HI-C64-more"
+}

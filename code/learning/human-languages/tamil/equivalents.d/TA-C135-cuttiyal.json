@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C135-cuttiyal",
+  "english": "a hammer",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸುತ್ತಿಗೆ",
+      "romanization": "suttige",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "సుత్తి",
+      "romanization": "sutti",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ചുറ്റിക",
+      "romanization": "cuṟṟika"
+    },
+    {
+      "language": "hindi",
+      "form": "हथौड़ा",
+      "romanization": "hathauṛā"
+    }
+  ],
+  "source": "cross-track match: KA-C117-suttige, TE-C69-hammer, ML-C159-currika, HI-C130-hathaura; sameRoot judged by the author, awaiting native review"
+}

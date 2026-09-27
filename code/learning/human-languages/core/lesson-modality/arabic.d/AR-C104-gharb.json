@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C104-gharb",
+    "language": "arabic",
+    "chapter": 104,
+    "sequence": 4220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bea409be2ce8f559"
+  },
+  "findings": []
+}

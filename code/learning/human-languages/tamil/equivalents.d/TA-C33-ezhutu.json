@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C33-ezhutu",
+  "english": "to write",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬರೆ",
+      "romanization": "bare"
+    },
+    {
+      "language": "telugu",
+      "form": "రాయు",
+      "romanization": "rāyu"
+    },
+    {
+      "language": "malayalam",
+      "form": "എഴുതുക",
+      "romanization": "eḻutuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "लिखना",
+      "romanization": "likhnā"
+    }
+  ],
+  "source": "cross-track match: KA-C33-bare, TE-C33-raayu, ML-C33-ezhutuka, HI-C34-likhna; sameRoot judged by the author, awaiting native review"
+}

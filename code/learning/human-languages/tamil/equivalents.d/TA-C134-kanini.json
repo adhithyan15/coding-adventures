@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C134-kanini",
+  "english": "a computer",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಂಪ್ಯೂಟರ್",
+      "romanization": "kampyūṭar"
+    },
+    {
+      "language": "telugu",
+      "form": "కంప్యూటర్",
+      "romanization": "kampyūṭar"
+    }
+  ],
+  "source": "cross-track match: KA-C137-kampyutar, TE-C130-kampyutar"
+}

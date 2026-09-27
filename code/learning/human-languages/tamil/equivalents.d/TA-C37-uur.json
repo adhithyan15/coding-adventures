@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C37-uur",
+  "english": "town, village",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಊರು",
+      "romanization": "ūru",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పట్టణం",
+      "romanization": "paṭṭaṇaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഊര്",
+      "romanization": "ūrŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C91-hometown, TE-C77-town, ML-C80-uuru; sameRoot judged by the author, awaiting native review"
+}

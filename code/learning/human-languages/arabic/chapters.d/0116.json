@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Jug, Frying pan, Oven, Fan, Computer",
+  "label": "ch:ar-jug-frying-pan-oven-fan-computer",
+  "canDo": "I can say a jug, a frying pan, an oven, a fan and a computer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C116-hasub",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a jug, a frying pan, an oven, a fan and a computer.",
+    "assesses": [
+      "AR-LEX-C116-THINGS116-03",
+      "AR-LEX-C116-THINGS116-04",
+      "AR-LEX-C116-THINGS116-05"
+    ]
+  }
+}

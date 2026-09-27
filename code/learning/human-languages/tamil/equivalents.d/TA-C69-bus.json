@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C69-bus",
+  "english": "a bus",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಸ್",
+      "romanization": "bas"
+    },
+    {
+      "language": "telugu",
+      "form": "బస్సు",
+      "romanization": "bassu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ബസ്",
+      "romanization": "bas"
+    }
+  ],
+  "source": "cross-track match: KA-C100-bus, TE-C105-bassu, ML-C121-bus"
+}

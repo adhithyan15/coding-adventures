@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C57-ember",
+  "english": "an ember",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "കനൽ",
+      "romanization": "kanal",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: ML-C59-ember; sameRoot judged by the author, awaiting native review"
+}

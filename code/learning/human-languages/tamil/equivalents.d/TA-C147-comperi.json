@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C147-comperi",
+  "english": "lazy",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸೋಮಾರಿ",
+      "romanization": "sōmāri",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "సోమరి",
+      "romanization": "sōmari",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മടിയുള്ള",
+      "romanization": "maṭiyuḷḷa"
+    }
+  ],
+  "source": "cross-track match: KA-C145-somari, TE-C141-somari, ML-C169-matiyulla; sameRoot judged by the author, awaiting native review"
+}

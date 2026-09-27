@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C136-kuppi",
+  "english": "a bottle",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾಟಲಿ",
+      "romanization": "bāṭali"
+    },
+    {
+      "language": "telugu",
+      "form": "బాటిలు",
+      "romanization": "bāṭilu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കുപ്പി",
+      "romanization": "kuppi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बोतल",
+      "romanization": "botal"
+    }
+  ],
+  "source": "cross-track match: KA-C138-batali, TE-C131-batilu, ML-C134-bottle, HI-C134-botal; sameRoot judged by the author, awaiting native review"
+}

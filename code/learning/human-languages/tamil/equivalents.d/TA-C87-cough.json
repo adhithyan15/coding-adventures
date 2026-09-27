@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C87-cough",
+  "english": "a cough",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೆಮ್ಮು",
+      "romanization": "kemmu"
+    },
+    {
+      "language": "telugu",
+      "form": "దగ్గు",
+      "romanization": "daggu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചുമ",
+      "romanization": "cuma"
+    },
+    {
+      "language": "hindi",
+      "form": "खाँसी",
+      "romanization": "khā̃sī"
+    }
+  ],
+  "source": "cross-track match: KA-C82-cough, TE-C63-cough, ML-C63-cough, HI-C106-khansi"
+}

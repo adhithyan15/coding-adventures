@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C29-kaalai-vanakkam",
+  "english": "good morning",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶುಭೋದಯ",
+      "romanization": "śubhōdaya"
+    },
+    {
+      "language": "telugu",
+      "form": "శుభోదయం",
+      "romanization": "śubhōdayam"
+    },
+    {
+      "language": "malayalam",
+      "form": "സുപ്രഭാതം",
+      "romanization": "suprabhātaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "सुप्रभात",
+      "romanization": "suprabhāt"
+    }
+  ],
+  "source": "cross-track match: KA-C29-shubhodaya, TE-C29-subhodayam, ML-C29-suprabhaatham, HI-C31-suprabhat"
+}

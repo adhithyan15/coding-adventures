@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C57-wind",
+  "english": "the wind",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಾಳಿ",
+      "romanization": "gāḷi"
+    },
+    {
+      "language": "telugu",
+      "form": "గాలి",
+      "romanization": "gāli"
+    },
+    {
+      "language": "malayalam",
+      "form": "കാറ്റ്",
+      "romanization": "kāṟṟŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "हवा",
+      "romanization": "havā"
+    }
+  ],
+  "source": "cross-track match: KA-C59-wind, TE-C59-wind, ML-C59-wind, HI-C145-hava; sameRoot judged by the author, awaiting native review"
+}

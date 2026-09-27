@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C142-darraja",
+    "language": "arabic",
+    "chapter": 142,
+    "sequence": 6500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fbf232ee2d4cc636"
+  },
+  "findings": []
+}

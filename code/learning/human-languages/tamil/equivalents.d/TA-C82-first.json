@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C82-first",
+  "english": "first",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊದಲನೆಯ",
+      "romanization": "modalaneya"
+    },
+    {
+      "language": "telugu",
+      "form": "మొదటి",
+      "romanization": "modaṭi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഒന്നാം",
+      "romanization": "onnāṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "पहला",
+      "romanization": "pahlā"
+    }
+  ],
+  "source": "cross-track match: KA-C74-first, TE-C81-first, ML-C67-first, HI-C75-first"
+}

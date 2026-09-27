@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C147-vayatana",
+  "english": "old",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಳೆಯ",
+      "romanization": "haḷeya"
+    },
+    {
+      "language": "malayalam",
+      "form": "പഴയ",
+      "romanization": "paḻaya"
+    }
+  ],
+  "source": "cross-track match: KA-C42-old, ML-C42-old"
+}

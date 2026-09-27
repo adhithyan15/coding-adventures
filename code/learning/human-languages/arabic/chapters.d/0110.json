@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Tool, To own, To lose, To keep, Talent",
+  "label": "ch:ar-tool-to-own-to-lose-to-keep-talent",
+  "canDo": "I can say a tool, to own, to lose, to keep and a talent.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-C110-mawhiba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a tool, to own, to lose, to keep and a talent.",
+    "assesses": [
+      "AR-LEX-C110-CAN110-03",
+      "AR-LEX-C110-CAN110-04",
+      "AR-LEX-C110-CAN110-05"
+    ]
+  }
+}

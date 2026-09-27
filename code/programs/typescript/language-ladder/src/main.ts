@@ -1112,6 +1112,9 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
   summary.textContent = `Open ${lesson.estMinutes || 5}-minute lesson`;
   details.appendChild(summary);
   let filmstripSection: HTMLElement | null = null;
+  // HL41: the equivalents panel goes under the first teaching section, the
+  // first one that is not the warm-up, where the book puts it too.
+  let teachingSection: HTMLElement | null = null;
   for (const sectionData of lessonSections(lesson.body)) {
     const sectionEl = el("section", "lesson-body__section");
     const heading = el("h4", "lesson-body__heading");
@@ -1119,6 +1122,9 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
     sectionEl.appendChild(heading);
     if (filmstripSection === null && /^(?:Writing|Script)\b/.test(sectionData.title.trim())) {
       filmstripSection = sectionEl;
+    }
+    if (teachingSection === null && !/^warm-?up\b/i.test(sectionData.title.trim())) {
+      teachingSection = sectionEl;
     }
     for (const block of sectionData.blocks) {
       if (block.kind === "image") {
@@ -1162,10 +1168,34 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
     figure.append(img, caption);
     filmstripSection.insertBefore(figure, filmstripSection.children[1] ?? null);
   };
+  // HL41: "In the family, and next door". The owner files the book prints,
+  // the comparison sets and the code that builds the table are all loaded only
+  // when the lesson opens, through a dynamic import, so none of them reach the
+  // first-paint chunk. A lesson with no owner file, or a malformed one, simply
+  // shows no panel.
+  let equivalentsRequested = false;
+  const loadEquivalentsPanel = async () => {
+    if (equivalentsRequested || teachingSection === null) return;
+    equivalentsRequested = true;
+    try {
+      const { equivalentsPanel } = await import("./equivalents-sources.ts");
+      const panel = await equivalentsPanel(lesson.language, lesson.id, languageName);
+      if (panel !== null) teachingSection.appendChild(panel);
+    } catch {
+      // A chunk that failed to load (a dropped connection, a stale deploy)
+      // leaves the lesson without its panel, and the next open tries again.
+      equivalentsRequested = false;
+    }
+  };
   details.addEventListener("toggle", () => {
-    if (details.open) void loadFilmstrip();
+    if (!details.open) return;
+    void loadFilmstrip();
+    void loadEquivalentsPanel();
   });
-  if (details.open) void loadFilmstrip();
+  if (details.open) {
+    void loadFilmstrip();
+    void loadEquivalentsPanel();
+  }
   return details;
 }
 

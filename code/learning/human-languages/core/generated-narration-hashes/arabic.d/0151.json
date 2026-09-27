@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:c9cac5f062af6243",
+  "lessonIds": [
+    "AR-C151-nahif",
+    "AR-C151-samin",
+    "AR-C151-muballal",
+    "AR-C151-jaff",
+    "AR-C151-mutassikh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch151.txt",
+  "json": "arabic/narration/ch151.json",
+  "textHash": "fnv1a64:43d266e9339d0804",
+  "jsonHash": "fnv1a64:ab31d74a4a9d697d",
+  "findings": []
+}

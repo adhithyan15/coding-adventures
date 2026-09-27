@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:43a59169e4dacb42",
+  "lessonIds": [
+    "AR-C140-kaff",
+    "AR-C140-zufr",
+    "AR-C140-dimagh",
+    "AR-C140-kab",
+    "AR-C140-shafa"
+  ],
+  "tex": "arabic/book/chapters/ch140-palm-fingernail-brain-heel-lip.tex"
+}

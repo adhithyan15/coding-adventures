@@ -1,0 +1,11 @@
+{
+  "id": "AR-C104-janub",
+  "pathSegment": "AR-PATH-104-LOC104",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-104-LOC104",
+      "order": 0
+    }
+  ]
+}

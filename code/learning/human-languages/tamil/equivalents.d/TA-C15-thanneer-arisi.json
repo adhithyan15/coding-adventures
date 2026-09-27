@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C15-thanneer-arisi",
+  "english": "water, and rice",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನೀರು ಅಕ್ಕಿ ಅನ್ನ",
+      "romanization": "nīru akki anna"
+    },
+    {
+      "language": "telugu",
+      "form": "నీళ్ళు బియ్యం అన్నం",
+      "romanization": "nīḷḷu biyyam annam"
+    },
+    {
+      "language": "malayalam",
+      "form": "വെള്ളം അരി ചോറ്",
+      "romanization": "veḷḷaṁ ari cōṟŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "पानी रोटी",
+      "romanization": "pānī roṭī"
+    }
+  ],
+  "source": "cross-track match: KA-C15-niiru-akki, TE-C15-neellu-biyyam, ML-C15-vellam-ari, HI-C15-paani-roti"
+}

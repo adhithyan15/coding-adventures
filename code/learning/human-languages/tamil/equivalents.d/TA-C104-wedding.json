@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C104-wedding",
+  "english": "a wedding, marriage",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮದುವೆ",
+      "romanization": "maduve"
+    },
+    {
+      "language": "telugu",
+      "form": "పెళ్ళి",
+      "romanization": "peḷḷi"
+    },
+    {
+      "language": "malayalam",
+      "form": "കല്യാണം",
+      "romanization": "kalyāṇaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "शादी",
+      "romanization": "śādī"
+    }
+  ],
+  "source": "cross-track match: KA-C91-wedding, TE-C89-wedding, ML-C126-wedding, HI-C119-shadi"
+}

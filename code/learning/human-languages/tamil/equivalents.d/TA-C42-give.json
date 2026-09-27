@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C42-give",
+  "english": "give",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೊಡು",
+      "romanization": "koḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఇవ్వు",
+      "romanization": "ivvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "തരൂ",
+      "romanization": "tarū"
+    },
+    {
+      "language": "hindi",
+      "form": "देना",
+      "romanization": "denā"
+    }
+  ],
+  "source": "cross-track match: KA-C43-give, TE-C43-give, ML-C43-give, HI-C42-give; sameRoot judged by the author, awaiting native review"
+}

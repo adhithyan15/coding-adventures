@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C68-price",
+  "english": "a price",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆಲೆ",
+      "romanization": "bele",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ధర",
+      "romanization": "dhara"
+    },
+    {
+      "language": "hindi",
+      "form": "दाम",
+      "romanization": "dām"
+    }
+  ],
+  "source": "cross-track match: KA-C94-price, TE-C72-price, HI-C72-price; sameRoot judged by the author, awaiting native review"
+}

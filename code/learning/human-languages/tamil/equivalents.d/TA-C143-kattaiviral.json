@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C143-kattaiviral",
+  "english": "a thumb",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೆಬ್ಬೆರಳು",
+      "romanization": "hebberaḷu"
+    },
+    {
+      "language": "hindi",
+      "form": "अंगूठा",
+      "romanization": "aṅgūṭhā"
+    }
+  ],
+  "source": "cross-track match: KA-C136-hebberalu, HI-C150-angutha"
+}

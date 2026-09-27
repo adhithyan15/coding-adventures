@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C46-doctor",
+  "english": "a doctor",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ವೈದ್ಯ",
+      "romanization": "vaidya"
+    },
+    {
+      "language": "telugu",
+      "form": "వైద్యుడు",
+      "romanization": "vaidyuḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "വൈദ്യൻ",
+      "romanization": "vaidyan"
+    },
+    {
+      "language": "hindi",
+      "form": "डाक्टर",
+      "romanization": "ḍākṭar"
+    }
+  ],
+  "source": "cross-track match: KA-C48-doctor, TE-C48-doctor, ML-C48-doctor, HI-C107-doctor"
+}

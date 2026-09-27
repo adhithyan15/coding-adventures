@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C143-nilamana",
+  "english": "long",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಉದ್ದ",
+      "romanization": "udda"
+    },
+    {
+      "language": "malayalam",
+      "form": "നീളമുള്ള",
+      "romanization": "nīḷamuḷḷa",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C140-udda, ML-C164-nilamulla; sameRoot judged by the author, awaiting native review"
+}

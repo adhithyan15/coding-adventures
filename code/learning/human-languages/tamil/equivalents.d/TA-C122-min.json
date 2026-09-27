@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C122-min",
+  "english": "a fish",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೀನು",
+      "romanization": "mīnu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "చేప",
+      "romanization": "cēpa"
+    },
+    {
+      "language": "malayalam",
+      "form": "മീൻ",
+      "romanization": "mīn",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मछली",
+      "romanization": "machhlī"
+    }
+  ],
+  "source": "cross-track match: KA-C122-minu, TE-C116-cepa, ML-C131-fish, HI-C54-fish; sameRoot judged by the author, awaiting native review"
+}

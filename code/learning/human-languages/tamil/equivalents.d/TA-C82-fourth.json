@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C82-fourth",
+  "english": "fourth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಾಲ್ಕನೆಯ",
+      "romanization": "nālkaneya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నాలుగవ",
+      "romanization": "nālugava",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "നാലാം",
+      "romanization": "nālāṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "चौथा",
+      "romanization": "cauthā"
+    }
+  ],
+  "source": "cross-track match: KA-C74-fourth, TE-C81-fourth, ML-C67-fourth, HI-C75-fourth; sameRoot judged by the author, awaiting native review"
+}

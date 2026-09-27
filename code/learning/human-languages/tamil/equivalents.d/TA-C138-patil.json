@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C138-patil",
+  "english": "an answer",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಉತ್ತರ",
+      "romanization": "uttara"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉത്തരം",
+      "romanization": "uttaraṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C16-uttara, ML-C140-answer"
+}

@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C134-tolaikkatci",
+  "english": "a television",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಟೀವಿ",
+      "romanization": "ṭīvi"
+    },
+    {
+      "language": "telugu",
+      "form": "టీవీ",
+      "romanization": "ṭīvī"
+    }
+  ],
+  "source": "cross-track match: KA-C137-tivi, TE-C130-tivi"
+}

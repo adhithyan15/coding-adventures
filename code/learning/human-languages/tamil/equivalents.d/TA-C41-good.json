@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C41-good",
+  "english": "good",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒಳ್ಳೆಯ",
+      "romanization": "oḷḷeya"
+    },
+    {
+      "language": "telugu",
+      "form": "మంచి",
+      "romanization": "manci"
+    },
+    {
+      "language": "malayalam",
+      "form": "നല്ല",
+      "romanization": "nalla",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "अच्छा",
+      "romanization": "acchā"
+    }
+  ],
+  "source": "cross-track match: KA-C42-good, TE-C42-good, ML-C42-good, HI-C41-good; sameRoot judged by the author, awaiting native review"
+}

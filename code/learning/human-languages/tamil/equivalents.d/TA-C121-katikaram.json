@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C121-katikaram",
+  "english": "a clock",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಡಿಯಾರ",
+      "romanization": "gaḍiyāra",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గడియారం",
+      "romanization": "gaḍiyāraṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C118-gadiyara, TE-C111-gadiyaram; sameRoot judged by the author, awaiting native review"
+}

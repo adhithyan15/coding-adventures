@@ -1,0 +1,11 @@
+{
+  "id": "AR-C147-ghadib",
+  "pathSegment": "AR-PATH-147-QUAL147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-147-QUAL147",
+      "order": 4
+    }
+  ]
+}

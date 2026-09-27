@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-152-QUAL152",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "AR-EXT-152-QUAL152"
+  ],
+  "after": []
+}

@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C100-children",
+  "english": "children",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "పిల్లలు",
+      "romanization": "pillalu"
+    },
+    {
+      "language": "hindi",
+      "form": "बच्चे",
+      "romanization": "bacce"
+    }
+  ],
+  "source": "cross-track match: TE-C88-children, HI-C91-bacche-plural"
+}

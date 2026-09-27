@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C71-wash",
+  "english": "to wash",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತೊಳೆ",
+      "romanization": "toḷe"
+    },
+    {
+      "language": "telugu",
+      "form": "కడుగు",
+      "romanization": "kaḍugu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കഴുകുക",
+      "romanization": "kaḻukuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "धोना",
+      "romanization": "dhonā"
+    }
+  ],
+  "source": "cross-track match: KA-C150-tole, TE-C146-kadugu, ML-C171-kalukuka, HI-C160-dhona; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Longing, Ambition, Purpose, Project, Suggestion",
+  "label": "ch:ar-longing-ambition-purpose-project-suggestion",
+  "canDo": "I can say longing, ambition, a purpose, a project and a suggestion.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "AR-C112-iqtirah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say longing, ambition, a purpose, a project and a suggestion.",
+    "assesses": [
+      "AR-LEX-C112-WANT112-03",
+      "AR-LEX-C112-WANT112-04",
+      "AR-LEX-C112-WANT112-05"
+    ]
+  }
+}

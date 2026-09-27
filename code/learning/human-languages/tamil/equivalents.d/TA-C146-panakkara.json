@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C146-panakkara",
+  "english": "rich",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶ್ರೀಮಂತ",
+      "romanization": "śrīmanta"
+    },
+    {
+      "language": "hindi",
+      "form": "अमीर",
+      "romanization": "amīr"
+    }
+  ],
+  "source": "cross-track match: KA-C143-srimanta, HI-C157-amir"
+}

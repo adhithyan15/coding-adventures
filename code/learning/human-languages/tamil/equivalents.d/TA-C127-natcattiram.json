@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C127-natcattiram",
+  "english": "a star",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚುಕ್ಕಿ",
+      "romanization": "cukki"
+    },
+    {
+      "language": "telugu",
+      "form": "చుక్క",
+      "romanization": "cukka"
+    },
+    {
+      "language": "malayalam",
+      "form": "നക്ഷത്രം",
+      "romanization": "nakṣatraṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "तारा",
+      "romanization": "tārā"
+    }
+  ],
+  "source": "cross-track match: KA-C53-star, TE-C53-star, ML-C53-star, HI-C55-star; sameRoot judged by the author, awaiting native review"
+}

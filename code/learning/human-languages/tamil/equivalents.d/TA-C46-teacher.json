@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C46-teacher",
+  "english": "a teacher",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶಿಕ್ಷಕ",
+      "romanization": "śikṣaka"
+    },
+    {
+      "language": "telugu",
+      "form": "గురువు",
+      "romanization": "guruvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "അധ്യാപകൻ",
+      "romanization": "adhyāpakan"
+    },
+    {
+      "language": "hindi",
+      "form": "शिक्षक",
+      "romanization": "śikṣak"
+    }
+  ],
+  "source": "cross-track match: KA-C48-teacher, TE-C48-teacher, ML-C48-teacher, HI-C47-teacher"
+}

@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C136-pommai",
+  "english": "a doll, a toy",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೊಂಬೆ",
+      "romanization": "bombe"
+    },
+    {
+      "language": "telugu",
+      "form": "బొమ్మ",
+      "romanization": "bomma",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C119-bombe, TE-C113-bomma; sameRoot judged by the author, awaiting native review"
+}
