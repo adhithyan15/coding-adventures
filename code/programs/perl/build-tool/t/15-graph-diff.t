@@ -102,6 +102,13 @@ sub capture_error {
     return $error;
 }
 
+sub capture_raw_error {
+    my ($callback) = @_;
+    my $ok = eval { $callback->(); 1 };
+    return '' if $ok;
+    return "$@";
+}
+
 subtest 'consumes the exact eight neutral graph fixtures' => sub {
     my @found = map { s{.*[\\/]}{}r }
         sort glob(File::Spec->catfile($CASE_ROOT, 'graph-*.json'));
@@ -174,6 +181,15 @@ subtest 'consumes the exact eleven neutral diff-selection fixtures' => sub {
 };
 
 subtest 'structural graph failures are stable and bounded' => sub {
+    is(
+        capture_raw_error(sub {
+            CodingAdventures::BuildTool::GraphDiff::evaluate_graph({
+                packages => ['fixture/a', 'fixture/a'], edges => [],
+            });
+        }),
+        'GRAPH_PACKAGE_DUPLICATE',
+        'raw structural error contains only the stable code',
+    );
     is(
         capture_error(sub {
             CodingAdventures::BuildTool::GraphDiff::evaluate_graph({
@@ -285,11 +301,11 @@ subtest 'diff validation precedence is stable' => sub {
         changed_paths => ['p/src/value.pm'],
     };
     is(
-        capture_error(sub {
+        capture_raw_error(sub {
             CodingAdventures::BuildTool::GraphDiff::evaluate_diff_selection($invalid_glob);
         }),
         'DIFF_GLOB_INVALID',
-        'invalid later glob is rejected before matching',
+        'invalid later glob is rejected before matching with only the stable code',
     );
 
     my $over = load_case('diff-selection-match-work-over-limit.json')->{input};
