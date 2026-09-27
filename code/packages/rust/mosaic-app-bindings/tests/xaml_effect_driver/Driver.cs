@@ -253,20 +253,15 @@ internal static class Driver
         var component = new EffectComponent();
         var result = await MosaicRuntimeHost.HandleEvent(component, new RequestEffect(false));
         Check(result is not null, "a handler that closes the host does not kill the process");
-        // And the host stays closed rather than half-open. It REFUSES by
-        // throwing -- the nullable return of `ApplyProps` means "no runtime was
-        // ever available", not "the one you had is gone" -- so the assertion is
-        // that it throws, not that it quietly hands back stale props.
-        var refused = false;
-        try
-        {
-            MosaicRuntimeHost.ApplyProps(new EffectComponent());
-        }
-        catch (ObjectDisposedException)
-        {
-            refused = true;
-        }
-        Check(refused, "a closed host refuses further props rather than serving stale ones");
+        // Closing clears the disposed runtime, so optional callers see no
+        // props instead of reaching through delegates from the unloaded DLL.
+        var closedProps = MosaicRuntimeHost.ApplyProps(new EffectComponent());
+        Check(closedProps is null, "a closed host does not serve stale props");
+
+        // A real startup retry explicitly asks the host to load again before
+        // reinstalling handlers and applying required props.
+        MosaicRuntimeHost.LoadRequired();
+        Check(MosaicRuntimeHost.IsAvailable, "a closed host can reload the runtime for retry");
     }
 
     /// Take ownership, answer LATER, from another thread.
