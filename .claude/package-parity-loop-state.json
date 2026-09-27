@@ -11,25 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16153,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16153",
-    "title": "feat(itf): enforce barcode v1 parity",
-    "branch": "codex/parity-itf-existing-lanes-v1-20260927",
-    "item_id": "itf-existing-lanes-v1-conformance",
-    "opened_at": "2026-09-27T13:55:32Z",
-    "head_revision": "833492b4c6932077c1a5b337e54cacf1ce47c837",
-    "checks_status": "pending",
-    "auto_merge_enabled": false
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-27T13:08:28Z",
-    "pr_number": 16145,
+    "observed_at": "2026-09-27T19:46:23Z",
+    "pr_number": 16153,
     "status": "merged",
-    "notes": "All 48 final-head checks reached terminal acceptable conclusions: 41 successes and seven expected path-gated skips. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and PR #16145 merged automatically as 0117283ca42564c87b1f9cbc8abab2664d06c159 without a plain manual merge command."
+    "notes": "All final-head checks reached terminal acceptable conclusions, including CodeQL, the Human Languages Books gate, repo-wide metadata contracts, CI on Ubuntu, macOS, and Windows, and the CI push gate; unrelated path-gated jobs skipped as designed. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge was enabled, and PR #16153 merged automatically as cb6fe40a0819113a820cd9886e494a2f4d9f4f66 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "dfde255876bc4d9ce01d05ec8a26f48b3e10b4bf",
+    "revision": "cb6fe40a0819113a820cd9886e494a2f4d9f4f66",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -10068,7 +10058,7 @@
     {
       "id": "itf-existing-lanes-v1-conformance",
       "title": "Reconcile existing ITF lanes with the neutral v1 contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["barcode-symbologies-language-neutral-conformance"],
       "branch": "codex/parity-itf-existing-lanes-v1-20260927",
       "pr_number": 16153,
@@ -10082,7 +10072,11 @@
       "rebase_notes": "Before publication, origin/main advanced through unrelated merged work with zero overlap against the 68 intended ITF, fixture, roadmap, and state paths. The implementation rebased cleanly onto exact origin/main dfde255876bc4d9ce01d05ec8a26f48b3e10b4bf; the refreshed schema-3 inventory and every reported count remain unchanged.",
       "notes": "Dynamically execute all ten neutral ITF cases in the twelve current lanes; repair Unicode-scalar preflight, the 4,096-scalar ceiling, length-before-alphabet precedence, ASCII-only digits, stable payload-blind atomic errors, exact normalized/modules/runs/digests, truthful empty capability metadata, and the ITF TypeScript paint-instructions dependency. Preserve public exception and Result shapes, use handwritten per-language adapters behind one shared projection contract, and validate each direct barcode-1d consumer.",
       "validation_notes": "All twelve ITF package suites pass with the shared ten-case corpus, plus lane-native coverage, lint, type, release-build, package-manager audit, and build-front checks. Direct barcode-1d consumers pass in C#, Elixir, F#, Go, Haskell, Lua, Python, Ruby, Rust, and TypeScript. Perl passes its ITF facade assertions before the pre-existing Windows XS loader expectation fails, and Swift ITF passes before the broader facade hits pre-existing Windows system-library link imports; both host-native failures are outside this pure child.",
-      "publication_notes": "Opened ready-for-review PR #16153 from validated implementation head 9d016d5b6939b0091112ad2f3e247eaa8e304dd9 after a normal first push. GitHub reports the PR open, non-draft, and mergeable; initial checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and the branch remains conflict-free."
+      "publication_notes": "Opened ready-for-review PR #16153 from validated implementation head 9d016d5b6939b0091112ad2f3e247eaa8e304dd9 after a normal first push. Subsequent focused repairs produced final head b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649.",
+      "merged_head_revision": "b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649",
+      "merged_at": "2026-09-27T19:46:23Z",
+      "merge_revision": "cb6fe40a0819113a820cd9886e494a2f4d9f4f66",
+      "merge_notes": "All final-head checks reached terminal acceptable conclusions. GitHub reported the reviewed head clean and mergeable, guarded squash auto-merge was enabled only then, and GitHub merged PR #16153 automatically without a plain manual merge command."
     },
     {
       "id": "code39-existing-lanes-v1-conformance",
@@ -10133,7 +10127,7 @@
       "id": "barcode-symbologies-existing-lanes-v1-conformance",
       "title": "Reconcile existing barcode symbology lanes with the neutral v1 contract",
       "status": "pending",
-      "depends_on": ["itf-existing-lanes-v1-conformance", "code39-existing-lanes-v1-conformance", "codabar-existing-lanes-v1-conformance", "code128-existing-lanes-v1-conformance", "upc-a-existing-lanes-v1-conformance", "ean-13-existing-lanes-v1-conformance"],
+      "depends_on": ["itf-existing-lanes-v1-conformance", "code39-existing-lanes-v1-conformance", "codabar-existing-lanes-v1-conformance", "code128-existing-lanes-v1-conformance", "upc-a-existing-lanes-v1-conformance", "ean-13-existing-lanes-v1-conformance", "haskell-itf-stack-windows-build-front-coverage", "haskell-barcode-1d-symbology-windows-build-front-coverage"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
@@ -10215,7 +10209,7 @@
       "id": "barcode-1d-java-kotlin-dart-lane-parity",
       "title": "Complete the barcode-1d facade in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-layout-1d-java-kotlin-dart-lane-parity", "itf-java-kotlin-dart-lane-parity", "code39-java-kotlin-dart-lane-parity", "codabar-java-kotlin-dart-lane-parity", "code128-java-kotlin-dart-lane-parity", "upc-a-java-kotlin-dart-lane-parity", "ean-13-java-kotlin-dart-lane-parity", "barcode-1d-facade-language-neutral-conformance"],
+      "depends_on": ["barcode-layout-1d-java-kotlin-dart-lane-parity", "itf-java-kotlin-dart-lane-parity", "code39-java-kotlin-dart-lane-parity", "codabar-java-kotlin-dart-lane-parity", "code128-java-kotlin-dart-lane-parity", "upc-a-java-kotlin-dart-lane-parity", "ean-13-java-kotlin-dart-lane-parity", "barcode-1d-facade-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the reviewed pure facade and paint-vm-ascii output in the three missing lanes after all six encoders and shared layout exist. Keep native image and text authority out of the portable surface."
@@ -10706,12 +10700,42 @@
     },
     {
       "id": "haskell-barcode-encoder-windows-build-front-coverage",
-      "title": "Add Windows build fronts for Haskell barcode encoders",
-      "status": "pending",
+      "title": "Add Windows build fronts for five Haskell 2D barcode encoders",
+      "status": "in-progress",
       "depends_on": [],
+      "branch": "codex/parity-itf-existing-lanes-v1-20260927",
+      "pr_number": null,
+      "selected_at": "2026-09-27T19:49:02Z",
+      "selection_revision": "b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649",
+      "selection_notes": "Reconciled after the work was delivered as a bounded prerequisite repair inside the active ITF PR. The item now enters the recorded lifecycle before being associated with that already-reviewed PR; no second implementation branch or PR was created.",
+      "notes": "Discovered by the post-PR #16127 Haskell front audit. Add fail-closed BUILD_windows recipes for aztec-code, data-matrix, micro-qr, pdf417, and qr-code that preserve each package's current `cabal test` command. Their present POSIX `if command -v` fallback fails under cmd.exe, so cover exact Windows-front precedence with a repository metadata regression while reusing the existing Hspec suites."
+    },
+    {
+      "id": "haskell-itf-stack-windows-build-front-coverage",
+      "title": "Add Windows build fronts for the Haskell ITF stack",
+      "status": "pending",
+      "depends_on": ["itf-existing-lanes-v1-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the post-PR #16127 Haskell front audit. Add fail-closed BUILD_windows recipes for aztec-code, data-matrix, micro-qr, pdf417, and qr-code that preserve each package's current `cabal test` command. Their present POSIX `if command -v` fallback fails under cmd.exe, so cover exact Windows-front precedence with a repository metadata regression while reusing the existing Hspec suites."
+      "notes": "Add real BUILD_windows fronts for barcode-layout-1d and itf, preserve their exact Cabal closure and tests: True project metadata, and cover Windows-front precedence without absorbing the complete barcode-1d facade."
+    },
+    {
+      "id": "haskell-barcode-1d-symbology-windows-build-front-coverage",
+      "title": "Add Windows build fronts for Haskell 1D barcode symbologies",
+      "status": "pending",
+      "depends_on": ["haskell-itf-stack-windows-build-front-coverage"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add real BUILD_windows fronts for codabar, code39, code128, ean-13, and upc-a as one sibling family tranche over the shared barcode-layout-1d and paint-instructions project shape."
+    },
+    {
+      "id": "haskell-barcode-1d-facade-windows-build-front-coverage",
+      "title": "Add Windows build fronts for the Haskell barcode-1d facade",
+      "status": "pending",
+      "depends_on": ["haskell-itf-stack-windows-build-front-coverage", "haskell-barcode-1d-symbology-windows-build-front-coverage"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add the paint-vm-ascii Windows front first, then the complete barcode-1d facade front over all six encoders, layout, paint instructions, ASCII renderer, and SHA-256."
     },
     {
       "id": "haskell-neural-examples-windows-build-front-coverage",
