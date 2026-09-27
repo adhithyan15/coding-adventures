@@ -110,11 +110,20 @@ export default defineConfig({
             },
             {
               name: "script-data",
-              test: /learning[\\/]human-languages[\\/]data[\\/]scripts[\\/]/,
+              test(moduleId) {
+                const normalized = moduleId.replaceAll("\\", "/").split(/[?#]/, 1)[0];
+                return (
+                  /learning\/human-languages\/data\/scripts\//.test(normalized) ||
+                  /^(?:\0)?virtual:script-ductus-inventories$/.test(normalized)
+                );
+              },
               // Source-verified stroke metadata grows with every HL-C09
               // tranche. Keep the eager canonical corpus in a few cacheable
               // batches instead of allowing one chunk to cross the 500 kB
-              // budget as soon as the next citation lands.
+              // budget as soon as the next citation lands. The virtual module
+              // is included explicitly because it reconstructs four sharded
+              // inventories: leaving that common dependency unowned lets the
+              // handwriting group absorb it and become eager again.
               maxSize: 250_000,
             },
             {
@@ -177,7 +186,9 @@ export default defineConfig({
               // authored paths are now split below `strokes/` by owner.
               // `scriptdata` is NOT in this chunk: the app's shell needs
               // SCRIPTS on first paint, while the pen paths and font parser are
-              // only needed once a learner opens a handwriting view.
+              // only needed once a learner opens a handwriting view. The app
+              // reaches these modules through a dynamic import; the bundle
+              // gate fails if this named chunk ever returns to the preload set.
               test: isHandwritingToolsModuleId,
             },
           ],

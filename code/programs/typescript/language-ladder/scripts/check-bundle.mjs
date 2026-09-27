@@ -113,6 +113,8 @@ if (handwritingChunks.length !== 1) {
   failures.push(
     `expected one handwriting-tools chunk, found ${handwritingChunks.length}`,
   );
+} else if (eager.includes(handwritingChunks[0])) {
+  failures.push("handwriting-tools chunk is eager; pen paths must load on letter open");
 }
 if (filmstripSourceChunks.length !== 1) {
   failures.push(

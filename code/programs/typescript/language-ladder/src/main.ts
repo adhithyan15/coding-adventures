@@ -7,7 +7,13 @@
 // core.ts / drill.ts (and is unit-tested there); the ONLY randomness lives here,
 // in the UI, so the pure modules stay deterministic and testable.
 
-import { SCRIPTS, verifiedLetterFont } from "@coding-adventures/script-ductus";
+// Keep the script inventory on first paint, but do not enter the package barrel:
+// it also exports the growing authored pen-path registry. The latter is loaded
+// only when a learner opens a verified handwriting detail below.
+import {
+  SCRIPTS,
+  verifiedLetterFont,
+} from "@coding-adventures/script-ductus/src/scriptdata.ts";
 import {
   buildScriptView,
   scriptSummary,
@@ -120,13 +126,8 @@ async function loadNarration(language: string, chapter: number): Promise<unknown
   return load(language, chapter);
 }
 import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
-import { parseFont, boundsOf, type Font } from "@coding-adventures/script-ductus";
-import {
-  ductusFilmstrip,
-  ductusFor,
-  isSafeName,
-  type SvgNode,
-} from "@coding-adventures/script-ductus";
+import type { SvgNode } from "@coding-adventures/script-ductus/src/ductusview.ts";
+import type { Font } from "@coding-adventures/script-ductus/src/truetype.ts";
 import tamilFontUrl from "../../../../learning/human-languages/_fonts/NotoSansTamil-Static.ttf?url";
 import naskhFontUrl from "../../../../learning/human-languages/_fonts/NotoNaskhArabic-Static.ttf?url";
 import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy.json";
@@ -792,7 +793,7 @@ function renderDetail(v: LetterView, script: string, siblings: Sibling[] = []): 
   // (`DUCTUS` admits no letter without a cited source.) Every other letter falls
   // back to a prose PART list whose heading explicitly says that numbering does
   // not claim separate strokes or any particular lifts.
-  if (ductusFor(v.glyph, script)) {
+  if (v.handwritingEvidence === "verified-ductus") {
     d.appendChild(section(handwritingHeading(v, true), renderDuctusSection(v, script)));
   } else if (v.strokeOrder.length > 0) {
     d.appendChild(section(handwritingHeading(v, false), orderedListOf(v.strokeOrder)));
@@ -2422,7 +2423,34 @@ function orderedListOf(items: string[]): HTMLElement {
 // ever become text — never markup — no matter where the label came from.
 const SVG_NS = "http://www.w3.org/2000/svg";
 
-function svgElement(node: SvgNode): SVGElement {
+type HandwritingTools = Pick<
+  typeof import("@coding-adventures/script-ductus/src/ductusview.ts"),
+  "ductusFilmstrip" | "ductusFor" | "isSafeName"
+> &
+  Pick<
+    typeof import("@coding-adventures/script-ductus/src/truetype.ts"),
+    "boundsOf" | "parseFont"
+  >;
+let handwritingToolsPromise: Promise<HandwritingTools> | null = null;
+
+function loadHandwritingTools(): Promise<HandwritingTools> {
+  handwritingToolsPromise ??= Promise.all([
+    import("@coding-adventures/script-ductus/src/ductusview.ts"),
+    import("@coding-adventures/script-ductus/src/truetype.ts"),
+  ]).then(([view, font]) => ({
+    ductusFilmstrip: view.ductusFilmstrip,
+    ductusFor: view.ductusFor,
+    isSafeName: view.isSafeName,
+    boundsOf: font.boundsOf,
+    parseFont: font.parseFont,
+  }));
+  return handwritingToolsPromise;
+}
+
+function svgElement(
+  node: SvgNode,
+  isSafeName: HandwritingTools["isSafeName"],
+): SVGElement {
   const element = document.createElementNS(SVG_NS, isSafeName(node.tag) ? node.tag : "g");
   for (const [name, value] of Object.entries(node.attrs)) {
     // `setAttribute` cannot be escaped out of, but it CAN set an event handler
@@ -2430,7 +2458,9 @@ function svgElement(node: SvgNode): SVGElement {
     if (isSafeName(name)) element.setAttribute(name, String(value));
   }
   if (node.text !== undefined) element.textContent = node.text;
-  for (const child of node.children ?? []) element.appendChild(svgElement(child));
+  for (const child of node.children ?? []) {
+    element.appendChild(svgElement(child, isSafeName));
+  }
   return element;
 }
 
@@ -2445,8 +2475,12 @@ const DUCTUS_FONT_URLS = new Map<string, string>([
 ]);
 const ductusFontPromises = new Map<string, Promise<Font | null>>();
 
-function ductusFont(glyph: string, script: string): Promise<Font | null> {
-  const letter = ductusFor(glyph, script);
+function ductusFont(
+  glyph: string,
+  script: string,
+  tools: HandwritingTools,
+): Promise<Font | null> {
+  const letter = tools.ductusFor(glyph, script);
   const fontPath = letter && verifiedLetterFont(glyph, letter.source.url);
   const url = fontPath && DUCTUS_FONT_URLS.get(fontPath);
   if (!url) return Promise.resolve(null);
@@ -2455,7 +2489,7 @@ function ductusFont(glyph: string, script: string): Promise<Font | null> {
   if (!promise) {
     promise = fetch(url)
       .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(`font ${r.status}`))))
-      .then((bytes) => parseFont(bytes))
+      .then((bytes) => tools.parseFont(bytes))
       .catch(() => null);
     ductusFontPromises.set(url, promise);
   }
@@ -2471,17 +2505,27 @@ function ductusFont(glyph: string, script: string): Promise<Font | null> {
  * the whole fallback story: the richer view is additive, never load-bearing.
  */
 function renderDuctusSection(v: LetterView, script: string): HTMLElement {
-  const letter = ductusFor(v.glyph, script)!;
   const holder = el("div", "ductus");
   holder.appendChild(orderedListOf(v.strokeOrder));
 
-  void ductusFont(letter.glyph, script).then((font) => {
+  // The prose list is useful immediately. The heavier pen-path registry,
+  // renderer, and TrueType parser cross this dynamic boundary only when the
+  // learner opens a letter whose inventory metadata promises cited ductus.
+  void loadHandwritingTools().then(async (tools) => {
+    const letter = tools.ductusFor(v.glyph, script);
+    if (!letter) return; // keep the prose if metadata and registry ever drift
+    const font = await ductusFont(letter.glyph, script, tools);
     const glyph = font?.glyphFor(letter.glyph);
     if (!glyph || glyph.contours.length === 0) return; // keep the prose
-    const strip = ductusFilmstrip(letter, { path: glyph.path, bounds: boundsOf(glyph.contours) });
+    const strip = tools.ductusFilmstrip(letter, {
+      path: glyph.path,
+      bounds: tools.boundsOf(glyph.contours),
+    });
 
     const film = el("div", "ductus__film");
-    for (const frame of strip.frames) film.appendChild(svgElement(frame));
+    for (const frame of strip.frames) {
+      film.appendChild(svgElement(frame, tools.isSafeName));
+    }
 
     const summary = el("p", "ductus__summary");
     summary.textContent = strip.summary;

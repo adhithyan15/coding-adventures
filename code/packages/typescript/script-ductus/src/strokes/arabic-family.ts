@@ -3,18 +3,18 @@
 import type { LetterDuctus, Stroke, StrokeSource } from "../strokes.ts";
 import type { DuctusEntry } from "./registry.ts";
 import arabic from "../../../../../learning/human-languages/data/scripts/arabic.json";
-import { SCRIPTS, type ScriptData } from "../scriptdata.ts";
+import type { ScriptData } from "../scriptdata.ts";
+import {
+  persoArabic as persoArabicInventory,
+  urduNastaliq as urduNastaliqInventory,
+} from "virtual:script-ductus-inventories";
 
-const canonicalScript = (id: string): ScriptData => {
-  const inventory = SCRIPTS.find((candidate) => candidate.script === id);
-  if (inventory === undefined)
-    throw new Error(`Script Ductus has no ${id} inventory`);
-  return inventory;
-};
+// These owners need their own canonical inventories, not the eager aggregate
+// SCRIPTS array. Keeping the dependency direct lets browser consumers load the
+// authored stroke registry after first paint.
+const persoArabic = persoArabicInventory as ScriptData;
 
-const persoArabic = canonicalScript("perso-arabic");
-
-const urduNastaliq = canonicalScript("urdu-nastaliq");
+const urduNastaliq = urduNastaliqInventory as ScriptData;
 
 const arabicAlphabetSource = (glyph: string): StrokeSource => {
   const letter = arabic.letters.find((candidate) => candidate.glyph === glyph);

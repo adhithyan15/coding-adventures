@@ -10,6 +10,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S112-letter-ca",
+      "sourceHash": "fnv1a64:12c2ea44c6faaf35",
+      "svgHash": "fnv1a64:709cc5606ce56d12",
+      "svg": "telugu/book/figures/TE-S112-letter-ca-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S118-letter-ga",
       "sourceHash": "fnv1a64:422e82bc6d2c02c4",
       "svgHash": "fnv1a64:68b5131b9911da59",

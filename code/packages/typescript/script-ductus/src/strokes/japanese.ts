@@ -2,16 +2,12 @@
 
 import type { DuctusEntry } from "./registry.ts";
 import type { StrokeSource } from "../strokes.ts";
-import { SCRIPTS, type ScriptData } from "../scriptdata.ts";
+import type { ScriptData } from "../scriptdata.ts";
+import { japanese as japaneseInventory } from "virtual:script-ductus-inventories";
 
-const canonicalScript = (id: string): ScriptData => {
-  const inventory = SCRIPTS.find((candidate) => candidate.script === id);
-  if (inventory === undefined)
-    throw new Error(`Script Ductus has no ${id} inventory`);
-  return inventory;
-};
-
-const japanese = canonicalScript("japanese");
+// Import the owner inventory directly. Reaching it through scriptdata.SCRIPTS
+// couples the lazy stroke registry back to the eager app-wide inventory.
+const japanese = japaneseInventory as ScriptData;
 
 const strokeSource = (glyph: string): StrokeSource =>
   japanese.letters.find((letter) => letter.glyph === glyph)!.strokeOrderSource!;

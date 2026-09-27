@@ -221,6 +221,31 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("telugu.json")?.has("ఘ") ?? false).toBe(false);
     expect(affected.get("ఘ") ?? 0).toBe(0);
+    const teluguCa = scripts.telugu!.letters.find(
+      (entry) => entry.glyph === "చ",
+    )!;
+    expect(teluguCa.sound).toBe("ca");
+    expect(teluguCa.penLifts).toBe(2);
+    expect(teluguCa.strokeOrder).toEqual([
+      "lead right",
+      "sweep the left bowl",
+      "trace the right bowl",
+      "cup the upper flourish",
+    ]);
+    expect(teluguCa.strokeOrderNote).toMatch(
+      /four numbered movements.*three pen-down runs.*movement 1.*2.?3.*movement 4/i,
+    );
+    expect(teluguCa.strokeOrderSource?.url).toBe(
+      "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+    );
+    expect(teluguCa.strokeOrderSource?.citation).toMatch(
+      /Sathish Shanmugam.*Write Telugu Alphabets.*చ.*dot_stroke_c_2_1_cha\.png.*movements 1.?4.*version 2\.6/i,
+    );
+    expect(teluguCa.strokeOrderSource?.variation).toMatch(
+      /horizontal lead-in.*movement 1.*movements 2.?3.*lower bowl.*upper flourish.*movement 4.*not uniform.*Noto Sans Telugu/i,
+    );
+    expect(missingByScript.get("telugu.json")?.has("చ") ?? false).toBe(false);
+    expect(affected.get("చ") ?? 0).toBe(0);
     const teluguAa = scripts.telugu!.independentVowels!.find(
       (entry) => entry.glyph === "ఆ",
     )!;

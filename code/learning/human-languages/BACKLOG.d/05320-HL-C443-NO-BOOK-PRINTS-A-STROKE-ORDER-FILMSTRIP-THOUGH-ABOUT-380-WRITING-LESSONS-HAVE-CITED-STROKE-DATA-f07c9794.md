@@ -96,6 +96,13 @@ That is about 380 filmstrips that could print today.
   `*-filmstrip.svg` into the first Writing or Script section; unopened lessons
   add nothing to first paint. The largest eager chunk remains 495,771 bytes,
   below the 500 kB budget.
+- **The live handwriting renderer is lazy too.** The next Telugu path exposed
+  that the separately named `handwriting-tools` chunk was still preloaded: it
+  reached 500,505 bytes and stopped #16175. The script inventory remains eager,
+  but authored pen paths, the TrueType parser, and the live filmstrip renderer
+  now load only when a learner opens a verified handwriting detail. The bundle
+  gate pins that boundary instead of buying another content tranche by raising
+  the 500 kB limit.
 
 - **Next: fill cited-stroke gaps, one script at a time.** Telugu, Kannada and
   Malayalam still have only partial sourced inventories; Bengali and Gurmukhi
@@ -119,6 +126,13 @@ That is about 380 filmstrips that could print today.
   body, then movements 4–6 restart for the outer arch, upper flourish and
   downward stem. The order comes from the same packaged tracing guide and is
   fitted to Noto Sans Telugu.
+- **The anchored pass continues with Telugu చ.** The alphabetically preceding
+  `ఙ` remains intentionally queued for a vocabulary-plus-letter tranche: it is
+  one of Telugu's eight inventory letters with no taught word, so giving it a
+  figure first would break the word-before-letter ramp. Existing `TE-S112`,
+  already anchored by `దయచేసి`, now owns చ's four-movement filmstrip: a separate
+  horizontal lead-in, joined lower bowl, and separate upper flourish from the
+  same packaged tracing guide, fitted to Noto Sans Telugu.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
