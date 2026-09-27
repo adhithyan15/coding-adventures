@@ -163,6 +163,11 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     private var settling = 0
     private var effectWarning: String? = null
     private var persistenceWarning: String? = null
+    /**
+     * The last environment the runtime accepted (UI48 ENV4), so an unchanged
+     * report is not sent twice.
+     */
+    private var lastReportedEnvironment: Map<String, String>? = null
 
     init {
         val app = PointerByReference()
@@ -177,6 +182,10 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
                 val utcOffsetMinutes = java.util.TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 60_000
                 if (utcOffsetMinutes in -840..840) put("utcOffsetMinutes", utcOffsetMinutes)
                 put("platform", mosaicPlatform())
+                // What the platform knows before the first frame (UI48 ENV4).
+                // The window's size class and orientation arrive with the
+                // shell's first environment report.
+                for ((axis, value) in initialEnvironment()) put(axis, value)
                 put("restoredSnapshot", snapshot ?: JsonNull)
             }
             return withJsonInput(start) { input ->
@@ -226,11 +235,50 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
         sequence = nextSequence
         // Settle BEFORE persisting: the runtime refuses to snapshot while an
         // effect is outstanding, so persisting first warns on every effect.
-        val settled = settleEffects(update)
+        val settled = keepShowingProps(settleEffects(update))
         persistSnapshot()
         latestUpdate = withPersistenceWarning(settled)
         propsChangedHandler?.invoke()
         return latestUpdate.toKotlinMap()
+    }
+
+    /**
+     * An update without props AT THE REVISION ALREADY SHOWING (an environment
+     * the app did not react to, UI48 §7.1) carries nothing to render: keep the
+     * props showing rather than handing the view nothing. Only then -- a
+     * props-less update that moves the revision is a defect, and is left as it
+     * is so it surfaces instead of being hidden.
+     */
+    private fun keepShowingProps(update: JsonObject): JsonObject {
+        if (update["props"] !is JsonNull) return update
+        val showing = latestUpdate["props"] as? JsonObject ?: return update
+        val revision = (update["revision"] as? JsonPrimitive)?.longOrNull ?: return update
+        val shownRevision = (latestUpdate["revision"] as? JsonPrimitive)?.longOrNull ?: return update
+        if (revision != shownRevision) return update
+        return JsonObject(update + ("props" to showing))
+    }
+
+    /**
+     * Report the window's environment (UI48 ENV4): `environmentChanged`, with
+     * the whole environment as its payload -- the six UI48 §4 values under
+     * `mosaic-app-runtime`'s wire names.
+     *
+     * - A report equal to the last accepted one is dropped and answers null.
+     * - An app that does not react answers with the props already showing
+     *   (see [keepShowingProps]).
+     * - A refusal (an invalid environment) answers `{"error": ...}` instead of
+     *   throwing, and is not remembered, so the next report is sent.
+     */
+    @Synchronized
+    fun reportEnvironment(environment: Map<String, String>): Map<String, Any?>? {
+        if (environment == lastReportedEnvironment) return null
+        val response = try {
+            handleEvent(mapOf("name" to "environmentChanged", "payload" to environment))
+        } catch (error: MosaicRuntimeException) {
+            return mapOf("error" to (error.message ?: "Mosaic runtime refused the environment"))
+        }
+        lastReportedEnvironment = environment.toMap()
+        return response
     }
 
     /**
@@ -723,6 +771,18 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     }
 
     companion object {
+        /**
+         * The UI48 axes knowable without a window: the platform's pointer and
+         * hover, and its reduced-motion setting. Wire names and values are
+         * `mosaic-app-runtime`'s. Compose Desktop exposes no reduced-motion
+         * setting, so that axis is `no-preference` until a probe exists.
+         */
+        fun initialEnvironment(): Map<String, String> = if (mosaicPlatform() == "android") {
+            mapOf("pointer" to "coarse", "hover" to "none", "reducedMotion" to "no-preference")
+        } else {
+            mapOf("pointer" to "fine", "hover" to "hover", "reducedMotion" to "no-preference")
+        }
+
         /**
          * Where state is kept, when the platform decides rather than the user's
          * home directory: Android sets its app's `filesDir` before [load].
