@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- **TaskApp's List-first shell is a product-scoped snapshot gate (#16120).**
+  The emitter test lane compiles TaskApp's real interface, package-expanded
+  layout, and light theme. The acceptance pins the task composer, repeated task
+  row, and SegmentedControl view-switch structure, plus the explicit
+  static-HTML dropped-event markers. It intentionally makes no runtime,
+  interaction, or release-artifact claim.
+
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
   - The runtime already fills an `( index : number )` parameter from the loop index by name. New: `checked` and `label` accept a loop binding or row expression as a dotted mustache path, and `data-checked` is read by the runtime's `truthy`.
 

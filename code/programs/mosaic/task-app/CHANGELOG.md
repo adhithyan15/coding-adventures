@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.3.0` accumulate here until the next version is
 cut.
 
+### Verified — the authored List shell survives static HTML lowering (#16120)
+
+The normal `mosaic-emit-html` test lane now compiles TaskApp's own interface,
+package-expanded layout, and light theme. It pins the primary composer, the
+repeated task-row template, and the toolkit SegmentedControl-backed view
+switcher, while also requiring explicit dropped-event markers. This is a
+structural static snapshot only; it does not claim an interactive host or add a
+release artifact.
+
 ### Fixed — release notes include every dated product change (#16116)
 
 The release publisher now summarizes the exact dated TaskApp changelog section

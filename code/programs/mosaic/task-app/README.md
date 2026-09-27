@@ -21,10 +21,11 @@ canonical engine state and user-visible core slots after every step. See
 host-only exclusions (theme storage and locale-formatted calendar copy).
 The first-run product acceptance and its focused follow-up queue are recorded in
 `code/specs/task-app-first-run-usability-audit-v1.md`. Which of Mosaic's nine
-backends TaskApp is actually finished on — six gated and shipped, three
-(`html`, `webcomponent`, `paint`) carrying no TaskApp coverage at all — is
-measured in `code/specs/task-app-platform-completion-v1.md`, which owns the
-ordered completion queue.
+backends TaskApp is actually finished on is measured in
+`code/specs/task-app-platform-completion-v1.md`: six interactive/native targets
+are gated and shipped, static HTML has a product-scoped structural snapshot
+gate, and `webcomponent` plus `paint` still lack TaskApp-level coverage. The
+static HTML gate does not imply interactivity or add a release artifact.
 
 ```text
 TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
