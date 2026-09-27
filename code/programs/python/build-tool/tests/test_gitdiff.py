@@ -25,8 +25,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from build_tool.discovery import Package
 from build_tool.gitdiff import map_files_to_packages
+from build_tool.glob_match import GlobPatternError
 
 # =========================================================================
 # Helper to create test packages
@@ -185,6 +188,20 @@ class TestStarlarkFiltering:
             changed, {pkg.name: pkg.path}, tmp_path, [pkg]
         )
         assert result == {"python/foo"}
+
+    def test_invalid_declared_glob_fails_closed(self, tmp_path):
+        """Strict change mapping propagates portable matcher rejection."""
+        pkg = _make_package(
+            "python/foo",
+            "code/packages/python/foo",
+            tmp_path,
+            is_starlark=True,
+            declared_srcs=["*.py", "[z-a].py"],
+        )
+        changed = ["code/packages/python/foo/a.py"]
+
+        with pytest.raises(GlobPatternError):
+            map_files_to_packages(changed, {pkg.name: pkg.path}, tmp_path, [pkg])
 
 
 # =========================================================================

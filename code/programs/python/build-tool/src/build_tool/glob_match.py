@@ -1,215 +1,241 @@
-"""
-glob_match.py -- Pure String-Based Glob Pattern Matching
-=========================================================
+"""Pure, bounded, language-neutral glob matching for repository paths.
 
-This module provides a single function, ``match_path()``, that tests whether
-a file path matches a glob pattern. It performs **no filesystem access** --
-everything is pure string manipulation. This makes it safe to use in contexts
-where the files don't exist yet (e.g., validating declared source patterns
-against changed file lists from ``git diff``).
+``match_path()`` performs no filesystem, process, environment, or platform
+access. It implements the build-tool portable glob grammar directly instead
+of delegating character classes to a host regular-expression engine.
 
-Supported glob syntax
----------------------
+``*`` matches zero or more Unicode scalar values within one path segment,
+``?`` matches exactly one scalar, and ``**`` as a complete segment matches
+zero or more path segments. Character classes support leading ``!``
+negation, ascending ranges, literal leading or trailing ``-``, literal leading
+``]``, and an unmatched ``[`` as a literal. Ambiguous class operators and
+descending ranges are rejected before matching.
 
-+---------+-------------------------------------------------------+
-| Pattern | Meaning                                               |
-+---------+-------------------------------------------------------+
-| ``*``   | Matches any sequence of characters within a single    |
-|         | path segment (never matches ``/``).                   |
-+---------+-------------------------------------------------------+
-| ``?``   | Matches exactly one character within a segment        |
-|         | (never matches ``/``).                                |
-+---------+-------------------------------------------------------+
-| ``[…]`` | Matches one character from a set (e.g., ``[abc]``,    |
-|         | ``[!abc]`` for negation, ``[0-9]`` for ranges).      |
-+---------+-------------------------------------------------------+
-| ``**``  | Matches zero or more path segments. Must appear as    |
-|         | an entire segment on its own (e.g., ``src/**/*.py``). |
-+---------+-------------------------------------------------------+
-
-Algorithm
----------
-
-The algorithm splits both pattern and path on ``/`` into lists of segments.
-Then it walks the two lists with two pointers (``pi`` for pattern, ``si`` for
-path segments), using the following rules:
-
-1. If the pattern segment is ``**``, it can consume zero or more path segments.
-   We try matching the rest of the pattern starting from the current path
-   position (zero segments consumed), then from the next position (one segment
-   consumed), and so on.
-
-2. For non-``**`` segments, we use ``fnmatch.fnmatchcase()`` to compare the
-   pattern segment against the path segment. ``fnmatchcase`` handles ``*``,
-   ``?``, and ``[…]`` within a single segment.
-
-3. The match succeeds only when both pointers reach the end of their respective
-   lists simultaneously. Trailing ``**`` segments are handled correctly because
-   ``**`` can match zero segments.
-
-Why not use ``pathlib.PurePath.match()``?
------------------------------------------
-
-Python's built-in ``PurePath.match()`` does not support ``**`` for recursive
-matching in a cross-platform way (its behavior varies between Python versions
-and has bugs with leading ``**``). By splitting on ``/`` and recursing
-ourselves, we get deterministic, platform-independent behavior.
-
-Why not use ``fnmatch.fnmatch()`` directly?
---------------------------------------------
-
-``fnmatch.fnmatch()`` treats ``*`` as matching everything including ``/``.
-That means ``*.py`` would match ``src/foo.py``, which is wrong for file path
-matching where ``*`` should only match within a single directory. By splitting
-into segments first, we confine ``*`` to single-segment matching.
-
-We use ``fnmatchcase`` (case-sensitive) rather than ``fnmatch`` (which may be
-case-insensitive on some platforms) for deterministic cross-platform behavior.
-BUILD systems should be case-sensitive even on macOS/Windows.
+Both segment matching and path matching use bottom-up dynamic programming.
+Their work is bounded by the pattern/value state grids, so adversarial
+globstar near misses cannot cause recursive suffix revisits or stack growth.
 """
 
 from __future__ import annotations
 
-import fnmatch
+from dataclasses import dataclass
+from typing import cast
+
+__all__ = ["GlobPatternError", "match_path", "validate_pattern"]
+
+
+class GlobPatternError(ValueError):
+    """Raised when a glob uses a rejected portable character class."""
+
+
+@dataclass(frozen=True, slots=True)
+class _Literal:
+    value: str
+
+
+@dataclass(frozen=True, slots=True)
+class _Star:
+    pass
+
+
+@dataclass(frozen=True, slots=True)
+class _Question:
+    pass
+
+
+_ClassMember = str | tuple[str, str]
+
+
+@dataclass(frozen=True, slots=True)
+class _CharacterClass:
+    negated: bool
+    members: tuple[_ClassMember, ...]
+
+
+_Token = _Literal | _Star | _Question | _CharacterClass
+_SingleValueToken = _Literal | _CharacterClass
+_STAR = _Star()
+_QUESTION = _Question()
+_INVALID_CLASS_MESSAGE = "ambiguous or descending character class in glob pattern"
 
 
 def match_path(pattern: str, path: str) -> bool:
-    """Test whether a file path matches a glob pattern.
+    """Return whether *path* matches *pattern* without host-system access.
 
-    Both ``pattern`` and ``path`` use forward slashes (``/``) as separators.
-    No filesystem access is performed -- this is pure string matching.
+    Empty components caused by leading, trailing, or repeated slashes are
+    ignored for compatibility with the existing Python build-tool callers.
+    Validated portable inputs never contain those components.
 
-    Parameters
-    ----------
-    pattern : str
-        The glob pattern. Supports ``*``, ``?``, ``[…]``, and ``**``.
-    path : str
-        The file path to test against the pattern.
-
-    Returns
-    -------
-    bool
-        True if the path matches the pattern, False otherwise.
-
-    Examples
-    --------
-    >>> match_path("src/**/*.py", "src/foo/bar.py")
-    True
-    >>> match_path("src/*.py", "src/foo/bar.py")
-    False
-    >>> match_path("**/*.py", "deep/nested/file.py")
-    True
-    >>> match_path("src/**", "src/anything/at/all")
-    True
+    Raises
+    ------
+    GlobPatternError
+        If a character class contains a descending range or one of the
+        ambiguous operators ``--``, ``&&``, ``~~``, or ``||``.
     """
-    # Split both pattern and path into segments.
-    #
-    # For example:
-    #   pattern "src/**/*.py" -> ["src", "**", "*.py"]
-    #   path    "src/foo/bar.py" -> ["src", "foo", "bar.py"]
-    #
-    # We filter out empty strings to handle edge cases like leading or
-    # trailing slashes and double slashes ("src//foo").
-    pat_segments = [s for s in pattern.split("/") if s]
-    path_segments = [s for s in path.split("/") if s]
-
-    # Delegate to the recursive matching engine.
-    return _match_segments(pat_segments, 0, path_segments, 0)
+    matched, _ = _match_path_with_state_count(pattern, path)
+    return matched
 
 
-def _match_segments(
-    pat: list[str],
-    pi: int,
-    path: list[str],
-    si: int,
-) -> bool:
-    """Recursive segment-by-segment matching engine.
+def validate_pattern(pattern: str) -> None:
+    """Reject host-ambiguous or descending classes before candidate matching."""
+    _compile_pattern(pattern)
 
-    This is the core of the glob matching algorithm. It walks two lists
-    of segments (pattern and path) using indices ``pi`` and ``si``.
 
-    Parameters
-    ----------
-    pat : list[str]
-        The pattern segments (e.g., ``["src", "**", "*.py"]``).
-    pi : int
-        Current index into the pattern segments.
-    path : list[str]
-        The path segments (e.g., ``["src", "foo", "bar.py"]``).
-    si : int
-        Current index into the path segments.
+def _match_path_with_state_count(pattern: str, path: str) -> tuple[bool, int]:
+    """Match and return the deterministic number of path-DP states visited."""
+    path_segments = [segment for segment in path.split("/") if segment]
+    compiled = _compile_pattern(pattern)
 
-    Returns
-    -------
-    bool
-        True if the remaining pattern matches the remaining path.
+    path_count = len(path_segments)
+    next_row = [False] * (path_count + 1)
+    next_row[path_count] = True
+    visited = path_count + 1
 
-    The recursion has three cases:
+    for segment in reversed(compiled):
+        row = [False] * (path_count + 1)
+        visited += path_count + 1
+        if segment is None:
+            row[path_count] = next_row[path_count]
+            for path_index in range(path_count - 1, -1, -1):
+                row[path_index] = next_row[path_index] or row[path_index + 1]
+        else:
+            for path_index in range(path_count - 1, -1, -1):
+                row[path_index] = next_row[path_index + 1] and _match_segment(
+                    segment,
+                    path_segments[path_index],
+                )
+        next_row = row
 
-    Case 1: Both lists exhausted (pi == len(pat) and si == len(path)).
-        Match succeeds -- we consumed everything.
+    return next_row[0], visited
 
-    Case 2: Pattern exhausted but path has remaining segments.
-        Match fails -- there are unmatched path segments.
 
-    Case 3: Current pattern segment is "**".
-        Try matching the rest of the pattern against path[si:], path[si+1:],
-        path[si+2:], etc. This implements "zero or more segments". We also
-        handle consecutive "**" segments by collapsing them (advancing pi
-        past all of them).
+def _compile_pattern(pattern: str) -> list[tuple[_Token, ...] | None]:
+    pattern_segments = [segment for segment in pattern.split("/") if segment]
+    return [
+        None if segment == "**" else _parse_segment(segment)
+        for segment in pattern_segments
+    ]
 
-    Case 4: Current pattern segment is a normal glob (may contain * or ?).
-        Use fnmatch.fnmatchcase to match against the current path segment.
-        If it matches, advance both pointers.
-    """
-    # Skip consecutive "**" segments in the pattern. Multiple "**" in a row
-    # are equivalent to a single "**", so we collapse them.
-    while pi < len(pat) and pat[pi] == "**":
-        # Try matching the rest of the pattern (after this **) against
-        # every possible suffix of the remaining path segments.
-        #
-        # When si == len(path), we're trying to match ** against zero
-        # remaining segments, which is valid.
-        #
-        # We advance pi past this "**" and try matching the rest of the
-        # pattern starting from the next pattern segment.
-        next_pi = pi + 1
 
-        # Collapse consecutive ** segments.
-        while next_pi < len(pat) and pat[next_pi] == "**":
-            next_pi += 1
+def _parse_segment(segment: str) -> tuple[_Token, ...]:
+    """Compile one slash-free glob segment into host-independent tokens."""
+    tokens, _ = _parse_segment_with_state_count(segment)
+    return tokens
 
-        # If ** is the last pattern segment, it matches everything remaining.
-        # This is an optimization that avoids looping.
-        if next_pi == len(pat):
-            return True
 
-        # Try matching the rest of the pattern against path[si:], path[si+1:],
-        # etc. The ** consumes 0, 1, 2, ... segments from the path.
-        for try_si in range(si, len(path) + 1):
-            if _match_segments(pat, next_pi, path, try_si):
-                return True
+def _parse_segment_with_state_count(segment: str) -> tuple[tuple[_Token, ...], int]:
+    """Compile a segment and report bounded parser states for regression tests."""
+    next_closing_bracket: list[int | None] = [None] * (len(segment) + 1)
+    next_closing: int | None = None
+    for position in range(len(segment) - 1, -1, -1):
+        if segment[position] == "]":
+            next_closing = position
+        next_closing_bracket[position] = next_closing
 
-        # No suffix of the path matched the rest of the pattern.
-        return False
+    tokens: list[_Token] = []
+    index = 0
+    visited = len(segment)
+    while index < len(segment):
+        visited += 1
+        character = segment[index]
+        if character == "*":
+            if not tokens or tokens[-1] is not _STAR:
+                tokens.append(_STAR)
+            index += 1
+            continue
+        if character == "?":
+            tokens.append(_QUESTION)
+            index += 1
+            continue
+        if character != "[":
+            tokens.append(_Literal(character))
+            index += 1
+            continue
 
-    # Base case: pattern is exhausted.
-    if pi == len(pat):
-        # Success only if the path is also exhausted.
-        return si == len(path)
+        parsed = _parse_character_class(segment, index, next_closing_bracket)
+        if parsed is None:
+            tokens.append(_Literal("["))
+            index += 1
+            continue
+        token, index = parsed
+        tokens.append(token)
 
-    # Path is exhausted but pattern still has non-** segments.
-    if si == len(path):
-        return False
+    return tuple(tokens), visited
 
-    # Normal segment matching: use fnmatchcase for *, ?, [abc] support.
-    #
-    # fnmatchcase("bar.py", "*.py") -> True
-    # fnmatchcase("foo", "f??") -> True
-    # fnmatchcase("a", "[abc]") -> True
-    #
-    # fnmatchcase is case-sensitive, which is correct for BUILD systems.
-    if fnmatch.fnmatchcase(path[si], pat[pi]):
-        return _match_segments(pat, pi + 1, path, si + 1)
 
-    return False
+def _parse_character_class(
+    segment: str,
+    opening: int,
+    next_closing_bracket: list[int | None],
+) -> tuple[_CharacterClass, int] | None:
+    cursor = opening + 1
+    negated = cursor < len(segment) and segment[cursor] == "!"
+    if negated:
+        cursor += 1
+
+    closing = next_closing_bracket[cursor]
+    if closing == cursor:
+        closing = next_closing_bracket[cursor + 1]
+    if closing is None:
+        return None
+
+    body = segment[cursor:closing]
+    if any(operator in body for operator in ("--", "&&", "~~", "||")):
+        raise GlobPatternError(_INVALID_CLASS_MESSAGE)
+
+    members: list[_ClassMember] = []
+    member = cursor
+    while member < closing:
+        if member + 2 < closing and segment[member + 1] == "-":
+            start = segment[member]
+            end = segment[member + 2]
+            if ord(start) > ord(end):
+                raise GlobPatternError(_INVALID_CLASS_MESSAGE)
+            members.append((start, end))
+            member += 3
+        else:
+            members.append(segment[member])
+            member += 1
+
+    return _CharacterClass(negated, tuple(members)), closing + 1
+
+
+def _match_segment(tokens: tuple[_Token, ...], value: str) -> bool:
+    """Match one slash-free value with bounded bottom-up dynamic programming."""
+    value_count = len(value)
+    next_row = [False] * (value_count + 1)
+    next_row[value_count] = True
+
+    for token in reversed(tokens):
+        row = [False] * (value_count + 1)
+        if token is _STAR:
+            row[value_count] = next_row[value_count]
+            for value_index in range(value_count - 1, -1, -1):
+                row[value_index] = next_row[value_index] or row[value_index + 1]
+        elif token is _QUESTION:
+            for value_index in range(value_count):
+                row[value_index] = next_row[value_index + 1]
+        else:
+            single_value_token = cast(_SingleValueToken, token)
+            for value_index in range(value_count):
+                row[value_index] = next_row[value_index + 1] and _token_matches(
+                    single_value_token,
+                    value[value_index],
+                )
+        next_row = row
+
+    return next_row[0]
+
+
+def _token_matches(token: _SingleValueToken, value: str) -> bool:
+    if isinstance(token, _Literal):
+        return token.value == value
+
+    matched = False
+    for member in token.members:
+        if isinstance(member, str):
+            matched = matched or member == value
+        else:
+            start, end = member
+            matched = matched or start <= value <= end
+    return not matched if token.negated else matched
