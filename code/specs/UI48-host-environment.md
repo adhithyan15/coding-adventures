@@ -397,8 +397,9 @@ Decisions taken while implementing ENV1 in `mosaic-app-runtime`:
 - **The runtime remembers the environment** (`Runtime::environment()`), from
   the start context and each change, for hosts and tests.
 - **Reserved name.** `environmentChanged` is the runtime's; a package emitting
-  an event of that name would be intercepted. Refusing it in `mosmodel` is a
-  follow-up.
+  an event of that name would be intercepted. `mosmodel-compiler` refuses an
+  `emit environmentChanged` as `ReservedName` (UI13 §5), and a test there pins
+  its reserved list to `mosaic-app-runtime`'s `ENVIRONMENT_CHANGED`.
 ### 7.2 ENV2 and ENV3, designed
 
 Written before implementation, from what the pipeline does today (checked on

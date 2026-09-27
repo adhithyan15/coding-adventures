@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+### Added — `ReservedName`: `emit environmentChanged` is refused (UI48 §7.1)
+
+The Mosaic runtime intercepts an event named `environmentChanged` — it is how
+a host reports a new size class, pointer or colour scheme — and calls
+`MosaicApp::environment_changed` instead of `dispatch`. A component declaring
+`emit environmentChanged` would therefore fire an event its app never sees,
+silently. `validate` now refuses any emit named in the new public
+`RESERVED_EMIT_NAMES` with the new `ErrorKind::ReservedName`.
+
+- The match is exact: `emit onEnvironmentChanged`, or a *slot* of that name,
+  still compiles.
+- A test pins `RESERVED_EMIT_NAMES` to `mosaic_app_runtime::ENVIRONMENT_CHANGED`
+  (a new dev-dependency), so the two lists cannot drift.
+- UI13 §5/§6 and UI48 §7.1 are updated to match.
+
 ### Added — `fixtures::parse_list_fixture` (#15428)
 
 One shared decoder for the JSON text `mosaic-compile` now writes for list

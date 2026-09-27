@@ -229,7 +229,7 @@ pub struct CompileError {
     pub message: String,
 }
 
-/// The seven error kinds defined by the mosmodel spec §6.
+/// The eight error kinds defined by the mosmodel spec §6.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ErrorKind {
     /// Two slots or two emits share a name.
@@ -246,6 +246,9 @@ pub enum ErrorKind {
     UnknownConstruct,
     /// A named component type was not found in the component library.
     MissingComponent,
+    /// An emit takes a name the Mosaic runtime reserves (see
+    /// [`RESERVED_EMIT_NAMES`]).
+    ReservedName,
 }
 
 impl std::fmt::Display for CompileError {
@@ -814,6 +817,26 @@ fn parse_emit_payload_type(node: &GrammarASTNode) -> Result<EmitPayloadType, Com
 // Validator
 // ===========================================================================
 
+/// Event names the Mosaic runtime reserves for itself.
+///
+/// A host dispatches every event to the runtime by name, and the runtime
+/// forwards each one to the app — except the names below, which it
+/// intercepts. `environmentChanged` is how a host reports that the window's
+/// size class, pointer, colour scheme and so on changed (UI48 §7.1); the
+/// runtime decodes it and calls `MosaicApp::environment_changed` instead of
+/// `dispatch`. A component that declared `emit environmentChanged` would
+/// therefore fire an event its app never receives, with no error anywhere —
+/// so the compiler refuses the name up front.
+///
+/// ```text
+/// component Foo { emit environmentChanged ; }
+///                      ^^^^^^^^^^^^^^^^^^ ReservedName
+/// ```
+///
+/// The list must match `mosaic-app-runtime`; a test pins it to
+/// `mosaic_app_runtime::ENVIRONMENT_CHANGED`.
+pub const RESERVED_EMIT_NAMES: &[&str] = &["environmentChanged"];
+
 /// Validate a `MosmodelComponent` for semantic correctness.
 ///
 /// Checks (from the spec §5):
@@ -824,6 +847,7 @@ fn parse_emit_payload_type(node: &GrammarASTNode) -> Result<EmitPayloadType, Com
 /// 4. Default values are type-compatible.
 /// 5. Types that cannot have defaults (`image`, `color`, `list`, component) don't.
 /// 6. Payload types exclude `image` and `node`.
+/// 7. No emit takes a name in [`RESERVED_EMIT_NAMES`].
 pub fn validate(component: &MosmodelComponent) -> Result<(), Vec<CompileError>> {
     let mut errors = Vec::new();
 
@@ -879,6 +903,19 @@ pub fn validate(component: &MosmodelComponent) -> Result<(), Vec<CompileError>> 
                 | EmitPayloadType::Color
                 | EmitPayloadType::Component(_) => {}
             }
+        }
+    }
+
+    // --- 7. No emit takes a name the runtime reserves ---
+    for emit in &component.emits {
+        if RESERVED_EMIT_NAMES.contains(&emit.name.as_str()) {
+            errors.push(CompileError {
+                kind: ErrorKind::ReservedName,
+                message: format!(
+                    "'{}' is reserved by the Mosaic runtime (UI48) and cannot be an emit name",
+                    emit.name
+                ),
+            });
         }
     }
 
@@ -1533,6 +1570,30 @@ component Cube {
         assert!(result.is_err());
         let errs = result.unwrap_err();
         assert!(errs.iter().any(|e| e.kind == ErrorKind::NameConflict));
+    }
+
+    /// An emit named like a runtime-reserved event is a ReservedName error.
+    #[test]
+    fn validate_reserved_emit_name() {
+        let src = r#"component Foo { emit environmentChanged ; }"#;
+        let errs = compile(src).unwrap_err();
+        assert_eq!(errs.len(), 1);
+        assert_eq!(errs[0].kind, ErrorKind::ReservedName);
+        assert!(errs[0].message.contains("'environmentChanged'"));
+    }
+
+    /// Reserved names are exact: a name that merely contains one still compiles.
+    #[test]
+    fn validate_reserved_emit_name_is_exact() {
+        let src = r#"component Foo { emit onEnvironmentChanged ; slot environmentChanged : text ; }"#;
+        assert!(compile(src).is_ok());
+    }
+
+    /// The compiler's reserved list is the runtime's: if the runtime renames
+    /// or adds an intercepted event, this fails until the list follows.
+    #[test]
+    fn reserved_emit_names_match_the_runtime() {
+        assert_eq!(RESERVED_EMIT_NAMES, &[mosaic_app_runtime::ENVIRONMENT_CHANGED]);
     }
 
     /// A bool slot with a string default produces an InvalidDefault error.
