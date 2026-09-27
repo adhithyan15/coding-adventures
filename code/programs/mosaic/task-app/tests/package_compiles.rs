@@ -3,7 +3,52 @@
 //! This is the same shape of smoke test engram-app uses.
 
 use std::fs;
+use std::path::Path;
 use std::path::PathBuf;
+
+const PAINT_WIDTH: u32 = 1280;
+const PAINT_HEIGHT: u32 = 900;
+
+fn packages_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../packages")
+}
+
+fn render_paint_theme(theme: &str) -> Vec<u8> {
+    let packages = packages_root();
+    let composed = mosaic_package_artifact_builder::compose_component(
+        "TaskApp",
+        &read("TaskApp.mil"),
+        &read("TaskApp.mll"),
+        &read(&format!("TaskApp.{theme}.msl")),
+        &[packages.clone(), packages.join("mosaic")],
+        Some(theme),
+    )
+    .unwrap_or_else(|e| panic!("TaskApp {theme} package composition failed: {e}"));
+    let scene = mosaic_emit_paint::render_scene_from_pipeline_with_sample_slot_values(
+        &composed.model.component,
+        &composed.layout.def,
+        &composed.style,
+        f64::from(PAINT_WIDTH),
+        f64::from(PAINT_HEIGHT),
+    )
+    .unwrap_or_else(|e| panic!("TaskApp {theme} Paint scene failed: {e}"));
+    barcode_2d::render_scene_png_with_backend(&scene, "skia")
+        .unwrap_or_else(|e| panic!("TaskApp {theme} Skia PNG failed: {e}"))
+}
+
+fn png_dimensions(png: &[u8]) -> (u32, u32) {
+    assert!(png.len() >= 24, "PNG must contain an IHDR chunk");
+    assert_eq!(&png[..8], b"\x89PNG\r\n\x1a\n", "invalid PNG signature");
+    assert_eq!(&png[12..16], b"IHDR", "PNG must start with IHDR");
+    (
+        u32::from_be_bytes(png[16..20].try_into().unwrap()),
+        u32::from_be_bytes(png[20..24].try_into().unwrap()),
+    )
+}
+
+fn update_golden(path: &Path, bytes: &[u8]) {
+    fs::write(path, bytes).unwrap_or_else(|e| panic!("failed to update {}: {e}", path.display()));
+}
 
 fn read(name: &str) -> String {
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -91,6 +136,41 @@ fn builds_on_every_backend() {
         })
         .unwrap_or_else(|e| panic!("{backend:?} build failed: {e}"));
     }
+}
+
+/// #16151: the package-expanded TaskApp has a reviewed, deterministic Paint
+/// image for both product themes. This is an explicit CPU Skia CI fixture; it
+/// does not claim that TaskApp ships a native Paint host or Paint artifacts.
+#[test]
+fn paint_images_match_reviewed_goldens() {
+    let light = render_paint_theme("light");
+    let dark = render_paint_theme("dark");
+
+    assert_eq!(light, render_paint_theme("light"));
+    assert_eq!(dark, render_paint_theme("dark"));
+    assert_eq!(png_dimensions(&light), (PAINT_WIDTH, PAINT_HEIGHT));
+    assert_eq!(png_dimensions(&dark), (PAINT_WIDTH, PAINT_HEIGHT));
+    assert_ne!(light, dark, "light and dark themes must render differently");
+
+    let golden_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("tests")
+        .join("golden");
+    if std::env::var("UPDATE_TASK_APP_PAINT_GOLDENS").as_deref() == Ok("1") {
+        update_golden(&golden_dir.join("TaskApp.light.png"), &light);
+        update_golden(&golden_dir.join("TaskApp.dark.png"), &dark);
+        return;
+    }
+
+    assert_eq!(
+        light.as_slice(),
+        include_bytes!("golden/TaskApp.light.png"),
+        "light Paint output changed; review it before regenerating with UPDATE_TASK_APP_PAINT_GOLDENS=1"
+    );
+    assert_eq!(
+        dark.as_slice(),
+        include_bytes!("golden/TaskApp.dark.png"),
+        "dark Paint output changed; review it before regenerating with UPDATE_TASK_APP_PAINT_GOLDENS=1"
+    );
 }
 
 #[test]

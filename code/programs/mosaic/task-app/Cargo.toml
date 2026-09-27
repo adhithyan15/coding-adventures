@@ -19,6 +19,8 @@ moslayout-compiler = { path = "../../../packages/rust/moslayout-compiler" }
 mosstyle-compiler = { path = "../../../packages/rust/mosstyle-compiler" }
 mosaic-package-manifest = { path = "../../../packages/rust/mosaic-package-manifest" }
 mosaic-package-artifact-builder = { path = "../../../packages/rust/mosaic-package-artifact-builder" }
+mosaic-emit-paint = { path = "../../../packages/rust/mosaic-emit-paint" }
+barcode-2d = { path = "../../../packages/rust/barcode-2d" }
 tempfile = "3"
 
 [[test]]

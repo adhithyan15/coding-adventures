@@ -27,9 +27,11 @@ The first-run product acceptance and its focused follow-up queue are recorded in
 backends TaskApp is actually finished on is measured in
 `code/specs/task-app-platform-completion-v1.md`: six interactive/native targets
 are gated and shipped, static HTML has a product-scoped structural snapshot
-gate, Web Components has a real-engine interactive parity gate, and only
-`paint` still lacks TaskApp-level coverage. Neither browser parity gate adds a
-release artifact.
+gate, Web Components has a real-engine interactive parity gate, and Paint has
+reviewed light/dark PNG goldens from the package-expanded typed pipeline. All
+nine Mosaic backends therefore have honest TaskApp-level coverage. The HTML,
+Web Components, and Paint gates are CI-only: they add no release artifact, and
+the Paint snapshot does not imply a Paint host or interaction support.
 
 ```text
 TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
