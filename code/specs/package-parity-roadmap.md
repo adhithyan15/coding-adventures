@@ -14774,6 +14774,39 @@ Swift's ITF suite passes, while the broader Windows facade remains stopped by
 its pre-existing Rust-static-library system-link imports. Those host-native
 front defects remain outside this pure symbology child.
 
+### PR #16153 merge and exact-main parity refresh
+
+All final-head checks for PR #16153 reached terminal acceptable conclusions at
+`b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649`, including CodeQL, repository
+metadata, the human-language gate, and CI on Ubuntu, macOS, and Windows.
+GitHub reported the reviewed head clean and mergeable, guarded squash
+auto-merge was enabled only then, and GitHub merged the PR automatically at
+`2026-09-27T19:46:23Z` as
+`cb6fe40a0819113a820cd9886e494a2f4d9f4f66`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+unchanged at 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, 1,512 all-reported identities, 178 high-consensus
+packages, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown language buckets.
+
+The merge also completed the already-owned five-package Haskell 2D-barcode
+Windows-front repair. A read-only follow-up audit registered three bounded
+successors rather than one lane-wide sweep: the Haskell ITF foundation stack,
+the five sibling 1D symbologies, and finally the paint-vm-ascii plus
+barcode-1d facade closure. These owners preserve the real Cabal dependency
+shape and leave the wider Haskell Windows-front backlog separately classified.
+
+The dependency/leverage refresh ranks
+`build-tool-rust-glob-matcher-complexity-hardening` first among eligible,
+unowned leaves. Both prerequisites are merged, no open PR overlaps its Rust
+glob or hasher paths, and the work directly advances the cross-engine portable
+glob contract. Its fresh branch starts at the exact merge revision above and
+is bounded to strict compiled pattern validation, Unicode-scalar semantics,
+globstar segments, linear bracket indexing, bounded dynamic programming, and
+complete declared-list preflight without new host authority or dependencies.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

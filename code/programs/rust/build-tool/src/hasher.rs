@@ -136,6 +136,7 @@ fn special_filenames(language: &str) -> HashSet<&'static str> {
 /// declared `src/**/*.py` as sources.
 fn collect_source_files(pkg: &Package) -> Vec<std::path::PathBuf> {
     collect_source_files_with_patterns(pkg, &[])
+        .expect("an empty declared-glob list cannot contain invalid syntax")
 }
 
 /// Variant of `collect_source_files` that accepts explicit glob patterns.
@@ -164,7 +165,7 @@ fn collect_source_files(pkg: &Package) -> Vec<std::path::PathBuf> {
 pub fn collect_source_files_with_patterns(
     pkg: &Package,
     srcs_patterns: &[String],
-) -> Vec<std::path::PathBuf> {
+) -> Result<Vec<std::path::PathBuf>, glob_match::GlobPatternError> {
     let mut files = Vec::new();
 
     if srcs_patterns.is_empty() {
@@ -173,6 +174,11 @@ pub fn collect_source_files_with_patterns(
         let specials = special_filenames(&pkg.language);
         walk_for_files(&pkg.path, &extensions, &specials, &mut files);
     } else {
+        // Compile every declaration before walking the package. This makes a
+        // rejected later pattern visible even when an earlier pattern or an
+        // exact BUILD front would otherwise short-circuit candidate matching.
+        let compiled_patterns = glob_match::compile_patterns(srcs_patterns)?;
+
         // Starlark mode: glob-based matching.
         walk_all_files(&pkg.path, &mut files);
 
@@ -199,9 +205,9 @@ pub fn collect_source_files_with_patterns(
             }
 
             // Check if any pattern matches.
-            srcs_patterns
+            compiled_patterns
                 .iter()
-                .any(|pat| glob_match::match_path(pat, &rel))
+                .any(|pattern| glob_match::match_compiled_path(pattern, &rel))
         });
     }
 
@@ -212,7 +218,7 @@ pub fn collect_source_files_with_patterns(
         rel_a.cmp(rel_b)
     });
 
-    files
+    Ok(files)
 }
 
 /// Recursively walks a directory collecting source files.
@@ -598,6 +604,7 @@ mod tests {
             vec![]
         };
         let actual: Vec<String> = collect_source_files_with_patterns(&pkg, &patterns)
+            .unwrap()
             .iter()
             .map(|path| {
                 path.strip_prefix(&dir)
@@ -689,6 +696,7 @@ mod tests {
 
         for patterns in [vec![], vec!["**/*.rs".to_string()]] {
             let actual: Vec<String> = collect_source_files_with_patterns(&pkg, &patterns)
+                .unwrap()
                 .iter()
                 .map(|path| {
                     path.strip_prefix(&root)
@@ -844,7 +852,7 @@ mod tests {
         };
 
         let patterns = vec!["src/**/*.py".to_string()];
-        let files = collect_source_files_with_patterns(&pkg, &patterns);
+        let files = collect_source_files_with_patterns(&pkg, &patterns).unwrap();
 
         // Should include BUILD + src/gates.py + src/__init__.py
         // Should NOT include scripts/helper.py
@@ -890,7 +898,7 @@ mod tests {
             language: "python".to_string(),
         };
 
-        let files = collect_source_files_with_patterns(&pkg, &[]);
+        let files = collect_source_files_with_patterns(&pkg, &[]).unwrap();
 
         let rel_paths: Vec<String> = files
             .iter()
@@ -906,6 +914,28 @@ mod tests {
         assert!(rel_paths.contains(&"BUILD".to_string()));
         // README.md has no matching extension — should be excluded.
         assert!(!rel_paths.contains(&"README.md".to_string()));
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn invalid_later_glob_fails_before_candidate_matching() {
+        let dir = fixture_temp_dir("glob_preflight");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("main.py"), "pass").unwrap();
+
+        let pkg = Package {
+            name: "python/glob-preflight".to_string(),
+            path: dir.clone(),
+            build_commands: vec!["pytest".to_string()],
+            language: "python".to_string(),
+        };
+        let patterns = vec!["*.py".to_string(), "[z-a].py".to_string()];
+
+        assert_eq!(
+            collect_source_files_with_patterns(&pkg, &patterns),
+            Err(glob_match::GlobPatternError::AmbiguousOrDescendingCharacterClass)
+        );
 
         let _ = fs::remove_dir_all(&dir);
     }
