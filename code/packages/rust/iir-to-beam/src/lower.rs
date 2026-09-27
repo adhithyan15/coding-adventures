@@ -878,17 +878,9 @@ pub fn lower_iir_to_beam(
     // `erlc -S`). Unlike `atomics`, the key is used AS GIVEN — ets is not
     // 1-indexed, so no `+1` adjustment is needed.
     //
-    // `array_get` uses `ets:lookup_element/3`, which returns the requested
-    // tuple element directly (no list/tuple destructuring needed): it
-    // raises `badarg` on a missing key — the same trap-on-out-of-range
-    // failure mode `atomics:get` already has for `array<i64>` arrays.
-    //
-    // KNOWN, DOCUMENTED LIMITATION (see the spec's own §6): unlike
-    // `atomics:new`, `ets:new` does not pre-zero N cells — reading an
-    // element that was never `array_set` traps (`badarg`) instead of
-    // returning `0.0`. No promoted row exercises this (every promoted
-    // float-array row writes every cell it later reads), so it is left
-    // undecided rather than guessed at.
+    // BEAM11: `array_get` checks the declared length in the handle before
+    // `ets:lookup_element/4`. That lookup supplies a typed default for an
+    // unwritten in-range key; out-of-range reads still raise `badarg`.
     let ets_atom = atoms.intern("ets");
     let atom_insert = atoms.intern("insert");
     let atom_lookup_element = atoms.intern("lookup_element");
@@ -896,7 +888,7 @@ pub fn lower_iir_to_beam(
     let atom_farray = atoms.intern("farray");
     let import_ets_new = imports.intern(ets_atom, atom_new, 2); // ets:new/2
     let import_ets_insert = imports.intern(ets_atom, atom_insert, 2); // ets:insert/2
-    let import_ets_lookup_element = imports.intern(ets_atom, atom_lookup_element, 3); // ets:lookup_element/3
+    let import_ets_lookup_element_default = imports.intern(ets_atom, atom_lookup_element, 4); // ets:lookup_element/4
     let import_list_to_tuple = imports.intern(erlang_atom, atom_list_to_tuple, 1); // erlang:list_to_tuple/1
 
     // ── BEAM10: `array_len` — asking each substrate for its extent ─────────
@@ -4516,14 +4508,9 @@ pub fn lower_iir_to_beam(
                     if instr.op == "array_get"
                         && matches!(instr.type_hint.as_str(), "f64" | "str")
                     {
-                        // BEAM04/BEAM06: array_get on an ets-backed
-                        // float/string array — see the `:ets` module-setup
-                        // comment above. `ets:lookup_element(Tab, Idx, 2)`
-                        // returns the value directly (position 2 of the
-                        // `{Idx, Val}` tuple) — no list/tuple destructuring
-                        // needed on this path, unlike the `atomics` branch's
-                        // index-only +1 below. Identical for `str` and
-                        // `f64`: `:ets` returns whatever term was stored.
+                        // BEAM11: absent in-range keys have a typed zero
+                        // value; bounds are checked against BEAM10's declared
+                        // length before `ets:lookup_element/4` supplies it.
                         let r_handle = operand_reg!(get_src!(instr, 0));
                         let r_idx = operand_reg!(get_src!(instr, 1));
 
@@ -4543,17 +4530,39 @@ pub fn lower_iir_to_beam(
                         let s_pos = meta.next_reg + 2;
                         let cur_idx = instr_idx - 1;
 
-                        // BEAM10: the handle is the pair `[Tab | N]`; the
-                        // table is its head. A plain opcode, no call.
+                        // BEAM10: the handle is `[Tab | N]`. Retain both
+                        // fields until the bounds checks have run.
                         instrs.push(BEAMInstruction::new(OP_GET_LIST, vec![
                             BEAMOperand::x(r_handle),  // Src  = [Tab | N]
                             BEAMOperand::x(s_ref),     // Head = Tab
-                            BEAMOperand::x(s_pos),     // Tail = N (unused; s_pos is
-                                                       // overwritten below)
+                            BEAMOperand::x(s_pos),     // Tail = N
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
                         ]));
+
+                        let trap_lbl = alloc_synth_label!("array_get bounds checks");
+                        let ok_lbl = alloc_synth_label!("array_get bounds checks");
+                        instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
+                            BEAMOperand::f(trap_lbl), BEAMOperand::x(s_idx), BEAMOperand::i(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_IS_LT, vec![
+                            BEAMOperand::f(trap_lbl), BEAMOperand::x(s_idx), BEAMOperand::x(s_pos),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(ok_lbl)]));
+                        instrs.push(BEAMInstruction::new(
+                            OP_LABEL, vec![BEAMOperand::u(trap_lbl as u64)],
+                        ));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(atom_badarg), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(1), BEAMOperand::u(import_error as u64),
+                        ]));
+                        instrs.push(BEAMInstruction::new(
+                            OP_LABEL, vec![BEAMOperand::u(ok_lbl as u64)],
+                        ));
+
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::i(2), BEAMOperand::x(s_pos), // tuple position 2 = Val
                         ]));
@@ -4564,8 +4573,18 @@ pub fn lower_iir_to_beam(
                                 BEAMOperand::x(from), BEAMOperand::x(to),
                             ]));
                         }
+                        if instr.type_hint == "f64" {
+                            let idx = literal_pool.intern_f64(0.0);
+                            let mut args = literal_operand(idx).to_vec();
+                            args.push(BEAMOperand::x(3));
+                            instrs.push(BEAMInstruction::new(OP_MOVE, args));
+                        } else {
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::a(0), BEAMOperand::x(3), // empty string = []
+                            ]));
+                        }
                         instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
-                            BEAMOperand::u(3), BEAMOperand::u(import_ets_lookup_element as u64),
+                            BEAMOperand::u(4), BEAMOperand::u(import_ets_lookup_element_default as u64),
                         ]));
                         if rd != 0 {
                             instrs.push(BEAMInstruction::new(OP_MOVE, vec![

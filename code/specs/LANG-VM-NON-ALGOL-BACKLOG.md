@@ -34,9 +34,32 @@ new failure before selecting another item. The immediate queue is:
    AOT00 exceptions/optimization/concurrency. Re-rank these against observed
    failures after each merged PR.
 
+6. **VM-072 (new language design, user-directed):** design a gradual next
+   language after Nib and Oct that can execute on Intel 8086 and Z80. Both
+   machines already have Rust/Python behavioral simulators, Rust encoders and
+   gate-level models. Their Rust CIR backends currently lower only constants
+   and return/halt, so a real language needs backend arithmetic, memory,
+   branches, calls and I/O before claiming end-to-end support. Z80 extends
+   8080; it is not 8086 binary-compatible. Start with a spec comparing a
+   portable source subset and separate machine-specific intrinsics, then
+   execute the same discriminating programs in both simulators. Decide whether
+   this is one cross-target language or two consecutive ladder rungs from the
+   feature/teaching cost audit; do not equate simulator completeness with a
+   complete compiler backend.
+
 The VM-071 implementation uses `ets:lookup_element/4` with explicit length
 guards instead of the issue's tentative O(N) table pre-population. See
 `BEAM11-ets-array-default-reads.md` for the runtime and validation contract.
+
+**VM-073 (discovered during BEAM11):** the ets-backed `array_set` lowering
+inserts an arbitrary integer key without consulting the `[Table | Length]`
+extent, whereas the `:atomics` path traps on an out-of-range index. Existing
+language frontends emit bounds checks, so this is not yet a proven declared
+matrix failure. Audit direct IIR consumers and any reachable frontend path,
+then either enforce bounds in the shared backend with a real-Erlang regression
+or document the frontend precondition explicitly. Rank it after the measured
+VM-071 failure and the missing CI protection above unless execution proves a
+reachable silent error.
 
 ### VM-071 — BEAM04's pre-zero gap is no longer unreachable (opened by VM-070)
 

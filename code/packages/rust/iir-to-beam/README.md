@@ -135,7 +135,7 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `store_byte` / `array_set` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:put/3` (`store_byte` additionally masks the value `band 255`) |
 | `array_set` (f64 or str) | `put_list [Idx,Val]`, `call_ext erlang:list_to_tuple/1`, `call_ext ets:insert/2` (BEAM04/BEAM06 — no `+1`, `:ets` is not 1-indexed; identical for both element types) |
 | `load_byte` / `array_get` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:get/2` |
-| `array_get` (f64 or str) | `get_list` recovering the table from the handle's head, then `call_ext ets:lookup_element/3` (BEAM04/BEAM06 — position `2` of the `{Idx,Val}` tuple; traps `badarg` on a missing key) |
+| `array_get` (f64 or str) | `get_list` recovering table and declared length; guard `0 <= idx < N`, then `call_ext ets:lookup_element/4` with `0.0` or `[]` as the default for an unwritten cell (BEAM11) |
 | `array_len` (`array<i64>`) | `call_ext atomics:info/1`, `call_ext maps:get/2` (BEAM10 — `atomics:new/2` is fixed-size so `info` reports the *declared* extent; there is no `atomics:size/1` and this backend emits no map opcodes, so the `size` key is projected with an ordinary `call_ext`) |
 | `array_len` (`array<f64>` or `array<str>`) | `get_list` taking the handle's tail — no call at all (BEAM10 — and **never** `ets:info/2`, which counts *inserted entries*: a ten-element array with three cells written would report `3`) |
 
@@ -229,9 +229,9 @@ bit-reinterpretation approach that kept `:atomics` was researched and
 rejected because it needs three entirely new opcode families
 (`bs_create_bin`, `bs_start_match4`/`bs_match`, `test bs_get_float2`) this
 backend has never implemented, versus `:ets`'s `call_ext`/`put_list`-only
-shape. One known, deliberately unfixed limitation: unlike `atomics:new`,
-`ets:new` does not pre-zero N cells, so reading a never-`array_set` index
-traps `badarg` instead of returning `0.0`.
+shape. BEAM11 closes the old unset-read limitation without populating N
+table entries: `array_get` supplies a typed default and checks the declared
+extent before the lookup.
 
 **BEAM10 update — this is now reachable.** It was previously described here
 as unreachable because every BEAM04-promoted row writes every cell it later
@@ -239,12 +239,10 @@ reads. That remains true of promoted rows, but it was never the whole story:
 ALGOL's `emit_array_value_copy` reads every element of the *source* array
 when one is passed by value, and an ALGOL source array may be sparsely
 written. Implementing `array_len` let those programs get far enough to hit
-it — six ALGOL corpus programs now trap this way, each passing a sparse
+it — six ALGOL corpus programs trapped this way, each passing a sparse
 multi-dimensional `real`/`string` array by value, where previously they
-refused to compile at all. Logged as its own backlog item, with a fix that
-pays the O(n) cost entirely in `call_ext`s (`lists:seq/2`,
-`lists:duplicate/2`, `lists:zip/2`, one `ets:insert/2`) rather than an
-emitted loop.
+refused to compile at all. BEAM11 adds an O(1) defaulted read with explicit
+bounds checks. The older O(n) pre-population proposal was not needed.
 
 BEAM10 makes an ets-backed array handle the **pair `[Tab | N]`** rather than a
 bare table identifier, and that shape was arrived at the hard way. Storing the
@@ -295,8 +293,8 @@ representation work needed. A hypothetical heterogeneous array (mixing
 `f64` and `str` elements in one array) never actually arises: BASIC's
 mixed numeric/string `DATA` pool uses three separate parallel typed
 arrays (kind/numeric/string), so no tagged/variant element wrapper is
-needed anywhere in this backend. The same unset-read `badarg` limitation
-above applies identically to string elements.
+needed anywhere in this backend. BEAM11 gives unwritten string elements the
+empty Erlang character list as their default.
 
 ## OTP compatibility
 

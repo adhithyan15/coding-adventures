@@ -949,11 +949,17 @@ BEAM opcode, no frontend change. Full research and decision:
 (`portable_text_stdout_dartmouth_basic_beam_rnd`) with the exact
 Park–Miller sequence every other standard backend already proves
 (`22`, `85032`, `85032`, `601352`). **Dartmouth BASIC now declares all
-51 of 51 rows on `Beam`.** Combined with Twig (49/49), Nib (26/26), Oct
-(12/12), COBOL-60 (58/58), FLOW-MATIC (8/8), and Brainfuck (3/6,
-intentional — real stdin-as-tape host support is a separate, unscoped
-item), **this closes every non-ALGOL BEAM gap in
-`LANG-VM-NON-ALGOL-BACKLOG.md`.**
+51 of 51 rows on `Beam`.** Later BEAM09 closed Brainfuck's input rows too.
+For current counts, use `LANG-VM-FEATURE-COVERAGE.md`; the older figures in
+this section describe BEAM08's merge point.
+
+### Sparse ALGOL arrays on BEAM (BEAM11)
+
+`tests/beam_array_len.rs` executes six existing ALGOL matrix sources that
+copy sparse real or string arrays by value on real Erlang. BEAM11 makes an
+unwritten in-range source cell read as `0.0` or the empty string; before the
+repair, all six copies trapped at that read. ALGOL's BEAM matrix declarations
+remain with the separate ALGOL completion track.
 
 ## [0.348.0] - 2026-09-19 - VM-058 INSPECT region intersection
 

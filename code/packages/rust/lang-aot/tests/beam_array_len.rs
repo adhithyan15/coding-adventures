@@ -162,3 +162,28 @@ fn call_by_value_array_copy_runs_on_beam() {
         "array passed by value: array_len is the element COUNT, not a bound"
     );
 }
+
+/// BEAM11: these six matrix sources copy sparse real/string arrays by value.
+/// The copy reads every source cell, including cells the caller never wrote.
+/// They formerly trapped at that read on real Erlang (VM-071). Keep the
+/// sources aligned with the corresponding `lang_matrix.rs` programs; ALGOL's
+/// BEAM declaration remains with its separate owner.
+#[test]
+fn sparse_real_and_string_value_copies_run_on_beam() {
+    if !erl_available() {
+        eprintln!("erl absent — skipping BEAM11 sparse ALGOL cases");
+        return;
+    }
+
+    let cases = [
+        ("b11_real_3d", "begin real array values[-1:0, 2:3, 5:6]; integer result, total; procedure setvalues(a); value a; real array a; begin procedure populate; begin a[-1,2,5] := 30.0; a[-1,3,6] := 4.0; a[0,2,5] := 6.0; a[0,3,6] := 2.0 end; populate(); total := entier(a[-1,2,5] + a[-1,3,6] + a[0,2,5] + a[0,3,6]); if total = 42 then result := 42 else result := 0 end; setvalues(values) end"),
+        ("b11_str_2d", "begin string array words[-1:0, 4:5]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4] := 'HI'; a[-1,5] := 'NO'; a[0,4] := 'LO'; a[0,5] := 'OK' end; seed(); if a[-1,4] < a[0,4] and a[0,5] = 'OK' and a[-1,5] != 'HI' then result := 42 else result := 0 end; fill(words) end"),
+        ("b11_str_3d", "begin string array words[-1:0, 4:5, 7:8]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4,7] := 'HI'; a[-1,5,8] := 'NO'; a[0,4,7] := 'LO'; a[0,5,8] := 'OK' end; seed(); if a[-1,4,7] < a[0,4,7] and a[0,5,8] = 'OK' and a[-1,5,8] != 'HI' then result := 42 else result := 0 end; fill(words) end"),
+        ("b11_str_4d", "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed; begin a[-1,4,7,10] := 'HI'; a[-1,5,8,11] := 'NO'; a[0,4,7,10] := 'LO'; a[0,5,8,11] := 'OK' end; seed(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end"),
+        ("b11_str_fwd", "begin string array words[-1:0, 4:5, 7:8, 10:11]; integer result; procedure fill(a); value a; string array a; begin procedure seed(b); string array b; begin b[-1,4,7,10] := 'HI'; b[-1,5,8,11] := 'NO'; b[0,4,7,10] := 'LO'; b[0,5,8,11] := 'OK' end; procedure invoke; seed(a); invoke(); if a[-1,4,7,10] < a[0,4,7,10] and a[0,5,8,11] = 'OK' and a[-1,5,8,11] != 'HI' then result := 42 else result := 0 end; fill(words) end"),
+        ("b11_real_fwd", "begin real array values[-1:0, 2:3, 5:6, 8:9]; integer result, total; procedure fill(a); value a; real array a; begin procedure seed(b); real array b; begin b[-1,2,5,8] := 30.0; b[-1,3,6,9] := 4.0; b[0,2,5,8] := 6.0; b[0,3,6,9] := 2.0 end; procedure invoke; seed(a); invoke(); total := entier(a[-1,2,5,8] + a[-1,3,6,9] + a[0,2,5,8] + a[0,3,6,9]); if total = 42 then result := 42 else result := 0 end; fill(values) end"),
+    ];
+    for (module, src) in cases {
+        assert_eq!(run(src, module), "42", "{module} must copy zero-filled sparse cells");
+    }
+}

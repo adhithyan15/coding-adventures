@@ -1,5 +1,19 @@
 # Changelog — iir-to-beam
 
+## 0.19.1 - BEAM11: zero-valued reads for sparse float/string arrays
+
+`array_get` on an ets-backed `array<f64>` or `array<str>` now checks the
+declared `[Table | Length]` handle bounds and uses `ets:lookup_element/4` to
+return `0.0` or `[]` when an in-range key has never been written. Negative and
+upper-bound reads still raise `badarg`; allocation stays O(1), and `array_len`
+continues to report the declared length. This closes VM-071 without the
+proposed O(N) pre-population or additional GC-sensitive allocation calls.
+
+The previous real-Erlang unset-read trap test now asserts `0.0`. New direct
+float/string boundary tests and the six sparse ALGOL array-by-value sources
+execute on real Erlang. The package's full backend suite, BEAM10 array-length
+suite, and Clippy remain the validation gates.
+
 ## 0.19.0 - BEAM10: `array_len`
 
 This backend had arrays but not their length: `array_len` fell through to

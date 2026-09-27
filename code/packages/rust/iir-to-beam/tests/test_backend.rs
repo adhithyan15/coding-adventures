@@ -3680,7 +3680,7 @@ fn test_94_f64_array_ops_use_ets_not_atomics() {
 
     assert!(is_called("ets", "new", 2), "must call_ext ets:new/2");
     assert!(is_called("ets", "insert", 2), "must call_ext ets:insert/2");
-    assert!(is_called("ets", "lookup_element", 3), "must call_ext ets:lookup_element/3");
+    assert!(is_called("ets", "lookup_element", 4), "must call_ext ets:lookup_element/4");
     assert!(is_called("erlang", "list_to_tuple", 1), "must call_ext erlang:list_to_tuple/1");
     assert!(!is_called("atomics", "new", 2),
         "an all-f64 array module must NOT call_ext atomics:new/2");
@@ -3815,18 +3815,11 @@ fn test_96_real_erl_float_array_overwrite() {
     assert_eq!(stdout.trim(), "99.5", "expected erl output \"99.5\", got {:?}", stdout.trim());
 }
 
-/// Documents the known limitation from `BEAM04-float-array-representation.md`
-/// §"known limitation": unlike `atomics:new`, `ets:new` does not pre-zero N
-/// cells, so `array_get` on an index that was never `array_set` TRAPS
-/// (`badarg`) instead of returning `0.0`. No promoted corpus row exercises
-/// this (every promoted float-array row writes every cell it later reads),
-/// so this test pins the trap as a documented, intentional divergence rather
-/// than letting it regress silently into "returns 0.0" or "returns garbage"
-/// without anyone noticing.
+/// BEAM11: a missing in-range ets key is a zero-valued float array cell.
 ///
 /// Silently skipped when `erl` is not on PATH.
 #[test]
-fn test_97_real_erl_float_array_unset_read_traps() {
+fn test_97_real_erl_float_array_unset_read_returns_zero() {
     use iir_to_beam::encode_beam;
 
     if !erl_available() {
@@ -3864,10 +3857,60 @@ fn test_97_real_erl_float_array_unset_read_traps() {
         .output()
         .expect("spawn erl");
 
-    assert!(!output.status.success(), "reading an unset ets-backed cell must trap");
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(stderr.contains("badarg"),
-        "expected a badarg trap on the unset read, got stderr: {stderr}");
+    assert!(output.status.success(), "unset float read failed: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "0.0");
+}
+
+/// BEAM11 checks the other ets-backed element type and both boundaries.
+/// Each case uses a fresh process so the trap cannot mask an earlier result.
+#[test]
+fn beam11_real_erl_unset_string_and_out_of_range_reads() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    for (name, array_ty, elem_ty, index, expected) in [
+        ("beam11_string_default", "array<str>", "str", 1, Some("[]")),
+        ("beam11_float_negative", "array<f64>", "f64", -1, None),
+        ("beam11_float_upper", "array<f64>", "f64", 3, None),
+        ("beam11_string_upper", "array<str>", "str", 3, None),
+    ] {
+        let module = make_module_fn("main", vec![], elem_ty, vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], array_ty),
+            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(index)], "i64"),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("p".into()), Operand::Var("i".into())], elem_ty),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], elem_ty),
+        ]);
+        let cfg = IIRBeamConfig::new(name);
+        let beam = lower_iir_to_beam(&module, &cfg).expect("lower BEAM11 array read");
+        let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).expect("create test directory");
+        std::fs::write(tmp.join(format!("{name}.beam")), encode_beam(&beam))
+            .expect("write BEAM11 module");
+        let output = std::process::Command::new("erl")
+            .arg("-noshell")
+            .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+            .arg("-eval")
+            .arg(format!("io:format(\"~w~n\",[{name}:main()]),halt(0)."))
+            .output().expect("spawn erl");
+        match expected {
+            Some(value) => {
+                assert!(output.status.success(), "{name}: {}",
+                    String::from_utf8_lossy(&output.stderr));
+                assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), value, "{name}");
+            }
+            None => {
+                assert!(!output.status.success(), "{name} must trap");
+                assert!(String::from_utf8_lossy(&output.stderr).contains("badarg"),
+                    "{name}: {}", String::from_utf8_lossy(&output.stderr));
+            }
+        }
+    }
 }
 
 // ===========================================================================
@@ -4177,7 +4220,7 @@ fn test_100_str_array_ops_use_ets_not_atomics() {
 
     assert!(is_called("ets", "new", 2), "must call_ext ets:new/2");
     assert!(is_called("ets", "insert", 2), "must call_ext ets:insert/2");
-    assert!(is_called("ets", "lookup_element", 3), "must call_ext ets:lookup_element/3");
+    assert!(is_called("ets", "lookup_element", 4), "must call_ext ets:lookup_element/4");
     assert!(is_called("erlang", "list_to_tuple", 1), "must call_ext erlang:list_to_tuple/1");
     assert!(!is_called("atomics", "new", 2),
         "an all-str array module must NOT call_ext atomics:new/2");
