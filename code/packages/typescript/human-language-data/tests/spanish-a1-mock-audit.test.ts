@@ -62,7 +62,10 @@ describe("Spanish pre-A1 book-bounded mock audit", () => {
     ]);
   });
 
-  it("measures a SMALLER taught set than A1, which is what makes it a different gate", () => {
+  // Two whole-corpus audits in one case, so it states its own budget instead of
+  // borrowing the 30s config default meant for one: under full-suite parallel
+  // load on CI this case measured 35.9s while passing in isolation.
+  it("measures a SMALLER taught set than A1, which is what makes it a different gate", { timeout: 60_000 }, () => {
     const root = defaultCurriculumRoot();
     const preA1 = buildSpanishA1MockAudit(root, "pre-A1");
     const a1 = buildSpanishA1MockAudit(root, "A1");
@@ -508,7 +511,8 @@ describe("Spanish A2 book-bounded mock audit", () => {
     ]);
   });
 
-  it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
+  // Two whole-corpus audits, like the pre-A1 comparison above: same budget, same reason.
+  it("measures a LARGER taught set than A1, which is what makes it a different gate", { timeout: 60_000 }, () => {
     const root = defaultCurriculumRoot();
     const a1 = buildSpanishA1MockAudit(root, "A1");
     const a2 = buildSpanishA1MockAudit(root, "A2");
