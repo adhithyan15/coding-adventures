@@ -9,7 +9,8 @@ capabilities, and no application carries its own copy (§7).
 | Compose (desktop) | `MosaicPlatformEffects.kt` | done (#16016) |
 | web family | `mosaic-file-effects.mjs` answers `files.*` | done (#16032) |
 | SwiftUI (macOS) | `MosaicPlatformEffects.swift` | done; iOS/iPadOS fail each request with a message until UI89 step 6 |
-| Qt, XAML, Flutter | — | not started |
+| Qt | `MosaicPlatformEffects.{h,cpp}` | done (§7.4a) |
+| XAML, Flutter | — | not started |
 
 First consumer: Journal's Export (J6a, #16034).
 
@@ -203,6 +204,35 @@ escape hatch, used deliberately and visibly.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.
+
+### 7.4a Qt: one routed handler, the signal as the fallback
+
+Compose and SwiftUI hosts each have one `effectHandler` property, so the
+platform library wraps the app's handler and every effect has exactly one
+owner. The Qt host instead emitted a fan-out signal, `effectRequested`, that
+every connected handler receives, and handlers answer inline (a blocking
+`QFileDialog`). A library connected beside photo-picker's handler would have
+opened a second dialog for one `files.open`, and `deferEffect` accepted a
+second owner of an id. So on Qt:
+
+- `MosaicHost` gains one handler slot, `setEffectHandler(EffectHandler)`.
+  When it is set, the host calls it **instead of** emitting
+  `effectRequested`; when it is not, the signal is emitted as before. Never
+  both, so an effect never has two owners.
+- `installMosaicPlatformEffects(host, appKinds)` sets that slot to the
+  router (§7.2). A kind that goes to the app is delivered the old way: to a
+  handler previously set in the slot, or else by emitting `effectRequested`,
+  so `connect`ed package handlers (Engram's, photo-picker's) keep working
+  unchanged. A standard kind the app did not claim is answered by the
+  library, and the signal is not emitted for it.
+- `deferEffect` refuses an id that is already deferred: an effect has one
+  owner.
+- Dialogs are `QFileDialog`'s static functions, answered inline like the
+  existing Qt handlers; a fake can be injected, so the library's behaviour is
+  tested headless against Qt Core only.
+- `MosaicPlatformEffects.{h,cpp}` are compiled into every Qt project beside
+  `MosaicHost.{h,cpp}`, under the same guard, and `main.cpp` installs the
+  library after the package's own handler.
 
 ### 7.5 First PRs
 

@@ -7,5 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 find_package(Qt6 REQUIRED COMPONENTS Core)
-add_executable(mosaic_qt_effect_driver main.cpp MosaicHost.cpp MosaicHost.h)
+add_executable(mosaic_qt_effect_driver main.cpp MosaicHost.cpp MosaicHost.h
+    MosaicPlatformEffects.cpp MosaicPlatformEffects.h)
 target_link_libraries(mosaic_qt_effect_driver PRIVATE Qt6::Core)

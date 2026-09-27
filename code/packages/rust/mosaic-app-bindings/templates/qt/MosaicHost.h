@@ -9,6 +9,8 @@
 #include <QVariant>
 #include <QVariantMap>
 
+#include <functional>
+
 class MosaicHost final : public QObject
 {
     Q_OBJECT
@@ -64,6 +66,23 @@ public:
     // later through `updated()`.
     Q_INVOKABLE void answerDeferredEffect(const QVariant &effectId,
                                           const QVariantMap &result);
+
+    // One routed handler (UI87 §7.4a). When set, the host calls it for each
+    // effect INSTEAD of emitting `effectRequested`; when empty, the signal is
+    // emitted as before. Never both, so an effect never has two owners. The
+    // handler follows the same contract as a `effectRequested` slot: answer
+    // inline with `completeEffect`, or take ownership with `deferEffect`.
+    //
+    // Mosaic's platform library installs its router here, and delivers the
+    // kinds that belong to the app the old way -- to the handler it replaced,
+    // or else by emitting `effectRequested` -- so `connect`ed handlers keep
+    // working unchanged.
+    using EffectHandler = std::function<void(const QVariant &effectId,
+                                             const QString &kind,
+                                             const QVariant &payload,
+                                             const QString &delivery)>;
+    void setEffectHandler(EffectHandler handler) { effectHandler_ = std::move(handler); }
+    const EffectHandler &effectHandler() const { return effectHandler_; }
 
 signals:
     // Emitted once per effect the runtime asks for, before the host decides
@@ -180,6 +199,8 @@ private:
     Snapshot snapshot_ = nullptr;
     Restore restore_ = nullptr;
     CompleteEffect completeEffect_ = nullptr;
+    // See `setEffectHandler`.
+    EffectHandler effectHandler_;
     BufferFree bufferFree_ = nullptr;
     Destroy destroy_ = nullptr;
 };
