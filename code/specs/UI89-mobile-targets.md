@@ -210,8 +210,9 @@ What step 4 changed from §3.4, and why:
   default) made legal for Android: `-` becomes `_`, a part that does not start
   with a letter gets an `x`, and a Java keyword part gets a trailing `_`. The
   label is `display-name` (or the root component) in `res/values/strings.xml`,
-  escaped for Android's string syntax and XML; a literal in the manifest would
-  read a leading `@` or `?` as a reference. Backup is off, and the app asks for
+  escaped for Android's string syntax (a leading `@` or `?`, after any
+  blanks, included) and XML, with `formatted="false"`; a literal in the manifest would
+  read a leading `@` or `?` as a reference. Cloud backup is off, and the app asks for
   no permissions.
 - **Drag and drop on Android.** Android hands a drop target the `clipData`
   only with the drop, and never tells the source its drag ended. The Android
