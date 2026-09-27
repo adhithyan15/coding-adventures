@@ -1,0 +1,11 @@
+{
+  "id": "AR-C122-sabun",
+  "pathSegment": "AR-PATH-122-THINGS122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-122-THINGS122",
+      "order": 2
+    }
+  ]
+}

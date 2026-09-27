@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Grass, Seed, Root, Branch, Island",
+  "label": "ch:ar-grass-seed-root-branch-island",
+  "canDo": "I can say grass, a seed, a root, a branch and an island.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C131-jazira",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say grass, a seed, a root, a branch and an island.",
+    "assesses": [
+      "AR-LEX-C131-THINGS131-03",
+      "AR-LEX-C131-THINGS131-04",
+      "AR-LEX-C131-THINGS131-05"
+    ]
+  }
+}

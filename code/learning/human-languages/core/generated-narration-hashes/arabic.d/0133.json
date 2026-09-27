@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:40ec9b50a35681d9",
+  "lessonIds": [
+    "AR-C133-sahra",
+    "AR-C133-buhayra",
+    "AR-C133-barq",
+    "AR-C133-rad",
+    "AR-C133-asifa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch133.txt",
+  "json": "arabic/narration/ch133.json",
+  "textHash": "fnv1a64:bc111b39f48ce324",
+  "jsonHash": "fnv1a64:049e46b745bfe9f1",
+  "findings": []
+}

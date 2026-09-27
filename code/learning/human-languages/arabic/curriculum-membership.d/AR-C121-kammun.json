@@ -1,0 +1,11 @@
+{
+  "id": "AR-C121-kammun",
+  "pathSegment": "AR-PATH-121-THINGS121",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-121-THINGS121",
+      "order": 4
+    }
+  ]
+}

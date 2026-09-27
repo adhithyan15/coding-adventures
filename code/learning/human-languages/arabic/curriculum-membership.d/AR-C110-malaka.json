@@ -1,0 +1,11 @@
+{
+  "id": "AR-C110-malaka",
+  "pathSegment": "AR-PATH-110-CAN110",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-110-CAN110",
+      "order": 1
+    }
+  ]
+}

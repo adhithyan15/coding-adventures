@@ -1,0 +1,11 @@
+{
+  "id": "AR-C111-tawaqqu",
+  "pathSegment": "AR-PATH-111-WANT111",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-111-WANT111",
+      "order": 1
+    }
+  ]
+}

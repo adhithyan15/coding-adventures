@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:3be9006dcef517af",
+  "lessonIds": [
+    "AR-C153-kasul",
+    "AR-C153-shuja",
+    "AR-C153-atshan",
+    "AR-C153-tazaj",
+    "AR-C153-nadij"
+  ],
+  "tex": "arabic/book/chapters/ch153-lazy-brave-thirsty-fresh-ripe.tex"
+}

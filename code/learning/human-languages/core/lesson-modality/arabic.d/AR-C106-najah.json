@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C106-najah",
+    "language": "arabic",
+    "chapter": 106,
+    "sequence": 4320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac7b6c173f5bc575"
+  },
+  "findings": []
+}

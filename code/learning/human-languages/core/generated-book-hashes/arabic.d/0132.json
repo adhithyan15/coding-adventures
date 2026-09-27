@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:0c624b61237f9cd7",
+  "lessonIds": [
+    "AR-C132-sahil",
+    "AR-C132-shallal",
+    "AR-C132-kahf",
+    "AR-C132-wadi",
+    "AR-C132-tall"
+  ],
+  "tex": "arabic/book/chapters/ch132-coast-waterfall-cave-valley-hill.tex"
+}

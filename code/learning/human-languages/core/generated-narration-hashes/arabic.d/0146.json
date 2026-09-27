@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:63dccab2a1973e8c",
+  "lessonIds": [
+    "AR-C146-mufid",
+    "AR-C146-khatir",
+    "AR-C146-amin",
+    "AR-C146-maftuh",
+    "AR-C146-mughlaq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch146.txt",
+  "json": "arabic/narration/ch146.json",
+  "textHash": "fnv1a64:5f75a97eabf6703c",
+  "jsonHash": "fnv1a64:9b07bb761e0eb8a6",
+  "findings": []
+}

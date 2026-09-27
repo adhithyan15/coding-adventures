@@ -1,0 +1,11 @@
+{
+  "id": "AR-C118-mihfaza",
+  "pathSegment": "AR-PATH-118-THINGS118",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-118-THINGS118",
+      "order": 3
+    }
+  ]
+}

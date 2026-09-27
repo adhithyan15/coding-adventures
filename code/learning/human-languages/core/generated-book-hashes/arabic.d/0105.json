@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:68c216b44eb6bc42",
+  "lessonIds": [
+    "AR-C105-madkhal",
+    "AR-C105-makhraj",
+    "AR-C105-mustaqim",
+    "AR-C105-hawla",
+    "AR-C105-inda"
+  ],
+  "tex": "arabic/book/chapters/ch105-entrance-exit-straight-ahead-around-at.tex"
+}

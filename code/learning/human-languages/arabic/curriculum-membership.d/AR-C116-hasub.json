@@ -1,0 +1,11 @@
+{
+  "id": "AR-C116-hasub",
+  "pathSegment": "AR-PATH-116-THINGS116",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-116-THINGS116",
+      "order": 4
+    }
+  ]
+}

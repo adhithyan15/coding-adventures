@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:b022b00930ec10e9",
+  "lessonIds": [
+    "AR-C106-imkaniyya",
+    "AR-C106-sulta",
+    "AR-C106-najah",
+    "AR-C106-itqan",
+    "AR-C106-qudra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch106.txt",
+  "json": "arabic/narration/ch106.json",
+  "textHash": "fnv1a64:60580a6a2a8df575",
+  "jsonHash": "fnv1a64:7fee89e017f52fcf",
+  "findings": []
+}

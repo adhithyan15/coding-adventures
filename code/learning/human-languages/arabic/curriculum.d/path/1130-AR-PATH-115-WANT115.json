@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-115-WANT115",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "AR-EXT-115-WANT115"
+  ],
+  "after": []
+}

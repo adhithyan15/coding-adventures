@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C100-maydan",
+    "language": "arabic",
+    "chapter": 100,
+    "sequence": 4020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99c31fe003c3ffc5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Entrance, Exit, Straight ahead, Around, At",
+  "label": "ch:ar-entrance-exit-straight-ahead-around-at",
+  "canDo": "I can say an entrance, an exit, straight ahead, around and at.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C105-inda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say an entrance, an exit, straight ahead, around and at.",
+    "assesses": [
+      "AR-LEX-C105-LOC105-03",
+      "AR-LEX-C105-LOC105-04",
+      "AR-LEX-C105-LOC105-05"
+    ]
+  }
+}

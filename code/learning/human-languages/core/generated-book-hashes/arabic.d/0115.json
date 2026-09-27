@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:f7c0a46ca87c9bf7",
+  "lessonIds": [
+    "AR-C115-qarar",
+    "AR-C115-ikhtara",
+    "AR-C115-faddala",
+    "AR-C115-talaba",
+    "AR-C115-niyya"
+  ],
+  "tex": "arabic/book/chapters/ch115-decision-to-choose-to-prefer-to-ask-for-intention.tex"
+}

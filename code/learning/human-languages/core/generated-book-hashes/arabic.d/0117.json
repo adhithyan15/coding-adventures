@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:bbe33be4a2f39737",
+  "lessonIds": [
+    "AR-C117-tilfaz",
+    "AR-C117-jarida",
+    "AR-C117-majalla",
+    "AR-C117-risala",
+    "AR-C117-zarf"
+  ],
+  "tex": "arabic/book/chapters/ch117-television-newspaper-magazine-letter-envelope.tex"
+}

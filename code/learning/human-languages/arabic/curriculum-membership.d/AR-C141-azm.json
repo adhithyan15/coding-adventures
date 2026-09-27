@@ -1,0 +1,11 @@
+{
+  "id": "AR-C141-azm",
+  "pathSegment": "AR-PATH-141-THINGS141",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-141-THINGS141",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:04590690053de712",
+  "lessonIds": [
+    "AR-C120-murabba",
+    "AR-C120-rumman",
+    "AR-C120-farawila",
+    "AR-C120-khass",
+    "AR-C120-badhinjan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch120.txt",
+  "json": "arabic/narration/ch120.json",
+  "textHash": "fnv1a64:504053039d126d46",
+  "jsonHash": "fnv1a64:a0cb749565f6d419",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C140-dimagh",
+    "language": "arabic",
+    "chapter": 140,
+    "sequence": 6420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3329d80783d46db"
+  },
+  "findings": []
+}

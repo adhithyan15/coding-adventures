@@ -1,0 +1,11 @@
+{
+  "id": "AR-C154-shabb",
+  "pathSegment": "AR-PATH-154-QUAL154",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-154-QUAL154",
+      "order": 1
+    }
+  ]
+}

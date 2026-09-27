@@ -1,0 +1,11 @@
+{
+  "id": "AR-C135-hamama",
+  "pathSegment": "AR-PATH-135-THINGS135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-135-THINGS135",
+      "order": 2
+    }
+  ]
+}

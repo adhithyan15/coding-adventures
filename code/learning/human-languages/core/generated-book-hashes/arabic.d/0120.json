@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:a0d9a1d06a7f5a0e",
+  "lessonIds": [
+    "AR-C120-murabba",
+    "AR-C120-rumman",
+    "AR-C120-farawila",
+    "AR-C120-khass",
+    "AR-C120-badhinjan"
+  ],
+  "tex": "arabic/book/chapters/ch120-jam-pomegranate-strawberries-lettuce-aubergine.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C101-mabna",
+    "language": "arabic",
+    "chapter": 101,
+    "sequence": 4070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:261b0f1f42fc3be2"
+  },
+  "findings": []
+}

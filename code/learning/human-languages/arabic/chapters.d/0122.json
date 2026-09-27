@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Cupboard, Comb, Soap, Towel, Mattress",
+  "label": "ch:ar-cupboard-comb-soap-towel-mattress",
+  "canDo": "I can say a cupboard, a comb, soap, a towel and a mattress.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C122-firash",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a cupboard, a comb, soap, a towel and a mattress.",
+    "assesses": [
+      "AR-LEX-C122-THINGS122-03",
+      "AR-LEX-C122-THINGS122-04",
+      "AR-LEX-C122-THINGS122-05"
+    ]
+  }
+}

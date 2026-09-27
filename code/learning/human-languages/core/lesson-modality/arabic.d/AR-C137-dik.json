@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C137-dik",
+    "language": "arabic",
+    "chapter": 137,
+    "sequence": 6160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:028c2f3ca92bd4df"
+  },
+  "findings": []
+}

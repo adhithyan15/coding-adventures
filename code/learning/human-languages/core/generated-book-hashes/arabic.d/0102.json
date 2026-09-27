@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:db43986f03c2b881",
+  "lessonIds": [
+    "AR-C102-sath",
+    "AR-C102-daraj",
+    "AR-C102-saqf",
+    "AR-C102-khalfa",
+    "AR-C102-bayna"
+  ],
+  "tex": "arabic/book/chapters/ch102-roof-stairs-ceiling-behind-between.tex"
+}

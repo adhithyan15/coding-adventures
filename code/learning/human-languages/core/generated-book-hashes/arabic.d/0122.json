@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:d540311c505c37a2",
+  "lessonIds": [
+    "AR-C122-khizana",
+    "AR-C122-musht",
+    "AR-C122-sabun",
+    "AR-C122-minshafa",
+    "AR-C122-firash"
+  ],
+  "tex": "arabic/book/chapters/ch122-cupboard-comb-soap-towel-mattress.tex"
+}

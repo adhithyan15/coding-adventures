@@ -1,0 +1,11 @@
+{
+  "id": "AR-C130-bittikh",
+  "pathSegment": "AR-PATH-130-THINGS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-130-THINGS130",
+      "order": 1
+    }
+  ]
+}

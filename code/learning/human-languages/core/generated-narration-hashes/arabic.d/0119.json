@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:febcfec988380467",
+  "lessonIds": [
+    "AR-C119-quffaz",
+    "AR-C119-wishah",
+    "AR-C119-ghada",
+    "AR-C119-asha",
+    "AR-C119-khall",
+    "AR-R119-first-pass-wanting-and-planning",
+    "AR-R119-second-pass-things-in-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch119.txt",
+  "json": "arabic/narration/ch119.json",
+  "textHash": "fnv1a64:49df2a9c0cabc3df",
+  "jsonHash": "fnv1a64:7907b064e68c118b",
+  "findings": []
+}

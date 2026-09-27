@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C137-qitta",
+    "language": "arabic",
+    "chapter": 137,
+    "sequence": 6170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04e6f2e5999f3961"
+  },
+  "findings": []
+}

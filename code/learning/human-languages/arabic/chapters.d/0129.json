@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Beans, Garlic, Cucumber, Apples, Dates",
+  "label": "ch:ar-beans-garlic-cucumber-apples-dates",
+  "canDo": "I can say beans, garlic, a cucumber, apples and dates.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-R129-second-pass-food-and-the-kitchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say beans, garlic, a cucumber, apples and dates.",
+    "assesses": [
+      "AR-LEX-C129-THINGS129-03",
+      "AR-LEX-C129-THINGS129-04",
+      "AR-LEX-C129-THINGS129-05"
+    ]
+  }
+}

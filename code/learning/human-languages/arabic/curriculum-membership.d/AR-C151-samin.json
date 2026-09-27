@@ -1,0 +1,11 @@
+{
+  "id": "AR-C151-samin",
+  "pathSegment": "AR-PATH-151-QUAL151",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-151-QUAL151",
+      "order": 1
+    }
+  ]
+}

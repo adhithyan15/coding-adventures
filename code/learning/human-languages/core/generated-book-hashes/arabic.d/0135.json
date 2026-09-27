@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:c3c0ffdb0ef884d8",
+  "lessonIds": [
+    "AR-C135-ghazal",
+    "AR-C135-thalab",
+    "AR-C135-hamama",
+    "AR-C135-batta",
+    "AR-C135-sulahfah"
+  ],
+  "tex": "arabic/book/chapters/ch135-gazelle-fox-pigeon-duck-turtle.tex"
+}

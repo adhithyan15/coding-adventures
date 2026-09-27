@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:2239446c503f22bb",
+  "lessonIds": [
+    "AR-C121-malfuf",
+    "AR-C121-nana",
+    "AR-C121-baqdunis",
+    "AR-C121-zatar",
+    "AR-C121-kammun"
+  ],
+  "tex": "arabic/book/chapters/ch121-cabbage-mint-parsley-thyme-cumin.tex"
+}

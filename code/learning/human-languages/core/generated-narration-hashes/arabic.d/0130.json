@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:7536de18319c3536",
+  "lessonIds": [
+    "AR-C130-tin",
+    "AR-C130-bittikh",
+    "AR-C130-mishmish",
+    "AR-C130-hasa",
+    "AR-C130-kaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch130.txt",
+  "json": "arabic/narration/ch130.json",
+  "textHash": "fnv1a64:e726cfd5248c04a3",
+  "jsonHash": "fnv1a64:6095f7663cc2ad5d",
+  "findings": []
+}

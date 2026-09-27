@@ -1,0 +1,11 @@
+{
+  "id": "AR-C105-mustaqim",
+  "pathSegment": "AR-PATH-105-LOC105",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-105-LOC105",
+      "order": 2
+    }
+  ]
+}

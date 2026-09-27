@@ -1,0 +1,11 @@
+{
+  "id": "AR-C116-furn",
+  "pathSegment": "AR-PATH-116-THINGS116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-116-THINGS116",
+      "order": 2
+    }
+  ]
+}

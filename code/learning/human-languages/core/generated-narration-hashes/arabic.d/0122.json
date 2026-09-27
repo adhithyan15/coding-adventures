@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:aaf47644b9df1a15",
+  "lessonIds": [
+    "AR-C122-khizana",
+    "AR-C122-musht",
+    "AR-C122-sabun",
+    "AR-C122-minshafa",
+    "AR-C122-firash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch122.txt",
+  "json": "arabic/narration/ch122.json",
+  "textHash": "fnv1a64:833a75cbc5884134",
+  "jsonHash": "fnv1a64:16c91e81066557dd",
+  "findings": []
+}

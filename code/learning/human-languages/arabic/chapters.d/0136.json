@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Crocodile, Mosquito, Fly, Bee, Butterfly",
+  "label": "ch:ar-crocodile-mosquito-fly-bee-butterfly",
+  "canDo": "I can say a crocodile, a mosquito, a fly, a bee and a butterfly.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C136-farasha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say a crocodile, a mosquito, a fly, a bee and a butterfly.",
+    "assesses": [
+      "AR-LEX-C136-THINGS136-03",
+      "AR-LEX-C136-THINGS136-04",
+      "AR-LEX-C136-THINGS136-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:319b7e8a4e6c16a4",
+  "lessonIds": [
+    "AR-C137-ankabut",
+    "AR-C137-dik",
+    "AR-C137-qitta",
+    "AR-C137-buma",
+    "AR-C137-ghurab"
+  ],
+  "tex": "arabic/book/chapters/ch137-spider-rooster-cat-owl-crow.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:32558f3fe4539bd8",
+  "lessonIds": [
+    "AR-C136-timsah",
+    "AR-C136-bauda",
+    "AR-C136-dhubaba",
+    "AR-C136-nahla",
+    "AR-C136-farasha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch136.txt",
+  "json": "arabic/narration/ch136.json",
+  "textHash": "fnv1a64:55ebbe084ed84620",
+  "jsonHash": "fnv1a64:519536262a63e389",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "To long for, Expectation, Enthusiasm, Wish, Preference",
+  "label": "ch:ar-to-long-for-expectation-enthusiasm-wish-preference",
+  "canDo": "I can say to long for, an expectation, enthusiasm, a wish and a preference.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "AR-C111-tafdil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say to long for, an expectation, enthusiasm, a wish and a preference.",
+    "assesses": [
+      "AR-LEX-C111-WANT111-03",
+      "AR-LEX-C111-WANT111-04",
+      "AR-LEX-C111-WANT111-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-103-LOC103",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say beside, left, the middle, a corner and north.",
+  "prerequisites": []
+}

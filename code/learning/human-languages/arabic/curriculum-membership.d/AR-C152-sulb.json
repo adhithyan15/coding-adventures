@@ -1,0 +1,11 @@
+{
+  "id": "AR-C152-sulb",
+  "pathSegment": "AR-PATH-152-QUAL152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-152-QUAL152",
+      "order": 3
+    }
+  ]
+}

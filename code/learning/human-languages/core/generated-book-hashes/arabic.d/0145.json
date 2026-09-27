@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:aa638c41d5a80a2c",
+  "lessonIds": [
+    "AR-C145-malih",
+    "AR-C145-fakhm",
+    "AR-C145-basit",
+    "AR-C145-murih",
+    "AR-C145-mashhur"
+  ],
+  "tex": "arabic/book/chapters/ch145-salty-luxurious-simple-comfortable-famous.tex"
+}

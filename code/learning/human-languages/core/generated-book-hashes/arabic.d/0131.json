@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:704d9e3355cf41aa",
+  "lessonIds": [
+    "AR-C131-ushb",
+    "AR-C131-bidhra",
+    "AR-C131-jidhr",
+    "AR-C131-ghusn",
+    "AR-C131-jazira"
+  ],
+  "tex": "arabic/book/chapters/ch131-grass-seed-root-branch-island.tex"
+}

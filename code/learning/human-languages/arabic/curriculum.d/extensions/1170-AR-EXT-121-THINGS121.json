@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-121-THINGS121",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a cabbage, mint, parsley, thyme and cumin.",
+  "prerequisites": []
+}

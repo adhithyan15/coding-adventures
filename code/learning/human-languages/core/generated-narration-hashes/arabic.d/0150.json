@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:0998ed2a3fdddcca",
+  "lessonIds": [
+    "AR-C150-ladhidh",
+    "AR-C150-munkhafid",
+    "AR-C150-murtafi",
+    "AR-C150-arid",
+    "AR-C150-dayyiq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch150.txt",
+  "json": "arabic/narration/ch150.json",
+  "textHash": "fnv1a64:c63415d9a0f78145",
+  "jsonHash": "fnv1a64:f59117276011733a",
+  "findings": []
+}

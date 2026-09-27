@@ -47,7 +47,11 @@ it("pins Arabic lesson-content budgets", () =>
     // (ثابت, عيد, كوخ, ثمن, حاج), each placed before the set it anchors.
     // 419 -> 421: HL-C443 anchor words for the two mark sets of chapter 2
     // (مُدَرِّس, أَهْلًا). No idioms, senses or culture claims.
-    lessons: 421,
+    // 421 -> 713: chapters 100-155 carry Arabic to A1 -- 280 word lessons
+    // (places, ability, wanting, things and qualities) and twelve reviews.
+    // RE-MEASURED against the tree. None introduces an idiom, a sense or a
+    // culture claim, so those stay at 2 / 3 / 14.
+    lessons: 713,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

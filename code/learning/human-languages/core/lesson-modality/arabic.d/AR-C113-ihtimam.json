@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C113-ihtimam",
+    "language": "arabic",
+    "chapter": 113,
+    "sequence": 4750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ade5ba7d12da32bb"
+  },
+  "findings": []
+}

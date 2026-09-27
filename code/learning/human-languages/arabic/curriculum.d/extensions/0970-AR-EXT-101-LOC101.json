@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-101-LOC101",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a neighbourhood, an alley, a building, a bathroom and a balcony.",
+  "prerequisites": []
+}

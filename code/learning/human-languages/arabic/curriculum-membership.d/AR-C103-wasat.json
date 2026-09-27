@@ -1,0 +1,11 @@
+{
+  "id": "AR-C103-wasat",
+  "pathSegment": "AR-PATH-103-LOC103",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-103-LOC103",
+      "order": 2
+    }
+  ]
+}

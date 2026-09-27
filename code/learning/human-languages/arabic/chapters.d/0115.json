@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Decision, To choose, To prefer, To ask for, Intention",
+  "label": "ch:ar-decision-to-choose-to-prefer-to-ask-for-intention",
+  "canDo": "I can say a decision, to choose, to prefer, to ask for and an intention.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "AR-C115-niyya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a decision, to choose, to prefer, to ask for and an intention.",
+    "assesses": [
+      "AR-LEX-C115-WANT115-03",
+      "AR-LEX-C115-WANT115-04",
+      "AR-LEX-C115-WANT115-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:6d2682c828e0c191",
+  "lessonIds": [
+    "AR-C103-bijanib",
+    "AR-C103-yasar",
+    "AR-C103-wasat",
+    "AR-C103-zawiya",
+    "AR-C103-shamal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch103.txt",
+  "json": "arabic/narration/ch103.json",
+  "textHash": "fnv1a64:80f962f14246f26a",
+  "jsonHash": "fnv1a64:e100be2f57caf5a7",
+  "findings": []
+}

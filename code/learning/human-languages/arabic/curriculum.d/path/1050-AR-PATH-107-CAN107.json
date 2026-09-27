@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-107-CAN107",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "AR-EXT-107-CAN107"
+  ],
+  "after": []
+}

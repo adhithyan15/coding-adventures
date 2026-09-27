@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Television, Newspaper, Magazine, Letter, Envelope",
+  "label": "ch:ar-television-newspaper-magazine-letter-envelope",
+  "canDo": "I can say a television, a newspaper, a magazine, a letter and an envelope.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C117-zarf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a television, a newspaper, a magazine, a letter and an envelope.",
+    "assesses": [
+      "AR-LEX-C117-THINGS117-03",
+      "AR-LEX-C117-THINGS117-04",
+      "AR-LEX-C117-THINGS117-05"
+    ]
+  }
+}

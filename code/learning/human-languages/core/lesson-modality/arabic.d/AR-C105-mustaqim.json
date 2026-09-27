@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C105-mustaqim",
+    "language": "arabic",
+    "chapter": 105,
+    "sequence": 4270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe4d7f269a6598a3"
+  },
+  "findings": []
+}

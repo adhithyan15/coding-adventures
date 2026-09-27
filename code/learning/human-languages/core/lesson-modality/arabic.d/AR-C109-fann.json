@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C109-fann",
+    "language": "arabic",
+    "chapter": 109,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:245c26efb9b44de1"
+  },
+  "findings": []
+}

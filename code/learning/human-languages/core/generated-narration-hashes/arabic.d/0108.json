@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:5f66e6f585569aa5",
+  "lessonIds": [
+    "AR-C108-yumkin",
+    "AR-C108-lada",
+    "AR-C108-quwwa",
+    "AR-C108-haqq",
+    "AR-C108-malik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch108.txt",
+  "json": "arabic/narration/ch108.json",
+  "textHash": "fnv1a64:673161ba62259aab",
+  "jsonHash": "fnv1a64:4437e89f74028fdb",
+  "findings": []
+}

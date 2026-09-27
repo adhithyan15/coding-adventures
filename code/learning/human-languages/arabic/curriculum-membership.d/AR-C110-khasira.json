@@ -1,0 +1,11 @@
+{
+  "id": "AR-C110-khasira",
+  "pathSegment": "AR-PATH-110-CAN110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-110-CAN110",
+      "order": 2
+    }
+  ]
+}

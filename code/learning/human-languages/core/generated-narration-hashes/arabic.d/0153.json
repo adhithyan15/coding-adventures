@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:0be7d9cc2bb249e0",
+  "lessonIds": [
+    "AR-C153-kasul",
+    "AR-C153-shuja",
+    "AR-C153-atshan",
+    "AR-C153-tazaj",
+    "AR-C153-nadij"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch153.txt",
+  "json": "arabic/narration/ch153.json",
+  "textHash": "fnv1a64:42636df08c0bb6a3",
+  "jsonHash": "fnv1a64:f710dfce433d57bd",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-102-LOC102",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "AR-EXT-102-LOC102"
+  ],
+  "after": []
+}
