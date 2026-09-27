@@ -643,7 +643,10 @@ Use it politely.
     );
   });
 
-  it("uses authored romanization for a non-Latin section bookmark", () => {
+  it("pairs a non-Latin headword with its authored romanization in the short title", () => {
+    // The contents line shows the word in its own script and in romanization.
+    // The PDF bookmark gets the plain text through \\texorpdfstring, because
+    // not every preamble maps its script command away inside PDF strings.
     const lesson = parseLesson(
       source("A", 10, "दोन").replace("gloss: दोन", "gloss: two\nromanization: don"),
       "test",
@@ -652,7 +655,9 @@ Use it politely.
       { ...target, unicodeScript: "Devanagari", scriptCommand: "mr" },
       [lesson],
     );
-    expect(generated.tex).toContain("\\section[don]{\\emph{\\mr{दोन}} — lesson}");
+    expect(generated.tex).toContain(
+      "\\section[\\texorpdfstring{\\mr{दोन} (don)}{दोन (don)}]{\\emph{\\mr{दोन}} — lesson}",
+    );
   });
 
   it("requires both script-rendering options when either is configured", () => {

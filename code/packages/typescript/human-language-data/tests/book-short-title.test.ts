@@ -62,8 +62,9 @@ const target = {
 };
 
 /** The `[...]` of the generated `\section[...]{...}`. */
-function shortTitle(headword: string, romanization = ""): string {
-  const tex = renderBookChapter(target, [parseLesson(source(headword, romanization), "test")]).tex;
+function shortTitle(headword: string, romanization = "", scripted = false): string {
+  const chapterTarget = scripted ? { ...target, unicodeScript: "Tamil", scriptCommand: "ta" } : target;
+  const tex = renderBookChapter(chapterTarget, [parseLesson(source(headword, romanization), "test")]).tex;
   const match = /\\section\[(.*?)\]\{/.exec(tex);
   if (match === null) throw new Error("no \\section[...] in the generated chapter");
   return match[1]!;
@@ -138,5 +139,41 @@ describe("section short titles", () => {
     const practice = source("anything at all here").replace("type: word", "type: practice");
     const tex = renderBookChapter(target, [parseLesson(practice, "test")]).tex;
     expect(tex).toContain("\\section[Practice]{");
+  });
+
+  describe("script headword with romanization", () => {
+    it("shows the headword in its own script, then the romanization", () => {
+      // The bookmark gets the plain text; the page gets the script font.
+      expect(shortTitle("கண்", "kaṇ", true)).toBe("\\texorpdfstring{\\ta{கண்} (kaṇ)}{கண் (kaṇ)}");
+    });
+
+    it("shows one form when the romanization repeats the headword", () => {
+      expect(shortTitle("kaṇ", "kaṇ", true)).toBe("kaṇ");
+    });
+
+    it("shows the headword alone for a bracketed placeholder", () => {
+      expect(shortTitle("(கண், continued)", "(kaṇ, continued)", true)).toBe(
+        "\\texorpdfstring{(\\ta{கண்}, continued)}{(கண், continued)}",
+      );
+    });
+
+    it("cuts each half to half the budget when the pair is too wide", () => {
+      const days = "ஞாயிறு திங்கள் செவ்வாய் புதன் வியாழன் வெள்ளி சனி";
+      const roman = "ñāyiṟu tiṅkaḷ cevvāy putaṉ viyāḻaṉ veḷḷi caṉi";
+      const cut = shortTitle(days, roman, true);
+      // Both halves keep their first two days; neither is dropped for the other.
+      expect(cut).toBe(
+        "\\texorpdfstring{\\ta{ஞாயிறு} \\ta{திங்கள்} … (ñāyiṟu tiṅkaḷ …)}{ஞாயிறு திங்கள் … (ñāyiṟu tiṅkaḷ …)}",
+      );
+    });
+  });
+
+  it("cuts a list written without spaces at its middle dots", () => {
+    // Japanese separates list items with ・, not spaces, so the word-boundary
+    // cut alone would keep the whole list.
+    const parts = "て・みみ・くち・あし・はな・かお・め・あたま・かみ・は・かた・おなか";
+    const cut = shortTitle(parts);
+    // Wide characters count two columns each, so seven items fit in 40.
+    expect(cut).toBe("て・みみ・くち・あし・はな・かお・め …");
   });
 });

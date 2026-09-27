@@ -1347,8 +1347,20 @@ function displayColumns(text: string): number {
  * number of `*` or `_` runs drops one more word rather than emitting markup the
  * renderer would mis-pair.
  */
-function truncateShortTitle(title: string): string {
-  if (displayColumns(title) <= SHORT_TITLE_MAX_COLUMNS) return title;
+function truncateShortTitle(title: string, budget: number = SHORT_TITLE_MAX_COLUMNS): string {
+  if (displayColumns(title) <= budget) return title;
+  // A list written without spaces -- Japanese `て・みみ・くち・…` -- is one
+  // "word" to the loop below and would never be cut. Its items are separated
+  // by the middle dot, so cut there instead.
+  if (!title.includes(" ") && title.includes("\u30fb")) {
+    const items = title.split("\u30fb");
+    const kept: string[] = [];
+    for (const item of items) {
+      if (displayColumns([...kept, item].join("\u30fb")) + 2 > budget) break;
+      kept.push(item);
+    }
+    if (kept.length > 0 && kept.length < items.length) return `${kept.join("\u30fb")} \u2026`;
+  }
   const words = title.split(" ");
   const balanced = (text: string): boolean =>
     (text.match(/\*\*/g)?.length ?? 0) % 2 === 0 &&
@@ -1359,7 +1371,7 @@ function truncateShortTitle(title: string): string {
     const candidate = [...kept, word].join(" ");
     // The ellipsis costs two columns of its own: one for the character, one for
     // the space before it.
-    if (displayColumns(candidate) + 2 > SHORT_TITLE_MAX_COLUMNS) break;
+    if (displayColumns(candidate) + 2 > budget) break;
     kept.push(word);
   }
   while (kept.length > 1 && !balanced(kept.join(" "))) kept = kept.slice(0, -1);
@@ -1386,18 +1398,57 @@ function truncateShortTitle(title: string): string {
   return `${kept.join(" ")} \u2026`;
 }
 
+/**
+ * The contents line for one lesson: the headword in its own script, with its
+ * romanization beside it -- `கண் (kaṇ)`.
+ *
+ * A contents page is where a reader first meets a book's words, and a line
+ * that shows only the romanization hides the script the book teaches; one
+ * that shows only the script is unreadable to a beginner. Both, in that
+ * order, is the same pairing every lesson heading uses.
+ *
+ * The pair shares the one-line budget. When it does not fit whole, each half
+ * is cut to half the budget (less the ` ()` that joins them) at a word
+ * boundary, so a long weekday list keeps the start of both its forms rather
+ * than all of one and none of the other.
+ *
+ * Only the headword is shown when there is nothing to pair: a practice
+ * lesson, a track with no target script, a lesson with no romanization, a
+ * romanization identical to the headword, or a bracketed placeholder
+ * headword such as `(recap)` or `(X, continued)`, whose romanization only
+ * repeats the placeholder.
+ */
 function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptionsInput): string {
-  const title = lesson.realization.type.startsWith("practice")
-    ? "Practice"
-    : options && stringValue(lesson.frontmatter.romanization).trim() !== ""
-      ? stringValue(lesson.frontmatter.romanization)
-      : lesson.realization.headword;
-  return renderInlineMarkdown(
-    truncateShortTitle(
-      title.replaceAll("←", " from ").replaceAll("→", " to ").replace(/\s+/g, " ").trim(),
-    ),
-    options,
-  );
+  const clean = (text: string): string =>
+    text.replaceAll("←", " from ").replaceAll("→", " to ").replace(/\s+/g, " ").trim();
+  if (lesson.realization.type.startsWith("practice")) {
+    return renderInlineMarkdown("Practice", options);
+  }
+  const headword = clean(lesson.realization.headword);
+  const romanization = clean(stringValue(lesson.frontmatter.romanization));
+  const paired =
+    options !== undefined &&
+    romanization !== "" &&
+    romanization !== headword &&
+    !headword.startsWith("(");
+  // The short title is also the PDF bookmark. A bookmark cannot hold a font
+  // command such as `\ta{...}`, and not every preamble maps its script
+  // commands away inside PDF strings (Persian, Russian and Urdu warned once per
+  // lesson). `\texorpdfstring` gives the bookmark the plain text instead, in
+  // every book, whatever its preamble says.
+  const bookmarked = (title: string): string => {
+    const page = renderInlineMarkdown(title, options);
+    const plain = renderInlineMarkdown(title);
+    return page === plain ? page : `\\texorpdfstring{${page}}{${plain}}`;
+  };
+  if (!paired) return bookmarked(truncateShortTitle(headword));
+  // ` (` and `)` cost three columns between them.
+  const whole = `${headword} (${romanization})`;
+  const half = Math.floor((SHORT_TITLE_MAX_COLUMNS - 3) / 2);
+  const title = displayColumns(whole) <= SHORT_TITLE_MAX_COLUMNS
+    ? whole
+    : `${truncateShortTitle(headword, half)} (${truncateShortTitle(romanization, half)})`;
+  return bookmarked(title);
 }
 
 interface InlineRenderTarget {
