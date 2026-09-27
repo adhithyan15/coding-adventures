@@ -209,6 +209,7 @@ module BuildTool
     # @param declared_srcs [Array<String>] Glob patterns from Starlark srcs.
     # @return [Array<Pathname>] Sorted absolute paths to source files.
     def collect_source_files_glob(package, declared_srcs)
+      compiled_patterns = GlobMatch.compile_patterns(declared_srcs)
       files = []
       special_names = SPECIAL_FILENAMES.fetch(package.language, [])
       manifest_extensions = DECLARED_MANIFEST_EXTENSIONS.fetch(package.language, [])
@@ -232,7 +233,7 @@ module BuildTool
 
         # Match against declared source patterns.
         rel = portable_relative_path(package.path, filepath)
-        if declared_srcs.any? { |pattern| GlobMatch.match_path?(pattern, rel) }
+        if compiled_patterns.any? { |pattern| GlobMatch.match_compiled_path?(pattern, rel) }
           files << filepath
         end
       end

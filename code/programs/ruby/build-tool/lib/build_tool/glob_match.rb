@@ -1,204 +1,230 @@
 # frozen_string_literal: true
 
-# glob_match.rb -- Pure String-Based Glob Pattern Matching
-# ========================================================
+# glob_match.rb -- Bounded Portable Glob Matching
+# =================================================
 #
-# This module provides glob pattern matching that correctly handles the
-# ** (double-star / globstar) wildcard. It works on path strings without
-# touching the filesystem.
+# BUILD files declare source patterns that must mean the same thing in every
+# build-tool implementation. This matcher therefore avoids File.fnmatch and
+# compiles a deliberately small portable language:
 #
-# Why not File.fnmatch?
-# ---------------------
+#   - ** crosses path boundaries only when it is a complete segment.
+#   - * matches zero or more Unicode scalars inside one segment.
+#   - ? matches exactly one Unicode scalar inside one segment.
+#   - [...] matches one scalar from a strict literal/range class.
 #
-# Ruby's File.fnmatch with FNM_PATHNAME does NOT correctly handle **
-# as a standalone pattern or at the end of a path. For example:
-#
-#     File.fnmatch("**", "a/b/c", File::FNM_PATHNAME)  # => false (wrong!)
-#     File.fnmatch("src/**", "src", File::FNM_PATHNAME) # => false (wrong!)
-#
-# The ** wildcard should match zero or more complete path segments, but
-# FNM_PATHNAME treats each * as matching only within a single segment.
-# The FNM_EXTGLOB flag helps in some cases (src/**/*.py) but fails for
-# standalone ** patterns.
-#
-# To match the behavior of the Go build tool's globmatch package, we
-# implement a custom recursive segment-based matcher. This gives us
-# consistent behavior across all three build tool implementations
-# (Go, Python, Ruby).
-#
-# Pattern syntax
-# --------------
-#
-# This module supports the same glob syntax as most build systems:
-#
-#   - *    matches any sequence of non-separator characters within a
-#          single path segment. "*.py" matches "foo.py" but not
-#          "dir/foo.py".
-#   - **   matches zero or more complete path segments. "src/**/*.py"
-#          matches "src/foo.py", "src/a/b/c.py", etc.
-#   - ?    matches exactly one non-separator character.
-#   - [ab] character classes, as supported by File.fnmatch.
-#
-# All matching uses forward slashes as the path separator. Callers
-# should normalize paths before calling.
-#
-# Algorithm
-# ---------
-#
-# The matcher splits both pattern and path on "/" into segments, then
-# recursively matches them:
-#
-#   1. Split pattern and path into arrays of segments.
-#   2. Walk the two arrays in lockstep.
-#   3. For a "**" pattern segment, try consuming 0, 1, 2, ... path
-#      segments (backtracking search). Consecutive ** segments are
-#      collapsed into one for efficiency.
-#   4. For any other pattern segment, use File.fnmatch to match it
-#      against exactly one path segment.
-#   5. Both arrays exhausted simultaneously => match.
-#      Path exhausted but pattern remains => match only if all
-#      remaining pattern segments are "**".
-#      Pattern exhausted but path remains => no match.
-#
-# This is a direct Ruby port of the Go build tool's
-# internal/globmatch/globmatch.go. The recursive structure and edge
-# case handling are identical.
+# Compilation validates a complete pattern before matching. Matching then uses
+# rolling-row dynamic programs for both path segments and tokens, so adversarial
+# near misses visit each state once instead of recursively slicing suffixes.
 
 module BuildTool
   module GlobMatch
+    INVALID_PATTERN_MESSAGE = "ambiguous or descending character class in glob pattern"
+
+    class InvalidPatternError < ArgumentError
+      def initialize
+        super(INVALID_PATTERN_MESSAGE)
+      end
+    end
+
     module_function
 
-    # match_path? -- Check whether a relative file path matches a glob pattern.
-    #
-    # Both pattern and path should use forward slashes as separators.
-    # Trailing slashes are stripped before matching.
-    #
-    # Examples:
-    #
-    #     match_path?("src/**/*.py", "src/foo/bar.py")   # => true
-    #     match_path?("src/**/*.py", "src/bar.py")        # => true
-    #     match_path?("*.toml", "pyproject.toml")         # => true
-    #     match_path?("src/**/*.py", "README.md")         # => false
-    #     match_path?("**/*.py", "a/b/c.py")             # => true
-    #     match_path?("**", "anything/at/all")            # => true
-    #
-    # Truth table for common Starlark BUILD patterns:
-    #
-    #     Pattern              | Path                  | Result
-    #     ---------------------|-----------------------|--------
-    #     "src/**/*.py"        | "src/main.py"         | true
-    #     "src/**/*.py"        | "src/a/b.py"          | true
-    #     "src/**/*.py"        | "tests/test.py"       | false
-    #     "**/*.py"            | "foo.py"              | true
-    #     "**"                 | "a/b/c"               | true
-    #     "**"                 | ""                    | true
-    #     "*.py"               | "dir/foo.py"          | false
-    #     "pyproject.toml"     | "pyproject.toml"      | true
-    #     "src/**"             | "src/foo.py"          | true
-    #     "src/**"             | "src"                 | true
-    #
-    # @param pattern [String] The glob pattern to match against.
-    # @param path [String] The file path to test.
-    # @return [Boolean] True if the path matches the pattern.
+    # Match one path against one portable glob. Invalid syntax raises the
+    # stable typed InvalidPatternError rather than becoming a host-dependent
+    # non-match.
     def match_path?(pattern, path)
-      # Normalize: strip trailing slashes for consistent matching.
-      # "src/" and "src" should match the same paths.
-      pattern = pattern.chomp("/")
-      path = path.chomp("/")
-
-      # Split into segments on forward slash.
-      pattern_parts = split_path(pattern)
-      path_parts = split_path(path)
-
-      match_segments(pattern_parts, path_parts)
+      match_compiled_path?(compile_pattern(pattern), path)
     end
 
-    # split_path -- Split a path string on "/" into non-empty segments.
-    #
-    # Handles edge cases:
-    #   - Empty string => empty array
-    #   - Leading/trailing slashes => ignored (no empty segments)
-    #   - Double slashes => collapsed (no empty segments)
-    #
-    # Examples:
-    #   split_path("")        => []
-    #   split_path("a/b/c")  => ["a", "b", "c"]
-    #   split_path("/a/b/")  => ["a", "b"]
-    #   split_path("a//b")   => ["a", "b"]
-    #
-    # @param str [String] The path to split.
-    # @return [Array<String>] The path segments.
-    def split_path(str)
-      return [] if str.empty?
-
-      str.split("/").reject(&:empty?)
+    # Validate one pattern without matching a candidate path.
+    def validate_pattern(pattern)
+      compile_pattern(pattern)
+      nil
     end
 
-    # match_segments -- Recursive core of the glob matcher.
-    #
-    # Walks pattern segments and path segments in lockstep. This is a
-    # direct port of the Go implementation's matchSegments function.
-    #
-    # The recursion has three base cases:
-    #
-    #   1. Both arrays empty => match (everything consumed successfully).
-    #   2. Pattern empty, path non-empty => no match (leftover path).
-    #   3. Path empty, pattern non-empty => match only if ALL remaining
-    #      pattern segments are "**" (which can match zero segments).
-    #
-    # For the recursive step:
-    #
-    #   - "**" segment: try consuming 0, 1, 2, ... path segments.
-    #     First, skip any consecutive "**" segments (they're redundant).
-    #     Then try matching the rest of the pattern against each suffix
-    #     of the path array: path[0:], path[1:], path[2:], etc.
-    #
-    #   - Normal segment: use File.fnmatch (without FNM_PATHNAME, since
-    #     we're matching individual segments) to compare against exactly
-    #     one path segment. If it matches, recurse with both arrays
-    #     shifted by one.
-    #
-    # @param pattern [Array<String>] Remaining pattern segments.
-    # @param path [Array<String>] Remaining path segments.
-    # @return [Boolean]
-    def match_segments(pattern, path)
-      # Base case: pattern fully consumed.
-      return path.empty? if pattern.empty?
+    # Compile the complete declared list before callers enumerate candidates.
+    def compile_patterns(patterns)
+      patterns.map { |pattern| compile_pattern(pattern) }.freeze
+    end
 
-      # Path empty: remaining pattern must be all "**".
-      if path.empty?
-        return pattern.all? { |seg| seg == "**" }
-      end
+    # Reuse one compiled pattern for every candidate in an operation.
+    def match_compiled_path?(compiled_pattern, path)
+      match_compiled_path_with_state_count(compiled_pattern, path).first
+    end
 
-      seg = pattern[0]
+    # Split a path string into non-empty compatibility segments.
+    def split_path(string)
+      return [] if string.empty?
 
-      if seg == "**"
-        # ** matches zero or more complete path segments.
-        #
-        # Optimization: skip consecutive ** segments. Three consecutive
-        # "**" segments are equivalent to one — they all match "zero or
-        # more segments". Collapsing them reduces recursion depth.
-        rest_pattern = pattern[1..]
-        rest_pattern = rest_pattern[1..] while !rest_pattern.empty? && rest_pattern[0] == "**"
+      string.split("/").reject(&:empty?)
+    end
 
-        # Try matching rest_pattern against path[i..] for every
-        # possible i from 0 to path.length. When i=0, ** matches zero
-        # segments; when i=path.length, ** consumed everything.
-        (0..path.length).each do |i|
-          return true if match_segments(rest_pattern, path[i..])
+    def compile_pattern(pattern)
+      segments = []
+      split_path(pattern.tr("\\", "/")).each do |segment|
+        if segment == "**"
+          segments << :globstar unless segments.last == :globstar
+        else
+          segments << parse_segment(segment).freeze
         end
+      end
+      segments.freeze
+    end
 
-        return false
+    def parse_segment(segment)
+      parse_segment_with_state_count(segment).first
+    end
+
+    def parse_segment_with_state_count(segment)
+      scalars = segment.chars.each(&:freeze)
+      next_closing_bracket = Array.new(scalars.length + 1)
+      next_closing = nil
+
+      (scalars.length - 1).downto(0) do |index|
+        next_closing = index if scalars[index] == "]"
+        next_closing_bracket[index] = next_closing
       end
 
-      # Normal segment: must match exactly one path segment.
-      #
-      # We use File.fnmatch WITHOUT FNM_PATHNAME because we're matching
-      # a single segment (no "/" characters). This handles *, ?, and
-      # character classes like [abc].
-      return false unless File.fnmatch(seg, path[0])
+      tokens = []
+      index = 0
+      visited = scalars.length
+      while index < scalars.length
+        visited += 1
+        case scalars[index]
+        when "*"
+          tokens << [:star].freeze unless tokens.last&.first == :star
+          index += 1
+        when "?"
+          tokens << [:question].freeze
+          index += 1
+        when "["
+          parsed = parse_character_class(scalars, index, next_closing_bracket)
+          if parsed
+            token, index = parsed
+            tokens << token
+          else
+            tokens << [:literal, "["].freeze
+            index += 1
+          end
+        else
+          tokens << [:literal, scalars[index]].freeze
+          index += 1
+        end
+      end
 
-      match_segments(pattern[1..], path[1..])
+      [tokens.freeze, visited]
+    end
+
+    def parse_character_class(scalars, opening, next_closing_bracket)
+      cursor = opening + 1
+      negated = cursor < scalars.length && scalars[cursor] == "!"
+      cursor += 1 if negated
+
+      closing = next_closing_bracket[cursor]
+      closing = next_closing_bracket[cursor + 1] if closing == cursor
+      return nil unless closing
+
+      body = scalars[cursor...closing]
+      ambiguous = body.each_cons(2).any? do |left, right|
+        left == right && ["-", "&", "~", "|"].include?(left)
+      end
+      raise InvalidPatternError if ambiguous
+
+      members = []
+      member_index = 0
+      while member_index < body.length
+        if member_index + 2 < body.length && body[member_index + 1] == "-"
+          range_start = body[member_index]
+          range_end = body[member_index + 2]
+          raise InvalidPatternError if range_start.ord > range_end.ord
+
+          members << [:range, range_start, range_end].freeze
+          member_index += 3
+        else
+          members << [:literal, body[member_index]].freeze
+          member_index += 1
+        end
+      end
+
+      [[:character_class, negated, members.freeze].freeze, closing + 1]
+    end
+
+    def match_path_with_state_count(pattern, path)
+      match_compiled_path_with_state_count(compile_pattern(pattern), path)
+    end
+
+    def match_compiled_path_with_state_count(compiled_pattern, path)
+      path_segments = split_path(path.tr("\\", "/")).map(&:chars)
+      path_count = path_segments.length
+      next_row = Array.new(path_count + 1, false)
+      next_row[path_count] = true
+      visited = path_count + 1
+
+      compiled_pattern.reverse_each do |segment|
+        row = Array.new(path_count + 1, false)
+        visited += path_count + 1
+        if segment == :globstar
+          row[path_count] = next_row[path_count]
+          (path_count - 1).downto(0) do |path_index|
+            row[path_index] = next_row[path_index] || row[path_index + 1]
+          end
+        else
+          (path_count - 1).downto(0) do |path_index|
+            row[path_index] = next_row[path_index + 1] &&
+              match_segment?(segment, path_segments[path_index])
+          end
+        end
+        next_row = row
+      end
+
+      [next_row[0], visited]
+    end
+
+    def match_segment?(tokens, value)
+      match_segment_with_state_count(tokens, value).first
+    end
+
+    def match_segment_with_state_count(tokens, value)
+      value_count = value.length
+      next_row = Array.new(value_count + 1, false)
+      next_row[value_count] = true
+
+      tokens.reverse_each do |token|
+        row = Array.new(value_count + 1, false)
+        case token.first
+        when :star
+          row[value_count] = next_row[value_count]
+          (value_count - 1).downto(0) do |value_index|
+            row[value_index] = next_row[value_index] || row[value_index + 1]
+          end
+        when :question
+          value_count.times { |value_index| row[value_index] = next_row[value_index + 1] }
+        else
+          value_count.times do |value_index|
+            row[value_index] = next_row[value_index + 1] && token_matches?(token, value[value_index])
+          end
+        end
+        next_row = row
+      end
+
+      [next_row[0], (tokens.length + 1) * (value_count + 1)]
+    end
+
+    def token_matches?(token, value)
+      case token.first
+      when :literal
+        token[1] == value
+      when :character_class
+        included = token[2].any? do |member|
+          if member.first == :literal
+            member[1] == value
+          else
+            value.ord.between?(member[1].ord, member[2].ord)
+          end
+        end
+        token[1] ? !included : included
+      else
+        false
+      end
     end
   end
 end
