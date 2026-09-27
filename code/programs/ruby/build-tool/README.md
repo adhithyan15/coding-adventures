@@ -94,6 +94,22 @@ descriptor-relative primitives needed to claim an atomic adversarial TOCTOU
 boundary, so the implementation and documentation deliberately make no such
 claim.
 
+## Portable Glob Matching
+
+Declared Starlark source globs are compiled and validated as a complete list
+before the hasher walks the filesystem or Git-diff selection examines changed
+files. The matcher implements the build-tool v1 portable grammar directly:
+whole-segment `**`, segment-local `*` and `?`, and strict character classes
+with Python `fnmatchcase` semantics. It treats unmatched `[` literally and
+rejects descending ranges plus the ambiguous `--`, `&&`, `~~`, and `||`
+operators with a stable typed error.
+
+Both path and segment matching use rolling-row dynamic programs over Unicode
+scalars. Compiled patterns are reused across candidates, avoiding recursive
+suffix slicing, host `File.fnmatch` differences, and repeated parsing. This
+also makes leading-dot matching portable and bounds adversarial near misses by
+the pattern-by-input state grid.
+
 ## Extra CI Toolchain Declarations
 
 `BuildTool::ToolchainDetection.evaluate_snapshot` accepts only caller-owned

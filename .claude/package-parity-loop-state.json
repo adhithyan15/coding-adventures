@@ -12,24 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16171,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16171",
-    "title": "feat(build-tool): harden Rust glob matching",
-    "branch": "codex/parity-rust-glob-hardening-20260927",
-    "item_id": "build-tool-rust-glob-matcher-complexity-hardening",
-    "opened_at": "2026-09-27T20:14:19Z",
-    "head_revision": "a4bc66b5517bcd8f8fde910fe45e5c76d24d3f13",
-    "checks_status": "pending",
-    "auto_merge_enabled": false
+    "number": 16181,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16181",
+    "branch": "codex/parity-ruby-glob-hardening-20260927",
+    "implementation_revision": "12c9919083805bcc9758856c3cfdd04373540243",
+    "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-27T19:46:23Z",
-    "pr_number": 16153,
-    "status": "merged",
-    "notes": "All final-head checks reached terminal acceptable conclusions, including CodeQL, the Human Languages Books gate, repo-wide metadata contracts, CI on Ubuntu, macOS, and Windows, and the CI push gate; unrelated path-gated jobs skipped as designed. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge was enabled, and PR #16153 merged automatically as cb6fe40a0819113a820cd9886e494a2f4d9f4f66 without a plain manual merge command."
+    "observed_at": "2026-09-27T20:56:44Z",
+    "pr_number": 16181,
+    "status": "checks-pending",
+    "notes": "PR #16181 is open and ready for review at implementation revision 12c9919083805bcc9758856c3cfdd04373540243. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued; auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "cb6fe40a0819113a820cd9886e494a2f4d9f4f66",
+    "revision": "96c35742c97202b04e81cc8da8391f932356fcb3",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -1101,16 +1097,24 @@
     {
       "id": "build-tool-ruby-glob-matcher-complexity-hardening",
       "title": "Harden Ruby build-tool glob matcher complexity",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-ruby-glob-hardening-20260927",
+      "pr_number": 16181,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16181",
+      "opened_at": "2026-09-27T20:56:40Z",
+      "opened_revision": "12c9919083805bcc9758856c3cfdd04373540243",
+      "implementation_revision": "12c9919083805bcc9758856c3cfdd04373540243",
+      "selected_at": "2026-09-27T20:37:01Z",
+      "selection_revision": "96c35742c97202b04e81cc8da8391f932356fcb3",
+      "selection_notes": "Selected only after PR #16171 completed all 48 final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 inventory remains collision-free and unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Both formal prerequisites are merged; no live open PR overlaps the Ruby build-tool matcher paths; and the dependency refresh ranks this item above the matching TypeScript hardening and Perl diff-selection adoption because it closes both recursive-suffix complexity and host File.fnmatch semantic drift while unlocking five direct and ten transitive unfinished children.",
+      "progress_notes": "Replaced recursive suffix slicing and File.fnmatch with an explicit Unicode-scalar parser and rolling-row dynamic programs. Strict character classes now match the portable Python-fnmatchcase contract, ambiguous or descending classes raise one stable typed error, and Hasher plus GitDiff validate and compile complete declared lists before enumeration or short-circuiting. The canonical BUILD front passes 376 tests with 923 assertions, four platform skips, 91.48% line coverage, and 76.77% branch coverage. Focused Go oracle tests, trimpath build, exact-diff downstream planning, conformance schema and corpus validation, collision-clean parity checks, bundle audit, diff checks, and independent security review pass; the inherited Windows syscall.Mkfifo vet boundary and repository CRLF/style baseline remain disclosed.",
       "notes": "Eliminate recursive suffix slicing and host-matcher divergence with bounded memoized portable-glob semantics, strict character classes, and stable failures."
     },
     {
       "id": "build-tool-rust-glob-matcher-complexity-hardening",
       "title": "Harden Rust build-tool glob matcher complexity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-rust-glob-hardening-20260927",
       "pr_number": 16171,
@@ -1123,7 +1127,10 @@
       "notes": "Replace recursive byte-state revisitation with bounded memoized matching, Unicode-scalar accounting, strict character classes, and stable failures.",
       "implementation_notes": "Specified complete-list glob preflight, replaced recursive byte matching with compiled Unicode-scalar tokens and rolling-row dynamic programs, implemented strict portable character classes and whole-segment globstar semantics, reused compiled lists in source hashing, and documented the compatibility bool wrapper plus typed host API.",
       "validation_notes": "Passed 176 Rust unit tests and 3 CLI integration tests, clippy with warnings denied, release build, focused rustfmt, exact generic and Windows BUILD fronts, 98.57% glob line coverage, 10 package-parity tests, 25 neutral schema tests, the 162-case neutral corpus validator, Go glob/graphdiff/hasher coverage, Go vet, Go build and dry-run front, cargo audit, state DAG validation, diff checks, collision refresh, and focused security re-review. Recorded unrelated current-main limitations separately: the neutral runner has one stale Haskell source-boundary expectation after PR #16153, full Rust rustfmt and rustdoc inherit pre-existing drift, and the Windows Go race suite cannot compile the Unix-only syscall.Mkfifo test.",
-      "publication_notes": "Opened ready-for-review PR #16171 from validated head a4bc66b5517bcd8f8fde910fe45e5c76d24d3f13 after rebasing onto exact origin/main 9ef5cc82b1cf1054a389bfecd4cfc6aad08db328. GitHub reports the PR open, non-draft, and mergeable; initial checks are queued or in progress, so auto-merge remains disabled."
+      "publication_notes": "Opened ready-for-review PR #16171 from validated head a4bc66b5517bcd8f8fde910fe45e5c76d24d3f13 after rebasing onto exact origin/main 9ef5cc82b1cf1054a389bfecd4cfc6aad08db328. GitHub reports the PR open, non-draft, and mergeable; initial checks are queued or in progress, so auto-merge remains disabled.",
+      "merged_at": "2026-09-27T20:34:14Z",
+      "merge_commit": "96c35742c97202b04e81cc8da8391f932356fcb3",
+      "merge_notes": "All 48 final-head checks reached terminal acceptable conclusions: 13 successes and 35 expected path-gated skips. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled only then, and GitHub merged PR #16171 automatically without a plain manual merge command."
     },
     {
       "id": "build-tool-typescript-glob-matcher-complexity-hardening",
@@ -3201,6 +3208,55 @@
       "notes": "Terminal TypeScript build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the TypeScript front door with zero undeclared skips or failures and process-free fixture authority."
     },
     {
+      "id": "build-tool-jvm-neutral-adapter-closure",
+      "title": "Close Java and Kotlin native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-jvm-current-contract-conformance",
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-execution-semantics-corpus"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal JVM adapter gate discovered by the post-PR #16171 all-lane audit. After both separate idiomatic Java and Kotlin engines satisfy the current process-free contract, add distinct adapters, invoke both front doors independently, and run the complete versioned neutral corpus with zero undeclared skips or failures. Java and Kotlin have no reviewed shared-engine exception."
+    },
+    {
+      "id": "build-tool-dart-neutral-adapter-closure",
+      "title": "Close Dart native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-dart-current-contract-conformance",
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-execution-semantics-corpus"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Dart adapter gate discovered by the post-PR #16171 all-lane audit. After the Dart engine satisfies every current process-free contract, add a real adapter, invoke the Dart front door independently, and run the complete versioned neutral corpus with zero undeclared skips or failures."
+    },
+    {
+      "id": "ocaml-build-tool-neutral-adapter-closure",
+      "title": "Close OCaml native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "ocaml-build-tool-current-contract-conformance",
+        "ocaml-build-tool-three-platform-ci-execution",
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-execution-semantics-corpus"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal emerging-lane adapter gate discovered by the post-PR #16171 all-lane audit. After OCaml has its native current-contract engine and real Ubuntu, macOS, and Windows execution, add a real adapter and run the complete versioned neutral corpus with zero undeclared skips or failures before promotion into the established denominator. Emerging status is not an implementation waiver."
+    },
+    {
       "id": "build-tool-all-language-adapter-ci-closure",
       "title": "Close the all-language build-tool adapter and CI denominator",
       "status": "pending",
@@ -3217,9 +3273,9 @@
         "build-tool-ruby-neutral-adapter-closure",
         "build-tool-rust-neutral-adapter-closure",
         "build-tool-typescript-neutral-adapter-closure",
-        "build-tool-jvm-current-contract-conformance",
-        "build-tool-dart-current-contract-conformance",
-        "ocaml-build-tool-current-contract-conformance",
+        "build-tool-jvm-neutral-adapter-closure",
+        "build-tool-dart-neutral-adapter-closure",
+        "ocaml-build-tool-neutral-adapter-closure",
         "ocaml-build-tool-three-platform-ci-execution",
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",

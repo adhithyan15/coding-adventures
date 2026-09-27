@@ -14807,6 +14807,38 @@ is bounded to strict compiled pattern validation, Unicode-scalar semantics,
 globstar segments, linear bracket indexing, bounded dynamic programming, and
 complete declared-list preflight without new host authority or dependencies.
 
+### PR #16171 merge and Ruby glob selection
+
+PR #16171 completed 13 successful checks and 35 expected path-gated skips on
+final head `dda735f8d6ab33d1f91292881e149d40b437aee8`. GitHub reported the
+branch clean and mergeable, guarded squash auto-merge was enabled only after
+every check became terminal and acceptable, and the PR merged automatically
+at `2026-09-27T20:34:14Z` as
+`96c35742c97202b04e81cc8da8391f932356fcb3`; no plain manual merge command was
+used.
+
+The exact merged-main schema-3 inventory remains collision-free and unchanged
+at 15 established lanes, 1,470 implementation identities, 4,737 implementation
+slots, 1,512 all-reported identities, 178 high-consensus packages, 805 Rust
+singletons, five emerging OCaml packages, zero canonical collisions, and zero
+unknown language buckets.
+
+The parallel all-lane audit found one ownership ambiguity rather than an
+implementation exception: Java/Kotlin, Dart, and OCaml current-contract owners
+did not explicitly own real neutral adapters and independent complete-corpus
+invocation. Three terminal, selection-blocked adapter closures now make those
+obligations explicit. Java and Kotlin remain separate mandatory engines and
+front doors; OCaml's emerging status is a sequencing rule, not a waiver.
+
+The dependency/leverage refresh selects
+`build-tool-ruby-glob-matcher-complexity-hardening` next. Its two prerequisites
+are merged, no live open PR overlaps the Ruby build-tool paths, and it unlocks
+five direct and ten transitive unfinished children while removing both
+recursive-suffix complexity and host `File.fnmatch` semantic drift. The fresh
+branch `codex/parity-ruby-glob-hardening-20260927` starts from the exact merge
+revision above. TypeScript glob hardening and Perl diff-selection adoption rank
+second and third respectively and remain pending.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
