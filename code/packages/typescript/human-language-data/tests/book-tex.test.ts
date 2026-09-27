@@ -31,6 +31,22 @@ const tracks = [
 ].sort();
 
 describe("the generated book.tex", () => {
+  it("never inverts nested bold-italic runs in generated chapters", () => {
+    const inverted = [...OUTPUTS]
+      .filter(([path]) => path.includes("/book/chapters/"))
+      .flatMap(([path, text]) =>
+        text
+          .split("\n")
+          .map((line, index) => ({ path, line: index + 1, text: line }))
+          .filter(({ text: line }) =>
+            /\\emph\{[^}]*\\textbf\{(?!\\emph\{)[^}]*\\emph\{/.test(line),
+          )
+          .map(({ path: findingPath, line }) => `${findingPath}:${line}`),
+      );
+
+    expect(inverted).toEqual([]);
+  });
+
   it("projects every book root while keeping the generated roots untracked", () => {
     const outputs = OUTPUTS;
     expect(tracks).toHaveLength(23);
