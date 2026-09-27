@@ -4,8 +4,18 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.4.0` accumulate here until the next version is
+Entries added after `task-app-v0.4.1` accumulate here until the next version is
 cut.
+
+## [0.4.1] - 2026-09-27
+
+### Fixed — release notes link the live signing tracker (#16142)
+
+Generated release notes now direct signing, notarization, and platform-native
+installer limitations to #13977. The previous template and its test pinned
+closed packaging issue #13522, so the otherwise verified immutable v0.4.0
+release sent readers to a retired tracker. The artifact and platform matrix is
+unchanged.
 
 ## [0.4.0] - 2026-09-27
 

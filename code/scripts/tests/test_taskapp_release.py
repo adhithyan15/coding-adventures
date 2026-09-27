@@ -528,7 +528,8 @@ def test_release_notes_are_product_scoped_and_filter_previous_history() -> None:
     assert "task-app-swiftui-macos-bundle-v0.1.0.zip" in notes
     assert "task-app-xaml-windows-bundle-v0.1.0.zip" in notes
     assert "not notarized" in notes.lower()
-    assert "issues/13522" in notes
+    assert "issues/13977" in notes
+    assert "issues/13522" not in notes
     assert "SHA256SUMS" in notes
 
 
