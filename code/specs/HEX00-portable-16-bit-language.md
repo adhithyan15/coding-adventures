@@ -71,13 +71,21 @@ fn main() -> u16 {
 }
 ```
 
-- Types: `u8`, `u16`, and `bool`. Literals must fit their annotated type;
-  `bool` is distinct and contains only `false`/`true`. Variables and
-  parameters require annotations. Locals must be assigned before reading.
+- Types: `u8`, `u16`, and `bool`. `bool` is distinct and contains only
+  `false`/`true`. Variables and parameters require annotations. Locals must
+  be assigned before reading. An unsuffixed integer literal takes an expected
+  `u8` or `u16` type from a declaration, return, argument, or the typed other
+  operand of a binary expression, and must fit that width. With no such
+  context it defaults to `u16` and must fit `0..65535`. Two untyped literals
+  in one expression therefore both default to `u16`.
 - `u8` arithmetic wraps modulo 256; `u16` arithmetic wraps modulo 65536.
   `+`, `-`, `&`, `|`, `^`, and `~` preserve operand width. Mixed-width binary
   expressions are errors. `u16(x)` zero-extends a `u8`; `u8(x)` keeps the low
-  eight bits of a `u16`. No implicit narrowing or signed interpretation.
+  eight bits of a `u16`. Casts also accept an input already of the destination
+  type as an identity. The cast's argument is checked without borrowing the
+  destination's expected type, so `u8(0x1234)` first gives the literal its
+  default `u16` type and then produces `0x34`. No implicit narrowing or
+  signed interpretation.
 - `==`, `!=`, `<`, `<=`, `>`, and `>=` compare unsigned operands of one
   width and return `bool`. `!`, `&&`, and `||` require `bool`; the latter two
   short-circuit left to right. `if` and `while` require `bool`.
@@ -145,7 +153,7 @@ Hex support only after they also satisfy these width and execution tests.
 |---|---|---|
 | H0 | Grammar, AST, type checker, IIR emission, exact diagnostics, reference interpreter; reject unsupported target emission | Parse/type errors and interpreter results for all cases below |
 | H1 | Entry ABI, `u8`/`u16` constants, explicit conversions, return and halt; Z80 gains a two-byte constant return | `main` returns `0`, `42`, `0x1234`, and `u8(0x1234) == 0x34` |
-| H2 | Stack locals, width-correct arithmetic/bitwise operations and unsigned comparisons; Z80 synthesizes operations it lacks natively | `0xffff + 2 == 1`; `u16(255) + 1 == 256`; `0xffff > 1`; local reassignment |
+| H2 | Stack locals, width-correct arithmetic/bitwise operations and unsigned comparisons; Z80 synthesizes operations it lacks natively | `0xffff + 2 == 1`; zero-extend a `u8` local holding 255, then add 1 to get 256; `0xffff > 1`; local reassignment |
 | H3 | Conditional and loop branches with short-circuiting | taken/untaken branches, a finite loop, and skipped right-hand expression |
 | H4 | Direct calls, parameters, frames, and static stack-depth analysis | `sum_to(5) == 15`, two nested calls, and compile-time recursion rejection |
 
