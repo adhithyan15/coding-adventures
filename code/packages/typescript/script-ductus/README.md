@@ -101,7 +101,7 @@ module), and this package already depends on that one — so importing it back w
 close a build-graph cycle.
 
 The two therefore meet on data. `filmstrip-ledger.ts` writes
-`code/learning/human-languages/data/ductus/filmstrip-geometry.json`: for each
+`code/learning/human-languages/data/ductus/filmstrip-geometry.d/`: for each
 letter the book prints, its frames as escaped SVG fragments in one shared viewBox,
 plus the citation, the font the outline came from, the pen-lift count and the
 summary line. Every value in it is read back out of the tree `ductusFilmstrip`

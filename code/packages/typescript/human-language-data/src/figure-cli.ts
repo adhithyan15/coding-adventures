@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { readLedgerFile } from "./shard.js";
@@ -8,8 +8,7 @@ import { defaultCurriculumRoot, loadLessons } from "./loader.js";
 import { renderFigure, type FigureSources, type FigureTarget } from "./figure.js";
 import {
   indexFilmstripLedger,
-  FILMSTRIP_LEDGER_PATH,
-  type FilmstripLedger,
+  loadFilmstripLedger,
 } from "./figure-filmstrip.js";
 import { filmstripCandidates, withDerivedFilmstrips } from "./figure-targets.js";
 import type { ParsedLesson } from "./parse.js";
@@ -33,6 +32,7 @@ interface GeneratedFigureHashManifest {
 
 export const FIGURE_CONFIG_PATH = "core/figure-generation.json";
 export const FIGURE_HASH_MANIFEST_PATH = "core/generated-figure-hashes.json";
+export const FIGURE_HASH_OWNER_DIRECTORY = "core/generated-figure-hashes.d";
 
 function loadConfig(root: string): FigureGenerationConfig {
   // Through the guarded door, like `book-cli`'s sibling `loadConfig`.
@@ -95,7 +95,7 @@ export function safeFigureOutput(root: string, relative: string): string {
 function figureSources(root: string, targets: FigureTarget[]): FigureSources {
   const sources: FigureSources = {};
   if (targets.some((target) => target.kind === "script-filmstrip")) {
-    const ledger = readLedgerFile<FilmstripLedger>(join(root, FILMSTRIP_LEDGER_PATH));
+    const ledger = loadFilmstripLedger(root);
     sources.filmstrips = indexFilmstripLedger(ledger);
   }
   // Read from THIS root, not the package's own, and only when a target needs
@@ -126,7 +126,7 @@ export function resolvedFigureTargets(
   const candidates = filmstripCandidates(lessons);
   if (candidates.length === 0) return config.targets;
   const cited = indexFilmstripLedger(
-    readLedgerFile<FilmstripLedger>(join(root, FILMSTRIP_LEDGER_PATH)),
+    loadFilmstripLedger(root),
   );
   return withDerivedFilmstrips(config.targets, candidates, (script, glyph) =>
     cited.has(`${script}:${glyph}`),
@@ -141,11 +141,7 @@ export function generatedFigureOutputs(
   const lessons = new Map(loaded.map((lesson) => [lesson.realization.lessonId, lesson]));
   const sources = figureSources(root, targets);
   const outputs = new Map<string, string>();
-  const manifest: GeneratedFigureHashManifest = {
-    version: 1,
-    algorithm: "fnv1a64",
-    figures: [],
-  };
+  const figures: GeneratedFigureHashManifest["figures"] = [];
   for (const target of targets) {
     assertKnownFigureTarget(target);
     safeFigureOutput(root, target.output);
@@ -157,7 +153,7 @@ export function generatedFigureOutputs(
     }
     const generated = renderFigure(target, lesson, sources);
     outputs.set(target.output, generated.svg);
-    manifest.figures.push({
+    figures.push({
       kind: target.kind,
       lessonId: target.lessonId,
       sourceHash: generated.sourceHash,
@@ -165,8 +161,21 @@ export function generatedFigureOutputs(
       svg: target.output,
     });
   }
-  manifest.figures.sort((left, right) => left.svg.localeCompare(right.svg));
-  outputs.set(FIGURE_HASH_MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
+  figures.sort((left, right) => left.svg.localeCompare(right.svg));
+  outputs.set(`${FIGURE_HASH_OWNER_DIRECTORY}/_meta.json`, '{\n  "version": 1,\n  "algorithm": "fnv1a64"\n}\n');
+  const byTrack = new Map<string, GeneratedFigureHashManifest["figures"]>();
+  for (const figure of figures) {
+    const track = figure.svg.split("/", 1)[0]!;
+    const owners = byTrack.get(track) ?? [];
+    owners.push(figure);
+    byTrack.set(track, owners);
+  }
+  for (const track of [...byTrack.keys()].sort()) {
+    outputs.set(
+      `${FIGURE_HASH_OWNER_DIRECTORY}/${track}.json`,
+      `${JSON.stringify({ track, figures: byTrack.get(track)! }, null, 2)}\n`,
+    );
+  }
   return outputs;
 }
 
@@ -180,11 +189,11 @@ export function runFigureGeneration(
     return 2;
   }
   let mismatch = false;
-  for (const [relative, expected] of generatedFigureOutputs(root)) {
-    const output =
-      relative === FIGURE_HASH_MANIFEST_PATH
-        ? join(root, relative)
-        : safeFigureOutput(root, relative);
+  const generated = generatedFigureOutputs(root);
+  for (const [relative, expected] of generated) {
+    const output = relative.startsWith(`${FIGURE_HASH_OWNER_DIRECTORY}/`)
+      ? join(root, relative)
+      : safeFigureOutput(root, relative);
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
       writeFileSync(output, expected, "utf8");
@@ -195,6 +204,35 @@ export function runFigureGeneration(
     if (actual !== expected) {
       process.stderr.write(`${relative}: generated output is missing or stale\n`);
       mismatch = true;
+    }
+  }
+  const ownerDirectory = join(root, FIGURE_HASH_OWNER_DIRECTORY);
+  if (existsSync(join(root, FIGURE_HASH_MANIFEST_PATH))) {
+    process.stderr.write(`${FIGURE_HASH_MANIFEST_PATH}: unexpected resurrected monolith\n`);
+    mismatch = true;
+  }
+  if (existsSync(ownerDirectory)) {
+    const directoryStat = lstatSync(ownerDirectory);
+    if (directoryStat.isSymbolicLink() || !directoryStat.isDirectory()) {
+      process.stderr.write(`${ownerDirectory}: generated figure hash owners must be a real directory\n`);
+      return 1;
+    }
+    const expectedOwners = new Set(
+      [...generated.keys()]
+        .filter((relative) => relative.startsWith(`${FIGURE_HASH_OWNER_DIRECTORY}/`))
+        .map((relative) => relative.slice(FIGURE_HASH_OWNER_DIRECTORY.length + 1)),
+    );
+    for (const name of readdirSync(ownerDirectory)) {
+      const path = join(ownerDirectory, name);
+      const stat = lstatSync(path);
+      if (mode === "--write" && stat.isFile() && !stat.isSymbolicLink() && !expectedOwners.has(name)) {
+        unlinkSync(path);
+        continue;
+      }
+      if (!stat.isFile() || stat.isSymbolicLink() || !expectedOwners.has(name)) {
+        process.stderr.write(`${path}: unexpected generated figure hash owner\n`);
+        mismatch = true;
+      }
     }
   }
   return mismatch ? 1 : 0;

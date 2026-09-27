@@ -5,7 +5,8 @@
 // generated for months and no book showed any of them, because nothing checked
 // that a generated figure reached a page.
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { resolvedFigureTargets } from "../src/figure-cli.js";
 import type { FigureTarget, ScriptFilmstripTarget } from "../src/figure.js";
@@ -19,6 +20,7 @@ import {
 } from "../src/figure-targets.js";
 import { defaultCurriculumRoot, loadLessons } from "../src/loader.js";
 import type { ParsedLesson } from "../src/parse.js";
+import { loadFilmstripTargetCountPins } from "./filmstrip-target-count-pins.js";
 
 function lesson(
   id: string,
@@ -202,23 +204,16 @@ describe("the real corpus", () => {
       const prefix = target.lessonId.split("-")[0]!;
       counts[prefix] = (counts[prefix] ?? 0) + 1;
     }
-    expect(counts).toEqual({
-      AR: 15,
-      FA: 26,
-      GU: 34,
-      HI: 44,
-      JA: 23,
-      KA: 13,
-      ML: 14,
-      MR: 42,
-      MW: 33,
-      RU: 22, // +1: chapter 81 writes ё from ребёнок. +2: chapter 93 writes э and щ
-      SA: 39,
-      TA: 30,
-      TE: 9,
-      UR: 29, // +2: chapter 99 writes ز and ط
-      ZH: 58,
-    });
+    const pins = loadFilmstripTargetCountPins(
+      join(dirname(fileURLToPath(import.meta.url)), "filmstrip-target-counts"),
+    );
+    const byTrack = Object.fromEntries(
+      Object.entries(counts).map(([prefix, count]) => [
+        targets.find((target) => target.lessonId.startsWith(`${prefix}-`))!.output.split("/", 1)[0]!,
+        count,
+      ]),
+    );
+    expect(byTrack).toEqual(pins);
   });
 
   it("prints every resolved filmstrip in its chapter", () => {

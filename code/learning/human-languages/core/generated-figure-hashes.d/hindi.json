@@ -1,0 +1,313 @@
+{
+  "track": "hindi",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S01-letter-ma",
+      "sourceHash": "fnv1a64:896277301a8bee28",
+      "svgHash": "fnv1a64:4507a2a0b3bb2cb0",
+      "svg": "hindi/book/figures/HI-S01-letter-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S02-letter-na",
+      "sourceHash": "fnv1a64:c8b2b1bd0e978f28",
+      "svgHash": "fnv1a64:e6220d8d2b425914",
+      "svg": "hindi/book/figures/HI-S02-letter-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S03-letter-a",
+      "sourceHash": "fnv1a64:15bbb2a9432337ee",
+      "svgHash": "fnv1a64:761e0abe1e706d0d",
+      "svg": "hindi/book/figures/HI-S03-letter-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S04-letter-aa",
+      "sourceHash": "fnv1a64:c93cbe36fe97f5b9",
+      "svgHash": "fnv1a64:49c6eba32dd15841",
+      "svg": "hindi/book/figures/HI-S04-letter-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S07-letter-ta",
+      "sourceHash": "fnv1a64:ec44228ebce1a610",
+      "svgHash": "fnv1a64:48b17816105f19f2",
+      "svg": "hindi/book/figures/HI-S07-letter-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S08-letter-sa",
+      "sourceHash": "fnv1a64:59697dad3529bc00",
+      "svgHash": "fnv1a64:748c3fc8be8e135b",
+      "svg": "hindi/book/figures/HI-S08-letter-sa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S110-letter-ra",
+      "sourceHash": "fnv1a64:525876ef2d4293c1",
+      "svgHash": "fnv1a64:5f8d465475c7dd70",
+      "svg": "hindi/book/figures/HI-S110-letter-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S111-letter-ka",
+      "sourceHash": "fnv1a64:0d8a6aea37ff22a9",
+      "svgHash": "fnv1a64:b80af52019f4a24c",
+      "svg": "hindi/book/figures/HI-S111-letter-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S113-letter-pa",
+      "sourceHash": "fnv1a64:435ea7f2cc043d84",
+      "svgHash": "fnv1a64:de616690902187ca",
+      "svg": "hindi/book/figures/HI-S113-letter-pa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S114-letter-ha",
+      "sourceHash": "fnv1a64:8a667b6e0c4277a1",
+      "svgHash": "fnv1a64:e5ea38624efa2e1f",
+      "svg": "hindi/book/figures/HI-S114-letter-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S115-letter-ya",
+      "sourceHash": "fnv1a64:86f49c09889f630b",
+      "svgHash": "fnv1a64:26ddfa520f4a00ed",
+      "svg": "hindi/book/figures/HI-S115-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S117-letter-ca",
+      "sourceHash": "fnv1a64:77e82b481fe9155c",
+      "svgHash": "fnv1a64:82881181639f43ca",
+      "svg": "hindi/book/figures/HI-S117-letter-ca-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S119-letter-ssa",
+      "sourceHash": "fnv1a64:d1744034a86b6e06",
+      "svgHash": "fnv1a64:3ffcfcea51b86579",
+      "svg": "hindi/book/figures/HI-S119-letter-ssa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S121-letter-la",
+      "sourceHash": "fnv1a64:29e952458da2df93",
+      "svgHash": "fnv1a64:6c712e21db2f3e27",
+      "svg": "hindi/book/figures/HI-S121-letter-la-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S122-letter-kha",
+      "sourceHash": "fnv1a64:e5685deb3e5acdf5",
+      "svgHash": "fnv1a64:e369ceee36886404",
+      "svg": "hindi/book/figures/HI-S122-letter-kha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S123-letter-da",
+      "sourceHash": "fnv1a64:8ae9ae874410d11d",
+      "svgHash": "fnv1a64:4bad59c61ab19ba8",
+      "svg": "hindi/book/figures/HI-S123-letter-da-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S124-letter-dha",
+      "sourceHash": "fnv1a64:0f647de206a48db1",
+      "svgHash": "fnv1a64:3c9a47541608d5e4",
+      "svg": "hindi/book/figures/HI-S124-letter-dha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S125-letter-vocalic-r",
+      "sourceHash": "fnv1a64:f27399ea8bb0c124",
+      "svgHash": "fnv1a64:35bd7965fad41d2d",
+      "svg": "hindi/book/figures/HI-S125-letter-vocalic-r-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S126-letter-tha",
+      "sourceHash": "fnv1a64:ec1eac1a2d3ff952",
+      "svgHash": "fnv1a64:dd9410549e4ed2c1",
+      "svg": "hindi/book/figures/HI-S126-letter-tha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S127-letter-u",
+      "sourceHash": "fnv1a64:284266b5458bc2a9",
+      "svgHash": "fnv1a64:a4f8c2948c51c5bb",
+      "svg": "hindi/book/figures/HI-S127-letter-u-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S128-letter-uu",
+      "sourceHash": "fnv1a64:19ce031dc6da7a26",
+      "svgHash": "fnv1a64:3913e2ad8f55e7c3",
+      "svg": "hindi/book/figures/HI-S128-letter-uu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S129-letter-o",
+      "sourceHash": "fnv1a64:0077168dd4256f17",
+      "svgHash": "fnv1a64:ab50b5106dd7f3bf",
+      "svg": "hindi/book/figures/HI-S129-letter-o-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S130-letter-chha",
+      "sourceHash": "fnv1a64:45c018a061845f90",
+      "svgHash": "fnv1a64:974f9e98ebafd92e",
+      "svg": "hindi/book/figures/HI-S130-letter-chha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S131-letter-e",
+      "sourceHash": "fnv1a64:54b288fa3cdaeb0f",
+      "svgHash": "fnv1a64:d8f9c88f516b36bc",
+      "svg": "hindi/book/figures/HI-S131-letter-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S132-letter-ja",
+      "sourceHash": "fnv1a64:6cb8a4416928122e",
+      "svgHash": "fnv1a64:4bb6bb071e9a444e",
+      "svg": "hindi/book/figures/HI-S132-letter-ja-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S133-letter-jha",
+      "sourceHash": "fnv1a64:79fd5496ad091182",
+      "svgHash": "fnv1a64:39e26c629448abcf",
+      "svg": "hindi/book/figures/HI-S133-letter-jha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S135-letter-au",
+      "sourceHash": "fnv1a64:b5646539b352ca5e",
+      "svgHash": "fnv1a64:13fd32bf8e4201d8",
+      "svg": "hindi/book/figures/HI-S135-letter-au-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S136-letter-gha",
+      "sourceHash": "fnv1a64:eb43bf97ac28cca9",
+      "svgHash": "fnv1a64:136ca633b9c1fd76",
+      "svg": "hindi/book/figures/HI-S136-letter-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S137-letter-dha-retroflex",
+      "sourceHash": "fnv1a64:023d922852bc7555",
+      "svgHash": "fnv1a64:a267b5912cbc6d7d",
+      "svg": "hindi/book/figures/HI-S137-letter-dha-retroflex-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S138-letter-ga",
+      "sourceHash": "fnv1a64:328b541df251aca5",
+      "svgHash": "fnv1a64:dab40168a9b2dac7",
+      "svg": "hindi/book/figures/HI-S138-letter-ga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S139-letter-pha",
+      "sourceHash": "fnv1a64:b47761a8b819aca4",
+      "svgHash": "fnv1a64:40c11ac8f4645cfc",
+      "svg": "hindi/book/figures/HI-S139-letter-pha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S142-letter-ta-retroflex",
+      "sourceHash": "fnv1a64:f9a7d09dda8ff879",
+      "svgHash": "fnv1a64:d4ea35897f05debf",
+      "svg": "hindi/book/figures/HI-S142-letter-ta-retroflex-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S143-letter-tha-retroflex",
+      "sourceHash": "fnv1a64:37e0f26e7b81a7dd",
+      "svgHash": "fnv1a64:51d2fc22531641db",
+      "svg": "hindi/book/figures/HI-S143-letter-tha-retroflex-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S145-letter-sha",
+      "sourceHash": "fnv1a64:9e45c280b20bd9ef",
+      "svgHash": "fnv1a64:4b75e0601c28ee4c",
+      "svg": "hindi/book/figures/HI-S145-letter-sha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S146-letter-va",
+      "sourceHash": "fnv1a64:6f50d1a08c52fb71",
+      "svgHash": "fnv1a64:fef7f3a98a7a9ef4",
+      "svg": "hindi/book/figures/HI-S146-letter-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-S147-letter-na-retroflex",
+      "sourceHash": "fnv1a64:04e604a3e3fa502d",
+      "svgHash": "fnv1a64:44b61b02c27dc360",
+      "svg": "hindi/book/figures/HI-S147-letter-na-retroflex-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-aa",
+      "sourceHash": "fnv1a64:f5d6ebe4a8001c21",
+      "svgHash": "fnv1a64:49c6eba32dd15841",
+      "svg": "hindi/book/figures/HI-W12-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-ba",
+      "sourceHash": "fnv1a64:8f03b1c22ecc86c3",
+      "svgHash": "fnv1a64:0619fb9d392539e3",
+      "svg": "hindi/book/figures/HI-W12-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-bha",
+      "sourceHash": "fnv1a64:4e1ba65f70297a3c",
+      "svgHash": "fnv1a64:04b72ee03485209b",
+      "svg": "hindi/book/figures/HI-W12-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-da-retroflex",
+      "sourceHash": "fnv1a64:f322bb9f6f066b4e",
+      "svgHash": "fnv1a64:d358105e8226e6c6",
+      "svg": "hindi/book/figures/HI-W12-da-retroflex-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-ii",
+      "sourceHash": "fnv1a64:cd4070c464c88558",
+      "svgHash": "fnv1a64:504604978631bbca",
+      "svg": "hindi/book/figures/HI-W12-ii-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W12-ya",
+      "sourceHash": "fnv1a64:ce693b41b51f0e52",
+      "svgHash": "fnv1a64:26ddfa520f4a00ed",
+      "svg": "hindi/book/figures/HI-W12-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W128-letter-i",
+      "sourceHash": "fnv1a64:e12c374ae640f10e",
+      "svgHash": "fnv1a64:a7656f8c223c4a53",
+      "svg": "hindi/book/figures/HI-W128-letter-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W128-letter-nya",
+      "sourceHash": "fnv1a64:957296092e95adb8",
+      "svgHash": "fnv1a64:08937ec66960ed69",
+      "svg": "hindi/book/figures/HI-W128-letter-nya-filmstrip.svg"
+    }
+  ]
+}

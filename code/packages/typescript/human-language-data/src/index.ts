@@ -466,6 +466,7 @@ export {
 export {
   FIGURE_CONFIG_PATH,
   FIGURE_HASH_MANIFEST_PATH,
+  FIGURE_HASH_OWNER_DIRECTORY,
   safeFigureOutput,
   generatedFigureOutputs,
   runFigureGeneration,
