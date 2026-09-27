@@ -71,20 +71,70 @@ function acceptedTypes(payload) {
 }
 
 /**
- * A suggested name is a plain file name (UI87 §3.1): no separators, no `:`
- * (a Windows drive or alternate data stream), no control or format characters
- * (a right-to-left override can disguise `.exe` as `.pdf`), no trailing dot or
- * space, at most 255 characters. The same rule as the Compose library.
+ * A suggested name is a plain file name (UI87 §3.1) -- one rule on every host
+ * (the Compose and SwiftUI libraries check the same things):
+ *  - no separators, and not `.` or `..`;
+ *  - no leading `.` (a hidden dot-file such as `.zshrc` is configuration a
+ *    shell runs, not a document);
+ *  - no `:` (a Windows drive or alternate data stream);
+ *  - no control, format, line- or paragraph-separator characters (a
+ *    right-to-left override can disguise `.exe` as `.pdf`);
+ *  - no leading or trailing whitespace of any kind, no trailing dot, and no
+ *    run of two or more whitespace characters -- `Invoice.pdf<30 spaces>.exe`
+ *    hides its extension that way. Invisible characters are dropped first,
+ *    so they cannot split a run or hide a leading or trailing dot;
+ *  - at most 255 UTF-16 units.
  */
+// Whitespace, plus characters that render as a wide blank without being
+// whitespace: the Hangul fillers and BRAILLE PATTERN BLANK.
+const BLANK = '[\\s\\u115F\\u1160\\u2800\\u3164\\uFFA0]';
+// Invisible characters (Default_Ignorable_Code_Point: variation selectors,
+// COMBINING GRAPHEME JOINER, ...) other than the blanks above. They are
+// dropped before the padding and dot rules, so ` <VS1> <VS1> ` is still a
+// run of spaces while `❤️ list.txt` (an emoji's own selector) is fine.
+const INVISIBLE = /(?![\u115F\u1160\u3164\uFFA0])\p{DI}/gu;
+
 export function isPlainFileName(name) {
-  return typeof name === 'string'
-    && name.trim() !== ''
-    && name.length <= 255
-    && name !== '.' && name !== '..'
-    && !/[.\s]$/.test(name)
-    // Runs of spaces are how `Invoice.pdf<30 spaces>.exe` hides its extension.
-    && !/\s{2,}/.test(name)
-    && !/[\\/:\u0000-\u001f\u007f-\u009f\p{Cf}]/u.test(name);
+  if (typeof name !== 'string' || name === '' || name.length > 255 || name === '.' || name === '..') {
+    return false;
+  }
+  const visible = name.replace(INVISIBLE, '');
+  return visible !== ''
+    && !visible.startsWith('.')
+    && !new RegExp(`^${BLANK}|[.]$|${BLANK}$`, 'u').test(visible)
+    && !new RegExp(`${BLANK}{2,}`, 'u').test(visible)
+    // Surrogates (a lone one cannot be a file name), and unassigned or
+    // private-use code points, whose meaning varies by Unicode version.
+    && !/[\\/:\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Cs}\p{Cn}\p{Co}]/u.test(name);
+}
+
+/**
+ * Extensions that run when the file is opened, on some platform. With no
+ * accepted type a save may not end in one -- the same set as the Compose and
+ * SwiftUI libraries.
+ */
+export const EXECUTABLE_EXTENSIONS = new Set([
+  // macOS: Terminal scripts, Finder location files and installers open
+  // with no prompt, or install.
+  'command', 'terminal', 'tool', 'webloc', 'inetloc', 'fileloc', 'afploc', 'ftploc',
+  'mailloc', 'newsloc', 'atloc', 'app', 'pkg', 'mpkg', 'dmg', 'mobileconfig', 'scpt',
+  'applescript', 'workflow',
+  // Windows: run, install, or leak credentials when merely browsed.
+  'exe', 'com', 'bat', 'cmd', 'scr', 'pif', 'msi', 'msp', 'msc', 'lnk', 'url', 'hta',
+  'cpl', 'chm', 'inf', 'vbs', 'vbe', 'js', 'jse', 'wsf', 'wsh', 'ws', 'wsc', 'sct',
+  'ps1', 'psm1', 'reg', 'jar', 'jnlp', 'gadget', 'xll', 'appref-ms', 'application',
+  'settingcontent-ms', 'appx', 'msix', 'appinstaller', 'diagcab', 'scf',
+  'library-ms', 'searchconnector-ms', 'iso', 'img', 'vhd', 'vhdx',
+  // Linux desktops.
+  'desktop', 'sh', 'run', 'appimage', 'deb', 'rpm', 'flatpakref',
+]);
+
+/** True when `name` ends in an extension from `EXECUTABLE_EXTENSIONS`. */
+export function hasExecutableExtension(name) {
+  const dot = String(name).lastIndexOf('.');
+  // Folded through upper case first: `ſ` (LONG S) is `S` to a
+  // case-insensitive file system.
+  return dot >= 0 && EXECUTABLE_EXTENSIONS.has(String(name).slice(dot + 1).toUpperCase().toLowerCase());
 }
 
 function mimeTypeFor(file) {
@@ -107,6 +157,11 @@ function pickerOptions(payload) {
     if (typeof payload.mimeType !== 'string' || !/^[\w.+-]+\/[\w.+-]+$/.test(payload.mimeType)
         || typeof payload.extension !== 'string' || !/^\.[A-Za-z0-9.]{1,15}$/.test(payload.extension)) {
       throw new Error('File type requires a MIME type and extension');
+    }
+    // The legacy pair becomes the picker's filter, and a dialog may append its
+    // extension to the chosen name: it may not name a launcher either.
+    if (payload.extension.endsWith('.') || hasExecutableExtension(payload.extension)) {
+      throw new Error('File type must not be an executable extension');
     }
     options.types = [{ accept: { [payload.mimeType]: [payload.extension] } }];
   }
@@ -147,6 +202,9 @@ export function createBrowserFileEffects(host, environment = globalThis) {
         const extensions = Object.values(acceptedTypes(effect.payload)).flat();
         if (extensions.length > 0 && !extensions.some(extension => name.toLowerCase().endsWith(extension))) {
           throw new Error('suggestedName must end in an extension of an accepted type');
+        }
+        if (extensions.length === 0 && hasExecutableExtension(name)) {
+          throw new Error('suggestedName must not end in an executable extension');
         }
         if (typeof savedBytes !== 'string' || savedBytes.length > Math.ceil(MAX_FILE_BYTES / 3) * 4) {
           throw new Error('File bytes must be base64 and no larger than 16 MiB');

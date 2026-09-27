@@ -2,8 +2,16 @@ import type { MosaicHost, MosaicUpdate } from './mosaic-host.mjs';
 export const MAX_FILE_BYTES: number;
 /** Minimum time between two fallback downloads (no File System Access API). */
 export const DOWNLOAD_FALLBACK_INTERVAL_MS: number;
-/** UI87 §3.1: a plain file name (no separators, `:`, control/format characters, trailing dot or space; ≤ 255). */
+/**
+ * UI87 §3.1: a plain file name -- no separators or `:`, no leading `.`, no
+ * control/format/line-/paragraph-separator characters, no leading or trailing
+ * whitespace or whitespace run, no trailing dot; ≤ 255 UTF-16 units.
+ */
 export function isPlainFileName(name: unknown): boolean;
+/** Extensions that run when opened; refused for a save that names no type. */
+export const EXECUTABLE_EXTENSIONS: ReadonlySet<string>;
+/** True when `name` ends in one of `EXECUTABLE_EXTENSIONS`. */
+export function hasExecutableExtension(name: string): boolean;
 export interface MosaicFileEffects {
   /** Run synchronously from the initiating gesture; await the resulting update. */
   run(effect: MosaicUpdate['effects'][number]): Promise<MosaicUpdate | undefined>;
