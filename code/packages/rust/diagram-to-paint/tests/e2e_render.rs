@@ -1764,7 +1764,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway]\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
+            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway]\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
@@ -1778,6 +1778,7 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(layout.nodes[0].icon_text.as_deref(), Some("API"));
         assert_eq!(layout.nodes[0].style.font_size, 18.0);
         assert!(layout.nodes[0].width >= 192.0);
+        assert_eq!(layout.nodes[1].x - (layout.nodes[0].x + layout.nodes[0].width), 110.0);
         assert_eq!(layout.nodes[2].icon_name.as_deref(), Some("database"));
         assert_eq!(layout.nodes[3].icon_name.as_deref(), Some("aws:lambda"));
         assert_eq!(layout.relationships[0].from_port, Some(diagram_ir::StructuralPort::Right));

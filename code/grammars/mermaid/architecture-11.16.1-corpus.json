@@ -51,8 +51,8 @@
       "source": "architecture-beta\nservice gateway(server)[Gateway]\nservice cache(disk)[Cache]\nservice worker(server)[Worker]\nalign row gateway cache worker\ngateway:R --> L:worker"
     },
     {
-      "id": "icon-and-font-size-config",
-      "source": "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18}}}%%\narchitecture-beta\nservice api(server)[API]"
+      "id": "size-and-separation-config",
+      "source": "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110}}}%%\narchitecture-beta\nservice api(server)[API]\nservice db(database)[Database]"
     }
   ]
 }

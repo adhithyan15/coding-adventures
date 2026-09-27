@@ -453,10 +453,11 @@ use a generic fallback when vendor artwork is unavailable. Orthogonal relationsh
 layout routes around unrelated service and junction bounds with deterministic
 clearance before the existing backend-neutral PaintScene lowering. Full vendor icon
 artwork and group-boundary obstacle avoidance remain unsupported at the partial
-level. Architecture `iconSize` and `fontSize` values from Mermaid init directives
-or YAML front matter survive as typed semantic configuration and resolve into
-backend-neutral node geometry and service typography. Randomized layout and the remaining
-fcose-specific tuning controls remain unsupported at the partial level.
+level. Architecture `iconSize`, `fontSize`, and `nodeSeparation` values from Mermaid
+init directives or YAML front matter survive as typed semantic configuration and
+resolve into backend-neutral node geometry, service typography, and deterministic
+row/column spacing. Randomized layout and the remaining fcose-specific tuning controls
+remain unsupported at the partial level.
 
 ### Radar Native Slice
 
