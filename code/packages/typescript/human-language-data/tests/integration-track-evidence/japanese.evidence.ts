@@ -1,6 +1,5 @@
 import { expect } from "vitest";
 import { compileLessonActivities } from "../../src/activity.js";
-import { buildCurriculumGapReport } from "../../src/report.js";
 import type { IntegrationTrackEvidence } from "./helpers.js";
 
 const TWO_ACTIVITY_LESSONS = new Set([
@@ -11,8 +10,7 @@ const TWO_ACTIVITY_LESSONS = new Set([
 
 export const integrationTrackEvidence: IntegrationTrackEvidence = {
   id: "japanese",
-  assert({ registry, lessons, books }): void {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
+  assert({ curriculumGapReport: report, lessons }): void {
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
     expect(japanese).toHaveLength(427);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
