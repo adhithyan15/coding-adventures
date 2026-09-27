@@ -1,2 +1,2 @@
 where cabal >nul 2>&1
-if errorlevel 1 (echo cabal not found -- skipping) else (cabal test --builddir=dist)
+if errorlevel 1 (echo cabal not found -- skipping) else (cabal test all --builddir=dist)
