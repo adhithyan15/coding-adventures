@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W03-mama-nama-dictation",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 188,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ba2c7f43a7bc7cab",
+    "detachableSegments": [
+      "Writing — phrase dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,10 +1,7 @@
 import { expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../../../src/loader.js";
-import { formatExamCoverage, measureExamCoverage } from "../../../src/exam-inventory.js";
+import { loadTrackLessons } from "../../../src/loader.js";
+import { readingOrder } from "../../../src/ramp.js";
 import {
-  expectLanguageContinuity,
-  expectLanguageLessonBudgets,
-  expectLanguageModality,
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
@@ -23,6 +20,12 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
     ["SA-S02-copy-the-three-strokes", "guided-copy"],
     ["SA-S02-delayed-copy", "delayed-copy"],
     ["SA-S02-dictation", "dictation-transcription"],
+    ["SA-W03-mama-guided-copy", "guided-copy"],
+    ["SA-W03-mama-delayed-copy", "delayed-copy"],
+    ["SA-W03-mama-dictation", "dictation-transcription"],
+    ["SA-W03-mama-nama-guided-copy", "guided-copy"],
+    ["SA-W03-mama-nama-delayed-copy", "delayed-copy"],
+    ["SA-W03-mama-nama-dictation", "dictation-transcription"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({
@@ -30,4 +33,36 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
     missingStages: [],
     complete: true,
   });
+});
+
+it("extends the sourced single-letter ladder through a known word and phrase", () => {
+  const ids = [
+    "SA-W03-mama-guided-copy",
+    "SA-W03-mama-delayed-copy",
+    "SA-W03-mama-dictation",
+    "SA-W03-mama-nama-guided-copy",
+    "SA-W03-mama-nama-delayed-copy",
+    "SA-W03-mama-nama-dictation",
+  ];
+  const lessons = loadTrackLessons("sanskrit")
+    .sort(readingOrder)
+    .filter((lesson) => ids.includes(lesson.realization.lessonId));
+
+  expect(lessons.map((lesson) => lesson.realization.lessonId)).toEqual(ids);
+  expect(lessons.map((lesson) => Number(lesson.frontmatter["duration.max_seconds"]))).toEqual([
+    150, 120, 120, 180, 150, 150,
+  ]);
+  for (let index = 1; index < lessons.length; index += 1) {
+    expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);
+  }
+
+  const markdown = lessons.map((lesson) =>
+    lesson.blocks.map((block) => block.markdown).join("\n"),
+  );
+  expect(markdown[0]).toContain("new vocabulary");
+  expect(markdown[2]).toContain("no visible Devanagari model and no romanized answer");
+  expect(markdown[3]).toContain("न + ◌ा");
+  expect(markdown[4]).toContain("Keep the two words apart");
+  expect(markdown[5]).toContain("from sound and meaning alone");
+  expect(markdown[5]).toContain("connected text");
 });
