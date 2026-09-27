@@ -167,8 +167,13 @@ jobs:
         run: |
           set -euo pipefail
           bash code/programs/mosaic/task-app/scripts/build-web.sh
+          # The acceptance suite imports the ignored Web Component output. Build
+          # that CI-only parity host before running the shared web tests, but keep
+          # the release archive scoped to the React bundle below.
+          bash code/programs/mosaic/task-app/scripts/build-webcomponent.sh
           npm --prefix code/programs/mosaic/task-app/host/web test
           npm --prefix code/programs/mosaic/task-app/host/web run build
+          npm --prefix code/programs/mosaic/task-app/host/web run build:webcomponent
           cmp \
             code/packages/rust/task-wasm/pkg/task_engine.wasm \
             code/programs/mosaic/task-app/host/web/public/task_engine.wasm

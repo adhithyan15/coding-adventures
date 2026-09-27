@@ -6,8 +6,11 @@ auto-schedules them into a working-day timeline via the Critical Path Method.
 
 ## Architecture
 
-The UI is authored **once in Mosaic**. The web host wires emitted React to
-`task-core` through `task-wasm`, retaining idiomatic React state. Generated native
+The UI is authored **once in Mosaic**. Browser hosts share one framework-neutral
+presentation controller: the shipped web host renders emitted React, while the
+Web Components parity host renders the generated `<mos-task-app>` Custom Element.
+Both wire the same controller to `task-core` through `task-wasm` and the same
+IndexedDB-with-memory-fallback persistence contract. Generated native
 hosts load `task-mosaic-app`, a standard-ABI adapter that owns portable presentation
 state and calls the same typed `task-core` operations and projections. The adapter is
 not a second task engine: domain validation, scheduling, and task/project invariants
@@ -24,21 +27,32 @@ The first-run product acceptance and its focused follow-up queue are recorded in
 backends TaskApp is actually finished on is measured in
 `code/specs/task-app-platform-completion-v1.md`: six interactive/native targets
 are gated and shipped, static HTML has a product-scoped structural snapshot
-gate, and `webcomponent` plus `paint` still lack TaskApp-level coverage. The
-static HTML gate does not imply interactivity or add a release artifact.
+gate, Web Components has a real-engine interactive parity gate, and only
+`paint` still lacks TaskApp-level coverage. Neither browser parity gate adds a
+release artifact.
 
 ```text
 TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
-        │  mosaic-compile --backend react   (emits ONE component into host/web/src)
-        ▼
-   host/web/src/TaskApp.tsx       (generated React component: { ...slotProps, dispatch })
-        │  host/web/src/main.tsx wires it to…
-        ▼
-   createTaskEngine (task-wasm)  →  task-core (the pure Rust engine) via WASM
-        │  host/web/src/persistence.ts saves/restores via…
-        ▼
-   @coding-adventures/storage    →  IndexedDB (in-memory fallback)
+        ├─ mosaic-compile --backend react         → generated React component
+        └─ mosaic-compile --backend webcomponent  → generated Custom Element
+                         │
+                         ▼
+   host/web/src/controller.ts     (shared slots/events presentation lifecycle)
+                         │
+                         ▼
+   React main.tsx or window.mosaicHost adapter wires it to…
+                         │
+                         ▼
+   createTaskEngine (task-wasm)   → task-core (the pure Rust engine) via WASM
+                         │
+                         ▼
+   @coding-adventures/storage     → IndexedDB (in-memory fallback)
 ```
+
+`host/web/webcomponent/` builds and tests both authored themes independently.
+Its emitted controls drive the simple-todo lifecycle against the real WASM
+engine, including restart restoration. The resulting bundle is a CI parity
+artifact only; the React bundle remains the published web application.
 
 The native path is:
 
