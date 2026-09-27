@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C62-still",
+  "english": "still, yet",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇನ್ನೂ",
+      "romanization": "innū",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఇంకా",
+      "romanization": "iṅkā",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C64-still, TE-C64-still; sameRoot judged by the author, awaiting native review"
+}

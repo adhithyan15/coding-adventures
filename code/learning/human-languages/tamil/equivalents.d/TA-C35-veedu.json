@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C35-veedu",
+  "english": "house, home",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮನೆ",
+      "romanization": "mane"
+    },
+    {
+      "language": "malayalam",
+      "form": "വീട്",
+      "romanization": "vīṭŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "घर",
+      "romanization": "ghar"
+    }
+  ],
+  "source": "cross-track match: KA-C103-house, ML-C128-house, HI-C36-ghar; sameRoot judged by the author, awaiting native review"
+}

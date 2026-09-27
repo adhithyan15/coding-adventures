@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C51-cloud",
+  "english": "a cloud",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೋಡ",
+      "romanization": "mōḍa"
+    },
+    {
+      "language": "telugu",
+      "form": "మబ్బు",
+      "romanization": "mabbu"
+    },
+    {
+      "language": "hindi",
+      "form": "बादल",
+      "romanization": "bādal"
+    }
+  ],
+  "source": "cross-track match: KA-C53-cloud, TE-C53-cloud, HI-C55-cloud"
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C156-vel",
+  "english": "to win",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗೆಲ್ಲು",
+      "romanization": "gellu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గెలుచు",
+      "romanization": "gelucu",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "जीतना",
+      "romanization": "jītnā"
+    }
+  ],
+  "source": "cross-track match: KA-C151-gellu, TE-C147-gelucu, HI-C163-jitna; sameRoot judged by the author, awaiting native review"
+}

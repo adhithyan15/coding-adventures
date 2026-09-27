@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C141-kalutai",
+  "english": "a donkey",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕತ್ತೆ",
+      "romanization": "katte",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గాడిద",
+      "romanization": "gāḍida"
+    },
+    {
+      "language": "malayalam",
+      "form": "കഴുത",
+      "romanization": "kaḻuta",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गधा",
+      "romanization": "gadhā"
+    }
+  ],
+  "source": "cross-track match: KA-C133-katte, TE-C126-gadida, ML-C151-kaluta, HI-C146-gadha; sameRoot judged by the author, awaiting native review"
+}

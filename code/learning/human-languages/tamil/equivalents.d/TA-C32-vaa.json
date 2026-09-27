@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C32-vaa",
+  "english": "to come",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾ",
+      "romanization": "bā",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "రా",
+      "romanization": "rā"
+    },
+    {
+      "language": "malayalam",
+      "form": "വരുക",
+      "romanization": "varuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आना",
+      "romanization": "ānā"
+    }
+  ],
+  "source": "cross-track match: KA-C32-baa, TE-C32-raa, ML-C32-varuka, HI-C42-come; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C55-lip",
+  "english": "a lip",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತುಟಿ",
+      "romanization": "tuṭi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పెదవి",
+      "romanization": "pedavi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചുണ്ട്",
+      "romanization": "cuṇṭŭ",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "होंठ",
+      "romanization": "hoṇṭh"
+    }
+  ],
+  "source": "cross-track match: KA-C57-lip, TE-C57-lip, ML-C57-lip, HI-C53-lip; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C60-needle",
+  "english": "a needle",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸೂಜಿ",
+      "romanization": "sūji"
+    },
+    {
+      "language": "telugu",
+      "form": "సూది",
+      "romanization": "sūdi"
+    },
+    {
+      "language": "malayalam",
+      "form": "സൂചി",
+      "romanization": "sūci"
+    },
+    {
+      "language": "hindi",
+      "form": "सूई",
+      "romanization": "sūī",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C62-needle, TE-C62-needle, ML-C62-needle, HI-C62-needle; sameRoot judged by the author, awaiting native review"
+}

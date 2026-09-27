@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C156-kantupiti",
+  "english": "to find",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "കണ്ടെത്തുക",
+      "romanization": "kaṇṭettuka",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: ML-C174-kantettuka; sameRoot judged by the author, awaiting native review"
+}

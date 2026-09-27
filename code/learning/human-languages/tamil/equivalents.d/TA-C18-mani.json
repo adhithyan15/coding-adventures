@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C18-mani",
+  "english": "hour",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಂಟೆ",
+      "romanization": "gaṇṭe",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "గంట",
+      "romanization": "ganṭa",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "മണി",
+      "romanization": "maṇi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "घंटा",
+      "romanization": "ghaṇṭā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C18-gante, TE-C18-ganta, ML-C18-mani, HI-C18-ghanta; sameRoot judged by the author, awaiting native review"
+}

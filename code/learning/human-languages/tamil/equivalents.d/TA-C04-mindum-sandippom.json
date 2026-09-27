@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C04-mindum-sandippom",
+  "english": "we'll meet again",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮತ್ತೆ ಸಿಗೋಣ",
+      "romanization": "matte sigōṇa"
+    },
+    {
+      "language": "telugu",
+      "form": "మళ్ళీ కలుద్దాం",
+      "romanization": "maḷḷī kaluddām"
+    },
+    {
+      "language": "malayalam",
+      "form": "വീണ്ടും കാണാം",
+      "romanization": "vīṇḍuṁ kāṇāṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "फिर मिलेंगे",
+      "romanization": "phir milenge"
+    }
+  ],
+  "source": "cross-track match: KA-C04-matte-sigona, TE-C04-malli-kaluddaam, ML-C04-veendum-kaanaam, HI-C04-phir-milenge"
+}

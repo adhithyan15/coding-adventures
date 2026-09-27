@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C146-karam",
+  "english": "spicy",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಖಾರ",
+      "romanization": "khāra",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కారమైన",
+      "romanization": "kāramaina",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "എരിവുള്ള",
+      "romanization": "erivuḷḷa"
+    },
+    {
+      "language": "hindi",
+      "form": "तीखा",
+      "romanization": "tīkhā"
+    }
+  ],
+  "source": "cross-track match: KA-C144-khara, TE-C141-karamaina, ML-C165-erivulla, HI-C156-tikha; sameRoot judged by the author, awaiting native review"
+}

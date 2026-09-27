@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C46-farmer",
+  "english": "a farmer",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ರೈತ",
+      "romanization": "raita"
+    },
+    {
+      "language": "telugu",
+      "form": "రైతు",
+      "romanization": "raitu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കർഷകൻ",
+      "romanization": "karṣakan"
+    },
+    {
+      "language": "hindi",
+      "form": "किसान",
+      "romanization": "kisān",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C48-farmer, TE-C48-farmer, ML-C48-farmer, HI-C47-farmer; sameRoot judged by the author, awaiting native review"
+}

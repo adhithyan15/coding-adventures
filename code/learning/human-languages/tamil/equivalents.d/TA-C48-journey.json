@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C48-journey",
+  "english": "a journey",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪ್ರಯಾಣ",
+      "romanization": "prayāṇa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ప్రయాణం",
+      "romanization": "prayāṇaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "യാത്ര",
+      "romanization": "yātra"
+    },
+    {
+      "language": "hindi",
+      "form": "सफ़र",
+      "romanization": "safar"
+    }
+  ],
+  "source": "cross-track match: KA-C50-journey, TE-C50-journey, ML-C50-journey, HI-C49-journey; sameRoot judged by the author, awaiting native review"
+}

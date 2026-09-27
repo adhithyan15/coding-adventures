@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C62-soon",
+  "english": "soon",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೇಗ",
+      "romanization": "bēga"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉടനെ",
+      "romanization": "uṭane"
+    }
+  ],
+  "source": "cross-track match: KA-C64-soon, ML-C64-soon"
+}

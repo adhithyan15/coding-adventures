@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C124-ten",
+  "english": "honey",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜೇನು",
+      "romanization": "jēnu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "తేనె",
+      "romanization": "tēne",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "शहद",
+      "romanization": "śahad"
+    }
+  ],
+  "source": "cross-track match: KA-C124-jenu, TE-C119-tene, HI-C141-sahad; sameRoot judged by the author, awaiting native review"
+}

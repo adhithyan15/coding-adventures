@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C58-hen",
+  "english": "a hen",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೋಳಿ",
+      "romanization": "kōḷi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కోడి",
+      "romanization": "kōḍi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കോഴി",
+      "romanization": "kōḻi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मुर्गी",
+      "romanization": "murgī"
+    }
+  ],
+  "source": "cross-track match: KA-C60-hen, TE-C60-hen, ML-C60-hen, HI-C60-hen; sameRoot judged by the author, awaiting native review"
+}

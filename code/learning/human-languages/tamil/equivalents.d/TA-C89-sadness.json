@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C89-sadness",
+  "english": "sadness, grief",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದುಃಖ",
+      "romanization": "duḥkha"
+    },
+    {
+      "language": "malayalam",
+      "form": "സങ്കടം",
+      "romanization": "saṅkaṭaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C83-sadness, ML-C116-sadness"
+}

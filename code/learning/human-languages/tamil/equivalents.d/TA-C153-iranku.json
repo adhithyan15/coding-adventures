@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C153-iranku",
+  "english": "to get down, to get off",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇಳಿ",
+      "romanization": "iḷi"
+    },
+    {
+      "language": "telugu",
+      "form": "దిగు",
+      "romanization": "digu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇറങ്ങുക",
+      "romanization": "iṟaṅṅuka",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C149-ili2, TE-C145-digu, ML-C176-irannuka; sameRoot judged by the author, awaiting native review"
+}

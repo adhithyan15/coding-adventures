@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C130-eli",
+  "english": "a rat, a mouse",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇಲಿ",
+      "romanization": "ili",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "എലി",
+      "romanization": "eli",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C134-ili, ML-C152-eli; sameRoot judged by the author, awaiting native review"
+}

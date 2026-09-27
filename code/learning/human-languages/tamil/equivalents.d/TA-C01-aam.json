@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C01-aam",
+  "english": "yes",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೌದು",
+      "romanization": "haudu"
+    },
+    {
+      "language": "telugu",
+      "form": "అవును",
+      "romanization": "avunu"
+    },
+    {
+      "language": "malayalam",
+      "form": "അതെ",
+      "romanization": "athe"
+    },
+    {
+      "language": "hindi",
+      "form": "हाँ",
+      "romanization": "hāṃ"
+    }
+  ],
+  "source": "cross-track match: KA-C01-haudu, TE-C01-avunu, ML-C01-athe, HI-C07-haan"
+}

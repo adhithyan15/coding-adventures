@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C88-hospital",
+  "english": "a hospital",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆಸ್ಪತ್ರೆ",
+      "romanization": "āspatre"
+    },
+    {
+      "language": "telugu",
+      "form": "ఆసుపత్రి",
+      "romanization": "āsupatri"
+    },
+    {
+      "language": "malayalam",
+      "form": "ആശുപത്രി",
+      "romanization": "āśupatri"
+    },
+    {
+      "language": "hindi",
+      "form": "अस्पताल",
+      "romanization": "aspatāl"
+    }
+  ],
+  "source": "cross-track match: KA-C84-hospital, TE-C92-hospital, ML-C112-aashupathri, HI-C107-aspatal"
+}

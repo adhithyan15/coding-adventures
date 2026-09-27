@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C115-katarkarai",
+  "english": "a beach",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಡಲತೀರ",
+      "romanization": "kaḍalatīra"
+    },
+    {
+      "language": "malayalam",
+      "form": "കടപ്പുറം",
+      "romanization": "kaṭappuṟaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C110-kadalatira, ML-C136-beach"
+}

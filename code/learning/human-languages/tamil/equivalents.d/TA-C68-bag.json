@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C68-bag",
+  "english": "a bag",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚೀಲ",
+      "romanization": "cīla"
+    },
+    {
+      "language": "telugu",
+      "form": "సంచి",
+      "romanization": "sañci"
+    },
+    {
+      "language": "malayalam",
+      "form": "ബാഗ്",
+      "romanization": "bāgŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "थैला",
+      "romanization": "thailā"
+    }
+  ],
+  "source": "cross-track match: KA-C118-cila, TE-C112-sanci, ML-C147-bagu, HI-C131-thaila"
+}

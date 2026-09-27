@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C54-knife",
+  "english": "a knife",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚಾಕು",
+      "romanization": "cāku"
+    },
+    {
+      "language": "telugu",
+      "form": "కత్తి",
+      "romanization": "katti",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കത്തി",
+      "romanization": "katti",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "छुरी",
+      "romanization": "churī"
+    }
+  ],
+  "source": "cross-track match: KA-C56-knife, TE-C56-knife, ML-C56-knife, HI-C132-churi; sameRoot judged by the author, awaiting native review"
+}

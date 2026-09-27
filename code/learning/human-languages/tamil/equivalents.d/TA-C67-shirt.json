@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C67-shirt",
+  "english": "a shirt",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಂಗಿ",
+      "romanization": "aṅgi"
+    },
+    {
+      "language": "telugu",
+      "form": "చొక్కా",
+      "romanization": "cokkā"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഷർട്ട്",
+      "romanization": "ṣarṭṭŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "कमीज़",
+      "romanization": "kamīz"
+    }
+  ],
+  "source": "cross-track match: KA-C120-angi, TE-C114-cokka, ML-C155-sarttu, HI-C135-kamiz"
+}

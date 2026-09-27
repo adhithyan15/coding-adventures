@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C61-hunger",
+  "english": "hunger",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಸಿವು",
+      "romanization": "hasivu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఆకలి",
+      "romanization": "ākali"
+    },
+    {
+      "language": "malayalam",
+      "form": "വിശപ്പ്",
+      "romanization": "viśappŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "भूख",
+      "romanization": "bhūkh"
+    }
+  ],
+  "source": "cross-track match: KA-C63-hunger, TE-C63-hunger, ML-C63-hunger, HI-C63-hunger; sameRoot judged by the author, awaiting native review"
+}

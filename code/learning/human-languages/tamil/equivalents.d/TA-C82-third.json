@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C82-third",
+  "english": "third",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೂರನೆಯ",
+      "romanization": "mūraneya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మూడవ",
+      "romanization": "mūḍava",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മൂന്നാം",
+      "romanization": "mūnnāṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "तीसरा",
+      "romanization": "tīsrā"
+    }
+  ],
+  "source": "cross-track match: KA-C74-third, TE-C81-third, ML-C67-third, HI-C75-third; sameRoot judged by the author, awaiting native review"
+}

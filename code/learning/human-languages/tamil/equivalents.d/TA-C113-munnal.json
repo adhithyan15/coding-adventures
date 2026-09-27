@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C113-munnal",
+  "english": "in front",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮುಂದೆ",
+      "romanization": "munde",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C108-munde; sameRoot judged by the author, awaiting native review"
+}

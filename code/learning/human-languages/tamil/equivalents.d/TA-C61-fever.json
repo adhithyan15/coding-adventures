@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C61-fever",
+  "english": "a fever",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜ್ವರ",
+      "romanization": "jvara"
+    },
+    {
+      "language": "telugu",
+      "form": "జ్వరం",
+      "romanization": "jvaraṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "പനി",
+      "romanization": "pani"
+    },
+    {
+      "language": "hindi",
+      "form": "बुख़ार",
+      "romanization": "bukhār"
+    }
+  ],
+  "source": "cross-track match: KA-C63-fever, TE-C84-fever, ML-C63-fever, HI-C63-fever"
+}

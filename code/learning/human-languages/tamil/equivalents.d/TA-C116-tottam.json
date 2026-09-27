@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C116-tottam",
+  "english": "a garden",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತೋಟ",
+      "romanization": "tōṭa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "తోట",
+      "romanization": "tōṭa",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പൂന്തോട്ടം",
+      "romanization": "pūntōṭṭaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बगीचा",
+      "romanization": "bagīcā"
+    }
+  ],
+  "source": "cross-track match: KA-C110-tota, TE-C104-tota, ML-C149-puntottam, HI-C153-bagica; sameRoot judged by the author, awaiting native review"
+}

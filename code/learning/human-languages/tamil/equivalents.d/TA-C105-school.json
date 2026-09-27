@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C105-school",
+  "english": "a school",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶಾಲೆ",
+      "romanization": "śāle",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "బడి",
+      "romanization": "baḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "പള്ളിക്കൂടം",
+      "romanization": "paḷḷikkūṭaṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C92-school, TE-C103-badi, ML-C103-pallikkoodam; sameRoot judged by the author, awaiting native review"
+}

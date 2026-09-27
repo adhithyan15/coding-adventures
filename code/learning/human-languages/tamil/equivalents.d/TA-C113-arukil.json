@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C113-arukil",
+  "english": "near, close by",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹತ್ತಿರ",
+      "romanization": "hattira"
+    },
+    {
+      "language": "telugu",
+      "form": "దగ్గర",
+      "romanization": "daggara"
+    },
+    {
+      "language": "malayalam",
+      "form": "അടുത്ത്",
+      "romanization": "aṭuttŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C100-near, TE-C100-daggara, ML-C81-aduthu"
+}

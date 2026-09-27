@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C115-vanki",
+  "english": "a bank",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬ್ಯಾಂಕು",
+      "romanization": "byāṅku",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "బ్యాంకు",
+      "romanization": "byāṅku",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ബാങ്ക്",
+      "romanization": "bāṅkŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बैंक",
+      "romanization": "baiṅk",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C109-byanku, TE-C103-byanku, ML-C112-bank, HI-C153-baink; sameRoot judged by the author, awaiting native review"
+}

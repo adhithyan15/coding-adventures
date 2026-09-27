@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C90-tears",
+  "english": "tears",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಣ್ಣೀರು",
+      "romanization": "kaṇṇīru",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కంటినీరు",
+      "romanization": "kaṇṭinīru",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आँसू",
+      "romanization": "ā̃sū"
+    }
+  ],
+  "source": "cross-track match: KA-C139-kanniru, TE-C133-kantiniru, HI-C109-ansu; sameRoot judged by the author, awaiting native review"
+}

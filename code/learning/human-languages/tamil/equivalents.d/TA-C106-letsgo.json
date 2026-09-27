@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C106-letsgo",
+  "english": "let's go",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೋಗೋಣ",
+      "romanization": "hōgōṇa"
+    },
+    {
+      "language": "telugu",
+      "form": "పదండి",
+      "romanization": "padaṇḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "പോകാം",
+      "romanization": "pōkāṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "चलिए",
+      "romanization": "calie"
+    }
+  ],
+  "source": "cross-track match: KA-C89-letsgo, TE-C90-letsgo, ML-C127-letsgo, HI-C121-chalie; sameRoot judged by the author, awaiting native review"
+}

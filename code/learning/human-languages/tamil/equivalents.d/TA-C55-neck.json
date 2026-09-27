@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C55-neck",
+  "english": "the neck",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕುತ್ತಿಗೆ",
+      "romanization": "kuttige"
+    },
+    {
+      "language": "telugu",
+      "form": "మెడ",
+      "romanization": "meḍa"
+    },
+    {
+      "language": "malayalam",
+      "form": "കഴുത്ത്",
+      "romanization": "kaḻuttŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गर्दन",
+      "romanization": "gardan"
+    }
+  ],
+  "source": "cross-track match: KA-C57-neck, TE-C57-neck, ML-C57-neck, HI-C151-gardan; sameRoot judged by the author, awaiting native review"
+}

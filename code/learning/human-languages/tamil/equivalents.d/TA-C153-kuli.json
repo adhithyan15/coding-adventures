@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C153-kuli",
+  "english": "to bathe",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "കുളിക്കുക",
+      "romanization": "kuḷikkuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "नहाना",
+      "romanization": "nahānā"
+    }
+  ],
+  "source": "cross-track match: ML-C171-kulikkuka, HI-C160-nahana; sameRoot judged by the author, awaiting native review"
+}

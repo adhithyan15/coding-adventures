@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C83-eighth",
+  "english": "eighth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎಂಟನೆಯ",
+      "romanization": "eṇṭaneya"
+    },
+    {
+      "language": "telugu",
+      "form": "ఎనిమిదవ",
+      "romanization": "enimidava"
+    },
+    {
+      "language": "malayalam",
+      "form": "എട്ടാം",
+      "romanization": "eṭṭāṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आठवाँ",
+      "romanization": "āṭhvā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C75-eighth, TE-C82-eighth, ML-C68-eighth, HI-C76-eighth; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C32-saappidu",
+  "english": "to eat",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತಿನ್ನು",
+      "romanization": "tinnu"
+    },
+    {
+      "language": "telugu",
+      "form": "తిను",
+      "romanization": "tinu"
+    },
+    {
+      "language": "malayalam",
+      "form": "തിന്നുക",
+      "romanization": "tinnuka"
+    }
+  ],
+  "source": "cross-track match: KA-C32-tinnu, TE-C32-tinu, ML-C32-tinnuka"
+}

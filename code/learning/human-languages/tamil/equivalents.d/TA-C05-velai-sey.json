@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C05-velai-sey",
+  "english": "to work",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೆಲಸ ಮಾಡು",
+      "romanization": "kelasa māḍu"
+    },
+    {
+      "language": "telugu",
+      "form": "పని చేయు",
+      "romanization": "pani cēyu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ജോലി ചെയ്യുക",
+      "romanization": "jōli ceyyuka"
+    }
+  ],
+  "source": "cross-track match: KA-C05-kelasa-maadu, TE-C05-pani-ceyu, ML-C05-joli-ceyyuka"
+}

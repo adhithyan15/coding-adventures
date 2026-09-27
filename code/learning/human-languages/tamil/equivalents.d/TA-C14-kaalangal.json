@@ -1,0 +1,12 @@
+{
+  "lesson": "TA-C14-kaalangal",
+  "english": "spring, summer, monsoon, winter",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം",
+      "romanization": "vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ"
+    }
+  ],
+  "source": "cross-track match: ML-C14-kaalangal"
+}

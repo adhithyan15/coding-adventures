@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C77-say",
+  "english": "to say, to tell",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೇಳು",
+      "romanization": "hēḷu"
+    },
+    {
+      "language": "malayalam",
+      "form": "പറയുക",
+      "romanization": "paṟayuka"
+    }
+  ],
+  "source": "cross-track match: KA-C70-say, ML-C50-parayuka"
+}

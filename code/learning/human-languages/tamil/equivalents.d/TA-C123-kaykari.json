@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C123-kaykari",
+  "english": "vegetables",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತರಕಾರಿ",
+      "romanization": "tarakāri",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "కూరగాయలు",
+      "romanization": "kūragāyalu"
+    },
+    {
+      "language": "malayalam",
+      "form": "പച്ചക്കറി",
+      "romanization": "paccakkaṟi"
+    }
+  ],
+  "source": "cross-track match: KA-C123-tarakari, TE-C117-kuragayalu, ML-C131-vegetables; sameRoot judged by the author, awaiting native review"
+}

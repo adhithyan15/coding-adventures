@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C41-small",
+  "english": "small",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚಿಕ್ಕ",
+      "romanization": "cikka"
+    },
+    {
+      "language": "telugu",
+      "form": "చిన్న",
+      "romanization": "cinna"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചെറിയ",
+      "romanization": "ceṟiya",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "छोटा",
+      "romanization": "choṭā"
+    }
+  ],
+  "source": "cross-track match: KA-C42-small, TE-C42-small, ML-C42-small, HI-C41-small; sameRoot judged by the author, awaiting native review"
+}

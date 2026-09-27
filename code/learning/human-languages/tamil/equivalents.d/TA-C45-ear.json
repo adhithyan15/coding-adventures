@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C45-ear",
+  "english": "an ear",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಿವಿ",
+      "romanization": "kivi"
+    },
+    {
+      "language": "telugu",
+      "form": "చెవి",
+      "romanization": "cevi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചെവി",
+      "romanization": "cevi"
+    },
+    {
+      "language": "hindi",
+      "form": "कान",
+      "romanization": "kān",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C37-kivi, TE-C37-cevi, ML-C37-chevi, HI-C46-ear; sameRoot judged by the author, awaiting native review"
+}

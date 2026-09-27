@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C67-sandal",
+  "english": "a sandal, footwear",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "ചെരുപ്പ്",
+      "romanization": "ceruppŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "चप्पल",
+      "romanization": "cappal"
+    }
+  ],
+  "source": "cross-track match: ML-C100-cheruppu, HI-C135-cappal; sameRoot judged by the author, awaiting native review"
+}

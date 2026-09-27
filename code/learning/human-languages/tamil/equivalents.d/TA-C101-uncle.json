@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C101-uncle",
+  "english": "uncle, the mother's brother",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಾವ",
+      "romanization": "māva",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మామ",
+      "romanization": "māma",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "അമ്മാവൻ",
+      "romanization": "ammāvan"
+    }
+  ],
+  "source": "cross-track match: KA-C90-uncle, TE-C71-uncle, ML-C125-uncle; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C21-naay-poonai",
+  "english": "dog and cat",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಾಯಿ, ಬೆಕ್ಕು",
+      "romanization": "nāyi, bekku"
+    },
+    {
+      "language": "telugu",
+      "form": "కుక్క, పిల్లి",
+      "romanization": "kukka, pilli"
+    },
+    {
+      "language": "malayalam",
+      "form": "നായ, പൂച്ച",
+      "romanization": "nāya, pūcca",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कुत्ता",
+      "romanization": "kuttā"
+    }
+  ],
+  "source": "cross-track match: KA-C21-naayi-bekku, TE-C21-kukka-pilli, ML-C21-naaya-poocha, HI-C23-kutta-billi; sameRoot judged by the author, awaiting native review"
+}

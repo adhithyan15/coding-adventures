@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C105-college",
+  "english": "a college",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಾಲೇಜು",
+      "romanization": "kālēju",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C92-college; sameRoot judged by the author, awaiting native review"
+}

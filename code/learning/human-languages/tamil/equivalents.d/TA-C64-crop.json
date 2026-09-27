@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C64-crop",
+  "english": "a standing crop",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆಳೆ",
+      "romanization": "beḷe"
+    },
+    {
+      "language": "hindi",
+      "form": "फ़सल",
+      "romanization": "fasal"
+    }
+  ],
+  "source": "cross-track match: KA-C66-crop, HI-C66-crop"
+}

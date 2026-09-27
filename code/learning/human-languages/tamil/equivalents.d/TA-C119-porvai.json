@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C119-porvai",
+  "english": "a blanket",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಂಬಳಿ",
+      "romanization": "kambaḷi"
+    },
+    {
+      "language": "telugu",
+      "form": "దుప్పటి",
+      "romanization": "duppaṭi"
+    },
+    {
+      "language": "malayalam",
+      "form": "പുതപ്പ്",
+      "romanization": "putappŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "कंबल",
+      "romanization": "kambal"
+    }
+  ],
+  "source": "cross-track match: KA-C116-kambali, TE-C109-duppati, ML-C158-putappu, HI-C129-kambal"
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C40-there",
+  "english": "there",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಲ್ಲಿ",
+      "romanization": "alli"
+    },
+    {
+      "language": "telugu",
+      "form": "అక్కడ",
+      "romanization": "akkaḍa"
+    },
+    {
+      "language": "malayalam",
+      "form": "അവിടെ",
+      "romanization": "aviṭe"
+    },
+    {
+      "language": "hindi",
+      "form": "वहाँ",
+      "romanization": "vahā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C41-there, TE-C41-there, ML-C41-there, HI-C40-there"
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C119-puttu",
+  "english": "a lock",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೀಗ",
+      "romanization": "bīga"
+    },
+    {
+      "language": "telugu",
+      "form": "తాళం",
+      "romanization": "tāḷaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "ताला",
+      "romanization": "tālā"
+    }
+  ],
+  "source": "cross-track match: KA-C116-biga, TE-C110-talam, HI-C129-tala"
+}

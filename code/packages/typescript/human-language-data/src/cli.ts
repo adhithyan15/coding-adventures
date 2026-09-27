@@ -2,7 +2,8 @@
 // Loads the real curriculum, runs the validator, prints a report, and exits
 // non-zero if there are any errors.
 
-import { loadEverything } from "./loader.js";
+import { defaultCurriculumRoot, loadEverything } from "./loader.js";
+import { loadComparisonSets, loadEquivalents, validateEquivalents } from "./equivalents.js";
 import { validate, hasErrors, summarize } from "./validate.js";
 import { validateCurriculum } from "./curriculum.js";
 import { coverageByLanguage } from "./queries.js";
@@ -12,6 +13,15 @@ export function runValidate(root?: string): number {
   const issues = [
     ...validate({ taxonomy, lessons, scripts, soundTags }),
     ...validateCurriculum({ registry, spine, curricula, taxonomy, lessons, books }),
+    ...validateEquivalents({
+      registry,
+      sets: loadComparisonSets(root ?? defaultCurriculumRoot()),
+      lessons,
+      equivalents: loadEquivalents(
+        root ?? defaultCurriculumRoot(),
+        registry.languages.map((language) => language.id),
+      ),
+    }),
   ];
 
   for (const issue of issues) {

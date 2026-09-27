@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C117-vayppu",
+  "english": "a chance, an opportunity",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅವಕಾಶ",
+      "romanization": "avakāśa"
+    },
+    {
+      "language": "telugu",
+      "form": "అవకాశం",
+      "romanization": "avakāśaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C112-avakasa, TE-C106-avakasam"
+}

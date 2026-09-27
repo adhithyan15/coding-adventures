@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C40-where",
+  "english": "where?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎಲ್ಲಿ",
+      "romanization": "elli"
+    },
+    {
+      "language": "telugu",
+      "form": "ఎక్కడ",
+      "romanization": "ekkaḍa"
+    },
+    {
+      "language": "malayalam",
+      "form": "എവിടെ",
+      "romanization": "eviṭe"
+    },
+    {
+      "language": "hindi",
+      "form": "कहाँ",
+      "romanization": "kahā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C41-where, TE-C41-where, ML-C41-where, HI-C40-where"
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C76-but",
+  "english": "but",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆದರೆ",
+      "romanization": "ādare",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కానీ",
+      "romanization": "kānī",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "എന്നാൽ",
+      "romanization": "ennāl",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "लेकिन",
+      "romanization": "lekin"
+    }
+  ],
+  "source": "cross-track match: KA-C67-but, TE-C74-but, ML-C64-but, HI-C68-lekin; sameRoot judged by the author, awaiting native review"
+}

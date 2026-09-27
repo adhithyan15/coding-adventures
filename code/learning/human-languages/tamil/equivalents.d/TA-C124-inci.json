@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C124-inci",
+  "english": "ginger",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶುಂಠಿ",
+      "romanization": "śuṇṭhi"
+    },
+    {
+      "language": "telugu",
+      "form": "అల్లం",
+      "romanization": "allaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇഞ്ചി",
+      "romanization": "iñci",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "अदरक",
+      "romanization": "adrak"
+    }
+  ],
+  "source": "cross-track match: KA-C124-sunthi, TE-C118-allam, ML-C133-ginger, HI-C138-adrak; sameRoot judged by the author, awaiting native review"
+}

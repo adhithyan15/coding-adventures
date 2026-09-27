@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C104-address",
+  "english": "an address",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ವಿಳಾಸ",
+      "romanization": "viḷāsa"
+    },
+    {
+      "language": "telugu",
+      "form": "చిరునామా",
+      "romanization": "cirunāmā"
+    },
+    {
+      "language": "malayalam",
+      "form": "വിലാസം",
+      "romanization": "vilāsaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C91-address, TE-C89-address, ML-C126-address"
+}

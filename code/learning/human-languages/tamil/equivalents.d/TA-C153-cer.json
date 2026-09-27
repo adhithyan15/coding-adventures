@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C153-cer",
+  "english": "to join, to reach",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸೇರು",
+      "romanization": "sēru",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C149-seru; sameRoot judged by the author, awaiting native review"
+}

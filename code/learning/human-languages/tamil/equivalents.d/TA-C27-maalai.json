@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C27-maalai",
+  "english": "evening",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಂಜೆ",
+      "romanization": "sañje"
+    },
+    {
+      "language": "telugu",
+      "form": "సాయంత్రం",
+      "romanization": "sāyantram"
+    },
+    {
+      "language": "malayalam",
+      "form": "വൈകുന്നേരം",
+      "romanization": "vaikunnēraṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "शाम",
+      "romanization": "shaam"
+    }
+  ],
+  "source": "cross-track match: KA-C27-sanje, TE-C27-sayantram, ML-C27-vaikunneram, HI-C29-shaam"
+}

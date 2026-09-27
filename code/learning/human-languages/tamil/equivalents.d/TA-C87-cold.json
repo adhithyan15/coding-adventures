@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C87-cold",
+  "english": "a cold, a runny nose",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶೀತ",
+      "romanization": "śīta"
+    },
+    {
+      "language": "malayalam",
+      "form": "ജലദോഷം",
+      "romanization": "jaladōṣaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "ज़ुकाम",
+      "romanization": "zukām"
+    }
+  ],
+  "source": "cross-track match: KA-C82-cold, ML-C115-cold, HI-C106-zukam"
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C123-venkayam",
+  "english": "an onion",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಈರುಳ್ಳಿ",
+      "romanization": "īruḷḷi"
+    },
+    {
+      "language": "telugu",
+      "form": "ఉల్లిపాయ",
+      "romanization": "ullipāya"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉള്ളി",
+      "romanization": "uḷḷi"
+    },
+    {
+      "language": "hindi",
+      "form": "प्याज़",
+      "romanization": "pyāz"
+    }
+  ],
+  "source": "cross-track match: KA-C123-irulli, TE-C117-ullipaya, ML-C131-onion, HI-C137-pyaz"
+}

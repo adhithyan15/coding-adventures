@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C59-ghee",
+  "english": "ghee",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತುಪ್ಪ",
+      "romanization": "tuppa"
+    },
+    {
+      "language": "telugu",
+      "form": "నెయ్యి",
+      "romanization": "neyyi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "घी",
+      "romanization": "ghī"
+    }
+  ],
+  "source": "cross-track match: KA-C61-ghee, TE-C61-ghee, HI-C14-ghee; sameRoot judged by the author, awaiting native review"
+}

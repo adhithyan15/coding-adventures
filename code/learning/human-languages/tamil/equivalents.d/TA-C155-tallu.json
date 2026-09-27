@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C155-tallu",
+  "english": "to push",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತಳ್ಳು",
+      "romanization": "taḷḷu",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C153-tallu; sameRoot judged by the author, awaiting native review"
+}

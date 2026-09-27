@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C02-ungal-peyar-enna",
+  "english": "what's your name?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
+      "romanization": "nimma hesaru ēnu?"
+    },
+    {
+      "language": "telugu",
+      "form": "మీ పేరు ఏమిటి?",
+      "romanization": "mī pēru ēmiṭi?"
+    },
+    {
+      "language": "malayalam",
+      "form": "നിന്റെ പേര് എന്താണ്?",
+      "romanization": "ninṟe pēr entāṇŭ?"
+    },
+    {
+      "language": "hindi",
+      "form": "आपका नाम क्या है?",
+      "romanization": "āpkā nām kyā hai?"
+    }
+  ],
+  "source": "cross-track match: KA-C02-nimma-hesaru-enu, TE-C02-mii-peru-emiti, ML-C02-ninre-peru-entaanu, HI-C02-aapka-naam-kya-hai"
+}

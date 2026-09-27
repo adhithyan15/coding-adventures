@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C35-kadavu",
+  "english": "door",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾಗಿಲು",
+      "romanization": "bāgilu"
+    },
+    {
+      "language": "telugu",
+      "form": "తలుపు",
+      "romanization": "talupu"
+    },
+    {
+      "language": "malayalam",
+      "form": "വാതിൽ",
+      "romanization": "vātil"
+    },
+    {
+      "language": "hindi",
+      "form": "दरवाज़ा",
+      "romanization": "darvāzā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C52-door, TE-C52-door, ML-C52-door, HI-C36-darvaaza; sameRoot judged by the author, awaiting native review"
+}

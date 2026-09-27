@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C123-mampalam",
+  "english": "a mango",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಾವಿನಹಣ್ಣು",
+      "romanization": "māvinahaṇṇu"
+    },
+    {
+      "language": "telugu",
+      "form": "మామిడిపండు",
+      "romanization": "māmiḍipaṇḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आम",
+      "romanization": "ām"
+    }
+  ],
+  "source": "cross-track match: KA-C123-mavinahannu, TE-C117-mamidipandu, HI-C139-am; sameRoot judged by the author, awaiting native review"
+}

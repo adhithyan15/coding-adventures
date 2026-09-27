@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C120-coppu",
+  "english": "soap",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಾಬೂನು",
+      "romanization": "sābūnu"
+    },
+    {
+      "language": "telugu",
+      "form": "సబ్బు",
+      "romanization": "sabbu"
+    },
+    {
+      "language": "malayalam",
+      "form": "സോപ്പ്",
+      "romanization": "sōppŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "साबुन",
+      "romanization": "sābun"
+    }
+  ],
+  "source": "cross-track match: KA-C117-sabunu, TE-C111-sabbu, ML-C147-soppu, HI-C45-soap; sameRoot judged by the author, awaiting native review"
+}

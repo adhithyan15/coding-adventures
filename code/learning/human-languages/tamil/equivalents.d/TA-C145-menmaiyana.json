@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C145-menmaiyana",
+  "english": "soft",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೃದು",
+      "romanization": "mṛdu"
+    },
+    {
+      "language": "telugu",
+      "form": "మెత్తని",
+      "romanization": "mettani"
+    },
+    {
+      "language": "malayalam",
+      "form": "മൃദുവായ",
+      "romanization": "mṛduvāya"
+    },
+    {
+      "language": "hindi",
+      "form": "नरम",
+      "romanization": "naram"
+    }
+  ],
+  "source": "cross-track match: KA-C141-mrdu, TE-C137-mettani, ML-C166-mrduvaya, HI-C155-naram"
+}

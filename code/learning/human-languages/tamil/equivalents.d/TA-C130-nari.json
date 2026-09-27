@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C130-nari",
+  "english": "a fox",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನರಿ",
+      "romanization": "nari",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నక్క",
+      "romanization": "nakka",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കുറുക്കൻ",
+      "romanization": "kuṟukkan"
+    },
+    {
+      "language": "hindi",
+      "form": "लोमड़ी",
+      "romanization": "lomṛī"
+    }
+  ],
+  "source": "cross-track match: KA-C130-nari, TE-C124-nakka, ML-C162-kurukkan, HI-C147-lomri; sameRoot judged by the author, awaiting native review"
+}

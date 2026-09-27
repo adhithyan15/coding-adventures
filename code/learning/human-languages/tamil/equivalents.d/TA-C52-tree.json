@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C52-tree",
+  "english": "a tree",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮರ",
+      "romanization": "mara",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "చెట్టు",
+      "romanization": "ceṭṭu"
+    },
+    {
+      "language": "malayalam",
+      "form": "മരം",
+      "romanization": "maraṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "पेड़",
+      "romanization": "peṛ"
+    }
+  ],
+  "source": "cross-track match: KA-C54-tree, TE-C54-tree, ML-C54-tree, HI-C143-per; sameRoot judged by the author, awaiting native review"
+}

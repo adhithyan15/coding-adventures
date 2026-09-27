@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C120-kannati",
+  "english": "a mirror",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕನ್ನಡಿ",
+      "romanization": "kannaḍi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "అద్దం",
+      "romanization": "addaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "കണ്ണാടി",
+      "romanization": "kaṇṇāṭi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "शीशा",
+      "romanization": "śīśā"
+    }
+  ],
+  "source": "cross-track match: KA-C137-kannadi, TE-C62-mirror, ML-C146-kannati, HI-C134-sisa; sameRoot judged by the author, awaiting native review"
+}

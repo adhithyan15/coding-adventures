@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C19-vayathu",
+  "english": "how old are you?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಿನ್ನ ವಯಸ್ಸು ಎಷ್ಟು?",
+      "romanization": "ninna vayassu eṣṭu?"
+    },
+    {
+      "language": "telugu",
+      "form": "నీ వయసెంత?",
+      "romanization": "nī vayasenta"
+    },
+    {
+      "language": "malayalam",
+      "form": "നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?",
+      "romanization": "niṅṅaḷkkŭ etra vayassuṇṭŭ?"
+    }
+  ],
+  "source": "cross-track match: KA-C19-vayassu, TE-C19-vayasu, ML-C19-vayassu"
+}

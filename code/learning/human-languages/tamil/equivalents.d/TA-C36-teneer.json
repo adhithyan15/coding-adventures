@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C36-teneer",
+  "english": "tea",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚಹಾ",
+      "romanization": "cahā"
+    },
+    {
+      "language": "telugu",
+      "form": "దయచేసి టీ",
+      "romanization": "dayacēsi ṭī"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചായ",
+      "romanization": "cāya"
+    },
+    {
+      "language": "hindi",
+      "form": "एक चाय दीजिए",
+      "romanization": "ek chāy dījie"
+    }
+  ],
+  "source": "cross-track match: KA-C39-chaha, TE-C39-tii, ML-C39-chaaya, HI-C37-chai"
+}

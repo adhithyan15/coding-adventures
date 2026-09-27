@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C48-now",
+  "english": "now",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಈಗ",
+      "romanization": "īga"
+    },
+    {
+      "language": "telugu",
+      "form": "ఇప్పుడు",
+      "romanization": "ippuḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇപ്പോൾ",
+      "romanization": "ippōḷ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "अब",
+      "romanization": "ab"
+    }
+  ],
+  "source": "cross-track match: KA-C50-now, TE-C50-now, ML-C50-now, HI-C64-now; sameRoot judged by the author, awaiting native review"
+}

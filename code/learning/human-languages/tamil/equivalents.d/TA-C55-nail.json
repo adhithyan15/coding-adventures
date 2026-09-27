@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C55-nail",
+  "english": "a nail",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊಳೆ",
+      "romanization": "moḷe"
+    },
+    {
+      "language": "telugu",
+      "form": "మేకు",
+      "romanization": "mēku"
+    },
+    {
+      "language": "malayalam",
+      "form": "നഖം",
+      "romanization": "nakhaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कील",
+      "romanization": "kīl"
+    }
+  ],
+  "source": "cross-track match: KA-C116-mole, TE-C110-meku, ML-C57-nail, HI-C130-kil; sameRoot judged by the author, awaiting native review"
+}

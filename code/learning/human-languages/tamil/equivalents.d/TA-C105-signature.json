@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C105-signature",
+  "english": "a signature",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "సంతకం",
+      "romanization": "santakaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "हस्ताक्षर",
+      "romanization": "hastākṣar"
+    }
+  ],
+  "source": "cross-track match: TE-C96-signature, HI-C120-hastakshar"
+}

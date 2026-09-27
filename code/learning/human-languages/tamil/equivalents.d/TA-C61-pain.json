@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C61-pain",
+  "english": "pain",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನೋವು",
+      "romanization": "nōvu"
+    },
+    {
+      "language": "telugu",
+      "form": "నొప్పి",
+      "romanization": "noppi"
+    },
+    {
+      "language": "malayalam",
+      "form": "വേദന",
+      "romanization": "vēdana",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "दर्द",
+      "romanization": "dard"
+    }
+  ],
+  "source": "cross-track match: KA-C63-pain, TE-C84-pain, ML-C63-pain, HI-C63-pain; sameRoot judged by the author, awaiting native review"
+}

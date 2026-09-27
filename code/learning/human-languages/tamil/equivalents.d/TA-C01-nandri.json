@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C01-nandri",
+  "english": "thank you (naṉṟi",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಧನ್ಯವಾದ",
+      "romanization": "dhanyavāda"
+    },
+    {
+      "language": "telugu",
+      "form": "ధన్యవాదములు",
+      "romanization": "dhanyavādamulu"
+    },
+    {
+      "language": "malayalam",
+      "form": "നന്ദി",
+      "romanization": "nandi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "धन्यवाद",
+      "romanization": "dhanyavād"
+    }
+  ],
+  "source": "cross-track match: KA-C01-dhanyavada, TE-C01-dhanyavadamulu, ML-C01-nandi, HI-C01-dhanyavad; sameRoot judged by the author, awaiting native review"
+}

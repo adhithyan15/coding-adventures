@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C125-tocai",
+  "english": "a dosa, a thin pancake",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದೋಸೆ",
+      "romanization": "dōse"
+    },
+    {
+      "language": "telugu",
+      "form": "దోశ",
+      "romanization": "dōsa"
+    },
+    {
+      "language": "malayalam",
+      "form": "ദോശ",
+      "romanization": "dōśa"
+    }
+  ],
+  "source": "cross-track match: KA-C125-dose, TE-C119-dosa, ML-C132-dosa"
+}

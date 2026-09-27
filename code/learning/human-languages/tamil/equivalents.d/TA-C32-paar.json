@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C32-paar",
+  "english": "to see, to look",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನೋಡು",
+      "romanization": "nōḍu"
+    },
+    {
+      "language": "telugu",
+      "form": "చూడు",
+      "romanization": "cūḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കാണുക",
+      "romanization": "kāṇuka"
+    }
+  ],
+  "source": "cross-track match: KA-C32-noodu, TE-C32-cuudu, ML-C32-kaanuka"
+}

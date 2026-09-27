@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C150-camai",
+  "english": "to cook",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "వండు",
+      "romanization": "vaṇḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "വേവിക്കുക",
+      "romanization": "vēvikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "पकाना",
+      "romanization": "pakānā"
+    }
+  ],
+  "source": "cross-track match: TE-C144-vandu, ML-C172-vevikkuka, HI-C161-pakana"
+}

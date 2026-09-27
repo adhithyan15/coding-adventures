@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C90-alone",
+  "english": "alone",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "ఒంటరిగా",
+      "romanization": "oṇṭarigā"
+    },
+    {
+      "language": "hindi",
+      "form": "अकेला",
+      "romanization": "akelā"
+    }
+  ],
+  "source": "cross-track match: TE-C97-alone, HI-C109-akela"
+}

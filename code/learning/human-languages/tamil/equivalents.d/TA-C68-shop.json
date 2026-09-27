@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C68-shop",
+  "english": "a shop",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಂಗಡಿ",
+      "romanization": "aṅgaḍi"
+    },
+    {
+      "language": "telugu",
+      "form": "అంగడి",
+      "romanization": "aṅgaḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "കട",
+      "romanization": "kaṭa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "दुकान",
+      "romanization": "dukān"
+    }
+  ],
+  "source": "cross-track match: KA-C104-shop, TE-C72-shop, ML-C91-kada, HI-C56-shop; sameRoot judged by the author, awaiting native review"
+}

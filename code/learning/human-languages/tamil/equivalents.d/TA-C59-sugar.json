@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C59-sugar",
+  "english": "sugar",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಕ್ಕರೆ",
+      "romanization": "sakkare",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "చక్కెర",
+      "romanization": "cakkera",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പഞ്ചസാര",
+      "romanization": "pañcasāra"
+    },
+    {
+      "language": "hindi",
+      "form": "चीनी",
+      "romanization": "chīnī"
+    }
+  ],
+  "source": "cross-track match: KA-C61-sugar, TE-C61-sugar, ML-C133-sugar, HI-C52-sugar; sameRoot judged by the author, awaiting native review"
+}

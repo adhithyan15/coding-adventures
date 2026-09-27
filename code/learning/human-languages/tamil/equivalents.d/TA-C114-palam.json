@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C114-palam",
+  "english": "a bridge",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸೇತುವೆ",
+      "romanization": "sētuve"
+    },
+    {
+      "language": "telugu",
+      "form": "వంతెన",
+      "romanization": "vantena"
+    },
+    {
+      "language": "malayalam",
+      "form": "പാലം",
+      "romanization": "pālaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "पुल",
+      "romanization": "pul",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C109-setuve, TE-C102-vantena, ML-C135-bridge, HI-C153-pul; sameRoot judged by the author, awaiting native review"
+}

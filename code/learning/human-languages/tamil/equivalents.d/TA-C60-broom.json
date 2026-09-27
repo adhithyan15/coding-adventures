@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C60-broom",
+  "english": "a broom",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪೊರಕೆ",
+      "romanization": "porake"
+    },
+    {
+      "language": "telugu",
+      "form": "చీపురు",
+      "romanization": "cīpuru"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചൂല്",
+      "romanization": "cūlŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "झाड़ू",
+      "romanization": "jhāṛū"
+    }
+  ],
+  "source": "cross-track match: KA-C62-broom, TE-C62-broom, ML-C62-broom, HI-C131-jharu"
+}

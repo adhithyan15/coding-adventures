@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C45-eye",
+  "english": "an eye",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಣ್ಣು",
+      "romanization": "kaṇṇu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కన్ను",
+      "romanization": "kannu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കണ്ണ്",
+      "romanization": "kaṇṇŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आँख",
+      "romanization": "āṁkh"
+    }
+  ],
+  "source": "cross-track match: KA-C37-kannu, TE-C37-kannu, ML-C37-kannu, HI-C38-aankh; sameRoot judged by the author, awaiting native review"
+}

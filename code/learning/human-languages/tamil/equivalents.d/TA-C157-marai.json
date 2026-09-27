@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C157-marai",
+  "english": "to hide",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಚ್ಚಿಡು",
+      "romanization": "bacciḍu"
+    },
+    {
+      "language": "telugu",
+      "form": "దాచు",
+      "romanization": "dācu"
+    }
+  ],
+  "source": "cross-track match: KA-C151-baccidu, TE-C147-dacu"
+}

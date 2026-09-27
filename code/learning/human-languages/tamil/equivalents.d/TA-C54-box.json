@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C54-box",
+  "english": "a box",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪೆಟ್ಟಿಗೆ",
+      "romanization": "peṭṭige",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పెట్టె",
+      "romanization": "peṭṭe",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പെട്ടി",
+      "romanization": "peṭṭi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "डिब्बा",
+      "romanization": "ḍibbā"
+    }
+  ],
+  "source": "cross-track match: KA-C56-box, TE-C56-box, ML-C56-box, HI-C131-dibba; sameRoot judged by the author, awaiting native review"
+}

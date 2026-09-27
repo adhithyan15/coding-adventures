@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C88-vomiting",
+  "english": "vomiting, nausea",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ವಾಂತಿ",
+      "romanization": "vānti",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ഛർദ്ദി",
+      "romanization": "chardi"
+    }
+  ],
+  "source": "cross-track match: KA-C93-vomiting, ML-C117-vomiting; sameRoot judged by the author, awaiting native review"
+}

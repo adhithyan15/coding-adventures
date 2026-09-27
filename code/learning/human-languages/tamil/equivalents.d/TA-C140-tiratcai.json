@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C140-tiratcai",
+  "english": "grapes",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದ್ರಾಕ್ಷಿ",
+      "romanization": "drākṣi"
+    },
+    {
+      "language": "telugu",
+      "form": "ద్రాక్ష",
+      "romanization": "drākṣa"
+    },
+    {
+      "language": "malayalam",
+      "form": "മുന്തിരി",
+      "romanization": "muntiri"
+    },
+    {
+      "language": "hindi",
+      "form": "अंगूर",
+      "romanization": "aṅgūr"
+    }
+  ],
+  "source": "cross-track match: KA-C126-draksi, TE-C135-draksa, ML-C149-muntiri, HI-C140-angur"
+}

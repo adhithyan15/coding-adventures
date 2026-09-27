@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C152-nintu",
+  "english": "to swim",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "നീന്തുക",
+      "romanization": "nīntuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "तैरना",
+      "romanization": "tairnā"
+    }
+  ],
+  "source": "cross-track match: ML-C176-nintuka, HI-C162-tairna; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C34-pidi",
+  "english": "to catch, to hold",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನನಗೆ ಕನ್ನಡ ಇಷ್ಟ",
+      "romanization": "nanage kannaḍa iṣṭa"
+    },
+    {
+      "language": "telugu",
+      "form": "నాకు తెలుగు ఇష్టం",
+      "romanization": "nāku telugu iṣṭaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "എനിക്ക് മലയാളം ഇഷ്ടമാണ്",
+      "romanization": "enikkŭ malayāḷaṁ iṣṭamāṇŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "मुझे … पसंद है",
+      "romanization": "mujhe … pasand hai"
+    }
+  ],
+  "source": "cross-track match: KA-C34-ishta, TE-C34-ishtam, ML-C34-ishtam, HI-C35-pasand"
+}

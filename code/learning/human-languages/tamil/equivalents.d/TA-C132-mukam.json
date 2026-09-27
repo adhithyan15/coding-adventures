@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C132-mukam",
+  "english": "the face",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮುಖ",
+      "romanization": "mukha",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ముఖం",
+      "romanization": "mukhaṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C134-mukha, TE-C126-mukham; sameRoot judged by the author, awaiting native review"
+}

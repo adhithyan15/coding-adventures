@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C135-kattarikkol",
+  "english": "scissors",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕತ್ತರಿ",
+      "romanization": "kattari",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కత్తెర",
+      "romanization": "katterā",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കത്രിക",
+      "romanization": "katrika",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कैंची",
+      "romanization": "kaĩcī"
+    }
+  ],
+  "source": "cross-track match: KA-C117-kattari, TE-C110-kattera, ML-C159-katrika, HI-C130-kaici; sameRoot judged by the author, awaiting native review"
+}

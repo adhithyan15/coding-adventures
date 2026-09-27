@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C93-meaning",
+  "english": "meaning",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅರ್ಥ",
+      "romanization": "artha",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "അർത്ഥം",
+      "romanization": "arthaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मतलब",
+      "romanization": "matlab"
+    }
+  ],
+  "source": "cross-track match: KA-C85-meaning, ML-C119-meaning, HI-C110-matlab; sameRoot judged by the author, awaiting native review"
+}

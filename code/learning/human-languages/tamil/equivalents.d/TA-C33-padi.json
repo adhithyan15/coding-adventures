@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C33-padi",
+  "english": "to read, to study",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಓದು",
+      "romanization": "ōdu"
+    },
+    {
+      "language": "telugu",
+      "form": "చదువు",
+      "romanization": "caduvu",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "വായിക്കുക",
+      "romanization": "vāyikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "पढ़ना",
+      "romanization": "paṛhnā",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C33-oodu, TE-C33-caduvu, ML-C33-vaayikkuka, HI-C34-padhna; sameRoot judged by the author, awaiting native review"
+}

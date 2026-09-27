@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C54-mat",
+  "english": "a mat",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚಾಪೆ",
+      "romanization": "cāpe"
+    },
+    {
+      "language": "telugu",
+      "form": "చాప",
+      "romanization": "cāpa"
+    },
+    {
+      "language": "malayalam",
+      "form": "പായ",
+      "romanization": "pāya",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C56-mat, TE-C56-mat, ML-C56-mat; sameRoot judged by the author, awaiting native review"
+}

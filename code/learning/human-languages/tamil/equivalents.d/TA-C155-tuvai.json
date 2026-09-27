@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C155-tuvai",
+  "english": "to wash",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತೊಳೆ",
+      "romanization": "toḷe"
+    },
+    {
+      "language": "telugu",
+      "form": "కడుగు",
+      "romanization": "kaḍugu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കഴുകുക",
+      "romanization": "kaḻukuka"
+    },
+    {
+      "language": "hindi",
+      "form": "धोना",
+      "romanization": "dhonā"
+    }
+  ],
+  "source": "cross-track match: KA-C150-tole, TE-C146-kadugu, ML-C171-kalukuka, HI-C160-dhona"
+}

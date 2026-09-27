@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C70-wall",
+  "english": "a wall",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "గోడ",
+      "romanization": "gōḍa"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഭിത്തി",
+      "romanization": "bhitti"
+    },
+    {
+      "language": "hindi",
+      "form": "दीवार",
+      "romanization": "dīvār",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: TE-C67-wall, ML-C147-bhitti, HI-C58-wall; sameRoot judged by the author, awaiting native review"
+}

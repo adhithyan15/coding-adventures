@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C131-antai",
+  "english": "an owl",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗೂಬೆ",
+      "romanization": "gūbe"
+    },
+    {
+      "language": "telugu",
+      "form": "గుడ్లగూబ",
+      "romanization": "guḍlagūba"
+    },
+    {
+      "language": "malayalam",
+      "form": "മൂങ്ങ",
+      "romanization": "mūṅṅa"
+    },
+    {
+      "language": "hindi",
+      "form": "उल्लू",
+      "romanization": "ullū"
+    }
+  ],
+  "source": "cross-track match: KA-C131-gube, TE-C125-gudlaguba, ML-C162-munna, HI-C148-ullu"
+}

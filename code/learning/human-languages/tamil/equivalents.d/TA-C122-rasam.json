@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C122-rasam",
+  "english": "rasam",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಾರು",
+      "romanization": "sāru"
+    },
+    {
+      "language": "telugu",
+      "form": "రసం",
+      "romanization": "rasaṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C121-saru, TE-C116-rasam; sameRoot judged by the author, awaiting native review"
+}

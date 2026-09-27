@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C44-salt",
+  "english": "salt",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಉಪ್ಪು",
+      "romanization": "uppu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఉప్పు",
+      "romanization": "uppu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉപ്പ്",
+      "romanization": "uppŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "नमक",
+      "romanization": "namak"
+    }
+  ],
+  "source": "cross-track match: KA-C46-salt, TE-C46-salt, ML-C46-salt, HI-C45-salt; sameRoot judged by the author, awaiting native review"
+}

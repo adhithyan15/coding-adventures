@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C01-vanakkam",
+  "english": "hello / greetings (vaṇakkam",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಮಸ್ಕಾರ",
+      "romanization": "namaskāra"
+    },
+    {
+      "language": "telugu",
+      "form": "నమస్కారం",
+      "romanization": "namaskāram"
+    },
+    {
+      "language": "malayalam",
+      "form": "നമസ്കാരം",
+      "romanization": "namaskāraṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "नमस्ते",
+      "romanization": "namaste"
+    }
+  ],
+  "source": "cross-track match: KA-C01-namaskara, TE-C01-namaskaram, ML-C01-namaskaram, HI-C01-namaste"
+}

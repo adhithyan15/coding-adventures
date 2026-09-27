@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C144-kanamana",
+  "english": "heavy",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಭಾರ",
+      "romanization": "bhāra"
+    },
+    {
+      "language": "telugu",
+      "form": "బరువు",
+      "romanization": "baruvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഭാരമുള്ള",
+      "romanization": "bhāramuḷḷa"
+    },
+    {
+      "language": "hindi",
+      "form": "भारी",
+      "romanization": "bhārī"
+    }
+  ],
+  "source": "cross-track match: KA-C140-bhara, TE-C136-baruvu, ML-C166-bharamulla, HI-C154-bhari"
+}

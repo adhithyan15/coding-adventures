@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C04-naalai",
+  "english": "see you tomorrow",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಾಳೆ ಸಿಗೋಣ",
+      "romanization": "nāḷe sigōṇa"
+    },
+    {
+      "language": "telugu",
+      "form": "రేపు కలుద్దాం",
+      "romanization": "rēpu kaluddām"
+    },
+    {
+      "language": "malayalam",
+      "form": "നാളെ കാണാം",
+      "romanization": "nāḷe kāṇāṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "कल मिलते हैं",
+      "romanization": "kal milte haiṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C04-naale-sigona, TE-C04-reepu-kaluddaam, ML-C04-naale-kaanaam, HI-C04-kal-milte-hain"
+}

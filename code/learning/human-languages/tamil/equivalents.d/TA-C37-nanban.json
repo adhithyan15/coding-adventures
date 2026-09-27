@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C37-nanban",
+  "english": "friend",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸ್ನೇಹಿತ",
+      "romanization": "snēhita"
+    },
+    {
+      "language": "telugu",
+      "form": "స్నేహితుడు",
+      "romanization": "snēhituḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "സുഹൃത്ത്",
+      "romanization": "suhṛttŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "दोस्त",
+      "romanization": "dost"
+    }
+  ],
+  "source": "cross-track match: KA-C35-snehita, TE-C35-snehitudu, ML-C35-suhruthu, HI-C39-dost"
+}

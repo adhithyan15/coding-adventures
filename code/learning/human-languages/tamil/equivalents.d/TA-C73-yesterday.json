@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C73-yesterday",
+  "english": "yesterday",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "నిన్న",
+      "romanization": "ninna"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇന്നലെ",
+      "romanization": "innale"
+    }
+  ],
+  "source": "cross-track match: TE-C75-yesterday, ML-C94-innale"
+}

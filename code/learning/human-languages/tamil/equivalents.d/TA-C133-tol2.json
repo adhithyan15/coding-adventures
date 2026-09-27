@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C133-tol2",
+  "english": "the skin",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚರ್ಮ",
+      "romanization": "carma"
+    },
+    {
+      "language": "telugu",
+      "form": "చర్మం",
+      "romanization": "carmaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "തൊലി",
+      "romanization": "tolī",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C99-skin, TE-C128-carmam, ML-C154-toli; sameRoot judged by the author, awaiting native review"
+}

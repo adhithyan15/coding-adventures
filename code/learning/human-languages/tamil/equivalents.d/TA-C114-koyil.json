@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C114-koyil",
+  "english": "a temple",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದೇವಸ್ಥಾನ",
+      "romanization": "dēvasthāna"
+    },
+    {
+      "language": "telugu",
+      "form": "గుడి",
+      "romanization": "guḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "ക്ഷേത്രം",
+      "romanization": "kṣētraṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "मंदिर",
+      "romanization": "mandir"
+    }
+  ],
+  "source": "cross-track match: KA-C109-devasthana, TE-C103-gudi, ML-C135-temple, HI-C152-mandir"
+}
