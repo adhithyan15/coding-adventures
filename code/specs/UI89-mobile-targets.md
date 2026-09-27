@@ -100,6 +100,20 @@ Venture scale from one generator rather than four hand-made projects.
 ### 2.3 Platform behaviour
 
 - State in the app sandbox (`Application Support` from `FileManager`).
+  *As built:* nothing iOS-specific was needed. The Swift host already asks
+  `FileManager` for `.applicationSupportDirectory` in the user domain, which
+  on iOS is the app container's `Library/Application Support`, and keeps
+  `<package name>/mosaic-state.v1.json` there, exactly as on macOS. The host
+  writes state only after the first event, so the CI gate seeds it instead of
+  driving the UI (step 3):
+  1. state the runtime rejects (`{}`) is quarantined to `….corrupt` **inside
+     the app's container** — proof the host found and read that path — and the
+     app keeps running on a fresh start;
+  2. the snapshot the macOS TaskApp run just persisted (the same engine) is
+     restored with nothing quarantined, and the app keeps running;
+  3. the same app is installed and launched on an iPad simulator too.
+  An XCUITest that edits, relaunches and reads the screen stays the goal of
+  the §4 lane; this gate needs no UI automation.
 - UI48 size classes: compact width collapses `HostNavigationSplit` to a stack,
   as `NavigationSplitView` does natively.
 - Host effects from the shared per-OS library (UI87 A):
