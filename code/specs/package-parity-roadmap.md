@@ -14419,6 +14419,44 @@ TLS, transport, and ambient authority remain outside it. The reconciled graph
 has 871 owners and 1,606 dependency edges: 224 merged, 646 pending, and exactly
 this owner in progress.
 
+### X.509 Extension all-lane implementation and pre-publication hardening
+
+The selected generic Extension tranche now implements the closed 48-case
+language-neutral profile in all 15 established lanes. Its collision-checked
+branch inventory contains 1,470 implementation identities, 4,737 slots, 178
+high-consensus packages, zero canonical collisions, and zero unknown buckets.
+Against fetched `origin/main` `475899c0075c61c825446366d4788ae401a05e44`,
+the branch is behind three unrelated TaskApp and curriculum commits with zero
+changed-path overlap; those commits add no package identity or newly eligible
+unowned parity gap.
+
+A pre-publication native review hardened the three weak boundaries without
+widening Extension semantics. Python OID and Extension values now use
+decoder-only construction and detached immutable bytes. Go OID and Extension
+values reject zero-value use and return defensive snapshots. TypeScript
+downstream composition now reads brand-checked private DER element, decoder,
+and cursor state, including captured pristine cursor operations, rather than
+trusting overridable public accessors. Native regression suites cover source
+mutation, forged construction or zero values, returned-view mutation,
+prototype and own-property poisoning, and actual payload-redacted error text.
+The strengthened Python DER suite passes 124 tests at 97.25 percent coverage,
+Go DER passes race testing at 91.4 percent coverage plus vet and build, and
+TypeScript DER passes 133 tests at 96.72 percent statement coverage. Their
+Extension suites remain green at 100 percent Python coverage, 97.3 percent Go
+coverage, and 100 percent TypeScript statement, branch, function, and line
+coverage; the neutral fixture, all-lane coverage, capability, TypeScript
+portability, and package-parity tests remain green.
+
+The audit also identified a distinct aggregate evidence improvement, now
+owned by pending `x509-extension-native-hardening-evidence`. It will record one
+native test path and the language-neutral claims `validated-origin`,
+`alias-safe-value`, and `payload-redacted-diagnostics` for every lane, then
+close explicit evidence gaps in Haskell, Perl, Rust, Swift, and Dart before
+enabling the central ratchet. This follow-up depends on the selected Extension
+owner and does not block publishing the complete portable behavior contract.
+The ownership graph therefore has 872 owners and 1,607 dependency edges: 224
+merged, 647 pending, and exactly the Extension owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
