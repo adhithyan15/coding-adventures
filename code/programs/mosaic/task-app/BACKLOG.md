@@ -13,15 +13,17 @@
 >
 > The native release P0 (#14249) and native startup-state epic (#13984) are now
 > closed. The product-scoped SemVer lane (#13543) has published
-> `task-app-v0.1.0` and `task-app-v0.2.0`; #16108 prepares `task-app-v0.3.0`
-> from the now-complete native lifecycle gates. The UI49 model/compiler bridge
+> `task-app-v0.1.0`, `task-app-v0.2.0`, and the immutable
+> `task-app-v0.3.0` release from the complete native lifecycle gates. Release
+> verification found that label-filtered GitHub history can omit valid
+> cross-package product changes; #16116 is the immediate release-lane repair.
+> The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
 > SwiftUI in #14331, Qt in #14344, Flutter in #14353, and XAML in #14362. The
 > static HTML snapshot lowering landed in #14369, Paint fixture-driven
 > resolution landed in #14378, Button's first focused toolkit retrofit landed
-> in #14385, and Alert followed in #14399. The current dependency is #14402:
-> make Badge's variant contract real through the same UI49 path. Toolkit
+> in #14385, Alert followed in #14399, and Badge in #14402. Toolkit
 > retrofits still precede stories or trustworthy TaskApp composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
@@ -61,9 +63,10 @@ links existing Mosaic work instead of duplicating it.
    `task-app-v0.1.0` with only the artifacts that are actually verified. The
    release lane builds a tested web bundle and strict generated native projects;
    installer packaging remains #13522. **Done in #13587, with follow-up clean-
-   runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0` and
-   `task-app-v0.2.0` published. The next incremental release is
-   [`task-app-v0.3.0` (#16108)](https://github.com/adhithyan15/coding-adventures/issues/16108).**
+   runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0`,
+   `task-app-v0.2.0`, and `task-app-v0.3.0` published. The next focused
+   release-lane repair is [#16116](https://github.com/adhithyan15/coding-adventures/issues/16116),
+   which makes the dated changelog authoritative in generated release notes.**
 8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
    **Done in #13602.**
@@ -144,10 +147,12 @@ step, no artifact. The ordered queue below comes from that spec.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
-The immediate release checkpoint is
-[#16108](https://github.com/adhithyan15/coding-adventures/issues/16108): roll
-the completed native startup-recovery slices and other post-0.2 capabilities
-into `task-app-v0.3.0` before taking the next product feature.
+The immediate release-lane repair is
+[#16116](https://github.com/adhithyan15/coding-adventures/issues/16116): generated
+notes must summarize the authoritative dated changelog section before the
+supporting, label-filtered GitHub history. This was discovered while verifying
+the immutable `task-app-v0.3.0` release, whose history list omitted several
+release-defining cross-package startup-recovery changes.
 
 1. **P0 [#14249](https://github.com/adhithyan15/coding-adventures/issues/14249):**
    restore Flutter's bundled Rust runtime after the current Linux runner image

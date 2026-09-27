@@ -954,6 +954,7 @@ jobs:
             --commit "$RELEASE_COMMIT"
             --repository "$REPOSITORY"
             --history taskapp-history.json
+            --changelog code/programs/mosaic/task-app/CHANGELOG.md
             --output release-notes.md
           )
           if [[ -n "$previous_published" ]]; then
