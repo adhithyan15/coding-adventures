@@ -39,7 +39,7 @@ targets, and the completion bar differs by kind:
 | `xaml` | Native desktop (Windows) | Same as `qt` |
 | `paint` | Raster snapshot | Deterministic PNG of the authored shell; a visual gate, not a host |
 
-## Measured state, 2026-09-01 (`dda3f95`)
+## Measured state, refreshed 2026-09-27
 
 Established by reading `.github/workflows/ci.yml`,
 `.github/workflows/release-task-app.yml`, and every `mosaic-emit-*` crate for
@@ -51,12 +51,16 @@ TaskApp references.
 emitted-control contract that drives the simple-todo lifecycle, and produce a
 release artifact.
 
-**Not exercised at all (3 of 9).** `mosaic-emit-html`,
-`mosaic-emit-webcomponent`, and `mosaic-emit-paint` contain **zero** references
-to TaskApp — no test, no CI step, no release artifact. The portable-input-label
-work in #13717 touched the html and webcomponent *emitters*, but drove them from
-emitter-local fixtures, never from TaskApp's own sources. These are genuine
-platform gaps, not covered work described imprecisely.
+**Structurally gated (1 of 9).** `html` compiles TaskApp's own interface,
+package-expanded layout, and light theme in the ordinary emitter test lane
+(#16120). The gate pins the List composer, repeated task-row template, and
+toolkit SegmentedControl lowering. It is a static structural snapshot: there is
+no runtime, interaction, host, or release-artifact claim.
+
+**Not exercised at TaskApp scope (2 of 9).** `mosaic-emit-webcomponent` and
+`mosaic-emit-paint` still contain no TaskApp product gate or release artifact.
+Emitter-local and MosaicBook fixtures prove their general lowerings, not that
+TaskApp's authored shell survives them.
 
 **Partial.** iOS compiles the generated SwiftUI sources against the iOS 16
 deployment target. That is source portability; nothing runs the app or its
@@ -72,29 +76,23 @@ rather than letting them read as silent gaps.
 ### Tier A — finish the claimed platforms
 
 1. **P1 [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695)
-   — startup loading and failure states.** The highest-severity remaining
-   product defect: a failed WASM fetch, compile, or storage open leaves the root
-   blank indefinitely, with no retry and no explanation. Every other queued item
-   assumes the app started.
+   — startup loading and failure states.** **Done** for the web host and all five
+   strict native backends; native recovery completed in #15788, #15821, #16086,
+   #16093, and #16100.
 2. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692)
-   — compact-window List layout.** The documented 780 px rail breakpoint is not
-   implemented, so narrow windows spend scarce space on advanced navigation and
-   can clip the primary capture path. **Blocked on a kernel gap**: Mosaic has no
-   runtime environment at all — no media queries in mosstyle, compile-time-only
-   `--variant`, no viewport or pointer observation in any of the nine emitters,
-   and no environment concept in `mosaic-app-runtime`. Specified as
-   `UI48-host-environment.md` (#14003). This is the first item in this queue
-   that turned out to be a platform gap wearing an app-shaped costume, which is
-   the risk this spec exists to surface.
+   — compact-window List layout.** **Done in #15700.** TaskApp now consumes the
+   kernel's `HostNavigationSplit`, so capable native platforms own compact pane
+   collapse instead of a TaskApp-specific viewport slot. UI48 (#14003) remains
+   broader Mosaic environment work rather than a blocker for this product item.
 3. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526)
    — Vitest on Vite's native ESM loading.** Test-infrastructure debt in the web
    host; blocks nothing, but it is the last known non-product wart in the lane
    that gates every web change. **Done in
    [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
 4. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625)
-   — changelog roll-forward gate.** `CHANGELOG.md` still marks `0.1.0`
-   `Unreleased` even though `task-app-v0.1.0` published on 2026-08-31. The gate
-   must reject a published version that is still marked unreleased.
+   — changelog roll-forward gate.** **Done in #15090.** Release validation now
+   requires exactly one bracketed Unreleased section and the requested version
+   as the newest dated release section.
 
 ### Tier B — close the unexercised backends
 
@@ -102,7 +100,7 @@ rather than letting them read as silent gaps.
    its own sources and assert the authored List-first shell — composer, task
    rows, view switcher — survives lowering. Cheapest of the three: no runtime,
    no host, no interaction claim. Its value is that it fails loudly when the
-   authored shell stops lowering truthfully, which no current gate catches.
+   authored shell stops lowering truthfully. **Implemented by #16120.**
 6. **Web Components host.** The only remaining *interactive* backend with no
    TaskApp presence. It needs the same treatment `react` has: emit from
    TaskApp's sources, wire the custom element to `task-wasm`, drive the
