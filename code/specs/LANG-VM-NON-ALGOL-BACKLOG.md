@@ -53,34 +53,44 @@ extent. The macOS-discovered allocation bug was repaired by retaining the
 length in an initialized Y slot across `ets:new/2`. Issue #15882's wider
 scratch-register GC-root risk remains open.
 
+PR #16169 delivered #16164/VM-074 and merged as
+`3afc8bf0c805fbfce535bef0bde4e2b3cf9a08c0` after all latest checks
+passed. OCT00 now requires target-specific code generation; a decoder test
+pins the 8008 `JMP`/8080 `MOV A,H` opcode collision.
+
 The next shared-platform queue, reranked against that merge and the user's
 request for a gradual 8086/Z80 language, is:
 
-1. **#16164 / VM-074 (selected):** OCT00 falsely promises that 8008 machine
-   code runs unchanged on 8080. An 8008 `JMP` is `0x7C`; an 8080 `JMP` is
-   `0xC3`. Correct the language and simulator specs, audit repeated claims,
-   and pin the control-flow encoding difference in a simulator test before
-   designing the next language on a false compatibility premise.
-2. **VM-072 (user-directed design):** design the next gradual language rung
+1. **VM-072 (selected, user-directed design):** design the next gradual language rung
    after Nib and Oct for Intel 8086 and Z80. Both have Rust/Python behavioral
    simulators, Rust encoders, and gate-level models. Their Rust CIR backends
    currently lower only constants and return/halt, so arithmetic, memory,
    branches, calls, and I/O need implementation and executed proof. Compare a
-   portable source subset with separate machine-specific intrinsics. Z80
-   extends the 8080 encoding; neither it nor 8086 accepts 8008 binaries as a
-   general rule. Decide one cross-target language versus two rungs from a
-   feature and teaching-cost audit, then run discriminating programs in both
-   simulators before claiming end-to-end support.
+   portable source subset with separate target code generation. `HEX00` chooses
+   one Hex source language with `u8`/`u16` semantics and distinct Z80/8086
+   emitters; its staged source-to-ROM acceptance plan must precede any claim
+   that the language already runs on either target.
+2. **VM-077 / Hex H0 (after the design PR merges):** implement the canonical
+   grammar, typed AST, type checker, IIR emission, reference execution, and
+   exact diagnostics from `HEX00`. Reject target emission until H1 can run
+   the generated ROM on both simulators; retain Nib/Oct regression coverage.
 3. **VM-067:** Rust generated grammars lack a CI regeneration guard; issue
    #14202 also reports existing drift. Scope the guard against that baseline
    before enabling it, so CI executes a useful assertion.
 4. **VM-073:** audit ets-backed `array_set` extent checks for direct IIR
    consumers and reachable frontends; add a real-Erlang regression if an
    out-of-range insertion is reachable.
-5. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
+5. **VM-075 / VM-076 (discovered during VM-072):** reconcile the older
+   `intel8086-backend.md` account of a curated Rust simulator with the now
+   complete implementation and full-state differential suite; narrow the
+   Z80 simulator README's claim of identical 8080 semantics to byte
+   compatibility where applicable, explicitly accounting for flag differences.
+   Both are documentation audits, behind the user-directed design and the
+   missing grammar CI protection.
+6. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
    `defined()` operand expansion before the C dialect; continue one bounded
    preprocessor slice at a time.
-6. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
+7. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
    4004 fidelity, VM-029/031 platform acceptance and native GC proofs, and
    AOT00 exceptions/optimization/concurrency. Re-rank after each merge.
 
