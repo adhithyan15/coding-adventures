@@ -22,6 +22,89 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:చ",
+    {
+      script: "telugu",
+      glyph: "చ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the upper bar from left to right",
+              path: [
+                { x: 50, y: 295 },
+                { x: 100, y: 295 },
+                { x: 150, y: 295 },
+                { x: 200, y: 295 },
+                { x: 250, y: 295 },
+              ],
+            },
+            {
+              label: "continue down and around the left bowl",
+              path: [
+                { x: 250, y: 295 },
+                { x: 220, y: 260 },
+                { x: 175, y: 235 },
+                { x: 130, y: 205 },
+                { x: 105, y: 165 },
+                { x: 105, y: 120 },
+                { x: 125, y: 80 },
+                { x: 165, y: 48 },
+                { x: 215, y: 30 },
+                { x: 265, y: 35 },
+                { x: 310, y: 62 },
+                { x: 345, y: 105 },
+                { x: 370, y: 155 },
+                { x: 385, y: 185 },
+              ],
+            },
+            {
+              label: "sweep right and up around the outer bowl",
+              path: [
+                { x: 385, y: 185 },
+                { x: 410, y: 135 },
+                { x: 450, y: 92 },
+                { x: 505, y: 62 },
+                { x: 565, y: 55 },
+                { x: 620, y: 78 },
+                { x: 660, y: 120 },
+                { x: 680, y: 180 },
+                { x: 675, y: 245 },
+                { x: 650, y: 305 },
+                { x: 610, y: 355 },
+                { x: 560, y: 392 },
+                { x: 505, y: 418 },
+                { x: 450, y: 432 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and cup through the upper flourish",
+              path: [
+                { x: 288, y: 570 },
+                { x: 310, y: 520 },
+                { x: 340, y: 480 },
+                { x: 380, y: 462 },
+                { x: 420, y: 465 },
+                { x: 460, y: 490 },
+                { x: 500, y: 535 },
+                { x: 540, y: 585 },
+                { x: 585, y: 630 },
+                { x: 635, y: 665 },
+                { x: 680, y: 683 },
+                { x: 710, y: 686 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("చ"),
+    },
+  ],
+  [
     "telugu:ఘ",
     {
       script: "telugu",
