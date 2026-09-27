@@ -54,6 +54,14 @@ export interface FilesystemPublishOptions {
   readonly signal?: AbortSignal;
   /** Optional lower resource ceilings for constrained hosts and tests. */
   readonly scanLimits?: Partial<FilesystemScanLimits>;
+  /** Optional caller-bound canonical parent identity for nested trust boundaries. */
+  readonly expectedParentIdentity?: FilesystemParentIdentity;
+}
+
+export interface FilesystemParentIdentity {
+  readonly canonicalPath: string;
+  readonly dev: bigint;
+  readonly ino: bigint;
 }
 
 export interface FilesystemScanLimits {
@@ -156,7 +164,7 @@ export async function inspectFilesystemSite(
   const reader = createVerifiedContentReader(manifest, options.contentStore, { signal: options.signal });
   await reader.preflight();
   const scanLimits = resolveScanLimits(options.scanLimits);
-  const location = await resolveRoot(options.root);
+  const location = await resolveRoot(options.root, options.expectedParentIdentity);
   const lockPath = join(location.parent, `.${location.name}.forme-lock`);
   await requireUnlocked(lockPath);
   const existing = await inspectTarget(location.root, options.signal, scanLimits);
@@ -179,7 +187,7 @@ export async function prepareFilesystemPublication(
   const manifest = parseDeployManifest(options.manifest);
   throwIfAborted(options.signal);
   const scanLimits = resolveScanLimits(options.scanLimits);
-  const location = await resolveRoot(options.root);
+  const location = await resolveRoot(options.root, options.expectedParentIdentity);
   const lockPath = join(location.parent, `.${location.name}.forme-lock`);
   await requireUnlocked(lockPath);
   const reader = createVerifiedContentReader(manifest, options.contentStore, { signal: options.signal });
@@ -461,7 +469,7 @@ function createChangedTransaction(
   });
 }
 
-async function resolveRoot(input: string): Promise<RootLocation> {
+async function resolveRoot(input: string, expected?: FilesystemParentIdentity): Promise<RootLocation> {
   if (typeof input !== "string" || input.length === 0 || input.includes("\0")) {
     throw new FilesystemPublishError("ROOT_UNSAFE", "root must be a non-empty path without NUL");
   }
@@ -478,6 +486,13 @@ async function resolveRoot(input: string): Promise<RootLocation> {
     if (!parentInfo.isDirectory()) throw new Error("parent is not a directory");
     parent = await realpath(lexicalParent);
     parentIdentity = await directoryIdentity(parent, "ROOT_UNSAFE");
+    if (expected !== undefined && (
+      expected.canonicalPath !== parent
+      || expected.dev !== parentIdentity.dev
+      || expected.ino !== parentIdentity.ino
+    )) {
+      throw new Error("root parent does not match the caller-bound identity");
+    }
   } catch (error) {
     throw new FilesystemPublishError("ROOT_UNSAFE", `root parent must be an existing directory: ${message(error)}`, error);
   }

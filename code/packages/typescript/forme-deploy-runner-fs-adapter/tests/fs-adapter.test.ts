@@ -6,6 +6,7 @@ import {
   mkdtemp,
   readFile,
   readdir,
+  realpath,
   rename,
   rm,
   stat,
@@ -153,6 +154,23 @@ describe("publishFilesystemSite", () => {
 
     await expect(inspectFilesystemSite({ root, manifest: manifest(files), contentStore: store(files) }))
       .resolves.toEqual({ status: "unchanged", fileCount: 1, totalSizeBytes: 4 });
+    expect(await artifacts(root)).toEqual([]);
+  });
+
+  it("rejects a caller-bound parent identity mismatch before staging", async () => {
+    const root = await temporarySite();
+    const parent = dirname(root);
+    const identity = await lstat(parent, { bigint: true });
+    await expect(publishFilesystemSite({
+      root,
+      manifest: manifest({ "index.html": "home" }),
+      contentStore: store({ "index.html": "home" }),
+      expectedParentIdentity: {
+        canonicalPath: await realpath(parent),
+        dev: identity.dev,
+        ino: identity.ino + 1n,
+      },
+    })).rejects.toMatchObject({ code: "ROOT_UNSAFE" });
     expect(await artifacts(root)).toEqual([]);
   });
 

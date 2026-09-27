@@ -1,6 +1,7 @@
 # FM08 — Forme Deploy Runner
 
-> **Status:** v0 specification.  Implementation in progress.
+> **Status:** v0 specification. Core, filesystem, GitHub Pages, and CLI/product
+> composition implemented; completion reconciliation remains in FM-B012.
 > **Layer:** FM08 (last layer of the FM00 vision — applies a
 > deploy manifest to a real target).
 > **Predecessor:** `forme-aot-deploy-manifest-emitter` produces
@@ -14,7 +15,7 @@
 | Core planning and validation | Implemented in FM-B044 | `forme-deploy-runner-core` validates manifests, plans complete output sets, preflights bytes, and emits deterministic dry-run reports without capabilities. |
 | Filesystem adapter | Implemented in FM-B045 | `forme-deploy-runner-fs-adapter` proves atomic tree replacement, rollback, idempotency, stale-file/directory pruning, and adversarial containment. |
 | GitHub Pages source-branch adapter | Implemented in FM-B046 | Publishes one owned prefix of the repository's shared `gh-pages` source branch through atomic Git ref updates. |
-| `forme deploy` composition | Pending | FM-B047 will add this command to the FM07 CLI surface and dogfood both live sites. |
+| `forme deploy` composition | Implemented in FM-B047 | The FM07 CLI composes strict directory, bundle, and inline stores with filesystem and GitHub Pages targets; both live sites prove clean build, write-free inspection, explicit legacy bootstrap, publication, rollback tests, and availability checks. |
 
 FM08 was originally checked in as FM05. FM-B011 moved it without changing its
 deploy contract so FM05 can retain the Interactivity IR number reserved by
@@ -211,9 +212,10 @@ containment rules in §3.1.1.
 
 The runner produces:
 
-1. **Side effects** on the target (file writes, S3 PUTs, etc.).
-2. **A deploy report JSON** on stdout (machine-readable) and
-   a human-readable summary on stderr.
+1. **Side effects** on the selected target for a real deployment.
+2. **One deploy report JSON** on stdout, or at the explicit `--report` path for
+   a real deployment. Dry-run is write-free and therefore always reports to
+   stdout.
 
 ### 4.1 Deploy report shape
 
@@ -258,7 +260,7 @@ order per entry.
 ### 5.1 CLI
 
 ```
-forme-deploy [OPTIONS] --manifest <path>
+forme deploy [OPTIONS] --manifest <path>
 ```
 
 Required:
@@ -268,7 +270,8 @@ Required (one of):
 - `--content-dir <path>` — `directory` content store rooted here.
 - `--content-bundle <path>` — canonical `.forme-bundle` content store.
 - `--content-inline-fd <int>` — `inline` store reads JSON
-  `{ "<sha>": "<base64>" }` from this file descriptor.
+  `{ "<sha>": "<base64>" }` from this regular-file descriptor. Pipes and
+  other blocking descriptor types are rejected before reading.
 
 Required:
 - `--target <kind>` — `fs` | `github-pages` in headless v0. Later adapters
@@ -276,9 +279,10 @@ Required:
 
 Required for every target:
 - `--target-config <path>` — JSON file with adapter-specific
-  config (bucket name, account ID, API token reference, ...).
-  Never contains secrets directly; secrets come from env vars
-  named in the config.
+  configuration. The filesystem shape is exactly `{ "root": "<path>" }`.
+  GitHub Pages requires exactly `owner`, `repository`, `ref`,
+  `deploymentOwner`, `destination`, and `tokenEnv`; `tokenEnv` MUST be the
+  literal `GITHUB_TOKEN`. Configuration never contains a secret value.
 
 Optional:
 - `--previous <path>` — previous manifest for diff-mode deploy.
@@ -286,44 +290,35 @@ Optional:
   inspect current target state through an adapter API that exposes no write
   operations, and print the deploy report to stdout with zero local or remote
   writes. `--dry-run` therefore rejects `--report`.
-- `--concurrency <int>` — max parallel writes (default `4`).
-- `--retry <int>` — per-file retry budget on transient errors
-  (default `3`, with exponential backoff).
-- `--strict` — fail-fast: abort the deploy on the first file
-  error (default: continue and report partial).
-- `--verify-after` — re-read every written file and SHA-256
-  it; fail if any digest differs from the manifest.
+- `--bootstrap-ownership <path>` — identity-bound one-time GitHub Pages
+  adoption expectation. It is inspected without writes during dry-run. Once
+  the deployment owner exists, retaining this option is a validated no-op;
+  normal ownership validation, not stale migration bytes, governs later
+  publications.
+- `--retry <int>` — bounded GitHub ref-race/transient retry budget from 0
+  through 10 (default `3`).
 - `--report <path>` — write the deploy report JSON to this
-  path instead of stdout.
+  path instead of stdout after a real publication.
+
+Concurrency, permissive partial publication, and optional read-back flags are
+not v0 CLI inputs. Both v0 adapters implement a complete-set atomic publication
+boundary and fail closed instead.
 
 ### 5.2 Environment variables
 
-Adapter-specific secrets are passed via env vars **named in the
-target config**, not directly on the CLI.  The runner reads only
-the env vars listed in the config; unrelated env is ignored.
-
-Standard env (all targets):
-- `FORME_DEPLOY_LOG_LEVEL` — `silent` | `error` | `info` (default) | `debug`.
-- `FORME_DEPLOY_NO_COLOR=1` — disable ANSI codes on stderr.
-- `FORME_DEPLOY_TIMEOUT_MS` — global per-file timeout (default 60s).
+The filesystem target reads no environment variables. A real GitHub Pages
+publication reads exactly `GITHUB_TOKEN`; anonymous dry-run reads no credential.
+The fixed target config value prevents selecting an arbitrary environment
+variable. No other deploy-specific environment variables exist in v0.
 
 ### 5.3 Exit codes
 
-- `0` — success.  Every file in the manifest was applied as
-  planned (or skipped per diff).
-- `1` — partial.  Some files failed; the deploy report has
-  details.  No rollback was performed (caller decides).
-- `2` — rolled back.  A failure triggered automatic rollback;
-  the target is back at its pre-deploy state.
-- `3` — manifest invalid.  The deploy never started.
-- `4` — content store error (a hash was missing or unreadable).
-  The deploy may have made partial writes; consult the report.
-- `5` — target adapter error (auth failed, network unreachable,
-  permissions denied).  Same caveat as 4.
-- `6` — user abort (SIGINT, SIGTERM).  Mid-deploy interrupts
-  attempt graceful shutdown; the report indicates which files
-  completed.
-- `>=100` — unexpected internal error (bug).
+- `0` — success. Every file in the complete manifest was published atomically
+  or the target was already exact.
+- `2` — usage, manifest, content-store, configuration, target, or unexpected
+  deployment failure. Adapter error codes remain present in the stable
+  diagnostic text.
+- `130` — cooperative SIGINT or SIGTERM cancellation.
 
 ## 6. Target adapter interface
 
@@ -551,19 +546,10 @@ plan.
 
 ## 10. Concurrency
 
-Default: 4 files in flight at once.  `--concurrency N` overrides.
-
-The runner uses a bounded worker pool, not unbounded `Promise.all`:
-
-- Worker pool size = `--concurrency`.
-- Each worker pulls the next file from a shared queue, fetches
-  content, writes, records the result.
-- Errors don't block other workers (unless `--strict`).
-- Workers exit when the queue is empty AND all workers are
-  idle.
-
-`--concurrency 1` is the deterministic / sequential mode.  Used
-for tests and debugging.
+The v0 runner processes files in stable `outputPath` order through a bounded,
+sequential pipeline. A configurable worker pool is deferred to v1; v0 exposes
+no concurrency flag. This keeps memory and target pressure bounded while the
+transactional adapters establish their atomic publication contract.
 
 ## 11. Error reporting
 
@@ -669,15 +655,12 @@ manifest aggregates them based on which adapter is selected.
 ## 14. Determinism and reproducibility
 
 - Given the same `(manifest, content store, target state)`, the
-  runner produces the same deploy report (modulo wall-clock
-  fields like `startedAt`, `elapsedMs` — those have an
-  explicit `--deterministic-timestamps` mode for testing that
-  zeros them).
+  v0 runner produces the same deploy report. v0 reports use the Unix epoch for
+  `startedAt` and zero `elapsedMs`; a future version may add opt-in wall-clock
+  timing without weakening the deterministic default.
 - The diff plan is byte-identical between runs.
-- The file write order is stable (sorted by `outputPath`)
-  even when concurrent workers race to start — the recorded
-  action order in the report uses each file's `outputPath` as
-  the sort key, not the timing of its completion.
+- The file write order and recorded action order are stable and sorted by
+  `outputPath`.
 
 ## 15. Out of scope for v0
 
