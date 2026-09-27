@@ -4999,9 +4999,9 @@ fn emit_text(
     };
 
     let size = effective_font_size(node, part_styles, ctx)?;
-    let text = if size.is_some() || ctx.table_font_size.is_some() {
-        let base = table_text_style(host_input_text_style_arg(node, part_styles), ctx)
-            .unwrap_or_else(|| "const TextStyle()".into());
+    let base = table_text_style(host_input_text_style_arg(node, part_styles), ctx);
+    let text = if size.is_some() || base.is_some() {
+        let base = base.unwrap_or_else(|| "const TextStyle()".into());
         let style = size
             .map(|size| format!("({base}).copyWith(fontSize: {size})"))
             .unwrap_or(base);
@@ -14875,6 +14875,48 @@ mod tests {
         assert_eq!(drops.len(), 1, "got: {drops:?}");
         assert_eq!(drops[0].part, "shared");
         assert_eq!(drops[0].name, "background-color");
+    }
+
+    // ====================================================================
+    // #15285 -- Text parts keep their authored Flutter typography
+    // ====================================================================
+
+    #[test]
+    fn text_part_colour_size_and_weight_reach_text_style() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "label", vec![]));
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![
+                StyleProp {
+                    name: "color".into(),
+                    value: "#e3eee4".into(),
+                },
+                StyleProp {
+                    name: "font-size".into(),
+                    value: "13px".into(),
+                },
+                StyleProp {
+                    name: "font-weight".into(),
+                    value: "600".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "Text(\"\", style: TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13, fontWeight: FontWeight.w600))"
+            ),
+            "authored Text-part typography must reach TextStyle, got:\n{out}"
+        );
+
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert!(
+            drops.is_empty(),
+            "implemented typography was reported dropped: {drops:?}"
+        );
     }
 
     // ====================================================================
