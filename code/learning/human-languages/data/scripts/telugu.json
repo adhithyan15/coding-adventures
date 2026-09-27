@@ -16,8 +16,21 @@
       "components": [
         "క  ka — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "turn down and left around the upper bowl",
+        "continue right through the middle shoulder",
+        "curve down and left around the lower bowl",
+        "finish upward along the left tail",
+        "restart and sweep up through the separate headstroke"
+      ],
+      "strokeOrderNote": "Five numbered movements grouped into two pen-down runs: movements 1–4 stay joined through the main body, then movement 5 restarts for the separate rising headstroke.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant క packaged tracing guide res/drawable/dot_stroke_c_1_1_ka.png, movements 1–5 (version 2.6)",
+        "accessed": "2026-09-27",
+        "variation": "The packaged tracing guide numbers five directional movements and marks two pen-down starts: movements 1–4 form the joined main body and movement 5 restarts for the separate rising headstroke. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      }
     },
     {
       "glyph": "కా",
