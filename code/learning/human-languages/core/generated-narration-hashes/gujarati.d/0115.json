@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:e986d439cfc43f0a",
+  "lessonIds": [
+    "GU-C115-gajar",
+    "GU-C115-lasan",
+    "GU-C115-adu",
+    "GU-C115-libu",
+    "GU-C115-naliyer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch115.txt",
+  "json": "gujarati/narration/ch115.json",
+  "textHash": "fnv1a64:a29e888856e3f6b8",
+  "jsonHash": "fnv1a64:7af7a3e70d06fe6f",
+  "findings": []
+}

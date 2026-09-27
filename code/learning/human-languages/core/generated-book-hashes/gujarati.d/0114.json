@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:cf34a7dc7c1da301",
+  "lessonIds": [
+    "GU-C114-bajri",
+    "GU-C114-ghau",
+    "GU-C114-makai",
+    "GU-C114-rigan",
+    "GU-C114-kobi"
+  ],
+  "tex": "gujarati/book/chapters/ch114-millet-wheat-maize-aubergine-cabbage.tex"
+}

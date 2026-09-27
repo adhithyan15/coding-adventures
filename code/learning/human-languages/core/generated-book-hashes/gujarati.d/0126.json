@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:09e620da21eddb6e",
+  "lessonIds": [
+    "GU-C126-pith",
+    "GU-C126-kamar",
+    "GU-C126-koni",
+    "GU-C126-hatheli",
+    "GU-C126-nakh"
+  ],
+  "tex": "gujarati/book/chapters/ch126-back-waist-elbow-palm-fingernail.tex"
+}

@@ -4195,6 +4195,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 write_file(&runtime_host, runtime_binding.host_swift.as_bytes())?;
                 written.push(runtime_host);
 
+                // The platform library every SwiftUI app gets (UI87 §7): the
+                // standard file effects, and the router App.swift installs.
+                let platform_effects = backend_dir.join("Sources/App/MosaicPlatformEffects.swift");
+                write_file(
+                    &platform_effects,
+                    mosaic_app_bindings::swift_platform_effects().as_bytes(),
+                )?;
+                written.push(platform_effects);
+
                 let runtime_header =
                     backend_dir.join("Sources/CMosaicRuntime/include/CMosaicRuntime.h");
                 write_file(&runtime_header, runtime_binding.header.as_bytes())?;
@@ -5049,17 +5058,24 @@ fn qt_main_with_host_effects(
 /// `effectHandler`. The `if let` also makes the permissive generated code
 /// correct when the standard host is absent and the app falls back to the
 /// reflection bridge -- there is no host to install onto then.
+///
+/// Every SwiftUI app also gets the platform library (UI87 §7), as on Compose:
+/// after the package's handler, if any, `App.swift` installs
+/// `installMosaicPlatformEffects`, which wraps that handler and routes each
+/// effect by kind.
 fn swift_app_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "swiftui")
-    else {
-        return Ok(generated.to_string());
-    };
+        .find(|handler| handler.backend == "swiftui");
+    // Named in errors: the package's handler when there is one, otherwise the
+    // platform library, which every app now gets (UI87 §7).
+    let installing = handler.map_or("installMosaicPlatformEffects", |handler| {
+        handler.install.as_str()
+    });
     // Scoped to the class body, THEN line-anchored within it.
     //
     // `self.bridge = ` is not a token only this generator produces: the file
@@ -5075,35 +5091,52 @@ fn swift_app_with_host_effects(
             // package author's slot default carrying a raw newline -- and
             // picking either one would be silently installing the handler
             // somewhere nobody chose.
-            BuildError::Io(format!(
-                "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
-                 app declares `MosaicHostState` {} times; refusing to guess which one \
-                 to install it in",
-                handler.install, ambiguity.count
-            ))
+            BuildError::Io(match handler {
+                Some(_) => format!(
+                    "`[host_effects]` declares a SwiftUI handler `{installing}`, but the generated \
+                     app declares `MosaicHostState` {} times; refusing to guess which one \
+                     to install it in",
+                    ambiguity.count
+                ),
+                None => format!(
+                    "the generated SwiftUI app declares `MosaicHostState` {} times; refusing \
+                     to guess which one to install Mosaic's platform library \
+                     (`{installing}`) in",
+                    ambiguity.count
+                ),
+            })
         })?;
-    let Some(class_start) = class_match else {
-        return Err(BuildError::Io(format!(
-            "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
-             app has no `MosaicHostState` to install it in",
-            handler.install
-        )));
-    };
     // Matches whichever form the runtime-binding rewrite left behind: the plain
     // load, or the bundled-runtime one carrying a library path.
-    let Some(relative) = line_anchored_find(&generated[class_start..], "self.bridge = ") else {
+    let assignment =
+        class_match.and_then(|class_start| {
+            line_anchored_find(&generated[class_start..], "self.bridge = ")
+                .map(|relative| class_start + relative)
+        });
+    let Some(assignment_start) = assignment else {
+        // Without a declared handler, an app that does not look like the
+        // generated one is left as it is: nothing was declared, so there is
+        // nothing to refuse (the same rule as Compose).
+        if handler.is_none() {
+            return Ok(generated.to_string());
+        }
         // Loud, for the same reason as Qt -- and more so here. SwiftPM compiles
         // every file under `Sources/App`, so an uninstalled handler still
         // compiles, links, and ships: there is no diagnostic at all until an
         // `Await` effect goes unanswered at runtime and takes the session's
         // persistence with it.
-        return Err(BuildError::Io(format!(
-            "`[host_effects]` declares a SwiftUI handler `{}`, but \
-             `MosaicHostState` has no host assignment to install it after",
-            handler.install
-        )));
+        return Err(BuildError::Io(if class_match.is_none() {
+            format!(
+                "`[host_effects]` declares a SwiftUI handler `{installing}`, but the generated \
+                 app has no `MosaicHostState` to install it in"
+            )
+        } else {
+            format!(
+                "`[host_effects]` declares a SwiftUI handler `{installing}`, but \
+                 `MosaicHostState` has no host assignment to install it after"
+            )
+        }));
     };
-    let assignment_start = class_start + relative;
     let line_end = generated[assignment_start..]
         .find('\n')
         .map_or(generated.len(), |index| assignment_start + index + 1);
@@ -5112,21 +5145,52 @@ fn swift_app_with_host_effects(
         .map_or(0, |index| index + 1);
     let indent: String = generated[line_start..assignment_start].to_string();
 
-    let mut out = String::with_capacity(generated.len() + 256);
+    let mut out = String::with_capacity(generated.len() + 384);
     out.push_str(&generated[..line_end]);
+    if let Some(handler) = handler {
+        writeln!(
+            out,
+            "{indent}// Package-declared effect handler, from `[host_effects]`."
+        )
+        .expect("write SwiftUI host-effect comment");
+        writeln!(
+            out,
+            "{indent}if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ {}(mosaicEffectHost) }}",
+            handler.install
+        )
+        .expect("write SwiftUI host-effect install");
+    }
     writeln!(
         out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`."
+        "{}",
+        swift_platform_install_line(&indent, handler.and_then(|handler| handler.kinds.as_deref()))
     )
-    .expect("write SwiftUI host-effect comment");
-    writeln!(
-        out,
-        "{indent}if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ {}(mosaicEffectHost) }}",
-        handler.install
-    )
-    .expect("write SwiftUI host-effect install");
+    .expect("write SwiftUI platform-effects install");
     out.push_str(&generated[line_end..]);
     Ok(out)
+}
+
+/// The `App.swift` lines that install the platform library (UI87 §7.2), after
+/// the package's own handler so the router wraps it. The handler's `kinds`
+/// (validated in the manifest to a dotted-name shape with no quote or
+/// backslash) become the set the router checks; without `kinds`, `nil` keeps
+/// the original meaning.
+fn swift_platform_install_line(indent: &str, kinds: Option<&[String]>) -> String {
+    let claimed = match kinds {
+        None => "nil".to_string(),
+        Some(kinds) => format!(
+            "[{}]",
+            kinds
+                .iter()
+                .map(|kind| format!("\"{kind}\""))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+    };
+    format!(
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n\
+         {indent}if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ installMosaicPlatformEffects(mosaicEffectHost, appKinds: {claimed}) }}"
+    )
 }
 
 /// Install a package's effect handler in the generated Compose entry point.
@@ -16169,11 +16233,79 @@ handlers = [
         )
     }
 
+    /// The platform lines, as `App.swift` carries them after the assignment.
+    fn platform_lines(claimed: &str) -> String {
+        format!(
+            "    // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n    \
+             if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ \
+             installMosaicPlatformEffects(mosaicEffectHost, appKinds: {claimed}) }}\n"
+        )
+    }
+
+    /// UI87 §7: with no package handler, the only change is the platform
+    /// library, installed right after the host with no claimed kinds.
     #[test]
-    fn a_package_without_the_section_changes_nothing() {
+    fn a_package_without_the_section_gets_only_the_platform_library() {
+        let expected = APP_SWIFT.replace(
+            "MosaicHostBridge.load()\n",
+            &format!("MosaicHostBridge.load()\n{}", platform_lines("nil")),
+        );
         assert_eq!(
             swift_app_with_host_effects(APP_SWIFT, &section("")).expect("wiring must succeed"),
-            APP_SWIFT
+            expected
+        );
+    }
+
+    /// The package's handler is installed first; the platform library wraps it
+    /// with the kinds the package claimed, as a Swift set literal.
+    #[test]
+    fn claimed_kinds_reach_the_platform_router_after_the_package_handler() {
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [ { backend = "swiftui", install = "installProbeEffects", kinds = ["importAnki", "files.save"] } ]
+"#,
+        );
+        let app = swift_app_with_host_effects(APP_SWIFT, &effects).expect("wiring");
+        let package = app
+            .find("installProbeEffects(mosaicEffectHost)")
+            .expect("package install");
+        let platform = app
+            .find(r#"installMosaicPlatformEffects(mosaicEffectHost, appKinds: ["importAnki", "files.save"])"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "the platform library must wrap the package handler:\n{app}");
+        let refresh = app.find("refreshProps()").expect("refresh");
+        assert!(platform < refresh, "the router must exist before the first refresh:\n{app}");
+    }
+
+    /// A handler without `kinds` keeps the original meaning: it receives every
+    /// non-standard kind, which the router expresses as `nil`.
+    #[test]
+    fn a_handler_without_kinds_gives_the_router_nil() {
+        let app = swift_app_with_host_effects(APP_SWIFT, &swiftui_handler()).expect("wiring");
+        assert!(app.contains(&platform_lines("nil")), "{app}");
+    }
+
+    /// Two classes and no handler: still refused, and the message names the
+    /// platform library rather than inventing a handler the package never had.
+    #[test]
+    fn an_ambiguous_class_without_a_handler_names_the_platform_library() {
+        let app = concat!(
+            "public final class MosaicHostState\n",
+            "private final class MosaicHostState: ObservableObject {\n",
+            "  init() {\n",
+            "    self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()\n",
+            "  }\n",
+            "}\n",
+        );
+        let message = format!(
+            "{:?}",
+            swift_app_with_host_effects(app, &section(""))
+                .expect_err("an ambiguous declaration must fail the build")
+        );
+        assert!(
+            message.contains("platform library") && !message.contains("declares a SwiftUI handler"),
+            "{message}"
         );
     }
 
@@ -16227,10 +16359,10 @@ handlers = [
 ]
 "#,
         );
-        assert_eq!(
-            swift_app_with_host_effects(APP_SWIFT, &qt_only).expect("wiring must succeed"),
-            APP_SWIFT
-        );
+        let wired = swift_app_with_host_effects(APP_SWIFT, &qt_only).expect("wiring must succeed");
+        assert!(!wired.contains("installProbeEffects"), "{wired}");
+        // Only the platform library, with nothing claimed.
+        assert!(wired.contains(&platform_lines("nil")), "{wired}");
     }
 
     #[test]

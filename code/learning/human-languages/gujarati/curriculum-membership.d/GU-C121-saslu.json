@@ -1,0 +1,11 @@
+{
+  "id": "GU-C121-saslu",
+  "pathSegment": "GU-PATH-121-THINGS121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-121-THINGS121",
+      "order": 3
+    }
+  ]
+}

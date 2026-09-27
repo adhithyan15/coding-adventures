@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:177779ac63b9e48d",
+  "lessonIds": [
+    "GU-C119-kinaro",
+    "GU-C119-dhodh",
+    "GU-C119-gupha",
+    "GU-C119-khin",
+    "GU-C119-tekri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch119.txt",
+  "json": "gujarati/narration/ch119.json",
+  "textHash": "fnv1a64:f49de8f3c4973e9b",
+  "jsonHash": "fnv1a64:1f9f2a5591bb9735",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C134-sant",
+  "pathSegment": "GU-PATH-134-QUAL134",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-134-QUAL134",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C94-vahelu",
+  "pathSegment": "GU-PATH-94-TIME94",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-94-TIME94",
+      "order": 1
+    }
+  ]
+}

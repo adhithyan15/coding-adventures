@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C134-khus",
+    "language": "gujarati",
+    "chapter": 134,
+    "sequence": 7020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:702a615fd90d57b2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/controller.ts",
+    "src/persistence.ts",
+    "src/task-engine.d.mts",
+    "src/theme.ts",
+    "src/timeline.ts",
+    "src/webcomponent.ts"
+  ]
+}

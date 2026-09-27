@@ -9,7 +9,7 @@ headword: ત્રીજું
 romanization: trījũ
 gloss: "third — the first exception, and the number is still legible inside it"
 concept_tag: GU-ORDINAL-TRIJU
-prerequisites: [GU-C38-panchmu, GU-C37-kyaan, GU-C34-kem-kemke, GU-C25-atyaare, GU-C06-number-histories]
+prerequisites: [GU-C38-panchmu, GU-C37-kyaan, GU-C34-kem-kemke, GU-C25-atyaare, GU-C06-number-histories, GU-C06-numbers-1-5-more, GU-C06-number-histories-more]
 sounds: [long-ii]
 roots: []
 etymology_hook: "Wiktionary inherits treejun from Old Gujarati treejaun and Sanskrit trteeya, with no mention of the -mun that built the fifth"

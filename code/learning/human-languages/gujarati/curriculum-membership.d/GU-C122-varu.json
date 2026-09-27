@@ -1,0 +1,11 @@
+{
+  "id": "GU-C122-varu",
+  "pathSegment": "GU-PATH-122-THINGS122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-122-THINGS122",
+      "order": 2
+    }
+  ]
+}

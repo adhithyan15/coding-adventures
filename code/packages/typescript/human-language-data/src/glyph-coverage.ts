@@ -187,6 +187,48 @@ function partition(text: string, wrappers: ReadonlyMap<string, string>): {
   return { main, script };
 }
 
+/**
+ * Keep only what `\texorpdfstring{typeset}{bookmark}` typesets.
+ *
+ * The second argument becomes a PDF bookmark and is never set in any font, so
+ * its characters are not the book's to render. Left in, a bookmark's plain
+ * Arabic or Tamil text lands in the MAIN bucket and reads as thousands of
+ * Latin Modern gaps. The first argument is kept whole, script commands and all,
+ * so it is measured exactly as body text is.
+ *
+ * Braces are matched by depth, because the typeset argument holds nested
+ * commands (`\ta{...}`). An unbalanced remainder is left as it is, which
+ * over-reports rather than hiding anything.
+ */
+export function stripPdfStrings(text: string): string {
+  const command = "\\texorpdfstring{";
+  let out = "";
+  let at = 0;
+  for (;;) {
+    const start = text.indexOf(command, at);
+    if (start === -1) return out + text.slice(at);
+    const group = (open: number): number => {
+      // `open` indexes a `{`; returns the index of its matching `}`, or -1.
+      let depth = 0;
+      for (let i = open; i < text.length; i += 1) {
+        const ch = text[i];
+        if (ch === "\\") { i += 1; continue; }
+        if (ch === "{") depth += 1;
+        else if (ch === "}" && --depth === 0) return i;
+      }
+      return -1;
+    };
+    const firstOpen = start + command.length - 1;
+    const firstClose = group(firstOpen);
+    const secondOpen = firstClose + 1;
+    if (firstClose === -1 || text[secondOpen] !== "{") return out + text.slice(at);
+    const secondClose = group(secondOpen);
+    if (secondClose === -1) return out + text.slice(at);
+    out += text.slice(at, start) + text.slice(firstOpen + 1, firstClose);
+    at = secondClose + 1;
+  }
+}
+
 function tally(text: string): Map<string, number> {
   const counts = new Map<string, number>();
   for (const ch of text) {
@@ -217,7 +259,7 @@ export function measureGlyphCoverage(
     const mapped = mappedCharacters(book.preamble);
     for (const file of book.files) {
       filesScanned += 1;
-      const { main, script } = partition(file.text, wrappers);
+      const { main, script } = partition(stripPdfStrings(file.text), wrappers);
 
       for (const [ch, n] of tally(main)) {
         mainChars.add(ch);

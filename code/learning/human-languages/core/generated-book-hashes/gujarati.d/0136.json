@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:5eff68393958bbb9",
+  "lessonIds": [
+    "GU-C136-khali",
+    "GU-C136-bharelu",
+    "GU-C136-sacu",
+    "GU-C136-khotu",
+    "GU-C136-amir"
+  ],
+  "tex": "gujarati/book/chapters/ch136-empty-full-true-false-rich.tex"
+}

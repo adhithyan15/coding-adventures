@@ -1,0 +1,11 @@
+{
+  "id": "GU-C104-kala",
+  "pathSegment": "GU-PATH-104-CAN104",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-104-CAN104",
+      "order": 4
+    }
+  ]
+}

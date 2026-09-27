@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:4cdbd9afd8365474",
+  "lessonIds": [
+    "GU-C104-anubhav",
+    "GU-C104-tev",
+    "GU-C104-adat",
+    "GU-C104-layakat",
+    "GU-C104-kala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch104.txt",
+  "json": "gujarati/narration/ch104.json",
+  "textHash": "fnv1a64:048059b319cf681d",
+  "jsonHash": "fnv1a64:ed57ee6ddbd57498",
+  "findings": []
+}

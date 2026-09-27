@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Something, Anything, Oneself, One's own, Both",
+  "label": "ch:gu-something-anything-oneself-one-s-own-both",
+  "canDo": "I can say something, anything, oneself, one's own and both.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-R100-second-pass-months-this-and-that",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say something, anything, oneself, one's own and both.",
+    "assesses": [
+      "GU-LEX-C100-DEF100-03",
+      "GU-LEX-C100-DEF100-04",
+      "GU-LEX-C100-DEF100-05"
+    ]
+  }
+}

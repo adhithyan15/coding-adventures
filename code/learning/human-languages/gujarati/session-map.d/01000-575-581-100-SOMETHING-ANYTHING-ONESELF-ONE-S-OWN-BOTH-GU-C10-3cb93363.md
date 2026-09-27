@@ -1,0 +1,1 @@
+| 575-581 | 100 | Something, Anything, Oneself, One's own, Both | `GU-C100-kaik` -> `GU-C100-kasu` -> `GU-C100-pote` -> `GU-C100-potanu` -> `GU-C100-banne` -> `GU-R100-first-pass-seasons-months-and-days` -> `GU-R100-second-pass-months-this-and-that` |

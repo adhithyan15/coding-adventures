@@ -1,0 +1,63 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-C96-saptembar
+spine_node: SPINE-TIME-OF-DAY
+sequence: 4940
+chapter: 96
+type: word
+headword: "સપ્ટેમ્બર"
+gloss: "September"
+romanization: "sapṭembar"
+concept_tag: GU-TIME96-SAPTEMBAR
+prerequisites: [GU-C96-jun, GU-C96-julai]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-LEX-C96-TIME96-03, GU-LEX-C96-TIME96-04]
+introduces:
+  knowledge: [GU-LEX-C96-TIME96-05]
+practises:
+  knowledge: [GU-LEX-C96-TIME96-05, GU-LEX-C96-TIME96-03, GU-LEX-C96-TIME96-04]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C96-julai]
+---
+
+# સપ્ટેમ્બર (sapṭembar) — September
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C96-TIME96-03, GU-LEX-C96-TIME96-04] -->
+
+[PAUSE 2s] Before the new one: say the Gujarati for June, then the Gujarati for July.
+
+## You'll want to know: સપ્ટેમ્બર
+<!-- hl-knowledge: introduces=[GU-LEX-C96-TIME96-05]; assesses=[] -->
+
+**સપ્ટેમ્બર** (*sapṭembar*) — "September".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C96-TIME96-05, GU-LEX-C96-TIME96-03, GU-LEX-C96-TIME96-04] -->
+
+[PAUSE 1s]
+- [YOU SAY: *sapṭembar*]
+- [YOU SAY: *sapṭembar*, once more]
+- [YOU SAY: say *sapṭembar*]
+- [YOU RECALL: say the Gujarati for June, then the Gujarati for July, then say *sapṭembar* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C96-TIME96-05, GU-LEX-C96-TIME96-03, GU-LEX-C96-TIME96-04] -->
+
+[PAUSE 3s] What does સપ્ટેમ્બર mean? ("September".) Say it once more.

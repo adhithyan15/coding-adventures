@@ -5,206 +5,202 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
-	"slices"
+	"sort"
+	"strings"
 	"testing"
 
-	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
-	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/graphdiff"
 )
 
-type neutralGraphDiffFixture struct {
+var graphFixtureRoster = []string{
+	"graph-canonical-edge-order.json", "graph-chain.json", "graph-cycle.json",
+	"graph-diamond.json", "graph-empty.json", "graph-isolated.json",
+	"graph-multiple-components.json", "graph-partial-cycle-no-output.json",
+}
+
+var diffFixtureRoster = []string{
+	"diff-selection-exact-build-fronts.json", "diff-selection-forced-package.json",
+	"diff-selection-known-unmatched-near-build.json", "diff-selection-match-work-at-limit.json",
+	"diff-selection-match-work-over-limit.json", "diff-selection-package-prefix.json",
+	"diff-selection-repository-boundary.json", "diff-selection-strict-glob-character-classes.json",
+	"diff-selection-transitive.json", "diff-selection-unknown-all.json",
+	"diff-selection-unknown-error.json",
+}
+
+var graphFixtureIDs = []string{
+	"graph/canonical-edge-order", "graph/chain", "graph/cycle", "graph/diamond",
+	"graph/empty", "graph/isolated", "graph/multiple-components",
+	"graph/partial-cycle-no-output",
+}
+
+var diffFixtureIDs = []string{
+	"diff-selection/exact-build-fronts", "diff-selection/forced-package",
+	"diff-selection/known-unmatched-near-build", "diff-selection/match-work-at-limit",
+	"diff-selection/match-work-over-limit", "diff-selection/package-prefix",
+	"diff-selection/repository-boundary-reverse-index",
+	"diff-selection/strict-glob-character-classes",
+	"diff-selection/transitive-package-change", "diff-selection/unknown-path-all",
+	"diff-selection/unknown-path-error",
+}
+
+type graphDiffFixture struct {
+	ID    string `json:"id"`
 	Input struct {
-		Options struct {
-			Packages       []json.RawMessage `json:"packages"`
-			Edges          [][2]string       `json:"edges"`
-			ForcedPackages []string          `json:"forced_packages"`
+		Operation string `json:"operation"`
+		Options   struct {
+			Packages          []json.RawMessage `json:"packages"`
+			Edges             [][2]string       `json:"edges"`
+			ForcedPackages    []string          `json:"forced_packages"`
+			UnknownPathPolicy string            `json:"unknown_path_policy"`
+			BoundarySHA256    string            `json:"boundary_sha256"`
 		} `json:"options"`
 		ChangedPaths []string `json:"changed_paths"`
 	} `json:"input"`
 	Expected struct {
-		Result struct {
+		Outcome string `json:"outcome"`
+		Result  struct {
 			Edges                [][2]string `json:"edges"`
 			Levels               [][]string  `json:"levels"`
 			ChangedPackages      []string    `json:"changed_packages"`
 			AffectedPackages     []string    `json:"affected_packages"`
 			PrerequisitePackages []string    `json:"prerequisite_packages"`
 		} `json:"result"`
+		Diagnostics []struct {
+			Code string `json:"code"`
+		} `json:"diagnostics"`
 	} `json:"expected"`
 }
 
-func loadNeutralGraphDiffFixture(t *testing.T, name string) neutralGraphDiffFixture {
+func graphDiffFixtureRoot(t *testing.T) string {
 	t.Helper()
-	path := filepath.Join(
-		toolchainFixtureRepoRoot(t), "code", "specs", "fixtures", "build-tool-v1", "cases", name,
-	)
-	data, err := os.ReadFile(path)
+	return filepath.Join(toolchainFixtureRepoRoot(t), "code", "specs", "fixtures", "build-tool-v1")
+}
+
+func enumerateGraphDiffFixtures(t *testing.T, prefix string) []string {
+	t.Helper()
+	entries, err := os.ReadDir(filepath.Join(graphDiffFixtureRoot(t), "cases"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	var fixture neutralGraphDiffFixture
+	names := make([]string, 0)
+	for _, entry := range entries {
+		if strings.HasPrefix(entry.Name(), prefix) && strings.HasSuffix(entry.Name(), ".json") {
+			info, err := entry.Info()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !info.Mode().IsRegular() || info.Size() > 1<<20 {
+				t.Fatalf("fixture %s must be a regular file no larger than 1 MiB", entry.Name())
+			}
+			names = append(names, entry.Name())
+		}
+	}
+	sort.Strings(names)
+	return names
+}
+
+func loadGraphDiffFixture(t *testing.T, name string) graphDiffFixture {
+	t.Helper()
+	data, err := os.ReadFile(filepath.Join(graphDiffFixtureRoot(t), "cases", name))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var fixture graphDiffFixture
 	if err := json.Unmarshal(data, &fixture); err != nil {
 		t.Fatalf("decode %s: %v", name, err)
 	}
 	return fixture
 }
 
-func graphFromNeutralFixture(fixture neutralGraphDiffFixture) *directedgraph.Graph {
-	graph := directedgraph.New()
-	for _, raw := range fixture.Input.Options.Packages {
-		var name string
-		if err := json.Unmarshal(raw, &name); err == nil {
-			graph.AddNode(name)
-		}
+func graphDiffEdges(values [][2]string) []graphdiff.Edge {
+	result := make([]graphdiff.Edge, len(values))
+	for index, value := range values {
+		result[index] = graphdiff.Edge{Prerequisite: value[0], Dependent: value[1]}
 	}
-	for _, edge := range fixture.Input.Options.Edges {
-		graph.AddEdge(edge[0], edge[1])
-	}
-	return graph
-}
-
-func sortedSetValues(values map[string]bool) []string {
-	result := make([]string, 0, len(values))
-	for value := range values {
-		result = append(result, value)
-	}
-	slices.Sort(result)
 	return result
 }
 
-func packagesFromNeutralFixture(
-	t *testing.T,
-	fixture neutralGraphDiffFixture,
-	repoRoot string,
-) []discovery.Package {
-	t.Helper()
-	packages := make([]discovery.Package, 0, len(fixture.Input.Options.Packages))
-	for _, raw := range fixture.Input.Options.Packages {
-		var pkg struct {
-			Name        string   `json:"name"`
-			RelPath     string   `json:"rel_path"`
-			SourceMode  string   `json:"source_mode"`
-			SourceGlobs []string `json:"source_globs"`
-		}
-		if err := json.Unmarshal(raw, &pkg); err != nil {
-			t.Fatal(err)
-		}
-		packages = append(packages, discovery.Package{
-			Name:         pkg.Name,
-			Path:         filepath.Join(repoRoot, filepath.FromSlash(pkg.RelPath)),
-			IsStarlark:   pkg.SourceMode == "strict_globs",
-			DeclaredSrcs: pkg.SourceGlobs,
-		})
-	}
-	return packages
-}
-
 func TestNeutralGraphDiffContractCoverage(t *testing.T) {
-	t.Run("empty graph", func(t *testing.T) {
-		fixture := loadNeutralGraphDiffFixture(t, "graph-empty.json")
-		graph := graphFromNeutralFixture(fixture)
-		if edges := graph.Edges(); len(edges) != 0 {
-			t.Fatalf("edges = %v, want empty", edges)
-		}
-		levels, err := graph.IndependentGroups()
-		if err != nil {
-			t.Fatal(err)
-		}
-		if len(levels) != 0 {
-			t.Fatalf("levels = %v, want empty", levels)
-		}
-	})
+	if names := enumerateGraphDiffFixtures(t, "graph-"); !reflect.DeepEqual(names, graphFixtureRoster) {
+		t.Fatalf("graph fixture roster = %v, want %v", names, graphFixtureRoster)
+	}
+	if names := enumerateGraphDiffFixtures(t, "diff-selection-"); !reflect.DeepEqual(names, diffFixtureRoster) {
+		t.Fatalf("diff fixture roster = %v, want %v", names, diffFixtureRoster)
+	}
 
-	t.Run("partial cycle has no output", func(t *testing.T) {
-		fixture := loadNeutralGraphDiffFixture(t, "graph-partial-cycle-no-output.json")
-		graph := graphFromNeutralFixture(fixture)
-		levels, err := graph.IndependentGroups()
-		if err == nil {
-			t.Fatal("expected cycle error")
-		}
-		if len(levels) != 0 {
-			t.Fatalf("levels = %v, want empty", levels)
-		}
-	})
-
-	t.Run("canonical graph edge order", func(t *testing.T) {
-		fixture := loadNeutralGraphDiffFixture(t, "graph-canonical-edge-order.json")
-		graph := graphFromNeutralFixture(fixture)
-		if got := graph.Edges(); !reflect.DeepEqual(got, fixture.Expected.Result.Edges) {
-			t.Fatalf("edges = %v, want %v", got, fixture.Expected.Result.Edges)
-		}
-		levels, err := graph.IndependentGroups()
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !reflect.DeepEqual(levels, fixture.Expected.Result.Levels) {
-			t.Fatalf("levels = %v, want %v", levels, fixture.Expected.Result.Levels)
-		}
-	})
-
-	t.Run("package prefix", func(t *testing.T) {
-		fixture := loadNeutralGraphDiffFixture(t, "diff-selection-package-prefix.json")
-		repoRoot := filepath.Join(t.TempDir(), "repo")
-		packages := make([]discovery.Package, 0, len(fixture.Input.Options.Packages))
-		for _, raw := range fixture.Input.Options.Packages {
-			var pkg struct {
-				Name    string `json:"name"`
-				RelPath string `json:"rel_path"`
-			}
-			if err := json.Unmarshal(raw, &pkg); err != nil {
+	graphIDs := make([]string, 0, len(graphFixtureRoster))
+	for _, name := range graphFixtureRoster {
+		fixture := loadGraphDiffFixture(t, name)
+		graphIDs = append(graphIDs, fixture.ID)
+		packages := make([]string, len(fixture.Input.Options.Packages))
+		for index, raw := range fixture.Input.Options.Packages {
+			if err := json.Unmarshal(raw, &packages[index]); err != nil {
 				t.Fatal(err)
 			}
-			packages = append(packages, discovery.Package{
-				Name: pkg.Name,
-				Path: filepath.Join(repoRoot, filepath.FromSlash(pkg.RelPath)),
-			})
 		}
-		changed := gitdiff.MapFilesToPackages(fixture.Input.ChangedPaths, packages, repoRoot)
-		if got := sortedSetValues(changed); !slices.Equal(got, fixture.Expected.Result.ChangedPackages) {
-			t.Fatalf("changed packages = %v, want %v", got, fixture.Expected.Result.ChangedPackages)
-		}
-	})
-
-	for _, name := range []string{
-		"diff-selection-exact-build-fronts.json",
-		"diff-selection-known-unmatched-near-build.json",
-		"diff-selection-strict-glob-character-classes.json",
-	} {
-		name := name
-		t.Run(name, func(t *testing.T) {
-			fixture := loadNeutralGraphDiffFixture(t, name)
-			repoRoot := filepath.Join(t.TempDir(), "repo")
-			packages := packagesFromNeutralFixture(t, fixture, repoRoot)
-			changed := gitdiff.MapFilesToPackages(fixture.Input.ChangedPaths, packages, repoRoot)
-			if got := sortedSetValues(changed); !slices.Equal(got, fixture.Expected.Result.ChangedPackages) {
-				t.Fatalf("changed packages = %v, want %v", got, fixture.Expected.Result.ChangedPackages)
-			}
+		actual, err := graphdiff.EvaluateGraph(graphdiff.GraphInput{
+			Packages: packages, Edges: graphDiffEdges(fixture.Input.Options.Edges),
 		})
+		if err != nil {
+			t.Fatalf("%s: %v", fixture.ID, err)
+		}
+		if fixture.Expected.Outcome == "error" {
+			if actual.ErrorCode != fixture.Expected.Diagnostics[0].Code || len(actual.Edges) != 0 || len(actual.Levels) != 0 {
+				t.Fatalf("%s: error result = %#v", fixture.ID, actual)
+			}
+			continue
+		}
+		if actual.ErrorCode != "" || !reflect.DeepEqual(actual.Edges, graphDiffEdges(fixture.Expected.Result.Edges)) || !reflect.DeepEqual(actual.Levels, fixture.Expected.Result.Levels) {
+			t.Fatalf("%s: result = %#v, want %#v", fixture.ID, actual, fixture.Expected.Result)
+		}
+	}
+	if !reflect.DeepEqual(graphIDs, graphFixtureIDs) {
+		t.Fatalf("graph fixture ids = %v, want %v", graphIDs, graphFixtureIDs)
 	}
 
-	t.Run("forced package closure", func(t *testing.T) {
-		fixture := loadNeutralGraphDiffFixture(t, "diff-selection-forced-package.json")
-		graph := graphFromNeutralFixture(fixture)
-		changed := make(map[string]bool)
-		for _, name := range fixture.Input.Options.ForcedPackages {
-			changed[name] = true
-		}
-		affected := graph.AffectedNodes(changed)
-		closed := expandAffectedSetWithPrereqs(graph, affected)
-		prerequisites := make(map[string]bool)
-		for name := range closed {
-			if !affected[name] {
-				prerequisites[name] = true
+	diffIDs := make([]string, 0, len(diffFixtureRoster))
+	for _, name := range diffFixtureRoster {
+		fixture := loadGraphDiffFixture(t, name)
+		diffIDs = append(diffIDs, fixture.ID)
+		packages := make([]graphdiff.PackageSpec, len(fixture.Input.Options.Packages))
+		for index, raw := range fixture.Input.Options.Packages {
+			if err := json.Unmarshal(raw, &packages[index]); err != nil {
+				t.Fatal(err)
 			}
 		}
-		if got := sortedSetValues(changed); !slices.Equal(got, fixture.Expected.Result.ChangedPackages) {
-			t.Fatalf("changed packages = %v, want %v", got, fixture.Expected.Result.ChangedPackages)
+		input := graphdiff.DiffSelectionInput{
+			Packages: packages, Edges: graphDiffEdges(fixture.Input.Options.Edges),
+			ForcedPackages:    fixture.Input.Options.ForcedPackages,
+			UnknownPathPolicy: fixture.Input.Options.UnknownPathPolicy,
+			ChangedPaths:      fixture.Input.ChangedPaths,
+			BoundarySHA256:    fixture.Input.Options.BoundarySHA256,
 		}
-		if got := sortedSetValues(affected); !slices.Equal(got, fixture.Expected.Result.AffectedPackages) {
-			t.Fatalf("affected packages = %v, want %v", got, fixture.Expected.Result.AffectedPackages)
+		if input.BoundarySHA256 != "" {
+			data, err := os.ReadFile(filepath.Join(graphDiffFixtureRoot(t), "repository-source-input-boundary.json"))
+			if err != nil {
+				t.Fatal(err)
+			}
+			var boundary graphdiff.RepositoryBoundary
+			if err := json.Unmarshal(data, &boundary); err != nil {
+				t.Fatal(err)
+			}
+			input.Boundary = &boundary
 		}
-		if got := sortedSetValues(prerequisites); !slices.Equal(got, fixture.Expected.Result.PrerequisitePackages) {
-			t.Fatalf("prerequisite packages = %v, want %v", got, fixture.Expected.Result.PrerequisitePackages)
+		actual, err := graphdiff.EvaluateDiffSelection(input)
+		if err != nil {
+			t.Fatalf("%s: %v", fixture.ID, err)
 		}
-	})
+		if fixture.Expected.Outcome == "error" {
+			if actual.ErrorCode != fixture.Expected.Diagnostics[0].Code || len(actual.ChangedPackages) != 0 || len(actual.AffectedPackages) != 0 || len(actual.PrerequisitePackages) != 0 {
+				t.Fatalf("%s: error result = %#v", fixture.ID, actual)
+			}
+			continue
+		}
+		if actual.ErrorCode != "" || !reflect.DeepEqual(actual.ChangedPackages, fixture.Expected.Result.ChangedPackages) || !reflect.DeepEqual(actual.AffectedPackages, fixture.Expected.Result.AffectedPackages) || !reflect.DeepEqual(actual.PrerequisitePackages, fixture.Expected.Result.PrerequisitePackages) {
+			t.Fatalf("%s: result = %#v, want %#v", fixture.ID, actual, fixture.Expected.Result)
+		}
+	}
+	if !reflect.DeepEqual(diffIDs, diffFixtureIDs) {
+		t.Fatalf("diff fixture ids = %v, want %v", diffIDs, diffFixtureIDs)
+	}
 }

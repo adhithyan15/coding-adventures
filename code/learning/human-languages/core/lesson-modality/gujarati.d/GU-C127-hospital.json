@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C127-hospital",
+    "language": "gujarati",
+    "chapter": 127,
+    "sequence": 6640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b8ef476f314037f"
+  },
+  "findings": []
+}

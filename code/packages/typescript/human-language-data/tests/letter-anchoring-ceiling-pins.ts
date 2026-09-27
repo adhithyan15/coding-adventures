@@ -4,13 +4,14 @@ import { join } from "node:path";
 export interface LetterAnchoringCeilingPin {
   readonly cold: number;
   readonly buildsToward: number;
+  readonly unreadInventory: number;
   readonly unwritten: number;
 }
 
 export type LetterAnchoringCeilingPins = Readonly<Record<string, LetterAnchoringCeilingPin>>;
 
 const OWNER_NAME = /^[A-Za-z][A-Za-z0-9-]*\.json$/;
-const FIELDS = ["buildsToward", "cold", "unwritten"] as const;
+const FIELDS = ["buildsToward", "cold", "unreadInventory", "unwritten"] as const;
 
 /** Read one exact letter-anchoring ratchet per track without following owner symlinks. */
 export function loadLetterAnchoringCeilingPins(directory: string): LetterAnchoringCeilingPins {
@@ -49,7 +50,7 @@ export function loadLetterAnchoringCeilingPins(directory: string): LetterAnchori
     }
     const keys = Object.keys(parsed).sort();
     if (keys.length !== FIELDS.length || keys.some((field, index) => field !== FIELDS[index])) {
-      throw new Error(`${entry.name}: expected exactly cold, buildsToward, and unwritten`);
+      throw new Error(`${entry.name}: expected exactly cold, buildsToward, unreadInventory, and unwritten`);
     }
     const candidate = parsed as Record<(typeof FIELDS)[number], unknown>;
     for (const field of FIELDS) {

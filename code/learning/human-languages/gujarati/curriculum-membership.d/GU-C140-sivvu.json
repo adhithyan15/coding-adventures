@@ -1,0 +1,11 @@
+{
+  "id": "GU-C140-sivvu",
+  "pathSegment": "GU-PATH-140-ACT140",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-140-ACT140",
+      "order": 1
+    }
+  ]
+}

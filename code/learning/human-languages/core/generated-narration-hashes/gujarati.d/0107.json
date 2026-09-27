@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:8a466b3cad902247",
+  "lessonIds": [
+    "GU-C107-gadlu",
+    "GU-C107-cadar",
+    "GU-C107-dhabalo",
+    "GU-C107-pagthiyu",
+    "GU-C107-culo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch107.txt",
+  "json": "gujarati/narration/ch107.json",
+  "textHash": "fnv1a64:4c60582d4947ec6e",
+  "jsonHash": "fnv1a64:beb9d055aabec2a9",
+  "findings": []
+}

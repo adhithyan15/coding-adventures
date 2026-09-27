@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:ff81107e8eba0f77",
+  "lessonIds": [
+    "GU-C125-bhamar",
+    "GU-C125-dadhi",
+    "GU-C125-much",
+    "GU-C125-gardan",
+    "GU-C125-chati"
+  ],
+  "tex": "gujarati/book/chapters/ch125-eyebrow-beard-moustache-neck-chest.tex"
+}

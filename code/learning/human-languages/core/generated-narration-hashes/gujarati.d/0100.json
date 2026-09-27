@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:6ac49c3a62c44052",
+  "lessonIds": [
+    "GU-C100-kaik",
+    "GU-C100-kasu",
+    "GU-C100-pote",
+    "GU-C100-potanu",
+    "GU-C100-banne",
+    "GU-R100-first-pass-seasons-months-and-days",
+    "GU-R100-second-pass-months-this-and-that"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch100.txt",
+  "json": "gujarati/narration/ch100.json",
+  "textHash": "fnv1a64:bb48495ab5655bee",
+  "jsonHash": "fnv1a64:fbe9d86a65cc851f",
+  "findings": []
+}

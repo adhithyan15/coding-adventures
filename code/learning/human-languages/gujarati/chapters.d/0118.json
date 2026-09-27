@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Spice, Turmeric, Cumin, Grass, Island",
+  "label": "ch:gu-spice-turmeric-cumin-grass-island",
+  "canDo": "I can say spice, turmeric, cumin, grass and an island.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-R118-second-pass-clothes-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say spice, turmeric, cumin, grass and an island.",
+    "assesses": [
+      "GU-LEX-C118-THINGS118-03",
+      "GU-LEX-C118-THINGS118-04",
+      "GU-LEX-C118-THINGS118-05"
+    ]
+  }
+}

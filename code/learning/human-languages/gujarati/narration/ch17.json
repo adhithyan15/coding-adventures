@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Friend and Family",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:22c1aea718439217",
+  "sourceHash": "fnv1a64:9f727b31b7b4ea94",
   "lessons": [
     {
       "id": "GU-C11-mitra",
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:89c3547ceb9f48af",
+      "sourceHash": "fnv1a64:9629080477d09aae",
       "notice": {
         "modality": "sight",
         "needs": [

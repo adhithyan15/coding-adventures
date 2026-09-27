@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C127-vahan",
+    "language": "gujarati",
+    "chapter": 127,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0487fa1da608a895"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:6a22d4daefee91e4",
+  "lessonIds": [
+    "GU-C109-batan",
+    "GU-C109-baldi",
+    "GU-C109-savarni",
+    "GU-C109-kacro",
+    "GU-C109-topli",
+    "GU-R109-first-pass-owning-and-being-able",
+    "GU-R109-second-pass-things-in-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch109.txt",
+  "json": "gujarati/narration/ch109.json",
+  "textHash": "fnv1a64:da12a98ed0473623",
+  "jsonHash": "fnv1a64:3bd2e6adb36d094b",
+  "findings": []
+}

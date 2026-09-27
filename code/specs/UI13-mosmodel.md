@@ -362,6 +362,11 @@ A single `.mil` file.
    supplies them explicitly).
 4. **No unknown constructs** — anything that is not a `slot` or `emit`
    declaration inside the component body is a compile error.
+5. **No reserved emit names** — an emit may not take a name the Mosaic
+   runtime reserves for events hosts send on their own. Today that is
+   `environmentChanged` (UI48 §7.1): the runtime intercepts an event of that
+   name before the app sees it, so a component that emitted it would have its
+   event silently swallowed. The list lives in `RESERVED_EMIT_NAMES`.
 
 ### Output
 
@@ -464,6 +469,7 @@ public class GridView: NSView {
 | `NoDefaultForType` | Default provided for non-defaultable type | `Slots of type image cannot have inline defaults at line 5` |
 | `UnknownConstruct` | Anything other than slot/emit in component body | `Unexpected token 'Box' — only slot and emit declarations are allowed here at line 9` |
 | `MissingComponent` | Named component type not found | `Component type 'CellAddress' not found in component library at line 12` |
+| `ReservedName` | An emit takes a name the runtime reserves | `'environmentChanged' is reserved by the Mosaic runtime (UI48) and cannot be an emit name` |
 
 All errors include file path, line number, and column number.
 

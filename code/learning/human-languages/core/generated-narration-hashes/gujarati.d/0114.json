@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:c459c03c22d10c43",
+  "lessonIds": [
+    "GU-C114-bajri",
+    "GU-C114-ghau",
+    "GU-C114-makai",
+    "GU-C114-rigan",
+    "GU-C114-kobi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch114.txt",
+  "json": "gujarati/narration/ch114.json",
+  "textHash": "fnv1a64:4902f1fd447cce69",
+  "jsonHash": "fnv1a64:893367361a9f3d58",
+  "findings": []
+}

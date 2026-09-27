@@ -1,0 +1,11 @@
+{
+  "id": "GU-C143-bhagvu",
+  "pathSegment": "GU-PATH-143-ACT143",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-143-ACT143",
+      "order": 0
+    }
+  ]
+}

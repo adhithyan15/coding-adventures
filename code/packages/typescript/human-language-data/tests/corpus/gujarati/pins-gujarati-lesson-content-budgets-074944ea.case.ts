@@ -47,7 +47,10 @@ it("pins Gujarati lesson-content budgets", () =>
     // 519 -> 532: HL-C443, thirteen anchor words opening the runway chapters
     // (1 and 3-7). Each introduces one lexical atom and no idiom, sense or
     // culture claim.
-    lessons: 532,
+    // 532 -> 806: Gujarati A1. Chapters 92-143, 260 word lessons (thirty-five
+    // verbs) and twelve reviews, plus two chapter-12 -more continuations that
+    // split the over-budget number lessons. No idiom, sense or culture claim.
+    lessons: 806,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,

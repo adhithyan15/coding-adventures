@@ -1,0 +1,11 @@
+{
+  "id": "GU-C130-pagar",
+  "pathSegment": "GU-PATH-130-THINGS130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-130-THINGS130",
+      "order": 3
+    }
+  ]
+}

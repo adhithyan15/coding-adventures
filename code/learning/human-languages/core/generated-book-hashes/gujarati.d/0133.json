@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:ea387e6758bd8bf1",
+  "lessonIds": [
+    "GU-C133-kathan",
+    "GU-C133-sahelu",
+    "GU-C133-agharu",
+    "GU-C133-hosiyar",
+    "GU-C133-alsu"
+  ],
+  "tex": "gujarati/book/chapters/ch133-hard-easy-difficult-clever-lazy.tex"
+}

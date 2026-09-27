@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:3347809e54e940b4",
+  "lessonIds": [
+    "GU-C112-but",
+    "GU-C112-patto",
+    "GU-C112-rumal",
+    "GU-C112-svetar",
+    "GU-C112-kot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch112.txt",
+  "json": "gujarati/narration/ch112.json",
+  "textHash": "fnv1a64:f4620d167ed63e98",
+  "jsonHash": "fnv1a64:85f55ff431af6fef",
+  "findings": []
+}

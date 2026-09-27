@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C135-paku",
+    "language": "gujarati",
+    "chapter": 135,
+    "sequence": 7080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7e9a31723e74687"
+  },
+  "findings": []
+}

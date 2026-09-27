@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Fifth Return: The Core Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b13e91622b36d3ae",
+  "sourceHash": "fnv1a64:d6b5fda4ba71e534",
   "lessons": [
     {
       "id": "GU-R26-numbers-r4",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:abe32d6e3f88c9b8",
+      "sourceHash": "fnv1a64:e3371a79df41acd8",
       "notice": {
         "modality": "pen",
         "needs": [],

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C98-bhadarvo",
+    "language": "gujarati",
+    "chapter": 98,
+    "sequence": 5030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:affb7b9be443c446"
+  },
+  "findings": []
+}

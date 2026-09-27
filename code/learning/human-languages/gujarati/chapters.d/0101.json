@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Some, This much, That much, Here, There",
+  "label": "ch:gu-some-this-much-that-much-here-there",
+  "canDo": "I can say some, this much, that much, here and there.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "GU-C101-tya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say some, this much, that much, here and there.",
+    "assesses": [
+      "GU-LEX-C101-DEF101-03",
+      "GU-LEX-C101-DEF101-04",
+      "GU-LEX-C101-DEF101-05"
+    ]
+  }
+}

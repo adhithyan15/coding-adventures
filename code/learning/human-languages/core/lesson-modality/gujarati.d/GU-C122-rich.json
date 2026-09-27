@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C122-rich",
+    "language": "gujarati",
+    "chapter": 122,
+    "sequence": 6350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:237bd750c705d2a7"
+  },
+  "findings": []
+}

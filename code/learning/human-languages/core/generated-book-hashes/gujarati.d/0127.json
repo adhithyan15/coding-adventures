@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:0d130958315954b8",
+  "lessonIds": [
+    "GU-C127-magaj",
+    "GU-C127-saikal",
+    "GU-C127-vahan",
+    "GU-C127-musaphar",
+    "GU-C127-hospital",
+    "GU-R127-first-pass-food-and-nature",
+    "GU-R127-second-pass-nature-and-animals"
+  ],
+  "tex": "gujarati/book/chapters/ch127-brain-bicycle-ship-traveller-hospital.tex"
+}

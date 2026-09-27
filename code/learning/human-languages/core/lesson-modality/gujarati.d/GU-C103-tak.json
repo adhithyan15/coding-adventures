@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C103-tak",
+    "language": "gujarati",
+    "chapter": 103,
+    "sequence": 5310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9999acdc5d65b28a"
+  },
+  "findings": []
+}

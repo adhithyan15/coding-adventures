@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C108-chari",
+    "language": "gujarati",
+    "chapter": 108,
+    "sequence": 5560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59d71a99050e6451"
+  },
+  "findings": []
+}

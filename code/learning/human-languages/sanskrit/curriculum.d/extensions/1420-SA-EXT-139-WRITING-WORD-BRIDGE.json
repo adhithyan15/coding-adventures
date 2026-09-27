@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-139-WRITING-WORD-BRIDGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can move from one sourced Devanagari letter to a known word and then the known two-word phrase मम नाम, first with a model, then after a delay, and finally from sound and meaning alone.",
+  "prerequisites": []
+}

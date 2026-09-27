@@ -723,6 +723,18 @@ match ceiling precedes unknown-path handling. A successful oracle expectation
 MUST reject an adapter error rather than accepting it as an alternative
 outcome.
 
+The Go operational reference MUST expose this graph and diff-selection domain
+through one typed, process-free module boundary. Its package-local suite MUST
+discover the exact eight `graph-*.json` and eleven `diff-selection-*.json`
+cases in the checked v1 corpus and evaluate every case through that production
+boundary. The boundary accepts only caller-owned immutable values: fixture
+decoding, checkout discovery, Git invocation, filesystem reads, environment
+inspection, network access, and process launch remain outside it. Go MUST
+return the same canonical graph levels, closure sets, stable error codes,
+repository-boundary digest behavior, Unicode-scalar match-work accounting, and
+structural validation precedence specified above. This native core does not by
+itself claim a neutral adapter or additional host authority.
+
 ### 5. Hashing and cache
 
 Required behavior:

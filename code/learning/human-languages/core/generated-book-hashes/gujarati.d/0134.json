@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:5fad9fbb1feea412",
+  "lessonIds": [
+    "GU-C134-bahadur",
+    "GU-C134-sant",
+    "GU-C134-khus",
+    "GU-C134-udas",
+    "GU-C134-bhukhyu"
+  ],
+  "tex": "gujarati/book/chapters/ch134-brave-calm-happy-sad-hungry.tex"
+}

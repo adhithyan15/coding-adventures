@@ -14544,6 +14544,145 @@ bounded buffering, and two-word length accounting. It found no additional
 owner or live path collision, so it does not displace the smaller ready Python
 glob hardening slice.
 
+### PR #16122 merge, exact-main refresh, and Python diff-selection selection
+
+All 47 final-head checks for PR #16122 reached terminal acceptable conclusions
+at `cb05d053fb499f52bbb675b7e92b1a6e2f3438d4`: 24 successes, 22 expected
+path-gated skips, and one neutral CodeQL result. GitHub reported the reviewed
+head clean and mergeable. Guarded squash auto-merge was enabled only after all
+checks completed, and GitHub merged the Python glob hardening automatically at
+`2026-09-27T07:33:07Z` as
+`ac8abbfd2b594dcc5572cbad7a44570a4911d14b`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains at
+15 established lanes, 1,470 implementation identities, 4,737 implementation
+slots, and 1,512 all-reported identities. Its completion bands remain 178/265,
+123/934, 181/2,282, and 988/13,832. Rust has 805 singleton identities,
+emerging OCaml remains at five packages, and canonical collisions and unknown
+language buckets remain zero. No eligible identity lacks an owner.
+
+The post-merge dependency pass found exactly three newly ready Python
+build-tool children. `build-tool-python-diff-selection-match-work-ceiling-adoption`
+has five unfinished transitive descendants, compared with four for source-input
+registry adoption and three for CI-gate selection. It is selected on fresh
+branch `codex/parity-python-diff-selection-20260927`. The coherent slice
+dynamically consumes all eight graph and eleven diff-selection neutral cases,
+including the 50,000,000-unit preflight ceiling, exact closures, cycle handling,
+stable failures, and the separately hardened portable matcher. A live file-list
+audit found no competing open-PR overlap.
+
+### Python graph and diff-selection PR #16127 opened
+
+Ready-for-review PR #16127 carries the selected Python graph and diff-selection
+slice from validated implementation revision
+`c9409b8361d9aa3323cd3baf245a6ad246119be4`. The branch rebased cleanly onto
+exact `origin/main` `5420815ffd57c04cd01eca80e75044afbc6ce04a` before
+publication, and a fresh live file-list audit found no competing parity PR or
+implementation-path overlap.
+
+The production API is pure and process-free. It dynamically consumes all eight
+graph and eleven diff-selection fixtures with canonical edges and levels, exact
+downstream and prerequisite closures, cycle-wide empty results, exact recursive
+BUILD-front selection, repository-boundary digest and reverse selection, and
+the 50,000,000 Unicode-scalar match-work preflight. Direct bounded regressions
+cover structural limits, validation precedence, complete fixture identifiers,
+Unicode and case-folded paths, nested-root rejection, immutable snapshots, and
+schema-forbidden question-mark globs.
+
+Final-head verification passes 523 Python package tests with four platform
+skips and 91.95% total coverage, 86 conformance-runner tests, 33 parity and
+capability tests plus 787 subtests, focused Ruff/format/strict MyPy/Bandit and
+compileall, the valid 162-case/285-file neutral corpus, the zero-collision
+schema-3 inventory, and a Go BUILD-validation dry run selecting exactly the
+Python build tool. Packaging, isolated wheel/API and CLI smoke tests,
+dependency checks, and production vulnerability audit also pass. Initial CI,
+CodeQL, and human-language detection checks are queued; guarded auto-merge
+remains disabled until every required check is terminal and acceptable.
+
+### PR #16127 merge, exact-main audit, and Go graph/diff selection
+
+PR #16127 completed 47 terminal acceptable checks: 24 successes, 22 expected
+path-gated skips, and one neutral result. GitHub reported the reviewed head
+clean and mergeable. Guarded squash auto-merge was enabled only after that
+terminal state, and GitHub merged the Python graph/diff core automatically at
+`2026-09-27T09:16:31Z` as
+`755891f4e8cd218d166a19acde18243166fb9f36`; no manual merge was used.
+
+The collision-checked schema-3 inventory from that exact merged main remains at
+15 established lanes, 1,470 implementation identities, 4,737 implementation
+slots, and 1,512 all-reported identities. Its completion bands remain 178/265,
+123/934, 181/2,282, and 988/13,832. Rust retains 805 singleton identities,
+emerging OCaml remains at five packages, and canonical collisions and unknown
+language buckets remain zero.
+
+The accompanying all-lane audits registered six concrete gaps before another
+implementation was selected: missing Haskell arc2d BUILD discovery, two
+separate Haskell Windows-front families, a generic loop-state integrity gate,
+and post-promotion OCaml http-core and HTTP/1 work. The stale OCaml analyzer and
+lane-readiness documentation repair is now an explicit promotion dependency.
+Swift, Dart, Java, and Kotlin package gaps remain owned; the live frontier is
+three Dart identities rather than the older five-item roadmap snapshot.
+
+The dependency/leverage pass ranks
+`build-tool-go-diff-selection-match-work-ceiling-adoption` first among ready
+leaves with 26 unfinished transitive descendants. It is selected on fresh
+branch `codex/parity-go-diff-selection-20260927` from the exact merge commit.
+The coherent slice adds a typed process-free Go graph/diff module and dynamic
+production-code consumption of the exact eight graph and eleven diff-selection
+fixtures, while leaving neutral-adapter, filesystem, Git, environment,
+credential, process, and network authority in their separately owned work.
+
+Validated implementation revision
+`69c13c7bbd92ffaaac324fd93d7a6cf665111a70` passes focused Go root and
+graphdiff tests, race detection, vet, gofmt, module verification, the real Go
+BUILD-validation dry run, all 162 neutral cases and 285 fixture files, 25
+schema tests, the schema-3 zero-collision parity inventory, `govulncheck`, and
+an independent security review. The new core has 91.5% statement coverage.
+The repository-wide Windows test still reaches the inherited
+`internal/executor/b07probe_test.go` `syscall.Mkfifo` compile limitation; every
+other package reached by that full suite passes, and the focused Windows tests
+for this slice are green.
+
+### Go graph and diff-selection PR #16133 opened
+
+Ready-for-review PR #16133 carries the Go graph/diff slice from validated
+implementation revision `69c13c7bbd92ffaaac324fd93d7a6cf665111a70`.
+The clean branch rebased onto exact `origin/main`
+`9cb5419fb3659e247f93b751c190add1ff238c91` before publication, and a fresh
+live PR audit found no competing parity branch. GitHub reports the opening head
+mergeable with CI, CodeQL, and human-language detection checks queued. Guarded
+auto-merge remains disabled until every required check is terminal and
+acceptable.
+
+### PR #16133 merge, exact-main root audit, and Elixir glob selection
+
+All 47 checks for PR #16133 reached terminal acceptable conclusions at head
+`41dcede68256357961a87a3ce98c81e896921a0b`: 12 succeeded, 34 were expected
+path-gated skips, and CodeQL reported one neutral result. GitHub merged the
+conflict-free PR through guarded squash auto-merge at `2026-09-27T10:20:02Z`
+as `d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57`; no manual merge command was
+used.
+
+The collision-checked exact-main schema-3 inventory remains unchanged at 15
+established lanes, 1,470 implementation identities, 4,737 implementation
+slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml
+packages, zero canonical collisions, and zero unknown buckets. A structural
+root audit found 36 established-lane package roots without BUILD fronts. It
+preserved the existing Python alpha-axp, CDC 6600, and PDP-11 simulator owners;
+registered concrete Kotlin micro-QR, Go neural-primitives, and Go ALGOL owners;
+placed the remaining 27 roots behind a classification-only owner; and added a
+generalized orphan-package-root validation owner plus an explicit dependency
+from the every-engine validation umbrella.
+
+After those collision-free owners were registered, dependency/leverage ranking
+selected `build-tool-elixir-glob-matcher-complexity-hardening`. Both formal
+prerequisites are merged and the leaf unlocks 13 unfinished descendants. Its
+fresh branch starts from the exact merge revision above and is bounded to
+Unicode-scalar portable matching, strict character classes, linear parsing,
+bounded memoized-equivalent state evaluation, stable failures, and complete
+declared-list validation without new host authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

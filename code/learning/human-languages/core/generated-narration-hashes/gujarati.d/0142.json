@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:6d5eac915b052585",
+  "lessonIds": [
+    "GU-C142-kahevu",
+    "GU-C142-jivvu",
+    "GU-C142-kharcvu",
+    "GU-C142-bacavvu",
+    "GU-C142-vavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch142.txt",
+  "json": "gujarati/narration/ch142.json",
+  "textHash": "fnv1a64:a01ac1a10fbefef3",
+  "jsonHash": "fnv1a64:9077d0de1626c546",
+  "findings": []
+}

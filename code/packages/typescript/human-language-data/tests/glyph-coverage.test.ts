@@ -4,8 +4,7 @@ import {
   renderGlyphCoverage,
   scriptWrappers,
   mappedCharacters,
-  type BookFonts,
-} from "../src/glyph-coverage.js";
+  type BookFonts, stripPdfStrings } from "../src/glyph-coverage.js";
 import { loadBookFonts, loadMainFontCharset } from "../src/loader.js";
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
@@ -456,3 +455,20 @@ describe("the committed main-font charset", () => {
     }
   });
 });
+
+describe("stripPdfStrings", () => {
+  // A bookmark is never typeset, so its characters are not the book's to render.
+  it("keeps the typeset argument and drops the bookmark", () => {
+    expect(stripPdfStrings("\\section[\\texorpdfstring{\\ta{கண்} (kaṇ)}{கண் (kaṇ)}]{x}"))
+      .toBe("\\section[\\ta{கண்} (kaṇ)]{x}");
+  });
+
+  it("matches nested braces and escaped braces in both arguments", () => {
+    expect(stripPdfStrings("a\\texorpdfstring{\\ar{\\textbf{b}}\\{}{c\\}}d")).toBe("a\\ar{\\textbf{b}}\\{d");
+  });
+
+  it("leaves an unbalanced command alone rather than hiding text", () => {
+    expect(stripPdfStrings("\\texorpdfstring{open")).toBe("\\texorpdfstring{open");
+  });
+});
+

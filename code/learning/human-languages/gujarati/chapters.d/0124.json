@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Butterfly, Squirrel, Hen, Cheek, Forehead",
+  "label": "ch:gu-butterfly-squirrel-hen-cheek-forehead",
+  "canDo": "I can say a butterfly, a squirrel, a hen, a cheek and a forehead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C124-kapal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a butterfly, a squirrel, a hen, a cheek and a forehead.",
+    "assesses": [
+      "GU-LEX-C124-THINGS124-03",
+      "GU-LEX-C124-THINGS124-04",
+      "GU-LEX-C124-THINGS124-05"
+    ]
+  }
+}

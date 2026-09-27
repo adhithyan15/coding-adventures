@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C140-sivvu",
+    "language": "gujarati",
+    "chapter": 140,
+    "sequence": 7360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eb6ee89f5616f51"
+  },
+  "findings": []
+}

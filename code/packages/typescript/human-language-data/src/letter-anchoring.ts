@@ -115,6 +115,7 @@ import { letterBlockIndex, writingLetterOf } from "./figure-targets.js";
 import { hasOwn } from "./constants.js";
 import type { ParsedLesson } from "./parse.js";
 import { SCRIPT_SYSTEMS, belongsToAny, readingOrder, systemOf } from "./ramp.js";
+import type { ScriptData } from "./types.js";
 
 export type LetterAnchoring = "anchored" | "builds-toward" | "numeral" | "cold" | "unmeasured";
 
@@ -149,6 +150,8 @@ export interface TrackLetterAnchoring {
    * learned all the letters" is true exactly when this is empty.
    */
   unwritten: string[];
+  /** Inventory letters that appear in no taught word headword, sorted. */
+  unreadInventory: string[];
 }
 
 export interface LetterAnchoringReport {
@@ -162,6 +165,7 @@ export interface LetterAnchoringReport {
     cold: number;
     unmeasured: number;
     unwritten: number;
+    unreadInventory: number;
   };
 }
 
@@ -254,8 +258,26 @@ function glyphsIn(text: string, target: ReadonlySet<string>): string[] {
   ];
 }
 
+/** Atomic letters promised by a script inventory, excluding composed syllables. */
+function inventoryLetters(script: ScriptData | undefined, target: ReadonlySet<string>): string[] {
+  if (script === undefined || script.system === "logographic") return [];
+  const generatedSyllabary = script.letters.some((letter) => letter.role === "syllable");
+  const letters = generatedSyllabary
+    ? script.letters.filter((letter) => letter.components.length === 1)
+    : script.letters;
+  return [
+    ...new Set(
+      [...letters, ...(script.independentVowels ?? []), ...(script.finalConsonants ?? [])]
+        .flatMap((letter) => glyphsIn(letter.glyph, target)),
+    ),
+  ];
+}
+
 /** Measure both halves of the rule for every non-Latin track. */
-export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): LetterAnchoringReport {
+export function measureLetterAnchoring(
+  lessons: readonly ParsedLesson[],
+  scripts: Readonly<Record<string, ScriptData>> = {},
+): LetterAnchoringReport {
   const byTrack = new Map<string, ParsedLesson[]>();
   for (const lesson of lessons) {
     let group = byTrack.get(lesson.language);
@@ -323,6 +345,9 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       lettersRead: read.size,
       lettersWritten: written.size,
       unwritten: [...read].filter((ch) => !written.has(ch)).sort(),
+      unreadInventory: inventoryLetters(scripts[script], target)
+        .filter((ch) => !read.has(ch) && !read.has(otherCase(ch)))
+        .sort(),
     });
   }
 
@@ -339,6 +364,7 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       cold: total((track) => track.cold),
       unmeasured: total((track) => track.unmeasured),
       unwritten: total((track) => track.unwritten.length),
+      unreadInventory: total((track) => track.unreadInventory.length),
     },
   };
 }

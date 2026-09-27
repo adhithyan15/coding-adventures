@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:b3a295abae8c3540",
+  "lessonIds": [
+    "GU-C118-masalo",
+    "GU-C118-haldar",
+    "GU-C118-jiru",
+    "GU-C118-ghas",
+    "GU-C118-tapu",
+    "GU-R118-first-pass-the-house-and-clothes",
+    "GU-R118-second-pass-clothes-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch118.txt",
+  "json": "gujarati/narration/ch118.json",
+  "textHash": "fnv1a64:ac45d48d24ba1745",
+  "jsonHash": "fnv1a64:f06914eace1f49e3",
+  "findings": []
+}

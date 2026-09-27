@@ -1,0 +1,11 @@
+{
+  "id": "GU-C106-ariso",
+  "pathSegment": "GU-PATH-106-THINGS106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-106-THINGS106",
+      "order": 1
+    }
+  ]
+}

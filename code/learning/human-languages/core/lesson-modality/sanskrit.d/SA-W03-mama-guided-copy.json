@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W03-mama-guided-copy",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 182,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ff7261a3aa23b2d2",
+    "detachableSegments": [
+      "Writing — guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

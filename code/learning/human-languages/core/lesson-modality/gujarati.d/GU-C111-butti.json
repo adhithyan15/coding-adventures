@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C111-butti",
+    "language": "gujarati",
+    "chapter": 111,
+    "sequence": 5780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44d5673aa0dbd56b"
+  },
+  "findings": []
+}

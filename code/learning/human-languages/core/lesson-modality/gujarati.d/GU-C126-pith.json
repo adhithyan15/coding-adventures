@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C126-pith",
+    "language": "gujarati",
+    "chapter": 126,
+    "sequence": 6550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b252ee25bfd1fe87"
+  },
+  "findings": []
+}

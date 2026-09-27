@@ -1,0 +1,11 @@
+{
+  "id": "GU-C107-cadar",
+  "pathSegment": "GU-PATH-107-THINGS107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-107-THINGS107",
+      "order": 1
+    }
+  ]
+}

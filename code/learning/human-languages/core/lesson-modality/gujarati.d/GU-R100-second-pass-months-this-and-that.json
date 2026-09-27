@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R100-second-pass-months-this-and-that",
+    "language": "gujarati",
+    "chapter": 100,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a27649a92c5fad8"
+  },
+  "findings": []
+}

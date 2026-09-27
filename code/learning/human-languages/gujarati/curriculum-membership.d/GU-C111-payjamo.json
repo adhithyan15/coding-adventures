@@ -1,0 +1,11 @@
+{
+  "id": "GU-C111-payjamo",
+  "pathSegment": "GU-PATH-111-THINGS111",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-111-THINGS111",
+      "order": 1
+    }
+  ]
+}

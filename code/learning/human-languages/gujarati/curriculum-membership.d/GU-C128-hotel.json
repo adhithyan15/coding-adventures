@@ -1,0 +1,11 @@
+{
+  "id": "GU-C128-hotel",
+  "pathSegment": "GU-PATH-128-THINGS128",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-128-THINGS128",
+      "order": 2
+    }
+  ]
+}

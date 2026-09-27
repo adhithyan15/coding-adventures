@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trestle — Web Components parity host</title>
+    <style>
+      body { margin: 0; min-width: 320px; min-height: 100vh; }
+      #startup-status { padding: 24px; font: 600 16px/1.5 system-ui, sans-serif; }
+      body[data-webcomponent-state="ready"] #startup-status { display: none; }
+      body:not([data-webcomponent-state="ready"]) mos-task-app { display: none; }
+    </style>
+    <script type="module" src="../src/webcomponent.ts"></script>
+    <script type="module" src="./generated/dark/TaskApp.js"></script>
+    <script type="module" src="./generated/dark/main.js"></script>
+  </head>
+  <body>
+    <p id="startup-status" role="status">Starting Trestle…</p>
+    <mos-task-app></mos-task-app>
+  </body>
+</html>

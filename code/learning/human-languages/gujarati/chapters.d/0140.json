@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "To cut, To sew, To fill, To pull, To throw",
+  "label": "ch:gu-to-cut-to-sew-to-fill-to-pull-to-throw",
+  "canDo": "I can say to cut, to sew, to fill, to pull and to throw.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C140-phekvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say to cut, to sew, to fill, to pull and to throw.",
+    "assesses": [
+      "GU-LEX-C140-ACT140-03",
+      "GU-LEX-C140-ACT140-04",
+      "GU-LEX-C140-ACT140-05"
+    ]
+  }
+}

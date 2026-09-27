@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C97-navembar",
+    "language": "gujarati",
+    "chapter": 97,
+    "sequence": 4950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e7bfb849cf346ee"
+  },
+  "findings": []
+}

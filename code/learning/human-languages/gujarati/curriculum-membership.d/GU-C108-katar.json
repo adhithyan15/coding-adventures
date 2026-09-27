@@ -1,0 +1,11 @@
+{
+  "id": "GU-C108-katar",
+  "pathSegment": "GU-PATH-108-THINGS108",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-108-THINGS108",
+      "order": 2
+    }
+  ]
+}

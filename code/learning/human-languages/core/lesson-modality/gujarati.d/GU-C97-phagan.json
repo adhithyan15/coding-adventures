@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C97-phagan",
+    "language": "gujarati",
+    "chapter": 97,
+    "sequence": 4980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:983b8e5fa72b82ed"
+  },
+  "findings": []
+}

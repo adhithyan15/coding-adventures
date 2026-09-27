@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C133-hosiyar",
+    "language": "gujarati",
+    "chapter": 133,
+    "sequence": 6980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5a4b8d06f13d7a1"
+  },
+  "findings": []
+}

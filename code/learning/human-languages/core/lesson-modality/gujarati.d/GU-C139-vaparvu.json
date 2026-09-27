@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C139-vaparvu",
+    "language": "gujarati",
+    "chapter": 139,
+    "sequence": 7330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14155f326fa7e67a"
+  },
+  "findings": []
+}

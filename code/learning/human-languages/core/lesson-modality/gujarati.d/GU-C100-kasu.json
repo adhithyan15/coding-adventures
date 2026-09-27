@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C100-kasu",
+    "language": "gujarati",
+    "chapter": 100,
+    "sequence": 5110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba316187b0877a5f"
+  },
+  "findings": []
+}

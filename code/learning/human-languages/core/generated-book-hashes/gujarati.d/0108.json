@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:6db1f3a1d92a912a",
+  "lessonIds": [
+    "GU-C108-vasan",
+    "GU-C108-chari",
+    "GU-C108-katar",
+    "GU-C108-soy",
+    "GU-C108-doro"
+  ],
+  "tex": "gujarati/book/chapters/ch108-vessel-knife-scissors-needle-thread.tex"
+}

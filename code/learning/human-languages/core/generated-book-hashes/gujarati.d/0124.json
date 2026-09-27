@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:cdcd5e9b9f019aec",
+  "lessonIds": [
+    "GU-C124-patangiyu",
+    "GU-C124-khiskoli",
+    "GU-C124-marghi",
+    "GU-C124-gal",
+    "GU-C124-kapal"
+  ],
+  "tex": "gujarati/book/chapters/ch124-butterfly-squirrel-hen-cheek-forehead.tex"
+}

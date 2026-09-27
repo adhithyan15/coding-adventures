@@ -1,10 +1,12 @@
 {
   "language": "gujarati",
   "chapter": 12,
-  "sourceHash": "fnv1a64:8ea29d99f6f42c40",
+  "sourceHash": "fnv1a64:0499653fdc0e5f1d",
   "lessonIds": [
     "GU-C06-numbers-1-5",
-    "GU-C06-number-histories"
+    "GU-C06-numbers-1-5-more",
+    "GU-C06-number-histories",
+    "GU-C06-number-histories-more"
   ],
   "tex": "gujarati/book/chapters/ch12-numbers-1-5.tex"
 }

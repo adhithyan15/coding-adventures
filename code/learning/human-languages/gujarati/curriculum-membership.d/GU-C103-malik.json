@@ -1,0 +1,11 @@
+{
+  "id": "GU-C103-malik",
+  "pathSegment": "GU-PATH-103-CAN103",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-103-CAN103",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C121-chayo",
+  "pathSegment": "GU-PATH-121-THINGS121",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-121-THINGS121",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-W03-mama-nama-delayed-copy",
+  "pathSegment": "SA-PATH-005",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "SA-EXT-139-WRITING-WORD-BRIDGE",
+      "order": 4
+    }
+  ]
+}

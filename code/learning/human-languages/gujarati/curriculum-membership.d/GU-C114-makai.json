@@ -1,0 +1,11 @@
+{
+  "id": "GU-C114-makai",
+  "pathSegment": "GU-PATH-114-THINGS114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-114-THINGS114",
+      "order": 2
+    }
+  ]
+}

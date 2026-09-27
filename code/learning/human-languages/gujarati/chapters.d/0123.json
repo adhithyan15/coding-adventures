@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Turtle, Crocodile, Mosquito, Fly, Bee",
+  "label": "ch:gu-turtle-crocodile-mosquito-fly-bee",
+  "canDo": "I can say a turtle, a crocodile, a mosquito, a fly and a bee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C123-madhmakhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say a turtle, a crocodile, a mosquito, a fly and a bee.",
+    "assesses": [
+      "GU-LEX-C123-THINGS123-03",
+      "GU-LEX-C123-THINGS123-04",
+      "GU-LEX-C123-THINGS123-05"
+    ]
+  }
+}

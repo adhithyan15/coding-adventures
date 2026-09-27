@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Clean, Dirty, Sour, Spicy, Soft",
+  "label": "ch:gu-clean-dirty-sour-spicy-soft",
+  "canDo": "I can say clean, dirty, sour, spicy and soft.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GU-C132-naram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say clean, dirty, sour, spicy and soft.",
+    "assesses": [
+      "GU-LEX-C132-QUAL132-03",
+      "GU-LEX-C132-QUAL132-04",
+      "GU-LEX-C132-QUAL132-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C127-saikal",
+  "pathSegment": "GU-PATH-127-THINGS127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-127-THINGS127",
+      "order": 1
+    }
+  ]
+}

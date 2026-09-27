@@ -1,0 +1,11 @@
+{
+  "id": "GU-C99-koi",
+  "pathSegment": "GU-PATH-99-DEF99",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-99-DEF99",
+      "order": 4
+    }
+  ]
+}

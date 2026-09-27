@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:3903213924dc0516",
+  "lessonIds": [
+    "GU-C95-haji",
+    "GU-C95-tarat",
+    "GU-C95-janyuari",
+    "GU-C95-phebruari",
+    "GU-C95-marc"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch95.txt",
+  "json": "gujarati/narration/ch95.json",
+  "textHash": "fnv1a64:045bccc6ace07aed",
+  "jsonHash": "fnv1a64:37609d837cef6e9c",
+  "findings": []
+}

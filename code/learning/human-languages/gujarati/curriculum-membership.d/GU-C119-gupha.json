@@ -1,0 +1,11 @@
+{
+  "id": "GU-C119-gupha",
+  "pathSegment": "GU-PATH-119-THINGS119",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-119-THINGS119",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C118-tapu",
+    "language": "gujarati",
+    "chapter": 118,
+    "sequence": 6140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4732f87be374a1b3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C94-vahelu",
+    "language": "gujarati",
+    "chapter": 94,
+    "sequence": 4810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d467f973ebdebc1"
+  },
+  "findings": []
+}
