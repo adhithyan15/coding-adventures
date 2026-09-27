@@ -84,6 +84,9 @@ if (eager.length === 0) {
 const handwritingChunks = javascript.filter((name) =>
   name.startsWith("handwriting-tools-"),
 );
+const filmstripSourceChunks = javascript.filter((name) =>
+  name.startsWith("filmstrip-sources-"),
+);
 
 async function largestBytes(files) {
   const sizes = await Promise.all(
@@ -101,6 +104,13 @@ if (handwritingChunks.length !== 1) {
   failures.push(
     `expected one handwriting-tools chunk, found ${handwritingChunks.length}`,
   );
+}
+if (filmstripSourceChunks.length !== 1) {
+  failures.push(
+    `expected one lazy filmstrip source-map chunk, found ${filmstripSourceChunks.length}`,
+  );
+} else if (eager.includes(filmstripSourceChunks[0])) {
+  failures.push("filmstrip source-map chunk is eager; writing figures must load on lesson open");
 }
 // THE REQUEST BUDGET IS DERIVED FROM THE CORPUS, NOT HARDCODED (#12918).
 //

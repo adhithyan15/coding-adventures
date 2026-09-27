@@ -1,9 +1,8 @@
-// Stroke-order filmstrips (`*-filmstrip.svg`, HL-C443) are excluded. The book
-// places them from derived targets and no lesson's Markdown references one, so
-// the app never asks for them -- and there are several hundred, which pushed
-// this eager URL map over the 500 kB first-paint budget (`check:bundle`) the
-// day they were rolled out. Showing filmstrips in the app is a lazy-loading
-// feature of its own, tracked in HL-C443.
+// Stroke-order filmstrips (`*-filmstrip.svg`, HL-C443) are excluded from THIS
+// eager map. There are several hundred of them, and putting their URL loaders
+// here pushed the first-paint chunk over the 500 kB `check:bundle` budget.
+// `generatedFilmstripUrl` reaches a separate, dynamically imported source map,
+// so opening an ordinary lesson still pays for none of those paths.
 const GENERATED_FIGURES = import.meta.glob(
   [
     "../../../../learning/human-languages/*/book/figures/*.svg",
@@ -24,4 +23,16 @@ export function generatedFigureUrl(language: string, source: string): string {
   );
   if (!entry) throw new Error(`missing generated lesson figure '${language}:${source}'`);
   return entry[1];
+}
+
+/** Resolve a writing lesson's canonical filmstrip only when the lesson opens. */
+export async function generatedFilmstripUrl(
+  language: string,
+  lessonId: string,
+): Promise<string | null> {
+  if (!/^[a-z0-9-]+$/.test(language) || !/^[A-Za-z0-9._-]+$/.test(lessonId)) {
+    throw new Error(`unsafe generated filmstrip '${language}:${lessonId}'`);
+  }
+  const { loadFilmstrip } = await import("./filmstrip-sources.ts");
+  return loadFilmstrip(language, lessonId);
 }
