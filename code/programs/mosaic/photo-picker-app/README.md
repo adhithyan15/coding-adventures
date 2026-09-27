@@ -14,9 +14,9 @@ how the effect result is rendered) lives in the separate
 `UI47`'s `[host_effects]` mechanism wires a package-declared handler
 into each backend's generated entry point, but until now no *generic*
 (non-Engram-specific) effect kind had a real handler on any backend.
-This package is that first one, and now covers every backend this
-environment can build: XAML, Qt, Compose, and Flutter (`UI59` §2).
-SwiftUI remains out of scope (no Apple toolchain here).
+This package is that first one. XAML, Qt and Flutter answer `files.open`
+with this package's own handlers (`UI59` §2); Compose and SwiftUI answer it
+from Mosaic's platform library (`UI87` §7).
 
 ## Layout
 
@@ -26,7 +26,6 @@ src/PhotoPickerApp.mll          -- layout: status text + "Pick a Photo" button
 src/PhotoPickerApp.{light,dark}.msl -- styling (native controls pick up dark mode themselves)
 host/xaml/PhotoPickerEffects.cs -- the XAML files.open handler ([host_effects])
 host/qt/PhotoPickerEffects.{h,cpp} -- the Qt files.open handler ([host_effects])
-host/compose/PhotoPickerEffects.kt -- the Compose files.open handler ([host_effects])
 host/flutter/PhotoPickerEffects.dart -- the Flutter files.open handler ([host_effects])
 mosaic-package.toml             -- exports + [host_effects]/[host_assets] wiring
 ```
@@ -90,35 +89,16 @@ same effect kind's XAML implementation (PR #15218):
   does surface those directly for its own already-merged handler; this
   one doesn't, applying the same lesson XAML's security review taught.
 
-## The Compose handler
+## Compose and SwiftUI: Mosaic's platform library
 
-`host/compose/PhotoPickerEffects.kt`'s `installPhotoPickerEffects(host:
-MosaicRuntimeHost)` sets `host.effectHandler`, **defers** the effect
-(`host.deferEffect(id)`), and runs the actual dialog + I/O work inside
-`SwingUtilities.invokeLater { ... }` — deferred for two reasons
-specific to this host (not because `JFileChooser` is async; it blocks
-the same way Qt's `QFileDialog` does): the host's monitor is held
-across the `effectHandler` call, so an inline modal dialog would hold
-it for as long as it's open, and Compose state must be written from
-the UI thread (EDT), which is where the generated app's props-changed
-handler runs. This mirrors Engram's own Compose effect handler
-(`installEngramEffects`) in structure, the one other real
-`[host_effects]` Compose handler in this repo. Full design rationale
-is documented inline in the file itself and in `UI59` §10.
-
-Same two departures from Engram's precedent as the Qt handler, both
-informed by `/security-review` findings against this effect kind's
-earlier implementations:
-
-- **Bounded reads from the start.** Rather than checking
-  `File.length()` once before calling `File.readBytes()` (which
-  Engram's own Compose handler does, and which XAML's first cut also
-  did — found TOCTOU by `/security-review`), the Compose handler reads
-  in 64 KiB chunks via `FileInputStream` and fails the moment the
-  running total exceeds the 50 MiB cap.
-- **Generic `failed.message`.** Never a raw `Exception.message` —
-  `installEngramEffects` does surface `error.message ?: "..."` for its
-  own already-merged handler; this one doesn't.
+This app carries no Compose or SwiftUI handler. Every generated Compose and
+SwiftUI project gets Mosaic's platform library (`MosaicPlatformEffects.kt` /
+`MosaicPlatformEffects.swift`, UI87 §7), which answers `files.open` with the
+same UI59 contract — the native file dialog, the picked file's name, MIME type
+and bytes, never its path — so the generated entry point installs only
+`installMosaicPlatformEffects`. The Compose handler this app used to carry
+(`host/compose/PhotoPickerEffects.kt`) was retired for it (UI87 §7.4); the
+XAML, Qt and Flutter handlers follow as those backends' libraries land.
 
 ## The Flutter handler
 
@@ -177,22 +157,19 @@ harness), 6 tests:
    `[host_effects]` file and handler exactly as documented (no
    `include` — the XAML emitter refuses one outright), the Qt
    `[host_effects]` files (header + source) and handler (with
-   `include`), the Compose `[host_effects]` file and handler (no
-   `include` — the Compose emitter refuses one outright too, for a
-   different reason: Kotlin has no include directive), the Flutter
-   `[host_effects]` file and handler (with `include`, since Dart
-   resolves nothing across files without one) plus the
-   `[host_assets].dependencies` entry for `file_selector`, and that no
-   other backend (SwiftUI) has a `[host_effects]` entry.
+   `include`), the Flutter `[host_effects]` file and handler (with
+   `include`, since Dart resolves nothing across files without one) plus
+   the `[host_assets].dependencies` entry for `file_selector`, and that
+   neither Compose nor SwiftUI has a `[host_effects]` entry (the platform
+   library answers there).
 3. `PhotoPickerEffects.cs` exists and declares `Install()`,
    `MosaicRuntimeHost.EffectHandler`, and the `"files.open"` kind
    string.
 4. `PhotoPickerEffects.h`/`.cpp` exist and declare
    `installPhotoPickerEffects(MosaicHost &host)`, `effectRequested`,
    and the `"files.open"` kind string.
-5. `PhotoPickerEffects.kt` exists and declares
-   `installPhotoPickerEffects(host: MosaicRuntimeHost)`,
-   `effectHandler`, and the `"files.open"` kind string.
+5. There is no Compose or SwiftUI handler, and `host/compose/` is gone
+   (the platform library answers `files.open` there).
 6. `PhotoPickerEffects.dart` exists and declares
    `installPhotoPickerEffects(MosaicHost host)`, `effectHandler`, and
    the `'files.open'` kind string.

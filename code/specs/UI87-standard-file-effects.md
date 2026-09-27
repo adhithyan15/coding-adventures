@@ -184,7 +184,9 @@ escape hatch, used deliberately and visibly.
 ### 7.4 Migration
 
 - `photo-picker-app` drops its four per-backend `files.open` handlers and uses
-  the platform library, becoming the second consumer.
+  the platform library, becoming the second consumer. *Compose done* (its
+  handler removed; SwiftUI never had one); XAML, Qt and Flutter follow their
+  libraries.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.

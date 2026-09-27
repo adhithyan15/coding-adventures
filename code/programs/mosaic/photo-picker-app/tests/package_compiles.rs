@@ -1,7 +1,8 @@
 //! Compile-check for the PhotoPickerApp Mosaic package: the interface
 //! (.mil), layout (.mll), and both style themes (.msl) must compile, and
 //! the manifest must declare the exported component and the
-//! XAML/Qt/Compose/Flutter `[host_effects]` handlers. Same shape of smoke
+//! XAML/Qt/Flutter `[host_effects]` handlers (Compose and SwiftUI answer
+//! `files.open` from Mosaic's platform library, UI87 §7). Same shape of smoke
 //! test `task-app`/`engram-app` use.
 
 use std::fs;
@@ -37,7 +38,7 @@ fn photo_picker_app_sources_compile() {
 }
 
 #[test]
-fn manifest_declares_photo_picker_app_and_the_xaml_qt_compose_and_flutter_files_open_handlers() {
+fn manifest_declares_photo_picker_app_and_the_xaml_qt_and_flutter_files_open_handlers() {
     let manifest_src =
         fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"))
             .expect("mosaic-package.toml must exist");
@@ -95,30 +96,19 @@ fn manifest_declares_photo_picker_app_and_the_xaml_qt_compose_and_flutter_files_
     assert_eq!(qt_handler.install, "installPhotoPickerEffects");
     assert_eq!(qt_handler.include.as_deref(), Some("PhotoPickerEffects.h"));
 
-    // Compose compiles everything under `src/main/kotlin` -- same shape as
-    // SwiftUI, unlike Qt -- so the target is a path there and no build-list
-    // entry is needed, matching engram-app's own Compose `[host_effects]`
-    // entry exactly.
-    let compose_file = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "compose")
-        .expect("must declare the Compose handler source file");
-    assert_eq!(compose_file.source, "host/compose/PhotoPickerEffects.kt");
-    assert_eq!(compose_file.target, "src/main/kotlin/PhotoPickerEffects.kt");
-
-    let compose_handler = package
-        .host_effects
-        .handlers
-        .iter()
-        .find(|handler| handler.backend == "compose")
-        .expect("must declare the Compose effect handler");
-    assert_eq!(compose_handler.install, "installPhotoPickerEffects");
-    // No `include` for Compose -- Kotlin has no include directive and the
-    // emitter refuses one outright (confirmed against
-    // `compose_main_with_host_effects`'s own refusal message).
-    assert_eq!(compose_handler.include, None);
+    // No Compose or SwiftUI handler: Mosaic's platform library answers
+    // `files.open` on those backends (UI87 §7), and a package handler for a
+    // backend would wrap it for nothing (UI87 §7.4).
+    for backend in ["compose", "swiftui"] {
+        assert!(
+            package.host_effects.files.iter().all(|file| file.backend != backend),
+            "no {backend} handler file: the platform library answers files.open"
+        );
+        assert!(
+            package.host_effects.handlers.iter().all(|handler| handler.backend != backend),
+            "no {backend} handler: the platform library answers files.open"
+        );
+    }
 
     // Dart resolves nothing across files without an import, so `include`
     // names the file relative to `lib/` -- matching engram-app's own
@@ -194,15 +184,12 @@ fn qt_handler_sources_exist_and_declare_install() {
     assert!(source.contains("\"files.open\""));
 }
 
+/// UI87 §7.4: the Compose copy is gone for good, not merely unwired.
 #[test]
-fn compose_handler_source_exists_and_declares_install() {
-    let source = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/compose/PhotoPickerEffects.kt"),
-    )
-    .expect("host/compose/PhotoPickerEffects.kt must exist");
-    assert!(source.contains("fun installPhotoPickerEffects(host: MosaicRuntimeHost)"));
-    assert!(source.contains("effectHandler"));
-    assert!(source.contains("\"files.open\""));
+fn the_compose_handler_is_retired_for_the_platform_library() {
+    assert!(!PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("host/compose")
+        .exists());
 }
 
 #[test]
