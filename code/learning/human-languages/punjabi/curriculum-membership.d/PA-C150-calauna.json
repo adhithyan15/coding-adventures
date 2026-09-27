@@ -1,0 +1,11 @@
+{
+  "id": "PA-C150-calauna",
+  "pathSegment": "PA-PATH-150-ACT150",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-150-ACT150",
+      "order": 4
+    }
+  ]
+}

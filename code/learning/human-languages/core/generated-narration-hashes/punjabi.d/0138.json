@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:954af16cd5a4599d",
+  "lessonIds": [
+    "PA-C138-caunk",
+    "PA-C138-bag",
+    "PA-C138-painsil",
+    "PA-C138-jamat",
+    "PA-C138-adhiapak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch138.txt",
+  "json": "punjabi/narration/ch138.json",
+  "textHash": "fnv1a64:eab321df2d44fe63",
+  "jsonHash": "fnv1a64:23a031bc83b753d2",
+  "findings": []
+}

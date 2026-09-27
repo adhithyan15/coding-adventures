@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "To sew, To fill, To pull, To wake up, To drive",
+  "label": "ch:pa-to-sew-to-fill-to-pull-to-wake-up-to-drive",
+  "canDo": "I can say to sew, to fill, to pull, to wake up and to drive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C150-calauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say to sew, to fill, to pull, to wake up and to drive.",
+    "assesses": [
+      "PA-LEX-C150-ACT150-03",
+      "PA-LEX-C150-ACT150-04",
+      "PA-LEX-C150-ACT150-05"
+    ]
+  }
+}

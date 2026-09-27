@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-105-TIME105",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say Kattak, Magghar, Poh, Magh and Phaggan.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:eb5254cbbe88dcc1",
+  "lessonIds": [
+    "PA-C129-hanera",
+    "PA-C129-canan",
+    "PA-C129-cha",
+    "PA-C129-satrangipingh",
+    "PA-C129-khargosh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch129.txt",
+  "json": "punjabi/narration/ch129.json",
+  "textHash": "fnv1a64:04e7fd74d7f3dd67",
+  "jsonHash": "fnv1a64:7c7898d8ab1359f0",
+  "findings": []
+}

@@ -17,7 +17,7 @@ The package should emit backend-neutral draw instructions through the shared
 
 ### V1 In Scope
 
-- 12-digit numeric payloads
+- 11-digit payloads and normalized 12-digit symbols
 - required check digit calculation
 - start, middle, and end guard patterns
 - left/right digit encoding

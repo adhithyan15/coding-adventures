@@ -1,0 +1,11 @@
+{
+  "id": "PA-C123-tarbuz",
+  "pathSegment": "PA-PATH-123-THINGS123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-123-THINGS123",
+      "order": 3
+    }
+  ]
+}

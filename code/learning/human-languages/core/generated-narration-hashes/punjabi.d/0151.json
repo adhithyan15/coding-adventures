@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:09093ed968011715",
+  "lessonIds": [
+    "PA-C151-kahina",
+    "PA-C151-jiuna",
+    "PA-C151-kharcna",
+    "PA-C151-bacauna",
+    "PA-C151-bijna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch151.txt",
+  "json": "punjabi/narration/ch151.json",
+  "textHash": "fnv1a64:2b3958445473dc46",
+  "jsonHash": "fnv1a64:5a6282e3c75ef2c9",
+  "findings": []
+}

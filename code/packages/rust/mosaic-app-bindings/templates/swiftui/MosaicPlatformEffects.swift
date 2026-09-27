@@ -206,25 +206,112 @@ func mosaicReadChosenFile(_ url: URL, limit: Int) -> MosaicOpenRead {
 }
 
 /// A suggested name is a plain file name (UI87 §3.1), so an app cannot steer
-/// the panel, or disguise what it is saving:
+/// the panel, or disguise what it is saving -- the same rule as the Compose
+/// library:
 ///
 /// - no directory separators, and not `.` or `..` -- no other directory;
+/// - no leading `.` -- a hidden dot-file such as `.zshrc` is configuration a
+///   shell or tool runs, not a document;
 /// - no `:` -- the Finder shows it as `/`, and on Windows it names a drive or
 ///   an alternate data stream;
-/// - no control or format characters -- a right-to-left override can make
-///   `invoice<RLO>fdp.exe` read as a PDF in the panel;
-/// - no trailing dot or space;
+/// - no control, format, line- or paragraph-separator characters -- a
+///   right-to-left override can make `invoice<RLO>fdp.exe` read as a PDF in
+///   the panel, and a separator breaks the name across lines;
+/// - no leading or trailing whitespace of any kind (a no-break space
+///   included), no run of two or more whitespace characters, and no trailing
+///   dot -- `report.pdf` padded out and ending `.command` hides its extension;
 /// - at most 255 UTF-16 units, the same count the Compose library makes.
 func mosaicIsPlainFileName(_ name: String) -> Bool {
   guard !name.isEmpty, name.utf16.count <= 255, name != ".", name != ".." else {
     return false
   }
-  if name.hasSuffix(".") || name.hasSuffix(" ") { return false }
-  return !name.unicodeScalars.contains { scalar in
-    scalar == "/" || scalar == "\\" || scalar == ":"
-      || scalar.properties.generalCategory == .control
-      || scalar.properties.generalCategory == .format
+  // By SCALAR throughout, never by Character: a Character is a grapheme
+  // cluster, and a Prepend letter (U+0D4E) or a combining mark (U+0301)
+  // merges with a neighbouring `.` into one, so `hasPrefix(".")` and
+  // `lastIndex(of: ".")` would not see it -- while the file system, and the
+  // Compose and browser hosts, do.
+  let scalars = name.unicodeScalars
+  let refused = scalars.contains { scalar in
+    if scalar == "/" || scalar == "\\" || scalar == ":" { return true }
+    switch scalar.properties.generalCategory {
+    case .control, .format, .lineSeparator, .paragraphSeparator,
+      // Unassigned and private-use code points mean different things to
+      // different runtimes' Unicode tables (Swift strings hold no surrogates).
+      .unassigned, .privateUse, .surrogate:
+      return true
+    default: return false
+    }
   }
+  if refused { return false }
+  // The padding and dot rules look at what is visible: invisible characters
+  // cannot split a run of spaces or hide a leading or trailing dot.
+  let visible = scalars.filter { !mosaicIsInvisible($0) }
+  guard let first = visible.first, let last = visible.last,
+    first != ".", last != ".",
+    !mosaicIsSpace(first), !mosaicIsSpace(last)
+  else {
+    return false
+  }
+  var previousWasSpace = false
+  for scalar in visible {
+    let isSpace = mosaicIsSpace(scalar)
+    if isSpace && previousWasSpace { return false }
+    previousWasSpace = isSpace
+  }
+  return true
+}
+
+/// Characters that are not whitespace to Unicode but render as a wide blank:
+/// the Hangul fillers and BRAILLE PATTERN BLANK. Whitespace for the padding
+/// rules, as on the other hosts.
+private let mosaicBlankCharacters: Set<UInt32> = [0x115F, 0x1160, 0x2800, 0x3164, 0xFFA0]
+
+private func mosaicIsSpace(_ scalar: Unicode.Scalar) -> Bool {
+  scalar.properties.isWhitespace || mosaicBlankCharacters.contains(scalar.value)
+}
+
+/// Default-ignorable characters other than the blanks: variation selectors,
+/// COMBINING GRAPHEME JOINER and the like. Dropped before the padding and dot
+/// rules, so `<space><VS1><space>` is still a run while an emoji's own
+/// selector (`❤️ list.txt`) is fine.
+private func mosaicIsInvisible(_ scalar: Unicode.Scalar) -> Bool {
+  scalar.properties.isDefaultIgnorableCodePoint && !mosaicBlankCharacters.contains(scalar.value)
+}
+
+/// The extension after the last `.`, found by scalar (see
+/// `mosaicIsPlainFileName`) and folded through upper case, so `ſ` (LONG S)
+/// compares as `s`; nil when there is no dot.
+func mosaicFileExtension(_ name: String) -> String? {
+  let scalars = name.unicodeScalars
+  guard let dot = scalars.lastIndex(of: ".") else { return nil }
+  return String(scalars[scalars.index(after: dot)...]).uppercased().lowercased()
+}
+
+/// Extensions that run when the file is opened, on some platform: when an
+/// app names no type (`accept` empty) a save may not end in one of these, so
+/// a `files.save` cannot drop a launcher next to the person's documents. When
+/// the app does name types, the name must already end in one of theirs. The
+/// same set as the Compose library.
+let mosaicExecutableExtensions: Set<String> = [
+  // macOS: Terminal scripts, Finder location files and installers open
+  // with no prompt, or install.
+  "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "afploc", "ftploc",
+  "mailloc", "newsloc", "atloc", "app", "pkg", "mpkg", "dmg", "mobileconfig", "scpt",
+  "applescript", "workflow",
+  // Windows: run, install, or leak credentials when merely browsed.
+  "exe", "com", "bat", "cmd", "scr", "pif", "msi", "msp", "msc", "lnk", "url", "hta",
+  "cpl", "chm", "inf", "vbs", "vbe", "js", "jse", "wsf", "wsh", "ws", "wsc", "sct",
+  "ps1", "psm1", "reg", "jar", "jnlp", "gadget", "xll", "appref-ms", "application",
+  "settingcontent-ms", "appx", "msix", "appinstaller", "diagcab", "scf",
+  "library-ms", "searchconnector-ms", "iso", "img", "vhd", "vhdx",
+  // Linux desktops.
+  "desktop", "sh", "run", "appimage", "deb", "rpm", "flatpakref",
+]
+
+/// True when `name` ends in an extension from `mosaicExecutableExtensions`.
+func mosaicHasExecutableExtension(_ name: String) -> Bool {
+  guard let fileExtension = mosaicFileExtension(name) else { return false }
+  return mosaicExecutableExtensions.contains(fileExtension)
 }
 
 /// `files.open`: the outcome dictionary, never a thrown error.
@@ -274,9 +361,12 @@ func mosaicRunFilesSave(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: 
   // When the app says what it is saving, the name must agree: a JSON export
   // cannot be offered as `notes.exe`.
   let extensions = mosaicExtensions(for: request)
-  let lowered = suggestedName.lowercased()
-  if !extensions.isEmpty && !extensions.contains(where: { lowered.hasSuffix(".\($0)") }) {
+  let suggestedExtension = mosaicFileExtension(suggestedName)
+  if !extensions.isEmpty && !extensions.contains(where: { $0 == suggestedExtension }) {
     return mosaicFailed("suggestedName must end in an extension of an accepted type")
+  }
+  if extensions.isEmpty && mosaicHasExecutableExtension(suggestedName) {
+    return mosaicFailed("suggestedName must not end in an executable extension")
   }
   guard let target = dialogs.chooseFileToSave(suggestedName: suggestedName, extensions: extensions)
   else {

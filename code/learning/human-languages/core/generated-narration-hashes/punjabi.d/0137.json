@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:81f9556ee18687f0",
+  "lessonIds": [
+    "PA-C137-jahaz",
+    "PA-C137-musafar",
+    "PA-C137-daftar",
+    "PA-C137-karkhana",
+    "PA-C137-laibreri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch137.txt",
+  "json": "punjabi/narration/ch137.json",
+  "textHash": "fnv1a64:674fd965b2dad850",
+  "jsonHash": "fnv1a64:5e4d7ef6a8e330b8",
+  "findings": []
+}

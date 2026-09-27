@@ -1,0 +1,11 @@
+{
+  "id": "PA-R134-first-pass-food-and-nature",
+  "pathSegment": "PA-PATH-134-THINGS134",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-134-THINGS134",
+      "order": 5
+    }
+  ]
+}

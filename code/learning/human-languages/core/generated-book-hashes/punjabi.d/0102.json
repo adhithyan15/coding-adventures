@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:063b3c7ba52c05c3",
+  "lessonIds": [
+    "PA-C102-mai",
+    "PA-C102-jun",
+    "PA-C102-julai",
+    "PA-C102-agast",
+    "PA-C102-satambar"
+  ],
+  "tex": "punjabi/book/chapters/ch102-may-june-july-august-september.tex"
+}

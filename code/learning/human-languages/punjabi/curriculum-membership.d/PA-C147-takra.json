@@ -1,0 +1,11 @@
+{
+  "id": "PA-C147-takra",
+  "pathSegment": "PA-PATH-147-QUAL147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-147-QUAL147",
+      "order": 3
+    }
+  ]
+}

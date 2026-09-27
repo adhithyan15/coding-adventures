@@ -33,7 +33,8 @@ The package should emit backend-neutral draw instructions through the shared
 The package should accept either:
 
 - a full Codabar string with explicit start and stop symbols
-- a body string plus explicit `start` and `stop` options
+- a body string plus independently optional `start` and `stop` options; each
+  omitted option defaults to `A`
 
 If the input body contains `A B C D`, they must be rejected unless they occupy
 the first and last positions as delimiters.

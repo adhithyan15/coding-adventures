@@ -22,6 +22,9 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
   // appended the same way, after chapter 48.
   // 532 -> 533 rows: HL-C443 inserts ਮੌਸਮ (mausam) before the chapter-20 ੌ
   // lesson. This one IS an insertion, so every later session moves up by one.
+  // 533 -> 818 rows: Punjabi A1. Three chapter-6 continuations are INSERTED
+  // (every later session moves up by three), and chapters 99-152 (270 word
+  // lessons and twelve reviews) are appended after chapter 98.
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -36,8 +39,8 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(533);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 533 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(818);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 818 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

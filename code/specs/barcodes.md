@@ -33,6 +33,7 @@ separate spec files:
 
 ### 1D (linear) barcodes
 
+- [barcode-symbologies-v1.md](barcode-symbologies-v1.md) — normative portable encoder contract and fixtures
 - [barcode-1d.md](barcode-1d.md) — shared 1D abstraction (runs model)
 - [code39.md](code39.md) — Code 39
 - [upc-a.md](upc-a.md) — UPC-A
@@ -138,6 +139,12 @@ Format-specific packages should own:
 - start/stop and guard patterns
 - parity or code-set rules
 - symbol tables
+
+For the six v1 linear encoders, `barcode-symbologies-v1.md` and its executable
+fixture corpus are authoritative when older teaching prose is less precise
+about ASCII normalization, empty inputs, guard defaults, width projection,
+checksums, limits, stable errors, or atomic failure. Renderer-selected geometry
+remains owned by the shared layout layer.
 
 ## Future Extensions
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C124-mugphali",
+    "language": "punjabi",
+    "chapter": 124,
+    "sequence": 6660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9823ccb08c88a3f4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C110-mauka",
+    "language": "punjabi",
+    "chapter": 110,
+    "sequence": 5930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd1e7096fe2e1746"
+  },
+  "findings": []
+}

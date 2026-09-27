@@ -1,0 +1,11 @@
+{
+  "id": "PA-C130-baghiar",
+  "pathSegment": "PA-PATH-130-THINGS130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-130-THINGS130",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C107-kai",
+    "language": "punjabi",
+    "chapter": 107,
+    "sequence": 5740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91e294af739d9d6d"
+  },
+  "findings": []
+}

@@ -38,7 +38,9 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
   );
   // HL-C443: +1, from ਮੌਸਮ (mausam), the anchor word placed before the
   // chapter-20 ੌ lesson. Every bridge lesson sits after it.
-  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([171, 172]);
+  // Punjabi A1: chapter 6's two over-budget lessons split into three -more
+  // continuations ahead of this point, so these positions move by 3.
+  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([174, 175]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 210)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
@@ -81,7 +83,10 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
   // {37, 88, 150, 97} -> {37, 89, 151, 98}: ਮੌਸਮ (mausam), HL-C443's anchor
   // word before the chapter-20 ੌ lesson, has R2-R4 windows that start out
   // missed in this prefix.
-  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 89, R3: 151, R4: 98 });
+  // {37, 89, 151, 98} -> {37, 85, 147, 97}. Punjabi A1: the chapter-6 splits and their warm-up retrievals close windows inside this
+  // prefix (the five numbers' and the five rivers' R2, the marks' R2, the
+  // homegrown-panj etymon and evidence R3, two recognition R3s).
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 85, R3: 147, R4: 97 });
 
   const before = measureContinuity(
     ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),

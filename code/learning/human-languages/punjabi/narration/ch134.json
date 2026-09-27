@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 134,
+  "title": "Cheek, Forehead, Eyebrow, Beard, Moustache",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:aeb408999c38def5",
+  "lessons": [
+    {
+      "id": "PA-C134-gallh",
+      "sequence": 7200,
+      "title": "ਗੱਲ੍ਹ (gallh) — a cheek",
+      "headword": "ਗੱਲ੍ਹ",
+      "romanization": "gallh",
+      "gloss": "a cheek",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdf5922243fa8d9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an owl, then the Punjabi for a crow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗੱਲ੍ਹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੱਲ੍ਹ — gallh — \"a cheek\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gallh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gallh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gallh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gallh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gallh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gallh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an owl, then the Punjabi for a crow, then say gallh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an owl, then the Punjabi for a crow, then say *gallh* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗੱਲ੍ਹ (gallh) mean? (\"A cheek\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C134-mattha",
+      "sequence": 7210,
+      "title": "ਮੱਥਾ (matthā) — a forehead",
+      "headword": "ਮੱਥਾ",
+      "romanization": "matthā",
+      "gloss": "a forehead",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:242eab9e8b3a578c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a crow, then the Punjabi for a cheek."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੱਥਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੱਥਾ — matthā — \"a forehead\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matthā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matthā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matthā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say matthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *matthā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a crow, then the Punjabi for a cheek, then say matthā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a crow, then the Punjabi for a cheek, then say *matthā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੱਥਾ (matthā) mean? (\"A forehead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C134-bharavatta",
+      "sequence": 7220,
+      "title": "ਭਰਵੱਟਾ (bharavaṭṭā) — an eyebrow",
+      "headword": "ਭਰਵੱਟਾ",
+      "romanization": "bharavaṭṭā",
+      "gloss": "an eyebrow",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:311293f42cae5a7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a cheek, then the Punjabi for a forehead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਭਰਵੱਟਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਰਵੱਟਾ — bharavaṭṭā — \"an eyebrow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharavaṭṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharavaṭṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharavaṭṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharavaṭṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bharavaṭṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bharavaṭṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a cheek, then the Punjabi for a forehead, then say bharavaṭṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a cheek, then the Punjabi for a forehead, then say *bharavaṭṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਭਰਵੱਟਾ (bharavaṭṭā) mean? (\"An eyebrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C134-darhi",
+      "sequence": 7230,
+      "title": "ਦਾੜ੍ਹੀ (dāṛhī) — a beard",
+      "headword": "ਦਾੜ੍ਹੀ",
+      "romanization": "dāṛhī",
+      "gloss": "a beard",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c59387b65a1e571a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a forehead, then the Punjabi for an eyebrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਦਾੜ੍ਹੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਾੜ੍ਹੀ — dāṛhī — \"a beard\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāṛhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāṛhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāṛhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāṛhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dāṛhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dāṛhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a forehead, then the Punjabi for an eyebrow, then say dāṛhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a forehead, then the Punjabi for an eyebrow, then say *dāṛhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਦਾੜ੍ਹੀ (dāṛhī) mean? (\"A beard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C134-mucch",
+      "sequence": 7240,
+      "title": "ਮੁੱਛ (mucch) — a moustache",
+      "headword": "ਮੁੱਛ",
+      "romanization": "mucch",
+      "gloss": "a moustache",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f08ad320ac1fe70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an eyebrow, then the Punjabi for a beard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੁੱਛ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁੱਛ — mucch — \"a moustache\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mucch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mucch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mucch, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mucch*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mucch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mucch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an eyebrow, then the Punjabi for a beard, then say mucch again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an eyebrow, then the Punjabi for a beard, then say *mucch* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੁੱਛ (mucch) mean? (\"A moustache\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R134-first-pass-food-and-nature",
+      "sequence": 7250,
+      "title": "Food and nature — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 126-129",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c98bd3ece79505a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a beard and a moustache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grass, a seed, a root, a bud, an island",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grass, a seed, a root, a bud, an island]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shore, a waterfall, a cave, a valley, a sand hill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shore, a waterfall, a cave, a valley, a sand hill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a desert, lightning, a storm, the earth, moonlight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a desert, lightning, a storm, the earth, moonlight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darkness, light, shade, a rainbow, a rabbit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: darkness, light, shade, a rainbow, a rabbit]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Grass? (ਘਾਹ, ghāh.) A seed? (ਬੀਜ, bīj.) A root? (ਜੜ੍ਹ, jaṛh.) A bud? (ਕਲੀ, kalī.) An island? (ਟਾਪੂ, ṭāpū.) A shore? (ਕਿਨਾਰਾ, kinārā.) A waterfall? (ਝਰਨਾ, jharnā.) A cave? (ਗੁਫ਼ਾ, gufā.) A valley? (ਵਾਦੀ, vādī.) A sand hill? (ਟਿੱਬਾ, ṭibbā.) A desert? (ਮਾਰੂਥਲ, mārūthal.) Lightning? (ਬਿਜਲੀ, bijlī.) A storm? (ਤੂਫ਼ਾਨ, tūfān.) The earth? (ਧਰਤੀ, dhartī.) Moonlight? (ਚਾਨਣੀ, cānṇī.) Darkness? (ਹਨੇਰਾ, hanerā.) Light? (ਚਾਨਣ, cānaṇ.) Shade? (ਛਾਂ, chā̃.) A rainbow? (ਸਤਰੰਗੀ ਪੀਂਘ, satrangī pīṅgh.) A rabbit? (ਖ਼ਰਗੋਸ਼, khargosh.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R134-second-pass-nature-and-animals",
+      "sequence": 7260,
+      "title": "Nature and animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 130-134",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0f25c3606b4d3cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a deer and a bear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a deer, a bear, a jackal, a wolf, a pigeon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a deer, a bear, a jackal, a wolf, a pigeon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a duck, a lizard, a turtle, a crocodile, a mosquito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a duck, a lizard, a turtle, a crocodile, a mosquito]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fly, a bee, a butterfly, a spider, a squirrel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fly, a bee, a butterfly, a spider, a squirrel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rooster, a hen, a donkey, an owl, a crow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rooster, a hen, a donkey, an owl, a crow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cheek, a forehead, an eyebrow, a beard, a moustache",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cheek, a forehead, an eyebrow, a beard, a moustache]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A deer? (ਹਿਰਨ, hiran.) A bear? (ਰਿੱਛ, ricch.) A jackal? (ਗਿੱਦੜ, giddaṛ.) A wolf? (ਬਘਿਆੜ, baghiāṛ.) A pigeon? (ਕਬੂਤਰ, kabūtar.) A duck? (ਬੱਤਖ਼, battakh.) A lizard? (ਕਿਰਲੀ, kirlī.) A turtle? (ਕੱਛੂ, kacchū.) A crocodile? (ਮਗਰਮੱਛ, magarmacch.) A mosquito? (ਮੱਛਰ, macchar.) A fly? (ਮੱਖੀ, makkhī.) A bee? (ਮਧੂਮੱਖੀ, madhūmakkhī.) A butterfly? (ਤਿਤਲੀ, titlī.) A spider? (ਮੱਕੜੀ, makkaṛī.) A squirrel? (ਗਾਲ੍ਹੜ, gālhaṛ.) A rooster? (ਕੁੱਕੜ, kukkaṛ.) A hen? (ਮੁਰਗੀ, murgī.) A donkey? (ਗਧਾ, gadhā.) An owl? (ਉੱਲੂ, ullū.) A crow? (ਕਾਂ, kā̃.) A cheek? (ਗੱਲ੍ਹ, gallh.) A forehead? (ਮੱਥਾ, matthā.) An eyebrow? (ਭਰਵੱਟਾ, bharavaṭṭā.) A beard? (ਦਾੜ੍ਹੀ, dāṛhī.) A moustache? (ਮੁੱਛ, mucch.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C135-pitth",
+  "pathSegment": "PA-PATH-135-THINGS135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-135-THINGS135",
+      "order": 2
+    }
+  ]
+}

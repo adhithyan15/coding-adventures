@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Soap, Towel, Mattress, Bedsheet, Blanket",
+  "label": "ch:pa-soap-towel-mattress-bedsheet-blanket",
+  "canDo": "I can say soap, a towel, a mattress, a bedsheet and a blanket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C114-kambal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say soap, a towel, a mattress, a bedsheet and a blanket.",
+    "assesses": [
+      "PA-LEX-C114-THINGS114-03",
+      "PA-LEX-C114-THINGS114-04",
+      "PA-LEX-C114-THINGS114-05"
+    ]
+  }
+}

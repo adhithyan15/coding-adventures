@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/barcode-symbologies-v1.json",
+  "title": "Barcode symbologies v1 conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "limits", "error_ids", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "barcode-symbologies-v1" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_input_scalars", "max_cases", "max_fixture_bytes", "max_fixture_depth", "max_module_bits", "max_runs"],
+      "properties": {
+        "max_input_scalars": { "const": 4096 },
+        "max_cases": { "const": 96 },
+        "max_fixture_bytes": { "const": 131072 },
+        "max_fixture_depth": { "const": 8 },
+        "max_module_bits": { "const": 65567 },
+        "max_runs": { "const": 40979 }
+      }
+    },
+    "error_ids": {
+      "const": [
+        "input-too-long",
+        "invalid-length",
+        "invalid-character",
+        "reserved-character",
+        "invalid-guard",
+        "guard-conflict",
+        "invalid-check-digit"
+      ]
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 36,
+      "maxItems": 96,
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "input": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text"],
+          "properties": { "text": { "type": "string", "maxLength": 4097 } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repeat"],
+          "properties": {
+            "repeat": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["text", "count"],
+              "properties": {
+                "text": { "type": "string", "minLength": 1, "maxLength": 1 },
+                "count": { "type": "integer", "minimum": 0, "maximum": 4097 }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": "string", "minLength": 1, "maxLength": 1 },
+        "stop": { "type": "string", "minLength": 1, "maxLength": 1 }
+      }
+    },
+    "run_lengths": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40979,
+      "items": { "type": "integer", "minimum": 1, "maximum": 65567 }
+    },
+    "exact_success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized", "modules", "module_count", "module_sha256", "run_lengths"],
+      "properties": {
+        "normalized": { "type": "string", "maxLength": 4098 },
+        "modules": { "type": "string", "pattern": "^1[01]*$", "not": { "pattern": "[^01]" }, "minLength": 1, "maxLength": 65567 },
+        "module_count": { "type": "integer", "minimum": 1, "maximum": 65567 },
+        "module_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 },
+        "run_lengths": { "$ref": "#/$defs/run_lengths" },
+        "checksum": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 102 }, { "type": "string", "pattern": "^[0-9]$", "minLength": 1, "maxLength": 1 }] },
+        "left_parity": { "type": "string", "pattern": "^[LG]{6}$", "minLength": 6, "maxLength": 6 },
+        "symbol_values": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "type": "integer", "minimum": 0, "maximum": 106 }
+        }
+      }
+    },
+    "digest_success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized_sha256", "module_count", "module_sha256", "run_count", "run_lengths_sha256"],
+      "properties": {
+        "normalized_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 },
+        "module_count": { "type": "integer", "minimum": 1, "maximum": 65567 },
+        "module_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 },
+        "run_count": { "type": "integer", "minimum": 1, "maximum": 40979 },
+        "run_lengths_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error"],
+      "properties": { "error": { "enum": ["input-too-long", "invalid-length", "invalid-character", "reserved-character", "invalid-guard", "guard-conflict", "invalid-check-digit"] } }
+    },
+    "plain_exact_success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized", "modules", "module_count", "module_sha256", "run_lengths"],
+      "properties": {
+        "normalized": { "type": "string", "maxLength": 4098 },
+        "modules": { "type": "string", "pattern": "^1[01]*$", "not": { "pattern": "[^01]" }, "minLength": 1, "maxLength": 65567 },
+        "module_count": { "type": "integer", "minimum": 1, "maximum": 65567 },
+        "module_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 },
+        "run_lengths": { "$ref": "#/$defs/run_lengths" }
+      }
+    },
+    "upc_exact_success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized", "modules", "module_count", "module_sha256", "run_lengths", "checksum"],
+      "properties": {
+        "normalized": { "type": "string", "minLength": 12, "maxLength": 12 },
+        "modules": { "type": "string", "pattern": "^1[01]*$", "not": { "pattern": "[^01]" }, "minLength": 95, "maxLength": 95 },
+        "module_count": { "const": 95 },
+        "module_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 },
+        "run_lengths": { "$ref": "#/$defs/run_lengths" },
+        "checksum": { "type": "string", "pattern": "^[0-9]$", "minLength": 1, "maxLength": 1 }
+      }
+    },
+    "ean_exact_success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized", "modules", "module_count", "module_sha256", "run_lengths", "checksum", "left_parity"],
+      "properties": {
+        "normalized": { "type": "string", "minLength": 13, "maxLength": 13 },
+        "modules": { "type": "string", "pattern": "^1[01]*$", "not": { "pattern": "[^01]" }, "minLength": 95, "maxLength": 95 },
+        "module_count": { "const": 95 },
+        "module_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 },
+        "run_lengths": { "$ref": "#/$defs/run_lengths" },
+        "checksum": { "type": "string", "pattern": "^[0-9]$", "minLength": 1, "maxLength": 1 },
+        "left_parity": { "type": "string", "pattern": "^[LG]{6}$", "minLength": 6, "maxLength": 6 }
+      }
+    },
+    "code128_exact_success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized", "modules", "module_count", "module_sha256", "run_lengths", "checksum", "symbol_values"],
+      "properties": {
+        "normalized": { "type": "string", "maxLength": 4096 },
+        "modules": { "type": "string", "pattern": "^1[01]*$", "not": { "pattern": "[^01]" }, "minLength": 1, "maxLength": 65567 },
+        "module_count": { "type": "integer", "minimum": 35, "maximum": 65567 },
+        "module_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "minLength": 64, "maxLength": 64 },
+        "run_lengths": { "$ref": "#/$defs/run_lengths" },
+        "checksum": { "type": "integer", "minimum": 0, "maximum": 102 },
+        "symbol_values": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 4099,
+          "items": { "type": "integer", "minimum": 0, "maximum": 106 }
+        }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "symbology", "input", "options", "expected"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^barcode-v1-[a-z0-9]+(?:-[a-z0-9]+)*$", "not": { "pattern": "[^a-z0-9-]" }, "minLength": 14, "maxLength": 128 },
+        "symbology": { "enum": ["itf", "code39", "codabar", "code128-b", "upc-a", "ean-13"] },
+        "input": { "$ref": "#/$defs/input" },
+        "options": { "$ref": "#/$defs/options" },
+        "expected": {
+          "oneOf": [
+            { "$ref": "#/$defs/exact_success" },
+            { "$ref": "#/$defs/digest_success" },
+            { "$ref": "#/$defs/error" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "symbology": { "enum": ["itf", "code39", "code128-b", "upc-a", "ean-13"] } } },
+          "then": { "properties": { "options": { "type": "object", "maxProperties": 0 } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "enum": ["itf", "code39", "codabar"] } } },
+          "then": { "properties": { "expected": { "oneOf": [{ "$ref": "#/$defs/plain_exact_success" }, { "$ref": "#/$defs/digest_success" }, { "$ref": "#/$defs/error" }] } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "code128-b" } } },
+          "then": { "properties": { "expected": { "oneOf": [{ "$ref": "#/$defs/code128_exact_success" }, { "$ref": "#/$defs/digest_success" }, { "$ref": "#/$defs/error" }] } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "upc-a" } } },
+          "then": { "properties": { "expected": { "oneOf": [{ "$ref": "#/$defs/upc_exact_success" }, { "$ref": "#/$defs/error" }] } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "ean-13" } } },
+          "then": { "properties": { "expected": { "oneOf": [{ "$ref": "#/$defs/ean_exact_success" }, { "$ref": "#/$defs/error" }] } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "itf" } } },
+          "then": { "properties": { "expected": { "properties": { "normalized": { "type": "string", "pattern": "^(?:[0-9]{2})+$", "not": { "pattern": "[^0-9]" }, "minLength": 2, "maxLength": 4096 } } } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "code39" } } },
+          "then": { "properties": { "expected": { "properties": { "normalized": { "type": "string", "not": { "pattern": "[^0-9A-Z .$/+%-]" }, "maxLength": 4096 } } } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "codabar" } } },
+          "then": { "properties": { "expected": { "properties": { "normalized": { "type": "string", "pattern": "^[ABCD][0-9$:/+.-]*[ABCD]$", "not": { "pattern": "[^0-9$:/+.ABCD-]" }, "minLength": 2, "maxLength": 4098 } } } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "code128-b" } } },
+          "then": { "properties": { "expected": { "properties": { "normalized": { "type": "string", "not": { "pattern": "[^ -~]" }, "maxLength": 4096 } } } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "upc-a" } } },
+          "then": { "properties": { "expected": { "properties": { "normalized": { "type": "string", "not": { "pattern": "[^0-9]" }, "minLength": 12, "maxLength": 12 } } } } }
+        },
+        {
+          "if": { "properties": { "symbology": { "const": "ean-13" } } },
+          "then": { "properties": { "expected": { "properties": { "normalized": { "type": "string", "not": { "pattern": "[^0-9]" }, "minLength": 13, "maxLength": 13 } } } } }
+        }
+      ]
+    }
+  }
+}

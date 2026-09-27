@@ -153,6 +153,13 @@ private func checkSaveRefusals(in directory: URL) {
   for name in [
     "", ".", "..", "../escape.json", "a/b.json", "a\\b.json", "C:x.json", "trailing.",
     "trailing ", "bell\u{7}.json", "invoice\u{202E}fdp.exe", String(repeating: "a", count: 256),
+    ".zshrc", " leading.json", "nbsp\u{00A0}", "\u{3000}ideographic.json",
+    "line\u{2028}break.json", "para\u{2029}break.json", "tag\u{E0001}.json",
+    "Invoice.pdf      .command",
+    ".\u{0301}zshrc", "Invoice.pdf\u{2800}\u{2800}.txt",
+    "x\u{0D4E}.", "a\u{E000}.json",
+    "Invoice.pdf" + String(repeating: " \u{FE00}", count: 30) + " x.html", "\u{FE00}.zshrc",
+    "notes.txt\u{FE00}.",
   ] {
     let dialogs = FakeDialogs(target)
     let outcome = mosaicRunFilesSave(
@@ -169,6 +176,27 @@ private func checkSaveRefusals(in directory: URL) {
   check(
     failure(mismatched) == "suggestedName must end in an extension of an accepted type",
     "extension must match the accepted type")
+
+  // With no accepted type, a name that would run when opened is refused.
+  for name in [
+    "run.command", "open.terminal", "site.webloc", "setup.EXE", "go.desktop", "a.ps1",
+    "a.j\u{017F}", "img.iso", "clip.scf", "app.AppImage",
+    // A Prepend letter merges with the dot into one Character; by scalar the
+    // extension is still `.terminal` (the security review's bypass).
+    "run\u{0D4E}.terminal",
+  ] {
+    let dialogs = FakeDialogs(directory.appendingPathComponent(name))
+    let outcome = mosaicRunFilesSave(
+      ["suggestedName": name, "bytes": encoded("x")] as [String: Any], dialogs: dialogs)
+    check(
+      failure(outcome) == "suggestedName must not end in an executable extension",
+      "executable extension \(name)")
+    check(dialogs.opened == 0, "no panel for executable \(name)")
+  }
+  check(mosaicIsPlainFileName("caf\u{00E9} menu.json"), "accented names still pass")
+  check(mosaicIsPlainFileName("\u{2764}\u{FE0F} list.txt"), "an emoji's own selector is fine")
+  check(!mosaicHasExecutableExtension("notes.txt") && !mosaicHasExecutableExtension("README"),
+    "an ordinary document is not executable")
 
   let notBase64 = mosaicRunFilesSave(
     ["suggestedName": "a.txt", "bytes": "%%%"] as [String: Any], dialogs: FakeDialogs(target))

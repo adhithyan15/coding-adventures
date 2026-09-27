@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:81638bed8e1d2fb7",
+  "lessonIds": [
+    "PA-C112-kala",
+    "PA-C112-sand",
+    "PA-C112-liakat",
+    "PA-C112-jittna",
+    "PA-C112-harna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch112.txt",
+  "json": "punjabi/narration/ch112.json",
+  "textHash": "fnv1a64:27f3a6cbf9e98dbd",
+  "jsonHash": "fnv1a64:070b12289256f2d7",
+  "findings": []
+}

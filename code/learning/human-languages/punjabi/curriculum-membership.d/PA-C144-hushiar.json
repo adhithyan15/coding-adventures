@@ -1,0 +1,11 @@
+{
+  "id": "PA-C144-hushiar",
+  "pathSegment": "PA-PATH-144-QUAL144",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-144-QUAL144",
+      "order": 3
+    }
+  ]
+}

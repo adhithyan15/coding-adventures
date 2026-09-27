@@ -1,0 +1,11 @@
+{
+  "id": "PA-C134-mucch",
+  "pathSegment": "PA-PATH-134-THINGS134",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-134-THINGS134",
+      "order": 4
+    }
+  ]
+}

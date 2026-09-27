@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C104-har",
+    "language": "punjabi",
+    "chapter": 104,
+    "sequence": 5560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a36025605e23e96b"
+  },
+  "findings": []
+}

@@ -448,7 +448,7 @@ describe("the Indian planning-document migration", () => {
     "marwadi/roadmap.md": "674c031e40898a9f3388287dda6321ebcd0a363f3405816564f50551835a3029",
     "marwadi/session-map.md": "6e56cfa771cfbdb8d9ac2db9649ad07ec79876ce77a5404ee2ccaeb8f7f0f1cf",
     "punjabi/roadmap.md": "35daceeb279e9e29f8d82456f019172d38e49ac554661df569be6a603b028604",
-    "punjabi/session-map.md": "9f4fb8ae149b7cb5c8c1614c07a641da9932420317886fc5d10c211a228f83d9",
+    "punjabi/session-map.md": "1531e4fe5466946bbb0809bfa83b88610a8d39eb76c4ea2d0e3d49913dda31b5",
     "sanskrit/roadmap.md": "7e572936de127d6da37af4c00fa38cb8fcb92d33a6cd1225a552062c62d21c85",
     "sanskrit/session-map.md": "94aac4e55875f37bc5798d008409a6f96727cb24833d765b53a6f69c79f2670b",
     "tamil/roadmap.md": "59c07fa003299dd31300ac11ad185df0e1a08c826ef02955ae4652c998818ba0",

@@ -7,9 +7,9 @@ license = "MIT"
 [components]
 exports = ["PhotoPickerApp"]
 
-# XAML, Qt, Compose, and Flutter this slice (UI59 §2) -- the last of the four
-# backends this environment can build (SwiftUI is out of scope: no Apple
-# toolchain here).
+# XAML, Qt and Flutter carry this app's own `files.open` handler (UI59 §2).
+# Compose and SwiftUI answer it from Mosaic's platform library (UI87 §7), and
+# the other three move onto theirs as those libraries land (UI87 §7.4).
 #
 # `[host_assets]` exists ONLY to declare the Flutter handler's third-party pub
 # dependency -- unlike Engram, this app has no legacy hand-written host to
@@ -32,10 +32,9 @@ files = [
   # listed, matching engram-app's own Qt `[host_effects]` entry.
   { backend = "qt", source = "host/qt/PhotoPickerEffects.h", target = "PhotoPickerEffects.h" },
   { backend = "qt", source = "host/qt/PhotoPickerEffects.cpp", target = "PhotoPickerEffects.cpp" },
-  # Gradle's Kotlin convention compiles everything under `src/main/kotlin`,
-  # so the target is a path there and no build-list entry is needed -- same
-  # shape as SwiftUI, unlike Qt. Matches engram-app's own Compose entry.
-  { backend = "compose", source = "host/compose/PhotoPickerEffects.kt", target = "src/main/kotlin/PhotoPickerEffects.kt" },
+  # No Compose (or SwiftUI) entry: Mosaic's platform library answers
+  # `files.open` for every app on those backends (UI87 §7), so this app keeps
+  # no copy of its own (UI87 §7.4).
   # Dart compiles everything under `lib/`, like Kotlin does under
   # `src/main/kotlin` -- but unlike Kotlin, Dart resolves nothing across
   # files without an import, so this one still needs an `include` below.
@@ -60,11 +59,6 @@ handlers = [
   # XAML), matching engram-app's `{ backend = "qt", include = ...,
   # install = "installEngramEffects" }` shape exactly.
   { backend = "qt", include = "PhotoPickerEffects.h", install = "installPhotoPickerEffects" },
-  # No `include`: Kotlin has no include directive and every file in the
-  # module is visible -- the emitter refuses one here for exactly that
-  # reason (confirmed against `compose_main_with_host_effects`'s own
-  # refusal message).
-  { backend = "compose", install = "installPhotoPickerEffects" },
   # `include` names the file relative to `lib/`, matching engram-app's own
   # Flutter entry -- Dart, unlike Kotlin/Swift, resolves nothing across
   # files without an explicit import, and `flutter_main_with_host_effects`

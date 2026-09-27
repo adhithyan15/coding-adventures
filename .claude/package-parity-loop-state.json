@@ -12,24 +12,24 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16139,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16139",
-    "title": "feat(build-tool): harden Elixir glob matching",
-    "branch": "codex/parity-elixir-glob-hardening-20260927",
-    "item_id": "build-tool-elixir-glob-matcher-complexity-hardening",
-    "opened_at": "2026-09-27T10:45:31Z",
-    "head_revision": "b76b705a3be0c18f97c7aec0b3e52b7402164351",
+    "number": 16145,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16145",
+    "title": "feat(specs): define portable barcode symbology contract",
+    "branch": "codex/parity-barcode-symbologies-contract-20260927",
+    "item_id": "barcode-symbologies-language-neutral-conformance",
+    "opened_at": "2026-09-27T11:57:58Z",
+    "head_revision": "48d6f5d23050e01f012f4b4792d6532884aa7a44",
     "checks_status": "pending",
     "auto_merge_enabled": false
   },
   "last_ci_action": {
-    "observed_at": "2026-09-27T10:20:02Z",
-    "pr_number": 16133,
+    "observed_at": "2026-09-27T11:20:55Z",
+    "pr_number": 16139,
     "status": "merged",
-    "notes": "All 47 final-head checks reached terminal acceptable conclusions: 12 successes, 34 expected path-gated skips, and one neutral CodeQL result. GitHub reported the reviewed head conflict-free, guarded squash auto-merge was enabled, and PR #16133 merged automatically as d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57 without a plain manual merge command."
+    "notes": "All 47 final-head checks reached terminal acceptable conclusions: 24 successes and 23 expected path-gated skips. GitHub reported the reviewed head conflict-free, guarded squash auto-merge was enabled, and PR #16139 merged automatically as 04bbbe63a9eb041cc6e7548b8b74ed0204ad7771 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57",
+    "revision": "99025bf353450e280eebba530b28f101001f2127",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -1061,7 +1061,7 @@
     {
       "id": "build-tool-elixir-glob-matcher-complexity-hardening",
       "title": "Harden Elixir build-tool glob matcher complexity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-elixir-glob-hardening-20260927",
       "pr_number": 16139,
@@ -1074,6 +1074,10 @@
       "security_notes": "Independent review found linear parsing, bounded rolling-row DP, fixed failures, complete prevalidation, and no regex, wildcard expansion, dynamic atom, eval, credential, network, environment, process, Git, or added filesystem authority. Strict hashing retains only its existing caller-authorized file walk after every pattern validates, and this slice intentionally leaves the separate operation-wide diff-selection ceiling to its registered adoption owner. No dependency or lockfile changed.",
       "opened_revision": "b76b705a3be0c18f97c7aec0b3e52b7402164351",
       "publication_notes": "Opened ready-for-review PR #16139 after a normal first push from the fresh dedicated branch rebased conflict-free onto origin/main 4955681da18ec06c497932156056494b803aaee3. The live open-PR file audit found zero exact overlap across this tranche, GitHub reported the opening head MERGEABLE, and initial CI, CodeQL, and human-language detection checks were queued. Auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
+      "merged_head_revision": "94cd6e8bfbd57fc11ecfa88f98fb46599ea54631",
+      "merged_at": "2026-09-27T11:20:55Z",
+      "merge_revision": "04bbbe63a9eb041cc6e7548b8b74ed0204ad7771",
+      "merge_notes": "All 47 final-head checks completed acceptably: 24 successes and 23 expected path-gated skips. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #16139 automatically without a plain manual merge command.",
       "notes": "Replace unbounded recursive grapheme matching with bounded memoized portable-glob behavior, strict character classes, Unicode-scalar accounting, and stable failures without adding host authority."
     },
     {
@@ -10040,11 +10044,31 @@
     {
       "id": "barcode-symbologies-language-neutral-conformance",
       "title": "Define neutral contracts for six one-dimensional barcode symbologies",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
+      "branch": "codex/parity-barcode-symbologies-contract-20260927",
+      "pr_number": 16145,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16145",
+      "opened_at": "2026-09-27T11:57:58Z",
+      "opened_revision": "48d6f5d23050e01f012f4b4792d6532884aa7a44",
+      "selected_at": "2026-09-27T11:22:00Z",
+      "selection_revision": "04bbbe63a9eb041cc6e7548b8b74ed0204ad7771",
+      "selection_notes": "Selected only after PR #16139 completed all 47 final-head checks acceptably and merged through guarded squash auto-merge. The collision-checked exact-main schema-3 inventory remains unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Parallel audits registered the decomposed unwatched-root owners and the existing-barcode-lane conformance repair before implementation. This dependency-free neutral contract ranks first globally by leverage, directly gates seven barcode layout/encoder/facade owners and twelve unfinished descendants, and starts from the exact merge revision in a fresh clean worktree.",
+      "rebase_base_revision": "99025bf353450e280eebba530b28f101001f2127",
+      "rebase_notes": "Before publication, origin/main advanced by the unrelated Mosaic host-environment merge. Its seven paths have zero overlap with this tranche. The implementation commit rebased cleanly onto exact origin/main 99025bf353450e280eebba530b28f101001f2127; the refreshed schema-3 inventory and every reported metric remain unchanged.",
+      "implementation_notes": "Defines one pure encoder-only contract for ITF, Code 39, Codabar, Code 128-B, UPC-A, and EAN-13 with ASCII-only normalization, closed stable errors and precedence, atomic failure, a 4,096-scalar ceiling, explicit ill-formed-host-string exclusion, fixed checksum/guard behavior, exact modules, maximal runs, and independently pinned compact boundary digests. The closed 91-case Draft 2020-12 corpus covers every required symbology table entry, every error class, checksum values 0 through 102, retail parity rows, Unicode traps, and length boundaries. The strict loader caps bytes and depth, rejects duplicate keys, non-finite numbers, lone surrogates, non-local references, trailing line terminators in lexical fields, and schema-invalid shapes; generation is deterministic LF-only UTF-8 at the byte level.",
+      "validation_notes": "The generator byte-for-byte check, eight fixture/loader tests, Ruff check/format, ten package-parity reporter tests, fifteen CI-gate registry tests, JSON/state parsing, the 907-owner/1,733-edge acyclic state graph, collision check, diff check, and credential-pattern scan pass. Six Python canonical build fronts pass 45 tests with 93.48-100% package coverage. Six TypeScript coverage fronts pass 51 tests with 91.89-100% statement coverage, and all six production tsc attempts consistently expose the pre-existing missing @coding-adventures/paint-instructions workspace dependency now assigned to the existing-lanes repair owner. Six Rust packages pass all unit/doc tests and Clippy with warnings denied. The clean post-rebase Go build-tool dry plan validates 45 Starlark files, discovers 5,262 packages, detects that no package files changed, and retains the shared CI gate suite required by the workflow edit. Six npm production audits report zero vulnerabilities. actionlint is unavailable locally and is not claimed. Three independent read-only reviews drove closure of checksum/table coverage, schema lexical and normalization constraints, stable loader failures, LF-only generation, boundary digest pinning, and README commands.",
+      "publication_notes": "Opened ready-for-review PR #16145 from validated implementation head 48d6f5d23050e01f012f4b4792d6532884aa7a44 after a normal first push. Immediately before publication, the branch was based on exact origin/main 99025bf353450e280eebba530b28f101001f2127, no other parity PR or target branch existed, and the only live path overlap was the additive ci.yml test registration versus Dependabot PR #15723's action-SHA updates. GitHub reports the PR open and non-draft; initial checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and the branch is conflict-free.",
+      "notes": "Freeze ITF, Code 39, Codabar, Code 128, UPC-A, and EAN-13 ASCII semantics, empty-input policy, checksums, stable errors, atomicity, checked resource ceilings, and exact module outputs in one bounded neutral corpus. Reject Unicode digit and case-folding ambiguity and keep layout, raster, font, device, filesystem, and native-paint authority outside this owner."
+    },
+    {
+      "id": "barcode-symbologies-existing-lanes-v1-conformance",
+      "title": "Reconcile existing barcode symbology lanes with the neutral v1 contract",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Freeze ITF, Code 39, Codabar, Code 128, UPC-A, and EAN-13 ASCII semantics, empty-input policy, checksums, stable errors, atomicity, checked resource ceilings, and exact module outputs in one bounded neutral corpus. Reject Unicode digit and case-folding ambiguity and keep layout, raster, font, device, filesystem, and native-paint authority outside this owner."
+      "notes": "A read-only audit during the neutral-contract tranche found material divergence across the twelve existing lanes: Unicode digit and case-folding acceptance, payload-bearing errors, missing 4,096-scalar ceilings, Codabar guard-option conflicts, a Rust Codabar Unicode byte-slice panic risk, and all six TypeScript package production builds missing their @coding-adventures/paint-instructions workspace dependency. Dynamically consume every neutral case in each existing portable lane, repair stable atomic behavior and build metadata without host libraries or added authority, and preserve the separate Java/Kotlin/Dart rollout owners."
     },
     {
       "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
@@ -10059,7 +10083,7 @@
       "id": "itf-java-kotlin-dart-lane-parity",
       "title": "Complete ITF parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral ITF encoder in all three missing lanes with strict nonempty even-length ASCII digits, exact patterns, checked bounds, stable payload-blind errors, and shared layout output."
@@ -10068,7 +10092,7 @@
       "id": "code39-java-kotlin-dart-lane-parity",
       "title": "Complete Code 39 parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral Code 39 encoder in all three missing lanes with ASCII-only folding, reserved-asterisk handling, exact symbol/checksum behavior, checked bounds, and shared layout output."
@@ -10077,7 +10101,7 @@
       "id": "codabar-java-kotlin-dart-lane-parity",
       "title": "Complete Codabar parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral Codabar encoder in all three missing lanes with exact guard and alphabet rules, checked bounds, stable errors, and shared layout output."
@@ -10086,7 +10110,7 @@
       "id": "code128-java-kotlin-dart-lane-parity",
       "title": "Complete Code 128 parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral Code 128 encoder in all three missing lanes with the exact printable-ASCII domain, complete symbol table, deterministic code-set policy, checksums, checked bounds, and shared layout output."
@@ -10095,7 +10119,7 @@
       "id": "upc-a-java-kotlin-dart-lane-parity",
       "title": "Complete UPC-A parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral UPC-A encoder in all three missing lanes with ASCII-only digits, exact check-digit validation/generation, role metadata, checked bounds, and shared layout output."
@@ -10104,7 +10128,7 @@
       "id": "ean-13-java-kotlin-dart-lane-parity",
       "title": "Complete EAN-13 parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral EAN-13 encoder in all three missing lanes as a sibling of UPC-A, not a runtime dependent. Require ASCII-only digits, exact parity/check-digit behavior, role metadata, checked bounds, and shared layout output."
@@ -10694,14 +10718,132 @@
       "notes": "Discovered by the post-PR #16133 structural package-root audit. The tracked `algol-lexer` and dependent `algol-parser` Go modules have native tests and package metadata but no BUILD fronts, so repository discovery cannot schedule either root. Add fail-closed cross-platform fronts in dependency order, preserve the existing generated grammar inputs and capability declarations, run both native suites, and validate the affected parser closure."
     },
     {
-      "id": "established-lane-unwatched-package-root-classification-20260927",
-      "title": "Classify established-lane package roots without BUILD fronts",
+      "id": "python-activation-matrix-loss-perceptron-build-front-coverage",
+      "title": "Add tested BUILD fronts for Python activation-functions, matrix, loss-functions, and perceptron",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "notes": "Add fail-closed cross-platform fronts and direct tests for the Python neural-primitives dependency chain without changing the separately owned loss semantics."
+    },
+    {
+      "id": "python-gradient-descent-build-front-coverage",
+      "title": "Add tested BUILD fronts for Python gradient-descent",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add an independent cross-platform front, run the existing optimizer suite and coverage/lint checks, and reconcile package documentation and metadata without changing the SGD API."
+    },
+    {
+      "id": "ruby-activation-matrix-perceptron-build-front-coverage",
+      "title": "Add tested BUILD fronts for Ruby activation-functions, matrix, and perceptron",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add lane-consistent fronts in dependency order, direct activation/perceptron tests, and missing runner/docs metadata while preserving existing Ruby semantics."
+    },
+    {
+      "id": "typescript-activation-matrix-perceptron-build-front-coverage",
+      "title": "Add tested BUILD fronts for TypeScript activation-functions, matrix, and perceptron",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add cross-platform fronts in dependency order, direct activation/perceptron tests, and required manifest synchronization without absorbing the separately owned native ABI work."
+    },
+    {
+      "id": "python-algol-lexer-parser-build-front-coverage",
+      "title": "Add tested BUILD fronts for the Python ALGOL lexer and parser",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add lexer-to-parser fronts over the existing grammar dependency graph and run both native suites plus coverage, lint, type, capability, and downstream checks."
+    },
+    {
+      "id": "python-block-ram-fpga-build-front-coverage",
+      "title": "Add tested BUILD fronts for Python block-ram and FPGA",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add the genuine block-ram to FPGA dependency chain, preserving the reviewed FPGA bitstream-read capability and pure block-ram profile."
+    },
+    {
+      "id": "python-cas-laplace-fourier-build-front-coverage",
+      "title": "Add tested BUILD fronts for Python CAS Laplace and Fourier transforms",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add the Laplace-to-Fourier front chain with existing symbolic dependencies and run both mature suites without changing transform semantics."
+    },
+    {
+      "id": "python-cas-mnewton-build-front-coverage",
+      "title": "Add a tested BUILD front for Python CAS multivariate Newton solving",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add a cross-platform cas-mnewton front with explicit symbolic dependencies and run its solver, metadata, and capability checks."
+    },
+    {
+      "id": "python-cas-ode-build-front-coverage",
+      "title": "Add a tested BUILD front for Python CAS ODE solving",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add a cross-platform cas-ode front and run the ODE, Frobenius, Lie-symmetry, phase, metadata, and capability suites."
+    },
+    {
+      "id": "python-intel8051-mips-r2000-sparc-v8-build-front-coverage",
+      "title": "Add tested BUILD fronts for Python Intel 8051, MIPS R2000, and SPARC V8 simulators",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add equivalent fail-closed fronts for three independent simulator-protocol consumers and run each architecture's instruction, program, protocol, and coverage suites."
+    },
+    {
+      "id": "typescript-macsyma-frontend-build-front-coverage",
+      "title": "Add tested BUILD fronts for the TypeScript MACSYMA lexer, parser, and compiler",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add lexer-to-parser-to-compiler fronts over the existing generated grammar graph and run build, tests, and coverage for all three roots."
+    },
+    {
+      "id": "typescript-symbolic-vm-build-front-coverage",
+      "title": "Add a tested BUILD front for the TypeScript symbolic VM",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Add a cross-platform symbolic-vm front with explicit CAS dependencies and run production build, Vitest, coverage, capability, and downstream smoke checks."
+    },
+    {
+      "id": "python-wave-physics-orphan-package-root-classification",
+      "title": "Classify the orphan Python wave-physics capability-only package root",
+      "status": "pending",
       "selection_blocked": true,
-      "notes": "Classification-only umbrella for the 27 structurally unwatched roots left after assigning the concrete Kotlin and Go families and preserving existing simulator owners: 17 Python roots (`activation-functions`, `algol-lexer`, `algol-parser`, `block-ram`, `cas-fourier`, `cas-laplace`, `cas-mnewton`, `cas-ode`, `fpga`, `gradient-descent`, `intel8051-simulator`, `loss-functions`, `matrix`, `mips-r2000-simulator`, `perceptron`, `sparc-v8-simulator`, and `wave_physics`), three Ruby roots (`activation-functions`, `matrix`, and `perceptron`), and seven TypeScript roots (`activation-functions`, `macsyma-compiler`, `macsyma-lexer`, `macsyma-parser`, `matrix`, `perceptron`, and `symbolic-vm`). Decompose exact dependency-shaped owners before implementation. Do not duplicate Python `alpha-axp-simulator`, `cdc6600-simulator`, or `pdp11-simulator`; their existing classification owners remain authoritative. The CAS standalone-integrity and loss-function semantic owners do not own these missing BUILD fronts."
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Review the root containing only required_capabilities.json, remove stale phantom metadata with reporter proof or register a separate spec-backed implementation owner if recovery evidence appears; do not manufacture a BUILD front around no source."
+    },
+    {
+      "id": "established-lane-unwatched-package-root-classification-20260927",
+      "title": "Classify established-lane package roots without BUILD fronts",
+      "status": "pending",
+      "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage", "python-gradient-descent-build-front-coverage", "ruby-activation-matrix-perceptron-build-front-coverage", "typescript-activation-matrix-perceptron-build-front-coverage", "python-algol-lexer-parser-build-front-coverage", "python-block-ram-fpga-build-front-coverage", "python-cas-laplace-fourier-build-front-coverage", "python-cas-mnewton-build-front-coverage", "python-cas-ode-build-front-coverage", "python-intel8051-mips-r2000-sparc-v8-build-front-coverage", "typescript-macsyma-frontend-build-front-coverage", "typescript-symbolic-vm-build-front-coverage", "python-wave-physics-orphan-package-root-classification"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Selection-blocked completion umbrella for the 27 structurally unwatched roots now owned by thirteen collision-free dependency-shaped children. It owns no implementation and completes only after every child is merged. Existing Python alpha-axp, CDC 6600, and PDP-11 simulator owners remain authoritative, and the generalized orphan validator owns enforcement rather than these repairs."
     },
     {
       "id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",

@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Fly, Bee, Butterfly, Spider, Squirrel",
+  "label": "ch:pa-fly-bee-butterfly-spider-squirrel",
+  "canDo": "I can say a fly, a bee, a butterfly, a spider and a squirrel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C132-galhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say a fly, a bee, a butterfly, a spider and a squirrel.",
+    "assesses": [
+      "PA-LEX-C132-THINGS132-03",
+      "PA-LEX-C132-THINGS132-04",
+      "PA-LEX-C132-THINGS132-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Darkness, Light, Shade, Rainbow, Rabbit",
+  "label": "ch:pa-darkness-light-shade-rainbow-rabbit",
+  "canDo": "I can say darkness, light, shade, a rainbow and a rabbit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C129-khargosh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say darkness, light, shade, a rainbow and a rabbit.",
+    "assesses": [
+      "PA-LEX-C129-THINGS129-03",
+      "PA-LEX-C129-THINGS129-04",
+      "PA-LEX-C129-THINGS129-05"
+    ]
+  }
+}

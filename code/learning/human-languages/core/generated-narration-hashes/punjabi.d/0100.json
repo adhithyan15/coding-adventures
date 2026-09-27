@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:2f242f6365a46ca7",
+  "lessonIds": [
+    "PA-C100-barsat",
+    "PA-C100-basant",
+    "PA-C100-patjhar",
+    "PA-C100-roz",
+    "PA-C100-tarikh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch100.txt",
+  "json": "punjabi/narration/ch100.json",
+  "textHash": "fnv1a64:b04cea831d09f685",
+  "jsonHash": "fnv1a64:124831ed8f1edfd7",
+  "findings": []
+}

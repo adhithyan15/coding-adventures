@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:cfd63410a2e5e164",
+  "lessonIds": [
+    "PA-C116-dhaga",
+    "PA-C116-batan",
+    "PA-C116-kill",
+    "PA-C116-balti",
+    "PA-C116-jharu",
+    "PA-R116-first-pass-owning-and-being-able",
+    "PA-R116-second-pass-things-in-the-house"
+  ],
+  "tex": "punjabi/book/chapters/ch116-thread-button-nail-bucket-broom.tex"
+}

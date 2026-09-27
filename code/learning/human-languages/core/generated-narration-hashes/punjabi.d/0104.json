@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:229a2f6ad1bcccfb",
+  "lessonIds": [
+    "PA-C104-jeth",
+    "PA-C104-har",
+    "PA-C104-savan",
+    "PA-C104-bhado",
+    "PA-C104-assu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch104.txt",
+  "json": "punjabi/narration/ch104.json",
+  "textHash": "fnv1a64:0ed756c281c66139",
+  "jsonHash": "fnv1a64:66c9ee5c3448310e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Cunning, Wise, Innocent, Round, Straight",
+  "label": "ch:pa-cunning-wise-innocent-round-straight",
+  "canDo": "I can say cunning, wise, innocent, round and straight.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C141-siddha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can say cunning, wise, innocent, round and straight.",
+    "assesses": [
+      "PA-LEX-C141-QUAL141-03",
+      "PA-LEX-C141-QUAL141-04",
+      "PA-LEX-C141-QUAL141-05"
+    ]
+  }
+}

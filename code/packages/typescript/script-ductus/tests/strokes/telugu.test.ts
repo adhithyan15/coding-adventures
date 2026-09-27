@@ -15,6 +15,7 @@ import {
 import { registerStrokeHonestyTests } from "../support/stroke-honesty";
 
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
+const TELUGU_KA = DUCTUS[ductusKey("telugu", "క")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -30,11 +31,20 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The five-run pedagogical ఐ route crosses the printed form's narrow
-  // counter transitions while still covering the complete outline.
-  registerStrokeHonestyTests(letters, { అ: 0.96, ఐ: 0.59, ఒ: 0.84, ఋ: 0.84 });
+  // The sourced క route and five-run pedagogical ఐ route cross narrow printed
+  // counter transitions while still covering their complete outlines.
+  registerStrokeHonestyTests(letters, {
+    అ: 0.96,
+    క: 0.93,
+    ఐ: 0.59,
+    ఒ: 0.84,
+    ఋ: 0.84,
+  });
 
   beforeAll(() => {
+    expect(verifiedLetterFont("క", TELUGU_KA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
@@ -62,6 +72,24 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ఋ", TELUGU_VOCALIC_R.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
+  });
+
+  it("Telugu క groups five source-verified movements into two pen-down runs", () => {
+    expect(penLifts(TELUGU_KA)).toBe(1);
+    expect(TELUGU_KA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_KA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "turn down and left around the upper bowl",
+        "continue right through the middle shoulder",
+        "curve down and left around the lower bowl",
+        "finish upward along the left tail",
+      ],
+      ["sweep up through the separate headstroke"],
+    ]);
   });
 
   it("Telugu అ groups four source-verified movements into two pen-down runs", () => {

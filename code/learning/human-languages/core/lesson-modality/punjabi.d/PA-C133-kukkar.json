@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C133-kukkar",
+    "language": "punjabi",
+    "chapter": 133,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0da65cee16e92416"
+  },
+  "findings": []
+}

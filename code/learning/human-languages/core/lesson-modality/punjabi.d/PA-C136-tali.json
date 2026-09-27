@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C136-tali",
+    "language": "punjabi",
+    "chapter": 136,
+    "sequence": 7350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9e8ec7a79323967"
+  },
+  "findings": []
+}

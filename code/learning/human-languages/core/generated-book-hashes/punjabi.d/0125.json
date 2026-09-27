@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:1104c3175e890e68",
+  "lessonIds": [
+    "PA-C125-halva",
+    "PA-C125-masala",
+    "PA-C125-haldi",
+    "PA-C125-jira",
+    "PA-C125-pakaura",
+    "PA-R125-first-pass-the-house-and-clothes",
+    "PA-R125-second-pass-clothes-and-food"
+  ],
+  "tex": "punjabi/book/chapters/ch125-halwa-spice-turmeric-cumin-fritter.tex"
+}

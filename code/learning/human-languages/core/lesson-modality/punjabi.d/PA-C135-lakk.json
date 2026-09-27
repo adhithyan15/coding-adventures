@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C135-lakk",
+    "language": "punjabi",
+    "chapter": 135,
+    "sequence": 7330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2a500481037c7a1"
+  },
+  "findings": []
+}

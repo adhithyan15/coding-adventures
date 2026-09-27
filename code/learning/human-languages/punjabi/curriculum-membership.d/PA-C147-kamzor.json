@@ -1,0 +1,11 @@
+{
+  "id": "PA-C147-kamzor",
+  "pathSegment": "PA-PATH-147-QUAL147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-147-QUAL147",
+      "order": 4
+    }
+  ]
+}

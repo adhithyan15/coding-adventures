@@ -1,0 +1,11 @@
+{
+  "id": "PA-C106-kade",
+  "pathSegment": "PA-PATH-106-DEF106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-106-DEF106",
+      "order": 1
+    }
+  ]
+}

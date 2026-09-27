@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:7d8eb8919ec5a9ed",
+  "lessonIds": [
+    "PA-C124-amrud",
+    "PA-C124-mugphali",
+    "PA-C124-sag",
+    "PA-C124-lassi",
+    "PA-C124-khir"
+  ],
+  "tex": "punjabi/book/chapters/ch124-guava-peanuts-cooked-greens-lassi-rice-pudding.tex"
+}

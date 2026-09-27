@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:de777f2edf3c0815",
+  "lessonIds": [
+    "PA-C139-tankhah",
+    "PA-C139-darzi",
+    "PA-C139-tarkhan",
+    "PA-C139-luhar",
+    "PA-C139-ghumiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch139.txt",
+  "json": "punjabi/narration/ch139.json",
+  "textHash": "fnv1a64:8b9cdfff55131aa0",
+  "jsonHash": "fnv1a64:bf8cbbb26f730ea8",
+  "findings": []
+}

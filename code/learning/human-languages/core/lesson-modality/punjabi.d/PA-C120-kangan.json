@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C120-kangan",
+    "language": "punjabi",
+    "chapter": 120,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69fcff7bcefd9d22"
+  },
+  "findings": []
+}

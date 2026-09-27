@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C123-narial",
+    "language": "punjabi",
+    "chapter": 123,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5f93e9169a3d4b0"
+  },
+  "findings": []
+}

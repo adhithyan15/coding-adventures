@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:2c8a5b9617a50689",
+  "lessonIds": [
+    "PA-C144-naram",
+    "PA-C144-sakht",
+    "PA-C144-mushkal",
+    "PA-C144-hushiar",
+    "PA-C144-alsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch144.txt",
+  "json": "punjabi/narration/ch144.json",
+  "textHash": "fnv1a64:a827f6786fc1cac7",
+  "jsonHash": "fnv1a64:42f16a89a345169d",
+  "findings": []
+}

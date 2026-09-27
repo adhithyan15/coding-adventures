@@ -1,0 +1,11 @@
+{
+  "id": "PA-C138-adhiapak",
+  "pathSegment": "PA-PATH-138-THINGS138",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-138-THINGS138",
+      "order": 4
+    }
+  ]
+}

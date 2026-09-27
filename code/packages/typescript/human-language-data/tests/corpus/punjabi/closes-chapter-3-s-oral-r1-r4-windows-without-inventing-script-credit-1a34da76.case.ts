@@ -29,7 +29,9 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   const checkpoints = checkpointIds.map((id) =>
     ordered.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(checkpoints.map((lesson) => ordered.indexOf(lesson))).toEqual([27, 36, 58, 127]);
+  // Punjabi A1: chapter 6's two over-budget lessons split into three -more
+  // continuations ahead of this point, so these positions move by 3.
+  expect(checkpoints.map((lesson) => ordered.indexOf(lesson))).toEqual([27, 36, 61, 130]);
   expect(checkpoints.map((lesson) => lesson.frontmatter["introduces.knowledge"])).toEqual([
     [],
     [],
@@ -136,5 +138,16 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // before the chapter-20 ੌ lesson: its own R2, R3 and R4 windows start out
   // missed (+1 each), and the one extra lesson carries ਪ and ਕ into their R4
   // for the first time (-2 R4).
-  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 360, R3: 380, R4: 259 });
+  // {55, 360, 380, 259} -> {55, 560, 484, 531}. Punjabi A1: chapters 99-152
+  // (270 words, twelve reviews) and three chapter-6 continuations. Decomposed
+  // against the corpus without them:
+  //   +485 on the new chapters' own atoms (201 R2, 90 R3, 194 R4): they sit at
+  //        the end of the track, and no later lesson exists to revisit them.
+  //    +99 on chapters 75-98 (3 R2, 18 R3, 78 R4): their windows used to fall
+  //        past the end of a 533-lesson track and are now measurable.
+  //     -8 PRE-EXISTING closed (4 R2, 4 R3) by the chapter-6 continuations.
+  //      0 pre-existing windows lost: the splits pushed the top-line clue, the
+  //        addak and the tippi past R1, and each is retrieved by name in the
+  //        next lesson's warm-up.
+  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 560, R3: 484, R4: 531 });
 });

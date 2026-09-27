@@ -4,8 +4,8 @@ import type { StrokeSource } from "../strokes.ts";
 import type { DuctusEntry } from "./registry.ts";
 import telugu from "../../../../../learning/human-languages/data/scripts/telugu.json";
 
-const teluguIndependentVowelSource = (glyph: string): StrokeSource => {
-  const letter = telugu.independentVowels.find(
+const teluguLetterSource = (glyph: string): StrokeSource => {
+  const letter = [...telugu.letters, ...telugu.independentVowels].find(
     (candidate) => candidate.glyph === glyph,
   );
   if (
@@ -13,12 +13,96 @@ const teluguIndependentVowelSource = (glyph: string): StrokeSource => {
     !("strokeOrderSource" in letter) ||
     !letter.strokeOrderSource
   ) {
-    throw new Error(`Telugu independent vowel ${glyph} has no verified source`);
+    throw new Error(`Telugu letter ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
 
+const teluguIndependentVowelSource = teluguLetterSource;
+
 export const entries: DuctusEntry[] = [
+  [
+    "telugu:క",
+    {
+      script: "telugu",
+      glyph: "క",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "turn down and left around the upper bowl",
+              path: [
+                { x: 442, y: 357 },
+                { x: 410, y: 415 },
+                { x: 350, y: 452 },
+                { x: 270, y: 466 },
+                { x: 190, y: 458 },
+                { x: 125, y: 425 },
+                { x: 87, y: 375 },
+                { x: 78, y: 325 },
+                { x: 100, y: 292 },
+              ],
+            },
+            {
+              label: "continue right through the middle shoulder",
+              path: [
+                { x: 100, y: 292 },
+                { x: 165, y: 268 },
+                { x: 235, y: 255 },
+                { x: 310, y: 251 },
+                { x: 385, y: 240 },
+                { x: 442, y: 218 },
+              ],
+            },
+            {
+              label: "curve down and left around the lower bowl",
+              path: [
+                { x: 442, y: 218 },
+                { x: 455, y: 165 },
+                { x: 430, y: 112 },
+                { x: 380, y: 72 },
+                { x: 315, y: 45 },
+                { x: 245, y: 31 },
+                { x: 175, y: 44 },
+                { x: 115, y: 78 },
+                { x: 77, y: 125 },
+              ],
+            },
+            {
+              label: "finish upward along the left tail",
+              path: [
+                { x: 77, y: 125 },
+                { x: 62, y: 155 },
+                { x: 57, y: 190 },
+                { x: 62, y: 225 },
+                { x: 78, y: 250 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep up through the separate headstroke",
+              path: [
+                { x: 132, y: 548 },
+                { x: 165, y: 505 },
+                { x: 215, y: 470 },
+                { x: 260, y: 468 },
+                { x: 315, y: 492 },
+                { x: 365, y: 535 },
+                { x: 410, y: 585 },
+                { x: 455, y: 635 },
+                { x: 510, y: 676 },
+                { x: 548, y: 684 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("క"),
+    },
+  ],
   [
     "telugu:అ",
     {

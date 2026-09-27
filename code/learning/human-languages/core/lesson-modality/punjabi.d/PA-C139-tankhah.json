@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C139-tankhah",
+    "language": "punjabi",
+    "chapter": 139,
+    "sequence": 7500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72a5ba6b4c551eb1"
+  },
+  "findings": []
+}

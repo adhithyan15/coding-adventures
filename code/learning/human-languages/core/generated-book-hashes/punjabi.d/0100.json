@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:cdc14544cf513404",
+  "lessonIds": [
+    "PA-C100-barsat",
+    "PA-C100-basant",
+    "PA-C100-patjhar",
+    "PA-C100-roz",
+    "PA-C100-tarikh"
+  ],
+  "tex": "punjabi/book/chapters/ch100-rainy-season-spring-autumn-every-day-date.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:54c12693910bfc4e",
+  "lessonIds": [
+    "PA-C134-gallh",
+    "PA-C134-mattha",
+    "PA-C134-bharavatta",
+    "PA-C134-darhi",
+    "PA-C134-mucch",
+    "PA-R134-first-pass-food-and-nature",
+    "PA-R134-second-pass-nature-and-animals"
+  ],
+  "tex": "punjabi/book/chapters/ch134-cheek-forehead-eyebrow-beard-moustache.tex"
+}

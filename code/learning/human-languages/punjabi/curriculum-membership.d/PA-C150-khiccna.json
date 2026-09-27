@@ -1,0 +1,11 @@
+{
+  "id": "PA-C150-khiccna",
+  "pathSegment": "PA-PATH-150-ACT150",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-150-ACT150",
+      "order": 2
+    }
+  ]
+}

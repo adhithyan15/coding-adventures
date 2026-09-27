@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C106-kade",
+    "language": "punjabi",
+    "chapter": 106,
+    "sequence": 5660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f4e23ee382f2a9a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C130-ricch",
+  "pathSegment": "PA-PATH-130-THINGS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-130-THINGS130",
+      "order": 1
+    }
+  ]
+}

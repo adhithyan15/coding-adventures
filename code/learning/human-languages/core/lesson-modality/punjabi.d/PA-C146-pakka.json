@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C146-pakka",
+    "language": "punjabi",
+    "chapter": 146,
+    "sequence": 7910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d93108edacf7c07"
+  },
+  "findings": []
+}

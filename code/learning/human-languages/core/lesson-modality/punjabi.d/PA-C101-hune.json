@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C101-hune",
+    "language": "punjabi",
+    "chapter": 101,
+    "sequence": 5400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b566364f559c8879"
+  },
+  "findings": []
+}

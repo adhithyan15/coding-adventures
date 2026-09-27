@@ -1,0 +1,11 @@
+{
+  "id": "PA-R116-first-pass-owning-and-being-able",
+  "pathSegment": "PA-PATH-116-THINGS116",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-116-THINGS116",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C117-mombatti",
+  "pathSegment": "PA-PATH-117-THINGS117",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-117-THINGS117",
+      "order": 4
+    }
+  ]
+}

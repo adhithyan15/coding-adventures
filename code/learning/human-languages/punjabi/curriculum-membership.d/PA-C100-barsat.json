@@ -1,0 +1,11 @@
+{
+  "id": "PA-C100-barsat",
+  "pathSegment": "PA-PATH-100-TIME100",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-100-TIME100",
+      "order": 0
+    }
+  ]
+}

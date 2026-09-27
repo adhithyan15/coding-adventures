@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:f20f6d2ad259c491",
+  "lessonIds": [
+    "PA-C123-lasan",
+    "PA-C123-adrak",
+    "PA-C123-narial",
+    "PA-C123-tarbuz",
+    "PA-C123-papita"
+  ],
+  "tex": "punjabi/book/chapters/ch123-garlic-ginger-coconut-watermelon-papaya.tex"
+}

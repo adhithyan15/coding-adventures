@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:ecea9c4115dc89b4",
+  "lessonIds": [
+    "PA-C125-halva",
+    "PA-C125-masala",
+    "PA-C125-haldi",
+    "PA-C125-jira",
+    "PA-C125-pakaura",
+    "PA-R125-first-pass-the-house-and-clothes",
+    "PA-R125-second-pass-clothes-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch125.txt",
+  "json": "punjabi/narration/ch125.json",
+  "textHash": "fnv1a64:ebb50c8964d44713",
+  "jsonHash": "fnv1a64:dd501156352f20f9",
+  "findings": []
+}

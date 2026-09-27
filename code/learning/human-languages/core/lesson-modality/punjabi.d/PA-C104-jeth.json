@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C104-jeth",
+    "language": "punjabi",
+    "chapter": 104,
+    "sequence": 5550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdf71d5a08704aee"
+  },
+  "findings": []
+}

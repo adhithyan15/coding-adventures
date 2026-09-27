@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:7a2e405ba7368b82",
+  "lessonIds": [
+    "PA-C105-kattak",
+    "PA-C105-magghar",
+    "PA-C105-poh",
+    "PA-C105-magh",
+    "PA-C105-phaggan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch105.txt",
+  "json": "punjabi/narration/ch105.json",
+  "textHash": "fnv1a64:fa02d6fddc3c18d8",
+  "jsonHash": "fnv1a64:df5f9cdeb5e5e1c8",
+  "findings": []
+}

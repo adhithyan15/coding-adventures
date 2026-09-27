@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:8951fb2a552d3684",
+  "lessonIds": [
+    "PA-C114-saban",
+    "PA-C114-taulia",
+    "PA-C114-gadda",
+    "PA-C114-cadar",
+    "PA-C114-kambal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch114.txt",
+  "json": "punjabi/narration/ch114.json",
+  "textHash": "fnv1a64:731593536aa359d0",
+  "jsonHash": "fnv1a64:b86b5027dcc93491",
+  "findings": []
+}

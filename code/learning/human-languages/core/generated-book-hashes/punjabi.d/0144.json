@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:91be9ce5cdf1eb1d",
+  "lessonIds": [
+    "PA-C144-naram",
+    "PA-C144-sakht",
+    "PA-C144-mushkal",
+    "PA-C144-hushiar",
+    "PA-C144-alsi"
+  ],
+  "tex": "punjabi/book/chapters/ch144-soft-hard-difficult-clever-lazy.tex"
+}

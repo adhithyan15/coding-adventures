@@ -1,0 +1,11 @@
+{
+  "id": "PA-C130-giddar",
+  "pathSegment": "PA-PATH-130-THINGS130",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-130-THINGS130",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C144-sakht",
+  "pathSegment": "PA-PATH-144-QUAL144",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-144-QUAL144",
+      "order": 1
+    }
+  ]
+}

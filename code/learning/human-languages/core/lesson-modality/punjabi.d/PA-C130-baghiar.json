@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C130-baghiar",
+    "language": "punjabi",
+    "chapter": 130,
+    "sequence": 7030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5943b8c4d21dd91"
+  },
+  "findings": []
+}

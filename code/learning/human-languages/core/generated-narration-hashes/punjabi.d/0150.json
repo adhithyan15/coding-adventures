@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:8fc41a1f723b0dc6",
+  "lessonIds": [
+    "PA-C150-siuna",
+    "PA-C150-bharna",
+    "PA-C150-khiccna",
+    "PA-C150-jagna",
+    "PA-C150-calauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch150.txt",
+  "json": "punjabi/narration/ch150.json",
+  "textHash": "fnv1a64:75a5dfcb58769d34",
+  "jsonHash": "fnv1a64:eaa7affffed8ea15",
+  "findings": []
+}

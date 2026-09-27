@@ -1,0 +1,11 @@
+{
+  "id": "PA-C115-kaici",
+  "pathSegment": "PA-PATH-115-THINGS115",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-115-THINGS115",
+      "order": 3
+    }
+  ]
+}

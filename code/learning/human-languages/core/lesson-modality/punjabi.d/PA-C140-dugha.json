@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C140-dugha",
+    "language": "punjabi",
+    "chapter": 140,
+    "sequence": 7570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14a0ae14d75b408b"
+  },
+  "findings": []
+}
