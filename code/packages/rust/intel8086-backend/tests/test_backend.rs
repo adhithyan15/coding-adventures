@@ -329,6 +329,39 @@ fn word02_rejects_malformed_boolean_and_instruction_shapes() {
             ],
             "no dest",
         ),
+        (
+            vec![
+                ci(
+                    "const_bool",
+                    Some("a"),
+                    vec![CIROperand::Bool(true)],
+                    "bool",
+                ),
+                ci("const_u8", Some("b"), vec![CIROperand::Int(2)], "u8"),
+                ci(
+                    "add_u8",
+                    Some("c"),
+                    vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                    "u8",
+                ),
+                ci("ret_u8", None, vec![CIROperand::Var("c".into())], "u8"),
+            ],
+            "source type mismatch",
+        ),
+        (
+            vec![
+                ci("const_i64", Some("a"), vec![CIROperand::Int(1)], "i64"),
+                ci("const_u16", Some("b"), vec![CIROperand::Int(2)], "u16"),
+                ci(
+                    "add_u16",
+                    Some("c"),
+                    vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                    "u16",
+                ),
+                ci("ret_u16", None, vec![CIROperand::Var("c".into())], "u16"),
+            ],
+            "source type mismatch",
+        ),
     ];
     for (cir, expected) in cases {
         let error = compile(&ctx("malformed", &[], "bool"), &cir).unwrap_err();

@@ -221,9 +221,11 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
                 .ok_or_else(|| BackendError::UndefinedVariable(right.clone()))?;
             if slots[left_slot].as_ref().expect("located slot").width != width
                 || slots[right_slot].as_ref().expect("located slot").width != width
+                || slots[left_slot].as_ref().expect("located slot").ty != width.name()
+                || slots[right_slot].as_ref().expect("located slot").ty != width.name()
             {
                 return Err(BackendError::InvalidOperand(format!(
-                    "{op} source width mismatch"
+                    "{op} source width mismatch or source type mismatch"
                 )));
             }
             let target = slots
