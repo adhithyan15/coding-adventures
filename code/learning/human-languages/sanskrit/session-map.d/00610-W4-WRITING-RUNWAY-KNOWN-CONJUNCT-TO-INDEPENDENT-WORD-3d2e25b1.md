@@ -1,0 +1,1 @@
+| W4 | writing-runway | स्त → अस्ति | observe/trace the joined consonants → visible whole-word copy → delayed copy → sound-and-meaning dictation; every component and the word “is” are already taught, and romanization earns no credit |

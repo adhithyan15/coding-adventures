@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W10-asti-dictation",
+    "language": "sanskrit",
+    "chapter": 10,
+    "sequence": 505,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9f7876e815f4a40a",
+    "detachableSegments": [
+      "Writing — conjunct dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W10-st-conjunct-observe-trace",
+    "language": "sanskrit",
+    "chapter": 10,
+    "sequence": 502,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:58724b43898ba7ff",
+    "detachableSegments": [
+      "Writing — observe and trace the conjunct"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

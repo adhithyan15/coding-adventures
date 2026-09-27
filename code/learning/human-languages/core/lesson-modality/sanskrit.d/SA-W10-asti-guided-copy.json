@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W10-asti-guided-copy",
+    "language": "sanskrit",
+    "chapter": 10,
+    "sequence": 503,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8881ce1579f5b984",
+    "detachableSegments": [
+      "Writing — guided conjunct copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
