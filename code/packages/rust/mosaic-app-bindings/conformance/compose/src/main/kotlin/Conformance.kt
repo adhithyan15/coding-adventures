@@ -93,6 +93,37 @@ fun main() {
             "restored count")
         requireConformance(restoredProps["status"] == "restored", "restore status")
         requireConformance(notificationCount == 2, "restore props-change notification")
+
+        // UI48 ENV4 (§7.4). The conformance app does not react to its
+        // environment, so the runtime answers with the current revision and no
+        // props -- and the host keeps showing what it showed.
+        val compact = MosaicRuntimeHost.initialEnvironment() + mapOf(
+            "colorScheme" to "light",
+            "sizeClass" to "compact",
+            "orientation" to "portrait",
+        )
+        val reported = objectMap(host.reportEnvironment(compact), "environment report")
+        requireConformance(integer(reported["revision"], "environment revision") == 3L,
+            "an ignored environment keeps the revision")
+        requireConformance(props(reported, "environment report") == restoredProps,
+            "an ignored environment keeps the props")
+        requireConformance(props(objectMap(host.props(), "props after report"), "props after report")
+            == restoredProps, "the host still shows the same props")
+        requireConformance(host.reportEnvironment(compact) == null,
+            "an unchanged environment is not sent again")
+        val refused = host.reportEnvironment(compact + ("sizeClass" to "enormous"))
+        requireConformance(refused?.containsKey("error") == true,
+            "an invalid environment is refused")
+        requireConformance(props(objectMap(host.props(), "props after refusal"), "props after refusal")
+            == restoredProps, "a refused environment leaves the props")
+        val expanded = compact + ("sizeClass" to "expanded") + ("orientation" to "landscape")
+        requireConformance(host.reportEnvironment(expanded) != null,
+            "a changed size class is sent")
+        requireConformance(host.reportEnvironment(compact) != null,
+            "a refused report was not remembered, and going back is a change")
+        requireConformance(MosaicRuntimeHost.initialEnvironment()["pointer"] == "fine" &&
+            MosaicRuntimeHost.initialEnvironment()["hover"] == "hover",
+            "a desktop start context carries a fine, hovering pointer")
     } finally {
         host.close()
     }

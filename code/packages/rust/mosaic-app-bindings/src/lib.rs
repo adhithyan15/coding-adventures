@@ -351,6 +351,28 @@ fn bind_application(template: &str, application_id: Option<&str>) -> String {
 mod tests {
     use super::*;
 
+    /// UI48 ENV4 on Compose (§7.4): the host reports the environment, keeps
+    /// the showing props for a no-reaction update at the same revision only,
+    /// and seeds the start context with what the platform knows.
+    #[test]
+    fn compose_host_reports_the_environment() {
+        let host = compose_jna_binding_for_application("probe");
+        assert!(host.contains("fun reportEnvironment(environment: Map<String, String>): Map<String, Any?>?"));
+        assert!(host.contains("if (environment == lastReportedEnvironment) return null"));
+        assert!(host.contains("mapOf(\"name\" to \"environmentChanged\", \"payload\" to environment)"));
+        // Remembered only after the runtime took it: the catch returns first.
+        let refused = host.find("} catch (error: MosaicRuntimeException) {").expect("refusal");
+        let remembered = host.find("lastReportedEnvironment = environment.toMap()").expect("remember");
+        assert!(refused < remembered);
+        // Props kept only at the revision already showing.
+        assert!(host.contains("if (revision != shownRevision) return update"));
+        assert!(host.contains("val settled = keepShowingProps(settleEffects(update))"));
+        // The start context carries pointer, hover and reduced motion.
+        assert!(host.contains("for ((axis, value) in initialEnvironment()) put(axis, value)"));
+        assert!(host.contains("mapOf(\"pointer\" to \"fine\", \"hover\" to \"hover\", \"reducedMotion\" to \"no-preference\")"));
+        assert!(host.contains("mapOf(\"pointer\" to \"coarse\", \"hover\" to \"none\", \"reducedMotion\" to \"no-preference\")"));
+    }
+
     /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
     /// same kinds, limits and MIME table, so an app sees the same outcome on
     /// either host. A drift in one template fails here, not on a Mac.
