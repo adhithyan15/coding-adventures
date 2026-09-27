@@ -26,9 +26,10 @@
 > cross-package product changes; #16116 was repaired in #16117 by making the
 > dated changelog authoritative. The static HTML shell gate shipped in #16121
 > and the Web Components lifecycle parity host in #16130. Both are coverage
-> work, not resumed feature composition or new release artifacts. After the
-> `v0.4.1` correction, Paint is the remaining TaskApp-scoped backend gap and
-> is selected in #16151.
+> work, not resumed feature composition or new release artifacts. The
+> package-expanded Paint visual gate in #16151 closes the final TaskApp-scoped
+> backend gap with reviewed light/dark CI goldens, without claiming a host,
+> interaction support, or new release artifact.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
@@ -76,7 +77,8 @@ links existing Mosaic work instead of duplicating it.
    release lane builds a tested web bundle and strict generated native projects;
    installer packaging remains #13522. **Done in #13587, with follow-up clean-
    runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0`,
-   `task-app-v0.2.0`, `task-app-v0.3.0`, and `task-app-v0.4.0` published. The
+   `task-app-v0.2.0`, `task-app-v0.3.0`, `task-app-v0.4.0`, and corrective
+   `task-app-v0.4.1` published. The
    `task-app-v0.4.0` checkpoint in
    [#16134](https://github.com/adhithyan15/coding-adventures/issues/16134)
    intentionally kept the verified artifact matrix unchanged. The generated-
@@ -164,11 +166,10 @@ The fresh pass this section used to defer to is now written down:
 [`code/specs/task-app-platform-completion-v1.md`](../../../specs/task-app-platform-completion-v1.md).
 It measures TaskApp against all nine Mosaic backends rather than against the
 super-app feature roadmap. Six interactive/native targets are gated and shipped;
-static HTML is structurally gated by #16120/#16121, and Web Components is
-real-engine parity-gated by #16125/#16130. Paint is the only backend left
-without TaskApp-level coverage. The ordered queue below comes from that spec;
-the release-notes correction and product-scoped `v0.4.1` patch in #16142 are
-prioritized before Paint.
+static HTML is structurally gated by #16120/#16121, Web Components is
+real-engine parity-gated by #16125/#16130, and Paint is visually gated by
+#16151. All nine backends now have explicitly scoped product coverage. The
+ordered queue below comes from that spec.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
@@ -243,7 +244,8 @@ see the spec for the completion bar each one has to clear.
    no release artifact claim.
 8. **P1 [#16151](https://github.com/adhithyan15/coding-adventures/issues/16151):**
    Paint visual-regression gate — the only mechanism that would catch a purely
-   visual regression. **Selected as the next single TaskApp iteration.**
+   visual regression. **Done with reviewed light/dark 1280 x 900 CPU Skia
+   goldens; CI-only, with no host or release-artifact claim.**
 
 **Tier C — reach, stated rather than silently missing.** iOS compiles but does
 not run; Android has no Mosaic backend and belongs to #12017; signing,

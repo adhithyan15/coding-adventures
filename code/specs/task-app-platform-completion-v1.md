@@ -63,10 +63,12 @@ presentation controller and persistence contract with React, and drives create,
 complete, restore, and delete through the emitted Custom Element controls
 (#16125). It is deliberately a CI parity bundle, not a shipped release artifact.
 
-**Selected for coverage (1 of 9).** `mosaic-emit-paint` still contains no
-TaskApp product gate or release artifact. Emitter-local fixtures prove the
-general lowering, not that TaskApp's authored shell survives it. #16151 owns
-the final product-scoped gate.
+**Visually gated (1 of 9).** `paint` package-expands TaskApp's real interface,
+layout, dependency styles, and both authored themes, then rasterizes reviewed
+1280 x 900 CPU Skia goldens (#16151). The gate proves repeat rendering is
+byte-identical, validates the PNG dimensions, and requires distinct light and
+dark output. It is a CI snapshot, not a host, interaction claim, or release
+artifact.
 
 **Partial.** iOS compiles the generated SwiftUI sources against the iOS 16
 deployment target. That is source portability; nothing runs the app or its
@@ -124,7 +126,7 @@ rather than letting them read as silent gaps.
    only mechanism in the stack that would catch a purely visual regression;
    every existing gate asserts structure, semantics, or behavior. It remains
    a CI-only raster snapshot, not a host, interaction claim, or release
-   artifact.
+   artifact. **Implemented for #16151.**
 
 ### Tier C — reach, stated honestly
 
