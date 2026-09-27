@@ -128,6 +128,27 @@ describe("curriculum gap report", () => {
       }),
     );
     expect(unclosed.wordCount).toBe(1);
+
+    // One unclosed "[" swallowing a very long tail used to overflow the call stack:
+    // the buffered label was spread into push() one argument per character.
+    const longTail = estimateLessonDuration(
+      lesson({
+        id: "AL-UNCLOSED-LONG",
+        language: "alpha",
+        chapter: 1,
+        minutes: 1,
+        body: `[${"a".repeat(500_000)}`,
+      }),
+    );
+    expect(longTail.wordCount).toBe(1);
+  });
+
+  it("hands every caller the same frozen estimate for one lesson", () => {
+    const one = lesson({ id: "AL-CACHED", language: "alpha", chapter: 1, minutes: 1 });
+    const first = estimateLessonDuration(one);
+    expect(estimateLessonDuration(one)).toBe(first);
+    expect(Object.isFrozen(first)).toBe(true);
+    expect(Object.isFrozen(first.reasons)).toBe(true);
   });
 
   it("reports duration, prerequisite, book, and schema migration gaps", () => {

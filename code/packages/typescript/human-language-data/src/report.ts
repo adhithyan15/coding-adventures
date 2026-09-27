@@ -325,26 +325,40 @@ function stripMarkdownLinks(markdown: string): string {
     state = "text";
   };
   const flushUnclosed = (suffix = ""): void => {
-    output.push(image ? "![" : "[", ...label);
+    // Joined, not spread: spreading every buffered character as a separate
+    // argument overflowed the call stack on an unclosed "[" followed by a few
+    // hundred thousand characters.
+    output.push(image ? "![" : "[", label.join(""));
     if (state === "destination-start" || state === "destination") output.push("]");
-    if (state === "destination") output.push("(", ...destination);
+    if (state === "destination") output.push("(", destination.join(""));
     if (suffix !== "") output.push(suffix);
     reset();
   };
 
   for (let index = 0; index < markdown.length; index += 1) {
-    const character = markdown[index];
     if (state === "text") {
-      if (character === "!" && markdown[index + 1] === "[") {
-        image = true;
-        state = "label";
-        index += 1;
-      } else if (character === "[") {
-        state = "label";
-      } else {
-        output.push(character);
+      // Plain text is copied a run at a time, jumping straight to the next "[".
+      // Character-at-a-time copying made this the report's second-hottest
+      // function; the output is identical. A "!" only opens an image when it is
+      // met in text state right before the "[", exactly as the per-character
+      // walk decided it.
+      const open = markdown.indexOf("[", index);
+      if (open === -1) {
+        output.push(markdown.slice(index));
+        break;
       }
-    } else if (state === "label") {
+      if (open > index && markdown[open - 1] === "!") {
+        output.push(markdown.slice(index, open - 1));
+        image = true;
+      } else {
+        output.push(markdown.slice(index, open));
+      }
+      state = "label";
+      index = open;
+      continue;
+    }
+    const character = markdown[index];
+    if (state === "label") {
       if (character === "]") state = "destination-start";
       else label.push(character);
     } else if (state === "destination-start") {
@@ -412,8 +426,27 @@ function explicitPauseSeconds(markdown: string): number {
   return total;
 }
 
+// The estimate is a pure function of one parsed lesson, and the same lesson objects
+// are estimated repeatedly: once by curriculum validation and once per gap-report
+// build, which callers and tests make several times over the whole corpus. Keyed
+// weakly on the object, so a lesson that is dropped takes its entry with it.
+// Callers must treat a ParsedLesson as immutable once estimated; nothing mutates one.
+const durationEstimates = new WeakMap<ParsedLesson, DurationEstimate>();
+
 /** Estimate a lesson independently from its author-declared duration. */
 export function estimateLessonDuration(lesson: ParsedLesson): DurationEstimate {
+  const cached = durationEstimates.get(lesson);
+  if (cached) return cached;
+  // Frozen because every later caller shares this object; a mutation would
+  // otherwise leak into the next report built over the same lessons.
+  const estimate = computeLessonDuration(lesson);
+  Object.freeze(estimate.reasons);
+  Object.freeze(estimate);
+  durationEstimates.set(lesson, estimate);
+  return estimate;
+}
+
+function computeLessonDuration(lesson: ParsedLesson): DurationEstimate {
   const text = instructionalText(lesson.body);
   const wordCount = countWords(text);
   const promptCount = countPromptLines(stripHtmlComments(lesson.body));
