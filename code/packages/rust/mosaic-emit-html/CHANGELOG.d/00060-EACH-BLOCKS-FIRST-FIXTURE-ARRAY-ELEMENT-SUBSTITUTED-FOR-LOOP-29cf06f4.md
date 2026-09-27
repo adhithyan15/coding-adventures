@@ -1,0 +1,1 @@
+- `each` blocks: first fixture array element substituted for loop variable (v1).

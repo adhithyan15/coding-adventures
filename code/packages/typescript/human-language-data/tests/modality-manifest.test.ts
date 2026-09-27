@@ -925,7 +925,11 @@ describe("corpus regression", () => {
     );
   });
 
-  it("keeps the committed manifest in step with the lessons", () => {
+  // An end-to-end `--check` makes the CLI parse the whole corpus itself, which is
+  // the path under test, so the shared parse above cannot absorb it. It keeps a
+  // file-local integration budget, like narration-cli's "is in sync" gate: under
+  // full-suite parallel load on CI it measured 35.3s against the 30s default.
+  it("keeps the committed manifest in step with the lessons", { timeout: 60_000 }, () => {
     // The gate itself, run against the real curriculum. If this fails, run
     // `npm run generate:modality` and commit the result — exactly what CI will say.
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);

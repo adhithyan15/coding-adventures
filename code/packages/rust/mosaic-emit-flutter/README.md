@@ -190,7 +190,7 @@ the package artifact builder exposes those entries as non-gating
 
 ## What works in v0.2 / what's deferred
 
-See `CHANGELOG.md` for the full feature matrix. The headline:
+See `CHANGELOG.d/` for the full feature matrix. The headline:
 
 - ✅ Containers (Box / Row / Column / Stack), leaves (Text / Image /
   Spacer / Divider / Icon), and the most-used host primitives

@@ -1,0 +1,1 @@
+- `checked: true|false` keyword → bare `checked` attribute or omitted.

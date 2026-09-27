@@ -1,0 +1,1 @@
+- `disabled: true|false` / `slot: d` → bare `disabled` / `data-disabled` marker.
