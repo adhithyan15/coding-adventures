@@ -15,6 +15,124 @@ fn ci(op: &str, dest: Option<&str>, srcs: Vec<CIROperand>, ty: &str) -> CIRInstr
     CIRInstr::new(op, dest, srcs, ty)
 }
 
+fn word02_binary(op: &str, width: &str, left: i64, right: i64) -> Vec<CIRInstr> {
+    vec![
+        ci(
+            &format!("const_{width}"),
+            Some("left"),
+            vec![CIROperand::Int(left)],
+            width,
+        ),
+        ci(
+            &format!("const_{width}"),
+            Some("right"),
+            vec![CIROperand::Int(right)],
+            width,
+        ),
+        ci(
+            op,
+            Some("result"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            width,
+        ),
+        ci(
+            &format!("ret_{width}"),
+            None,
+            vec![CIROperand::Var("result".into())],
+            width,
+        ),
+    ]
+}
+
+#[test]
+fn word02_executes_two_live_byte_and_word_operations() {
+    for (op, width, left, right, expected) in [
+        ("add_u8", "u8", 255, 2, 1),
+        ("sub_u8", "u8", 0, 1, 255),
+        ("and_u8", "u8", 0x55, 0x0f, 5),
+        ("or_u8", "u8", 0x50, 0x0f, 0x5f),
+        ("xor_u8", "u8", 0x55, 0x0f, 0x5a),
+        ("add_u16", "u16", 65535, 2, 1),
+        ("sub_u16", "u16", 0, 1, 65535),
+        ("and_u16", "u16", 0x1234, 0x00ff, 0x0034),
+        ("or_u16", "u16", 0x1234, 0x00ff, 0x12ff),
+        ("xor_u16", "u16", 0x1234, 0x00ff, 0x12cb),
+    ] {
+        let cir = word02_binary(op, width, left, right);
+        let bytes = compile(&ctx("word02", &[], width), &cir).unwrap();
+        let mut sim = Z80Simulator::new(65536);
+        sim.load_program(&bytes).unwrap();
+        assert!(sim.run_loaded_with_limit(100).unwrap().halted, "{op}");
+        let actual = if width == "u8" {
+            u16::from(sim.regs.a)
+        } else {
+            u16::from_be_bytes([sim.regs.h, sim.regs.l])
+        };
+        assert_eq!(actual, expected, "{op}");
+    }
+}
+
+#[test]
+fn word02_preserves_second_live_value_across_first_result() {
+    let mut cir = word02_binary("add_u16", "u16", 5, 2);
+    cir[3] = ci(
+        "sub_u16",
+        Some("difference"),
+        vec![
+            CIROperand::Var("result".into()),
+            CIROperand::Var("right".into()),
+        ],
+        "u16",
+    );
+    cir.push(ci(
+        "ret_u16",
+        None,
+        vec![CIROperand::Var("difference".into())],
+        "u16",
+    ));
+    let bytes = compile(&ctx("reuse", &[], "u16"), &cir).unwrap();
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    assert!(sim.run_loaded_with_limit(100).unwrap().halted);
+    assert_eq!(u16::from_be_bytes([sim.regs.h, sim.regs.l]), 5);
+}
+
+#[test]
+fn word02_rejects_three_live_values_without_spilling() {
+    let mut cir = word02_binary("add_u16", "u16", 5, 2);
+    cir[3] = ci(
+        "add_u16",
+        Some("next"),
+        vec![
+            CIROperand::Var("left".into()),
+            CIROperand::Var("result".into()),
+        ],
+        "u16",
+    );
+    cir.push(ci(
+        "add_u16",
+        Some("final"),
+        vec![
+            CIROperand::Var("next".into()),
+            CIROperand::Var("right".into()),
+        ],
+        "u16",
+    ));
+    cir.push(ci(
+        "ret_u16",
+        None,
+        vec![CIROperand::Var("final".into())],
+        "u16",
+    ));
+    assert!(matches!(
+        compile(&ctx("three", &[], "u16"), &cir),
+        Err(BackendError::UnsupportedOp(_))
+    ));
+}
+
 fn const_42_ret_cir() -> Vec<CIRInstr> {
     vec![
         ci("const_i64", Some("v"), vec![CIROperand::Int(42)], "i64"),
