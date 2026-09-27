@@ -18,7 +18,7 @@
     "branch": "codex/parity-itf-existing-lanes-v1-20260927",
     "item_id": "itf-existing-lanes-v1-conformance",
     "opened_at": "2026-09-27T13:55:32Z",
-    "head_revision": "6af8a5f0f8e4381c669a6c51ae1a77bfd0777cbc",
+    "head_revision": "9980c661b465983919362d9d23750fae0666c0db",
     "checks_status": "pending",
     "auto_merge_enabled": false
   },
