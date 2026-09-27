@@ -76,8 +76,10 @@ fn main() -> u16 {
   be assigned before reading. An unsuffixed integer literal takes an expected
   `u8` or `u16` type from a declaration, return, argument, or the typed other
   operand of a binary expression, and must fit that width. With no such
-  context it defaults to `u16` and must fit `0..65535`. Two untyped literals
-  in one expression therefore both default to `u16`.
+  context it defaults to `u16` and must fit `0..65535`. An outer expected
+  width propagates through a binary expression, so `let x: u8 = 1 + 2;`
+  checks both literals as `u8`. Two untyped literals default to `u16` only
+  when neither operand nor the enclosing expression supplies a width.
 - `u8` arithmetic wraps modulo 256; `u16` arithmetic wraps modulo 65536.
   `+`, `-`, `&`, `|`, `^`, and `~` preserve operand width. Mixed-width binary
   expressions are errors. `u16(x)` zero-extends a `u8`; `u8(x)` keeps the low
@@ -121,8 +123,10 @@ For the 8086 profile, startup sets `CS = DS = SS = 0`, `IP = 0`, and
 20-bit physical address space and far calls are deliberately deferred. A
 `u16` return is in AX, `u8`/`bool` in AL. For the Z80 profile, startup sets
 `PC = 0` and `SP = 0xFFFE`; a `u16` return is in HL, `u8`/`bool` in A.
-The compiler emits a target-specific startup/exit sequence that halts after
-capturing `main`'s result. Internal functions use actual CALL/RET rather
+Both targets encode returned `false` as zero and `true` as one, with no
+other boolean register values. The target-specific exit sequence halts while
+preserving `main`'s result register for simulator inspection. Internal
+functions use actual CALL/RET rather
 than the present backends' `ret_*`-as-HALT shortcut.
 
 All `u16` values stored on the stack use little-endian byte order, matching
@@ -136,11 +140,12 @@ target may be fed to the other target's simulator as a compatibility proof.
 Hex will follow the shared frontend path: grammar tools → typed Hex AST →
 IIR → existing inference/specialization → CIR → target backend → target ROM.
 This keeps one source/type contract and two machine-code emitters. Each rung
-is a separate reviewable PR; a rung is delivered only after **both** Rust
-simulators execute its generated ROM under a finite step limit and the
-expected result is asserted. Python simulators and gate-level models are
-independent oracles for selected discriminating cases, not substitutes for
-running the emitted ROM.
+is a separate reviewable PR. H0 passes frontend diagnostics and reference
+execution while rejecting machine-code emission. H1–H4 are delivered only
+after **both** Rust simulators execute their generated ROM under a finite step
+limit and the expected result is asserted. Python simulators and gate-level
+models are independent oracles for selected discriminating cases, not
+substitutes for running the emitted ROM.
 
 As in Oct, shared IIR may use wider storage slots, but every operation must
 carry or enforce its source width before a value is observed. In particular,
@@ -149,12 +154,12 @@ intermediate that accidentally returns `65537` instead of `1` is a failed
 compiler even when the simulator itself is correct. Other LANG backends gain
 Hex support only after they also satisfy these width and execution tests.
 
-| Rung | New work | Required two-target source proof |
+| Rung | New work | Required proof |
 |---|---|---|
 | H0 | Grammar, AST, type checker, IIR emission, exact diagnostics, reference interpreter; reject unsupported target emission | Parse/type errors and interpreter results for all cases below |
-| H1 | Entry ABI, `u8`/`u16` constants, explicit conversions, return and halt; Z80 gains a two-byte constant return | `main` returns `0`, `42`, `0x1234`, and `u8(0x1234) == 0x34` |
+| H1 | Entry ABI, `u8`/`u16` constants, explicit conversions, return and halt; Z80 gains a two-byte constant return | `main` returns `0`, `42`, `0x1234`, `false`/`true` as 0/1, and `u8(0x1234)` yields `0x34` |
 | H2 | Stack locals, width-correct arithmetic/bitwise operations and unsigned comparisons; Z80 synthesizes operations it lacks natively | `0xffff + 2 == 1`; zero-extend a `u8` local holding 255, then add 1 to get 256; `0xffff > 1`; local reassignment |
-| H3 | Conditional and loop branches with short-circuiting | taken/untaken branches, a finite loop, and skipped right-hand expression |
+| H3 | Conditional and loop branches with short-circuiting | taken/untaken branches, a finite loop, and a trace that executes a dynamic `&&` right-hand branch when its left side is true but skips the same branch when its left side is false |
 | H4 | Direct calls, parameters, frames, and static stack-depth analysis | `sum_to(5) == 15`, two nested calls, and compile-time recursion rejection |
 
 The first **language-runs-on-both** claim belongs to H4. Earlier rungs may
@@ -164,6 +169,9 @@ CI-executed conformance suite, pins errors as well as successful results,
 and preserves the existing Nib/Oct suites. After H4, memory arrays, port
 I/O, 8086 far pointers, and Z80-specific instructions can be designed as
 explicit later extensions rather than accidental differences in v0.
+Because H3 has no effectful expressions, its short-circuit proof inspects
+the emitted instruction trace as well as the result; a later effectful
+extension needs an observable right-hand-side regression of its own.
 
 ## Open implementation decisions
 
