@@ -1,5 +1,9 @@
 # Changelog — itf (Lua)
 
+## Unreleased
+
+- Add shared fixture conformance, scalar-aware preflight, and stable error IDs.
+
 ## 0.1.0 — 2026-04-13
 
 Initial release.

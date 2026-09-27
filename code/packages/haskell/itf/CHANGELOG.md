@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add shared fixture conformance, bounded scalar preflight, and stable error IDs.
+
 ## 0.1.0
 
 - Validate non-empty, even-length ASCII digit payloads.

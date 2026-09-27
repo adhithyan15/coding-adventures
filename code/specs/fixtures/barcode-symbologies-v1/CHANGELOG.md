@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Register exact per-language consumer packages, tests, APIs, and stable-error adapters in a closed schema.
+
 ## 1.0.0 - 2026-09-27
 
 - Define closed, bounded contracts for ITF, Code 39, Codabar, Code 128-B,

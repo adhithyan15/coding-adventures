@@ -1,0 +1,2 @@
+packages: . ../barcode-2d ../paint-instructions
+tests: True

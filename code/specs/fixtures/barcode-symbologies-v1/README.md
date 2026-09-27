@@ -5,6 +5,10 @@ barcode encoders: ITF, Code 39, Codabar, Code 128-B, UPC-A, and EAN-13.
 
 - `schema.json` is the closed Draft 2020-12 schema.
 - `cases.json` is the normative generated corpus.
+- `consumers.schema.json` closes the cross-language consumer registry.
+- `consumers.json` records the package, test, API, projection, and stable-error
+  adapter surface for each completed consumer without prescribing one host
+  language's invocation syntax.
 - `generate_cases.py` contains the dependency-free tables and oracle. Run it
   with `--check` to reject drift or without flags to regenerate `cases.json`.
 - `CHANGELOG.md` records contract changes.
@@ -23,6 +27,8 @@ array containing decimal integers separated by commas with no whitespace
 
 The corpus is encoder-only and grants no host authority. Layout, quiet zones,
 text, rendering, files, devices, and native backends are deliberately absent.
+Fixture loading, JSON parsing, and digesting are test-only concerns and never
+change a package's production capability profile.
 
 Regenerate or verify the committed corpus from the repository root:
 

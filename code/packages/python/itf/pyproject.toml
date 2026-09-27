@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "coding-adventures-itf"
 version = "0.1.0"
 description = "Dependency-free ITF encoder that emits backend-neutral paint scenes"
+readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

@@ -12,3 +12,6 @@ local scene = itf.draw_itf("123456")
 
 This package stops at `PaintScene` so the same barcode logic can feed native
 Paint VMs, Canvas, SVG, or future codecs.
+
+Validation follows `barcode-symbologies-v1`; `error_id` maps checked failures
+to stable language-neutral identifiers.

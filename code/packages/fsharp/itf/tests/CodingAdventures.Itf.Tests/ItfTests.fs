@@ -1,11 +1,73 @@
 namespace CodingAdventures.Itf.Tests
 
 open System
+open System.IO
+open System.Security.Cryptography
+open System.Text
+open System.Text.Json
 open CodingAdventures.BarcodeLayout1D.FSharp
 open CodingAdventures.Itf.FSharp
 open Xunit
 
 module ItfTests =
+    let private findFixture () =
+        let rec search (directory: DirectoryInfo) =
+            if isNull directory then
+                raise (FileNotFoundException("barcode-symbologies-v1 cases.json was not found"))
+            let candidate = Path.Combine(directory.FullName, "code", "specs", "fixtures", "barcode-symbologies-v1", "cases.json")
+            if File.Exists candidate then candidate else search directory.Parent
+        search (DirectoryInfo(AppContext.BaseDirectory))
+
+    let private sha256 (value: string) =
+        value
+        |> Encoding.UTF8.GetBytes
+        |> SHA256.HashData
+        |> Convert.ToHexString
+        |> fun value -> value.ToLowerInvariant()
+
+    let private runLengths (modules: string) =
+        modules
+        |> Seq.fold (fun (previous, lengths) bit ->
+            match previous, lengths with
+            | Some prior, head :: tail when prior = bit -> Some bit, (head + 1) :: tail
+            | _ -> Some bit, 1 :: lengths) (None, [])
+        |> snd
+        |> List.rev
+
+    [<Fact>]
+    let ``shared ITF corpus conforms`` () =
+        use document = JsonDocument.Parse(File.ReadAllText(findFixture ()))
+        document.RootElement.GetProperty("cases").EnumerateArray()
+        |> Seq.filter (fun testCase -> testCase.GetProperty("symbology").GetString() = "itf")
+        |> Seq.iter (fun testCase ->
+            let inputSpec = testCase.GetProperty("input")
+            let mutable text = Unchecked.defaultof<JsonElement>
+            let input =
+                if inputSpec.TryGetProperty("text", &text) then text.GetString()
+                else
+                    let repeat = inputSpec.GetProperty("repeat")
+                    String.replicate (repeat.GetProperty("count").GetInt32()) (repeat.GetProperty("text").GetString())
+            let expected = testCase.GetProperty("expected")
+            let mutable error = Unchecked.defaultof<JsonElement>
+            if expected.TryGetProperty("error", &error) then
+                let caught = Assert.Throws<InvalidItfInputException>(fun () -> Itf.normalizeItf input |> ignore)
+                Assert.Equal(Some(error.GetString()), Itf.errorId (caught :> exn))
+            else
+                let normalized = Itf.normalizeItf input
+                let modules = "1010" + (Itf.encodeItf input |> List.map _.BinaryPattern |> String.concat "") + "11101"
+                let runs = runLengths modules
+                let mutable normalizedValue = Unchecked.defaultof<JsonElement>
+                if expected.TryGetProperty("normalized", &normalizedValue) then
+                    Assert.Equal(normalizedValue.GetString(), normalized)
+                    Assert.Equal(expected.GetProperty("modules").GetString(), modules)
+                    Assert.Equal<int list>(expected.GetProperty("run_lengths").EnumerateArray() |> Seq.map _.GetInt32() |> List.ofSeq, runs)
+                else
+                    Assert.Equal(expected.GetProperty("normalized_sha256").GetString(), sha256 normalized)
+                    Assert.Equal(expected.GetProperty("run_count").GetInt32(), runs.Length)
+                    Assert.Equal(expected.GetProperty("run_lengths_sha256").GetString(), sha256 (JsonSerializer.Serialize runs))
+                Assert.Equal(expected.GetProperty("module_count").GetInt32(), modules.Length)
+                Assert.Equal(expected.GetProperty("module_sha256").GetString(), sha256 modules))
+
     [<Fact>]
     let ``version exists`` () =
         Assert.Equal("0.1.0", Itf.VERSION)

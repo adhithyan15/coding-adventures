@@ -1,1 +1,2 @@
-packages: . ../barcode-layout-1d ../paint-instructions
+packages: . ../barcode-layout-1d ../paint-instructions ../sha256
+tests: True

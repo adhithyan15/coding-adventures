@@ -44,13 +44,34 @@ local function retag_runs(runs, role)
 end
 
 function M.normalize_itf(data)
-    if not data:match("^%d+$") then
-        error("ITF input must contain digits only")
+    local scalar_count = utf8.len(data)
+    if scalar_count == nil then
+        error("ITF input must contain valid Unicode scalar values")
     end
-    if #data == 0 or (#data % 2) ~= 0 then
+    if scalar_count > 4096 then
+        error("ITF input must contain at most 4096 characters")
+    end
+    if scalar_count == 0 or (scalar_count % 2) ~= 0 then
         error("ITF input must contain an even number of digits")
     end
+    if not data:match("^[0-9]+$") then
+        error("ITF input must contain digits only")
+    end
     return data
+end
+
+function M.error_id(caught)
+    local message = tostring(caught)
+    if message:find("ITF input must contain at most 4096 characters", 1, true) then
+        return "input-too-long"
+    end
+    if message:find("ITF input must contain an even number of digits", 1, true) then
+        return "invalid-length"
+    end
+    if message:find("ITF input must contain digits only", 1, true) then
+        return "invalid-character"
+    end
+    return nil
 end
 
 function M.encode_itf(data)

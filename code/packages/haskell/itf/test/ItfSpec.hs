@@ -1,13 +1,30 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module ItfSpec (spec) where
 
 import CodingAdventures.Itf
 import CodingAdventures.PaintInstructions (PaintInstruction (..))
-import Data.Aeson (toJSON)
+import Control.Monad (forM_)
+import Data.Aeson (FromJSON (..), (.:), (.:?), toJSON, withObject)
+import qualified Data.Aeson as Aeson
 import qualified Data.Map.Strict as Map
+import Data.Word (Word8)
+import Sha256 (sha256Hex)
+import System.Directory (doesFileExist, getCurrentDirectory)
+import System.FilePath ((</>), takeDirectory)
 import Test.Hspec
 
 spec :: Spec
 spec = do
+  describe "barcode-symbologies-v1" $ do
+    it "conforms to every shared ITF case" $ do
+      fixturePath <- findFixture
+      decoded <- Aeson.eitherDecodeFileStrict' fixturePath
+      fixture <- either fail pure decoded
+      let itfCases = filter ((== "itf") . fixtureSymbology) (fixtureCases fixture)
+      length itfCases `shouldBe` 10
+      forM_ itfCases assertFixtureCase
+
   describe "metadata" $ do
     it "reports the shared package version" $
       version `shouldBe` "0.1.0"
@@ -17,9 +34,13 @@ spec = do
       normalizeItf "00" `shouldBe` Right "00"
       normalizeItf "123456" `shouldBe` Right "123456"
 
-    it "rejects empty, non-ASCII, whitespace, and non-digit input" $ do
-      let expected = Left (InvalidItfInput "ITF input must contain digits only")
+    it "rejects empty and odd input before character validation" $ do
+      let expected = Left (InvalidItfInput "ITF input must contain an even number of digits")
       normalizeItf "" `shouldBe` expected
+      normalizeItf "A" `shouldBe` expected
+
+    it "rejects non-ASCII, whitespace, and non-digit input" $ do
+      let expected = Left (InvalidItfInput "ITF input must contain digits only")
       normalizeItf "12A4" `shouldBe` expected
       normalizeItf "12 4" `shouldBe` expected
       normalizeItf "１２" `shouldBe` expected
@@ -83,7 +104,7 @@ spec = do
       length runs `shouldBe` 37
 
     it "propagates input validation" $
-      expandItfRuns "abc" `shouldBe`
+      expandItfRuns "ab" `shouldBe`
         Left (InvalidItfInput "ITF input must contain digits only")
 
   describe "layoutItf" $ do
@@ -155,3 +176,101 @@ digitTable =
 expectRight :: Show error => Either error value -> IO value
 expectRight (Right value) = pure value
 expectRight (Left err) = fail ("unexpected error: " ++ show err)
+
+data Fixture = Fixture { fixtureCases :: [FixtureCase] }
+
+data FixtureCase = FixtureCase
+  { fixtureSymbology :: String
+  , fixtureInput :: FixtureInput
+  , fixtureExpected :: FixtureExpected
+  }
+
+data FixtureInput = FixtureInput (Maybe String) (Maybe RepeatInput)
+data RepeatInput = RepeatInput String Int
+
+data FixtureExpected = FixtureExpected
+  { expectedError :: Maybe String
+  , expectedNormalized :: Maybe String
+  , expectedNormalizedSha256 :: Maybe String
+  , expectedModules :: Maybe String
+  , expectedModuleCount :: Maybe Int
+  , expectedModuleSha256 :: Maybe String
+  , expectedRunLengths :: Maybe [Int]
+  , expectedRunCount :: Maybe Int
+  , expectedRunLengthsSha256 :: Maybe String
+  }
+
+instance FromJSON Fixture where
+  parseJSON = withObject "Fixture" $ \value -> Fixture <$> value .: "cases"
+
+instance FromJSON FixtureCase where
+  parseJSON = withObject "FixtureCase" $ \value -> FixtureCase
+    <$> value .: "symbology" <*> value .: "input" <*> value .: "expected"
+
+instance FromJSON FixtureInput where
+  parseJSON = withObject "FixtureInput" $ \value -> FixtureInput
+    <$> value .:? "text" <*> value .:? "repeat"
+
+instance FromJSON RepeatInput where
+  parseJSON = withObject "RepeatInput" $ \value -> RepeatInput
+    <$> value .: "text" <*> value .: "count"
+
+instance FromJSON FixtureExpected where
+  parseJSON = withObject "FixtureExpected" $ \value -> FixtureExpected
+    <$> value .:? "error"
+    <*> value .:? "normalized"
+    <*> value .:? "normalized_sha256"
+    <*> value .:? "modules"
+    <*> value .:? "module_count"
+    <*> value .:? "module_sha256"
+    <*> value .:? "run_lengths"
+    <*> value .:? "run_count"
+    <*> value .:? "run_lengths_sha256"
+
+assertFixtureCase :: FixtureCase -> Expectation
+assertFixtureCase testCase = do
+  let input = materializeInput (fixtureInput testCase)
+      expected = fixtureExpected testCase
+  case expectedError expected of
+    Just errorId -> itfErrorId (normalizeItf input) `shouldBe` Just errorId
+    Nothing -> do
+      normalized <- expectRight (normalizeItf input)
+      pairs <- expectRight (encodeItf input)
+      let modules = "1010" ++ concatMap encodedPairBinaryPattern pairs ++ "11101"
+          runs = runLengths modules
+      maybe (pure ()) (normalized `shouldBe`) (expectedNormalized expected)
+      maybe (pure ()) (sha256Hex (asciiBytes normalized) `shouldBe`) (expectedNormalizedSha256 expected)
+      maybe (pure ()) (modules `shouldBe`) (expectedModules expected)
+      maybe (pure ()) (length modules `shouldBe`) (expectedModuleCount expected)
+      maybe (pure ()) (sha256Hex (asciiBytes modules) `shouldBe`) (expectedModuleSha256 expected)
+      maybe (pure ()) (runs `shouldBe`) (expectedRunLengths expected)
+      maybe (pure ()) (length runs `shouldBe`) (expectedRunCount expected)
+      maybe (pure ()) (sha256Hex (asciiBytes (show runs)) `shouldBe`) (expectedRunLengthsSha256 expected)
+
+materializeInput :: FixtureInput -> String
+materializeInput (FixtureInput (Just text) _) = text
+materializeInput (FixtureInput _ (Just (RepeatInput text count))) = concat (replicate count text)
+materializeInput _ = error "fixture input must contain text or repeat"
+
+runLengths :: String -> [Int]
+runLengths [] = []
+runLengths (firstBit : rest) = reverse (snd (foldl step (firstBit, [1]) rest))
+  where
+    step (previous, count : counts) bit
+      | bit == previous = (bit, (count + 1) : counts)
+      | otherwise = (bit, 1 : count : counts)
+    step _ _ = error "run lengths must be non-empty"
+
+asciiBytes :: String -> [Word8]
+asciiBytes = map (fromIntegral . fromEnum)
+
+findFixture :: IO FilePath
+findFixture = getCurrentDirectory >>= search
+  where
+    search directory = do
+      let candidate = directory </> "code" </> "specs" </> "fixtures" </> "barcode-symbologies-v1" </> "cases.json"
+      exists <- doesFileExist candidate
+      if exists then pure candidate
+      else if takeDirectory directory == directory
+        then fail "barcode-symbologies-v1 cases.json was not found"
+        else search (takeDirectory directory)
