@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 14923,
+    "totalLessons": 15168,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 251,
+    "atomsNeverRevisited": 248,
     "forwardReferences": 921,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 13169,
+    "drivableLessons": 13414,
     "drivablePercent": 88,
     "chaptersWithoutDrivablePrefix": 274,
     "unexplainedModalityOverrides": 0
@@ -3546,7 +3546,54 @@
           103,
           104,
           105,
-          106
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153
         ],
         "bookChapters": [
           1,
@@ -3654,7 +3701,54 @@
           103,
           104,
           105,
-          106
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -7144,9 +7238,9 @@
       {
         "language": "kannada",
         "status": "version-2",
-        "lessonCount": 494,
+        "lessonCount": 739,
         "versions": {
-          "2": 494
+          "2": 739
         }
       },
       {
@@ -8007,8 +8101,8 @@
       },
       {
         "language": "kannada",
-        "bookChapters": 106,
-        "declaredChapters": 106,
+        "bookChapters": 153,
+        "declaredChapters": 153,
         "missingCapability": 0,
         "findings": 5,
         "clean": false
@@ -8119,8 +8213,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 3068,
-      "declaredChapters": 3068,
+      "bookChapters": 3115,
+      "declaredChapters": 3115,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -8132,10 +8226,10 @@
     }
   },
   "levels": {
-    "totalLessons": 14923,
+    "totalLessons": 15168,
     "byLevel": {
       "pre-A1": 8747,
-      "A1": 5150,
+      "A1": 5395,
       "A2": 942,
       "B1": 39,
       "B2": 17,
@@ -8282,10 +8376,10 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 494,
+        "lessonCount": 739,
         "byLevel": {
           "pre-A1": 370,
-          "A1": 107,
+          "A1": 352,
           "A2": 17,
           "B1": 0,
           "B2": 0,
@@ -9094,8 +9188,8 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 494,
-        "measurable": 494,
+        "lessonCount": 739,
+        "measurable": 739,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 4
@@ -9660,7 +9754,7 @@
           "language": "kannada",
           "script": "kannada",
           "latinScript": false,
-          "lessonCount": 494,
+          "lessonCount": 739,
           "totalGlyphs": 69,
           "lessonViolations": 4,
           "systemViolations": 0,
@@ -14279,19 +14373,6 @@
         "revisits": 2
       },
       {
-        "atom": "KA-GRAMMAR-C75-ORDINAL-09",
-        "language": "kannada",
-        "introducedBy": "KA-C75-on-a-sign",
-        "introducedAt": 330,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "KA-PRAGMATICS-C16-TINGALUGALU-02",
         "language": "kannada",
         "introducedBy": "KA-C16-tingalugalu",
@@ -14328,7 +14409,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-148",
@@ -14341,7 +14422,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-149",
@@ -14354,20 +14435,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
-      },
-      {
-        "atom": "KA-SKILL-CONNECTED-READING",
-        "language": "kannada",
-        "introducedBy": "KA-C76-modala-oduvike",
-        "introducedAt": 333,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "LA-ETYMON-EMO-02",
@@ -43127,19 +43195,19 @@
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
-        "atom": "KA-GRAMMAR-C75-ORDINAL-07",
+        "atom": "KA-GRAMMAR-C75-ORDINAL-09",
         "language": "kannada",
-        "introducedBy": "KA-C75-eleventh",
-        "introducedAt": 328,
+        "introducedBy": "KA-C75-on-a-sign",
+        "introducedAt": 330,
         "missed": [
+          "R1",
           "R2",
-          "R3",
-          "R4"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "KA-LEX-ANCHOR-IIJU",
@@ -43490,6 +43558,342 @@
         "revisits": 5
       },
       {
+        "atom": "KA-LEX-C103-HOME-03",
+        "language": "kannada",
+        "introducedBy": "KA-C103-city",
+        "introducedAt": 474,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C103-HOME-04",
+        "language": "kannada",
+        "introducedBy": "KA-C103-country",
+        "introducedAt": 475,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C103-HOME-05",
+        "language": "kannada",
+        "introducedBy": "KA-C103-state",
+        "introducedAt": 476,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C104-JOBS-01",
+        "language": "kannada",
+        "introducedBy": "KA-C104-business",
+        "introducedAt": 477,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C106-SOON-03",
+        "language": "kannada",
+        "introducedBy": "KA-C106-later",
+        "introducedAt": 489,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C106-SOON-04",
+        "language": "kannada",
+        "introducedBy": "KA-C106-phone",
+        "introducedAt": 490,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C106-SOON-05",
+        "language": "kannada",
+        "introducedBy": "KA-C106-seeyou",
+        "introducedAt": 491,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C113-CAN113-03",
+        "language": "kannada",
+        "introducedBy": "KA-C113-sakti",
+        "introducedAt": 526,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C113-CAN113-04",
+        "language": "kannada",
+        "introducedBy": "KA-C113-ase",
+        "introducedAt": 527,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C113-CAN113-05",
+        "language": "kannada",
+        "introducedBy": "KA-C113-kanasu",
+        "introducedAt": 528,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C114-WANT114-01",
+        "language": "kannada",
+        "introducedBy": "KA-C114-uddesa",
+        "introducedAt": 529,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C116-THINGS116-03",
+        "language": "kannada",
+        "introducedBy": "KA-C116-parade",
+        "introducedAt": 541,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C116-THINGS116-04",
+        "language": "kannada",
+        "introducedBy": "KA-C116-biga",
+        "introducedAt": 542,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C116-THINGS116-05",
+        "language": "kannada",
+        "introducedBy": "KA-C116-mole",
+        "introducedAt": 543,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C123-THINGS123-03",
+        "language": "kannada",
+        "introducedBy": "KA-C123-mavinahannu",
+        "introducedAt": 578,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C123-THINGS123-04",
+        "language": "kannada",
+        "introducedBy": "KA-C123-tengu",
+        "introducedAt": 579,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C123-THINGS123-05",
+        "language": "kannada",
+        "introducedBy": "KA-C123-irulli",
+        "introducedAt": 580,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C124-THINGS124-01",
+        "language": "kannada",
+        "introducedBy": "KA-C124-alugadde",
+        "introducedAt": 581,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C126-THINGS126-03",
+        "language": "kannada",
+        "introducedBy": "KA-C126-halasu",
+        "introducedAt": 593,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C126-THINGS126-04",
+        "language": "kannada",
+        "introducedBy": "KA-C126-menasu",
+        "introducedAt": 594,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C126-THINGS126-05",
+        "language": "kannada",
+        "introducedBy": "KA-C126-jirige",
+        "introducedAt": 595,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C132-THINGS132-03",
+        "language": "kannada",
+        "introducedBy": "KA-C132-iruve",
+        "introducedAt": 625,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C132-THINGS132-04",
+        "language": "kannada",
+        "introducedBy": "KA-C132-solle",
+        "introducedAt": 626,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C132-THINGS132-05",
+        "language": "kannada",
+        "introducedBy": "KA-C132-jeda",
+        "introducedAt": 627,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C133-THINGS133-01",
+        "language": "kannada",
+        "introducedBy": "KA-C133-kappe",
+        "introducedAt": 628,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C135-THINGS135-03",
+        "language": "kannada",
+        "introducedBy": "KA-C135-monakalu",
+        "introducedAt": 640,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C135-THINGS135-04",
+        "language": "kannada",
+        "introducedBy": "KA-C135-monakai",
+        "introducedAt": 641,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C135-THINGS135-05",
+        "language": "kannada",
+        "introducedBy": "KA-C135-manikattu",
+        "introducedAt": 642,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "KA-LEX-C16-TINGALUGALU-01",
         "language": "kannada",
         "introducedBy": "KA-C16-tingalugalu",
@@ -43500,54 +43904,6 @@
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C75-ORDINAL-04",
-        "language": "kannada",
-        "introducedBy": "KA-C75-ninth",
-        "introducedAt": 326,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-C75-ORDINAL-05",
-        "language": "kannada",
-        "introducedBy": "KA-C75-tenth",
-        "introducedAt": 327,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-C75-ORDINAL-06",
-        "language": "kannada",
-        "introducedBy": "KA-C75-eleventh",
-        "introducedAt": 328,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-C75-ORDINAL-08",
-        "language": "kannada",
-        "introducedBy": "KA-C75-short-form",
-        "introducedAt": 329,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
       },
       {
         "atom": "KA-LEX-C86-WAIT-03",
@@ -43634,6 +43990,90 @@
         "revisits": 4
       },
       {
+        "atom": "KA-LEX-C94-TABLE-03",
+        "language": "kannada",
+        "introducedBy": "KA-C94-glass",
+        "introducedAt": 427,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C94-TABLE-04",
+        "language": "kannada",
+        "introducedBy": "KA-C94-plate",
+        "introducedAt": 428,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C94-TABLE-05",
+        "language": "kannada",
+        "introducedBy": "KA-C94-price",
+        "introducedAt": 429,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C95-MAYBE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C95-notpossible",
+        "introducedAt": 430,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C97-GRATEFUL-03",
+        "language": "kannada",
+        "introducedBy": "KA-C97-grateful",
+        "introducedAt": 442,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C97-GRATEFUL-04",
+        "language": "kannada",
+        "introducedBy": "KA-C97-dontforget",
+        "introducedAt": 443,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C97-GRATEFUL-05",
+        "language": "kannada",
+        "introducedBy": "KA-C97-kindness",
+        "introducedAt": 444,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "KA-PRAGMATICS-C18-GANTE-02",
         "language": "kannada",
         "introducedBy": "KA-C18-gante",
@@ -43655,7 +44095,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "KA-PRAGMATICS-C29-SHUBHODAYA-02",
@@ -43667,7 +44107,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "KA-PRAGMATICS-C30-SHUBHA-SANJE-02",
@@ -43679,7 +44119,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "KA-PRAGMATICS-C31-SHUBHA-MADHYAHNA-02",
@@ -43691,7 +44131,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "KA-SCRIPT-RECOG-02",
@@ -43979,7 +44419,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-142",
@@ -44003,7 +44443,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-144",
@@ -44015,7 +44455,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-145",
@@ -44027,7 +44467,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-147",
@@ -44039,7 +44479,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-152",
@@ -44064,18 +44504,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "KA-SCRIPT-RECOG-154",
-        "language": "kannada",
-        "introducedBy": "KA-S154-other-marks",
-        "introducedAt": 336,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
       },
       {
         "atom": "KA-SCRIPT-RECOG-157",
@@ -44210,40 +44638,16 @@
         "revisits": 2
       },
       {
-        "atom": "KA-SCRIPT-RECOG-173",
+        "atom": "KA-SKILL-CONNECTED-READING",
         "language": "kannada",
-        "introducedBy": "KA-S173-letter-ttha",
-        "introducedAt": 358,
+        "introducedBy": "KA-C76-modala-oduvike",
+        "introducedAt": 333,
         "missed": [
+          "R1",
           "R2",
-          "R3",
-          "R4"
+          "R3"
         ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-SKILL-READ-LINES",
-        "language": "kannada",
-        "introducedBy": "KA-C76-lines",
-        "introducedAt": 332,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-SKILL-READ-WORDS",
-        "language": "kannada",
-        "introducedBy": "KA-C76-words",
-        "introducedAt": 331,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "LA-DIALOGUE-DAY-CYCLE-01",
@@ -101573,6 +101977,17 @@
         "revisits": 12
       },
       {
+        "atom": "KA-GRAMMAR-C75-ORDINAL-07",
+        "language": "kannada",
+        "introducedBy": "KA-C75-eleventh",
+        "introducedAt": 328,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "KA-LEX-C03-CENNAAGI-01",
         "language": "kannada",
         "introducedBy": "KA-C03-cennaagi",
@@ -101681,6 +102096,1909 @@
           "R4"
         ],
         "revisits": 8
+      },
+      {
+        "atom": "KA-LEX-C100-FIND-01",
+        "language": "kannada",
+        "introducedBy": "KA-C100-map",
+        "introducedAt": 457,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C100-FIND-02",
+        "language": "kannada",
+        "introducedBy": "KA-C100-ticket",
+        "introducedAt": 458,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C100-FIND-03",
+        "language": "kannada",
+        "introducedBy": "KA-C100-bus",
+        "introducedAt": 459,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C100-FIND-04",
+        "language": "kannada",
+        "introducedBy": "KA-C100-station",
+        "introducedAt": 460,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C100-FIND-05",
+        "language": "kannada",
+        "introducedBy": "KA-C100-near",
+        "introducedAt": 461,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C101-OPEN-01",
+        "language": "kannada",
+        "introducedBy": "KA-C101-open",
+        "introducedAt": 462,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C101-OPEN-02",
+        "language": "kannada",
+        "introducedBy": "KA-C101-close",
+        "introducedAt": 463,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C101-OPEN-03",
+        "language": "kannada",
+        "introducedBy": "KA-C101-stop",
+        "introducedAt": 464,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C101-OPEN-04",
+        "language": "kannada",
+        "introducedBy": "KA-C101-call",
+        "introducedAt": 465,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C101-OPEN-05",
+        "language": "kannada",
+        "introducedBy": "KA-C101-urgent",
+        "introducedAt": 466,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C102-THISWAY-01",
+        "language": "kannada",
+        "introducedBy": "KA-C102-other",
+        "introducedAt": 467,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C102-THISWAY-02",
+        "language": "kannada",
+        "introducedBy": "KA-C102-wrong",
+        "introducedAt": 468,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C102-THISWAY-03",
+        "language": "kannada",
+        "introducedBy": "KA-C102-all",
+        "introducedAt": 469,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C102-THISWAY-04",
+        "language": "kannada",
+        "introducedBy": "KA-C102-onlyone",
+        "introducedAt": 470,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C102-THISWAY-05",
+        "language": "kannada",
+        "introducedBy": "KA-C102-fornoreason",
+        "introducedAt": 471,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C103-HOME-01",
+        "language": "kannada",
+        "introducedBy": "KA-C103-house",
+        "introducedAt": 472,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C103-HOME-02",
+        "language": "kannada",
+        "introducedBy": "KA-C103-street",
+        "introducedAt": 473,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C104-JOBS-02",
+        "language": "kannada",
+        "introducedBy": "KA-C104-worker",
+        "introducedAt": 478,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C104-JOBS-03",
+        "language": "kannada",
+        "introducedBy": "KA-C104-police",
+        "introducedAt": 479,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C104-JOBS-04",
+        "language": "kannada",
+        "introducedBy": "KA-C104-driver",
+        "introducedAt": 480,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C104-JOBS-05",
+        "language": "kannada",
+        "introducedBy": "KA-C104-shop",
+        "introducedAt": 481,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C105-WISHES-01",
+        "language": "kannada",
+        "introducedBy": "KA-C105-wishes",
+        "introducedAt": 482,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C105-WISHES-02",
+        "language": "kannada",
+        "introducedBy": "KA-C105-festival",
+        "introducedAt": 483,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C105-WISHES-03",
+        "language": "kannada",
+        "introducedBy": "KA-C105-hospitality",
+        "introducedAt": 484,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C105-WISHES-04",
+        "language": "kannada",
+        "introducedBy": "KA-C105-love",
+        "introducedAt": 485,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C105-WISHES-05",
+        "language": "kannada",
+        "introducedBy": "KA-C105-appreciation",
+        "introducedAt": 486,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C106-SOON-01",
+        "language": "kannada",
+        "introducedBy": "KA-C106-farewell",
+        "introducedAt": 487,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C106-SOON-02",
+        "language": "kannada",
+        "introducedBy": "KA-C106-today",
+        "introducedAt": 488,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C107-LOC107-01",
+        "language": "kannada",
+        "introducedBy": "KA-C107-bala",
+        "introducedAt": 494,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C107-LOC107-02",
+        "language": "kannada",
+        "introducedBy": "KA-C107-eda",
+        "introducedAt": 495,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C107-LOC107-03",
+        "language": "kannada",
+        "introducedBy": "KA-C107-nera",
+        "introducedAt": 496,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C107-LOC107-04",
+        "language": "kannada",
+        "introducedBy": "KA-C107-dura",
+        "introducedAt": 497,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C107-LOC107-05",
+        "language": "kannada",
+        "introducedBy": "KA-C107-mele",
+        "introducedAt": 498,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C108-LOC108-01",
+        "language": "kannada",
+        "introducedBy": "KA-C108-kelage",
+        "introducedAt": 499,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C108-LOC108-02",
+        "language": "kannada",
+        "introducedBy": "KA-C108-horage",
+        "introducedAt": 500,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C108-LOC108-03",
+        "language": "kannada",
+        "introducedBy": "KA-C108-munde",
+        "introducedAt": 501,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C108-LOC108-04",
+        "language": "kannada",
+        "introducedBy": "KA-C108-naduve",
+        "introducedAt": 502,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C108-LOC108-05",
+        "language": "kannada",
+        "introducedBy": "KA-C108-raste",
+        "introducedAt": 503,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C109-LOC109-01",
+        "language": "kannada",
+        "introducedBy": "KA-C109-setuve",
+        "introducedAt": 504,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C109-LOC109-02",
+        "language": "kannada",
+        "introducedBy": "KA-C109-udyana",
+        "introducedAt": 505,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C109-LOC109-03",
+        "language": "kannada",
+        "introducedBy": "KA-C109-devasthana",
+        "introducedAt": 506,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C109-LOC109-04",
+        "language": "kannada",
+        "introducedBy": "KA-C109-granthalaya",
+        "introducedAt": 507,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C109-LOC109-05",
+        "language": "kannada",
+        "introducedBy": "KA-C109-byanku",
+        "introducedAt": 508,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C110-LOC110-01",
+        "language": "kannada",
+        "introducedBy": "KA-C110-sante",
+        "introducedAt": 509,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C110-LOC110-02",
+        "language": "kannada",
+        "introducedBy": "KA-C110-kadalatira",
+        "introducedAt": 510,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C110-LOC110-03",
+        "language": "kannada",
+        "introducedBy": "KA-C110-tota",
+        "introducedAt": 511,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C110-LOC110-04",
+        "language": "kannada",
+        "introducedBy": "KA-C110-mule",
+        "introducedAt": 512,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C110-LOC110-05",
+        "language": "kannada",
+        "introducedBy": "KA-C110-tiruvu",
+        "introducedAt": 513,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C111-LOC111-01",
+        "language": "kannada",
+        "introducedBy": "KA-C111-hotel",
+        "introducedAt": 514,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C111-LOC111-02",
+        "language": "kannada",
+        "introducedBy": "KA-C111-railu",
+        "introducedAt": 515,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C111-LOC111-03",
+        "language": "kannada",
+        "introducedBy": "KA-C111-vimana",
+        "introducedAt": 516,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C111-LOC111-04",
+        "language": "kannada",
+        "introducedBy": "KA-C111-karu",
+        "introducedAt": 517,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C111-LOC111-05",
+        "language": "kannada",
+        "introducedBy": "KA-C111-saikal",
+        "introducedAt": 518,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C112-CAN112-01",
+        "language": "kannada",
+        "introducedBy": "KA-C112-samarthya",
+        "introducedAt": 519,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C112-CAN112-02",
+        "language": "kannada",
+        "introducedBy": "KA-C112-kausalya",
+        "introducedAt": 520,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C112-CAN112-03",
+        "language": "kannada",
+        "introducedBy": "KA-C112-hakku",
+        "introducedAt": 521,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C112-CAN112-04",
+        "language": "kannada",
+        "introducedBy": "KA-C112-avakasa",
+        "introducedAt": 522,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C112-CAN112-05",
+        "language": "kannada",
+        "introducedBy": "KA-C112-sadhana",
+        "introducedAt": 523,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C113-CAN113-01",
+        "language": "kannada",
+        "introducedBy": "KA-C113-asti",
+        "introducedAt": 524,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C113-CAN113-02",
+        "language": "kannada",
+        "introducedBy": "KA-C113-yajamana",
+        "introducedAt": 525,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C114-WANT114-02",
+        "language": "kannada",
+        "introducedBy": "KA-C114-yojane",
+        "introducedAt": 530,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C114-WANT114-03",
+        "language": "kannada",
+        "introducedBy": "KA-C114-agatya",
+        "introducedAt": 531,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C114-WANT114-04",
+        "language": "kannada",
+        "introducedBy": "KA-C114-nirdhara",
+        "introducedAt": 532,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C114-WANT114-05",
+        "language": "kannada",
+        "introducedBy": "KA-C114-bayasu",
+        "introducedAt": 533,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C115-WHY115-01",
+        "language": "kannada",
+        "introducedBy": "KA-C115-karana",
+        "introducedAt": 534,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C115-WHY115-02",
+        "language": "kannada",
+        "introducedBy": "KA-C115-adudarinda",
+        "introducedAt": 535,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C115-WHY115-03",
+        "language": "kannada",
+        "introducedBy": "KA-C115-adakke",
+        "introducedAt": 536,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C115-WHY115-04",
+        "language": "kannada",
+        "introducedBy": "KA-C115-yakendare",
+        "introducedAt": 537,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C115-WHY115-05",
+        "language": "kannada",
+        "introducedBy": "KA-C115-mamca",
+        "introducedAt": 538,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C116-THINGS116-01",
+        "language": "kannada",
+        "introducedBy": "KA-C116-dimbu",
+        "introducedAt": 539,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C116-THINGS116-02",
+        "language": "kannada",
+        "introducedBy": "KA-C116-kambali",
+        "introducedAt": 540,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C117-THINGS117-01",
+        "language": "kannada",
+        "introducedBy": "KA-C117-suttige",
+        "introducedAt": 546,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C117-THINGS117-02",
+        "language": "kannada",
+        "introducedBy": "KA-C117-kattari",
+        "introducedAt": 547,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C117-THINGS117-03",
+        "language": "kannada",
+        "introducedBy": "KA-C117-bacanige",
+        "introducedAt": 548,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C117-THINGS117-04",
+        "language": "kannada",
+        "introducedBy": "KA-C117-sabunu",
+        "introducedAt": 549,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C117-THINGS117-05",
+        "language": "kannada",
+        "introducedBy": "KA-C117-tavel",
+        "introducedAt": 550,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C118-THINGS118-01",
+        "language": "kannada",
+        "introducedBy": "KA-C118-kannadaka",
+        "introducedAt": 551,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C118-THINGS118-02",
+        "language": "kannada",
+        "introducedBy": "KA-C118-gadiyara",
+        "introducedAt": 552,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C118-THINGS118-03",
+        "language": "kannada",
+        "introducedBy": "KA-C118-cila",
+        "introducedAt": 553,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C118-THINGS118-04",
+        "language": "kannada",
+        "introducedBy": "KA-C118-lekhani",
+        "introducedAt": 554,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C118-THINGS118-05",
+        "language": "kannada",
+        "introducedBy": "KA-C118-kagada",
+        "introducedAt": 555,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C119-THINGS119-01",
+        "language": "kannada",
+        "introducedBy": "KA-C119-ole",
+        "introducedAt": 556,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C119-THINGS119-02",
+        "language": "kannada",
+        "introducedBy": "KA-C119-menabatti",
+        "introducedAt": 557,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C119-THINGS119-03",
+        "language": "kannada",
+        "introducedBy": "KA-C119-benkipettige",
+        "introducedAt": 558,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C119-THINGS119-04",
+        "language": "kannada",
+        "introducedBy": "KA-C119-bombe",
+        "introducedAt": 559,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C119-THINGS119-05",
+        "language": "kannada",
+        "introducedBy": "KA-C119-cendu",
+        "introducedAt": 560,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C120-THINGS120-01",
+        "language": "kannada",
+        "introducedBy": "KA-C120-galipata",
+        "introducedAt": 561,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C120-THINGS120-02",
+        "language": "kannada",
+        "introducedBy": "KA-C120-angi",
+        "introducedAt": 562,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C120-THINGS120-03",
+        "language": "kannada",
+        "introducedBy": "KA-C120-sire",
+        "introducedAt": 563,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C120-THINGS120-04",
+        "language": "kannada",
+        "introducedBy": "KA-C120-pamce",
+        "introducedAt": 564,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C120-THINGS120-05",
+        "language": "kannada",
+        "introducedBy": "KA-C120-cappali",
+        "introducedAt": 565,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C121-THINGS121-01",
+        "language": "kannada",
+        "introducedBy": "KA-C121-topi",
+        "introducedAt": 566,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C121-THINGS121-02",
+        "language": "kannada",
+        "introducedBy": "KA-C121-ungura",
+        "introducedAt": 567,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C121-THINGS121-03",
+        "language": "kannada",
+        "introducedBy": "KA-C121-bale",
+        "introducedAt": 568,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C121-THINGS121-04",
+        "language": "kannada",
+        "introducedBy": "KA-C121-saru",
+        "introducedAt": 569,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C121-THINGS121-05",
+        "language": "kannada",
+        "introducedBy": "KA-C121-sambaru",
+        "introducedAt": 570,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C122-THINGS122-01",
+        "language": "kannada",
+        "introducedBy": "KA-C122-palya",
+        "introducedAt": 571,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C122-THINGS122-02",
+        "language": "kannada",
+        "introducedBy": "KA-C122-uppinakayi",
+        "introducedAt": 572,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C122-THINGS122-03",
+        "language": "kannada",
+        "introducedBy": "KA-C122-motte",
+        "introducedAt": 573,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C122-THINGS122-04",
+        "language": "kannada",
+        "introducedBy": "KA-C122-minu",
+        "introducedAt": 574,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C122-THINGS122-05",
+        "language": "kannada",
+        "introducedBy": "KA-C122-mamsa",
+        "introducedAt": 575,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C123-THINGS123-01",
+        "language": "kannada",
+        "introducedBy": "KA-C123-tarakari",
+        "introducedAt": 576,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C123-THINGS123-02",
+        "language": "kannada",
+        "introducedBy": "KA-C123-balehannu",
+        "introducedAt": 577,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C124-THINGS124-02",
+        "language": "kannada",
+        "introducedBy": "KA-C124-badanekayi",
+        "introducedAt": 582,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C124-THINGS124-03",
+        "language": "kannada",
+        "introducedBy": "KA-C124-sunthi",
+        "introducedAt": 583,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C124-THINGS124-04",
+        "language": "kannada",
+        "introducedBy": "KA-C124-bellulli",
+        "introducedAt": 584,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C124-THINGS124-05",
+        "language": "kannada",
+        "introducedBy": "KA-C124-jenu",
+        "introducedAt": 585,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C125-THINGS125-01",
+        "language": "kannada",
+        "introducedBy": "KA-C125-idli",
+        "introducedAt": 586,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C125-THINGS125-02",
+        "language": "kannada",
+        "introducedBy": "KA-C125-dose",
+        "introducedAt": 587,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C125-THINGS125-03",
+        "language": "kannada",
+        "introducedBy": "KA-C125-vade",
+        "introducedAt": 588,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C125-THINGS125-04",
+        "language": "kannada",
+        "introducedBy": "KA-C125-uppittu",
+        "introducedAt": 589,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C125-THINGS125-05",
+        "language": "kannada",
+        "introducedBy": "KA-C125-ragi",
+        "introducedAt": 590,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C126-THINGS126-01",
+        "language": "kannada",
+        "introducedBy": "KA-C126-nimbe",
+        "introducedAt": 591,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C126-THINGS126-02",
+        "language": "kannada",
+        "introducedBy": "KA-C126-draksi",
+        "introducedAt": 592,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C127-THINGS127-01",
+        "language": "kannada",
+        "introducedBy": "KA-C127-samudra",
+        "introducedAt": 598,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C127-THINGS127-02",
+        "language": "kannada",
+        "introducedBy": "KA-C127-kadu",
+        "introducedAt": 599,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C127-THINGS127-03",
+        "language": "kannada",
+        "introducedBy": "KA-C127-mannu",
+        "introducedAt": 600,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C127-THINGS127-04",
+        "language": "kannada",
+        "introducedBy": "KA-C127-kallu",
+        "introducedAt": 601,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C127-THINGS127-05",
+        "language": "kannada",
+        "introducedBy": "KA-C127-gudugu",
+        "introducedAt": 602,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C128-THINGS128-01",
+        "language": "kannada",
+        "introducedBy": "KA-C128-mimcu",
+        "introducedAt": 603,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C128-THINGS128-02",
+        "language": "kannada",
+        "introducedBy": "KA-C128-birugali",
+        "introducedAt": 604,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C128-THINGS128-03",
+        "language": "kannada",
+        "introducedBy": "KA-C128-ale",
+        "introducedAt": 605,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C128-THINGS128-04",
+        "language": "kannada",
+        "introducedBy": "KA-C128-jalapata",
+        "introducedAt": 606,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C128-THINGS128-05",
+        "language": "kannada",
+        "introducedBy": "KA-C128-dvipa",
+        "introducedAt": 607,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C129-THINGS129-01",
+        "language": "kannada",
+        "introducedBy": "KA-C129-surya",
+        "introducedAt": 608,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C129-THINGS129-02",
+        "language": "kannada",
+        "introducedBy": "KA-C129-kudure",
+        "introducedAt": 609,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C129-THINGS129-03",
+        "language": "kannada",
+        "introducedBy": "KA-C129-ane",
+        "introducedAt": 610,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C129-THINGS129-04",
+        "language": "kannada",
+        "introducedBy": "KA-C129-huli",
+        "introducedAt": 611,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C129-THINGS129-05",
+        "language": "kannada",
+        "introducedBy": "KA-C129-simha",
+        "introducedAt": 612,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C130-THINGS130-01",
+        "language": "kannada",
+        "introducedBy": "KA-C130-karadi",
+        "introducedAt": 613,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C130-THINGS130-02",
+        "language": "kannada",
+        "introducedBy": "KA-C130-koti",
+        "introducedAt": 614,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C130-THINGS130-03",
+        "language": "kannada",
+        "introducedBy": "KA-C130-mola",
+        "introducedAt": 615,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C130-THINGS130-04",
+        "language": "kannada",
+        "introducedBy": "KA-C130-jinke",
+        "introducedAt": 616,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C130-THINGS130-05",
+        "language": "kannada",
+        "introducedBy": "KA-C130-nari",
+        "introducedAt": 617,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C131-THINGS131-01",
+        "language": "kannada",
+        "introducedBy": "KA-C131-havu",
+        "introducedAt": 618,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C131-THINGS131-02",
+        "language": "kannada",
+        "introducedBy": "KA-C131-ame",
+        "introducedAt": 619,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C131-THINGS131-03",
+        "language": "kannada",
+        "introducedBy": "KA-C131-gili",
+        "introducedAt": 620,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C131-THINGS131-04",
+        "language": "kannada",
+        "introducedBy": "KA-C131-parivala",
+        "introducedAt": 621,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C131-THINGS131-05",
+        "language": "kannada",
+        "introducedBy": "KA-C131-gube",
+        "introducedAt": 622,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C132-THINGS132-01",
+        "language": "kannada",
+        "introducedBy": "KA-C132-navilu",
+        "introducedAt": 623,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C132-THINGS132-02",
+        "language": "kannada",
+        "introducedBy": "KA-C132-citte",
+        "introducedAt": 624,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C133-THINGS133-02",
+        "language": "kannada",
+        "introducedBy": "KA-C133-batukoli",
+        "introducedAt": 629,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C133-THINGS133-03",
+        "language": "kannada",
+        "introducedBy": "KA-C133-handi",
+        "introducedAt": 630,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C133-THINGS133-04",
+        "language": "kannada",
+        "introducedBy": "KA-C133-katte",
+        "introducedAt": 631,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C133-THINGS133-05",
+        "language": "kannada",
+        "introducedBy": "KA-C133-onte",
+        "introducedAt": 632,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C134-THINGS134-01",
+        "language": "kannada",
+        "introducedBy": "KA-C134-ili",
+        "introducedAt": 633,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C134-THINGS134-02",
+        "language": "kannada",
+        "introducedBy": "KA-C134-emme",
+        "introducedAt": 634,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C134-THINGS134-03",
+        "language": "kannada",
+        "introducedBy": "KA-C134-kuri",
+        "introducedAt": 635,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C134-THINGS134-04",
+        "language": "kannada",
+        "introducedBy": "KA-C134-mukha",
+        "introducedAt": 636,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C134-THINGS134-05",
+        "language": "kannada",
+        "introducedBy": "KA-C134-nalige",
+        "introducedAt": 637,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C135-THINGS135-01",
+        "language": "kannada",
+        "introducedBy": "KA-C135-galla",
+        "introducedAt": 638,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C135-THINGS135-02",
+        "language": "kannada",
+        "introducedBy": "KA-C135-kenne",
+        "introducedAt": 639,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C136-THINGS136-01",
+        "language": "kannada",
+        "introducedBy": "KA-C136-hebberalu",
+        "introducedAt": 645,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C136-THINGS136-02",
+        "language": "kannada",
+        "introducedBy": "KA-C136-uguru",
+        "introducedAt": 646,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C136-THINGS136-03",
+        "language": "kannada",
+        "introducedBy": "KA-C136-ede",
+        "introducedAt": 647,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C136-THINGS136-04",
+        "language": "kannada",
+        "introducedBy": "KA-C136-sonta",
+        "introducedAt": 648,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C136-THINGS136-05",
+        "language": "kannada",
+        "introducedBy": "KA-C136-hubbu",
+        "introducedAt": 649,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C137-THINGS137-01",
+        "language": "kannada",
+        "introducedBy": "KA-C137-meju",
+        "introducedAt": 650,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C137-THINGS137-02",
+        "language": "kannada",
+        "introducedBy": "KA-C137-kitaki",
+        "introducedAt": 651,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C137-THINGS137-03",
+        "language": "kannada",
+        "introducedBy": "KA-C137-kannadi",
+        "introducedAt": 652,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C137-THINGS137-04",
+        "language": "kannada",
+        "introducedBy": "KA-C137-tivi",
+        "introducedAt": 653,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C137-THINGS137-05",
+        "language": "kannada",
+        "introducedBy": "KA-C137-kampyutar",
+        "introducedAt": 654,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C138-THINGS138-01",
+        "language": "kannada",
+        "introducedBy": "KA-C138-rupayi",
+        "introducedAt": 655,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C138-THINGS138-02",
+        "language": "kannada",
+        "introducedBy": "KA-C138-batali",
+        "introducedAt": 656,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C138-THINGS138-03",
+        "language": "kannada",
+        "introducedBy": "KA-C138-jebu",
+        "introducedAt": 657,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C138-THINGS138-04",
+        "language": "kannada",
+        "introducedBy": "KA-C138-saks",
+        "introducedAt": 658,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C141-QUAL141-03",
+        "language": "kannada",
+        "introducedBy": "KA-C141-gatti",
+        "introducedAt": 672,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C141-QUAL141-04",
+        "language": "kannada",
+        "introducedBy": "KA-C141-kolaku",
+        "introducedAt": 673,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C141-QUAL141-05",
+        "language": "kannada",
+        "introducedBy": "KA-C141-vega",
+        "introducedAt": 674,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C142-QUAL142-01",
+        "language": "kannada",
+        "introducedBy": "KA-C142-sundara",
+        "introducedAt": 675,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C144-QUAL144-03",
+        "language": "kannada",
+        "introducedBy": "KA-C144-nerale",
+        "introducedAt": 687,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C144-QUAL144-04",
+        "language": "kannada",
+        "introducedBy": "KA-C144-budu",
+        "introducedAt": 688,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C144-QUAL144-05",
+        "language": "kannada",
+        "introducedBy": "KA-C144-khara",
+        "introducedAt": 689,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
       },
       {
         "atom": "KA-LEX-C20-HAVAMANA-02",
@@ -102178,6 +104496,50 @@
         "revisits": 2
       },
       {
+        "atom": "KA-LEX-C75-ORDINAL-04",
+        "language": "kannada",
+        "introducedBy": "KA-C75-ninth",
+        "introducedAt": 326,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C75-ORDINAL-05",
+        "language": "kannada",
+        "introducedBy": "KA-C75-tenth",
+        "introducedAt": 327,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C75-ORDINAL-06",
+        "language": "kannada",
+        "introducedBy": "KA-C75-eleventh",
+        "introducedAt": 328,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C75-ORDINAL-08",
+        "language": "kannada",
+        "introducedBy": "KA-C75-short-form",
+        "introducedAt": 329,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "KA-LEX-C82-UNWELL-01",
         "language": "kannada",
         "introducedBy": "KA-C82-tiredness",
@@ -102640,81 +105002,378 @@
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C94-TABLE-03",
+        "atom": "KA-LEX-C91-ABOUTYOU-05",
         "language": "kannada",
-        "introducedBy": "KA-C94-glass",
-        "introducedAt": 427,
+        "introducedBy": "KA-C91-language",
+        "introducedAt": 414,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C94-TABLE-04",
+        "atom": "KA-LEX-C92-WORK-01",
         "language": "kannada",
-        "introducedBy": "KA-C94-plate",
-        "introducedAt": 428,
+        "introducedBy": "KA-C92-school",
+        "introducedAt": 415,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C94-TABLE-05",
+        "atom": "KA-LEX-C92-WORK-02",
         "language": "kannada",
-        "introducedBy": "KA-C94-price",
-        "introducedAt": 429,
+        "introducedBy": "KA-C92-college",
+        "introducedAt": 416,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C95-MAYBE-01",
+        "atom": "KA-LEX-C92-WORK-03",
         "language": "kannada",
-        "introducedBy": "KA-C95-notpossible",
-        "introducedAt": 430,
+        "introducedBy": "KA-C92-office",
+        "introducedAt": 417,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C97-GRATEFUL-03",
+        "atom": "KA-LEX-C92-WORK-04",
         "language": "kannada",
-        "introducedBy": "KA-C97-grateful",
-        "introducedAt": 442,
+        "introducedBy": "KA-C92-job",
+        "introducedAt": 418,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C97-GRATEFUL-04",
+        "atom": "KA-LEX-C92-WORK-05",
         "language": "kannada",
-        "introducedBy": "KA-C97-dontforget",
-        "introducedAt": 443,
+        "introducedBy": "KA-C92-english",
+        "introducedAt": 419,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
-        "revisits": 4
+        "revisits": 3
       },
       {
-        "atom": "KA-LEX-C97-GRATEFUL-05",
+        "atom": "KA-LEX-C93-WEATHER-01",
         "language": "kannada",
-        "introducedBy": "KA-C97-kindness",
-        "introducedAt": 444,
+        "introducedBy": "KA-C93-dizzy",
+        "introducedAt": 420,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
-        "revisits": 4
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C93-WEATHER-02",
+        "language": "kannada",
+        "introducedBy": "KA-C93-sultry",
+        "introducedAt": 421,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C93-WEATHER-03",
+        "language": "kannada",
+        "introducedBy": "KA-C93-ease",
+        "introducedAt": 422,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C93-WEATHER-04",
+        "language": "kannada",
+        "introducedBy": "KA-C93-wound",
+        "introducedAt": 423,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C93-WEATHER-05",
+        "language": "kannada",
+        "introducedBy": "KA-C93-vomiting",
+        "introducedAt": 424,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C94-TABLE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C94-snack",
+        "introducedAt": 425,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C94-TABLE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C94-spoon",
+        "introducedAt": 426,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C95-MAYBE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C95-notlikethat",
+        "introducedAt": 431,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C95-MAYBE-03",
+        "language": "kannada",
+        "introducedBy": "KA-C95-oh",
+        "introducedAt": 432,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C95-MAYBE-04",
+        "language": "kannada",
+        "introducedBy": "KA-C95-maybe",
+        "introducedAt": 433,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C95-MAYBE-05",
+        "language": "kannada",
+        "introducedBy": "KA-C95-certainly",
+        "introducedAt": 434,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C96-HELLO-01",
+        "language": "kannada",
+        "introducedBy": "KA-C96-eaten",
+        "introducedAt": 435,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C96-HELLO-02",
+        "language": "kannada",
+        "introducedBy": "KA-C96-whatsnew",
+        "introducedAt": 436,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C96-HELLO-03",
+        "language": "kannada",
+        "introducedBy": "KA-C96-longtime",
+        "introducedAt": 437,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C96-HELLO-04",
+        "language": "kannada",
+        "introducedBy": "KA-C96-hello",
+        "introducedAt": 438,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C96-HELLO-05",
+        "language": "kannada",
+        "introducedBy": "KA-C96-wellbeing",
+        "introducedAt": 439,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C97-GRATEFUL-01",
+        "language": "kannada",
+        "introducedBy": "KA-C97-pardon",
+        "introducedAt": 440,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C97-GRATEFUL-02",
+        "language": "kannada",
+        "introducedBy": "KA-C97-introduction",
+        "introducedAt": 441,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C98-MOODS-01",
+        "language": "kannada",
+        "introducedBy": "KA-C98-boredom",
+        "introducedAt": 447,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C98-MOODS-02",
+        "language": "kannada",
+        "introducedBy": "KA-C98-enthusiasm",
+        "introducedAt": 448,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C98-MOODS-03",
+        "language": "kannada",
+        "introducedBy": "KA-C98-shyness",
+        "introducedAt": 449,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C98-MOODS-04",
+        "language": "kannada",
+        "introducedBy": "KA-C98-alarm",
+        "introducedAt": 450,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C98-MOODS-05",
+        "language": "kannada",
+        "introducedBy": "KA-C98-peace",
+        "introducedAt": 451,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C99-BODY2-01",
+        "language": "kannada",
+        "introducedBy": "KA-C99-breath",
+        "introducedAt": 452,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C99-BODY2-02",
+        "language": "kannada",
+        "introducedBy": "KA-C99-skin",
+        "introducedAt": 453,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C99-BODY2-03",
+        "language": "kannada",
+        "introducedBy": "KA-C99-blood",
+        "introducedAt": 454,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C99-BODY2-04",
+        "language": "kannada",
+        "introducedBy": "KA-C99-stomachache",
+        "introducedAt": 455,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C99-BODY2-05",
+        "language": "kannada",
+        "introducedBy": "KA-C99-weight",
+        "introducedAt": 456,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "KA-LEX-GIVE",
@@ -102882,6 +105541,17 @@
         "revisits": 4
       },
       {
+        "atom": "KA-SCRIPT-RECOG-154",
+        "language": "kannada",
+        "introducedBy": "KA-S154-other-marks",
+        "introducedAt": 336,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "KA-SCRIPT-RECOG-155",
         "language": "kannada",
         "introducedBy": "KA-S155-letter-aa",
@@ -102955,6 +105625,39 @@
         "missed": [
           "R3",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-SCRIPT-RECOG-173",
+        "language": "kannada",
+        "introducedBy": "KA-S173-letter-ttha",
+        "introducedAt": 358,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-SKILL-READ-LINES",
+        "language": "kannada",
+        "introducedBy": "KA-C76-lines",
+        "introducedAt": 332,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-SKILL-READ-WORDS",
+        "language": "kannada",
+        "introducedBy": "KA-C76-words",
+        "introducedAt": 331,
+        "missed": [
+          "R2",
+          "R3"
         ],
         "revisits": 2
       },
@@ -161817,216 +164520,6 @@
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C100-FIND-01",
-        "language": "kannada",
-        "introducedBy": "KA-C100-map",
-        "introducedAt": 457,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C100-FIND-02",
-        "language": "kannada",
-        "introducedBy": "KA-C100-ticket",
-        "introducedAt": 458,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C100-FIND-03",
-        "language": "kannada",
-        "introducedBy": "KA-C100-bus",
-        "introducedAt": 459,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C100-FIND-04",
-        "language": "kannada",
-        "introducedBy": "KA-C100-station",
-        "introducedAt": 460,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C100-FIND-05",
-        "language": "kannada",
-        "introducedBy": "KA-C100-near",
-        "introducedAt": 461,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C101-OPEN-01",
-        "language": "kannada",
-        "introducedBy": "KA-C101-open",
-        "introducedAt": 462,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C101-OPEN-02",
-        "language": "kannada",
-        "introducedBy": "KA-C101-close",
-        "introducedAt": 463,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C101-OPEN-03",
-        "language": "kannada",
-        "introducedBy": "KA-C101-stop",
-        "introducedAt": 464,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C101-OPEN-04",
-        "language": "kannada",
-        "introducedBy": "KA-C101-call",
-        "introducedAt": 465,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C101-OPEN-05",
-        "language": "kannada",
-        "introducedBy": "KA-C101-urgent",
-        "introducedAt": 466,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C102-THISWAY-01",
-        "language": "kannada",
-        "introducedBy": "KA-C102-other",
-        "introducedAt": 467,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C102-THISWAY-02",
-        "language": "kannada",
-        "introducedBy": "KA-C102-wrong",
-        "introducedAt": 468,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C102-THISWAY-03",
-        "language": "kannada",
-        "introducedBy": "KA-C102-all",
-        "introducedAt": 469,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C102-THISWAY-04",
-        "language": "kannada",
-        "introducedBy": "KA-C102-onlyone",
-        "introducedAt": 470,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C102-THISWAY-05",
-        "language": "kannada",
-        "introducedBy": "KA-C102-fornoreason",
-        "introducedAt": 471,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C103-HOME-01",
-        "language": "kannada",
-        "introducedBy": "KA-C103-house",
-        "introducedAt": 472,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C103-HOME-02",
-        "language": "kannada",
-        "introducedBy": "KA-C103-street",
-        "introducedAt": 473,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C103-HOME-03",
-        "language": "kannada",
-        "introducedBy": "KA-C103-city",
-        "introducedAt": 474,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C103-HOME-04",
-        "language": "kannada",
-        "introducedBy": "KA-C103-country",
-        "introducedAt": 475,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C103-HOME-05",
-        "language": "kannada",
-        "introducedBy": "KA-C103-state",
-        "introducedAt": 476,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C104-JOBS-01",
-        "language": "kannada",
-        "introducedBy": "KA-C104-business",
-        "introducedAt": 477,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "KA-LEX-C11-BANNAGALU-02",
         "language": "kannada",
         "introducedBy": "KA-C11-bannagalu",
@@ -162047,12 +164540,562 @@
         "revisits": 4
       },
       {
+        "atom": "KA-LEX-C138-THINGS138-05",
+        "language": "kannada",
+        "introducedBy": "KA-C138-kotu",
+        "introducedAt": 659,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C139-THINGS139-01",
+        "language": "kannada",
+        "introducedBy": "KA-C139-kamala",
+        "introducedAt": 660,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C139-THINGS139-02",
+        "language": "kannada",
+        "introducedBy": "KA-C139-godhi",
+        "introducedAt": 661,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C139-THINGS139-03",
+        "language": "kannada",
+        "introducedBy": "KA-C139-doni",
+        "introducedAt": 662,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C139-THINGS139-04",
+        "language": "kannada",
+        "introducedBy": "KA-C139-kanniru",
+        "introducedAt": 663,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C139-THINGS139-05",
+        "language": "kannada",
+        "introducedBy": "KA-C139-mise",
+        "introducedAt": 664,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "KA-LEX-C14-KAALAGALU-01",
         "language": "kannada",
         "introducedBy": "KA-C14-kaalagalu",
         "introducedAt": 80,
         "missed": [
           "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C140-THINGS140-01",
+        "language": "kannada",
+        "introducedBy": "KA-C140-gadda",
+        "introducedAt": 665,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C140-THINGS140-02",
+        "language": "kannada",
+        "introducedBy": "KA-C140-pada",
+        "introducedAt": 666,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C140-THINGS140-03",
+        "language": "kannada",
+        "introducedBy": "KA-C140-udda",
+        "introducedAt": 667,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C140-THINGS140-04",
+        "language": "kannada",
+        "introducedBy": "KA-C140-gidda",
+        "introducedAt": 668,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C140-THINGS140-05",
+        "language": "kannada",
+        "introducedBy": "KA-C140-bhara",
+        "introducedAt": 669,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C141-QUAL141-01",
+        "language": "kannada",
+        "introducedBy": "KA-C141-hagura",
+        "introducedAt": 670,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C141-QUAL141-02",
+        "language": "kannada",
+        "introducedBy": "KA-C141-mrdu",
+        "introducedAt": 671,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C142-QUAL142-02",
+        "language": "kannada",
+        "introducedBy": "KA-C142-ala",
+        "introducedAt": 676,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C142-QUAL142-03",
+        "language": "kannada",
+        "introducedBy": "KA-C142-agala",
+        "introducedAt": 677,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C142-QUAL142-04",
+        "language": "kannada",
+        "introducedBy": "KA-C142-kiridu",
+        "introducedAt": 678,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C142-QUAL142-05",
+        "language": "kannada",
+        "introducedBy": "KA-C142-odde",
+        "introducedAt": 679,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C143-QUAL143-01",
+        "language": "kannada",
+        "introducedBy": "KA-C143-ona",
+        "introducedAt": 680,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C143-QUAL143-02",
+        "language": "kannada",
+        "introducedBy": "KA-C143-bada",
+        "introducedAt": 681,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C143-QUAL143-03",
+        "language": "kannada",
+        "introducedBy": "KA-C143-srimanta",
+        "introducedAt": 682,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C143-QUAL143-04",
+        "language": "kannada",
+        "introducedBy": "KA-C143-prasiddha",
+        "introducedAt": 683,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C143-QUAL143-05",
+        "language": "kannada",
+        "introducedBy": "KA-C143-suraksita",
+        "introducedAt": 684,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C144-QUAL144-01",
+        "language": "kannada",
+        "introducedBy": "KA-C144-apayakari",
+        "introducedAt": 685,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C144-QUAL144-02",
+        "language": "kannada",
+        "introducedBy": "KA-C144-sullu",
+        "introducedAt": 686,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C145-QUAL145-01",
+        "language": "kannada",
+        "introducedBy": "KA-C145-kahi",
+        "introducedAt": 692,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C145-QUAL145-02",
+        "language": "kannada",
+        "introducedBy": "KA-C145-huli2",
+        "introducedAt": 693,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C145-QUAL145-03",
+        "language": "kannada",
+        "introducedBy": "KA-C145-sihi",
+        "introducedAt": 694,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C145-QUAL145-04",
+        "language": "kannada",
+        "introducedBy": "KA-C145-somari",
+        "introducedAt": 695,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C145-QUAL145-05",
+        "language": "kannada",
+        "introducedBy": "KA-C145-jana",
+        "introducedAt": 696,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C146-QUAL146-01",
+        "language": "kannada",
+        "introducedBy": "KA-C146-ketta",
+        "introducedAt": 697,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C146-QUAL146-02",
+        "language": "kannada",
+        "introducedBy": "KA-C146-bhayankara",
+        "introducedAt": 698,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C146-QUAL146-03",
+        "language": "kannada",
+        "introducedBy": "KA-C146-dhairyavanta",
+        "introducedAt": 699,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C146-QUAL146-04",
+        "language": "kannada",
+        "introducedBy": "KA-C146-cinnada",
+        "introducedAt": 700,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C146-QUAL146-05",
+        "language": "kannada",
+        "introducedBy": "KA-C146-belliya",
+        "introducedAt": 701,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C147-ACT147-01",
+        "language": "kannada",
+        "introducedBy": "KA-C147-kudi",
+        "introducedAt": 702,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C147-ACT147-02",
+        "language": "kannada",
+        "introducedBy": "KA-C147-odu",
+        "introducedAt": 703,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C147-ACT147-03",
+        "language": "kannada",
+        "introducedBy": "KA-C147-malagu",
+        "introducedAt": 704,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C147-ACT147-04",
+        "language": "kannada",
+        "introducedBy": "KA-C147-kattarisu",
+        "introducedAt": 705,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C147-ACT147-05",
+        "language": "kannada",
+        "introducedBy": "KA-C147-ode",
+        "introducedAt": 706,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C148-ACT148-01",
+        "language": "kannada",
+        "introducedBy": "KA-C148-kalisu",
+        "introducedAt": 707,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C148-ACT148-02",
+        "language": "kannada",
+        "introducedBy": "KA-C148-huduku",
+        "introducedAt": 708,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C148-ACT148-03",
+        "language": "kannada",
+        "introducedBy": "KA-C148-kali",
+        "introducedAt": 709,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C148-ACT148-04",
+        "language": "kannada",
+        "introducedBy": "KA-C148-kalisu2",
+        "introducedAt": 710,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C148-ACT148-05",
+        "language": "kannada",
+        "introducedBy": "KA-C148-jigi",
+        "introducedAt": 711,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C149-ACT149-01",
+        "language": "kannada",
+        "introducedBy": "KA-C149-ili2",
+        "introducedAt": 712,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C149-ACT149-02",
+        "language": "kannada",
+        "introducedBy": "KA-C149-seru",
+        "introducedAt": 713,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C149-ACT149-03",
+        "language": "kannada",
+        "introducedBy": "KA-C149-todu",
+        "introducedAt": 714,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C149-ACT149-04",
+        "language": "kannada",
+        "introducedBy": "KA-C149-kare",
+        "introducedAt": 715,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C149-ACT149-05",
+        "language": "kannada",
+        "introducedBy": "KA-C149-enisu",
+        "introducedAt": 716,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C150-ACT150-01",
+        "language": "kannada",
+        "introducedBy": "KA-C150-tole",
+        "introducedAt": 717,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C150-ACT150-02",
+        "language": "kannada",
+        "introducedBy": "KA-C150-oresu",
+        "introducedAt": 718,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C150-ACT150-03",
+        "language": "kannada",
+        "introducedBy": "KA-C150-gudisu",
+        "introducedAt": 719,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C150-ACT150-04",
+        "language": "kannada",
+        "introducedBy": "KA-C150-kattu",
+        "introducedAt": 720,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C150-ACT150-05",
+        "language": "kannada",
+        "introducedBy": "KA-C150-holi",
+        "introducedAt": 721,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C151-ACT151-01",
+        "language": "kannada",
+        "introducedBy": "KA-C151-gellu",
+        "introducedAt": 722,
+        "missed": [
+          "R2"
         ],
         "revisits": 3
       },
@@ -163365,346 +166408,6 @@
           "R4"
         ],
         "revisits": 5
-      },
-      {
-        "atom": "KA-LEX-C91-ABOUTYOU-05",
-        "language": "kannada",
-        "introducedBy": "KA-C91-language",
-        "introducedAt": 414,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C92-WORK-01",
-        "language": "kannada",
-        "introducedBy": "KA-C92-school",
-        "introducedAt": 415,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C92-WORK-02",
-        "language": "kannada",
-        "introducedBy": "KA-C92-college",
-        "introducedAt": 416,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C92-WORK-03",
-        "language": "kannada",
-        "introducedBy": "KA-C92-office",
-        "introducedAt": 417,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C92-WORK-04",
-        "language": "kannada",
-        "introducedBy": "KA-C92-job",
-        "introducedAt": 418,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C92-WORK-05",
-        "language": "kannada",
-        "introducedBy": "KA-C92-english",
-        "introducedAt": 419,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C93-WEATHER-01",
-        "language": "kannada",
-        "introducedBy": "KA-C93-dizzy",
-        "introducedAt": 420,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C93-WEATHER-02",
-        "language": "kannada",
-        "introducedBy": "KA-C93-sultry",
-        "introducedAt": 421,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C93-WEATHER-03",
-        "language": "kannada",
-        "introducedBy": "KA-C93-ease",
-        "introducedAt": 422,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C93-WEATHER-04",
-        "language": "kannada",
-        "introducedBy": "KA-C93-wound",
-        "introducedAt": 423,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C93-WEATHER-05",
-        "language": "kannada",
-        "introducedBy": "KA-C93-vomiting",
-        "introducedAt": 424,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C94-TABLE-01",
-        "language": "kannada",
-        "introducedBy": "KA-C94-snack",
-        "introducedAt": 425,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C94-TABLE-02",
-        "language": "kannada",
-        "introducedBy": "KA-C94-spoon",
-        "introducedAt": 426,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C95-MAYBE-02",
-        "language": "kannada",
-        "introducedBy": "KA-C95-notlikethat",
-        "introducedAt": 431,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C95-MAYBE-03",
-        "language": "kannada",
-        "introducedBy": "KA-C95-oh",
-        "introducedAt": 432,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C95-MAYBE-04",
-        "language": "kannada",
-        "introducedBy": "KA-C95-maybe",
-        "introducedAt": 433,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C95-MAYBE-05",
-        "language": "kannada",
-        "introducedBy": "KA-C95-certainly",
-        "introducedAt": 434,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C96-HELLO-01",
-        "language": "kannada",
-        "introducedBy": "KA-C96-eaten",
-        "introducedAt": 435,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C96-HELLO-02",
-        "language": "kannada",
-        "introducedBy": "KA-C96-whatsnew",
-        "introducedAt": 436,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C96-HELLO-03",
-        "language": "kannada",
-        "introducedBy": "KA-C96-longtime",
-        "introducedAt": 437,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C96-HELLO-04",
-        "language": "kannada",
-        "introducedBy": "KA-C96-hello",
-        "introducedAt": 438,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C96-HELLO-05",
-        "language": "kannada",
-        "introducedBy": "KA-C96-wellbeing",
-        "introducedAt": 439,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C97-GRATEFUL-01",
-        "language": "kannada",
-        "introducedBy": "KA-C97-pardon",
-        "introducedAt": 440,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C97-GRATEFUL-02",
-        "language": "kannada",
-        "introducedBy": "KA-C97-introduction",
-        "introducedAt": 441,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C98-MOODS-01",
-        "language": "kannada",
-        "introducedBy": "KA-C98-boredom",
-        "introducedAt": 447,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C98-MOODS-02",
-        "language": "kannada",
-        "introducedBy": "KA-C98-enthusiasm",
-        "introducedAt": 448,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C98-MOODS-03",
-        "language": "kannada",
-        "introducedBy": "KA-C98-shyness",
-        "introducedAt": 449,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C98-MOODS-04",
-        "language": "kannada",
-        "introducedBy": "KA-C98-alarm",
-        "introducedAt": 450,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C98-MOODS-05",
-        "language": "kannada",
-        "introducedBy": "KA-C98-peace",
-        "introducedAt": 451,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C99-BODY2-01",
-        "language": "kannada",
-        "introducedBy": "KA-C99-breath",
-        "introducedAt": 452,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C99-BODY2-02",
-        "language": "kannada",
-        "introducedBy": "KA-C99-skin",
-        "introducedAt": 453,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C99-BODY2-03",
-        "language": "kannada",
-        "introducedBy": "KA-C99-blood",
-        "introducedAt": 454,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C99-BODY2-04",
-        "language": "kannada",
-        "introducedBy": "KA-C99-stomachache",
-        "introducedAt": 455,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C99-BODY2-05",
-        "language": "kannada",
-        "introducedBy": "KA-C99-weight",
-        "introducedAt": 456,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "KA-LEX-COME",
@@ -185430,12 +188133,12 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 494,
+        "lessonCount": 739,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 587,
-        "atomsNeverRevisited": 3,
+        "atomsTaught": 822,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 14
       },
       {
@@ -185574,14 +188277,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 16150,
-      "atomsNeverRevisited": 251,
+      "atomsTaught": 16385,
+      "atomsNeverRevisited": 248,
       "neverRevisitedPercent": 2,
       "missedByWindow": {
         "R1": 1760,
-        "R2": 10136,
-        "R3": 9777,
-        "R4": 10661
+        "R2": 10316,
+        "R3": 9867,
+        "R4": 10885
       },
       "forwardReferences": 921
     }
@@ -185669,7 +188372,7 @@
       {
         "language": "kannada",
         "script": "kannada",
-        "lessonCount": 494,
+        "lessonCount": 739,
         "scriptLessons": 75,
         "taughtGlyphs": 69,
         "shownGlyphs": 69,
@@ -206232,8 +208935,8 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 494,
-        "atomMeasurableLessons": 494,
+        "lessonCount": 739,
+        "atomMeasurableLessons": 739,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -206248,14 +208951,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 14,
-        "atomsTaught": 587,
-        "atomsNeverRevisited": 3,
-        "reinforcementWindowMisses": 1061,
+        "atomsTaught": 822,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 1555,
         "reinforcementMissesByWindow": {
           "R1": 98,
-          "R2": 181,
-          "R3": 418,
-          "R4": 364
+          "R2": 361,
+          "R3": 508,
+          "R4": 588
         },
         "payoffSurprises": 5,
         "writingPracticeLessons": 107,
@@ -206286,7 +208989,7 @@
           {
             "language": "kannada",
             "kind": "reinforcement",
-            "count": 1061,
+            "count": 1555,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -207815,6 +210518,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "kannada",
+        "kind": "reinforcement",
+        "count": 1555,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "latin",
         "kind": "reinforcement",
         "count": 1527,
@@ -207860,13 +210570,6 @@
         "language": "arabic",
         "kind": "reinforcement",
         "count": 1077,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "kannada",
-        "kind": "reinforcement",
-        "count": 1061,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -208406,29 +211109,9 @@
             "criterion": "writing-stage",
             "detail": "2 cumulative writing stage(s) unproved at A1: controlled-composition, timed-assessment-production",
             "shortfall": 2
-          },
-          {
-            "criterion": "spine-nodes",
-            "detail": "6 of 12 A1 spine node(s) unrealized: SPINE-ASK-LOCATION, SPINE-NAME-EVERYDAY-THINGS, SPINE-DESCRIBE-QUALITIES, SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO…",
-            "shortfall": 6
-          },
-          {
-            "criterion": "vocabulary",
-            "detail": "teaches 373 distinct headwords at or below A1, against 600",
-            "shortfall": 227
-          },
-          {
-            "criterion": "verb-vocabulary",
-            "detail": "teaches 12 distinct verb headwords at or below A1, against 40",
-            "shortfall": 28
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "24 atom(s) at or below A1 are revisited fewer than twice (74 etymology hook(s) waived)",
-            "shortfall": 24
           }
         ],
-        "vocabulary": 384
+        "vocabulary": 619
       },
       {
         "language": "latin",
@@ -208754,11 +211437,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 14923,
-    "voice": 12593,
+    "totalLessons": 15168,
+    "voice": 12838,
     "sight": 989,
     "pen": 1341,
-    "coreVoice": 13169,
+    "coreVoice": 13414,
     "lessonsWithWritingSegments": 858,
     "drivablePercent": 88,
     "tracks": [
@@ -222630,13 +225313,13 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 494,
-        "voice": 372,
+        "lessonCount": 739,
+        "voice": 617,
         "sight": 47,
         "pen": 75,
-        "coreVoice": 403,
-        "drivablePercent": 82,
-        "drivablePrefixTotal": 350,
+        "coreVoice": 648,
+        "drivablePercent": 88,
+        "drivablePrefixTotal": 595,
         "chapters": [
           {
             "language": "kannada",
@@ -224180,6 +226863,664 @@
           {
             "language": "kannada",
             "chapter": 106,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 107,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 108,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 109,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 110,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 111,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 112,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 113,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 114,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 115,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 116,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 117,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 118,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 119,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 120,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 121,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 122,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 123,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 124,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 125,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 126,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 127,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 128,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 129,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 130,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 131,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 132,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 133,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 134,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 135,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 136,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 137,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 138,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 139,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 140,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 141,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 142,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 143,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 144,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 145,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 146,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 147,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 148,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 149,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 150,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 151,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 152,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 153,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -253496,7 +256837,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 14923,
+    "lessons": 15168,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -253504,11 +256845,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 14923,
-    "measuredLessons": 10750,
-    "idiomMeasuredLessons": 10750,
-    "senseMeasuredLessons": 10751,
-    "cultureClaimMeasuredLessons": 10750,
+    "lessons": 15168,
+    "measuredLessons": 10995,
+    "idiomMeasuredLessons": 10995,
+    "senseMeasuredLessons": 10996,
+    "cultureClaimMeasuredLessons": 10995,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -253517,22 +256858,22 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 14011,
-    "usesBeforeIntroduction": 31374,
-    "technicalUsesBeforeIntroduction": 6291,
-    "technicalLessons": 3526,
+    "lessonsUsingTerms": 14256,
+    "usesBeforeIntroduction": 31629,
+    "technicalUsesBeforeIntroduction": 6295,
+    "technicalLessons": 3529,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2025
+        "lessons": 2027
       },
       {
         "term": "noun",
-        "lessons": 1194
+        "lessons": 1195
       },
       {
         "term": "adjective",
-        "lessons": 373
+        "lessons": 374
       },
       {
         "term": "pronoun",
@@ -253549,12 +256890,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 14923,
+    "lessonsScanned": 15168,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 3137,
+    "filesScanned": 3184,
     "mainCharacters": 134,
     "scriptCharacters": 801,
     "gaps": 0
