@@ -222,6 +222,12 @@ test('files.save refuses names that are paths, disguises, or the wrong type, bef
     ['line\u2028break.json', undefined], ['tag\u{E0001}.json', undefined],
     // With no accepted type, nothing that runs when opened.
     ['run.command', undefined], ['site.webloc', undefined], ['setup.EXE', undefined],
+    // Security review round 2: grapheme merges, blank characters, surrogates,
+    // private use, LONG S, and the wider launcher list.
+    ['run\u0D4E.terminal', undefined], ['.\u0301zshrc', undefined],
+    ['Invoice.pdf\u2800\u2800.txt', undefined], ['a\uD800.json', undefined],
+    ['a\uE000.json', undefined], ['a.j\u017F', undefined], ['img.iso', undefined],
+    ['clip.scf', undefined], ['app.AppImage', undefined],
   ]) {
     const { files, calls, completions } = fixture();
     await files.run(effect(9, 'files.save', { suggestedName: name, ...(accept ? { accept } : {}), bytes: 'AA==' }));
@@ -276,10 +282,18 @@ test('the plain-name rule and executable list match the Compose library', async 
   const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicPlatformEffects.kt', import.meta.url), 'utf8');
   const start = kotlin.indexOf('val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(');
   const body = kotlin.slice(start, kotlin.indexOf(')\n', start));
-  const listed = [...body.matchAll(/"([a-z0-9]+)"/g)].map(match => match[1]).sort();
+  const listed = [...body.matchAll(/"([a-z0-9-]+)"/g)].map(match => match[1]).sort();
   assert.deepEqual([...EXECUTABLE_EXTENSIONS].sort(), listed);
   assert.equal(hasExecutableExtension('notes.txt'), false);
   assert.equal(hasExecutableExtension('README'), false);
   assert.equal(isPlainFileName('journal-2026-09-27.json'), true);
   assert.equal(isPlainFileName('two words.json'), true);
+  assert.equal(isPlainFileName('caf\u00E9 menu.json'), true);
+});
+
+test('the legacy file.save type may not name a launcher', async () => {
+  const { files, calls, completions } = fixture();
+  await files.run(effect(14, 'file.save', { suggestedName: 'photo', mimeType: 'application/x-msdownload', extension: '.scr', bytes: 'AA==' }));
+  assert.equal(calls.length, 0);
+  assert.ok(completions[0][1].failed);
 });

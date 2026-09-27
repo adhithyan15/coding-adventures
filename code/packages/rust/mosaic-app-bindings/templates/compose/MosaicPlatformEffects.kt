@@ -171,6 +171,10 @@ private fun mosaicReadBounded(file: File, limit: Long): ByteArray? {
  *   hides its real extension;
  * - at most 255 UTF-16 units.
  *
+ * - no lone surrogate, unassigned or private-use code point;
+ * - blank-rendering characters (Hangul fillers, BRAILLE PATTERN BLANK) count as
+ *   whitespace.
+ *
  * Checked by code point, so a format character outside the BMP (the tag
  * characters, U+E0000..) is caught as well as one inside it.
  */
@@ -188,14 +192,26 @@ fun mosaicIsPlainFileName(name: String): Boolean {
         point == '/'.code || point == '\\'.code || point == ':'.code ||
             when (Character.getType(point).toByte()) {
                 Character.CONTROL, Character.FORMAT,
-                Character.LINE_SEPARATOR, Character.PARAGRAPH_SEPARATOR -> true
+                Character.LINE_SEPARATOR, Character.PARAGRAPH_SEPARATOR,
+                // A lone surrogate cannot be written as a file name (Java
+                // saves it as `?`), and unassigned or private-use code points
+                // mean different things to different runtimes' Unicode tables.
+                Character.SURROGATE, Character.UNASSIGNED, Character.PRIVATE_USE -> true
                 else -> false
             }
     }
 }
 
 private fun mosaicIsSpace(point: Int): Boolean =
-    Character.isWhitespace(point) || Character.isSpaceChar(point)
+    Character.isWhitespace(point) || Character.isSpaceChar(point) || point in MOSAIC_BLANK_CHARACTERS
+
+/**
+ * Characters that are not whitespace to Unicode but render blank, so they pad
+ * a name just as well: COMBINING GRAPHEME JOINER, the Hangul fillers and
+ * BRAILLE PATTERN BLANK. They count as whitespace for the padding rules.
+ */
+private val MOSAIC_BLANK_CHARACTERS: Set<Int> =
+    setOf(0x034F, 0x115F, 0x1160, 0x2800, 0x3164, 0xFFA0)
 
 /**
  * Extensions that run when the file is opened, on some platform: when an app
@@ -204,19 +220,27 @@ private fun mosaicIsSpace(point: Int): Boolean =
  * app does name types, the name must already end in one of theirs.
  */
 val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(
-    // macOS: Terminal scripts and Finder location files open with no prompt.
-    "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "app", "pkg", "dmg",
-    // Windows.
-    "exe", "com", "bat", "cmd", "scr", "pif", "msi", "lnk", "url", "hta", "cpl",
-    "vbs", "vbe", "js", "jse", "wsf", "wsh", "ps1", "reg", "jar",
+    // macOS: Terminal scripts, Finder location files and installers open
+    // with no prompt, or install.
+    "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "afploc", "ftploc",
+    "mailloc", "newsloc", "atloc", "app", "pkg", "mpkg", "dmg", "mobileconfig", "scpt",
+    "applescript", "workflow",
+    // Windows: run, install, or leak credentials when merely browsed.
+    "exe", "com", "bat", "cmd", "scr", "pif", "msi", "msp", "msc", "lnk", "url", "hta",
+    "cpl", "chm", "inf", "vbs", "vbe", "js", "jse", "wsf", "wsh", "ws", "wsc", "sct",
+    "ps1", "psm1", "reg", "jar", "jnlp", "gadget", "xll", "appref-ms", "application",
+    "settingcontent-ms", "appx", "msix", "appinstaller", "diagcab", "scf",
+    "library-ms", "searchconnector-ms", "iso", "img", "vhd", "vhdx",
     // Linux desktops.
-    "desktop", "sh",
+    "desktop", "sh", "run", "appimage", "deb", "rpm", "flatpakref",
 )
 
 /** True when [name] ends in an extension from [MOSAIC_EXECUTABLE_EXTENSIONS]. */
 fun mosaicHasExecutableExtension(name: String): Boolean {
     val dot = name.lastIndexOf('.')
-    return dot >= 0 && name.substring(dot + 1).lowercase() in MOSAIC_EXECUTABLE_EXTENSIONS
+    // Folded through upper case first: `ſ` (LONG S) lowercases to itself but
+    // is `S` to a case-insensitive file system.
+    return dot >= 0 && name.substring(dot + 1).uppercase().lowercase() in MOSAIC_EXECUTABLE_EXTENSIONS
 }
 
 /** `files.open`: the outcome map, never an exception. */

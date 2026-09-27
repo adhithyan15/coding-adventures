@@ -73,10 +73,15 @@ executor's, applied everywhere:
   to one rule): no path separators or `:`, not `.`/`..`, no leading `.`
   (dot-files), no control, format, line- or paragraph-separator characters,
   no leading or trailing whitespace, no run of two or more whitespace
-  characters, no trailing dot, at most 255 UTF-16 units;
+  characters (characters that render blank — Hangul fillers, BRAILLE
+  PATTERN BLANK — count as whitespace), no surrogate, unassigned or
+  private-use code point, no trailing dot, at most 255 UTF-16 units. Hosts
+  check by code point (Swift by scalar, never by grapheme cluster: a
+  combining letter merged with a `.` would otherwise hide it);
 - when the app names no accepted type, the name may not end in an extension
-  that runs when opened (`.command`, `.terminal`, `.webloc`, `.exe`, `.bat`,
-  `.desktop`, … — one list, shared by every host). With a type, the name must
+  that runs, installs or mounts when opened (`.command`, `.terminal`,
+  `.webloc`, `.exe`, `.scf`, `.iso`, `.desktop`, `.AppImage`, … — one list,
+  shared by every host, compared after folding case through upper case). With a type, the name must
   already end in one of that type's extensions;
 - one file operation at a time; a second request gets `failed`, not a queue.
 

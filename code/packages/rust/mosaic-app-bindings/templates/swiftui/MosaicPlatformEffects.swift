@@ -225,25 +225,52 @@ func mosaicIsPlainFileName(_ name: String) -> Bool {
   guard !name.isEmpty, name.utf16.count <= 255, name != ".", name != ".." else {
     return false
   }
-  if name.hasPrefix(".") || name.hasSuffix(".") { return false }
-  guard let first = name.unicodeScalars.first, let last = name.unicodeScalars.last,
-    !first.properties.isWhitespace, !last.properties.isWhitespace
+  // By SCALAR throughout, never by Character: a Character is a grapheme
+  // cluster, and a Prepend letter (U+0D4E) or a combining mark (U+0301)
+  // merges with a neighbouring `.` into one, so `hasPrefix(".")` and
+  // `lastIndex(of: ".")` would not see it -- while the file system, and the
+  // Compose and browser hosts, do.
+  let scalars = name.unicodeScalars
+  guard let first = scalars.first, let last = scalars.last,
+    first != ".", last != ".",
+    !mosaicIsSpace(first), !mosaicIsSpace(last)
   else {
     return false
   }
   var previousWasSpace = false
-  for scalar in name.unicodeScalars {
-    let isSpace = scalar.properties.isWhitespace
+  for scalar in scalars {
+    let isSpace = mosaicIsSpace(scalar)
     if isSpace && previousWasSpace { return false }
     previousWasSpace = isSpace
   }
-  return !name.unicodeScalars.contains { scalar in
+  return !scalars.contains { scalar in
     if scalar == "/" || scalar == "\\" || scalar == ":" { return true }
     switch scalar.properties.generalCategory {
-    case .control, .format, .lineSeparator, .paragraphSeparator: return true
+    case .control, .format, .lineSeparator, .paragraphSeparator,
+      // Unassigned and private-use code points mean different things to
+      // different runtimes' Unicode tables (Swift strings hold no surrogates).
+      .unassigned, .privateUse, .surrogate:
+      return true
     default: return false
     }
   }
+}
+
+/// Whitespace for the padding rules, plus the characters that are not
+/// whitespace to Unicode but render blank: COMBINING GRAPHEME JOINER, the
+/// Hangul fillers and BRAILLE PATTERN BLANK.
+private func mosaicIsSpace(_ scalar: Unicode.Scalar) -> Bool {
+  scalar.properties.isWhitespace
+    || [0x034F, 0x115F, 0x1160, 0x2800, 0x3164, 0xFFA0].contains(scalar.value)
+}
+
+/// The extension after the last `.`, found by scalar (see
+/// `mosaicIsPlainFileName`) and folded through upper case, so `ſ` (LONG S)
+/// compares as `s`; nil when there is no dot.
+func mosaicFileExtension(_ name: String) -> String? {
+  let scalars = name.unicodeScalars
+  guard let dot = scalars.lastIndex(of: ".") else { return nil }
+  return String(scalars[scalars.index(after: dot)...]).uppercased().lowercased()
 }
 
 /// Extensions that run when the file is opened, on some platform: when an
@@ -252,19 +279,25 @@ func mosaicIsPlainFileName(_ name: String) -> Bool {
 /// the app does name types, the name must already end in one of theirs. The
 /// same set as the Compose library.
 let mosaicExecutableExtensions: Set<String> = [
-  // macOS: Terminal scripts and Finder location files open with no prompt.
-  "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "app", "pkg", "dmg",
-  // Windows.
-  "exe", "com", "bat", "cmd", "scr", "pif", "msi", "lnk", "url", "hta", "cpl",
-  "vbs", "vbe", "js", "jse", "wsf", "wsh", "ps1", "reg", "jar",
+  // macOS: Terminal scripts, Finder location files and installers open
+  // with no prompt, or install.
+  "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "afploc", "ftploc",
+  "mailloc", "newsloc", "atloc", "app", "pkg", "mpkg", "dmg", "mobileconfig", "scpt",
+  "applescript", "workflow",
+  // Windows: run, install, or leak credentials when merely browsed.
+  "exe", "com", "bat", "cmd", "scr", "pif", "msi", "msp", "msc", "lnk", "url", "hta",
+  "cpl", "chm", "inf", "vbs", "vbe", "js", "jse", "wsf", "wsh", "ws", "wsc", "sct",
+  "ps1", "psm1", "reg", "jar", "jnlp", "gadget", "xll", "appref-ms", "application",
+  "settingcontent-ms", "appx", "msix", "appinstaller", "diagcab", "scf",
+  "library-ms", "searchconnector-ms", "iso", "img", "vhd", "vhdx",
   // Linux desktops.
-  "desktop", "sh",
+  "desktop", "sh", "run", "appimage", "deb", "rpm", "flatpakref",
 ]
 
 /// True when `name` ends in an extension from `mosaicExecutableExtensions`.
 func mosaicHasExecutableExtension(_ name: String) -> Bool {
-  guard let dot = name.lastIndex(of: ".") else { return false }
-  return mosaicExecutableExtensions.contains(String(name[name.index(after: dot)...]).lowercased())
+  guard let fileExtension = mosaicFileExtension(name) else { return false }
+  return mosaicExecutableExtensions.contains(fileExtension)
 }
 
 /// `files.open`: the outcome dictionary, never a thrown error.
@@ -314,8 +347,8 @@ func mosaicRunFilesSave(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: 
   // When the app says what it is saving, the name must agree: a JSON export
   // cannot be offered as `notes.exe`.
   let extensions = mosaicExtensions(for: request)
-  let lowered = suggestedName.lowercased()
-  if !extensions.isEmpty && !extensions.contains(where: { lowered.hasSuffix(".\($0)") }) {
+  let suggestedExtension = mosaicFileExtension(suggestedName)
+  if !extensions.isEmpty && !extensions.contains(where: { $0 == suggestedExtension }) {
     return mosaicFailed("suggestedName must end in an extension of an accepted type")
   }
   if extensions.isEmpty && mosaicHasExecutableExtension(suggestedName) {

@@ -84,15 +84,21 @@ function acceptedTypes(payload) {
  *    hides its extension that way;
  *  - at most 255 UTF-16 units.
  */
+// Whitespace, plus characters that render blank without being whitespace:
+// COMBINING GRAPHEME JOINER, the Hangul fillers, BRAILLE PATTERN BLANK.
+const BLANK = '[\\s\\u034F\\u115F\\u1160\\u2800\\u3164\\uFFA0]';
+
 export function isPlainFileName(name) {
   return typeof name === 'string'
     && name !== ''
     && name.length <= 255
     && name !== '.' && name !== '..'
     && !name.startsWith('.')
-    && !/^\s|[.\s]$/u.test(name)
-    && !/\s{2,}/u.test(name)
-    && !/[\\/:\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u.test(name);
+    && !new RegExp(`^${BLANK}|[.]$|${BLANK}$`, 'u').test(name)
+    && !new RegExp(`${BLANK}{2,}`, 'u').test(name)
+    // Surrogates (a lone one cannot be a file name), and unassigned or
+    // private-use code points, whose meaning varies by Unicode version.
+    && !/[\\/:\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Cs}\p{Cn}\p{Co}]/u.test(name);
 }
 
 /**
@@ -101,19 +107,27 @@ export function isPlainFileName(name) {
  * SwiftUI libraries.
  */
 export const EXECUTABLE_EXTENSIONS = new Set([
-  // macOS: Terminal scripts and Finder location files open with no prompt.
-  'command', 'terminal', 'tool', 'webloc', 'inetloc', 'fileloc', 'app', 'pkg', 'dmg',
-  // Windows.
-  'exe', 'com', 'bat', 'cmd', 'scr', 'pif', 'msi', 'lnk', 'url', 'hta', 'cpl',
-  'vbs', 'vbe', 'js', 'jse', 'wsf', 'wsh', 'ps1', 'reg', 'jar',
+  // macOS: Terminal scripts, Finder location files and installers open
+  // with no prompt, or install.
+  'command', 'terminal', 'tool', 'webloc', 'inetloc', 'fileloc', 'afploc', 'ftploc',
+  'mailloc', 'newsloc', 'atloc', 'app', 'pkg', 'mpkg', 'dmg', 'mobileconfig', 'scpt',
+  'applescript', 'workflow',
+  // Windows: run, install, or leak credentials when merely browsed.
+  'exe', 'com', 'bat', 'cmd', 'scr', 'pif', 'msi', 'msp', 'msc', 'lnk', 'url', 'hta',
+  'cpl', 'chm', 'inf', 'vbs', 'vbe', 'js', 'jse', 'wsf', 'wsh', 'ws', 'wsc', 'sct',
+  'ps1', 'psm1', 'reg', 'jar', 'jnlp', 'gadget', 'xll', 'appref-ms', 'application',
+  'settingcontent-ms', 'appx', 'msix', 'appinstaller', 'diagcab', 'scf',
+  'library-ms', 'searchconnector-ms', 'iso', 'img', 'vhd', 'vhdx',
   // Linux desktops.
-  'desktop', 'sh',
+  'desktop', 'sh', 'run', 'appimage', 'deb', 'rpm', 'flatpakref',
 ]);
 
 /** True when `name` ends in an extension from `EXECUTABLE_EXTENSIONS`. */
 export function hasExecutableExtension(name) {
   const dot = String(name).lastIndexOf('.');
-  return dot >= 0 && EXECUTABLE_EXTENSIONS.has(String(name).slice(dot + 1).toLowerCase());
+  // Folded through upper case first: `ſ` (LONG S) is `S` to a
+  // case-insensitive file system.
+  return dot >= 0 && EXECUTABLE_EXTENSIONS.has(String(name).slice(dot + 1).toUpperCase().toLowerCase());
 }
 
 function mimeTypeFor(file) {
@@ -136,6 +150,11 @@ function pickerOptions(payload) {
     if (typeof payload.mimeType !== 'string' || !/^[\w.+-]+\/[\w.+-]+$/.test(payload.mimeType)
         || typeof payload.extension !== 'string' || !/^\.[A-Za-z0-9.]{1,15}$/.test(payload.extension)) {
       throw new Error('File type requires a MIME type and extension');
+    }
+    // The legacy pair becomes the picker's filter, and a dialog may append its
+    // extension to the chosen name: it may not name a launcher either.
+    if (hasExecutableExtension(payload.extension)) {
+      throw new Error('File type must not be an executable extension');
     }
     options.types = [{ accept: { [payload.mimeType]: [payload.extension] } }];
   }

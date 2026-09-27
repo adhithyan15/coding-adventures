@@ -85,17 +85,23 @@ class MosaicPlatformEffectsTest {
             "line\u2028break.json", "para\u2029break.json",
             "tag\uDB40\uDC01.json", // U+E0001 LANGUAGE TAG, a format character outside the BMP
             "x".repeat(256), "Invoice.pdf      .command",
+            ".\u0301zshrc", "Invoice.pdf\u2800\u2800.txt",
+            "a\uD800.json", "a\uE000.json",
         )) {
             assertFalse(mosaicIsPlainFileName(name), name)
             val outcome = mosaicRunFilesSave(mapOf("suggestedName" to name, "bytes" to encoded("x")), FakeDialogs(null))
             assertTrue(outcome.containsKey("failed"), name)
         }
         assertTrue(mosaicIsPlainFileName("journal.json"))
+        assertTrue(mosaicIsPlainFileName("caf\u00E9 menu.json"))
     }
 
     @Test
     fun withNoAcceptedTypeAnExecutableExtensionIsRefused() {
-        for (name in listOf("run.command", "open.terminal", "site.webloc", "setup.EXE", "go.desktop", "a.ps1")) {
+        for (name in listOf(
+            "run.command", "open.terminal", "site.webloc", "setup.EXE", "go.desktop", "a.ps1",
+            "a.j\u017F", "img.iso", "clip.scf", "app.AppImage", "run\u0D4E.terminal",
+        )) {
             assertTrue(mosaicHasExecutableExtension(name), name)
             val outcome = mosaicRunFilesSave(
                 mapOf("suggestedName" to name, "bytes" to encoded("x")),

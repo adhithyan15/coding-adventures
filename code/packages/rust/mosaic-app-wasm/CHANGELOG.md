@@ -17,6 +17,16 @@ a name ending in an extension that runs when opened (`.command`, `.terminal`,
 - `isPlainFileName` gains the same checks, and `EXECUTABLE_EXTENSIONS` /
   `hasExecutableExtension` are exported. A node test pins the list to the
   Compose library's.
+- Security review, round 2: Swift checks the dot rules and the extension by
+  scalar (a Prepend letter or combining mark merged with `.` into one
+  grapheme hid `run\u{0D4E}.terminal` and `.\u{0301}zshrc` from it);
+  surrogates, unassigned and private-use code points are refused everywhere;
+  blank-rendering characters count as whitespace; the executable list gains
+  macOS location files and installers, Windows launchers, credential-leaking
+  shell files and disk images, and Linux packages; extensions are folded
+  through upper case (`ſ`).
+- The legacy `file.save` alias refuses a `mimeType`/`extension` pair whose
+  extension is on the executable list (the dialog may append it).
 
 ### Added — the browser answers the standard `files.*` kinds (UI87 §7)
 
