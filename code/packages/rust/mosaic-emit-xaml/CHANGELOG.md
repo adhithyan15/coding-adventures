@@ -3,6 +3,13 @@
 
 ## [Unreleased]
 
+### Added — recoverable native-complete startup
+
+Native-complete WinUI shells now render loading and failure surfaces before
+loading the Rust application runtime. Failures expose selectable loader detail
+and a generated retry action that closes partial runtime state and attempts a
+fresh load without restarting the process (#16097).
+
 - Repeated children of horizontal rows now use a horizontal WinUI `StackLayout`, including structural table headers and cells. Nested columns and boxes retain vertical repeater layout (#14274).
 
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.

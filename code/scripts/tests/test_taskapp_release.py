@@ -14,6 +14,9 @@ SCRIPTS = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 WORKFLOW = REPOSITORY_ROOT / ".github" / "workflows" / "release-task-app.yml"
 WINDOWS_SMOKE = REPOSITORY_ROOT / "code" / "scripts" / "taskapp-xaml-smoke.ps1"
+WINDOWS_STARTUP_SMOKE = (
+    REPOSITORY_ROOT / "code" / "scripts" / "taskapp-xaml-startup-smoke.ps1"
+)
 WEB_LOCK = (
     REPOSITORY_ROOT
     / "code"
@@ -538,6 +541,8 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "-p:AssemblyName=Trestle" in workflow
     assert "$taskAppExecutable" not in workflow
     assert "@('Trestle.pri', 'App.xbf', 'MainWindow.xbf', 'TaskApp.xbf')" in workflow
+    assert "taskapp-xaml-startup-smoke.ps1" in workflow
+    assert "-RuntimePath $replacementRuntime" in workflow
     assert "-RestartExePath $replacementExecutable" in workflow
     assert workflow.count("materialize-upgrade-fixture") == 5
     assert workflow.count("verify-upgrade-state") == 5
@@ -557,3 +562,15 @@ def test_windows_ui_smoke_can_restart_through_a_replacement_package() -> None:
     assert "$effectiveRestartExePath" in smoke
     assert "Start-Process -FilePath $ExePath" in smoke
     assert "Start-Process -FilePath $effectiveRestartExePath" in smoke
+
+
+def test_windows_startup_smoke_restores_runtime_and_retries_in_place() -> None:
+    smoke = WINDOWS_STARTUP_SMOKE.read_text(encoding="utf-8")
+
+    assert "[Parameter(Mandatory = $true)][string]$RuntimePath" in smoke
+    assert "Move-Item -LiteralPath $RuntimePath -Destination $runtimeBackup" in smoke
+    assert "Move-Item -LiteralPath $runtimeBackup -Destination $RuntimePath" in smoke
+    assert "'mosaic-startup-failure-detail'" in smoke
+    assert "'mosaic-startup-retry'" in smoke
+    assert "[System.Windows.Automation.InvokePattern]::Pattern" in smoke
+    assert "'name-input'" in smoke

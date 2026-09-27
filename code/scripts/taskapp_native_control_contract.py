@@ -202,6 +202,19 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
         ),
     },
     "xaml": {
+        "MainWindow.xaml": (
+            'AutomationProperties.AutomationId="mosaic-startup-loading"',
+            'AutomationProperties.AutomationId="mosaic-startup-failure"',
+            'Text="TaskApp could not start"',
+            'Text="Your saved tasks have not been changed. Retrying is safe."',
+            'AutomationProperties.AutomationId="mosaic-startup-retry"',
+        ),
+        "MainWindow.xaml.cs": (
+            "DispatcherQueue.TryEnqueue(StartRuntime)",
+            "RetryStartup_Click",
+            "MosaicRuntimeHost.Close()",
+            "ShowStartupFailure",
+        ),
         "TaskApp.xaml": (
             'AutomationProperties.AutomationId="name-input"',
             'AutomationProperties.Name="Task name"',

@@ -21,15 +21,25 @@ public static class MosaicRuntimeHost
     private static readonly bool PersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
     private const string ApplicationId = "__MOSAIC_APPLICATION_ID__";
     private const string StateFileName = "mosaic-state.v1.json";
-    private static readonly Lazy<Runtime?> State = new(Load);
+    private static string? LastLoadError;
+    private static Runtime? State = Load();
 
-    public static bool IsAvailable => State.Value is not null;
+    static MosaicRuntimeHost()
+    {
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => State?.Dispose();
+    }
 
-    public static void LoadRequired() => _ = RequiredRuntime();
+    public static bool IsAvailable => State is not null;
+
+    public static void LoadRequired()
+    {
+        State ??= Load();
+        _ = RequiredRuntime();
+    }
 
     public static string? ApplyProps(object component)
     {
-        var runtime = State.Value;
+        var runtime = State;
         if (runtime is null) return null;
         runtime.ApplyProps(component);
         return runtime.Status("Mosaic runtime props loaded");
@@ -43,7 +53,7 @@ public static class MosaicRuntimeHost
 
     public static Task<MosaicRuntimeResult?> HandleEvent(object component, object mosaicEvent)
     {
-        var runtime = State.Value;
+        var runtime = State;
         if (runtime is null) return Task.FromResult<MosaicRuntimeResult?>(null);
         try
         {
@@ -88,8 +98,8 @@ public static class MosaicRuntimeHost
     /// </summary>
     public static Action<ulong, string, JsonElement, string>? EffectHandler
     {
-        get => State.Value?.EffectHandler;
-        set { if (State.Value is { } runtime) runtime.EffectHandler = value; }
+        get => State?.EffectHandler;
+        set { if (State is { } runtime) runtime.EffectHandler = value; }
     }
 
     /// <summary>Answer an effect the app is waiting on.</summary>
@@ -100,25 +110,31 @@ public static class MosaicRuntimeHost
     /// Take ownership of an effect without answering it yet. False when the
     /// runtime is not awaiting this id, or when there is no runtime at all.
     /// </summary>
-    public static bool DeferEffect(ulong id) => State.Value?.DeferEffect(id) ?? false;
+    public static bool DeferEffect(ulong id) => State?.DeferEffect(id) ?? false;
 
-    public static void Close() => State.Value?.Dispose();
+    public static void Close()
+    {
+        State?.Dispose();
+        State = null;
+    }
 
-    private static Runtime RequiredRuntime() => State.Value
+    private static Runtime RequiredRuntime() => State
         ?? throw new InvalidOperationException(
             "native-complete requires the Mosaic Rust application runtime; " +
-            "set MOSAIC_APP_LIBRARY or package mosaic_app.dll beside the application");
+            "set MOSAIC_APP_LIBRARY or package mosaic_app.dll beside the application. " +
+            $"Loader detail: {LastLoadError ?? "unknown error"}");
 
     private static Runtime? Load()
     {
         try
         {
             var runtime = Runtime.Load();
-            AppDomain.CurrentDomain.ProcessExit += (_, _) => runtime.Dispose();
+            LastLoadError = null;
             return runtime;
         }
         catch (Exception error)
         {
+            LastLoadError = $"{error.GetType().Name}: {error.Message}";
             Debug.WriteLine($"Mosaic Rust runtime unavailable: {error}");
             return null;
         }

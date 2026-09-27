@@ -744,6 +744,13 @@ jobs:
           python code/scripts/ocaml_toolchain_lock.py validate-repository-report \
             --names "$repository_names" \
             --listing "$repository_listing"
+          opam_config="$(opam var root --global)/config"
+          test -f "$opam_config"
+          if grep -q '^archive-mirrors:' "$opam_config"; then
+            echo "unexpected preconfigured opam archive mirror" >&2
+            exit 1
+          fi
+          printf 'archive-mirrors: "https://opam.ocaml.org/cache"\n' >> "$opam_config"
           test -z "$(find . -name dune-workspace -print -quit)"
           cd code/packages/ocaml/ca-capability-analyzer
           opam install . --deps-only --with-test --with-dev-setup \
@@ -3261,6 +3268,14 @@ jobs:
           # UI Automation does not need a foreground window, so no interactive
           # desktop session is required.
           $env:MOSAIC_APP_STATE_PATH = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp-ui-state.json'
+          Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
+          pwsh -NoProfile -ExecutionPolicy Bypass `
+            -File code/scripts/taskapp-xaml-startup-smoke.ps1 `
+            -ExePath $executable.FullName `
+            -RuntimePath $installedTaskRuntime
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML recoverable-startup smoke failed with exit code $LASTEXITCODE"
+          }
           Remove-Item $env:MOSAIC_APP_STATE_PATH, "$($env:MOSAIC_APP_STATE_PATH).corrupt", "$($env:MOSAIC_APP_STATE_PATH).tmp" -Force -ErrorAction SilentlyContinue
           pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/taskapp-xaml-smoke.ps1 -ExePath $executable.FullName
           if ($LASTEXITCODE -ne 0) {
