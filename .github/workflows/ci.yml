@@ -2231,6 +2231,12 @@ jobs:
             MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
             swift run --package-path "$harness" Conformance --library "$installed_runtime"
 
+          # The SwiftUI platform library's own behaviour (UI87 §7): every SwiftUI app
+          # gets MosaicPlatformEffects.swift, and this drives its open/save
+          # logic, limits and routing with a fake host and fake panels.
+          cp "$bundled_output/swiftui/Sources/App/MosaicPlatformEffects.swift" "$harness/Sources/Conformance/MosaicPlatformEffects.swift"
+          swift run --package-path "$harness" -Xswiftc -DMOSAIC_PLATFORM_EFFECTS Conformance --platform-effects
+
           cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
           task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.dylib"
           taskapp_output="$RUNNER_TEMP/mosaic-swift-taskapp"
