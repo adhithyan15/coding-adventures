@@ -124,6 +124,13 @@ That is about 380 filmstrips that could print today.
   `TE-S112` lesson is the next available owner. Its four-movement filmstrip
   joins movements 1–3 for the main body and restarts for the upper flourish,
   using the same packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఙ now gets the word first.** Chapter 150 introduces **వాఙ్మయం**
+  (*vāṅmayaṁ*, literature) before `TE-S171` extracts the uncommon letter from
+  the word and gives it a five-movement filmstrip. Movements 1–3 form the
+  connected body; movements 4 and 5 restart for the inner bar and headstroke.
+  The order comes from the packaged `dot_stroke_c_1_5_nya.png` tracing guide
+  and is fitted to Noto Sans Telugu. This closes the earlier vocabulary-first
+  dependency instead of teaching the inventory shape cold.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

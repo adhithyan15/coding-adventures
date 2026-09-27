@@ -1,0 +1,10 @@
+{
+  "language": "telugu",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:83c9122d2a6a8b58",
+  "lessonIds": [
+    "TE-C150-vangmayam",
+    "TE-S171-letter-nga"
+  ],
+  "tex": "telugu/book/chapters/ch150-a-word-for-literature-then-the-letter-inside-it.tex"
+}

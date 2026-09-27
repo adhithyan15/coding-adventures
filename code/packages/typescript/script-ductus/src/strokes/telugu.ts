@@ -22,6 +22,96 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:ఙ",
+    {
+      script: "telugu",
+      glyph: "ఙ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "turn around the compact upper-left lobe",
+              path: [
+                { x: 128, y: 323 },
+                { x: 118, y: 365 },
+                { x: 140, y: 410 },
+                { x: 175, y: 452 },
+                { x: 220, y: 465 },
+                { x: 270, y: 445 },
+                { x: 310, y: 405 },
+                { x: 320, y: 360 },
+                { x: 300, y: 305 },
+                { x: 260, y: 270 },
+              ],
+            },
+            {
+              label: "continue down and around the broad lower bowl",
+              path: [
+                { x: 260, y: 270 },
+                { x: 190, y: 245 },
+                { x: 125, y: 215 },
+                { x: 85, y: 170 },
+                { x: 82, y: 120 },
+                { x: 105, y: 75 },
+                { x: 150, y: 42 },
+                { x: 205, y: 25 },
+                { x: 260, y: 35 },
+                { x: 315, y: 70 },
+                { x: 365, y: 115 },
+              ],
+            },
+            {
+              label: "curl upward around the rounded right lobe",
+              path: [
+                { x: 365, y: 115 },
+                { x: 410, y: 75 },
+                { x: 465, y: 42 },
+                { x: 525, y: 25 },
+                { x: 585, y: 35 },
+                { x: 635, y: 68 },
+                { x: 660, y: 115 },
+                { x: 660, y: 160 },
+                { x: 640, y: 200 },
+                { x: 600, y: 225 },
+                { x: 565, y: 220 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label:
+                "lift and draw the inner horizontal bar from left to right",
+              path: [
+                { x: 310, y: 321 },
+                { x: 380, y: 321 },
+                { x: 450, y: 321 },
+                { x: 520, y: 321 },
+                { x: 590, y: 321 },
+                { x: 660, y: 321 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift again and draw the short upper headstroke downward",
+              path: [
+                { x: 499, y: 480 },
+                { x: 499, y: 440 },
+                { x: 499, y: 400 },
+                { x: 499, y: 360 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఙ"),
+    },
+  ],
+  [
     "telugu:చ",
     {
       script: "telugu",

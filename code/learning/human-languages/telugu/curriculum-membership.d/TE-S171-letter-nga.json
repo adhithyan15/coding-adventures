@@ -1,0 +1,11 @@
+{
+  "id": "TE-S171-letter-nga",
+  "pathSegment": "TE-PATH-150-LITERARY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-150-LITERARY",
+      "order": 1
+    }
+  ]
+}
