@@ -6,6 +6,13 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Added a typed, process-free graph and diff-selection core that dynamically
+  consumes all eight graph and eleven diff-selection cases in the neutral v1
+  corpus. It now pins canonical graph output, exact closure semantics,
+  repository-boundary reverse selection and digest validation, strict portable
+  globs, both unknown-path policies, and the fixed 50,000,000 Unicode-scalar
+  match-work ceiling without acquiring Git, filesystem, environment, process,
+  credential, or network authority.
 - Bounded ordinary CI-gate path evaluation to a complete 50,000,000-unit
   Unicode-scalar preflight, returning stable
   `CI_GATE_MATCH_LIMIT_EXCEEDED` failure before any glob call or partial plan
