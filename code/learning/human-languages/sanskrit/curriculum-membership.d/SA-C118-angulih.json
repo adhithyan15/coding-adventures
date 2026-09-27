@@ -1,0 +1,11 @@
+{
+  "id": "SA-C118-angulih",
+  "pathSegment": "SA-PATH-118-THINGS118",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-118-THINGS118",
+      "order": 1
+    }
+  ]
+}

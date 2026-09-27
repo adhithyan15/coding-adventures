@@ -1,0 +1,11 @@
+{
+  "id": "SA-C135-siksate",
+  "pathSegment": "SA-PATH-135-ACT135",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-135-ACT135",
+      "order": 0
+    }
+  ]
+}

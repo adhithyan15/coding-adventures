@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:9a50132297f80885",
+  "lessonIds": [
+    "SA-C95-madhye",
+    "SA-C95-parsve",
+    "SA-C95-sarvatra",
+    "SA-C95-anyatra",
+    "SA-C95-vithi"
+  ],
+  "tex": "sanskrit/book/chapters/ch95-in-the-middle-beside-everywhere-elsewhere-street.tex"
+}

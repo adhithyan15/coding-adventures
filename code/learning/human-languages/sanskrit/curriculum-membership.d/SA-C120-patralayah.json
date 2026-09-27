@@ -1,0 +1,11 @@
+{
+  "id": "SA-C120-patralayah",
+  "pathSegment": "SA-PATH-120-THINGS120",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-120-THINGS120",
+      "order": 1
+    }
+  ]
+}

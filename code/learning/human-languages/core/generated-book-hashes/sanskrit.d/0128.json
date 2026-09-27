@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:9aa9e7abfa07ce53",
+  "lessonIds": [
+    "SA-C128-bhayankarah",
+    "SA-C128-mithya",
+    "SA-C128-katuh",
+    "SA-C128-amlah",
+    "SA-C128-tiktah"
+  ],
+  "tex": "sanskrit/book/chapters/ch128-terrible-false-pungent-sour-bitter.tex"
+}

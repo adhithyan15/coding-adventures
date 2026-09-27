@@ -12,17 +12,17 @@ headword: "सायम्"
 gloss: "evening"
 romanization: "sāyam"
 concept_tag: SA-DAYTIME-SAYAM
-prerequisites: [SA-C45-noon, SA-C43-humility, SA-C44-yellow]
+prerequisites: [SA-C45-noon, SA-C43-humility, SA-C44-yellow, SA-C17-night]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C45-DAYTIME-02]
+  knowledge: [SA-LEX-C45-DAYTIME-02, SA-LEX-C17-TIME-02]
 introduces:
   knowledge: [SA-LEX-C45-DAYTIME-03]
 practises:
-  knowledge: [SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C43-COURTESY-03, SA-LEX-C44-COLOUR-03]
+  knowledge: [SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03, SA-LEX-C43-COURTESY-03, SA-LEX-C44-COLOUR-03, SA-LEX-C17-TIME-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -33,9 +33,11 @@ reviews_of: [SA-C45-noon]
 # सायम् (sāyam) — evening
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C17-TIME-02] -->
 
 [PAUSE 2s] Before the new word: what did *madhyāhnaḥ* mean?
+
+[PAUSE 1s] Say "night." (*Rātriḥ*.) This lesson's word is the time that comes before it.
 
 ## You'll want to know: सायम्
 <!-- hl-knowledge: introduces=[SA-LEX-C45-DAYTIME-03]; assesses=[] -->

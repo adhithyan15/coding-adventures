@@ -1,0 +1,11 @@
+{
+  "id": "SA-C93-vamah",
+  "pathSegment": "SA-PATH-93-TIME93",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-93-TIME93",
+      "order": 2
+    }
+  ]
+}

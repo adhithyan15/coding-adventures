@@ -1,0 +1,11 @@
+{
+  "id": "SA-C106-godhumah",
+  "pathSegment": "SA-PATH-106-THINGS106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-106-THINGS106",
+      "order": 1
+    }
+  ]
+}

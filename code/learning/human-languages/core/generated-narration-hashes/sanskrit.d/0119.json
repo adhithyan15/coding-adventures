@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:54cc80cc1ee30f79",
+  "lessonIds": [
+    "SA-C119-darvi",
+    "SA-C119-katahah",
+    "SA-C119-patram",
+    "SA-C119-kupi",
+    "SA-C119-chatrika",
+    "SA-R119-first-pass-nature-and-animals",
+    "SA-R119-second-pass-animals-the-body-and-the-kitchen"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch119.txt",
+  "json": "sanskrit/narration/ch119.json",
+  "textHash": "fnv1a64:58ae563513a4c79b",
+  "jsonHash": "fnv1a64:db5eee44b7eed9f4",
+  "findings": []
+}

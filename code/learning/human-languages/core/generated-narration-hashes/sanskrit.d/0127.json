@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:8c44c0f7088a5b38",
+  "lessonIds": [
+    "SA-C127-daridrah",
+    "SA-C127-dhanikah",
+    "SA-C127-tarunah",
+    "SA-C127-prasiddhah",
+    "SA-C127-suraksitah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch127.txt",
+  "json": "sanskrit/narration/ch127.json",
+  "textHash": "fnv1a64:c27fca789478a2fc",
+  "jsonHash": "fnv1a64:20ca1173c208f003",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:8e8d97d8ebd83594",
+  "lessonIds": [
+    "SA-C108-palanduh",
+    "SA-C108-alukam",
+    "SA-C108-vrntakam",
+    "SA-C108-kusmandam",
+    "SA-C108-narikelam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch108.txt",
+  "json": "sanskrit/narration/ch108.json",
+  "textHash": "fnv1a64:217e920f47abcfe9",
+  "jsonHash": "fnv1a64:3c9bc335586cda78",
+  "findings": []
+}

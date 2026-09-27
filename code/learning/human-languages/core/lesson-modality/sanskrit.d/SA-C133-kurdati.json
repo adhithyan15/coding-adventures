@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C133-kurdati",
+    "language": "sanskrit",
+    "chapter": 133,
+    "sequence": 6610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5693fb3cf3f8e5ed"
+  },
+  "findings": []
+}

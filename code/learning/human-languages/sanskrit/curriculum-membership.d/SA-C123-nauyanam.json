@@ -1,0 +1,11 @@
+{
+  "id": "SA-C123-nauyanam",
+  "pathSegment": "SA-PATH-123-THINGS123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-123-THINGS123",
+      "order": 3
+    }
+  ]
+}

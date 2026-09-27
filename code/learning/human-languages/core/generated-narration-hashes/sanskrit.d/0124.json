@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:77bec42a8eeb61f9",
+  "lessonIds": [
+    "SA-C124-patah",
+    "SA-C124-sarovarah",
+    "SA-C124-naditiram",
+    "SA-C124-kokilah",
+    "SA-C124-catakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch124.txt",
+  "json": "sanskrit/narration/ch124.json",
+  "textHash": "fnv1a64:4a4ef154d1ee1b46",
+  "jsonHash": "fnv1a64:44e89e7f8544d704",
+  "findings": []
+}

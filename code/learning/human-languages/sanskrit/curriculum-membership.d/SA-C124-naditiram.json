@@ -1,0 +1,11 @@
+{
+  "id": "SA-C124-naditiram",
+  "pathSegment": "SA-PATH-124-THINGS124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-124-THINGS124",
+      "order": 2
+    }
+  ]
+}

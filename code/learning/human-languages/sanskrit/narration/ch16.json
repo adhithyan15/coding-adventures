@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Places --- and the Two Noun Families",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:484260fdacf45f46",
+  "sourceHash": "fnv1a64:e5b10614efdf42cd",
   "lessons": [
     {
       "id": "SA-C16-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97c73876bd82ec2b",
+      "sourceHash": "fnv1a64:2e127bcf38c69e7d",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You can describe a thing now — big, small, new, old. This chapter gives you places to put those things."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does an adjective go? (In front of its noun.) Keep that ready for this lesson's word."
             }
           ]
         },
@@ -141,7 +151,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:887ab8ab8cc51a1a",
+      "sourceHash": "fnv1a64:8ec1695b78210b49",
       "notice": null,
       "blocks": [
         {
@@ -158,6 +168,16 @@
             {
               "kind": "speech",
               "text": "One house is a home. Many of them together are this."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I live.\" (Vasāmi.) Where you live may be this lesson's word."
             }
           ]
         },
@@ -452,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5918b34cdb9641c",
+      "sourceHash": "fnv1a64:1c07e4974aa8d6c8",
       "notice": null,
       "blocks": [
         {
@@ -469,6 +489,16 @@
             {
               "kind": "speech",
               "text": "Two places, and no way between them. Here is the way."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"old\" — of a thing, not a person. (Purātana.)"
             }
           ]
         },
@@ -897,7 +927,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e0700a96330862",
+      "sourceHash": "fnv1a64:4b4c98356f63494b",
       "notice": null,
       "blocks": [
         {
@@ -914,6 +944,16 @@
             {
               "kind": "speech",
               "text": "The last of the five places, and the biggest."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"in the city.\" (Nagare — the locative ending -e, \"in, at.\")"
             }
           ]
         },

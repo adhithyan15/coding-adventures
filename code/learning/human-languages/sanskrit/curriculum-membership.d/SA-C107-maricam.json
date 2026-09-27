@@ -1,0 +1,11 @@
+{
+  "id": "SA-C107-maricam",
+  "pathSegment": "SA-PATH-107-THINGS107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-107-THINGS107",
+      "order": 1
+    }
+  ]
+}

@@ -12,17 +12,17 @@ headword: "इदानीम्"
 gloss: "now"
 romanization: "idānīm"
 concept_tag: SA-LEAVE-NOW
-prerequisites: [SA-C27-thus, SA-C26-teacher, SA-C27-so-be-it]
+prerequisites: [SA-C27-thus, SA-C26-teacher, SA-C27-so-be-it, SA-C17-time-words]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C27-REPLY-05]
+  knowledge: [SA-LEX-C27-REPLY-05, SA-GRAMMAR-C17-TIME-WORDS]
 introduces:
   knowledge: [SA-LEX-C28-LEAVE-01]
 practises:
-  knowledge: [SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C26-ROLE-01, SA-LEX-C27-REPLY-01]
+  knowledge: [SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C26-ROLE-01, SA-LEX-C27-REPLY-01, SA-GRAMMAR-C17-TIME-WORDS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C27-thus]
 # इदानीम् (idānīm) — now
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-04, SA-LEX-C27-REPLY-05, SA-GRAMMAR-C17-TIME-WORDS] -->
 
 [PAUSE 2s] Before the new word: what did *evam* mean?
+
+[PAUSE 1s] Remember the time words that keep one shape wherever they land (*adya, hyaḥ, sadā*). Today's word is another of them.
 
 ## You'll want to know: इदानीम्
 <!-- hl-knowledge: introduces=[SA-LEX-C28-LEAVE-01]; assesses=[] -->

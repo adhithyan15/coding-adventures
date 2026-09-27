@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:bef1ffab5c23d767",
+  "lessonIds": [
+    "SA-C106-rajjuh",
+    "SA-C106-godhumah",
+    "SA-C106-tandulah",
+    "SA-C106-mudgah",
+    "SA-C106-supah"
+  ],
+  "tex": "sanskrit/book/chapters/ch106-rope-wheat-rice-mung-beans-dal.tex"
+}

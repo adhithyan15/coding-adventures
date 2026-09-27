@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C124-naditiram",
+    "language": "sanskrit",
+    "chapter": 124,
+    "sequence": 6110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bb8e80811909d0d"
+  },
+  "findings": []
+}

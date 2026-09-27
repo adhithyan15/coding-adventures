@@ -12,17 +12,17 @@ headword: "सङ्ख्याशब्दाः"
 gloss: "the numbers, and what they prove"
 romanization: "saṅkhyā-śabdāḥ"
 concept_tag: SA-GRAMMAR-NUMBER-FAMILY
-prerequisites: [SA-C19-ten]
+prerequisites: [SA-C19-ten, SA-C06-number-cognates-more, SA-C06-number-cognates-more]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C19-NUM-05]
+  knowledge: [SA-LEX-C19-NUM-05, SA-HISTORY-FOUR-FIVE-ANALOGY, SA-SOUND-PIE-KW-OUTCOMES]
 introduces:
   knowledge: [SA-GRAMMAR-C19-NUMBER-FAMILY]
 practises:
-  knowledge: [SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY]
+  knowledge: [SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY, SA-HISTORY-FOUR-FIVE-ANALOGY, SA-SOUND-PIE-KW-OUTCOMES]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C19-ten]
 # सङ्ख्याशब्दाः (saṅkhyā-śabdāḥ) — the numbers, and what they prove
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-HISTORY-FOUR-FIVE-ANALOGY, SA-SOUND-PIE-KW-OUTCOMES] -->
 
 [PAUSE 2s] Ten numbers is enough to see something no single word could have shown you.
+
+[PAUSE 1s] Why is English *four* odd? (By the sound rule it should start *hw-*, like *what*; it took its *f-* from *five*.) And the rounded *\*kʷ* gave Latin *qu-*, Sanskrit *c-*, English *wh-*.
 
 ## You'll want to know: सङ्ख्याशब्दाः
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-C19-NUMBER-FAMILY]; assesses=[] -->

@@ -12,18 +12,18 @@ headword: गच्छति
 romanization: gacchati
 gloss: he, she, or it goes — the verb whose present stem you could never guess from its root
 concept_tag: VERB-GO
-prerequisites: [SA-C07-asti]
+prerequisites: [SA-C07-asti, SA-C05-practice]
 sounds: [inherent-a, conjunct-ccha]
 roots: [pie-gwem]
 etymology_hook: "the root is गम्, the present stem is गच्छ-, and nothing in one predicts the other — which is exactly why Sanskrit indexes verbs by root; and गम् is English come and, through Latin venire, venue, advent and convene"
 duration:
   max_seconds: 265
 requires:
-  knowledge: [SA-GRAMMAR-DHATU-GANA]
+  knowledge: [SA-GRAMMAR-DHATU-GANA, SA-HISTORY-VERB-ROOTS-BOTH-WAYS]
 introduces:
   knowledge: [SA-LEX-GACCHATI-GO, SA-ETYMON-GWEM-COME-VENUE]
 practises:
-  knowledge: [SA-GRAMMAR-DHATU-GANA, SA-LEX-GACCHATI-GO, SA-ETYMON-GWEM-COME-VENUE]
+  knowledge: [SA-GRAMMAR-DHATU-GANA, SA-LEX-GACCHATI-GO, SA-ETYMON-GWEM-COME-VENUE, SA-HISTORY-VERB-ROOTS-BOTH-WAYS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,10 +35,12 @@ reviews_of: [SA-C04-gacchami, SA-C07-asti]
 # गच्छति (gacchati) — "goes," and why dictionaries file it elsewhere
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-DHATU-GANA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-DHATU-GANA, SA-HISTORY-VERB-ROOTS-BOTH-WAYS] -->
 
 [PAUSE 2s] Root, then class, then ending. Say the two roots from last time.
 (*As*, *bhū*.) Here the middle step stops being tidy.
+
+[PAUSE 1s] Three roots you already use: *vad* "speak," *vas* "dwell," *kṛ* "do." Today's verb is built on another root, *gam*.
 
 ## You'll want to know: गच्छति
 <!-- hl-knowledge: introduces=[SA-LEX-GACCHATI-GO]; assesses=[] -->

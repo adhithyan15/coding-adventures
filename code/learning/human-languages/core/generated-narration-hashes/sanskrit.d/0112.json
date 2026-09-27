@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:c881e462f9c9d58a",
+  "lessonIds": [
+    "SA-C112-padmam",
+    "SA-C112-naksatram",
+    "SA-C112-suryah",
+    "SA-C112-bhallukah",
+    "SA-C112-srgalah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch112.txt",
+  "json": "sanskrit/narration/ch112.json",
+  "textHash": "fnv1a64:ebb54ea0bb59cf83",
+  "jsonHash": "fnv1a64:188708d980705d2d",
+  "findings": []
+}

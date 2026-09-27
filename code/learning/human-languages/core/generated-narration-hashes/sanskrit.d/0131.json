@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:f9175054855bde7b",
+  "lessonIds": [
+    "SA-C131-krsnah",
+    "SA-C131-dhusarah",
+    "SA-C131-patalah",
+    "SA-C131-spastah",
+    "SA-C131-sthulah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch131.txt",
+  "json": "sanskrit/narration/ch131.json",
+  "textHash": "fnv1a64:cf0588d3245aa477",
+  "jsonHash": "fnv1a64:2e1eb519cdd7026e",
+  "findings": []
+}

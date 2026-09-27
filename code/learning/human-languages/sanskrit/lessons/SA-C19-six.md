@@ -12,17 +12,17 @@ headword: "षट्"
 gloss: "six"
 romanization: "ṣaṭ"
 concept_tag: SA-NUM-SIX
-prerequisites: [SA-C18-k-words]
+prerequisites: [SA-C18-k-words, SA-C06-number-cognates]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [SA-HISTORY-NUMERAL-INHERITANCE]
 introduces:
   knowledge: [SA-LEX-C19-NUM-01]
 practises:
-  knowledge: [SA-LEX-C19-NUM-01]
+  knowledge: [SA-LEX-C19-NUM-01, SA-HISTORY-NUMERAL-INHERITANCE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C18-k-words]
 # षट् (ṣaṭ) — six
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-HISTORY-NUMERAL-INHERITANCE] -->
 
 [PAUSE 2s] You can count to five. The next five are where the family resemblance becomes impossible to miss.
+
+[PAUSE 1s] Why do the numbers still sound alike across Sanskrit, Latin and English? (One family inherited them, and numbers resist replacement.) Listen for it in "six."
 
 ## You'll want to know: षट्
 <!-- hl-knowledge: introduces=[SA-LEX-C19-NUM-01]; assesses=[] -->

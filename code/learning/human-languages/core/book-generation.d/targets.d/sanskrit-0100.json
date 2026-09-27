@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 100,
+  "output": "sanskrit/book/chapters/ch100-nail-hammer-scissors-needle-thread.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

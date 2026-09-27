@@ -12,18 +12,18 @@ headword: पृच्छति
 romanization: pṛcchati
 gloss: he, she, or it asks — the root that became Latin prayer and German fragen
 concept_tag: VERB-ASK
-prerequisites: [SA-C09-grhnati]
+prerequisites: [SA-C09-grhnati, SA-C06-number-cognates-more, SA-C08-cintayati]
 sounds: [vocalic-r, conjunct-ccha]
 roots: [prach-ask, pie-prek]
 etymology_hook: "पृच्छति is PIE prek- 'to ask': Latin precārī 'to pray' gives English pray, prayer and precarious, and Germanic turned the same p into f by Grimm's law, giving German fragen — the identical change that made Sanskrit pañca into English five"
 duration:
   max_seconds: 280
 requires:
-  knowledge: [SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-LEX-GACCHATI-GO, SA-LEX-LIKHATI-WRITE, SA-SOUND-GRIMMS-LAW-P-TO-F, SA-HISTORY-TATSAMA-TADBHAVA]
+  knowledge: [SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-LEX-GACCHATI-GO, SA-LEX-LIKHATI-WRITE, SA-SOUND-GRIMMS-LAW-P-TO-F, SA-HISTORY-TATSAMA-TADBHAVA, SA-GRAMMAR-GANA-TEN-AYA]
 introduces:
   knowledge: [SA-LEX-PRCCHATI-ASK, SA-ETYMON-PREK-PRAY-FRAGEN]
 practises:
-  knowledge: [SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-LEX-GACCHATI-GO, SA-LEX-LIKHATI-WRITE, SA-SOUND-GRIMMS-LAW-P-TO-F, SA-HISTORY-TATSAMA-TADBHAVA, SA-LEX-PRCCHATI-ASK, SA-ETYMON-PREK-PRAY-FRAGEN]
+  knowledge: [SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-LEX-GACCHATI-GO, SA-LEX-LIKHATI-WRITE, SA-SOUND-GRIMMS-LAW-P-TO-F, SA-HISTORY-TATSAMA-TADBHAVA, SA-LEX-PRCCHATI-ASK, SA-ETYMON-PREK-PRAY-FRAGEN, SA-GRAMMAR-GANA-TEN-AYA]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,10 +35,12 @@ reviews_of: [SA-C09-grhnati, SA-C07-gacchati, SA-C06-number-cognates]
 # पृच्छति (pṛcchati) — "asks," and the prayer at the other end of it
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-LEX-GACCHATI-GO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-LEX-GACCHATI-GO, SA-GRAMMAR-GANA-TEN-AYA] -->
 
 [PAUSE 2s] Say "it takes" and its English kin. (*Gṛhṇāti*; **grab**.) Say "it
 goes." (*Gacchati*.) Listen to the middle of that one — it comes back here.
+
+[PAUSE 1s] Four ways to build a present stem: add nothing, add a vowel, plant a syllable, or add *-aya-*. Which verb took *-aya-*? (*Cintayati*.)
 
 ## You'll want to know: पृच्छति
 <!-- hl-knowledge: introduces=[SA-LEX-PRCCHATI-ASK]; assesses=[SA-LEX-LIKHATI-WRITE] -->

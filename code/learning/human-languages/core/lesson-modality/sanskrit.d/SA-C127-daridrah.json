@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C127-daridrah",
+    "language": "sanskrit",
+    "chapter": 127,
+    "sequence": 6240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4133875c53316bd1"
+  },
+  "findings": []
+}

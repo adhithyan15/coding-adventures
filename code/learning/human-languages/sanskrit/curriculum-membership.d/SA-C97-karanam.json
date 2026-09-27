@@ -1,0 +1,11 @@
+{
+  "id": "SA-C97-karanam",
+  "pathSegment": "SA-PATH-97-LOC97",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-97-LOC97",
+      "order": 3
+    }
+  ]
+}

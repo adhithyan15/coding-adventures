@@ -1,0 +1,11 @@
+{
+  "id": "SA-C102-casakah",
+  "pathSegment": "SA-PATH-102-THINGS102",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-102-THINGS102",
+      "order": 1
+    }
+  ]
+}

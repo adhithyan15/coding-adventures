@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Silver, Glass, Cart, Pot, Cot",
+  "label": "ch:sa-silver-glass-cart-pot-cot",
+  "canDo": "I can say silver, glass, a cart, a pot and a cot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C122-khatva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say silver, glass, a cart, a pot and a cot.",
+    "assesses": [
+      "SA-LEX-C122-THINGS122-03",
+      "SA-LEX-C122-THINGS122-04",
+      "SA-LEX-C122-THINGS122-05"
+    ]
+  }
+}

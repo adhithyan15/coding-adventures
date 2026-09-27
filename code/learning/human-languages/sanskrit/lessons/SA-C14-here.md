@@ -12,17 +12,17 @@ headword: "अत्र"
 gloss: "here — where I am"
 romanization: "atra"
 concept_tag: SA-DEIXIS-HERE
-prerequisites: [SA-C14-that]
+prerequisites: [SA-C14-that, SA-C07-asti]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C14-DEIXIS-01, SA-LEX-C14-DEIXIS-02]
+  knowledge: [SA-LEX-C14-DEIXIS-01, SA-LEX-C14-DEIXIS-02, SA-LEX-ASTI-BHAVATI-BE]
 introduces:
   knowledge: [SA-LEX-C14-DEIXIS-03]
 practises:
-  knowledge: [SA-LEX-C14-DEIXIS-01, SA-LEX-C14-DEIXIS-02, SA-LEX-C14-DEIXIS-03]
+  knowledge: [SA-LEX-C14-DEIXIS-01, SA-LEX-C14-DEIXIS-02, SA-LEX-C14-DEIXIS-03, SA-LEX-ASTI-BHAVATI-BE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C14-that]
 # अत्र (atra) — here — where I am
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-01, SA-LEX-C14-DEIXIS-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-01, SA-LEX-C14-DEIXIS-02, SA-LEX-ASTI-BHAVATI-BE] -->
 
 [PAUSE 2s] You can already name things. This is how you POINT at them.
+
+[PAUSE 1s] Say "it is" and "it becomes." (*Asti, bhavati*.) You will want *asti* with this lesson's word.
 
 ## You'll want to know: अत्र
 <!-- hl-knowledge: introduces=[SA-LEX-C14-DEIXIS-03]; assesses=[] -->

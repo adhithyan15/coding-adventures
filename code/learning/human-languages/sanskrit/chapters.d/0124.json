@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Cloth, Lake, Riverbank, Cuckoo, Sparrow",
+  "label": "ch:sa-cloth-lake-riverbank-cuckoo-sparrow",
+  "canDo": "I can say a cloth, a lake, a riverbank, a cuckoo and a sparrow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C124-catakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a cloth, a lake, a riverbank, a cuckoo and a sparrow.",
+    "assesses": [
+      "SA-LEX-C124-THINGS124-03",
+      "SA-LEX-C124-THINGS124-04",
+      "SA-LEX-C124-THINGS124-05"
+    ]
+  }
+}

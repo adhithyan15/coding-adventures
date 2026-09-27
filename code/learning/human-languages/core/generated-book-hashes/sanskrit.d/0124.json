@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:325f40d0aa2c850e",
+  "lessonIds": [
+    "SA-C124-patah",
+    "SA-C124-sarovarah",
+    "SA-C124-naditiram",
+    "SA-C124-kokilah",
+    "SA-C124-catakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch124-cloth-lake-riverbank-cuckoo-sparrow.tex"
+}

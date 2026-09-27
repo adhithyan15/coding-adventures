@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C128-katuh",
+    "language": "sanskrit",
+    "chapter": 128,
+    "sequence": 6310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a9305f03753afa7"
+  },
+  "findings": []
+}

@@ -12,17 +12,17 @@ headword: "नरः"
 gloss: "man, person"
 romanization: "naraḥ"
 concept_tag: SA-NOUN-MAN
-prerequisites: [SA-C19-number-family, SA-C18-when, SA-C19-six]
+prerequisites: [SA-C19-number-family, SA-C18-when, SA-C19-six, SA-C18-k-words]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [SA-GRAMMAR-C18-K-QUESTIONS]
 introduces:
   knowledge: [SA-LEX-C20-PERSON-01]
 practises:
-  knowledge: [SA-LEX-C20-PERSON-01, SA-LEX-C18-ASK-01, SA-LEX-C19-NUM-01]
+  knowledge: [SA-LEX-C20-PERSON-01, SA-LEX-C18-ASK-01, SA-LEX-C19-NUM-01, SA-GRAMMAR-C18-K-QUESTIONS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C19-number-family]
 # नरः (naraḥ) — man, person
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C18-K-QUESTIONS] -->
 
 [PAUSE 2s] Places, times, numbers — and nobody in them yet. This chapter supplies the people.
+
+[PAUSE 1s] Ask "who?" and "what?" (*Kaḥ? Kim?*) Every question word you have met begins with *k-*.
 
 ## You'll want to know: नरः
 <!-- hl-knowledge: introduces=[SA-LEX-C20-PERSON-01]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:40b98241cacb2fdc",
+  "lessonIds": [
+    "SA-C130-murkhah",
+    "SA-C130-alasah",
+    "SA-C130-sabalah",
+    "SA-C130-durbalah",
+    "SA-C130-svacchah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch130.txt",
+  "json": "sanskrit/narration/ch130.json",
+  "textHash": "fnv1a64:2c82c8503d378a52",
+  "jsonHash": "fnv1a64:e5de960a088e82ce",
+  "findings": []
+}

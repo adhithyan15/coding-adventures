@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R109-first-pass-tools-and-things-you-use",
+    "language": "sanskrit",
+    "chapter": 109,
+    "sequence": 5330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ed2951a0e8f38be"
+  },
+  "findings": []
+}

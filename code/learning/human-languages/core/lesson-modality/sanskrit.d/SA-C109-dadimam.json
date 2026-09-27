@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C109-dadimam",
+    "language": "sanskrit",
+    "chapter": 109,
+    "sequence": 5280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4080e4cf01024671"
+  },
+  "findings": []
+}

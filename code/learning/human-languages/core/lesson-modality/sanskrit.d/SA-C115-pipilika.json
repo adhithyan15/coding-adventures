@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C115-pipilika",
+    "language": "sanskrit",
+    "chapter": 115,
+    "sequence": 5630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54f91b3690f8cb43"
+  },
+  "findings": []
+}

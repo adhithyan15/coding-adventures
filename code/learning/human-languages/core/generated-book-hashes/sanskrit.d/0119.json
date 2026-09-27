@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:a1cca94a92903c10",
+  "lessonIds": [
+    "SA-C119-darvi",
+    "SA-C119-katahah",
+    "SA-C119-patram",
+    "SA-C119-kupi",
+    "SA-C119-chatrika",
+    "SA-R119-first-pass-nature-and-animals",
+    "SA-R119-second-pass-animals-the-body-and-the-kitchen"
+  ],
+  "tex": "sanskrit/book/chapters/ch119-ladle-frying-pan-vessel-bottle-small-umbrella.tex"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 125,
+  "output": "sanskrit/book/chapters/ch125-mongoose-short-soft-clean-dirty.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

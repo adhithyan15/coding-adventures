@@ -18,11 +18,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [SA-GRAMMAR-C17-TIME-WORDS]
 introduces:
   knowledge: [SA-LEX-C18-ASK-01]
 practises:
-  knowledge: [SA-LEX-C18-ASK-01]
+  knowledge: [SA-LEX-C18-ASK-01, SA-GRAMMAR-C17-TIME-WORDS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C17-time-words]
 # कदा (kadā) — when?
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-C17-TIME-WORDS] -->
 
 [PAUSE 2s] You can say when. This chapter is for asking when.
+
+[PAUSE 1s] Which three words from the last chapter never change their ending? (*Adya, hyaḥ, sadā* — they say *when* and keep one shape.)
 
 ## You'll want to know: कदा
 <!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-01]; assesses=[] -->

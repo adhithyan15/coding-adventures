@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:c66ceaee25206aa2",
+  "lessonIds": [
+    "SA-C116-sarasah",
+    "SA-C116-kapolah",
+    "SA-C116-cibukam",
+    "SA-C116-kurparah",
+    "SA-C116-manibandhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch116.txt",
+  "json": "sanskrit/narration/ch116.json",
+  "textHash": "fnv1a64:597243bf70c97ee9",
+  "jsonHash": "fnv1a64:994fd53381838203",
+  "findings": []
+}

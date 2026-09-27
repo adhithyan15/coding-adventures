@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "People --- and the Four Noun Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d19c47f007b5456a",
+  "sourceHash": "fnv1a64:baaec3e1bc30f97b",
   "lessons": [
     {
       "id": "SA-C20-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28ad0e4351617686",
+      "sourceHash": "fnv1a64:9363adf2bca3a86b",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Places, times, numbers — and nobody in them yet. This chapter supplies the people."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"who?\" and \"what?\" (Kaḥ? Kim?) Every question word you have met begins with k-."
             }
           ]
         },

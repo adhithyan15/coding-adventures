@@ -1,0 +1,11 @@
+{
+  "id": "SA-C118-asandi",
+  "pathSegment": "SA-PATH-118-THINGS118",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-118-THINGS118",
+      "order": 3
+    }
+  ]
+}

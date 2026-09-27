@@ -1,0 +1,11 @@
+{
+  "id": "SA-C130-durbalah",
+  "pathSegment": "SA-PATH-130-QUAL130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-130-QUAL130",
+      "order": 3
+    }
+  ]
+}

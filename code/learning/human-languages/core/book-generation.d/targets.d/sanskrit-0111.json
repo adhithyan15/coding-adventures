@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 111,
+  "output": "sanskrit/book/chapters/ch111-storm-mist-branch-leaf-flower.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

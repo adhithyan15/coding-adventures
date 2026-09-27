@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 109,
+  "title": "Pomegranate, Grapes, Jackfruit, Lemon, Cake",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:eff7510b963c8472",
+  "lessons": [
+    {
+      "id": "SA-C109-dadimam",
+      "sequence": 5280,
+      "title": "दाडिमम् (dāḍimam) — a pomegranate",
+      "headword": "दाडिमम्",
+      "romanization": "dāḍimam",
+      "gloss": "a pomegranate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4080e4cf01024671",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pumpkin, then the Sanskrit for a coconut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दाडिमम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दाडिमम् — dāḍimam — \"a pomegranate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāḍimam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāḍimam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāḍimam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāḍimam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dāḍimam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dāḍimam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pumpkin, then the Sanskrit for a coconut, then say dāḍimam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pumpkin, then the Sanskrit for a coconut, then say *dāḍimam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दाडिमम् (dāḍimam) mean? (\"A pomegranate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C109-draksa",
+      "sequence": 5290,
+      "title": "द्राक्षा (drākṣā) — grapes",
+      "headword": "द्राक्षा",
+      "romanization": "drākṣā",
+      "gloss": "grapes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:086009468a094a2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a coconut, then the Sanskrit for a pomegranate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: द्राक्षा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "द्राक्षा — drākṣā — \"grapes\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "drākṣā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *drākṣā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "drākṣā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *drākṣā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say drākṣā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *drākṣā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a coconut, then the Sanskrit for a pomegranate, then say drākṣā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a coconut, then the Sanskrit for a pomegranate, then say *drākṣā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does द्राक्षा (drākṣā) mean? (\"Grapes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C109-panasam",
+      "sequence": 5300,
+      "title": "पनसम् (panasam) — a jackfruit",
+      "headword": "पनसम्",
+      "romanization": "panasam",
+      "gloss": "a jackfruit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:368ba5ca3ce264c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a pomegranate, then the Sanskrit for grapes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पनसम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पनसम् — panasam — \"a jackfruit\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "panasam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *panasam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "panasam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *panasam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say panasam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *panasam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a pomegranate, then the Sanskrit for grapes, then say panasam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a pomegranate, then the Sanskrit for grapes, then say *panasam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पनसम् (panasam) mean? (\"A jackfruit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C109-nimbukam",
+      "sequence": 5310,
+      "title": "निम्बुकम् (nimbukam) — a lemon",
+      "headword": "निम्बुकम्",
+      "romanization": "nimbukam",
+      "gloss": "a lemon",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53f5b55b704237fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for grapes, then the Sanskrit for a jackfruit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निम्बुकम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निम्बुकम् — nimbukam — \"a lemon\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nimbukam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nimbukam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nimbukam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nimbukam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nimbukam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nimbukam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for grapes, then the Sanskrit for a jackfruit, then say nimbukam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for grapes, then the Sanskrit for a jackfruit, then say *nimbukam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निम्बुकम् (nimbukam) mean? (\"A lemon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C109-apupah",
+      "sequence": 5320,
+      "title": "अपूपः (apūpaḥ) — a cake",
+      "headword": "अपूपः",
+      "romanization": "apūpaḥ",
+      "gloss": "a cake",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14d57e505f394a9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a jackfruit, then the Sanskrit for a lemon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अपूपः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अपूपः — apūpaḥ — \"a cake\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apūpaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apūpaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apūpaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apūpaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say apūpaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *apūpaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a jackfruit, then the Sanskrit for a lemon, then say apūpaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a jackfruit, then the Sanskrit for a lemon, then say *apūpaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अपूपः (apūpaḥ) mean? (\"A cake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R109-first-pass-tools-and-things-you-use",
+      "sequence": 5330,
+      "title": "Tools and things you use — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 100-104",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ed2951a0e8f38be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a lemon and a cake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nail, a hammer, scissors, a needle, thread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nail, a hammer, scissors, a needle, thread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a comb, soap, a towel, glasses, a bag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a comb, soap, a towel, glasses, a bag]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plate, a cup, a spoon, a stove, a candle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plate, a cup, a spoon, a stove, a candle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ball, a toy, a ring, a bangle, a shawl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ball, a toy, a ring, a bangle, a shawl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sari, a shoe, a turban, a shirt, a telephone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sari, a shoe, a turban, a shirt, a telephone]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A nail? (कीलः, kīlaḥ.) A hammer? (मुद्गरः, mudgaraḥ.) Scissors? (कर्तरी, kartarī.) A needle? (सूचिः, sūciḥ.) Thread? (सूत्रम्, sūtram.) A comb? (कंकतिका, kaṅkatikā.) Soap? (फेनकम्, phenakam.) A towel? (प्रोञ्छनम्, proñchanam.) Glasses? (उपनेत्रम्, upanetram.) A bag? (स्यूतः, syūtaḥ.) A plate? (स्थाली, sthālī.) A cup? (चषकः, caṣakaḥ.) A spoon? (चमसः, camasaḥ.) A stove? (चुल्ली, cullī.) A candle? (वर्तिका, vartikā.) A ball? (कन्दुकः, kandukaḥ.) A toy? (क्रीडनकम्, krīḍanakam.) A ring? (अंगुलीयकम्, aṅgulīyakam.) A bangle? (कंकणम्, kaṅkaṇam.) A shawl? (उत्तरीयम्, uttarīyam.) A sari? (शाटिका, śāṭikā.) A shoe? (पादत्राणम्, pādatrāṇam.) A turban? (उष्णीषम्, uṣṇīṣam.) A shirt? (कञ्चुकः, kañcukaḥ.) A telephone? (दूरभाषः, dūrabhāṣaḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R109-second-pass-machines-the-house-and-food",
+      "sequence": 5340,
+      "title": "Machines, the house and food — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 105-109",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e61f18175b607618",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a television and a computer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a television, a computer, a machine, a fan, a box",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a television, a computer, a machine, a fan, a box]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rope, wheat, rice, mung beans, dal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rope, wheat, rice, mung beans, dal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaggery, pepper, turmeric, ginger, garlic",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: jaggery, pepper, turmeric, ginger, garlic]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an onion, a potato, an aubergine, a pumpkin, a coconut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an onion, a potato, an aubergine, a pumpkin, a coconut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pomegranate, grapes, a jackfruit, a lemon, a cake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pomegranate, grapes, a jackfruit, a lemon, a cake]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A television? (दूरदर्शनम्, dūradarśanam.) A computer? (संगणकम्, saṅgaṇakam.) A machine? (यन्त्रम्, yantram.) A fan? (व्यजनम्, vyajanam.) A box? (पेटिका, peṭikā.) A rope? (रज्जुः, rajjuḥ.) Wheat? (गोधूमः, godhūmaḥ.) Rice? (तण्डुलः, taṇḍulaḥ.) Mung beans? (मुद्गः, mudgaḥ.) Dal? (सूपः, sūpaḥ.) Jaggery? (गुडः, guḍaḥ.) Pepper? (मरीचम्, marīcam.) Turmeric? (हरिद्रा, haridrā.) Ginger? (आर्द्रकम्, ārdrakam.) Garlic? (लशुनम्, laśunam.) An onion? (पलाण्डुः, palāṇḍuḥ.) A potato? (आलुकम्, ālukam.) An aubergine? (वृन्ताकम्, vṛntākam.) A pumpkin? (कूष्माण्डम्, kūṣmāṇḍam.) A coconut? (नारिकेलम्, nārikelam.) A pomegranate? (दाडिमम्, dāḍimam.) Grapes? (द्राक्षा, drākṣā.) A jackfruit? (पनसम्, panasam.) A lemon? (निम्बुकम्, nimbukam.) A cake? (अपूपः, apūpaḥ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

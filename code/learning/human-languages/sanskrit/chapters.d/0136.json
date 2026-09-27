@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Reaches, Wears, Counts, Wipes, Ties",
+  "label": "ch:sa-reaches-wears-counts-wipes-ties",
+  "canDo": "I can say reaches, wears, counts, wipes and ties.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C136-badhnati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say reaches, wears, counts, wipes and ties.",
+    "assesses": [
+      "SA-LEX-C136-ACT136-03",
+      "SA-LEX-C136-ACT136-04",
+      "SA-LEX-C136-ACT136-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:52668ea4ceca6911",
+  "lessonIds": [
+    "SA-C137-sivyati",
+    "SA-C137-jayati",
+    "SA-C137-guhati",
+    "SA-C137-raksati",
+    "SA-C137-jvalati"
+  ],
+  "tex": "sanskrit/book/chapters/ch137-sews-wins-hides-protects-burns.tex"
+}

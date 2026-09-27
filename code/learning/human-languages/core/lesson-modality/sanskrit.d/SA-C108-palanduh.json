@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C108-palanduh",
+    "language": "sanskrit",
+    "chapter": 108,
+    "sequence": 5230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f015bd0d76e1418"
+  },
+  "findings": []
+}

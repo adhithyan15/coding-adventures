@@ -1,0 +1,11 @@
+{
+  "id": "SA-C114-kapotah",
+  "pathSegment": "SA-PATH-114-THINGS114",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-114-THINGS114",
+      "order": 1
+    }
+  ]
+}

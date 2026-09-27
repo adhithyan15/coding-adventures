@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:2dec5eb715f298b7",
+  "lessonIds": [
+    "SA-C136-prapnoti",
+    "SA-C136-dharayati",
+    "SA-C136-ganayati",
+    "SA-C136-marjayati",
+    "SA-C136-badhnati"
+  ],
+  "tex": "sanskrit/book/chapters/ch136-reaches-wears-counts-wipes-ties.tex"
+}

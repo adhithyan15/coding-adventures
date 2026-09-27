@@ -12,18 +12,18 @@ headword: साहाय्यं करोति
 romanization: sāhāyyaṁ karoti
 gloss: he, she, or it helps — a noun plus "does," and help named as going along with someone
 concept_tag: VERB-HELP
-prerequisites: [SA-C09-prcchati]
+prerequisites: [SA-C09-prcchati, SA-C05-aham-samskritam-vadami]
 sounds: [long-aa, anusvara-m, conjunct-yya]
 roots: [saha-with, i-go, kr-do]
 etymology_hook: "साहाय्य is built on सहाय, 'a companion' — सह 'with' plus आय from the root इ 'to go', so a helper is one who goes along with you; Latin names a companion the same way, comes being com- 'with' on īre 'to go', the root behind exit and transit"
 duration:
   max_seconds: 285
 requires:
-  knowledge: [SA-LEX-PRCCHATI-ASK, SA-LEX-GRHNATI-TAKE, SA-GRAMMAR-UPASARGA-PREFIX, SA-GRAMMAR-DHATU-GANA, SA-HISTORY-TATSAMA-TADBHAVA]
+  knowledge: [SA-LEX-PRCCHATI-ASK, SA-LEX-GRHNATI-TAKE, SA-GRAMMAR-UPASARGA-PREFIX, SA-GRAMMAR-DHATU-GANA, SA-HISTORY-TATSAMA-TADBHAVA, SA-GRAMMAR-SANDHI-JOINS-WORDS]
 introduces:
   knowledge: [SA-LEX-SAHAYYAM-KAROTI-HELP, SA-ETYMON-SAHAYA-GOES-WITH]
 practises:
-  knowledge: [SA-LEX-PRCCHATI-ASK, SA-LEX-GRHNATI-TAKE, SA-GRAMMAR-UPASARGA-PREFIX, SA-GRAMMAR-DHATU-GANA, SA-HISTORY-TATSAMA-TADBHAVA, SA-LEX-SAHAYYAM-KAROTI-HELP, SA-ETYMON-SAHAYA-GOES-WITH]
+  knowledge: [SA-LEX-PRCCHATI-ASK, SA-LEX-GRHNATI-TAKE, SA-GRAMMAR-UPASARGA-PREFIX, SA-GRAMMAR-DHATU-GANA, SA-HISTORY-TATSAMA-TADBHAVA, SA-LEX-SAHAYYAM-KAROTI-HELP, SA-ETYMON-SAHAYA-GOES-WITH, SA-GRAMMAR-SANDHI-JOINS-WORDS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,10 +35,12 @@ reviews_of: [SA-C09-prcchati, SA-C05-karomi, SA-C07-agacchati]
 # साहाय्यं करोति (sāhāyyaṁ karoti) — "helps," or going along with
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PRCCHATI-ASK, SA-LEX-GRHNATI-TAKE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PRCCHATI-ASK, SA-LEX-GRHNATI-TAKE, SA-GRAMMAR-SANDHI-JOINS-WORDS] -->
 
 [PAUSE 2s] Say "it asks" and "it takes." (*Pṛcchati*, *gṛhṇāti*.) Helping is not
 built like either of them. It takes two words.
+
+[PAUSE 1s] Listen for sandhi today: *sāhāyyam* + *karoti* runs together as *sāhāyyaṁ karoti*, the way *aham* did before *saṁskṛtam*.
 
 ## You'll want to know: साहाय्यं करोति
 <!-- hl-knowledge: introduces=[SA-LEX-SAHAYYAM-KAROTI-HELP]; assesses=[SA-GRAMMAR-DHATU-GANA] -->

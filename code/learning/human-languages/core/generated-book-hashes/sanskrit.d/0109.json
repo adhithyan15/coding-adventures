@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:0fccec75046573ec",
+  "lessonIds": [
+    "SA-C109-dadimam",
+    "SA-C109-draksa",
+    "SA-C109-panasam",
+    "SA-C109-nimbukam",
+    "SA-C109-apupah",
+    "SA-R109-first-pass-tools-and-things-you-use",
+    "SA-R109-second-pass-machines-the-house-and-food"
+  ],
+  "tex": "sanskrit/book/chapters/ch109-pomegranate-grapes-jackfruit-lemon-cake.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C98-tasmat",
+  "pathSegment": "SA-PATH-98-WHY98",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-98-WHY98",
+      "order": 1
+    }
+  ]
+}

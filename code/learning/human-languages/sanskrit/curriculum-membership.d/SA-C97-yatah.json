@@ -1,0 +1,11 @@
+{
+  "id": "SA-C97-yatah",
+  "pathSegment": "SA-PATH-97-LOC97",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-97-LOC97",
+      "order": 4
+    }
+  ]
+}

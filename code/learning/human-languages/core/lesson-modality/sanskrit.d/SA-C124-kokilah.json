@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C124-kokilah",
+    "language": "sanskrit",
+    "chapter": 124,
+    "sequence": 6120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3c9706b5b89ac2f"
+  },
+  "findings": []
+}

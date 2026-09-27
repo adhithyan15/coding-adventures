@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:abda5271600f13bb",
+  "lessonIds": [
+    "SA-C134-chinatti",
+    "SA-C134-bhinatti",
+    "SA-C134-sthapayati",
+    "SA-C134-presayati",
+    "SA-C134-anvisyati"
+  ],
+  "tex": "sanskrit/book/chapters/ch134-cuts-breaks-places-sends-searches.tex"
+}

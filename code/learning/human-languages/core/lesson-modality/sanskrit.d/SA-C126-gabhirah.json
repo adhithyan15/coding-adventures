@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C126-gabhirah",
+    "language": "sanskrit",
+    "chapter": 126,
+    "sequence": 6210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:366537b87cfe6e55"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:70a5a31877a24023",
+  "lessonIds": [
+    "SA-C96-rajamargah",
+    "SA-C96-catuspathah",
+    "SA-C96-konah",
+    "SA-C96-pustakalayah",
+    "SA-C96-visvavidyalayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch96.txt",
+  "json": "sanskrit/narration/ch96.json",
+  "textHash": "fnv1a64:73fb30216805318a",
+  "jsonHash": "fnv1a64:2e6f31fbf51708a8",
+  "findings": []
+}

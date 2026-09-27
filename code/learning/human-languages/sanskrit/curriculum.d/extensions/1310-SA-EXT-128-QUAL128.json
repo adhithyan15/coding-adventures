@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-128-QUAL128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say terrible, false, pungent, sour and bitter.",
+  "prerequisites": []
+}

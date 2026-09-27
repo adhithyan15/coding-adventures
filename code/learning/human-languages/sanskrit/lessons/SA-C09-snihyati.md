@@ -12,7 +12,7 @@ headword: स्निह्यति · प्रियम्
 romanization: snihyati · priyam
 gloss: he, she, or it loves, and what is dear — affection named as stickiness, and the word behind English friend
 concept_tag: VERB-LIKE-LOVE
-prerequisites: [SA-C09-sahayyam-karoti]
+prerequisites: [SA-C09-sahayyam-karoti, SA-C06-number-cognates-more]
 sounds: [conjunct-sni, conjunct-hya, inherent-a]
 roots: [snih-stick, pie-priHos]
 etymology_hook: "स्निह् means to be sticky or oily before it means to feel affection — स्नेह is both oil and love — while प्रिय 'dear' is PIE priHos, whose p became f by Grimm's law to give English friend, free and Friday, and which also wore down eastward into Hindi piyā 'beloved'"

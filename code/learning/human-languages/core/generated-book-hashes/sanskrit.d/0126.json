@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:1e68fe99f027cc2a",
+  "lessonIds": [
+    "SA-C126-vistrtah",
+    "SA-C126-sankirnah",
+    "SA-C126-gabhirah",
+    "SA-C126-ardrah",
+    "SA-C126-suskah"
+  ],
+  "tex": "sanskrit/book/chapters/ch126-wide-narrow-deep-wet-dry.tex"
+}

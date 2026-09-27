@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:689bfaeb4e20edfc",
+  "lessonIds": [
+    "SA-C115-maksika",
+    "SA-C115-masakah",
+    "SA-C115-pipilika",
+    "SA-C115-citrapatangah",
+    "SA-C115-kukkutah"
+  ],
+  "tex": "sanskrit/book/chapters/ch115-fly-mosquito-ant-butterfly-rooster.tex"
+}

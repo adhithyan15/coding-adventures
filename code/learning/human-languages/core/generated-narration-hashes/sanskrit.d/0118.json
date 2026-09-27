@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:e39ab2d9887e2537",
+  "lessonIds": [
+    "SA-C118-gulphah",
+    "SA-C118-angulih",
+    "SA-C118-kaksah",
+    "SA-C118-asandi",
+    "SA-C118-phalakam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch118.txt",
+  "json": "sanskrit/narration/ch118.json",
+  "textHash": "fnv1a64:582c04cbacf736b8",
+  "jsonHash": "fnv1a64:dc8eb897a49b8a92",
+  "findings": []
+}

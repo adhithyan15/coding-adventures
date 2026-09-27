@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:9d74ca13816a2466",
+  "lessonIds": [
+    "SA-C100-kilah",
+    "SA-C100-mudgarah",
+    "SA-C100-kartari",
+    "SA-C100-sucih",
+    "SA-C100-sutram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch100.txt",
+  "json": "sanskrit/narration/ch100.json",
+  "textHash": "fnv1a64:36076c6bbd5e8b64",
+  "jsonHash": "fnv1a64:1075890e8faefdb6",
+  "findings": []
+}

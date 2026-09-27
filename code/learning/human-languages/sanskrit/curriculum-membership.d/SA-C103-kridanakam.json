@@ -1,0 +1,11 @@
+{
+  "id": "SA-C103-kridanakam",
+  "pathSegment": "SA-PATH-103-THINGS103",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-103-THINGS103",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:e90879f2a763b0bc",
+  "lessonIds": [
+    "SA-C101-kankatika",
+    "SA-C101-phenakam",
+    "SA-C101-pronchanam",
+    "SA-C101-upanetram",
+    "SA-C101-syutah"
+  ],
+  "tex": "sanskrit/book/chapters/ch101-comb-soap-towel-glasses-bag.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C106-rajjuh",
+    "language": "sanskrit",
+    "chapter": 106,
+    "sequence": 5130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5227389426e20d5c"
+  },
+  "findings": []
+}

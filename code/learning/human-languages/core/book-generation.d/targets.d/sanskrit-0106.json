@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 106,
+  "output": "sanskrit/book/chapters/ch106-rope-wheat-rice-mung-beans-dal.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

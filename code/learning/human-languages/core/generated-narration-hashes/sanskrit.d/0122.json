@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:5d2629c373631799",
+  "lessonIds": [
+    "SA-C122-rajatam",
+    "SA-C122-kacah",
+    "SA-C122-sakatam",
+    "SA-C122-bhandam",
+    "SA-C122-khatva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch122.txt",
+  "json": "sanskrit/narration/ch122.json",
+  "textHash": "fnv1a64:be49d8df23573214",
+  "jsonHash": "fnv1a64:2d945d611638c22f",
+  "findings": []
+}

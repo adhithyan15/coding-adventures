@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 17,
-  "sourceHash": "fnv1a64:80d66c61a26a6fb1",
+  "sourceHash": "fnv1a64:bca8cf5a924f4f8a",
   "lessonIds": [
     "SA-C17-day",
     "SA-C17-night",
@@ -16,7 +16,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch17.txt",
   "json": "sanskrit/narration/ch17.json",
-  "textHash": "fnv1a64:dd91eb1dd22daf79",
-  "jsonHash": "fnv1a64:533a1aa40def2096",
+  "textHash": "fnv1a64:52caf9b60a292bb3",
+  "jsonHash": "fnv1a64:13be82439fec6beb",
   "findings": []
 }

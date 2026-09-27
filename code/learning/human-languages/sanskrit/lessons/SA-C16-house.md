@@ -18,11 +18,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-ANCHOR-MAUNA]
+  knowledge: [SA-LEX-ANCHOR-MAUNA, SA-GRAMMAR-C15-ADJ-SYSTEM]
 introduces:
   knowledge: [SA-LEX-C16-PLACE-01]
 practises:
-  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-ANCHOR-MAUNA]
+  knowledge: [SA-LEX-C16-PLACE-01, SA-LEX-ANCHOR-MAUNA, SA-GRAMMAR-C15-ADJ-SYSTEM]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C15-adjective-system]
 # गृहम् (gṛham) — house, home
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-ANCHOR-MAUNA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-ANCHOR-MAUNA, SA-GRAMMAR-C15-ADJ-SYSTEM] -->
 
 [PAUSE 2s] You can describe a thing now — big, small, new, old. This chapter gives you places to put those things.
+
+[PAUSE 1s] Where does an adjective go? (In front of its noun.) Keep that ready for this lesson's word.
 
 ## You'll want to know: गृहम्
 <!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-01]; assesses=[] -->

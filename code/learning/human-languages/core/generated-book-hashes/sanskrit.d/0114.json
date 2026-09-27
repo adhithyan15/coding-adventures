@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:9d716f969bf1be5e",
+  "lessonIds": [
+    "SA-C114-mesah",
+    "SA-C114-kapotah",
+    "SA-C114-ulukah",
+    "SA-C114-bakah",
+    "SA-C114-bhramarah"
+  ],
+  "tex": "sanskrit/book/chapters/ch114-sheep-pigeon-owl-heron-bee.tex"
+}

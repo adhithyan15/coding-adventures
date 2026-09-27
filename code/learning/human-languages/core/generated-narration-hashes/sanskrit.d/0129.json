@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:3c160e6cb324794e",
+  "lessonIds": [
+    "SA-C129-sitalah",
+    "SA-C129-navinah",
+    "SA-C129-pracinah",
+    "SA-C129-virah",
+    "SA-C129-caturah",
+    "SA-R129-first-pass-things-of-value-and-getting-around",
+    "SA-R129-second-pass-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch129.txt",
+  "json": "sanskrit/narration/ch129.json",
+  "textHash": "fnv1a64:568c137cb9495f0a",
+  "jsonHash": "fnv1a64:19f2f9e0bf3f8bdf",
+  "findings": []
+}

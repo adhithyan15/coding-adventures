@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Pomegranate, Grapes, Jackfruit, Lemon, Cake",
+  "label": "ch:sa-pomegranate-grapes-jackfruit-lemon-cake",
+  "canDo": "I can say a pomegranate, grapes, a jackfruit, a lemon and a cake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R109-second-pass-machines-the-house-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a pomegranate, grapes, a jackfruit, a lemon and a cake.",
+    "assesses": [
+      "SA-LEX-C109-THINGS109-03",
+      "SA-LEX-C109-THINGS109-04",
+      "SA-LEX-C109-THINGS109-05"
+    ]
+  }
+}

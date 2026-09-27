@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Moment, Before, After, Now, Always",
+  "label": "ch:sa-moment-before-after-now-always",
+  "canDo": "I can say a moment, before, after, now and always.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "SA-C92-sarvada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say a moment, before, after, now and always.",
+    "assesses": [
+      "SA-LEX-C92-TIME92-03",
+      "SA-LEX-C92-TIME92-04",
+      "SA-LEX-C92-TIME92-05"
+    ]
+  }
+}

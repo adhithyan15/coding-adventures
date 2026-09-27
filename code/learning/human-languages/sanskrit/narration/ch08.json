@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind and the Palm Leaf",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c04f8ec27e3dd912",
+  "sourceHash": "fnv1a64:0a4f860630d13fa6",
   "lessons": [
     {
       "id": "SA-C08-cintayati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9d094ae59750be1",
+      "sourceHash": "fnv1a64:f84f7ce1d1b46169",
       "notice": null,
       "blocks": [
         {
@@ -27,6 +27,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"no worries.\" (Na cintā.) Keep that cintā, \"worry, thought,\" in mind."
+            },
             {
               "kind": "pause",
               "seconds": 2,
@@ -506,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:657ebd125936f6a6",
+      "sourceHash": "fnv1a64:67f853087f410558",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f00ddf129c4a377f",
+      "sourceHash": "fnv1a64:c47668f655ba6d6c",
       "notice": null,
       "blocks": [
         {
@@ -870,6 +880,16 @@
             {
               "kind": "speech",
               "text": "Say \"it reads.\" (Paṭhati.) Name a language that still reads with that word. (Hindi paṛhnā, Bengali poṛa, Marathi paḍhṇe — any one.) Now the other half of literacy."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"thinks.\" (Cintayati — the root with -aya- added, the fourth way to build a present stem.)"
             }
           ]
         },

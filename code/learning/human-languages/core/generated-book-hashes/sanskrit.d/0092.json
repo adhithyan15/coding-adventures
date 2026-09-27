@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:7990571d9c8157a7",
+  "lessonIds": [
+    "SA-C92-nimesah",
+    "SA-C92-purvam",
+    "SA-C92-pascat",
+    "SA-C92-adhuna",
+    "SA-C92-sarvada"
+  ],
+  "tex": "sanskrit/book/chapters/ch92-moment-before-after-now-always.tex"
+}

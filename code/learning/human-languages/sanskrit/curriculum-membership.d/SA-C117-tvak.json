@@ -1,0 +1,11 @@
+{
+  "id": "SA-C117-tvak",
+  "pathSegment": "SA-PATH-117-THINGS117",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-117-THINGS117",
+      "order": 4
+    }
+  ]
+}

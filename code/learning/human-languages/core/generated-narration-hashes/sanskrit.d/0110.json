@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:506a8fc48143ec66",
+  "lessonIds": [
+    "SA-C110-girih",
+    "SA-C110-prapatah",
+    "SA-C110-tarangah",
+    "SA-C110-vidyut",
+    "SA-C110-garjanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch110.txt",
+  "json": "sanskrit/narration/ch110.json",
+  "textHash": "fnv1a64:88d41f1814574052",
+  "jsonHash": "fnv1a64:4fe690cf9ff386eb",
+  "findings": []
+}
