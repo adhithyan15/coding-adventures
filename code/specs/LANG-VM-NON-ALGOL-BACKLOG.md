@@ -50,6 +50,10 @@ new failure before selecting another item. The immediate queue is:
 The VM-071 implementation uses `ets:lookup_element/4` with explicit length
 guards instead of the issue's tentative O(N) table pre-population. See
 `BEAM11-ets-array-default-reads.md` for the runtime and validation contract.
+Its first PR CI run found an intermittent macOS upper-bound failure; the
+allocation repair now stores the declared extent in an initialized Y slot
+across `ets:new/2` rather than relying on a scratch X register. Verify that
+the repaired exact head passes all platforms before enabling auto-merge.
 
 **VM-073 (discovered during BEAM11):** the ets-backed `array_set` lowering
 inserts an arbitrary integer key without consulting the `[Table | Length]`

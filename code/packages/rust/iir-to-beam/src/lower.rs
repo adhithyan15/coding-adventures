@@ -1052,10 +1052,12 @@ pub fn lower_iir_to_beam(
         // `live_across`: maps instruction index → sorted list of variable names
         // that are live across that call and must be saved/restored around it.
         //
-        // `n_yregs`: total number of Y-slots (= y_reg_map.len()).
+        // `n_yregs`: liveness slots plus one allocation-length slot when an
+        // ets-backed array is allocated in this function.
         y_reg_map: HashMap<String, u8>,
         live_across: HashMap<usize, Vec<String>>,
         n_yregs: u8,
+        ets_alloc_len_slot: Option<u8>,
     }
 
     let mut fn_metas: Vec<FnMeta> = Vec::with_capacity(module.functions.len());
@@ -1405,16 +1407,20 @@ pub fn lower_iir_to_beam(
             }
         }
 
-        // Guard: BEAM Y-registers are 8-bit (0–255).  More than 255 live-across-
-        // call variables cannot be represented; the `slot as u8` and `len() as u8`
-        // casts below would silently overflow without this check.
-        if all_live_vars.len() > 255 {
+        // Guard: BEAM Y-registers are 8-bit (0–255). The length handoff needs
+        // one extra slot in functions with ets-backed allocation; unchecked
+        // casts below would silently overflow at 256 total slots.
+        let has_ets_alloc = func.instructions.iter().any(|instr| {
+            instr.op == "alloc_array"
+                && matches!(instr.type_hint.as_str(), "array<f64>" | "array<str>")
+        });
+        if all_live_vars.len() + usize::from(has_ets_alloc) > 255 {
             return Err(IIRBeamError::UnsupportedOp {
                 function: func.name.clone(),
                 op: format!(
-                    "too many live-across-call variables ({}); \
+                    "too many Y-register slots ({} live variables, {} ets array length); \
                      BEAM Y-registers are limited to 255",
-                    all_live_vars.len()
+                    all_live_vars.len(), usize::from(has_ets_alloc)
                 ),
             });
         }
@@ -1424,7 +1430,8 @@ pub fn lower_iir_to_beam(
             y_reg_map.insert(var.clone(), slot as u8);
         }
 
-        let n_yregs = y_reg_map.len() as u8;
+        let ets_alloc_len_slot = has_ets_alloc.then_some(y_reg_map.len() as u8);
+        let n_yregs = (y_reg_map.len() + usize::from(has_ets_alloc)) as u8;
 
         fn_metas.push(FnMeta {
             fn_atom,
@@ -1436,6 +1443,7 @@ pub fn lower_iir_to_beam(
             y_reg_map,
             live_across,
             n_yregs,
+            ets_alloc_len_slot,
         });
     }
 
@@ -1481,8 +1489,8 @@ pub fn lower_iir_to_beam(
 
         // ── Stack frame allocation (Y-registers for cross-call liveness) ─────
         //
-        // If this function makes any `call` or `call_ext` instructions that
-        // have live variables crossing them, we must allocate a stack frame.
+        // If this function has live variables crossing calls or an ets array
+        // length crossing `ets:new/2`, we must allocate a stack frame.
         //
         // `{allocate, StackNeed, Live}`:
         //   - StackNeed = number of Y-register slots we will use.
@@ -4131,25 +4139,13 @@ pub fn lower_iir_to_beam(
                         let r_len = operand_reg!(get_src!(instr, 0));
                         let cur_idx = instr_idx - 1;
 
-                        // Stage the length ABOVE `live` before any call: the
-                        // `ets:new/2` below clobbers every x-register, so the
-                        // caller's register holding N would not survive it.
-                        // `move` never triggers GC, so the staged copy cannot
-                        // be collected out from under us either.
-                        let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
-                        if top.is_none() {
-                            return Err(IIRBeamError::UnsupportedOp {
-                                function: fn_name.clone(),
-                                op: format!(
-                                    "alloc_array (f64/str via ets): needs 1 scratch \
-                                     register but only {} remain below x255",
-                                    255u16 - meta.next_reg as u16
-                                ),
-                            });
-                        }
-                        let s_len = meta.next_reg;
+                        // A call may clobber every X register, including a
+                        // scratch register above the live prefix. Keep the
+                        // declared length in this function's initialized Y
+                        // slot across ets:new, then build [Tab | N].
+                        let len_slot = meta.ets_alloc_len_slot.expect("ets allocation needs Y slot");
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(r_len), BEAMOperand::x(s_len),
+                            BEAMOperand::x(r_len), BEAMOperand::y(len_slot),
                         ]));
 
                         save_live_across_imported_call!(cur_idx);
@@ -4214,7 +4210,7 @@ pub fn lower_iir_to_beam(
                         // failure `call_builtin "input_str"` documents at
                         // length above.
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(s_len), BEAMOperand::x(1),
+                            BEAMOperand::y(len_slot), BEAMOperand::x(1),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
                             BEAMOperand::u(2), BEAMOperand::u(2),

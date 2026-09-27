@@ -9,6 +9,11 @@ upper-bound reads still raise `badarg`; allocation stays O(1), and `array_len`
 continues to report the declared length. This closes VM-071 without the
 proposed O(N) pre-population or additional GC-sensitive allocation calls.
 
+The macOS PR run exposed an intermittent upper-bound mismatch: the BEAM10
+allocation path carried `N` in a scratch X register across `ets:new/2`.
+Allocation now reserves an initialized Y stack slot for `N` and reloads it
+after the call, so the handle's extent survives call clobbering.
+
 The previous real-Erlang unset-read trap test now asserts `0.0`. New direct
 float/string boundary tests and the six sparse ALGOL array-by-value sources
 execute on real Erlang. The package's full backend suite, BEAM10 array-length

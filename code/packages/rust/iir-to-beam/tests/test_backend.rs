@@ -5130,6 +5130,8 @@ fn beam10_array_len_on_str_shares_the_ets_substrate() {
 /// needs no call, so neither of those instructions may appear on this path.
 #[test]
 fn beam10_alloc_array_on_ets_builds_the_handle_pair_without_a_second_call() {
+    use ir_to_beam::{BEAMOperand, BEAMTag};
+
     let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
         .expect("lower");
     assert!(
@@ -5154,6 +5156,16 @@ fn beam10_alloc_array_on_ets_builds_the_handle_pair_without_a_second_call() {
     let heap = first_index_of(&beam, 16).expect("test_heap present");
     let put = first_index_of(&beam, 69).expect("put_list present");
     assert!(heap < put, "test_heap must precede the put_list ({heap} vs {put})");
+    // The source length is dead after alloc_array, so ordinary liveness
+    // saving would omit it. An explicit Y slot must carry it through ets:new.
+    assert!(beam.instructions.iter().any(|i| i.opcode == OP_MOVE
+        && i.operands.first().is_some_and(|op| op.tag == BEAMTag::X)
+        && i.operands.get(1) == Some(&BEAMOperand::y(0))),
+        "ets allocation must park its declared length in a Y slot");
+    assert!(beam.instructions.iter().any(|i| i.opcode == OP_MOVE
+        && i.operands.first() == Some(&BEAMOperand::y(0))
+        && i.operands.get(1) == Some(&BEAMOperand::x(1))),
+        "ets allocation must reload its declared length after ets:new");
 }
 
 /// The substrate map is seeded from `IIRFunction::params`, not only from
@@ -5534,10 +5546,9 @@ fn beam10_array_set_on_ets_reserves_heap_before_building_its_tuple() {
 
 /// The behavioural half, on real `erl`.
 ///
-/// 2000 ets-backed allocations in one function. Without the reservation this
-/// segfaults the emulator outright — verified by reverting the fix — so this
-/// is a genuine end-to-end regression guard rather than a restatement of the
-/// structural tests above.
+/// 2000 ets-backed allocations in one function. The last handle must still
+/// report its declared extent after crossing `ets:new/2`, in addition to
+/// surviving the heap pressure that originally motivated this test.
 #[test]
 fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
     if !erl_available() {
@@ -5557,7 +5568,10 @@ fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
             "array<f64>",
         ));
     }
-    instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"));
+    instrs.push(IIRInstr::new(
+        "array_len", Some("actual_len".into()), vec![Operand::Var("a".into())], "i64",
+    ));
+    instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("actual_len".into())], "i64"));
 
     use iir_to_beam::encode_beam;
     let m = make_module_fn("main", vec![], "i64", instrs);
@@ -5583,8 +5597,7 @@ fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
     assert_eq!(
         out.trim(),
         "4",
-        "2000 ets-backed allocations must not corrupt the process heap; without \
-         the `test_heap` before each length entry's `put_list` pair this \
-         segfaults the emulator"
+        "2000 ets-backed allocations must retain the declared length and \
+         not corrupt the process heap"
     );
 }
