@@ -193,9 +193,7 @@ fn parse_segment(segment: &str) -> Result<Vec<Token>, GlobPatternError> {
     parse_segment_with_state_count(segment).map(|(tokens, _)| tokens)
 }
 
-fn parse_segment_with_state_count(
-    segment: &str,
-) -> Result<(Vec<Token>, usize), GlobPatternError> {
+fn parse_segment_with_state_count(segment: &str) -> Result<(Vec<Token>, usize), GlobPatternError> {
     let scalars: Vec<char> = segment.chars().collect();
     let mut next_closing_bracket = vec![None; scalars.len() + 1];
     let mut next_closing = None;
@@ -263,9 +261,10 @@ fn parse_character_class(
     };
     let body = &scalars[cursor..closing];
 
-    if body.windows(2).any(|pair| {
-        pair[0] == pair[1] && matches!(pair[0], '-' | '&' | '~' | '|')
-    }) {
+    if body
+        .windows(2)
+        .any(|pair| pair[0] == pair[1] && matches!(pair[0], '-' | '&' | '~' | '|'))
+    {
         return Err(GlobPatternError::AmbiguousOrDescendingCharacterClass);
     }
 
@@ -305,10 +304,7 @@ fn match_path_with_state_count(
     Ok(match_compiled_path_with_state_count(&compiled, path))
 }
 
-fn match_compiled_path_with_state_count(
-    pattern: &CompiledPattern,
-    path: &str,
-) -> (bool, usize) {
+fn match_compiled_path_with_state_count(pattern: &CompiledPattern, path: &str) -> (bool, usize) {
     let normalized = path.replace('\\', "/");
     let path_segments: Vec<Vec<char>> = normalized
         .split('/')
@@ -366,8 +362,8 @@ fn match_segment_with_state_count(tokens: &[Token], value: &[char]) -> (bool, us
             }
             Token::Literal(_) | Token::CharacterClass { .. } => {
                 for value_index in 0..value_count {
-                    row[value_index] = next_row[value_index + 1]
-                        && token_matches(token, value[value_index]);
+                    row[value_index] =
+                        next_row[value_index + 1] && token_matches(token, value[value_index]);
                 }
             }
         }
@@ -535,7 +531,10 @@ mod tests {
 
     #[test]
     fn test_doublestar_with_exact_suffix() {
-        assert!(match_path("**/BUILD", "code/packages/python/logic-gates/BUILD"));
+        assert!(match_path(
+            "**/BUILD",
+            "code/packages/python/logic-gates/BUILD"
+        ));
         assert!(match_path("**/BUILD", "BUILD"));
     }
 
