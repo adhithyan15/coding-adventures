@@ -87,6 +87,7 @@ class MosaicPlatformEffectsTest {
             "x".repeat(256), "Invoice.pdf      .command",
             ".\u0301zshrc", "Invoice.pdf\u2800\u2800.txt",
             "a\uD800.json", "a\uE000.json",
+            "Invoice.pdf" + " \uFE00".repeat(30) + " x.html", "\uFE00.zshrc", "notes.txt\uFE00.",
         )) {
             assertFalse(mosaicIsPlainFileName(name), name)
             val outcome = mosaicRunFilesSave(mapOf("suggestedName" to name, "bytes" to encoded("x")), FakeDialogs(null))
@@ -94,6 +95,7 @@ class MosaicPlatformEffectsTest {
         }
         assertTrue(mosaicIsPlainFileName("journal.json"))
         assertTrue(mosaicIsPlainFileName("caf\u00E9 menu.json"))
+        assertTrue(mosaicIsPlainFileName("\u2764\uFE0F list.txt"))
     }
 
     @Test

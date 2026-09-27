@@ -228,6 +228,9 @@ test('files.save refuses names that are paths, disguises, or the wrong type, bef
     ['Invoice.pdf\u2800\u2800.txt', undefined], ['a\uD800.json', undefined],
     ['a\uE000.json', undefined], ['a.j\u017F', undefined], ['img.iso', undefined],
     ['clip.scf', undefined], ['app.AppImage', undefined],
+    // Round 3: invisible marks cannot split a run of spaces or hide a dot.
+    ['Invoice.pdf' + ' \uFE00'.repeat(30) + ' x.html', undefined], ['\uFE00.zshrc', undefined],
+    ['notes.txt\uFE00.', undefined],
   ]) {
     const { files, calls, completions } = fixture();
     await files.run(effect(9, 'files.save', { suggestedName: name, ...(accept ? { accept } : {}), bytes: 'AA==' }));
@@ -289,6 +292,7 @@ test('the plain-name rule and executable list match the Compose library', async 
   assert.equal(isPlainFileName('journal-2026-09-27.json'), true);
   assert.equal(isPlainFileName('two words.json'), true);
   assert.equal(isPlainFileName('caf\u00E9 menu.json'), true);
+  assert.equal(isPlainFileName('\u2764\uFE0F list.txt'), true);
 });
 
 test('the legacy file.save type may not name a launcher', async () => {
@@ -296,4 +300,8 @@ test('the legacy file.save type may not name a launcher', async () => {
   await files.run(effect(14, 'file.save', { suggestedName: 'photo', mimeType: 'application/x-msdownload', extension: '.scr', bytes: 'AA==' }));
   assert.equal(calls.length, 0);
   assert.ok(completions[0][1].failed);
+  const trailing = fixture();
+  await trailing.files.run(effect(15, 'file.save', { suggestedName: 'photo', mimeType: 'application/x-msdownload', extension: '.exe.', bytes: 'AA==' }));
+  assert.equal(trailing.calls.length, 0);
+  assert.ok(trailing.completions[0][1].failed);
 });

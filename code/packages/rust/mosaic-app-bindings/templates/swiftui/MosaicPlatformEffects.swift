@@ -231,19 +231,7 @@ func mosaicIsPlainFileName(_ name: String) -> Bool {
   // `lastIndex(of: ".")` would not see it -- while the file system, and the
   // Compose and browser hosts, do.
   let scalars = name.unicodeScalars
-  guard let first = scalars.first, let last = scalars.last,
-    first != ".", last != ".",
-    !mosaicIsSpace(first), !mosaicIsSpace(last)
-  else {
-    return false
-  }
-  var previousWasSpace = false
-  for scalar in scalars {
-    let isSpace = mosaicIsSpace(scalar)
-    if isSpace && previousWasSpace { return false }
-    previousWasSpace = isSpace
-  }
-  return !scalars.contains { scalar in
+  let refused = scalars.contains { scalar in
     if scalar == "/" || scalar == "\\" || scalar == ":" { return true }
     switch scalar.properties.generalCategory {
     case .control, .format, .lineSeparator, .paragraphSeparator,
@@ -254,14 +242,40 @@ func mosaicIsPlainFileName(_ name: String) -> Bool {
     default: return false
     }
   }
+  if refused { return false }
+  // The padding and dot rules look at what is visible: invisible characters
+  // cannot split a run of spaces or hide a leading or trailing dot.
+  let visible = scalars.filter { !mosaicIsInvisible($0) }
+  guard let first = visible.first, let last = visible.last,
+    first != ".", last != ".",
+    !mosaicIsSpace(first), !mosaicIsSpace(last)
+  else {
+    return false
+  }
+  var previousWasSpace = false
+  for scalar in visible {
+    let isSpace = mosaicIsSpace(scalar)
+    if isSpace && previousWasSpace { return false }
+    previousWasSpace = isSpace
+  }
+  return true
 }
 
-/// Whitespace for the padding rules, plus the characters that are not
-/// whitespace to Unicode but render blank: COMBINING GRAPHEME JOINER, the
-/// Hangul fillers and BRAILLE PATTERN BLANK.
+/// Characters that are not whitespace to Unicode but render as a wide blank:
+/// the Hangul fillers and BRAILLE PATTERN BLANK. Whitespace for the padding
+/// rules, as on the other hosts.
+private let mosaicBlankCharacters: Set<UInt32> = [0x115F, 0x1160, 0x2800, 0x3164, 0xFFA0]
+
 private func mosaicIsSpace(_ scalar: Unicode.Scalar) -> Bool {
-  scalar.properties.isWhitespace
-    || [0x034F, 0x115F, 0x1160, 0x2800, 0x3164, 0xFFA0].contains(scalar.value)
+  scalar.properties.isWhitespace || mosaicBlankCharacters.contains(scalar.value)
+}
+
+/// Default-ignorable characters other than the blanks: variation selectors,
+/// COMBINING GRAPHEME JOINER and the like. Dropped before the padding and dot
+/// rules, so `<space><VS1><space>` is still a run while an emoji's own
+/// selector (`❤️ list.txt`) is fine.
+private func mosaicIsInvisible(_ scalar: Unicode.Scalar) -> Bool {
+  scalar.properties.isDefaultIgnorableCodePoint && !mosaicBlankCharacters.contains(scalar.value)
 }
 
 /// The extension after the last `.`, found by scalar (see

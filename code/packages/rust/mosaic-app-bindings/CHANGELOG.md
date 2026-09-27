@@ -27,6 +27,10 @@ a name ending in an extension that runs when opened (`.command`, `.terminal`,
   macOS location files and installers, Windows launchers, credential-leaking
   shell files and disk images, and Linux packages; extensions are folded
   through upper case (`ſ`).
+- Security review, round 3: invisible (default-ignorable) characters are
+  dropped before the padding and dot rules, so a variation selector between
+  single spaces no longer splits a run, while an emoji's own selector
+  (`❤️ list.txt`) is still fine.
 
 ### Added — the Compose host reports its environment (UI48 ENV4, §7.4)
 

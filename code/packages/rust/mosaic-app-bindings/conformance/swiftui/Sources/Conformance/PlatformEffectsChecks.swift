@@ -158,6 +158,8 @@ private func checkSaveRefusals(in directory: URL) {
     "Invoice.pdf      .command",
     ".\u{0301}zshrc", "Invoice.pdf\u{2800}\u{2800}.txt",
     "x\u{0D4E}.", "a\u{E000}.json",
+    "Invoice.pdf" + String(repeating: " \u{FE00}", count: 30) + " x.html", "\u{FE00}.zshrc",
+    "notes.txt\u{FE00}.",
   ] {
     let dialogs = FakeDialogs(target)
     let outcome = mosaicRunFilesSave(
@@ -192,6 +194,7 @@ private func checkSaveRefusals(in directory: URL) {
     check(dialogs.opened == 0, "no panel for executable \(name)")
   }
   check(mosaicIsPlainFileName("caf\u{00E9} menu.json"), "accented names still pass")
+  check(mosaicIsPlainFileName("\u{2764}\u{FE0F} list.txt"), "an emoji's own selector is fine")
   check(!mosaicHasExecutableExtension("notes.txt") && !mosaicHasExecutableExtension("README"),
     "an ordinary document is not executable")
 

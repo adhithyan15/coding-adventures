@@ -81,21 +81,28 @@ function acceptedTypes(payload) {
  *    right-to-left override can disguise `.exe` as `.pdf`);
  *  - no leading or trailing whitespace of any kind, no trailing dot, and no
  *    run of two or more whitespace characters -- `Invoice.pdf<30 spaces>.exe`
- *    hides its extension that way;
+ *    hides its extension that way. Invisible characters are dropped first,
+ *    so they cannot split a run or hide a leading or trailing dot;
  *  - at most 255 UTF-16 units.
  */
-// Whitespace, plus characters that render blank without being whitespace:
-// COMBINING GRAPHEME JOINER, the Hangul fillers, BRAILLE PATTERN BLANK.
-const BLANK = '[\\s\\u034F\\u115F\\u1160\\u2800\\u3164\\uFFA0]';
+// Whitespace, plus characters that render as a wide blank without being
+// whitespace: the Hangul fillers and BRAILLE PATTERN BLANK.
+const BLANK = '[\\s\\u115F\\u1160\\u2800\\u3164\\uFFA0]';
+// Invisible characters (Default_Ignorable_Code_Point: variation selectors,
+// COMBINING GRAPHEME JOINER, ...) other than the blanks above. They are
+// dropped before the padding and dot rules, so ` <VS1> <VS1> ` is still a
+// run of spaces while `❤️ list.txt` (an emoji's own selector) is fine.
+const INVISIBLE = /(?![\u115F\u1160\u3164\uFFA0])\p{DI}/gu;
 
 export function isPlainFileName(name) {
-  return typeof name === 'string'
-    && name !== ''
-    && name.length <= 255
-    && name !== '.' && name !== '..'
-    && !name.startsWith('.')
-    && !new RegExp(`^${BLANK}|[.]$|${BLANK}$`, 'u').test(name)
-    && !new RegExp(`${BLANK}{2,}`, 'u').test(name)
+  if (typeof name !== 'string' || name === '' || name.length > 255 || name === '.' || name === '..') {
+    return false;
+  }
+  const visible = name.replace(INVISIBLE, '');
+  return visible !== ''
+    && !visible.startsWith('.')
+    && !new RegExp(`^${BLANK}|[.]$|${BLANK}$`, 'u').test(visible)
+    && !new RegExp(`${BLANK}{2,}`, 'u').test(visible)
     // Surrogates (a lone one cannot be a file name), and unassigned or
     // private-use code points, whose meaning varies by Unicode version.
     && !/[\\/:\p{Cc}\p{Cf}\p{Zl}\p{Zp}\p{Cs}\p{Cn}\p{Co}]/u.test(name);
@@ -153,7 +160,7 @@ function pickerOptions(payload) {
     }
     // The legacy pair becomes the picker's filter, and a dialog may append its
     // extension to the chosen name: it may not name a launcher either.
-    if (hasExecutableExtension(payload.extension)) {
+    if (payload.extension.endsWith('.') || hasExecutableExtension(payload.extension)) {
       throw new Error('File type must not be an executable extension');
     }
     options.types = [{ accept: { [payload.mimeType]: [payload.extension] } }];
