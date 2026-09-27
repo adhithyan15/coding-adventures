@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To drink, To run, To sleep, To cut, To break",
+  "label": "ch:ka-to-drink-to-run-to-sleep-to-cut-to-break",
+  "canDo": "I can say to drink, to run, to sleep, to cut and to break.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C147-ode",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say to drink, to run, to sleep, to cut and to break.",
+    "assesses": [
+      "KA-LEX-C147-ACT147-03",
+      "KA-LEX-C147-ACT147-04",
+      "KA-LEX-C147-ACT147-05"
+    ]
+  }
+}

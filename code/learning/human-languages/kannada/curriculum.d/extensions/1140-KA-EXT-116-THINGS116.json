@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-116-THINGS116",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pillow, a blanket, a curtain, a lock and a nail.",
+  "prerequisites": []
+}

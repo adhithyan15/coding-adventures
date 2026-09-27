@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Beard, Foot, Long, Short, Heavy",
+  "label": "ch:ka-beard-foot-long-short-heavy",
+  "canDo": "I can say a beard, a foot, long, short and heavy.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C140-bhara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say a beard, a foot, long, short and heavy.",
+    "assesses": [
+      "KA-LEX-C140-THINGS140-03",
+      "KA-LEX-C140-THINGS140-04",
+      "KA-LEX-C140-THINGS140-05"
+    ]
+  }
+}

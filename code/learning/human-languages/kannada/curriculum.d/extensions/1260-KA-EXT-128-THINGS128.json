@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-128-THINGS128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say lightning, a storm, a wave, a waterfall and an island.",
+  "prerequisites": []
+}

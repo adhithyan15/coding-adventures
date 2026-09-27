@@ -1,0 +1,11 @@
+{
+  "id": "KA-C118-gadiyara",
+  "pathSegment": "KA-PATH-118-THINGS118",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-118-THINGS118",
+      "order": 1
+    }
+  ]
+}

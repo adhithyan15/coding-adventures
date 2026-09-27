@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:415e3f26dc3e1e61",
+  "lessonIds": [
+    "KA-C139-kamala",
+    "KA-C139-godhi",
+    "KA-C139-doni",
+    "KA-C139-kanniru",
+    "KA-C139-mise"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch139.txt",
+  "json": "kannada/narration/ch139.json",
+  "textHash": "fnv1a64:d0bbdbab42585e42",
+  "jsonHash": "fnv1a64:548235c702b154ea",
+  "findings": []
+}

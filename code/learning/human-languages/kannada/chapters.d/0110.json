@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Market, Beach, Garden, Corner, Turn",
+  "label": "ch:ka-market-beach-garden-corner-turn",
+  "canDo": "I can say a market, a beach, a garden, a corner and a turn.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C110-tiruvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a market, a beach, a garden, a corner and a turn.",
+    "assesses": [
+      "KA-LEX-C110-LOC110-03",
+      "KA-LEX-C110-LOC110-04",
+      "KA-LEX-C110-LOC110-05"
+    ]
+  }
+}

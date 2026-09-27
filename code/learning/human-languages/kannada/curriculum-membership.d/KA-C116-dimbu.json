@@ -1,0 +1,11 @@
+{
+  "id": "KA-C116-dimbu",
+  "pathSegment": "KA-PATH-116-THINGS116",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-116-THINGS116",
+      "order": 0
+    }
+  ]
+}

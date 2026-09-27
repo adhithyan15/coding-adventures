@@ -1,0 +1,11 @@
+{
+  "id": "KA-C135-monakai",
+  "pathSegment": "KA-PATH-135-THINGS135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-135-THINGS135",
+      "order": 3
+    }
+  ]
+}

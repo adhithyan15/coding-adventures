@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:eb4a2645e3a62ff8",
+  "lessonIds": [
+    "KA-C119-ole",
+    "KA-C119-menabatti",
+    "KA-C119-benkipettige",
+    "KA-C119-bombe",
+    "KA-C119-cendu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch119.txt",
+  "json": "kannada/narration/ch119.json",
+  "textHash": "fnv1a64:5949ffe992008d47",
+  "jsonHash": "fnv1a64:35dea073dd382cc4",
+  "findings": []
+}

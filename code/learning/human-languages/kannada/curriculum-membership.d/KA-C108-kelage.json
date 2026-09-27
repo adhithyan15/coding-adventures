@@ -1,0 +1,11 @@
+{
+  "id": "KA-C108-kelage",
+  "pathSegment": "KA-PATH-108-LOC108",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-108-LOC108",
+      "order": 0
+    }
+  ]
+}

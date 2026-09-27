@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Dry, Poor, Rich, Famous, Safe",
+  "label": "ch:ka-dry-poor-rich-famous-safe",
+  "canDo": "I can say dry, poor, rich, famous and safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C143-suraksita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say dry, poor, rich, famous and safe.",
+    "assesses": [
+      "KA-LEX-C143-QUAL143-03",
+      "KA-LEX-C143-QUAL143-04",
+      "KA-LEX-C143-QUAL143-05"
+    ]
+  }
+}

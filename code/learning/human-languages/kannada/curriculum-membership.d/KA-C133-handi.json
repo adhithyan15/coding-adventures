@@ -1,0 +1,11 @@
+{
+  "id": "KA-C133-handi",
+  "pathSegment": "KA-PATH-133-THINGS133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-133-THINGS133",
+      "order": 2
+    }
+  ]
+}

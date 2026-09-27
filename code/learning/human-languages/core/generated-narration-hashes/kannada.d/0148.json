@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:2180ac879f6ff990",
+  "lessonIds": [
+    "KA-C148-kalisu",
+    "KA-C148-huduku",
+    "KA-C148-kali",
+    "KA-C148-kalisu2",
+    "KA-C148-jigi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch148.txt",
+  "json": "kannada/narration/ch148.json",
+  "textHash": "fnv1a64:6b7c5a9fc5230aa0",
+  "jsonHash": "fnv1a64:c5a4b08bbbc4c7d4",
+  "findings": []
+}

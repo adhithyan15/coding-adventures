@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C109-granthalaya",
+    "language": "kannada",
+    "chapter": 109,
+    "sequence": 4430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56fe6c510669a1d9"
+  },
+  "findings": []
+}

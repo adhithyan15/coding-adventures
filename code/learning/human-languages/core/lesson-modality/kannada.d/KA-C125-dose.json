@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C125-dose",
+    "language": "kannada",
+    "chapter": 125,
+    "sequence": 5240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:178812604c638afd"
+  },
+  "findings": []
+}

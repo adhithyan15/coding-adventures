@@ -1,0 +1,11 @@
+{
+  "id": "KA-C115-mamca",
+  "pathSegment": "KA-PATH-115-WHY115",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-115-WHY115",
+      "order": 4
+    }
+  ]
+}

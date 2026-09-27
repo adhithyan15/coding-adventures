@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:7c2fb731b1c2a288",
+  "lessonIds": [
+    "KA-C152-arisu",
+    "KA-C152-adu",
+    "KA-C152-hadu",
+    "KA-C152-maru",
+    "KA-C152-nade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch152.txt",
+  "json": "kannada/narration/ch152.json",
+  "textHash": "fnv1a64:5df2abcc1ae96b1f",
+  "jsonHash": "fnv1a64:dc35da5f121ad1bb",
+  "findings": []
+}

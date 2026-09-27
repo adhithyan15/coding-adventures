@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:dceed29e24475c6b",
+  "lessonIds": [
+    "KA-C113-asti",
+    "KA-C113-yajamana",
+    "KA-C113-sakti",
+    "KA-C113-ase",
+    "KA-C113-kanasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch113.txt",
+  "json": "kannada/narration/ch113.json",
+  "textHash": "fnv1a64:5bf48b05f7ebcd7a",
+  "jsonHash": "fnv1a64:cb3e037de0be627e",
+  "findings": []
+}

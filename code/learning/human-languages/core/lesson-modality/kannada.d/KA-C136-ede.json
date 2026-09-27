@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C136-ede",
+    "language": "kannada",
+    "chapter": 136,
+    "sequence": 5860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a0544d22f97bfde"
+  },
+  "findings": []
+}

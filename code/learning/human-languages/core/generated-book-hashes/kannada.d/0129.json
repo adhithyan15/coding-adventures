@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:ed200d32fdd6e78a",
+  "lessonIds": [
+    "KA-C129-surya",
+    "KA-C129-kudure",
+    "KA-C129-ane",
+    "KA-C129-huli",
+    "KA-C129-simha"
+  ],
+  "tex": "kannada/book/chapters/ch129-sun-horse-elephant-tiger-lion.tex"
+}

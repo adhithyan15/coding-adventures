@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C136-hubbu",
+    "language": "kannada",
+    "chapter": 136,
+    "sequence": 5880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:196e75d7d89c1836"
+  },
+  "findings": []
+}

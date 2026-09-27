@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Dry vegetable dish, Pickle, Egg, Fish, Meat",
+  "label": "ch:ka-dry-vegetable-dish-pickle-egg-fish-meat",
+  "canDo": "I can say a dry vegetable dish, a pickle, an egg, a fish and meat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C122-mamsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a dry vegetable dish, a pickle, an egg, a fish and meat.",
+    "assesses": [
+      "KA-LEX-C122-THINGS122-03",
+      "KA-LEX-C122-THINGS122-04",
+      "KA-LEX-C122-THINGS122-05"
+    ]
+  }
+}

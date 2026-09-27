@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:846755478a1234c8",
+  "lessonIds": [
+    "KA-C118-kannadaka",
+    "KA-C118-gadiyara",
+    "KA-C118-cila",
+    "KA-C118-lekhani",
+    "KA-C118-kagada"
+  ],
+  "tex": "kannada/book/chapters/ch118-glasses-clock-bag-pen-paper.tex"
+}

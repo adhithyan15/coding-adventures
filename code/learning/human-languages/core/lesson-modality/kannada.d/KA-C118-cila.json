@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C118-cila",
+    "language": "kannada",
+    "chapter": 118,
+    "sequence": 4900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbae9104def62158"
+  },
+  "findings": []
+}

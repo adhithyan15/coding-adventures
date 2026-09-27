@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Kite, Shirt, Sari, Dhoti, Sandals",
+  "label": "ch:ka-kite-shirt-sari-dhoti-sandals",
+  "canDo": "I can say a kite, a shirt, a sari, a dhoti and sandals.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C120-cappali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a kite, a shirt, a sari, a dhoti and sandals.",
+    "assesses": [
+      "KA-LEX-C120-THINGS120-03",
+      "KA-LEX-C120-THINGS120-04",
+      "KA-LEX-C120-THINGS120-05"
+    ]
+  }
+}

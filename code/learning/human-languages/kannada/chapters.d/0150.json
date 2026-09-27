@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "To wash, To wipe, To sweep, To tie, To sew",
+  "label": "ch:ka-to-wash-to-wipe-to-sweep-to-tie-to-sew",
+  "canDo": "I can say to wash, to wipe, to sweep, to tie and to sew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C150-holi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say to wash, to wipe, to sweep, to tie and to sew.",
+    "assesses": [
+      "KA-LEX-C150-ACT150-03",
+      "KA-LEX-C150-ACT150-04",
+      "KA-LEX-C150-ACT150-05"
+    ]
+  }
+}

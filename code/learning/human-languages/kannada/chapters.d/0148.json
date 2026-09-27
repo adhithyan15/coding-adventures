@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To send, To look for, To learn, To teach, To jump",
+  "label": "ch:ka-to-send-to-look-for-to-learn-to-teach-to-jump",
+  "canDo": "I can say to send, to look for, to learn, to teach and to jump.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C148-jigi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say to send, to look for, to learn, to teach and to jump.",
+    "assesses": [
+      "KA-LEX-C148-ACT148-03",
+      "KA-LEX-C148-ACT148-04",
+      "KA-LEX-C148-ACT148-05"
+    ]
+  }
+}

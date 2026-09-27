@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Idli, Dosa, Vada, Upma, Finger millet",
+  "label": "ch:ka-idli-dosa-vada-upma-finger-millet",
+  "canDo": "I can say an idli, a dosa, a vada, upma and finger millet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C125-ragi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say an idli, a dosa, a vada, upma and finger millet.",
+    "assesses": [
+      "KA-LEX-C125-THINGS125-03",
+      "KA-LEX-C125-THINGS125-04",
+      "KA-LEX-C125-THINGS125-05"
+    ]
+  }
+}

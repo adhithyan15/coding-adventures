@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:18ec034b6a86e4dc",
+  "lessonIds": [
+    "KA-C111-hotel",
+    "KA-C111-railu",
+    "KA-C111-vimana",
+    "KA-C111-karu",
+    "KA-C111-saikal"
+  ],
+  "tex": "kannada/book/chapters/ch111-hotel-train-aeroplane-car-bicycle.tex"
+}

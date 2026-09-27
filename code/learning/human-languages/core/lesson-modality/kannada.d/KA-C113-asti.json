@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C113-asti",
+    "language": "kannada",
+    "chapter": 113,
+    "sequence": 4600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45ae18d206167982"
+  },
+  "findings": []
+}

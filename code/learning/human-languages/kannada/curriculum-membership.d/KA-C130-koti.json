@@ -1,0 +1,11 @@
+{
+  "id": "KA-C130-koti",
+  "pathSegment": "KA-PATH-130-THINGS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-130-THINGS130",
+      "order": 1
+    }
+  ]
+}

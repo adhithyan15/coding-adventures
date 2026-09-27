@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:edfce7e70f4f9108",
+  "lessonIds": [
+    "KA-C126-nimbe",
+    "KA-C126-draksi",
+    "KA-C126-halasu",
+    "KA-C126-menasu",
+    "KA-C126-jirige",
+    "KA-R126-first-pass-the-house-and-things-you-carry",
+    "KA-R126-second-pass-clothes-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch126.txt",
+  "json": "kannada/narration/ch126.json",
+  "textHash": "fnv1a64:f89166d22285de7c",
+  "jsonHash": "fnv1a64:d188e509076c66cb",
+  "findings": []
+}

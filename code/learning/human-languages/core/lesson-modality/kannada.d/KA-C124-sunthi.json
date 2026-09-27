@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C124-sunthi",
+    "language": "kannada",
+    "chapter": 124,
+    "sequence": 5200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:567f5c1b0bfd47e1"
+  },
+  "findings": []
+}

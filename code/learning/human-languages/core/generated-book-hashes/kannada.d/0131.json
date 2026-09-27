@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:e06b192cac5c7f04",
+  "lessonIds": [
+    "KA-C131-havu",
+    "KA-C131-ame",
+    "KA-C131-gili",
+    "KA-C131-parivala",
+    "KA-C131-gube"
+  ],
+  "tex": "kannada/book/chapters/ch131-snake-tortoise-parrot-pigeon-owl.tex"
+}

@@ -18,6 +18,13 @@ import {
 const ROOT = defaultCurriculumRoot();
 const config = loadBookGenerationConfig(ROOT) as Parameters<typeof chapterInputsFor>[0];
 
+/**
+ * Every book, rendered ONCE at import and shared by the tests that read it.
+ * Two tests used to render all 23 books each, inside their own 30s budgets;
+ * that cost grows with every content PR (see chapter-modality-book.test.ts).
+ */
+const OUTPUTS = generatedBookOutputs(ROOT);
+
 /** Every track whose canonical owners project a book. */
 const tracks = [
   ...new Set(config.targets.map((entry) => entry.language)),
@@ -25,7 +32,7 @@ const tracks = [
 
 describe("the generated book.tex", () => {
   it("projects every book root while keeping the generated roots untracked", () => {
-    const outputs = generatedBookOutputs(ROOT);
+    const outputs = OUTPUTS;
     expect(tracks).toHaveLength(23);
     expect(tracks).toEqual(
       loadLanguageRegistry(ROOT).languages.map((entry) => entry.id).sort(),
@@ -49,7 +56,7 @@ describe("the generated book.tex", () => {
   it("keeps the authored halves out of the generated set", () => {
     // They are edited by hand. A generator that also emitted them would
     // overwrite the edit on the next `--write`.
-    const outputs = generatedBookOutputs(ROOT);
+    const outputs = OUTPUTS;
     for (const track of tracks) {
       expect(outputs.has(`${track}/book/${FRONTMATTER_TEX}`)).toBe(false);
       expect(outputs.has(`${track}/book/${BACKMATTER_TEX}`)).toBe(false);

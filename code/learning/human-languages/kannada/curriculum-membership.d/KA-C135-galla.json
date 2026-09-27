@@ -1,0 +1,11 @@
+{
+  "id": "KA-C135-galla",
+  "pathSegment": "KA-PATH-135-THINGS135",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-135-THINGS135",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:240daf0780973b80",
+  "lessonIds": [
+    "KA-C150-tole",
+    "KA-C150-oresu",
+    "KA-C150-gudisu",
+    "KA-C150-kattu",
+    "KA-C150-holi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch150.txt",
+  "json": "kannada/narration/ch150.json",
+  "textHash": "fnv1a64:c91360873efe2d8e",
+  "jsonHash": "fnv1a64:ac16963dfadba08a",
+  "findings": []
+}

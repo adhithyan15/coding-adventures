@@ -1,0 +1,11 @@
+{
+  "id": "KA-C122-motte",
+  "pathSegment": "KA-PATH-122-THINGS122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-122-THINGS122",
+      "order": 2
+    }
+  ]
+}

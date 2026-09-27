@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:3ba94396b9ad1e22",
+  "lessonIds": [
+    "KA-C140-gadda",
+    "KA-C140-pada",
+    "KA-C140-udda",
+    "KA-C140-gidda",
+    "KA-C140-bhara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch140.txt",
+  "json": "kannada/narration/ch140.json",
+  "textHash": "fnv1a64:c26e6563b45d4667",
+  "jsonHash": "fnv1a64:970cc5055e869b37",
+  "findings": []
+}

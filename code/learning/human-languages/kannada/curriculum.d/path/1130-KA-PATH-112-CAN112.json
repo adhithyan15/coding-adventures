@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-112-CAN112",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "KA-EXT-112-CAN112"
+  ],
+  "after": []
+}
