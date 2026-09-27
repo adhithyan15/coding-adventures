@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:bad289dab27d1d93",
+  "lessonIds": [
+    "JA-C102-sentakumono",
+    "JA-C102-senzai",
+    "JA-C102-yunomi",
+    "JA-C102-kama",
+    "JA-C102-manaita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch102.txt",
+  "json": "japanese/narration/ch102.json",
+  "textHash": "fnv1a64:88fce72a9516dec2",
+  "jsonHash": "fnv1a64:42c8693588a506d6",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C83-dono",
+  "pathSegment": "JA-PATH-83-DEF83",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-83-DEF83",
+      "order": 2
+    }
+  ]
+}

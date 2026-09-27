@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 81,
+  "title": "Area around, Foot of a mountain, City, Between, Region",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:8f3713682881b875",
+  "lessons": [
+    {
+      "id": "JA-C81-atari",
+      "sequence": 4750,
+      "title": "あたり (atari) — the area around",
+      "headword": "あたり",
+      "romanization": "atari",
+      "gloss": "the area around",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:585baecd8aee291f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a shortcut, then the Japanese for the surroundings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あたり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あたり — atari — \"the area around\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say atari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *atari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a shortcut, then the Japanese for the surroundings, then say atari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a shortcut, then the Japanese for the surroundings, then say *atari* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あたり (atari) mean? (\"The area around\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C81-atari-type",
+              "prompt": "Type the Japanese for 'the area around'.",
+              "assesses": [
+                "JA-LEX-C81-LOC81-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あたり",
+                "atari"
+              ],
+              "feedback": {
+                "correct": "Right: あたり (atari) is 'the area around'.",
+                "incorrect": "'the area around' is あたり (atari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C81-fumoto",
+      "sequence": 4760,
+      "title": "ふもと (fumoto) — the foot of a mountain",
+      "headword": "ふもと",
+      "romanization": "fumoto",
+      "gloss": "the foot of a mountain",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1092ac4b5de2376b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the surroundings, then the Japanese for the area around."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふもと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふもと — fumoto — \"the foot of a mountain\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fumoto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fumoto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fumoto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fumoto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say fumoto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *fumoto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the surroundings, then the Japanese for the area around, then say fumoto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the surroundings, then the Japanese for the area around, then say *fumoto* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふもと (fumoto) mean? (\"The foot of a mountain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C81-fumoto-type",
+              "prompt": "Type the Japanese for 'the foot of a mountain'.",
+              "assesses": [
+                "JA-LEX-C81-LOC81-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふもと",
+                "fumoto"
+              ],
+              "feedback": {
+                "correct": "Right: ふもと (fumoto) is 'the foot of a mountain'.",
+                "incorrect": "'the foot of a mountain' is ふもと (fumoto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C81-tokai",
+      "sequence": 4770,
+      "title": "とかい (tokai) — the city",
+      "headword": "とかい",
+      "romanization": "tokai",
+      "gloss": "the city",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fa0982717b8998e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the area around, then the Japanese for the foot of a mountain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とかい — tokai — \"the city\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tokai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tokai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the area around, then the Japanese for the foot of a mountain, then say tokai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the area around, then the Japanese for the foot of a mountain, then say *tokai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とかい (tokai) mean? (\"The city\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C81-tokai-type",
+              "prompt": "Type the Japanese for 'the city'.",
+              "assesses": [
+                "JA-LEX-C81-LOC81-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とかい",
+                "tokai"
+              ],
+              "feedback": {
+                "correct": "Right: とかい (tokai) is 'the city'.",
+                "incorrect": "'the city' is とかい (tokai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C81-aida",
+      "sequence": 4780,
+      "title": "あいだ (aida) — between",
+      "headword": "あいだ",
+      "romanization": "aida",
+      "gloss": "between",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aab78b48d964122",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the foot of a mountain, then the Japanese for the city."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あいだ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あいだ — aida — \"between\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aida, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aida*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say aida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *aida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the foot of a mountain, then the Japanese for the city, then say aida again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the foot of a mountain, then the Japanese for the city, then say *aida* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あいだ (aida) mean? (\"Between\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C81-aida-type",
+              "prompt": "Type the Japanese for 'between'.",
+              "assesses": [
+                "JA-LEX-C81-LOC81-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あいだ",
+                "aida"
+              ],
+              "feedback": {
+                "correct": "Right: あいだ (aida) is 'between'.",
+                "incorrect": "'between' is あいだ (aida)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C81-chihou",
+      "sequence": 4790,
+      "title": "ちほう (chihou) — a region",
+      "headword": "ちほう",
+      "romanization": "chihou",
+      "gloss": "a region",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be0b0e2083aa8527",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the city, then the Japanese for between."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちほう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちほう — chihou — \"a region\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chihou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chihou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chihou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chihou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chihou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chihou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the city, then the Japanese for between, then say chihou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the city, then the Japanese for between, then say *chihou* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちほう (chihou) mean? (\"A region\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C81-chihou-type",
+              "prompt": "Type the Japanese for 'a region'.",
+              "assesses": [
+                "JA-LEX-C81-LOC81-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちほう",
+                "chihou"
+              ],
+              "feedback": {
+                "correct": "Right: ちほう (chihou) is 'a region'.",
+                "incorrect": "'a region' is ちほう (chihou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R81-first-pass-times-of-day-and-dates",
+      "sequence": 4800,
+      "title": "Times of day and dates — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 72-76",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0577995840b7befb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for between and a region."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the afternoon, the middle of the night, early morning, the evening meal, the morning sun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the afternoon, the middle of the night, early morning, the evening meal, the morning sun]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sunset, tonight, the day after tomorrow, the day before yesterday, every morning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sunset, tonight, the day after tomorrow, the day before yesterday, every morning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every week, the weekend, the end, on the way, half past",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every week, the weekend, the end, on the way, half past]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "every year, this year, this week, the year before last, oversleeping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: every year, this year, this week, the year before last, oversleeping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "midnight, a whole week, one whole day, half a day, the first of the month",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: midnight, a whole week, one whole day, half a day, the first of the month]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The afternoon? (ごご, gogo.) The middle of the night? (よなか, yonaka.) Early morning? (あさがた, asagata.) The evening meal? (ゆうはん, yuuhan.) The morning sun? (あさひ, asahi.) Sunset? (ひのいり, hinoiri.) Tonight? (こんや, konya.) The day after tomorrow? (あさって, asatte.) The day before yesterday? (おととい, ototoi.) Every morning? (まいあさ, maiasa.) Every week? (まいしゅう, maishuu.) The weekend? (しゅうまつ, shuumatsu.) The end? (おわり, owari.) On the way? (とちゅう, tochuu.) Half past? (はん, han.) Every year? (まいとし, maitoshi.) This year? (ことし, kotoshi.) This week? (こんしゅう, konshuu.) The year before last? (おととし, ototoshi.) Oversleeping? (あさねぼう, asanebou.) Midnight? (まよなか, mayonaka.) A whole week? (いっしゅうかん, isshuukan.) One whole day? (いちにち, ichinichi.) Half a day? (はんにち, hannichi.) The first of the month? (ついたち, tsuitachi.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R81-first-pass-times-of-day-and-dates-type",
+              "prompt": "Type the Japanese for 'between'.",
+              "assesses": [
+                "JA-LEX-C81-LOC81-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あいだ",
+                "aida"
+              ],
+              "feedback": {
+                "correct": "Right: あいだ (aida) is 'between'.",
+                "incorrect": "'between' is あいだ (aida)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R81-second-pass-places-and-directions",
+      "sequence": 4810,
+      "title": "Places and directions — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 77-81",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:809936bf34ae49bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for the second of the month and the third of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the second of the month, the third of the month, the fourth of the month, the fifth of the month; some day, the sixth of the month",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the second of the month, the third of the month, the fourth of the month, the fifth of the month; some day, the sixth of the month]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where, nearby, behind, beside, the very middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where, nearby, behind, beside, the very middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other side, this side of, a corner, stairs, a corridor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other side, this side of, a corner, stairs, a corridor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crossroads, a traffic light, a direction, a shortcut, the surroundings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crossroads, a traffic light, a direction, a shortcut, the surroundings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the area around, the foot of a mountain, the city, between, a region",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the area around, the foot of a mountain, the city, between, a region]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second of the month? (ふつか, futsuka.) The third of the month? (みっか, mikka.) The fourth of the month? (よっか, yokka.) The fifth of the month; some day? (いつか, itsuka.) The sixth of the month? (むいか, muika.) Where? (どこ, doko.) Nearby? (ちかく, chikaku.) Behind? (うしろ, ushiro.) Beside? (よこ, yoko.) The very middle? (まんなか, mannaka.) The other side? (むこう, mukou.) This side of? (てまえ, temae.) A corner? (かど, kado.) Stairs? (かいだん, kaidan.) A corridor? (ろうか, rouka.) A crossroads? (こうさてん, kousaten.) A traffic light? (しんごう, shingou.) A direction? (ほうがく, hougaku.) A shortcut? (ちかみち, chikamichi.) The surroundings? (まわり, mawari.) The area around? (あたり, atari.) The foot of a mountain? (ふもと, fumoto.) The city? (とかい, tokai.) Between? (あいだ, aida.) A region? (ちほう, chihou.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R81-second-pass-places-and-directions-type",
+              "prompt": "Type the Japanese for 'the second of the month'.",
+              "assesses": [
+                "JA-LEX-C77-TIME77-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふつか",
+                "futsuka"
+              ],
+              "feedback": {
+                "correct": "Right: ふつか (futsuka) is 'the second of the month'.",
+                "incorrect": "'the second of the month' is ふつか (futsuka)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

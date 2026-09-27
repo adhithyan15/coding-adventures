@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Wanted, Wish, To wish for, Request, Desire",
+  "label": "ch:ja-wanted-wish-to-wish-for-request-desire",
+  "canDo": "I can say wanted, a wish, to wish for, a request and a desire.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "JA-C92-yokubou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say wanted, a wish, to wish for, a request and a desire.",
+    "assesses": [
+      "JA-LEX-C92-WANT92-03",
+      "JA-LEX-C92-WANT92-04",
+      "JA-LEX-C92-WANT92-05"
+    ]
+  }
+}

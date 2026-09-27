@@ -1,0 +1,11 @@
+{
+  "id": "JA-C108-risu",
+  "pathSegment": "JA-PATH-108-THINGS108",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-108-THINGS108",
+      "order": 3
+    }
+  ]
+}

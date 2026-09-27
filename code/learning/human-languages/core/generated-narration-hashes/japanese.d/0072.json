@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:23a03461a56ef69c",
+  "lessonIds": [
+    "JA-C72-gogo",
+    "JA-C72-yonaka",
+    "JA-C72-asagata",
+    "JA-C72-yuuhan",
+    "JA-C72-asahi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch72.txt",
+  "json": "japanese/narration/ch72.json",
+  "textHash": "fnv1a64:74c9db00f16c80c7",
+  "jsonHash": "fnv1a64:5e30a89dd5868441",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:75d5179af0c48fc3",
+  "lessonIds": [
+    "JA-C111-hitai",
+    "JA-C111-kangoshi",
+    "JA-C111-shiro",
+    "JA-C111-douro",
+    "JA-C111-hodou",
+    "JA-R111-first-pass-things-at-home-and-outdoors",
+    "JA-R111-second-pass-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch111.txt",
+  "json": "japanese/narration/ch111.json",
+  "textHash": "fnv1a64:7bffd4544d95f9eb",
+  "jsonHash": "fnv1a64:4315726d2140346a",
+  "findings": []
+}

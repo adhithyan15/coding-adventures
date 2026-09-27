@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:95d36fa4274ef95c",
+  "lessonIds": [
+    "JA-C124-kayui",
+    "JA-C124-kusai",
+    "JA-C124-mushiatsui",
+    "JA-C124-okashii",
+    "JA-C124-omoshiroi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch124.txt",
+  "json": "japanese/narration/ch124.json",
+  "textHash": "fnv1a64:b62fbf94bd017e33",
+  "jsonHash": "fnv1a64:65357656fadd5024",
+  "findings": []
+}

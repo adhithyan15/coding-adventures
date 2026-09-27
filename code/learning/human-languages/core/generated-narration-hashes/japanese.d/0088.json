@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:b784269874114c2e",
+  "lessonIds": [
+    "JA-C88-utsusu",
+    "JA-C88-tamesu",
+    "JA-C88-modosu",
+    "JA-C88-nokosu",
+    "JA-C88-taosu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch88.txt",
+  "json": "japanese/narration/ch88.json",
+  "textHash": "fnv1a64:72096c57638d2dda",
+  "jsonHash": "fnv1a64:6e1298c19f788e9c",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-89-ACT89",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-89-ACT89"
+  ],
+  "after": []
+}

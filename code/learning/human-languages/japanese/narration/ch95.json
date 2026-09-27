@@ -1,0 +1,738 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 95,
+  "title": "Possible, Good at, Poor at, Belongings, Rich person",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:37046902c0d11db0",
+  "lessons": [
+    {
+      "id": "JA-C95-kanou",
+      "sequence": 5650,
+      "title": "かのう (kanou) — possible",
+      "headword": "かのう",
+      "romanization": "kanou",
+      "gloss": "possible",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7836a11cbf8c802a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for something to look forward to, then the Japanese for love."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かのう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かのう — kanou — \"possible\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kanou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kanou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for something to look forward to, then the Japanese for love, then say kanou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for something to look forward to, then the Japanese for love, then say *kanou* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かのう (kanou) mean? (\"Possible\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C95-kanou-type",
+              "prompt": "Type the Japanese for 'possible'.",
+              "assesses": [
+                "JA-LEX-C95-CAN95-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かのう",
+                "kanou"
+              ],
+              "feedback": {
+                "correct": "Right: かのう (kanou) is 'possible'.",
+                "incorrect": "'possible' is かのう (kanou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C95-tokui",
+      "sequence": 5660,
+      "title": "とくい (tokui) — good at",
+      "headword": "とくい",
+      "romanization": "tokui",
+      "gloss": "good at",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f5cdd27b9d89422",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for love, then the Japanese for possible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とくい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とくい — tokui — \"good at\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tokui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tokui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for love, then the Japanese for possible, then say tokui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for love, then the Japanese for possible, then say *tokui* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とくい (tokui) mean? (\"Good at\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C95-tokui-type",
+              "prompt": "Type the Japanese for 'good at'.",
+              "assesses": [
+                "JA-LEX-C95-CAN95-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とくい",
+                "tokui"
+              ],
+              "feedback": {
+                "correct": "Right: とくい (tokui) is 'good at'.",
+                "incorrect": "'good at' is とくい (tokui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C95-nigate",
+      "sequence": 5670,
+      "title": "にがて (nigate) — poor at",
+      "headword": "にがて",
+      "romanization": "nigate",
+      "gloss": "poor at",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5976f90e2ac17d9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for possible, then the Japanese for good at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にがて",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にがて — nigate — \"poor at\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nigate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nigate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for possible, then the Japanese for good at, then say nigate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for possible, then the Japanese for good at, then say *nigate* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にがて (nigate) mean? (\"Poor at\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C95-nigate-type",
+              "prompt": "Type the Japanese for 'poor at'.",
+              "assesses": [
+                "JA-LEX-C95-CAN95-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にがて",
+                "nigate"
+              ],
+              "feedback": {
+                "correct": "Right: にがて (nigate) is 'poor at'.",
+                "incorrect": "'poor at' is にがて (nigate)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C95-mochimono",
+      "sequence": 5680,
+      "title": "もちもの (mochimono) — belongings",
+      "headword": "もちもの",
+      "romanization": "mochimono",
+      "gloss": "belongings",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:026adc47bcdc2024",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for good at, then the Japanese for poor at."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read on sight:"
+            },
+            {
+              "kind": "speech",
+              "text": "こんにちは."
+            },
+            {
+              "kind": "speech",
+              "text": "ありがとう."
+            },
+            {
+              "kind": "speech",
+              "text": "さようなら."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もちもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もちもの — mochimono — \"belongings\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochimono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochimono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochimono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochimono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mochimono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mochimono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for good at, then the Japanese for poor at, then say mochimono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for good at, then the Japanese for poor at, then say *mochimono* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もちもの (mochimono) mean? (\"Belongings\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C95-mochimono-type",
+              "prompt": "Type the Japanese for 'belongings'.",
+              "assesses": [
+                "JA-LEX-C95-CAN95-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もちもの",
+                "mochimono"
+              ],
+              "feedback": {
+                "correct": "Right: もちもの (mochimono) is 'belongings'.",
+                "incorrect": "'belongings' is もちもの (mochimono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C95-okanemochi",
+      "sequence": 5690,
+      "title": "おかねもち (okanemochi) — a rich person",
+      "headword": "おかねもち",
+      "romanization": "okanemochi",
+      "gloss": "a rich person",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45f0b591ef10a40d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for poor at, then the Japanese for belongings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おかねもち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おかねもち — okanemochi — \"a rich person\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okanemochi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okanemochi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okanemochi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okanemochi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say okanemochi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *okanemochi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for poor at, then the Japanese for belongings, then say okanemochi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for poor at, then the Japanese for belongings, then say *okanemochi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おかねもち (okanemochi) mean? (\"A rich person\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C95-okanemochi-type",
+              "prompt": "Type the Japanese for 'a rich person'.",
+              "assesses": [
+                "JA-LEX-C95-CAN95-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おかねもち",
+                "okanemochi"
+              ],
+              "feedback": {
+                "correct": "Right: おかねもち (okanemochi) is 'a rich person'.",
+                "incorrect": "'a rich person' is おかねもち (okanemochi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

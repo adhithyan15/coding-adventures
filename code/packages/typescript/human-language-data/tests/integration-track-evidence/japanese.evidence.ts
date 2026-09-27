@@ -12,9 +12,11 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
   id: "japanese",
   assert({ curriculumGapReport: report, lessons }): void {
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    expect(japanese).toHaveLength(427);
+    // 427 -> 734: chapters 72-130 (295 word lessons and twelve reviews) take
+    // Japanese to A1.
+    expect(japanese).toHaveLength(734);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 71 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 130 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

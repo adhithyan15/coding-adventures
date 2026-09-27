@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C108-kai",
+    "language": "japanese",
+    "chapter": 108,
+    "sequence": 6400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b74c175158e88407"
+  },
+  "findings": []
+}

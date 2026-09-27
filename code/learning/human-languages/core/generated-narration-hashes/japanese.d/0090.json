@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:867e93cbf70e6876",
+  "lessonIds": [
+    "JA-C90-odoroku",
+    "JA-C90-todoku",
+    "JA-C90-itadaku",
+    "JA-C90-kayou",
+    "JA-C90-tsutsumu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch90.txt",
+  "json": "japanese/narration/ch90.json",
+  "textHash": "fnv1a64:898c0440eacfd770",
+  "jsonHash": "fnv1a64:94f6e6807a6652ca",
+  "findings": []
+}

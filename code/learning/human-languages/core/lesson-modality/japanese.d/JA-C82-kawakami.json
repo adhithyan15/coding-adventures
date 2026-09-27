@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C82-kawakami",
+    "language": "japanese",
+    "chapter": 82,
+    "sequence": 4940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f035ac3f37806add"
+  },
+  "findings": []
+}

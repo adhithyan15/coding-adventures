@@ -1,0 +1,11 @@
+{
+  "id": "JA-C96-sainou",
+  "pathSegment": "JA-PATH-96-CAN96",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-96-CAN96",
+      "order": 1
+    }
+  ]
+}

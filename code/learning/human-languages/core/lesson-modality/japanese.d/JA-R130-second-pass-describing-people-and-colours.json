@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R130-second-pass-describing-people-and-colours",
+    "language": "japanese",
+    "chapter": 130,
+    "sequence": 7710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:785da8d0b69581e8"
+  },
+  "findings": []
+}

@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 111,
+  "title": "Forehead, Nurse, Castle, Road, Pavement",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:75d5179af0c48fc3",
+  "lessons": [
+    {
+      "id": "JA-C111-hitai",
+      "sequence": 6550,
+      "title": "ひたい (hitai) — the forehead",
+      "headword": "ひたい",
+      "romanization": "hitai",
+      "gloss": "the forehead",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec9c0946926104da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a heel, then the Japanese for a shin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひたい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひたい — hitai — \"the forehead\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hitai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hitai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a heel, then the Japanese for a shin, then say hitai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a heel, then the Japanese for a shin, then say *hitai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひたい (hitai) mean? (\"The forehead\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C111-hitai-type",
+              "prompt": "Type the Japanese for 'the forehead'.",
+              "assesses": [
+                "JA-LEX-C111-THINGS111-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひたい",
+                "hitai"
+              ],
+              "feedback": {
+                "correct": "Right: ひたい (hitai) is 'the forehead'.",
+                "incorrect": "'the forehead' is ひたい (hitai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C111-kangoshi",
+      "sequence": 6560,
+      "title": "かんごし (kangoshi) — a nurse",
+      "headword": "かんごし",
+      "romanization": "kangoshi",
+      "gloss": "a nurse",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4c29205f37093b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a shin, then the Japanese for the forehead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かんごし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんごし — kangoshi — \"a nurse\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kangoshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kangoshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kangoshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kangoshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kangoshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kangoshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a shin, then the Japanese for the forehead, then say kangoshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a shin, then the Japanese for the forehead, then say *kangoshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かんごし (kangoshi) mean? (\"A nurse\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C111-kangoshi-type",
+              "prompt": "Type the Japanese for 'a nurse'.",
+              "assesses": [
+                "JA-LEX-C111-THINGS111-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かんごし",
+                "kangoshi"
+              ],
+              "feedback": {
+                "correct": "Right: かんごし (kangoshi) is 'a nurse'.",
+                "incorrect": "'a nurse' is かんごし (kangoshi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C111-shiro",
+      "sequence": 6570,
+      "title": "しろ (shiro) — a castle; the colour white",
+      "headword": "しろ",
+      "romanization": "shiro",
+      "gloss": "a castle; the colour white",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c518f6d03cd727d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the forehead, then the Japanese for a nurse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しろ — shiro — \"a castle; the colour white\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shiro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shiro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the forehead, then the Japanese for a nurse, then say shiro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the forehead, then the Japanese for a nurse, then say *shiro* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しろ (shiro) mean? (\"A castle; the colour white\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C111-shiro-type",
+              "prompt": "Type the Japanese for 'a castle'.",
+              "assesses": [
+                "JA-LEX-C111-THINGS111-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しろ",
+                "shiro"
+              ],
+              "feedback": {
+                "correct": "Right: しろ (shiro) is 'a castle'.",
+                "incorrect": "'a castle' is しろ (shiro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C111-douro",
+      "sequence": 6580,
+      "title": "どうろ (douro) — a road, a highway",
+      "headword": "どうろ",
+      "romanization": "douro",
+      "gloss": "a road, a highway",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e5af4be10294b71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a nurse, then the Japanese for a castle; the colour white."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どうろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どうろ — douro — \"a road, a highway\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "douro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *douro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "douro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *douro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say douro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *douro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a nurse, then the Japanese for a castle; the colour white, then say douro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a nurse, then the Japanese for a castle; the colour white, then say *douro* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どうろ (douro) mean? (\"A road, a highway\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C111-douro-type",
+              "prompt": "Type the Japanese for 'a road, a highway'.",
+              "assesses": [
+                "JA-LEX-C111-THINGS111-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どうろ",
+                "douro"
+              ],
+              "feedback": {
+                "correct": "Right: どうろ (douro) is 'a road, a highway'.",
+                "incorrect": "'a road, a highway' is どうろ (douro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C111-hodou",
+      "sequence": 6590,
+      "title": "ほどう (hodou) — a pavement",
+      "headword": "ほどう",
+      "romanization": "hodou",
+      "gloss": "a pavement",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:332d75302ca194fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a castle; the colour white, then the Japanese for a road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほどう — hodou — \"a pavement\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hodou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hodou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hodou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hodou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hodou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hodou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a castle; the colour white, then the Japanese for a road, then say hodou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a castle; the colour white, then the Japanese for a road, then say *hodou* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほどう (hodou) mean? (\"A pavement\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C111-hodou-type",
+              "prompt": "Type the Japanese for 'a pavement'.",
+              "assesses": [
+                "JA-LEX-C111-THINGS111-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほどう",
+                "hodou"
+              ],
+              "feedback": {
+                "correct": "Right: ほどう (hodou) is 'a pavement'.",
+                "incorrect": "'a pavement' is ほどう (hodou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R111-first-pass-things-at-home-and-outdoors",
+      "sequence": 6600,
+      "title": "Things at home and outdoors — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 102-106",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54c0ce0ef439d795",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a road and a pavement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the laundry, detergent, a teacup, a rice pot, a chopping board",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the laundry, detergent, a teacup, a rice pot, a chopping board]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ladle, the water supply, a kettle, a tray, a can",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ladle, the water supply, a kettle, a tray, a can]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a parcel, an envelope, a gift, a ball, a bell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a parcel, an envelope, a gift, a ball, a bell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hakama, a cotton kimono, a flame, a lamp, light",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hakama, a cotton kimono, a flame, a lamp, light]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a gate, a wood, a bud, a rock, a pebble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a gate, a wood, a bud, a rock, a pebble]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The laundry? (せんたくもの, sentakumono.) Detergent? (せんざい, senzai.) A teacup? (ゆのみ, yunomi.) A rice pot? (かま, kama.) A chopping board? (まないた, manaita.) A ladle? (おたま, otama.) The water supply? (すいどう, suidou.) A kettle? (やかん, yakan.) A tray? (おぼん, obon.) A can? (かん, kan.) A parcel? (つつみ, tsutsumi.) An envelope? (ふうとう, fuutou.) A gift? (おくりもの, okurimono.) A ball? (まり, mari.) A bell? (かね, kane.) A hakama? (はかま, hakama.) A cotton kimono? (ゆかた, yukata.) A flame? (ほのお, honoo.) A lamp? (あかり, akari.) Light? (ひかり, hikari.) A gate? (もん, mon.) A wood? (はやし, hayashi.) A bud? (つぼみ, tsubomi.) A rock? (いわ, iwa.) A pebble? (こいし, koishi.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R111-first-pass-things-at-home-and-outdoors-type",
+              "prompt": "Type the Japanese for 'a road, a highway'.",
+              "assesses": [
+                "JA-LEX-C111-THINGS111-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どうろ",
+                "douro"
+              ],
+              "feedback": {
+                "correct": "Right: どうろ (douro) is 'a road, a highway'.",
+                "incorrect": "'a road, a highway' is どうろ (douro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R111-second-pass-nature-and-animals",
+      "sequence": 6610,
+      "title": "Nature and animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 107-111",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:952cb253b79bc683",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for mud and dust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mud, dust, foam, dew; the rainy season, a slope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mud, dust, foam, dew; the rainy season, a slope]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shellfish, a sea bream, a shark, a squirrel, a wild boar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shellfish, a sea bream, a shark, a squirrel, a wild boar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wild duck, an eagle, a hawk, an owl, a silkworm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wild duck, an eagle, a hawk, an owl, a silkworm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fly, a snail, a tail, a heel, a shin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fly, a snail, a tail, a heel, a shin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the forehead, a nurse, a castle; the colour white, a road, a pavement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the forehead, a nurse, a castle; the colour white, a road, a pavement]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Mud? (どろ, doro.) Dust? (ほこり, hokori.) Foam? (あわ, awa.) Dew; the rainy season? (つゆ, tsuyu.) A slope? (さか, saka.) A shellfish? (かい, kai.) A sea bream? (たい, tai.) A shark? (さめ, same.) A squirrel? (りす, risu.) A wild boar? (いのしし, inoshishi.) A wild duck? (かも, kamo.) An eagle? (わし, washi.) A hawk? (たか, taka.) An owl? (ふくろう, fukurou.) A silkworm? (かいこ, kaiko.) A fly? (はえ, hae.) A snail? (かたつむり, katatsumuri.) A tail? (しっぽ, shippo.) A heel? (かかと, kakato.) A shin? (すね, sune.) The forehead? (ひたい, hitai.) A nurse? (かんごし, kangoshi.) A castle; the colour white? (しろ, shiro.) A road? (どうろ, douro.) A pavement? (ほどう, hodou.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R111-second-pass-nature-and-animals-type",
+              "prompt": "Type the Japanese for 'mud'.",
+              "assesses": [
+                "JA-LEX-C107-THINGS107-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どろ",
+                "doro"
+              ],
+              "feedback": {
+                "correct": "Right: どろ (doro) is 'mud'.",
+                "incorrect": "'mud' is どろ (doro)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

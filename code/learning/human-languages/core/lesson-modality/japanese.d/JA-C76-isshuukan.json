@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C76-isshuukan",
+    "language": "japanese",
+    "chapter": 76,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:699e60991f5196d7"
+  },
+  "findings": []
+}

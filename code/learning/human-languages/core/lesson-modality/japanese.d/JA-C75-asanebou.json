@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C75-asanebou",
+    "language": "japanese",
+    "chapter": 75,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dac6727886f7554f"
+  },
+  "findings": []
+}

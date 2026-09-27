@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:6506829b404f82b1",
+  "lessonIds": [
+    "JA-C123-otonashii",
+    "JA-C123-natsukashii",
+    "JA-C123-kuyashii",
+    "JA-C123-ayashii",
+    "JA-C123-kuwashii"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch123.txt",
+  "json": "japanese/narration/ch123.json",
+  "textHash": "fnv1a64:daf26cf742eb4fb4",
+  "jsonHash": "fnv1a64:76c75b13c4d2a28b",
+  "findings": []
+}

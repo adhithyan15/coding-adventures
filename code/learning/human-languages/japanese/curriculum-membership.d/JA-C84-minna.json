@@ -1,0 +1,11 @@
+{
+  "id": "JA-C84-minna",
+  "pathSegment": "JA-PATH-84-DEF84",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-84-DEF84",
+      "order": 2
+    }
+  ]
+}

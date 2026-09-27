@@ -1,0 +1,11 @@
+{
+  "id": "JA-C116-funa",
+  "pathSegment": "JA-PATH-116-THINGS116",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-116-THINGS116",
+      "order": 1
+    }
+  ]
+}

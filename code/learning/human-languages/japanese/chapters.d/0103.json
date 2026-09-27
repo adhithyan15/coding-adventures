@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Ladle, Water supply, Kettle, Tray, Can",
+  "label": "ch:ja-ladle-water-supply-kettle-tray-can",
+  "canDo": "I can say a ladle, the water supply, a kettle, a tray and a can.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C103-kan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say a ladle, the water supply, a kettle, a tray and a can.",
+    "assesses": [
+      "JA-LEX-C103-THINGS103-03",
+      "JA-LEX-C103-THINGS103-04",
+      "JA-LEX-C103-THINGS103-05"
+    ]
+  }
+}

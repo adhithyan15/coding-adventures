@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:acb868dd6931517e",
+  "lessonIds": [
+    "JA-C96-shikaku",
+    "JA-C96-sainou",
+    "JA-C96-waza",
+    "JA-C96-yoyuu",
+    "JA-C96-tsugou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch96.txt",
+  "json": "japanese/narration/ch96.json",
+  "textHash": "fnv1a64:db62726e331c9834",
+  "jsonHash": "fnv1a64:507984bc048ff5c5",
+  "findings": []
+}

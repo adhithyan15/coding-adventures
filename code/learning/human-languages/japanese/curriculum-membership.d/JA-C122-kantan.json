@@ -1,0 +1,11 @@
+{
+  "id": "JA-C122-kantan",
+  "pathSegment": "JA-PATH-122-QUAL122",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-122-QUAL122",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Amazing, Terrible, Young, Very young, Plentiful",
+  "label": "ch:ja-amazing-terrible-young-very-young-plentiful",
+  "canDo": "I can say amazing, terrible, young, very young and plentiful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "JA-C125-yutaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say amazing, terrible, young, very young and plentiful.",
+    "assesses": [
+      "JA-LEX-C125-QUAL125-03",
+      "JA-LEX-C125-QUAL125-04",
+      "JA-LEX-C125-QUAL125-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C117-nomi",
+  "pathSegment": "JA-PATH-117-THINGS117",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-117-THINGS117",
+      "order": 1
+    }
+  ]
+}

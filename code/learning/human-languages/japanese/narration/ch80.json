@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 80,
+  "title": "Crossroads, Traffic light, Direction, Shortcut, Surroundings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0bdc56a0dc4fef33",
+  "lessons": [
+    {
+      "id": "JA-C80-kousaten",
+      "sequence": 4700,
+      "title": "こうさてん (kousaten) — a crossroads",
+      "headword": "こうさてん",
+      "romanization": "kousaten",
+      "gloss": "a crossroads",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac18eed1fdbf0cb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for stairs, then the Japanese for a corridor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうさてん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうさてん — kousaten — \"a crossroads\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kousaten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kousaten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kousaten, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kousaten*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kousaten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kousaten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for stairs, then the Japanese for a corridor, then say kousaten again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for stairs, then the Japanese for a corridor, then say *kousaten* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうさてん (kousaten) mean? (\"A crossroads\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C80-kousaten-type",
+              "prompt": "Type the Japanese for 'a crossroads'.",
+              "assesses": [
+                "JA-LEX-C80-LOC80-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうさてん",
+                "kousaten"
+              ],
+              "feedback": {
+                "correct": "Right: こうさてん (kousaten) is 'a crossroads'.",
+                "incorrect": "'a crossroads' is こうさてん (kousaten)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C80-shingou",
+      "sequence": 4710,
+      "title": "しんごう (shingou) — a traffic light",
+      "headword": "しんごう",
+      "romanization": "shingou",
+      "gloss": "a traffic light",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c07a94d56d66aa8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a corridor, then the Japanese for a crossroads."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しんごう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんごう — shingou — \"a traffic light\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shingou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shingou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shingou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shingou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shingou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shingou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a corridor, then the Japanese for a crossroads, then say shingou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a corridor, then the Japanese for a crossroads, then say *shingou* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しんごう (shingou) mean? (\"A traffic light\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C80-shingou-type",
+              "prompt": "Type the Japanese for 'a traffic light'.",
+              "assesses": [
+                "JA-LEX-C80-LOC80-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しんごう",
+                "shingou"
+              ],
+              "feedback": {
+                "correct": "Right: しんごう (shingou) is 'a traffic light'.",
+                "incorrect": "'a traffic light' is しんごう (shingou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C80-hougaku",
+      "sequence": 4720,
+      "title": "ほうがく (hougaku) — a direction",
+      "headword": "ほうがく",
+      "romanization": "hougaku",
+      "gloss": "a direction",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f01f102805fc83d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a crossroads, then the Japanese for a traffic light."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうがく — hougaku — \"a direction\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hougaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hougaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hougaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hougaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hougaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hougaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a crossroads, then the Japanese for a traffic light, then say hougaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a crossroads, then the Japanese for a traffic light, then say *hougaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうがく (hougaku) mean? (\"A direction\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C80-hougaku-type",
+              "prompt": "Type the Japanese for 'a direction'.",
+              "assesses": [
+                "JA-LEX-C80-LOC80-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうがく",
+                "hougaku"
+              ],
+              "feedback": {
+                "correct": "Right: ほうがく (hougaku) is 'a direction'.",
+                "incorrect": "'a direction' is ほうがく (hougaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C80-chikamichi",
+      "sequence": 4730,
+      "title": "ちかみち (chikamichi) — a shortcut",
+      "headword": "ちかみち",
+      "romanization": "chikamichi",
+      "gloss": "a shortcut",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b868938f36145034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a traffic light, then the Japanese for a direction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちかみち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちかみち — chikamichi — \"a shortcut\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chikamichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chikamichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chikamichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chikamichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chikamichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chikamichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a traffic light, then the Japanese for a direction, then say chikamichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a traffic light, then the Japanese for a direction, then say *chikamichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちかみち (chikamichi) mean? (\"A shortcut\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C80-chikamichi-type",
+              "prompt": "Type the Japanese for 'a shortcut'.",
+              "assesses": [
+                "JA-LEX-C80-LOC80-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちかみち",
+                "chikamichi"
+              ],
+              "feedback": {
+                "correct": "Right: ちかみち (chikamichi) is 'a shortcut'.",
+                "incorrect": "'a shortcut' is ちかみち (chikamichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C80-mawari",
+      "sequence": 4740,
+      "title": "まわり (mawari) — the surroundings",
+      "headword": "まわり",
+      "romanization": "mawari",
+      "gloss": "the surroundings",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2779add7fbed567f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a direction, then the Japanese for a shortcut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まわり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まわり — mawari — \"the surroundings\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mawari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mawari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a direction, then the Japanese for a shortcut, then say mawari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a direction, then the Japanese for a shortcut, then say *mawari* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まわり (mawari) mean? (\"The surroundings\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C80-mawari-type",
+              "prompt": "Type the Japanese for 'the surroundings'.",
+              "assesses": [
+                "JA-LEX-C80-LOC80-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まわり",
+                "mawari"
+              ],
+              "feedback": {
+                "correct": "Right: まわり (mawari) is 'the surroundings'.",
+                "incorrect": "'the surroundings' is まわり (mawari)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

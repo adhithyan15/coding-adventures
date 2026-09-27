@@ -1,0 +1,11 @@
+{
+  "id": "JA-C122-taisetsu",
+  "pathSegment": "JA-PATH-122-QUAL122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-122-QUAL122",
+      "order": 1
+    }
+  ]
+}

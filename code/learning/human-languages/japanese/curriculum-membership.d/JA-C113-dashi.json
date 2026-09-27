@@ -1,0 +1,11 @@
+{
+  "id": "JA-C113-dashi",
+  "pathSegment": "JA-PATH-113-THINGS113",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-113-THINGS113",
+      "order": 2
+    }
+  ]
+}

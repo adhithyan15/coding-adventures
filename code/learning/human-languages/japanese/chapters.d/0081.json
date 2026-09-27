@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Area around, Foot of a mountain, City, Between, Region",
+  "label": "ch:ja-area-around-foot-of-a-mountain-city-between-region",
+  "canDo": "I can say the area around, the foot of a mountain, the city, between and a region.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "JA-R81-second-pass-places-and-directions",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say the area around, the foot of a mountain, the city, between and a region.",
+    "assesses": [
+      "JA-LEX-C81-LOC81-03",
+      "JA-LEX-C81-LOC81-04",
+      "JA-LEX-C81-LOC81-05"
+    ]
+  }
+}

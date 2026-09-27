@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:82d1b38dc94c169a",
+  "lessonIds": [
+    "JA-C122-fukai",
+    "JA-C122-taisetsu",
+    "JA-C122-hitsuyou",
+    "JA-C122-kantan",
+    "JA-C122-fukuzatsu"
+  ],
+  "tex": "japanese/book/chapters/ch122-deep-precious-necessary-simple-complicated.tex"
+}

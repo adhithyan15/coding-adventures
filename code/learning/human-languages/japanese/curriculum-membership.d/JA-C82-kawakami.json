@@ -1,0 +1,11 @@
+{
+  "id": "JA-C82-kawakami",
+  "pathSegment": "JA-PATH-82-LOC82",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-82-LOC82",
+      "order": 4
+    }
+  ]
+}

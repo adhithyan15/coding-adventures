@@ -1,0 +1,11 @@
+{
+  "id": "JA-C120-shinsetsu",
+  "pathSegment": "JA-PATH-120-QUAL120",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-120-QUAL120",
+      "order": 3
+    }
+  ]
+}

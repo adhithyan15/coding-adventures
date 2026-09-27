@@ -1,0 +1,11 @@
+{
+  "id": "JA-C95-mochimono",
+  "pathSegment": "JA-PATH-95-CAN95",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-95-CAN95",
+      "order": 3
+    }
+  ]
+}

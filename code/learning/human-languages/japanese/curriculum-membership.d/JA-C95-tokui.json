@@ -1,0 +1,11 @@
+{
+  "id": "JA-C95-tokui",
+  "pathSegment": "JA-PATH-95-CAN95",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-95-CAN95",
+      "order": 1
+    }
+  ]
+}

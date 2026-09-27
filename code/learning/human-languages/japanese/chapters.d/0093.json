@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Long-awaited, Prayer, Order, Candidate, Plan",
+  "label": "ch:ja-long-awaited-prayer-order-candidate-plan",
+  "canDo": "I can say long-awaited, a prayer, an order, a candidate and a plan.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "JA-C93-yotei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say long-awaited, a prayer, an order, a candidate and a plan.",
+    "assesses": [
+      "JA-LEX-C93-WANT93-03",
+      "JA-LEX-C93-WANT93-04",
+      "JA-LEX-C93-WANT93-05"
+    ]
+  }
+}

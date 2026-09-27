@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Flag, Chest of drawers, Sliding door, Heated table, Heating",
+  "label": "ch:ja-flag-chest-of-drawers-sliding-door-heated-table-heating",
+  "canDo": "I can say a flag, a chest of drawers, a sliding door, a heated table and heating.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-R101-second-pass-why-and-things-at-home",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say a flag, a chest of drawers, a sliding door, a heated table and heating.",
+    "assesses": [
+      "JA-LEX-C101-THINGS101-03",
+      "JA-LEX-C101-THINGS101-04",
+      "JA-LEX-C101-THINGS101-05"
+    ]
+  }
+}

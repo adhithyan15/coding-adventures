@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Rope, Ladder, Chain, Cotton wool, Bookshop",
+  "label": "ch:ja-rope-ladder-chain-cotton-wool-bookshop",
+  "canDo": "I can say a rope, a ladder, a chain, cotton wool and a bookshop.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C118-honya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a rope, a ladder, a chain, cotton wool and a bookshop.",
+    "assesses": [
+      "JA-LEX-C118-THINGS118-03",
+      "JA-LEX-C118-THINGS118-04",
+      "JA-LEX-C118-THINGS118-05"
+    ]
+  }
+}

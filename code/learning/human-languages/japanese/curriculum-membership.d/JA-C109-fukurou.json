@@ -1,0 +1,11 @@
+{
+  "id": "JA-C109-fukurou",
+  "pathSegment": "JA-PATH-109-THINGS109",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-109-THINGS109",
+      "order": 3
+    }
+  ]
+}

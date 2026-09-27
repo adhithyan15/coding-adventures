@@ -1,0 +1,11 @@
+{
+  "id": "JA-C116-asari",
+  "pathSegment": "JA-PATH-116-THINGS116",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-116-THINGS116",
+      "order": 4
+    }
+  ]
+}

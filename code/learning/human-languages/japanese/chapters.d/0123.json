@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Well-behaved, Dear, Frustrating, Suspicious, Detailed",
+  "label": "ch:ja-well-behaved-dear-frustrating-suspicious-detailed",
+  "canDo": "I can say well-behaved, dear, frustrating, suspicious and detailed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "JA-C123-kuwashii",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say well-behaved, dear, frustrating, suspicious and detailed.",
+    "assesses": [
+      "JA-LEX-C123-QUAL123-03",
+      "JA-LEX-C123-QUAL123-04",
+      "JA-LEX-C123-QUAL123-05"
+    ]
+  }
+}

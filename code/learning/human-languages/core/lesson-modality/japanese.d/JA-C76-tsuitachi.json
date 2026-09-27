@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C76-tsuitachi",
+    "language": "japanese",
+    "chapter": 76,
+    "sequence": 4540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2942c4221854954"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C90-kayou",
+  "pathSegment": "JA-PATH-90-ACT90",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-90-ACT90",
+      "order": 3
+    }
+  ]
+}

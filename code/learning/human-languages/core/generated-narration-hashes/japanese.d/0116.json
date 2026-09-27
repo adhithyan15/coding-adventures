@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:26593337a30485f3",
+  "lessonIds": [
+    "JA-C116-masu",
+    "JA-C116-funa",
+    "JA-C116-hamachi",
+    "JA-C116-sanma",
+    "JA-C116-asari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch116.txt",
+  "json": "japanese/narration/ch116.json",
+  "textHash": "fnv1a64:bbf9e4502791668e",
+  "jsonHash": "fnv1a64:1325f5890f29d0a5",
+  "findings": []
+}

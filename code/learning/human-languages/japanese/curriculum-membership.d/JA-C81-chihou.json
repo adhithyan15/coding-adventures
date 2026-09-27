@@ -1,0 +1,11 @@
+{
+  "id": "JA-C81-chihou",
+  "pathSegment": "JA-PATH-81-LOC81",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-81-LOC81",
+      "order": 4
+    }
+  ]
+}

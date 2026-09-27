@@ -1,0 +1,11 @@
+{
+  "id": "JA-C78-chikaku",
+  "pathSegment": "JA-PATH-78-LOC78",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-78-LOC78",
+      "order": 1
+    }
+  ]
+}

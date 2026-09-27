@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:c33e771c50dc4184",
+  "lessonIds": [
+    "JA-C118-nawa",
+    "JA-C118-hashigo",
+    "JA-C118-kusari",
+    "JA-C118-wata",
+    "JA-C118-honya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch118.txt",
+  "json": "japanese/narration/ch118.json",
+  "textHash": "fnv1a64:6c584b93c0b58abf",
+  "jsonHash": "fnv1a64:7e04e1ca069e5d5d",
+  "findings": []
+}

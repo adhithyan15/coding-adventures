@@ -1,0 +1,11 @@
+{
+  "id": "JA-C129-yakamashii",
+  "pathSegment": "JA-PATH-129-QUAL129",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-129-QUAL129",
+      "order": 2
+    }
+  ]
+}

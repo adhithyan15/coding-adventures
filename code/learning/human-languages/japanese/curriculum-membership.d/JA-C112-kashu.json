@@ -1,0 +1,11 @@
+{
+  "id": "JA-C112-kashu",
+  "pathSegment": "JA-PATH-112-THINGS112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-112-THINGS112",
+      "order": 2
+    }
+  ]
+}

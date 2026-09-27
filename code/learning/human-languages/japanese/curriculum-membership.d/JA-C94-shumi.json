@@ -1,0 +1,11 @@
+{
+  "id": "JA-C94-shumi",
+  "pathSegment": "JA-PATH-94-LIKE94",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-94-LIKE94",
+      "order": 2
+    }
+  ]
+}

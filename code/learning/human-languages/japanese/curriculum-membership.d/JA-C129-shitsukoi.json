@@ -1,0 +1,11 @@
+{
+  "id": "JA-C129-shitsukoi",
+  "pathSegment": "JA-PATH-129-QUAL129",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-129-QUAL129",
+      "order": 1
+    }
+  ]
+}

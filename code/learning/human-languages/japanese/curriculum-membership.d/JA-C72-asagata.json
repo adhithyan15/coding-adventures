@@ -1,0 +1,11 @@
+{
+  "id": "JA-C72-asagata",
+  "pathSegment": "JA-PATH-72-TIME72",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-72-TIME72",
+      "order": 2
+    }
+  ]
+}

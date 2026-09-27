@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C86-toku",
+    "language": "japanese",
+    "chapter": 86,
+    "sequence": 5110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:040157975ed21102"
+  },
+  "findings": []
+}

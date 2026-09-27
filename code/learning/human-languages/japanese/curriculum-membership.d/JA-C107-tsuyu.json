@@ -1,0 +1,11 @@
+{
+  "id": "JA-C107-tsuyu",
+  "pathSegment": "JA-PATH-107-THINGS107",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-107-THINGS107",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C126-nemutai",
+  "pathSegment": "JA-PATH-126-QUAL126",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-126-QUAL126",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-R111-first-pass-things-at-home-and-outdoors",
+  "pathSegment": "JA-PATH-111-THINGS111",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-111-THINGS111",
+      "order": 5
+    }
+  ]
+}

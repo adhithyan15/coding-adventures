@@ -1,0 +1,11 @@
+{
+  "id": "JA-C82-hantaigawa",
+  "pathSegment": "JA-PATH-82-LOC82",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-82-LOC82",
+      "order": 3
+    }
+  ]
+}

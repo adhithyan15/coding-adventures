@@ -1,0 +1,11 @@
+{
+  "id": "JA-C109-kaiko",
+  "pathSegment": "JA-PATH-109-THINGS109",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-109-THINGS109",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C124-omoshiroi",
+  "pathSegment": "JA-PATH-124-QUAL124",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-124-QUAL124",
+      "order": 4
+    }
+  ]
+}

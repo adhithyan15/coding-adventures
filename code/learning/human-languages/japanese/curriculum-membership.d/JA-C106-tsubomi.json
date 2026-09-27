@@ -1,0 +1,11 @@
+{
+  "id": "JA-C106-tsubomi",
+  "pathSegment": "JA-PATH-106-THINGS106",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-106-THINGS106",
+      "order": 2
+    }
+  ]
+}

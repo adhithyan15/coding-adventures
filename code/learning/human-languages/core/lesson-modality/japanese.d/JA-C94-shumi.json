@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C94-shumi",
+    "language": "japanese",
+    "chapter": 94,
+    "sequence": 5620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec36a4578d73b9a5"
+  },
+  "findings": []
+}

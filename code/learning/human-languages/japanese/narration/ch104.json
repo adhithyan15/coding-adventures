@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 104,
+  "title": "Parcel, Envelope, Gift, Ball, Bell",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f458a9b1f0cffc08",
+  "lessons": [
+    {
+      "id": "JA-C104-tsutsumi",
+      "sequence": 6200,
+      "title": "つつみ (tsutsumi) — a parcel",
+      "headword": "つつみ",
+      "romanization": "tsutsumi",
+      "gloss": "a parcel",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:994cd51b13a481ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a tray, then the Japanese for a can."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つつみ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つつみ — tsutsumi — \"a parcel\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutsumi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutsumi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsutsumi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsutsumi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsutsumi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsutsumi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a tray, then the Japanese for a can, then say tsutsumi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a tray, then the Japanese for a can, then say *tsutsumi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つつみ (tsutsumi) mean? (\"A parcel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C104-tsutsumi-type",
+              "prompt": "Type the Japanese for 'a parcel'.",
+              "assesses": [
+                "JA-LEX-C104-THINGS104-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つつみ",
+                "tsutsumi"
+              ],
+              "feedback": {
+                "correct": "Right: つつみ (tsutsumi) is 'a parcel'.",
+                "incorrect": "'a parcel' is つつみ (tsutsumi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C104-fuutou",
+      "sequence": 6210,
+      "title": "ふうとう (fuutou) — an envelope",
+      "headword": "ふうとう",
+      "romanization": "fuutou",
+      "gloss": "an envelope",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:837f5a4dcb74a29b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a can, then the Japanese for a parcel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふうとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふうとう — fuutou — \"an envelope\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuutou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuutou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuutou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuutou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say fuutou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *fuutou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a can, then the Japanese for a parcel, then say fuutou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a can, then the Japanese for a parcel, then say *fuutou* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふうとう (fuutou) mean? (\"An envelope\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C104-fuutou-type",
+              "prompt": "Type the Japanese for 'an envelope'.",
+              "assesses": [
+                "JA-LEX-C104-THINGS104-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふうとう",
+                "fuutou"
+              ],
+              "feedback": {
+                "correct": "Right: ふうとう (fuutou) is 'an envelope'.",
+                "incorrect": "'an envelope' is ふうとう (fuutou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C104-okurimono",
+      "sequence": 6220,
+      "title": "おくりもの (okurimono) — a gift",
+      "headword": "おくりもの",
+      "romanization": "okurimono",
+      "gloss": "a gift",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:761e7a5fb6605adc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a parcel, then the Japanese for an envelope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おくりもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おくりもの — okurimono — \"a gift\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okurimono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okurimono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okurimono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okurimono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say okurimono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *okurimono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a parcel, then the Japanese for an envelope, then say okurimono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a parcel, then the Japanese for an envelope, then say *okurimono* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おくりもの (okurimono) mean? (\"A gift\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C104-okurimono-type",
+              "prompt": "Type the Japanese for 'a gift'.",
+              "assesses": [
+                "JA-LEX-C104-THINGS104-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おくりもの",
+                "okurimono"
+              ],
+              "feedback": {
+                "correct": "Right: おくりもの (okurimono) is 'a gift'.",
+                "incorrect": "'a gift' is おくりもの (okurimono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C104-mari",
+      "sequence": 6230,
+      "title": "まり (mari) — a ball",
+      "headword": "まり",
+      "romanization": "mari",
+      "gloss": "a ball",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c7a732ea2b1dc0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an envelope, then the Japanese for a gift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まり — mari — \"a ball\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an envelope, then the Japanese for a gift, then say mari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an envelope, then the Japanese for a gift, then say *mari* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まり (mari) mean? (\"A ball\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C104-mari-type",
+              "prompt": "Type the Japanese for 'a ball'.",
+              "assesses": [
+                "JA-LEX-C104-THINGS104-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まり",
+                "mari"
+              ],
+              "feedback": {
+                "correct": "Right: まり (mari) is 'a ball'.",
+                "incorrect": "'a ball' is まり (mari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C104-kane",
+      "sequence": 6240,
+      "title": "かね (kane) — a bell",
+      "headword": "かね",
+      "romanization": "kane",
+      "gloss": "a bell",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7541b15e150c50b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a gift, then the Japanese for a ball."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かね",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かね — kane — \"a bell\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a gift, then the Japanese for a ball, then say kane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a gift, then the Japanese for a ball, then say *kane* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かね (kane) mean? (\"A bell\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C104-kane-type",
+              "prompt": "Type the Japanese for 'a bell'.",
+              "assesses": [
+                "JA-LEX-C104-THINGS104-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かね",
+                "kane"
+              ],
+              "feedback": {
+                "correct": "Right: かね (kane) is 'a bell'.",
+                "incorrect": "'a bell' is かね (kane)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

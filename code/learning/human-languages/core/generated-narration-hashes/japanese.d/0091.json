@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:3c7afcf7a1c5594e",
+  "lessonIds": [
+    "JA-C91-yamu",
+    "JA-C91-shimau",
+    "JA-C91-hirou",
+    "JA-C91-tetsudau",
+    "JA-C91-mayou",
+    "JA-R91-first-pass-this-and-that-and-everyday-actions",
+    "JA-R91-second-pass-more-everyday-actions"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch91.txt",
+  "json": "japanese/narration/ch91.json",
+  "textHash": "fnv1a64:e7d0305eb03e4949",
+  "jsonHash": "fnv1a64:a14da146b37ab399",
+  "findings": []
+}

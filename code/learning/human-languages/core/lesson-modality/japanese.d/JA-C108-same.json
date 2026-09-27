@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C108-same",
+    "language": "japanese",
+    "chapter": 108,
+    "sequence": 6420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77a402efdcc33be9"
+  },
+  "findings": []
+}

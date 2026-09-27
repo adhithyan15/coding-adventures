@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-94-LIKE94",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "before": [],
+  "inline": [
+    "JA-EXT-94-LIKE94"
+  ],
+  "after": []
+}

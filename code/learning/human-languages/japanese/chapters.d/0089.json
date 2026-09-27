@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "To break, To boil, To turn round, To grab, To fold",
+  "label": "ch:ja-to-break-to-boil-to-turn-round-to-grab-to-fold",
+  "canDo": "I can say to break, to boil, to turn round, to grab and to fold.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C89-tatamu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say to break, to boil, to turn round, to grab and to fold.",
+    "assesses": [
+      "JA-LEX-C89-ACT89-03",
+      "JA-LEX-C89-ACT89-04",
+      "JA-LEX-C89-ACT89-05"
+    ]
+  }
+}

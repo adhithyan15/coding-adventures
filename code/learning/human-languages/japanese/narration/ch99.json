@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 99,
+  "title": "Wallet, Walking stick, Bag, Scrubbing brush, Dustpan",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:874079f36a9391fa",
+  "lessons": [
+    {
+      "id": "JA-C99-saifu",
+      "sequence": 5850,
+      "title": "さいふ (saifu) — a wallet",
+      "headword": "さいふ",
+      "romanization": "saifu",
+      "gloss": "a wallet",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9a8a82e12fde8f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the fault, then the Japanese for a reason."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さいふ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいふ — saifu — \"a wallet\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saifu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saifu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saifu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saifu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say saifu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *saifu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the fault, then the Japanese for a reason, then say saifu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the fault, then the Japanese for a reason, then say *saifu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さいふ (saifu) mean? (\"A wallet\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C99-saifu-type",
+              "prompt": "Type the Japanese for 'a wallet'.",
+              "assesses": [
+                "JA-LEX-C99-THINGS99-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さいふ",
+                "saifu"
+              ],
+              "feedback": {
+                "correct": "Right: さいふ (saifu) is 'a wallet'.",
+                "incorrect": "'a wallet' is さいふ (saifu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C99-tsue",
+      "sequence": 5860,
+      "title": "つえ (tsue) — a walking stick",
+      "headword": "つえ",
+      "romanization": "tsue",
+      "gloss": "a walking stick",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b226393da8eaa21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a reason, then the Japanese for a wallet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つえ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つえ — tsue — \"a walking stick\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsue, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsue*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a reason, then the Japanese for a wallet, then say tsue again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a reason, then the Japanese for a wallet, then say *tsue* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つえ (tsue) mean? (\"A walking stick\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C99-tsue-type",
+              "prompt": "Type the Japanese for 'a walking stick'.",
+              "assesses": [
+                "JA-LEX-C99-THINGS99-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つえ",
+                "tsue"
+              ],
+              "feedback": {
+                "correct": "Right: つえ (tsue) is 'a walking stick'.",
+                "incorrect": "'a walking stick' is つえ (tsue)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C99-fukuro",
+      "sequence": 5870,
+      "title": "ふくろ (fukuro) — a bag, a sack",
+      "headword": "ふくろ",
+      "romanization": "fukuro",
+      "gloss": "a bag, a sack",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05969b651672de13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a wallet, then the Japanese for a walking stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふくろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふくろ — fukuro — \"a bag, a sack\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukuro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukuro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukuro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukuro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say fukuro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *fukuro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a wallet, then the Japanese for a walking stick, then say fukuro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a wallet, then the Japanese for a walking stick, then say *fukuro* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふくろ (fukuro) mean? (\"A bag, a sack\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C99-fukuro-type",
+              "prompt": "Type the Japanese for 'a bag, a sack'.",
+              "assesses": [
+                "JA-LEX-C99-THINGS99-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふくろ",
+                "fukuro"
+              ],
+              "feedback": {
+                "correct": "Right: ふくろ (fukuro) is 'a bag, a sack'.",
+                "incorrect": "'a bag, a sack' is ふくろ (fukuro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C99-tawashi",
+      "sequence": 5880,
+      "title": "たわし (tawashi) — a scrubbing brush",
+      "headword": "たわし",
+      "romanization": "tawashi",
+      "gloss": "a scrubbing brush",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e320cc4185a8822",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a walking stick, then the Japanese for a bag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たわし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たわし — tawashi — \"a scrubbing brush\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tawashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tawashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tawashi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tawashi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tawashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tawashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a walking stick, then the Japanese for a bag, then say tawashi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a walking stick, then the Japanese for a bag, then say *tawashi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たわし (tawashi) mean? (\"A scrubbing brush\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C99-tawashi-type",
+              "prompt": "Type the Japanese for 'a scrubbing brush'.",
+              "assesses": [
+                "JA-LEX-C99-THINGS99-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たわし",
+                "tawashi"
+              ],
+              "feedback": {
+                "correct": "Right: たわし (tawashi) is 'a scrubbing brush'.",
+                "incorrect": "'a scrubbing brush' is たわし (tawashi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C99-chiritori",
+      "sequence": 5890,
+      "title": "ちりとり (chiritori) — a dustpan",
+      "headword": "ちりとり",
+      "romanization": "chiritori",
+      "gloss": "a dustpan",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe1c5a7bf7aae8b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a bag, then the Japanese for a scrubbing brush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちりとり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちりとり — chiritori — \"a dustpan\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiritori",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiritori*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiritori, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiritori*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chiritori",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chiritori*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a bag, then the Japanese for a scrubbing brush, then say chiritori again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a bag, then the Japanese for a scrubbing brush, then say *chiritori* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちりとり (chiritori) mean? (\"A dustpan\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C99-chiritori-type",
+              "prompt": "Type the Japanese for 'a dustpan'.",
+              "assesses": [
+                "JA-LEX-C99-THINGS99-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちりとり",
+                "chiritori"
+              ],
+              "feedback": {
+                "correct": "Right: ちりとり (chiritori) is 'a dustpan'.",
+                "incorrect": "'a dustpan' is ちりとり (chiritori)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

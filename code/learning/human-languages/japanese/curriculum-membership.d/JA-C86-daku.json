@@ -1,0 +1,11 @@
+{
+  "id": "JA-C86-daku",
+  "pathSegment": "JA-PATH-86-ACT86",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-86-ACT86",
+      "order": 2
+    }
+  ]
+}

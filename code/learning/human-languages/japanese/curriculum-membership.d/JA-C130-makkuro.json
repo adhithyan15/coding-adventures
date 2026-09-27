@@ -1,0 +1,11 @@
+{
+  "id": "JA-C130-makkuro",
+  "pathSegment": "JA-PATH-130-QUAL130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-130-QUAL130",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Gate, Wood, Bud, Rock, Pebble",
+  "label": "ch:ja-gate-wood-bud-rock-pebble",
+  "canDo": "I can say a gate, a wood, a bud, a rock and a pebble.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C106-koishi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say a gate, a wood, a bud, a rock and a pebble.",
+    "assesses": [
+      "JA-LEX-C106-THINGS106-03",
+      "JA-LEX-C106-THINGS106-04",
+      "JA-LEX-C106-THINGS106-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C74-maishuu",
+    "language": "japanese",
+    "chapter": 74,
+    "sequence": 4400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b4ba8ebc1ef673b"
+  },
+  "findings": []
+}

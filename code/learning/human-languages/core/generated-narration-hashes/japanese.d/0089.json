@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:fa1f249f8788b80e",
+  "lessonIds": [
+    "JA-C89-kowasu",
+    "JA-C89-wakasu",
+    "JA-C89-mawasu",
+    "JA-C89-tsukamu",
+    "JA-C89-tatamu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch89.txt",
+  "json": "japanese/narration/ch89.json",
+  "textHash": "fnv1a64:12b8a9514a9db86f",
+  "jsonHash": "fnv1a64:25f1f1e02cec43e2",
+  "findings": []
+}

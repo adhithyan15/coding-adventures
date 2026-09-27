@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R91-second-pass-more-everyday-actions",
+    "language": "japanese",
+    "chapter": 91,
+    "sequence": 5410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d4e95288e018120"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C117-kamoshika",
+  "pathSegment": "JA-PATH-117-THINGS117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-117-THINGS117",
+      "order": 3
+    }
+  ]
+}

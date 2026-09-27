@@ -1,0 +1,11 @@
+{
+  "id": "JA-C102-yunomi",
+  "pathSegment": "JA-PATH-102-THINGS102",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-102-THINGS102",
+      "order": 2
+    }
+  ]
+}

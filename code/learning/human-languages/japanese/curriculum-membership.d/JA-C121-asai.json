@@ -1,0 +1,11 @@
+{
+  "id": "JA-C121-asai",
+  "pathSegment": "JA-PATH-121-QUAL121",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-121-QUAL121",
+      "order": 4
+    }
+  ]
+}

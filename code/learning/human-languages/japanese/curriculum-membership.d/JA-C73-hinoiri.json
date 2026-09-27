@@ -1,0 +1,11 @@
+{
+  "id": "JA-C73-hinoiri",
+  "pathSegment": "JA-PATH-73-TIME73",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-73-TIME73",
+      "order": 0
+    }
+  ]
+}

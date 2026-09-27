@@ -1,0 +1,11 @@
+{
+  "id": "JA-R101-second-pass-why-and-things-at-home",
+  "pathSegment": "JA-PATH-101-THINGS101",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "JA-EXT-101-THINGS101",
+      "order": 6
+    }
+  ]
+}

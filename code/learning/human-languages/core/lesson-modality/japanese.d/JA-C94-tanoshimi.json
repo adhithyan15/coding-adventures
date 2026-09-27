@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C94-tanoshimi",
+    "language": "japanese",
+    "chapter": 94,
+    "sequence": 5630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc47bc969d2fc558"
+  },
+  "findings": []
+}

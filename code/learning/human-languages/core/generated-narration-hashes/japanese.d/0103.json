@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:112f5cfc5798b19b",
+  "lessonIds": [
+    "JA-C103-otama",
+    "JA-C103-suidou",
+    "JA-C103-yakan",
+    "JA-C103-obon",
+    "JA-C103-kan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch103.txt",
+  "json": "japanese/narration/ch103.json",
+  "textHash": "fnv1a64:9e7e22abfa6ead94",
+  "jsonHash": "fnv1a64:065008c45b863c2d",
+  "findings": []
+}

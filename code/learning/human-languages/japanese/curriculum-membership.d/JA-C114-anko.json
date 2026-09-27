@@ -1,0 +1,11 @@
+{
+  "id": "JA-C114-anko",
+  "pathSegment": "JA-PATH-114-THINGS114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-114-THINGS114",
+      "order": 2
+    }
+  ]
+}

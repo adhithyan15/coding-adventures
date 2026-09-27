@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:e71a1c1da952e2d3",
+  "lessonIds": [
+    "JA-C93-machidooshii",
+    "JA-C93-inori",
+    "JA-C93-chuumon",
+    "JA-C93-kouho",
+    "JA-C93-yotei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch93.txt",
+  "json": "japanese/narration/ch93.json",
+  "textHash": "fnv1a64:958509ae8ed6989a",
+  "jsonHash": "fnv1a64:f1fd8e7e3bc468fd",
+  "findings": []
+}

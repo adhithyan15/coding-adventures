@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C121-haiiro",
+    "language": "japanese",
+    "chapter": 121,
+    "sequence": 7220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:363528d0f5019f45"
+  },
+  "findings": []
+}

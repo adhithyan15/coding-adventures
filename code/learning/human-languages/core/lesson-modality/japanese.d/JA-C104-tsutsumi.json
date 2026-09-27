@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C104-tsutsumi",
+    "language": "japanese",
+    "chapter": 104,
+    "sequence": 6200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:994cd51b13a481ab"
+  },
+  "findings": []
+}

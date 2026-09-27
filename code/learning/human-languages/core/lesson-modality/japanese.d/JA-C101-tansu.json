@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C101-tansu",
+    "language": "japanese",
+    "chapter": 101,
+    "sequence": 5960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa6bc4166b5df202"
+  },
+  "findings": []
+}

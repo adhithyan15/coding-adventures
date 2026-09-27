@@ -1,0 +1,11 @@
+{
+  "id": "JA-C121-momoiro",
+  "pathSegment": "JA-PATH-121-QUAL121",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-121-QUAL121",
+      "order": 1
+    }
+  ]
+}

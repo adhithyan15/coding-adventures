@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-95-CAN95",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "JA-EXT-95-CAN95"
+  ],
+  "after": []
+}

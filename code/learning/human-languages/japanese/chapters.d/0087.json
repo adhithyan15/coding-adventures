@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "To pile up, To ask for, To go forward, To hang out to dry, To point",
+  "label": "ch:ja-to-pile-up-to-ask-for-to-go-forward-to-hang-out-to-dry-to-point",
+  "canDo": "I can say to pile up, to ask for, to go forward, to hang out to dry and to point.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C87-sasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say to pile up, to ask for, to go forward, to hang out to dry and to point.",
+    "assesses": [
+      "JA-LEX-C87-ACT87-03",
+      "JA-LEX-C87-ACT87-04",
+      "JA-LEX-C87-ACT87-05"
+    ]
+  }
+}

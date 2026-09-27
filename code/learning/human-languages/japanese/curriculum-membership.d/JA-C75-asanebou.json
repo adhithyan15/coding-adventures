@@ -1,0 +1,11 @@
+{
+  "id": "JA-C75-asanebou",
+  "pathSegment": "JA-PATH-75-TIME75",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-75-TIME75",
+      "order": 4
+    }
+  ]
+}
