@@ -4,3 +4,5 @@
 
 - Added bounded generic Extension decoding, defensive value bytes, trusted
   private-state DER composition, and all 48 portable cases.
+- Made the Windows build front use the repository's `cmd.exe`-compatible
+  dependency setup commands.
