@@ -1,5 +1,14 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — native style losses can only shrink (#16182)
+
+- The shared emitted-control contract now ratchets TaskApp's measured
+  `styleDegradations` on XAML, SwiftUI, Compose, Qt, and Flutter. A newly
+  dropped property or an increase in an existing property's occurrences fails
+  the native lane, while an emitter fix that removes drops passes without a
+  baseline edit. This protects the route to #12022's zero-drop hard fail
+  without pretending the current inventories are complete.
+
 ## [Unreleased] — Compose text wears its box
 
 - No code change here. On Compose a `Text` now wears its part's padding,
