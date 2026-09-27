@@ -12,7 +12,200 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import Counter
 from pathlib import Path
+
+# Issue #16182: native-complete cannot reject every style drop yet without
+# making all five shipping TaskApp gates fail.  Ratchet the measured debt
+# instead: an emitter fix may reduce these counts, but a new property or an
+# increase fails the same shared contract every native lane already runs.
+STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
+    "xaml": {
+        "border": 1,
+        "border-bottom-style": 3,
+        "border-left-style": 5,
+        "border-right-style": 6,
+        "border-style": 4,
+        "border-top-left-radius": 1,
+        "border-top-right-radius": 1,
+        "border-top-style": 3,
+        "box-shadow": 1,
+        "box-sizing": 1,
+        "cursor": 2,
+        "display": 1,
+        "flex-direction": 1,
+        "flex-shrink": 9,
+        "flex-wrap": 1,
+        "font": 1,
+        "letter-spacing": 12,
+        "overflow": 1,
+        "text-overflow": 1,
+        "text-transform": 11,
+        "transform": 2,
+        "white-space": 1,
+        "width": 8,
+    },
+    "swiftui": {
+        "align": 22,
+        "border-bottom-style": 3,
+        "border-left-style": 5,
+        "border-right-style": 6,
+        "border-style": 4,
+        "border-top-left-radius": 1,
+        "border-top-right-radius": 1,
+        "border-top-style": 3,
+        "box-shadow": 11,
+        "box-sizing": 1,
+        "cursor": 2,
+        "display": 1,
+        "elevation": 10,
+        "flex-direction": 1,
+        "flex-grow": 6,
+        "flex-shrink": 9,
+        "flex-wrap": 1,
+        "font": 1,
+        "gap": 4,
+        "left": 6,
+        "letter-spacing": 12,
+        "margin-bottom": 1,
+        "margin-left": 1,
+        "min-width": 2,
+        "overflow": 1,
+        "position": 6,
+        "text-overflow": 1,
+        "text-transform": 11,
+        "top": 6,
+        "transform": 2,
+        "white-space": 1,
+    },
+    "compose": {
+        "border": 1,
+        "border-bottom-style": 3,
+        "border-left-style": 5,
+        "border-right-style": 6,
+        "border-top-left-radius": 1,
+        "border-top-right-radius": 1,
+        "border-top-style": 3,
+        "box-shadow": 11,
+        "box-sizing": 1,
+        "cursor": 2,
+        "display": 1,
+        "flex-direction": 1,
+        "flex-shrink": 2,
+        "font": 1,
+        "left": 6,
+        "letter-spacing": 12,
+        "margin-bottom": 1,
+        "margin-left": 1,
+        "min-width": 2,
+        "overflow": 1,
+        "position": 6,
+        "text-overflow": 1,
+        "text-transform": 11,
+        "top": 6,
+        "transform": 2,
+        "white-space": 1,
+    },
+    "qt": {
+        "align": 22,
+        "background": 8,
+        "border-bottom-color": 3,
+        "border-bottom-style": 3,
+        "border-bottom-width": 3,
+        "border-color": 1,
+        "border-left-color": 2,
+        "border-left-style": 2,
+        "border-left-width": 2,
+        "border-radius": 8,
+        "border-right-color": 6,
+        "border-right-style": 6,
+        "border-right-width": 6,
+        "border-style": 4,
+        "border-top-color": 3,
+        "border-top-left-radius": 1,
+        "border-top-right-radius": 1,
+        "border-top-style": 3,
+        "border-top-width": 3,
+        "border-width": 1,
+        "box-shadow": 9,
+        "box-sizing": 1,
+        "color": 2,
+        "elevation": 8,
+        "flex-grow": 5,
+        "flex-shrink": 9,
+        "flex-wrap": 1,
+        "font": 1,
+        "font-size": 2,
+        "font-weight": 2,
+        "height": 3,
+        "left": 6,
+        "letter-spacing": 12,
+        "margin-bottom": 1,
+        "margin-left": 1,
+        "min-height": 1,
+        "outline": 2,
+        "padding": 5,
+        "padding-bottom": 24,
+        "padding-left": 19,
+        "padding-right": 17,
+        "padding-top": 24,
+        "position": 6,
+        "text-align": 6,
+        "text-transform": 11,
+        "top": 6,
+        "transform": 2,
+        "width": 33,
+    },
+    "flutter": {
+        "align": 22,
+        "background": 10,
+        "border-bottom-style": 3,
+        "border-color": 1,
+        "border-left-color": 2,
+        "border-left-style": 5,
+        "border-left-width": 2,
+        "border-radius": 26,
+        "border-right-style": 6,
+        "border-style": 4,
+        "border-top-left-radius": 1,
+        "border-top-right-radius": 1,
+        "border-top-style": 3,
+        "border-width": 1,
+        "box-shadow": 11,
+        "box-sizing": 1,
+        "color": 72,
+        "cursor": 2,
+        "display": 1,
+        "flex-direction": 1,
+        "flex-shrink": 9,
+        "flex-wrap": 1,
+        "font-family": 1,
+        "font-size": 42,
+        "font-weight": 39,
+        "gap": 4,
+        "height": 3,
+        "left": 6,
+        "letter-spacing": 12,
+        "margin-bottom": 1,
+        "margin-left": 1,
+        "min-height": 3,
+        "min-width": 2,
+        "overflow": 1,
+        "padding": 5,
+        "padding-bottom": 24,
+        "padding-left": 19,
+        "padding-right": 17,
+        "padding-top": 24,
+        "position": 6,
+        "text-align": 14,
+        "text-overflow": 1,
+        "text-transform": 11,
+        "top": 6,
+        "transform": 2,
+        "white-space": 1,
+        "width": 33,
+    },
+}
 
 
 CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
@@ -260,6 +453,57 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
 }
 
 
+def validate_style_degradations(
+    backend: str, report: object, report_path: Path | str
+) -> list[str]:
+    """Reject style-drop growth while allowing existing debt to shrink."""
+
+    errors: list[str] = []
+    label = str(report_path)
+    if not isinstance(report, dict):
+        return [f"{label}: degradation report is not an object"]
+
+    entries = report.get("styleDegradations")
+    if not isinstance(entries, list):
+        return [f"{label}: styleDegradations is missing or is not an array"]
+
+    counts: Counter[str] = Counter()
+    for index, entry in enumerate(entries):
+        entry_label = f"{label}: styleDegradations[{index}]"
+        if not isinstance(entry, dict):
+            errors.append(f"{entry_label} is not an object")
+            continue
+        if entry.get("code") != "style.property-dropped":
+            errors.append(f"{entry_label} has an invalid code")
+        if entry.get("backend") != backend:
+            errors.append(
+                f"{entry_label} has backend {entry.get('backend')!r}, expected {backend!r}"
+            )
+        for field in ("component", "layoutPath", "reason"):
+            if not isinstance(entry.get(field), str) or not entry[field]:
+                errors.append(f"{entry_label}.{field} must be a non-empty string")
+        primitive = entry.get("primitive")
+        if not isinstance(primitive, str) or not primitive:
+            errors.append(f"{entry_label}.primitive must be a non-empty string")
+            continue
+        counts[primitive] += 1
+
+    baseline = STYLE_DROP_BASELINES[backend]
+    for primitive, count in sorted(counts.items()):
+        maximum = baseline.get(primitive)
+        if maximum is None:
+            errors.append(
+                f"{label}: {backend} introduced unbaselined style drop {primitive!r} "
+                f"({count} occurrence(s))"
+            )
+        elif count > maximum:
+            errors.append(
+                f"{label}: {backend} style drop {primitive!r} increased "
+                f"from at most {maximum} to {count} occurrence(s)"
+            )
+    return errors
+
+
 def validate(backend: str, generated_dir: Path) -> list[str]:
     errors: list[str] = []
     report_path = generated_dir / "mosaic-degradations.json"
@@ -272,6 +516,7 @@ def validate(backend: str, generated_dir: Path) -> list[str]:
             errors.append(f"{report_path}: nativeComplete is not true")
         if report.get("degradations") != []:
             errors.append(f"{report_path}: degradations are not empty")
+        errors.extend(validate_style_degradations(backend, report, report_path))
 
     for relative_path, markers in CONTRACTS[backend].items():
         path = generated_dir / relative_path
