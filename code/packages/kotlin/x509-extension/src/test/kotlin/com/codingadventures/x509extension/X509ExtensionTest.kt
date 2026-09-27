@@ -61,11 +61,20 @@ class X509ExtensionTest {
                 Modifier.isPublic(it.modifiers) && !it.isSynthetic
             },
         )
+        assertTrue(
+            X509Extension.Error::class.java.constructors.none {
+                Modifier.isPublic(it.modifiers) && !it.isSynthetic
+            },
+        )
         val input = fromHex("30090603551d1104023000")
         val decoder = DerAsn1.Asn1Decoder()
         val value = X509Extension.decodeX509Extension(decoder, decoder.decodeExact(input))
         input[9] = 0xff.toByte()
         assertEquals("3000", toHex(bytes(value.extensionValue)))
+        assertFailsWith<ReadOnlyBufferException> { value.extensionId.encoded.put(0, 0) }
+        @Suppress("UNCHECKED_CAST")
+        val javaVisibleArcs = value.extensionId.arcs as MutableList<ULong>
+        assertFailsWith<UnsupportedOperationException> { javaVisibleArcs.clear() }
         assertFailsWith<ReadOnlyBufferException> { value.extensionValue.put(0, 0) }
         assertEquals("3000", toHex(bytes(value.extensionValue)))
 
