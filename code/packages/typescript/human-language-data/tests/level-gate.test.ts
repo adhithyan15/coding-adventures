@@ -45,8 +45,11 @@ const HELD = Object.fromEntries(
 // charges the whole load-and-build to that one test's budget: "separates what a
 // track TOUCHES" took 22.8s locally with ~20s of it this build, one heavy CI runner
 // away from its 30s limit. Import time carries no per-test budget.
+// The parsed corpus itself is kept too, so a test that runs the gate on its own
+// inputs reads this parse instead of paying for another one in its body.
+const REAL_EVERYTHING = loadEverything();
 const REAL_REPORT = (() => {
-  const e = loadEverything();
+  const e = REAL_EVERYTHING;
   return buildCurriculumGapReport({
     registry: e.registry,
     lessons: e.lessons,
@@ -327,7 +330,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // the grounds that "no node is unrealized" is not "every node is realized".
     // The tranche is authored now, so the refusal has a better reason: 17 nodes exist
     // and none is realized by any track. The failure names a number instead of a void.
-    const e = loadEverything();
+    const e = REAL_EVERYTHING;
     const gate = runLevelGate({
       lessons: e.lessons,
       levels: summarizeLevels(e.lessons, e.curricula, e.spine),
