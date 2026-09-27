@@ -10701,13 +10701,17 @@
     {
       "id": "haskell-barcode-encoder-windows-build-front-coverage",
       "title": "Add Windows build fronts for five Haskell 2D barcode encoders",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-itf-existing-lanes-v1-20260927",
-      "pr_number": null,
+      "pr_number": 16153,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16153",
+      "opened_at": "2026-09-27T13:55:32Z",
+      "opened_revision": "9d016d5b6939b0091112ad2f3e247eaa8e304dd9",
       "selected_at": "2026-09-27T19:49:02Z",
       "selection_revision": "b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649",
       "selection_notes": "Reconciled after the work was delivered as a bounded prerequisite repair inside the active ITF PR. The item now enters the recorded lifecycle before being associated with that already-reviewed PR; no second implementation branch or PR was created.",
+      "publication_notes": "Associated with the already-open ITF PR #16153 because its five BUILD_windows fronts and metadata regression were included as the smallest focused Windows CI repair on that branch. No second PR was opened.",
       "notes": "Discovered by the post-PR #16127 Haskell front audit. Add fail-closed BUILD_windows recipes for aztec-code, data-matrix, micro-qr, pdf417, and qr-code that preserve each package's current `cabal test` command. Their present POSIX `if command -v` fallback fails under cmd.exe, so cover exact Windows-front precedence with a repository metadata regression while reusing the existing Hspec suites."
     },
     {
