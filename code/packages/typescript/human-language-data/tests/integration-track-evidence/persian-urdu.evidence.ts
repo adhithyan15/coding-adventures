@@ -1,6 +1,5 @@
 import { expect } from "vitest";
 import { compileLessonActivities } from "../../src/activity.js";
-import { buildCurriculumGapReport } from "../../src/report.js";
 import type { IntegrationTrackEvidence } from "./helpers.js";
 
 const EXPECTED_COUNTS = {
@@ -10,8 +9,7 @@ const EXPECTED_COUNTS = {
 
 export const integrationTrackEvidence: IntegrationTrackEvidence = {
   id: "persian-urdu",
-  assert({ registry, lessons, books }): void {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
+  assert({ lessons, gapReport: report }): void {
     for (const language of ["persian", "urdu"] as const) {
       for (const chapterNumber of [3, 4, 5] as const) {
         const chapter = lessons.filter(

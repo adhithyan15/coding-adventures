@@ -1,11 +1,10 @@
 import { expect } from "vitest";
 import { lessonsUpToLevel } from "../../src/levels.js";
-import { buildCurriculumGapReport } from "../../src/report.js";
 import type { IntegrationTrackEvidence } from "./helpers.js";
 
 export const integrationTrackEvidence: IntegrationTrackEvidence = {
   id: "spanish",
-  assert({ lessons, curricula, spine, registry, books }): void {
+  assert({ lessons, curricula, spine, gapReport }): void {
     const a1Ids = new Set(
       lessonsUpToLevel(lessons, curricula, spine, "A1")
         .filter((lesson) => lesson.language === "spanish")
@@ -21,7 +20,7 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     ];
     expect(expectedA1.filter((id) => !a1Ids.has(id))).toEqual([]);
 
-    const report = buildCurriculumGapReport({ registry, lessons, books });
+    const report = gapReport;
     const pilot = lessons.filter(
       (lesson) => lesson.language === "spanish" &&
         lesson.realization.chapter >= 1 && lesson.realization.chapter <= 4,
