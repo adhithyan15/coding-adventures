@@ -4,8 +4,10 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.4.1` accumulate here until the next version is
+Entries added after `task-app-v0.5.0` accumulate here until the next version is
 cut.
+
+## [0.5.0] - 2026-09-27
 
 ### Verified — Paint output is guarded by reviewed product goldens (#16151)
 
