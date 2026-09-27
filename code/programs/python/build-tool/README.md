@@ -41,6 +41,20 @@ match or an empty candidate set from hiding an invalid later pattern. Closing
 bracket positions are indexed once, so unmatched literal `[` runs remain
 linear-time to validate.
 
+`build_tool.graph_diff` is the process-free native graph and diff-selection
+boundary. It consumes immutable caller-materialized records, emits canonical
+dependency edges and deterministic prerequisite-first levels, and derives
+changed, dependent-closed affected, and prerequisite-only package sets. Strict
+source selection recognizes only the five exact recursive BUILD fronts and the
+portable matcher above; known near-BUILD paths remain unselected. Optional
+repository-source boundaries are digest-pinned and exact-path matched. Before
+the first glob match, the operation charges the complete applicable
+pattern/path cross product against a fixed 50,000,000 Unicode-scalar work
+ceiling, while exact BUILD fronts cost zero. The core reads no checkout, Git
+state, environment, credentials, clock, process, or network resource. Its
+package-local tests dynamically pin and consume every one of the eight graph
+and eleven diff-selection language-neutral cases.
+
 The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the
 exact `.ocamlformat`, `dune`, and `dune-project` metadata names in extension
 and declared-source modes; applicable `.opam` manifests remain inputs even
