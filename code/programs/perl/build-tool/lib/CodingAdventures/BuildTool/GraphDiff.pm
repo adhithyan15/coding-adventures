@@ -474,6 +474,9 @@ sub _match_path {
 
 sub _match_segment {
     my ($tokens, $value) = @_;
+    if (!grep { $_->{kind} ne 'literal' } @{$tokens}) {
+        return join('', map { $_->{value} } @{$tokens}) eq $value;
+    }
     my @values = split //u, $value;
     my @next = (0) x (@values + 1);
     $next[@values] = 1;
