@@ -3185,6 +3185,14 @@ jobs:
           assert install < returned, "install must precede returning the host"
           PY
 
+          # UI48 §7.5 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots and the selector must be
+          # in the source set, so the compile below proves they coexist.
+          grep -q '^fun EngramAppTouch($' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"
+          if grep -q '^sealed class EngramAppEvent' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"; then exit 1; fi
+          grep -q 'when (mosaicLayoutVariant(environmentReport))' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
+          grep -q '"touch" -> EngramAppTouch(' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
+
           # The gate: it builds. `compileKotlin` is enough -- this lane already
           # exercises `createDistributable` on task-app, and what is new here is
           # the handler source, not the packaging.
