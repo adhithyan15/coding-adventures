@@ -10,7 +10,7 @@ const TWO_ACTIVITY_LESSONS = new Set([
 
 export const integrationTrackEvidence: IntegrationTrackEvidence = {
   id: "japanese",
-  assert({ lessons, gapReport: report }): void {
+  assert({ curriculumGapReport: report, lessons }): void {
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
     expect(japanese).toHaveLength(427);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))

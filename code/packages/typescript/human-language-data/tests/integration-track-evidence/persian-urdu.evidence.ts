@@ -9,7 +9,7 @@ const EXPECTED_COUNTS = {
 
 export const integrationTrackEvidence: IntegrationTrackEvidence = {
   id: "persian-urdu",
-  assert({ lessons, gapReport: report }): void {
+  assert({ curriculumGapReport: report, lessons }): void {
     for (const language of ["persian", "urdu"] as const) {
       for (const chapterNumber of [3, 4, 5] as const) {
         const chapter = lessons.filter(
