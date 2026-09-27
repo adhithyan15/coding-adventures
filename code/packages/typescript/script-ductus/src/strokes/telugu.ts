@@ -22,6 +22,122 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:ఘ",
+    {
+      script: "telugu",
+      glyph: "ఘ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep left around the upper-left shoulder",
+              path: [
+                { x: 300, y: 145 },
+                { x: 280, y: 195 },
+                { x: 245, y: 230 },
+                { x: 200, y: 250 },
+                { x: 150, y: 248 },
+                { x: 110, y: 230 },
+                { x: 80, y: 200 },
+                { x: 65, y: 165 },
+              ],
+            },
+            {
+              label: "continue down and right around the lower-left bowl",
+              path: [
+                { x: 65, y: 165 },
+                { x: 65, y: 125 },
+                { x: 75, y: 85 },
+                { x: 105, y: 50 },
+                { x: 150, y: 28 },
+                { x: 200, y: 25 },
+                { x: 245, y: 45 },
+                { x: 275, y: 80 },
+                { x: 300, y: 125 },
+                { x: 300, y: 145 },
+              ],
+            },
+            {
+              label: "turn upward around the broad middle arch",
+              path: [
+                { x: 300, y: 145 },
+                { x: 330, y: 105 },
+                { x: 370, y: 70 },
+                { x: 420, y: 45 },
+                { x: 480, y: 30 },
+                { x: 535, y: 50 },
+                { x: 575, y: 90 },
+                { x: 600, y: 145 },
+                { x: 607, y: 205 },
+                { x: 595, y: 270 },
+                { x: 565, y: 325 },
+                { x: 520, y: 370 },
+                { x: 470, y: 405 },
+                { x: 420, y: 430 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and up around the outer arch",
+              path: [
+                { x: 650, y: 145 },
+                { x: 690, y: 95 },
+                { x: 745, y: 55 },
+                { x: 810, y: 30 },
+                { x: 870, y: 45 },
+                { x: 915, y: 85 },
+                { x: 945, y: 145 },
+                { x: 950, y: 210 },
+                { x: 935, y: 275 },
+                { x: 900, y: 330 },
+                { x: 855, y: 375 },
+                { x: 805, y: 410 },
+                { x: 765, y: 430 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and cup through the upper flourish",
+              path: [
+                { x: 98, y: 570 },
+                { x: 120, y: 520 },
+                { x: 150, y: 480 },
+                { x: 190, y: 462 },
+                { x: 230, y: 465 },
+                { x: 270, y: 490 },
+                { x: 310, y: 535 },
+                { x: 350, y: 585 },
+                { x: 395, y: 630 },
+                { x: 445, y: 665 },
+                { x: 490, y: 683 },
+                { x: 520, y: 686 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and draw the separate downward stem",
+              path: [
+                { x: 325, y: 15 },
+                { x: 325, y: -48 },
+                { x: 325, y: -118 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఘ"),
+    },
+  ],
+  [
     "telugu:గ",
     {
       script: "telugu",
