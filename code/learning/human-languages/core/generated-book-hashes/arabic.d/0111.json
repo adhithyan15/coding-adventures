@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:85b8aa68ee5376aa",
+  "lessonIds": [
+    "AR-C111-ishtaqa",
+    "AR-C111-tawaqqu",
+    "AR-C111-hamas",
+    "AR-C111-umniyya",
+    "AR-C111-tafdil"
+  ],
+  "tex": "arabic/book/chapters/ch111-to-long-for-expectation-enthusiasm-wish-preference.tex"
+}

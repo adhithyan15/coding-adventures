@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:6a945d12c619b0cf",
+  "lessonIds": [
+    "AR-C128-nazzara",
+    "AR-C128-filfil",
+    "AR-C128-qamh",
+    "AR-C128-adas",
+    "AR-C128-hummus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch128.txt",
+  "json": "arabic/narration/ch128.json",
+  "textHash": "fnv1a64:a42a705aeb700a19",
+  "jsonHash": "fnv1a64:a3b6a35d7faa083e",
+  "findings": []
+}

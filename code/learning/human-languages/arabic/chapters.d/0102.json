@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Roof, Stairs, Ceiling, Behind, Between",
+  "label": "ch:ar-roof-stairs-ceiling-behind-between",
+  "canDo": "I can say a roof, stairs, a ceiling, behind and between.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C102-bayna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say a roof, stairs, a ceiling, behind and between.",
+    "assesses": [
+      "AR-LEX-C102-LOC102-03",
+      "AR-LEX-C102-LOC102-04",
+      "AR-LEX-C102-LOC102-05"
+    ]
+  }
+}

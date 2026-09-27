@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:d2f627ebd458b50c",
+  "lessonIds": [
+    "AR-C134-daw",
+    "AR-C134-zill",
+    "AR-C134-zalam",
+    "AR-C134-ghayma",
+    "AR-C134-arnab"
+  ],
+  "tex": "arabic/book/chapters/ch134-light-shade-darkness-cloud-rabbit.tex"
+}

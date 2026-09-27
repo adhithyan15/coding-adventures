@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Pleased, Spacious, Deep, Round, Sharp",
+  "label": "ch:ar-pleased-spacious-deep-round-sharp",
+  "canDo": "I can say pleased, spacious, deep, round and sharp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C148-hadd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say pleased, spacious, deep, round and sharp.",
+    "assesses": [
+      "AR-LEX-C148-QUAL148-03",
+      "AR-LEX-C148-QUAL148-04",
+      "AR-LEX-C148-QUAL148-05"
+    ]
+  }
+}

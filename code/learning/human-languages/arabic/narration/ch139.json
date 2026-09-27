@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 139,
+  "title": "Beard, Moustache, Chest, Waist, Elbow",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:6d70959ec1182287",
+  "lessons": [
+    {
+      "id": "AR-C139-lihya",
+      "sequence": 6250,
+      "title": "لحية (liḥya) — a beard",
+      "headword": "لحية",
+      "romanization": "liḥya",
+      "gloss": "a beard",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbcdfeaea225af46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a forehead, then the Arabic for an eyebrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لحية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لحية — liḥya — \"a beard\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liḥya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liḥya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liḥya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liḥya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say liḥya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *liḥya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a forehead, then the Arabic for an eyebrow, then say liḥya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a forehead, then the Arabic for an eyebrow, then say *liḥya* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لحية (liḥya) mean? (\"A beard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C139-sharib",
+      "sequence": 6260,
+      "title": "شارب (shārib) — a moustache",
+      "headword": "شارب",
+      "romanization": "shārib",
+      "gloss": "a moustache",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3118a191c158b90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an eyebrow, then the Arabic for a beard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شارب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شارب — shārib — \"a moustache\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shārib",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shārib*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shārib, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shārib*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shārib",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shārib*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an eyebrow, then the Arabic for a beard, then say shārib again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an eyebrow, then the Arabic for a beard, then say *shārib* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شارب (shārib) mean? (\"A moustache\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C139-sadr",
+      "sequence": 6270,
+      "title": "صدر (ṣadr) — a chest",
+      "headword": "صدر",
+      "romanization": "ṣadr",
+      "gloss": "a chest",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f04bbddcd4a4b55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a beard, then the Arabic for a moustache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صدر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صدر — ṣadr — \"a chest\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣadr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣadr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣadr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣadr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ṣadr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ṣadr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a beard, then the Arabic for a moustache, then say ṣadr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a beard, then the Arabic for a moustache, then say *ṣadr* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صدر (ṣadr) mean? (\"A chest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C139-khasr",
+      "sequence": 6280,
+      "title": "خصر (khaṣr) — a waist",
+      "headword": "خصر",
+      "romanization": "khaṣr",
+      "gloss": "a waist",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46b3d8c8d9c4a6ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a moustache, then the Arabic for a chest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خصر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خصر — khaṣr — \"a waist\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṣr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṣr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṣr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṣr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khaṣr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khaṣr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a moustache, then the Arabic for a chest, then say khaṣr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a moustache, then the Arabic for a chest, then say *khaṣr* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خصر (khaṣr) mean? (\"A waist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C139-mirfaq",
+      "sequence": 6290,
+      "title": "مرفق (mirfaq) — an elbow",
+      "headword": "مرفق",
+      "romanization": "mirfaq",
+      "gloss": "an elbow",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:238fff1bef31a198",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a chest, then the Arabic for a waist."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Greet the evening, and give its answer. (Masāʾ al-khayr; masāʾ an-nūr.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرفق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرفق — mirfaq — \"an elbow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirfaq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirfaq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirfaq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirfaq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mirfaq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mirfaq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a chest, then the Arabic for a waist, then say mirfaq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a chest, then the Arabic for a waist, then say *mirfaq* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرفق (mirfaq) mean? (\"An elbow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R139-first-pass-nature",
+      "sequence": 6300,
+      "title": "Nature — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 130-134",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ab5aebeeaee1b91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a waist and an elbow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "figs, a watermelon, apricots, soup, a cake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: figs, a watermelon, apricots, soup, a cake]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grass, a seed, a root, a branch, an island",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grass, a seed, a root, a branch, an island]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a coast, a waterfall, a cave, a valley, a hill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a coast, a waterfall, a cave, a valley, a hill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a desert, a lake, lightning, thunder, a storm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a desert, a lake, lightning, thunder, a storm]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "light, shade, darkness, a cloud, a rabbit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: light, shade, darkness, a cloud, a rabbit]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Figs? (تين, tīn.) A watermelon? (بطيخ, biṭṭīkh.) Apricots? (مشمش, mishmish.) Soup? (حساء, ḥasāʾ.) A cake? (كعكة, kaʿka.) Grass? (عشب, ʿushb.) A seed? (بذرة, bidhra.) A root? (جذر, jidhr.) A branch? (غصن, ghuṣn.) An island? (جزيرة, jazīra.) A coast? (ساحل, sāḥil.) A waterfall? (شلال, shallāl.) A cave? (كهف, kahf.) A valley? (وادي, wādī.) A hill? (تل, tall.) A desert? (صحراء, ṣaḥrāʾ.) A lake? (بحيرة, buḥayra.) Lightning? (برق, barq.) Thunder? (رعد, raʿd.) A storm? (عاصفة, ʿāṣifa.) Light? (ضوء, ḍawʾ.) Shade? (ظل, ẓill.) Darkness? (ظلام, ẓalām.) A cloud? (غيمة, ghayma.) A rabbit? (أرنب, arnab.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R139-second-pass-animals",
+      "sequence": 6310,
+      "title": "Animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 135-139",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4ab68bdc6dbc9ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a gazelle and a fox."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a gazelle, a fox, a pigeon, a duck, a turtle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a gazelle, a fox, a pigeon, a duck, a turtle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crocodile, a mosquito, a fly, a bee, a butterfly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crocodile, a mosquito, a fly, a bee, a butterfly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spider, a rooster, a cat, an owl, a crow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spider, a rooster, a cat, an owl, a crow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an eagle, a frog, a cheek, a forehead, an eyebrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an eagle, a frog, a cheek, a forehead, an eyebrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a beard, a moustache, a chest, a waist, an elbow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a beard, a moustache, a chest, a waist, an elbow]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A gazelle? (غزال, ghazāl.) A fox? (ثعلب, thaʿlab.) A pigeon? (حمامة, ḥamāma.) A duck? (بطة, baṭṭa.) A turtle? (سلحفاة, sulaḥfāh.) A crocodile? (تمساح, timsāḥ.) A mosquito? (بعوضة, baʿūḍa.) A fly? (ذبابة, dhubāba.) A bee? (نحلة, naḥla.) A butterfly? (فراشة, farāsha.) A spider? (عنكبوت, ʿankabūt.) A rooster? (ديك, dīk.) A cat? (قطة, qiṭṭa.) An owl? (بومة, būma.) A crow? (غراب, ghurāb.) An eagle? (نسر, nasr.) A frog? (ضفدع, ḍifdaʿ.) A cheek? (خد, khadd.) A forehead? (جبين, jabīn.) An eyebrow? (حاجب, ḥājib.) A beard? (لحية, liḥya.) A moustache? (شارب, shārib.) A chest? (صدر, ṣadr.) A waist? (خصر, khaṣr.) An elbow? (مرفق, mirfaq.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

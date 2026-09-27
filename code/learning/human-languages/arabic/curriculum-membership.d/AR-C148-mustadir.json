@@ -1,0 +1,11 @@
+{
+  "id": "AR-C148-mustadir",
+  "pathSegment": "AR-PATH-148-QUAL148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-148-QUAL148",
+      "order": 3
+    }
+  ]
+}

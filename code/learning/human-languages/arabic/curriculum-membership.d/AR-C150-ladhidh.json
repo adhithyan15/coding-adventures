@@ -1,0 +1,11 @@
+{
+  "id": "AR-C150-ladhidh",
+  "pathSegment": "AR-PATH-150-QUAL150",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-150-QUAL150",
+      "order": 0
+    }
+  ]
+}

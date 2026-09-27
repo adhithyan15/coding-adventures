@@ -1,0 +1,11 @@
+{
+  "id": "AR-C102-bayna",
+  "pathSegment": "AR-PATH-102-LOC102",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-102-LOC102",
+      "order": 4
+    }
+  ]
+}

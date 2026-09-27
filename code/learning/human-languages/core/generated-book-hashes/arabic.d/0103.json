@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:55e5534bf0b68f51",
+  "lessonIds": [
+    "AR-C103-bijanib",
+    "AR-C103-yasar",
+    "AR-C103-wasat",
+    "AR-C103-zawiya",
+    "AR-C103-shamal"
+  ],
+  "tex": "arabic/book/chapters/ch103-beside-left-middle-corner-north.tex"
+}

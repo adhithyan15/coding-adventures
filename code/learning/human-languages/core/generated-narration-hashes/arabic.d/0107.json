@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:a5463b1a4aa78c4f",
+  "lessonIds": [
+    "AR-C107-kafaa",
+    "AR-C107-shahada",
+    "AR-C107-milkiyya",
+    "AR-C107-istataa",
+    "AR-C107-qadara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch107.txt",
+  "json": "arabic/narration/ch107.json",
+  "textHash": "fnv1a64:2ffc5d7eabcebd6e",
+  "jsonHash": "fnv1a64:abd685147f27c5fb",
+  "findings": []
+}

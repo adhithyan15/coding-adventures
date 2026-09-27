@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:819a1d7431b5861c",
+  "lessonIds": [
+    "AR-C131-ushb",
+    "AR-C131-bidhra",
+    "AR-C131-jidhr",
+    "AR-C131-ghusn",
+    "AR-C131-jazira"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch131.txt",
+  "json": "arabic/narration/ch131.json",
+  "textHash": "fnv1a64:6cf0219033233168",
+  "jsonHash": "fnv1a64:23698c7f9c8938fa",
+  "findings": []
+}

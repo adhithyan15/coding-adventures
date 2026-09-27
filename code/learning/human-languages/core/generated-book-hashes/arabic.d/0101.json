@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:6550c88f59173a64",
+  "lessonIds": [
+    "AR-C101-hayy",
+    "AR-C101-zuqaq",
+    "AR-C101-mabna",
+    "AR-C101-hammam",
+    "AR-C101-shurfa"
+  ],
+  "tex": "arabic/book/chapters/ch101-neighbourhood-alley-building-bathroom-balcony.tex"
+}

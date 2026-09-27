@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Bicycle, Ship, Traveller, Factory, Square",
+  "label": "ch:ar-bicycle-ship-traveller-factory-square",
+  "canDo": "I can say a bicycle, a ship, a traveller, a factory and a square.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C142-saha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say a bicycle, a ship, a traveller, a factory and a square.",
+    "assesses": [
+      "AR-LEX-C142-THINGS142-03",
+      "AR-LEX-C142-THINGS142-04",
+      "AR-LEX-C142-THINGS142-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Blanket, Pillow, Ladder, Stove, Vessel",
+  "label": "ch:ar-blanket-pillow-ladder-stove-vessel",
+  "canDo": "I can say a blanket, a pillow, a ladder, a stove and a vessel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C123-ina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say a blanket, a pillow, a ladder, a stove and a vessel.",
+    "assesses": [
+      "AR-LEX-C123-THINGS123-03",
+      "AR-LEX-C123-THINGS123-04",
+      "AR-LEX-C123-THINGS123-05"
+    ]
+  }
+}

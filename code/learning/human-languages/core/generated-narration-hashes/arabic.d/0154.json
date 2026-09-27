@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:a6aa208fde27b00b",
+  "lessonIds": [
+    "AR-C154-mali",
+    "AR-C154-shabb",
+    "AR-C154-ajuz",
+    "AR-C154-qawi",
+    "AR-C154-daif"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch154.txt",
+  "json": "arabic/narration/ch154.json",
+  "textHash": "fnv1a64:76393245b67049ba",
+  "jsonHash": "fnv1a64:7ff228a6a958b4c0",
+  "findings": []
+}

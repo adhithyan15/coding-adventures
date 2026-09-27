@@ -1,0 +1,11 @@
+{
+  "id": "AR-C155-thamin",
+  "pathSegment": "AR-PATH-155-QUAL155",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-155-QUAL155",
+      "order": 2
+    }
+  ]
+}

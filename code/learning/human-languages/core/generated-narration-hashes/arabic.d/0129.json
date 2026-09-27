@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:a52f5914650762a5",
+  "lessonIds": [
+    "AR-C129-ful",
+    "AR-C129-thum",
+    "AR-C129-khiyar",
+    "AR-C129-tuffah",
+    "AR-C129-tamr",
+    "AR-R129-first-pass-the-house-clothes-and-food",
+    "AR-R129-second-pass-food-and-the-kitchen"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch129.txt",
+  "json": "arabic/narration/ch129.json",
+  "textHash": "fnv1a64:5c7235c1b93a7764",
+  "jsonHash": "fnv1a64:650035ea83b1011b",
+  "findings": []
+}

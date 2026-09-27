@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C122-minshafa",
+    "language": "arabic",
+    "chapter": 122,
+    "sequence": 5330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd6cade78255f0ed"
+  },
+  "findings": []
+}

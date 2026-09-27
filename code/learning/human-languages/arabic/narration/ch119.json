@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 119,
+  "title": "Glove, Scarf, Lunch, Dinner, Vinegar",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:febcfec988380467",
+  "lessons": [
+    {
+      "id": "AR-C119-quffaz",
+      "sequence": 5050,
+      "title": "قفاز (quffāz) — a glove",
+      "headword": "قفاز",
+      "romanization": "quffāz",
+      "gloss": "a glove",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e55d172b095ee74a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a wallet, then the Arabic for an umbrella."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قفاز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قفاز — quffāz — \"a glove\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quffāz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quffāz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quffāz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quffāz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say quffāz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *quffāz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a wallet, then the Arabic for an umbrella, then say quffāz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a wallet, then the Arabic for an umbrella, then say *quffāz* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قفاز (quffāz) mean? (\"A glove\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C119-wishah",
+      "sequence": 5060,
+      "title": "وشاح (wishāḥ) — a scarf",
+      "headword": "وشاح",
+      "romanization": "wishāḥ",
+      "gloss": "a scarf",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66cead76eeda90b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an umbrella, then the Arabic for a glove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وشاح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وشاح — wishāḥ — \"a scarf\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wishāḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wishāḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wishāḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wishāḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say wishāḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *wishāḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an umbrella, then the Arabic for a glove, then say wishāḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an umbrella, then the Arabic for a glove, then say *wishāḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وشاح (wishāḥ) mean? (\"A scarf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C119-ghada",
+      "sequence": 5070,
+      "title": "غداء (ghadāʾ) — lunch",
+      "headword": "غداء",
+      "romanization": "ghadāʾ",
+      "gloss": "lunch",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87fba4a2b0dc5345",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a glove, then the Arabic for a scarf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غداء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غداء — ghadāʾ — \"lunch\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghadāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghadāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghadāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghadāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ghadāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ghadāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a glove, then the Arabic for a scarf, then say ghadāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a glove, then the Arabic for a scarf, then say *ghadāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غداء (ghadāʾ) mean? (\"Lunch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C119-asha",
+      "sequence": 5080,
+      "title": "عشاء (ʿashāʾ) — dinner",
+      "headword": "عشاء",
+      "romanization": "ʿashāʾ",
+      "gloss": "dinner",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:335f78e87d7be8ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a scarf, then the Arabic for lunch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عشاء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عشاء — ʿashāʾ — \"dinner\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿashāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿashāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿashāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿashāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ʿashāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ʿashāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a scarf, then the Arabic for lunch, then say ʿashāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a scarf, then the Arabic for lunch, then say *ʿashāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عشاء (ʿashāʾ) mean? (\"Dinner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C119-khall",
+      "sequence": 5090,
+      "title": "خل (khall) — vinegar",
+      "headword": "خل",
+      "romanization": "khall",
+      "gloss": "vinegar",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c79b3ba297a2b002",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for lunch, then the Arabic for dinner."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say eleven and twenty. (Aḥada ʿashar, \"one-ten\"; ʿishrūn, its own word on the root of ten.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خل — khall — \"vinegar\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khall*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khall, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khall*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khall*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for lunch, then the Arabic for dinner, then say khall again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for lunch, then the Arabic for dinner, then say *khall* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خل (khall) mean? (\"Vinegar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R119-first-pass-wanting-and-planning",
+      "sequence": 5100,
+      "title": "Wanting and planning — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 110-114",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30c03860396cbd35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for dinner and vinegar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tool, to own, to lose, to keep, a talent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tool, to own, to lose, to keep, a talent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to long for, an expectation, enthusiasm, a wish, a preference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to long for, an expectation, enthusiasm, a wish, a preference]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "longing, ambition, a purpose, a project, a suggestion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: longing, ambition, a purpose, a project, a suggestion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "interest, to hate, a desire, a dream, hope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: interest, to hate, a desire, a dream, hope]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a goal, a plan, a need, to need, to wish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a goal, a plan, a need, to need, to wish]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tool? (أداة, adāt.) To own? (ملك, malaka.) To lose? (خسر, khasira.) To keep? (حفظ, ḥafiẓa.) A talent? (موهبة, mawhiba.) To long for? (اشتاق, ishtāqa.) An expectation? (توقع, tawaqquʿ.) Enthusiasm? (حماس, ḥamās.) A wish? (أمنية, umniyya.) A preference? (تفضيل, tafḍīl.) Longing? (شوق, shawq.) Ambition? (طموح, ṭumūḥ.) A purpose? (غاية, ghāya.) A project? (مشروع, mashrūʿ.) A suggestion? (اقتراح, iqtirāḥ.) Interest? (اهتمام, ihtimām.) To hate? (كره, kariha.) A desire? (رغبة, raghba.) A dream? (حلم, ḥulm.) Hope? (أمل, amal.) A goal? (هدف, hadaf.) A plan? (خطة, khuṭṭa.) A need? (حاجة, ḥāja.) To need? (احتاج, iḥtāja.) To wish? (تمنى, tamannā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R119-second-pass-things-in-the-house",
+      "sequence": 5110,
+      "title": "Things in the house — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 115-119",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9782fb7cbe1d189c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a decision and to choose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a decision, to choose, to prefer, to ask for, an intention",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a decision, to choose, to prefer, to ask for, an intention]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a jug, a frying pan, an oven, a fan, a computer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a jug, a frying pan, an oven, a fan, a computer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a television, a newspaper, a magazine, a letter, an envelope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a television, a newspaper, a magazine, a letter, an envelope]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a present, a ticket, a passport, a wallet, an umbrella",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a present, a ticket, a passport, a wallet, an umbrella]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a glove, a scarf, lunch, dinner, vinegar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a glove, a scarf, lunch, dinner, vinegar]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A decision? (قرار, qarār.) To choose? (اختار, ikhtāra.) To prefer? (فضل, faḍḍala.) To ask for? (طلب, ṭalaba.) An intention? (نية, niyya.) A jug? (إبريق, ibrīq.) A frying pan? (مقلاة, miqlāh.) An oven? (فرن, furn.) A fan? (مروحة, mirwaḥa.) A computer? (حاسوب, ḥāsūb.) A television? (تلفاز, tilfāz.) A newspaper? (جريدة, jarīda.) A magazine? (مجلة, majalla.) A letter? (رسالة, risāla.) An envelope? (ظرف, ẓarf.) A present? (هدية, hadiyya.) A ticket? (تذكرة, tadhkira.) A passport? (جواز, jawāz.) A wallet? (محفظة, miḥfaẓa.) An umbrella? (مظلة, miẓalla.) A glove? (قفاز, quffāz.) A scarf? (وشاح, wishāḥ.) Lunch? (غداء, ghadāʾ.) Dinner? (عشاء, ʿashāʾ.) Vinegar? (خل, khall.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

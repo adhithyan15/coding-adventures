@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:e7566803fa8e8916",
+  "lessonIds": [
+    "AR-C143-mimhah",
+    "AR-C143-saff",
+    "AR-C143-talib",
+    "AR-C143-wazifa",
+    "AR-C143-ratib"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch143.txt",
+  "json": "arabic/narration/ch143.json",
+  "textHash": "fnv1a64:828fe06c25623095",
+  "jsonHash": "fnv1a64:c36838e2d474621f",
+  "findings": []
+}

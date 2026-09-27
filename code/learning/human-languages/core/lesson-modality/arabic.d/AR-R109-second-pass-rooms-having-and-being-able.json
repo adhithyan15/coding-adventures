@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R109-second-pass-rooms-having-and-being-able",
+    "language": "arabic",
+    "chapter": 109,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd6254bb1bd1fafb"
+  },
+  "findings": []
+}

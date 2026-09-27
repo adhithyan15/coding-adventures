@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C155-qabih",
+    "language": "arabic",
+    "chapter": 155,
+    "sequence": 7260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ba595d26ee6e769"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:850a882a276bb2b3",
+  "lessonIds": [
+    "AR-C124-miqass",
+    "AR-C124-ibra",
+    "AR-C124-khayt",
+    "AR-C124-zirr",
+    "AR-C124-mismar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch124.txt",
+  "json": "arabic/narration/ch124.json",
+  "textHash": "fnv1a64:be7565f606197e73",
+  "jsonHash": "fnv1a64:b3c7d78c4167acce",
+  "findings": []
+}

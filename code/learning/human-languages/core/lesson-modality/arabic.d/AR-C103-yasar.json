@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C103-yasar",
+    "language": "arabic",
+    "chapter": 103,
+    "sequence": 4160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebab113c577d3577"
+  },
+  "findings": []
+}

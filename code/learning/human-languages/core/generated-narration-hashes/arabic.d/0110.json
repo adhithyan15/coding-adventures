@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:223b101914122172",
+  "lessonIds": [
+    "AR-C110-adat",
+    "AR-C110-malaka",
+    "AR-C110-khasira",
+    "AR-C110-hafiza",
+    "AR-C110-mawhiba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch110.txt",
+  "json": "arabic/narration/ch110.json",
+  "textHash": "fnv1a64:098bb51df1d30c5c",
+  "jsonHash": "fnv1a64:533d8dbb8c214e3b",
+  "findings": []
+}

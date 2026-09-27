@@ -1,0 +1,11 @@
+{
+  "id": "AR-C110-hafiza",
+  "pathSegment": "AR-PATH-110-CAN110",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-110-CAN110",
+      "order": 3
+    }
+  ]
+}

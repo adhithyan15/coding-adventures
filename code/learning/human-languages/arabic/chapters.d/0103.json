@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Beside, Left, Middle, Corner, North",
+  "label": "ch:ar-beside-left-middle-corner-north",
+  "canDo": "I can say beside, left, the middle, a corner and north.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "AR-C103-shamal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say beside, left, the middle, a corner and north.",
+    "assesses": [
+      "AR-LEX-C103-LOC103-03",
+      "AR-LEX-C103-LOC103-04",
+      "AR-LEX-C103-LOC103-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R109-first-pass-places-in-town-and-at-home",
+    "language": "arabic",
+    "chapter": 109,
+    "sequence": 4500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a44a825c7205354"
+  },
+  "findings": []
+}

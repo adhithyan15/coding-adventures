@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:c3c2c378f45fb5aa",
+  "lessonIds": [
+    "AR-C109-tharwa",
+    "AR-C109-khibra",
+    "AR-C109-ada",
+    "AR-C109-mahara",
+    "AR-C109-fann",
+    "AR-R109-first-pass-places-in-town-and-at-home",
+    "AR-R109-second-pass-rooms-having-and-being-able"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch109.txt",
+  "json": "arabic/narration/ch109.json",
+  "textHash": "fnv1a64:4737f38d5ee3e49e",
+  "jsonHash": "fnv1a64:b5615198233ef8f9",
+  "findings": []
+}

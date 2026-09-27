@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:d8c577b80c0592bc",
+  "lessonIds": [
+    "AR-C154-mali",
+    "AR-C154-shabb",
+    "AR-C154-ajuz",
+    "AR-C154-qawi",
+    "AR-C154-daif"
+  ],
+  "tex": "arabic/book/chapters/ch154-full-young-old-strong-weak.tex"
+}

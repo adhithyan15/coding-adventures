@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:cd4dc505f54881a7",
+  "lessonIds": [
+    "AR-C150-ladhidh",
+    "AR-C150-munkhafid",
+    "AR-C150-murtafi",
+    "AR-C150-arid",
+    "AR-C150-dayyiq"
+  ],
+  "tex": "arabic/book/chapters/ch150-delicious-low-high-wide-narrow.tex"
+}

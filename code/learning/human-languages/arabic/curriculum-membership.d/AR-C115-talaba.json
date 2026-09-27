@@ -1,0 +1,11 @@
+{
+  "id": "AR-C115-talaba",
+  "pathSegment": "AR-PATH-115-WANT115",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-115-WANT115",
+      "order": 3
+    }
+  ]
+}

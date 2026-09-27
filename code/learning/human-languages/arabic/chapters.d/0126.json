@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Candle, Carpet, Doll, Toy, Fridge",
+  "label": "ch:ar-candle-carpet-doll-toy-fridge",
+  "canDo": "I can say a candle, a carpet, a doll, a toy and a fridge.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C126-thallaja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say a candle, a carpet, a doll, a toy and a fridge.",
+    "assesses": [
+      "AR-LEX-C126-THINGS126-03",
+      "AR-LEX-C126-THINGS126-04",
+      "AR-LEX-C126-THINGS126-05"
+    ]
+  }
+}

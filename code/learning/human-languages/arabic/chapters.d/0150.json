@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Delicious, Low, High, Wide, Narrow",
+  "label": "ch:ar-delicious-low-high-wide-narrow",
+  "canDo": "I can say delicious, low, high, wide and narrow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C150-dayyiq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say delicious, low, high, wide and narrow.",
+    "assesses": [
+      "AR-LEX-C150-QUAL150-03",
+      "AR-LEX-C150-QUAL150-04",
+      "AR-LEX-C150-QUAL150-05"
+    ]
+  }
+}

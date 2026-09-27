@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Coast, Waterfall, Cave, Valley, Hill",
+  "label": "ch:ar-coast-waterfall-cave-valley-hill",
+  "canDo": "I can say a coast, a waterfall, a cave, a valley and a hill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C132-tall",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say a coast, a waterfall, a cave, a valley and a hill.",
+    "assesses": [
+      "AR-LEX-C132-THINGS132-03",
+      "AR-LEX-C132-THINGS132-04",
+      "AR-LEX-C132-THINGS132-05"
+    ]
+  }
+}

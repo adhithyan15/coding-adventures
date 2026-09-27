@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:171cc2cd8cb1af23",
+  "lessonIds": [
+    "AR-C146-mufid",
+    "AR-C146-khatir",
+    "AR-C146-amin",
+    "AR-C146-maftuh",
+    "AR-C146-mughlaq"
+  ],
+  "tex": "arabic/book/chapters/ch146-useful-dangerous-safe-open-closed.tex"
+}

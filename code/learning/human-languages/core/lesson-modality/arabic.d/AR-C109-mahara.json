@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C109-mahara",
+    "language": "arabic",
+    "chapter": 109,
+    "sequence": 4480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:673731bcb958e48c"
+  },
+  "findings": []
+}

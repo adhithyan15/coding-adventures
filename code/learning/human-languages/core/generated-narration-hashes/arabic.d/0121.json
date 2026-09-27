@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:6622f3933dd8172b",
+  "lessonIds": [
+    "AR-C121-malfuf",
+    "AR-C121-nana",
+    "AR-C121-baqdunis",
+    "AR-C121-zatar",
+    "AR-C121-kammun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch121.txt",
+  "json": "arabic/narration/ch121.json",
+  "textHash": "fnv1a64:98934462ca3ee33c",
+  "jsonHash": "fnv1a64:1bd2b043a4b3c281",
+  "findings": []
+}

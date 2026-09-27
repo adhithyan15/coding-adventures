@@ -1,0 +1,11 @@
+{
+  "id": "AR-C145-murih",
+  "pathSegment": "AR-PATH-145-QUAL145",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-145-QUAL145",
+      "order": 3
+    }
+  ]
+}

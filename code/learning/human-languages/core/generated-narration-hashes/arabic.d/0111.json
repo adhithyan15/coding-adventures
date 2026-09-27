@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:849aef60cc677b96",
+  "lessonIds": [
+    "AR-C111-ishtaqa",
+    "AR-C111-tawaqqu",
+    "AR-C111-hamas",
+    "AR-C111-umniyya",
+    "AR-C111-tafdil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch111.txt",
+  "json": "arabic/narration/ch111.json",
+  "textHash": "fnv1a64:cd8d1097a012ea90",
+  "jsonHash": "fnv1a64:a8a7f3ae99c6e3b8",
+  "findings": []
+}

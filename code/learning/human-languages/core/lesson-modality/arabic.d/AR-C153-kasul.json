@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C153-kasul",
+    "language": "arabic",
+    "chapter": 153,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e9d555ecc2c8fd2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C132-kahf",
+  "pathSegment": "AR-PATH-132-THINGS132",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-132-THINGS132",
+      "order": 2
+    }
+  ]
+}

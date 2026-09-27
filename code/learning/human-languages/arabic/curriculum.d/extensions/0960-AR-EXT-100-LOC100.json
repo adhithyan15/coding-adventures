@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-100-LOC100",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lift, a corridor, a public square, an airport and a port.",
+  "prerequisites": []
+}

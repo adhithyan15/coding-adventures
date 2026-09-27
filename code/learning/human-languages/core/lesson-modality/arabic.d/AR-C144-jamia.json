@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C144-jamia",
+    "language": "arabic",
+    "chapter": 144,
+    "sequence": 6640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e35d9089be3acd4"
+  },
+  "findings": []
+}

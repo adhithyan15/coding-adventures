@@ -1,0 +1,11 @@
+{
+  "id": "AR-C116-miqlah",
+  "pathSegment": "AR-PATH-116-THINGS116",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-116-THINGS116",
+      "order": 1
+    }
+  ]
+}

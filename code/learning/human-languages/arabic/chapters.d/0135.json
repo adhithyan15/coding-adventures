@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Gazelle, Fox, Pigeon, Duck, Turtle",
+  "label": "ch:ar-gazelle-fox-pigeon-duck-turtle",
+  "canDo": "I can say a gazelle, a fox, a pigeon, a duck and a turtle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C135-sulahfah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say a gazelle, a fox, a pigeon, a duck and a turtle.",
+    "assesses": [
+      "AR-LEX-C135-THINGS135-03",
+      "AR-LEX-C135-THINGS135-04",
+      "AR-LEX-C135-THINGS135-05"
+    ]
+  }
+}

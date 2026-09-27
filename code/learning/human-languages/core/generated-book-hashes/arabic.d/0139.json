@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:a6a087fd884a6a03",
+  "lessonIds": [
+    "AR-C139-lihya",
+    "AR-C139-sharib",
+    "AR-C139-sadr",
+    "AR-C139-khasr",
+    "AR-C139-mirfaq",
+    "AR-R139-first-pass-nature",
+    "AR-R139-second-pass-animals"
+  ],
+  "tex": "arabic/book/chapters/ch139-beard-moustache-chest-waist-elbow.tex"
+}

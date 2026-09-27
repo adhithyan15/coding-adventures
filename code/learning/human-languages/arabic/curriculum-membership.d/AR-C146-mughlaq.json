@@ -1,0 +1,11 @@
+{
+  "id": "AR-C146-mughlaq",
+  "pathSegment": "AR-PATH-146-QUAL146",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-146-QUAL146",
+      "order": 4
+    }
+  ]
+}

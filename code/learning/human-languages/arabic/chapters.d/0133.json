@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Desert, Lake, Lightning, Thunder, Storm",
+  "label": "ch:ar-desert-lake-lightning-thunder-storm",
+  "canDo": "I can say a desert, a lake, lightning, thunder and a storm.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C133-asifa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say a desert, a lake, lightning, thunder and a storm.",
+    "assesses": [
+      "AR-LEX-C133-THINGS133-03",
+      "AR-LEX-C133-THINGS133-04",
+      "AR-LEX-C133-THINGS133-05"
+    ]
+  }
+}

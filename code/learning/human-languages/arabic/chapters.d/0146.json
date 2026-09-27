@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Useful, Dangerous, Safe, Open, Closed",
+  "label": "ch:ar-useful-dangerous-safe-open-closed",
+  "canDo": "I can say useful, dangerous, safe, open and closed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "AR-C146-mughlaq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say useful, dangerous, safe, open and closed.",
+    "assesses": [
+      "AR-LEX-C146-QUAL146-03",
+      "AR-LEX-C146-QUAL146-04",
+      "AR-LEX-C146-QUAL146-05"
+    ]
+  }
+}

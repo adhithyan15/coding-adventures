@@ -1,0 +1,11 @@
+{
+  "id": "AR-C125-sunduq",
+  "pathSegment": "AR-PATH-125-THINGS125",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-125-THINGS125",
+      "order": 4
+    }
+  ]
+}

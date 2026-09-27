@@ -1,0 +1,11 @@
+{
+  "id": "AR-R139-first-pass-nature",
+  "pathSegment": "AR-PATH-139-THINGS139",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-139-THINGS139",
+      "order": 5
+    }
+  ]
+}

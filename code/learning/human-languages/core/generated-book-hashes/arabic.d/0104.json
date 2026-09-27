@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:15cb961b754bfede",
+  "lessonIds": [
+    "AR-C104-janub",
+    "AR-C104-sharq",
+    "AR-C104-gharb",
+    "AR-C104-makan",
+    "AR-C104-unwan"
+  ],
+  "tex": "arabic/book/chapters/ch104-south-east-west-place-address.tex"
+}

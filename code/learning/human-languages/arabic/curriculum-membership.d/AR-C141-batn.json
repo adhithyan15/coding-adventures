@@ -1,0 +1,11 @@
+{
+  "id": "AR-C141-batn",
+  "pathSegment": "AR-PATH-141-THINGS141",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-141-THINGS141",
+      "order": 1
+    }
+  ]
+}

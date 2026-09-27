@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R147-second-pass-town-school-and-work",
+    "language": "arabic",
+    "chapter": 147,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db335676262558e4"
+  },
+  "findings": []
+}
