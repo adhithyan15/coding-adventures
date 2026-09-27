@@ -128,18 +128,27 @@ rather than letting them read as silent gaps.
    a CI-only raster snapshot, not a host, interaction claim, or release
    artifact. **Implemented for #16151.**
 
+### Product release checkpoint
+
+8. **P1 [#16165](https://github.com/adhithyan15/coding-adventures/issues/16165)
+   — publish `task-app-v0.5.0`.** Record the completed Paint gate as the
+   all-nine-backend product-coverage checkpoint. This minor release recognizes
+   a newly verified capability, but does not promote Paint, static HTML, or Web
+   Components into a shipped host. The verified web and strict-native artifact
+   matrix remains unchanged.
+
 ### Tier C — reach, stated honestly
 
-8. **iOS: run, don't just compile.** Today's gate proves the generated SwiftUI
+9. **iOS: run, don't just compile.** Today's gate proves the generated SwiftUI
    sources compile for iOS 16. Promoting that to a real claim needs a simulator
    launch and a driven lifecycle against an iOS-built `task-mosaic-app`.
    Until then the README's phrasing — "source portability rather than a claim" —
    stays exactly as written.
-9. **Android has no backend.** `compose` is Compose Desktop. An Android target
+10. **Android has no backend.** `compose` is Compose Desktop. An Android target
    is a new Mosaic backend, not a TaskApp task, and belongs to
    [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
    here. Recorded so its absence is a decision rather than an oversight.
-10. **Signing, notarization, and installers**
+11. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up

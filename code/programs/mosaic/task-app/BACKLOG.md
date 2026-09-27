@@ -29,7 +29,10 @@
 > work, not resumed feature composition or new release artifacts. The
 > package-expanded Paint visual gate in #16151 closes the final TaskApp-scoped
 > backend gap with reviewed light/dark CI goldens, without claiming a host,
-> interaction support, or new release artifact.
+> interaction support, or new release artifact. The resulting product-scoped
+> `task-app-v0.5.0` coverage checkpoint is tracked by
+> [#16165](https://github.com/adhithyan15/coding-adventures/issues/16165); it
+> must keep the verified downloadable artifact matrix unchanged.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
@@ -87,7 +90,10 @@ links existing Mosaic work instead of duplicating it.
    earlier focused release-lane repair,
    [#16116](https://github.com/adhithyan15/coding-adventures/issues/16116),
    was completed in #16117; generated notes now make the dated changelog
-   authoritative before supporting GitHub history.**
+   authoritative before supporting GitHub history. The next incremental
+   checkpoint, `task-app-v0.5.0`, is tracked by
+   [#16165](https://github.com/adhithyan15/coding-adventures/issues/16165) and
+   records the completed Paint coverage without adding a Paint artifact.**
 8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
    **Done in #13602.**
@@ -246,6 +252,14 @@ see the spec for the completion bar each one has to clear.
    Paint visual-regression gate — the only mechanism that would catch a purely
    visual regression. **Done with reviewed light/dark 1280 x 900 CPU Skia
    goldens; CI-only, with no host or release-artifact claim.**
+
+**Selected release checkpoint.**
+
+9. **P1 [#16165](https://github.com/adhithyan15/coding-adventures/issues/16165):**
+   publish `task-app-v0.5.0` as the product-scoped all-nine-backend coverage
+   checkpoint. The release records the completed Paint visual gate while
+   retaining the existing verified web/native downloadable artifact matrix;
+   static HTML, Web Components, and Paint remain CI-only outputs.
 
 **Tier C — reach, stated rather than silently missing.** iOS compiles but does
 not run; Android has no Mosaic backend and belongs to #12017; signing,
