@@ -5,6 +5,8 @@ OBJECT IDENTIFIER, an omitted-default critical flag, and an opaque OCTET
 STRING. It shares the caller's `der-asn1` limits and owns no extension
 registry, certificate policy, or cryptographic authority.
 
+Successful values reject zero-value use and return defensive byte snapshots.
+
 The native test front door consumes all 48 language-neutral X.509 Extension
 v1 cases.
 

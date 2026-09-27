@@ -251,10 +251,24 @@ class DerBitString:
     bit_length: int
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True, slots=True, init=False)
 class ObjectIdentifier:
-    encoded: memoryview
+    """A validated OID with a detached immutable encoding."""
+
+    encoded: bytes
     arcs: tuple[int, ...]
+
+    def __new__(cls, *_args: object, **_kwargs: object) -> ObjectIdentifier:
+        raise TypeError("ObjectIdentifier values are created by DER decoding")
+
+    @classmethod
+    def _from_validated(
+        cls, encoded: bytes | bytearray | memoryview, arcs: tuple[int, ...]
+    ) -> ObjectIdentifier:
+        instance = object.__new__(cls)
+        object.__setattr__(instance, "encoded", bytes(encoded))
+        object.__setattr__(instance, "arcs", tuple(arcs))
+        return instance
 
     @property
     def arc_count(self) -> int:
@@ -376,7 +390,7 @@ def _decode_oid_contents(element: Asn1Element, limits: Asn1Limits) -> ObjectIden
                 Asn1ErrorKind.OID_ARC_LIMIT_EXCEEDED,
                 element.value_offset + arc_start,
             )
-    return ObjectIdentifier(encoded, tuple(arcs))
+    return ObjectIdentifier._from_validated(encoded, tuple(arcs))
 
 
 def _parse_base128(

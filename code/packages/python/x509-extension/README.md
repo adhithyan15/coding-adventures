@@ -6,6 +6,9 @@ STRING. It composes with `der-asn1`, shares its depth and element budgets, and
 deliberately owns no extension registry, certificate policy, or cryptographic
 authority.
 
+Successful values are decoder-created and own immutable copies of their OID
+encoding and opaque extension bytes.
+
 ```python
 from der_asn1 import Asn1Decoder
 from x509_extension import decode_x509_extension

@@ -1,14 +1,20 @@
 /** Bounded generic RFC 5280 Extension decoding. */
 
 import {
+  Asn1Cursor,
   Asn1Decoder,
-  type Asn1Element,
+  Asn1Element,
   Asn1Error,
   Asn1ErrorKind,
   type ObjectIdentifier,
   decodeBoolean,
   decodeObjectIdentifier,
   decodeOctetString,
+  trustedCursorRead,
+  trustedCursorRemainingLength,
+  trustedDecoderLimits,
+  trustedElementShape,
+  trustedSequence,
 } from "@coding-adventures/der-asn1";
 
 export const VERSION = "0.1.0";
@@ -80,10 +86,11 @@ function childOffset(valueOffset: number, valueLength: number, remainingLength: 
 }
 
 export function decodeX509Extension(decoder: Asn1Decoder, element: Asn1Element): X509Extension {
-  const valueOffset = element.header.length;
-  const valueLength = element.value.length;
-  let fields;
-  try { fields = decoder.sequence(element); }
+  const rootShape = trustedElementShape(element);
+  const valueOffset = rootShape.headerLength;
+  const valueLength = rootShape.valueLength;
+  let fields: Asn1Cursor;
+  try { fields = trustedSequence(decoder, element); }
   catch (error: unknown) {
     /* v8 ignore else -- dependency documents Asn1Error as its only failure */
     if (error instanceof Asn1Error) throw structure(error);
@@ -92,7 +99,7 @@ export function decodeX509Extension(decoder: Asn1Decoder, element: Asn1Element):
   }
 
   const read = (offset: number): Asn1Element | undefined => {
-    try { return fields.read(decoder); }
+    try { return trustedCursorRead(fields, decoder); }
     catch (error: unknown) {
       /* v8 ignore else -- dependency documents Asn1Error as its only failure */
       if (error instanceof Asn1Error) throw structure(error, valueOffset, offset);
@@ -101,11 +108,11 @@ export function decodeX509Extension(decoder: Asn1Decoder, element: Asn1Element):
     }
   };
 
-  const idOffset = childOffset(valueOffset, valueLength, fields.remaining.length);
+  const idOffset = childOffset(valueOffset, valueLength, trustedCursorRemainingLength(fields));
   const idElement = read(idOffset);
   if (idElement === undefined) throw new X509ExtensionError(X509ExtensionErrorKind.MissingExtensionId, idOffset);
   let extensionId;
-  try { extensionId = decodeObjectIdentifier(idElement, decoder.limits); }
+  try { extensionId = decodeObjectIdentifier(idElement, trustedDecoderLimits(decoder)); }
   catch (error: unknown) {
     /* v8 ignore else -- dependency documents Asn1Error as its only failure */
     if (error instanceof Asn1Error) throw semantic(X509ExtensionErrorKind.InvalidExtensionId, error, idOffset);
@@ -113,14 +120,14 @@ export function decodeX509Extension(decoder: Asn1Decoder, element: Asn1Element):
     throw error;
   }
 
-  const secondOffset = childOffset(valueOffset, valueLength, fields.remaining.length);
+  const secondOffset = childOffset(valueOffset, valueLength, trustedCursorRemainingLength(fields));
   const second = read(secondOffset);
   if (second === undefined) throw new X509ExtensionError(X509ExtensionErrorKind.MissingExtensionValue, secondOffset);
 
   let critical = false;
   let valueElement = second;
   let valueElementOffset = secondOffset;
-  if (second.tag.number === BOOLEAN_TAG) {
+  if (trustedElementShape(second).tag.number === BOOLEAN_TAG) {
     try { critical = decodeBoolean(second); }
     catch (error: unknown) {
       /* v8 ignore else -- dependency documents Asn1Error as its only failure */
@@ -129,7 +136,7 @@ export function decodeX509Extension(decoder: Asn1Decoder, element: Asn1Element):
       throw error;
     }
     if (!critical) throw new X509ExtensionError(X509ExtensionErrorKind.EncodedDefaultCritical, secondOffset);
-    valueElementOffset = childOffset(valueOffset, valueLength, fields.remaining.length);
+    valueElementOffset = childOffset(valueOffset, valueLength, trustedCursorRemainingLength(fields));
     const third = read(valueElementOffset);
     if (third === undefined) throw new X509ExtensionError(X509ExtensionErrorKind.MissingExtensionValue, valueElementOffset);
     valueElement = third;
@@ -144,7 +151,7 @@ export function decodeX509Extension(decoder: Asn1Decoder, element: Asn1Element):
     throw error;
   }
 
-  const trailingOffset = childOffset(valueOffset, valueLength, fields.remaining.length);
+  const trailingOffset = childOffset(valueOffset, valueLength, trustedCursorRemainingLength(fields));
   if (read(trailingOffset) !== undefined) {
     throw new X509ExtensionError(X509ExtensionErrorKind.TrailingElement, trailingOffset);
   }

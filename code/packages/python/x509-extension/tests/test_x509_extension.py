@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import json
 import sys
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 from typing import Any, cast
 
-from der_asn1 import Asn1Decoder, Asn1Element, Asn1Limits
+import pytest
+from der_asn1 import Asn1Decoder, Asn1Element, Asn1Limits, ObjectIdentifier
 from der_tlv import DerLimits
 
-from x509_extension import X509ExtensionError, decode_x509_extension
+from x509_extension import X509Extension, X509ExtensionError, decode_x509_extension
 
 FIXTURE_ROOT = Path(__file__).resolve().parents[4] / "specs/fixtures"
 FIXTURE = FIXTURE_ROOT / "x509-extension-v1/cases.json"
@@ -91,5 +93,28 @@ def test_consumes_every_closed_x509_extension_case() -> None:
 def test_error_text_is_payload_blind() -> None:
     decoder = Asn1Decoder()
     root = decoder.decode_exact(bytes.fromhex("30080601800403deadbe"))
-    result = attempt(decoder, root)
-    assert "deadbe" not in json.dumps(result)
+    with pytest.raises(X509ExtensionError) as caught:
+        decode_x509_extension(decoder, root)
+    assert "deadbe" not in str(caught.value).lower()
+    assert "deadbe" not in repr(caught.value).lower()
+
+
+def test_values_are_private_detached_and_immutable() -> None:
+    source = bytearray.fromhex("30090603551d1104023000")
+    decoder = Asn1Decoder()
+    root = decoder.decode_exact(source)
+    extension = decode_x509_extension(decoder, root)
+
+    source[4] = 0x2A
+    source[-1] = 0xFF
+    assert extension.extension_value == bytes.fromhex("3000")
+    assert extension.extension_id.encoded == bytes.fromhex("551d11")
+    assert isinstance(extension.extension_value, bytes)
+    assert isinstance(extension.extension_id.encoded, bytes)
+
+    with pytest.raises(TypeError, match="created by decode_x509_extension"):
+        X509Extension(extension.extension_id, False, b"")  # type: ignore[call-arg]
+    with pytest.raises(TypeError, match="created by DER decoding"):
+        ObjectIdentifier(b"\x55\x1d\x11", (2, 5, 29, 17))  # type: ignore[call-arg]
+    with pytest.raises(FrozenInstanceError):
+        extension.critical = True  # type: ignore[misc]

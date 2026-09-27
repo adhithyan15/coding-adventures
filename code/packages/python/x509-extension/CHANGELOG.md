@@ -4,4 +4,5 @@
 
 - Added bounded generic RFC 5280 Extension decoding with omitted-default
   critical handling, shared decoder budgets, stable redacted errors, opaque
-  extension values, and all 48 portable conformance cases.
+  detached extension values, decoder-only value construction, and all 48
+  portable conformance cases.

@@ -355,14 +355,26 @@ func TestPortableConformance(t *testing.T) {
 }
 
 func TestLimitsAndOIDEquality(t *testing.T) {
+	input := []byte{0x06, 0x03, 0x2a, 0x03, 0x04}
 	decoder := NewDecoder(DefaultLimits())
-	element, err := decoder.DecodeExact([]byte{0x06, 0x03, 0x2a, 0x03, 0x04})
+	element, err := decoder.DecodeExact(input)
 	if err != nil {
 		t.Fatal(err)
 	}
 	oid, err := DecodeObjectIdentifier(element, DefaultLimits())
 	if err != nil || !oid.Equals([]uint64{1, 2, 3, 4}) || oid.Equals([]uint64{1, 2, 3}) {
 		t.Fatal("OID equality failed")
+	}
+	input[2] = 0x7f
+	encoded := oid.Encoded()
+	encoded[0] = 0x7f
+	arcs := oid.Arcs()
+	arcs[0] = 9
+	if got := hex.EncodeToString(oid.Encoded()); got != "2a0304" {
+		t.Fatalf("OID encoding alias leaked: %s", got)
+	}
+	if !reflect.DeepEqual(oid.Arcs(), []uint64{1, 2, 3, 4}) || oid.ArcCount() != 4 {
+		t.Fatalf("OID arc alias leaked: %#v", oid.Arcs())
 	}
 }
 
@@ -378,5 +390,22 @@ func TestZeroValuesCannotForgeValidatedState(t *testing.T) {
 		t.Fatal("zero-value DERInteger bypassed validation")
 	} else if typed, ok := err.(*Error); !ok || typed.Kind != EmptyInteger {
 		t.Fatalf("unexpected zero-value integer error: %#v", err)
+	}
+
+	assertPanics(t, func() { _ = (ObjectIdentifier{}).Encoded() })
+	assertPanics(t, func() { _ = (ObjectIdentifier{}).Arcs() })
+	assertPanics(t, func() { _ = (ObjectIdentifier{}).ArcCount() })
+	assertPanics(t, func() { _ = (ObjectIdentifier{}).Equals(nil) })
+}
+
+func assertPanics(t *testing.T, operation func()) {
+	t.Helper()
+	panicked := false
+	func() {
+		defer func() { panicked = recover() != nil }()
+		operation()
+	}()
+	if !panicked {
+		t.Fatal("operation did not panic")
 	}
 }

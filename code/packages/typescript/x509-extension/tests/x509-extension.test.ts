@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { DerLimits } from "@coding-adventures/der-tlv";
-import { Asn1Decoder, type Asn1Element, type Asn1Limits } from "@coding-adventures/der-asn1";
+import { Asn1Cursor, Asn1Decoder, Asn1Element, type Asn1Limits } from "@coding-adventures/der-asn1";
 import {
   X509Extension,
   X509ExtensionError,
@@ -117,10 +117,80 @@ describe("portable x509-extension-v1", () => {
 
   it("blocks forged values and returns defensive bytes", () => {
     expect(() => new X509Extension({}, {} as never, false, new Uint8Array())).toThrow(TypeError);
+    const input = materialize([{ hex: "30090603551d1104023000" }]);
     const decoder = new Asn1Decoder();
-    const value = decodeX509Extension(decoder, decoder.decodeExact(materialize([{ hex: "30090603551d1104023000" }])));
+    const value = decodeX509Extension(decoder, decoder.decodeExact(input));
+    input[4] = 0x2a;
+    input[input.length - 1] = 0xff;
     const first = value.extensionValue;
     first[0] = 0xff;
     expect(hex(value.extensionValue)).toBe("3000");
+    expect(value.extensionId.arcs).toEqual([2n, 5n, 29n, 17n]);
+
+    const hostileDecoder = new Asn1Decoder();
+    const hostileRoot = hostileDecoder.decodeExact(materialize([{ hex: "30080601800403deadbe" }]));
+    let actual: unknown;
+    try { decodeX509Extension(hostileDecoder, hostileRoot); }
+    catch (error: unknown) { actual = error; }
+    expect(actual).toBeInstanceOf(X509ExtensionError);
+    expect(String(actual).toLowerCase()).not.toContain("deadbe");
+  });
+
+  it("ignores poisoned public DER accessors and methods", () => {
+    const elementDescriptors = {
+      tag: Object.getOwnPropertyDescriptor(Asn1Element.prototype, "tag")!,
+      header: Object.getOwnPropertyDescriptor(Asn1Element.prototype, "header")!,
+      value: Object.getOwnPropertyDescriptor(Asn1Element.prototype, "value")!,
+    };
+    const cursorDescriptors = {
+      remaining: Object.getOwnPropertyDescriptor(Asn1Cursor.prototype, "remaining")!,
+      read: Object.getOwnPropertyDescriptor(Asn1Cursor.prototype, "read")!,
+    };
+    try {
+      Object.defineProperty(Asn1Element.prototype, "tag", {
+        configurable: true,
+        get: () => ({ class: "universal", constructed: false, number: 1 }),
+      });
+      Object.defineProperty(Asn1Element.prototype, "header", {
+        configurable: true,
+        get: () => new Uint8Array(292),
+      });
+      Object.defineProperty(Asn1Element.prototype, "value", {
+        configurable: true,
+        get: () => new Uint8Array(292),
+      });
+      Object.defineProperty(Asn1Cursor.prototype, "remaining", {
+        configurable: true,
+        get: () => new Uint8Array(),
+      });
+      Object.defineProperty(Asn1Cursor.prototype, "read", {
+        configurable: true,
+        value: () => undefined,
+      });
+
+      const decoder = new Asn1Decoder();
+      Object.defineProperty(decoder, "limits", { configurable: true, value: { poisoned: true } });
+      Object.defineProperty(decoder, "sequence", {
+        configurable: true,
+        value: () => { throw new Error("poisoned sequence"); },
+      });
+      const root = decoder.decodeExact(materialize([{ hex: "30090603551d1104023000" }]));
+      Object.defineProperty(root, "header", { configurable: true, value: new Uint8Array(292) });
+      Object.defineProperty(root, "value", { configurable: true, value: new Uint8Array(292) });
+      Object.defineProperty(root, "tag", {
+        configurable: true,
+        value: { class: "universal", constructed: false, number: 1 },
+      });
+      const decoded = decodeX509Extension(decoder, root);
+      expect(decoded.extensionId.arcs).toEqual([2n, 5n, 29n, 17n]);
+      expect(decoded.critical).toBe(false);
+      expect(hex(decoded.extensionValue)).toBe("3000");
+    } finally {
+      Object.defineProperty(Asn1Element.prototype, "tag", elementDescriptors.tag);
+      Object.defineProperty(Asn1Element.prototype, "header", elementDescriptors.header);
+      Object.defineProperty(Asn1Element.prototype, "value", elementDescriptors.value);
+      Object.defineProperty(Asn1Cursor.prototype, "remaining", cursorDescriptors.remaining);
+      Object.defineProperty(Asn1Cursor.prototype, "read", cursorDescriptors.read);
+    }
   });
 });

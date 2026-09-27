@@ -2,6 +2,11 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+- Added brand-checked composition helpers backed by private element, decoder,
+  and cursor state so downstream decoders do not trust overridable accessors.
+
 ## [0.1.0] - 2026-09-20
 
 ### Added

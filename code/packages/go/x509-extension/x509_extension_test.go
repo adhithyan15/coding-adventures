@@ -171,3 +171,59 @@ func TestPortableConformance(t *testing.T) {
 		})
 	}
 }
+
+func TestValuesAreValidatedDetachedAndPayloadBlind(t *testing.T) {
+	input, err := hex.DecodeString("30090603551d1104023000")
+	if err != nil {
+		t.Fatal(err)
+	}
+	decoder := derasn1.NewDecoder(derasn1.DefaultLimits())
+	root, err := decoder.DecodeExact(input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	extension, err := DecodeX509Extension(decoder, root)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	input[4] = 0x2a
+	input[len(input)-1] = 0xff
+	value := extension.ExtensionValue()
+	value[0] = 0xff
+	if got := hex.EncodeToString(extension.ExtensionValue()); got != "3000" {
+		t.Fatalf("extension value alias leaked: %s", got)
+	}
+	encoded := extension.ExtensionID().Encoded()
+	encoded[0] = 0xff
+	if got := hex.EncodeToString(extension.ExtensionID().Encoded()); got != "551d11" {
+		t.Fatalf("OID encoding alias leaked: %s", got)
+	}
+
+	assertPanics(t, func() { _ = (X509Extension{}).ExtensionID() })
+	assertPanics(t, func() { _ = (X509Extension{}).Critical() })
+	assertPanics(t, func() { _ = (X509Extension{}).ExtensionValue() })
+	assertPanics(t, func() { _ = (derasn1.ObjectIdentifier{}).Encoded() })
+
+	hostileDecoder := derasn1.NewDecoder(derasn1.DefaultLimits())
+	hostileRoot, err := hostileDecoder.DecodeExact([]byte{0x30, 0x08, 0x06, 0x01, 0x80, 0x04, 0x03, 0xde, 0xad, 0xbe})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = DecodeX509Extension(hostileDecoder, hostileRoot)
+	if err == nil || strings.Contains(strings.ToLower(err.Error()), "deadbe") {
+		t.Fatalf("hostile payload leaked in error: %v", err)
+	}
+}
+
+func assertPanics(t *testing.T, operation func()) {
+	t.Helper()
+	panicked := false
+	func() {
+		defer func() { panicked = recover() != nil }()
+		operation()
+	}()
+	if !panicked {
+		t.Fatal("operation did not panic")
+	}
+}

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import type { DerLimits } from "@coding-adventures/der-tlv";
+import { DerCursor, type DerLimits } from "@coding-adventures/der-tlv";
 import {
   Asn1Cursor,
   Asn1Decoder,
@@ -20,6 +20,11 @@ import {
   decodeObjectIdentifier,
   decodeOctetString,
   defaultAsn1Limits,
+  trustedCursorRead,
+  trustedCursorRemainingLength,
+  trustedDecoderLimits,
+  trustedElementShape,
+  trustedSequence,
 } from "../src/index.js";
 
 interface Segment { hex?: string; repeat_hex?: string; count?: number }
@@ -286,14 +291,60 @@ describe("DER ASN.1 v1 portable conformance", () => {
       depth: { value: -1, configurable: true },
     });
     expect(() => decodeBoolean(fake)).toThrowError(expect.objectContaining({ kind: Asn1ErrorKind.UnexpectedTag }));
+    expect(() => trustedElementShape(fake)).toThrowError(expect.objectContaining({ kind: Asn1ErrorKind.UnexpectedTag }));
     expect(() => new Asn1Decoder({ ...defaultAsn1Limits(), maxDepth: 1 }).sequence(fake))
       .toThrowError(expect.objectContaining({ kind: Asn1ErrorKind.UnexpectedTag }));
 
     const real = new Asn1Decoder().decodeExact(Uint8Array.of(0x01, 0x01, 0xff));
     const descriptor = Object.getOwnPropertyDescriptor(Asn1Element.prototype, "tag")!;
     Object.defineProperty(Asn1Element.prototype, "tag", { configurable: true, get: () => ({ class: "universal", constructed: false, number: 4 }) });
-    try { expect(decodeBoolean(real)).toBe(true); }
+    Object.defineProperties(real, {
+      header: { configurable: true, get: () => Uint8Array.of(0x30, 0x7f) },
+      tag: { configurable: true, get: () => ({ class: "universal", constructed: true, number: 16 }) },
+      value: { configurable: true, get: () => Uint8Array.of(0x00) },
+    });
+    try {
+      expect(decodeBoolean(real)).toBe(true);
+      expect(trustedElementShape(real)).toEqual({
+        tag: { class: "universal", constructed: false, number: 1 },
+        headerLength: 2,
+        valueLength: 1,
+      });
+    }
     finally { Object.defineProperty(Asn1Element.prototype, "tag", descriptor); }
+
+    const decoder = new Asn1Decoder();
+    const sequence = decoder.decodeExact(Uint8Array.of(0x30, 0x02, 0x05, 0x00));
+    Object.defineProperties(decoder, {
+      limits: { configurable: true, get: () => { throw new Error("poisoned limits"); } },
+      sequence: { configurable: true, value: () => { throw new Error("poisoned sequence"); } },
+    });
+    expect(trustedDecoderLimits(decoder)).toEqual(defaultAsn1Limits());
+    const cursor = trustedSequence(decoder, sequence);
+    const fakeCursor = Object.create(Asn1Cursor.prototype) as Asn1Cursor;
+    expect(() => trustedCursorRemainingLength(fakeCursor)).toThrow(TypeError);
+    expect(() => trustedCursorRead(fakeCursor, decoder)).toThrow(TypeError);
+
+    const remainingDescriptor = Object.getOwnPropertyDescriptor(DerCursor.prototype, "remaining")!;
+    const readDescriptor = Object.getOwnPropertyDescriptor(DerCursor.prototype, "read")!;
+    const finishDescriptor = Object.getOwnPropertyDescriptor(DerCursor.prototype, "finish")!;
+    Object.defineProperties(DerCursor.prototype, {
+      remaining: { configurable: true, get: () => new Uint8Array() },
+      read: { configurable: true, value: () => { throw new Error("poisoned read"); } },
+      finish: { configurable: true, value: () => { throw new Error("poisoned finish"); } },
+    });
+    try {
+      expect(trustedCursorRemainingLength(cursor)).toBe(2);
+      expect(trustedCursorRead(cursor, decoder)).toBeInstanceOf(Asn1Element);
+      expect(trustedCursorRemainingLength(cursor)).toBe(0);
+      cursor.finish();
+    } finally {
+      Object.defineProperties(DerCursor.prototype, {
+        remaining: remainingDescriptor,
+        read: readDescriptor,
+        finish: finishDescriptor,
+      });
+    }
   });
 
   it("keeps validated typed bytes stable after returned views are mutated", () => {

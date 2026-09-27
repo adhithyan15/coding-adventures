@@ -38,11 +38,29 @@ type X509Extension struct {
 	extensionID    derasn1.ObjectIdentifier
 	critical       bool
 	extensionValue []byte
+	valid          bool
 }
 
-func (e X509Extension) ExtensionID() derasn1.ObjectIdentifier { return e.extensionID }
-func (e X509Extension) Critical() bool                        { return e.critical }
-func (e X509Extension) ExtensionValue() []byte                { return e.extensionValue }
+func (e X509Extension) requireValid() {
+	if !e.valid {
+		panic("X509Extension is not a validated value")
+	}
+}
+
+func (e X509Extension) ExtensionID() derasn1.ObjectIdentifier {
+	e.requireValid()
+	return e.extensionID
+}
+
+func (e X509Extension) Critical() bool {
+	e.requireValid()
+	return e.critical
+}
+
+func (e X509Extension) ExtensionValue() []byte {
+	e.requireValid()
+	return append([]byte(nil), e.extensionValue...)
+}
 
 func DecodeX509Extension(decoder *derasn1.ASN1Decoder, element derasn1.ASN1Element) (X509Extension, error) {
 	valueOffset := len(element.Header())
@@ -107,7 +125,12 @@ func DecodeX509Extension(decoder *derasn1.ASN1Decoder, element derasn1.ASN1Eleme
 	if trailing != nil {
 		return X509Extension{}, &Error{Kind: TrailingElement, Offset: trailingOffset}
 	}
-	return X509Extension{extensionID: id, critical: critical, extensionValue: value}, nil
+	return X509Extension{
+		extensionID:    id,
+		critical:       critical,
+		extensionValue: append([]byte(nil), value...),
+		valid:          true,
+	}, nil
 }
 
 func readChild(decoder *derasn1.ASN1Decoder, fields *derasn1.ASN1Cursor, valueOffset, childOffset int) (*derasn1.ASN1Element, error) {

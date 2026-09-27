@@ -81,13 +81,29 @@ class X509ExtensionError(ValueError):
         return cls(kind, child_offset + error.offset, error.kind, error.framing_kind)
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True, slots=True, init=False)
 class X509Extension:
-    """One generic Extension whose opaque value borrows the source buffer."""
+    """One validated generic Extension with detached immutable bytes."""
 
     extension_id: ObjectIdentifier
     critical: bool
-    extension_value: memoryview
+    extension_value: bytes
+
+    def __new__(cls, *_args: object, **_kwargs: object) -> X509Extension:
+        raise TypeError("X509Extension values are created by decode_x509_extension")
+
+    @classmethod
+    def _from_validated(
+        cls,
+        extension_id: ObjectIdentifier,
+        critical: bool,
+        extension_value: bytes | bytearray | memoryview,
+    ) -> X509Extension:
+        instance = object.__new__(cls)
+        object.__setattr__(instance, "extension_id", extension_id)
+        object.__setattr__(instance, "critical", critical)
+        object.__setattr__(instance, "extension_value", bytes(extension_value))
+        return instance
 
 
 def decode_x509_extension(decoder: Asn1Decoder, element: Asn1Element) -> X509Extension:
@@ -165,7 +181,7 @@ def decode_x509_extension(decoder: Asn1Decoder, element: Asn1Element) -> X509Ext
         raise X509ExtensionError(
             X509ExtensionErrorKind.TRAILING_ELEMENT, trailing_offset
         )
-    return X509Extension(extension_id, critical, extension_value)
+    return X509Extension._from_validated(extension_id, critical, extension_value)
 
 
 def _read_child(

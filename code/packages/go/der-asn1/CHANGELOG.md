@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Hardened OBJECT IDENTIFIER values against zero-value construction and byte
+  aliasing.
+
 ## 0.1.0 - 2026-09-20
 
 - Added bounded typed DER values, implicit and constructed helpers, shared
