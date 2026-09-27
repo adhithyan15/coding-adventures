@@ -1,0 +1,6 @@
+requires 'coding-adventures-der-asn1';
+
+on test => sub {
+    requires 'JSON::PP';
+    requires 'Test::More';
+};
