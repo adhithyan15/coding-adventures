@@ -1,7 +1,8 @@
 # WORD00 — Word cross-target language contract
 
-> **Status:** design selected for VM-072. This document does not claim a
-> frontend or a non-trivial Z80/8086 backend implementation.
+> **Status:** design selected for VM-072; WORD01 implements the fixed-width
+> result boundary. This document does not claim a frontend or arithmetic,
+> control-flow, memory, I/O, or call lowering.
 
 ## Purpose
 
@@ -147,6 +148,11 @@ The discriminating proof is `const_u16 0x1234; ret_u16`: Z80 must finish with
 `HL == 0x1234`; 8086 must finish with `AX == 0x1234`. Keep the single-live-value
 restriction. Do not add arithmetic, a frontend, or pretend the byte streams are
 compatible.
+
+**Implemented:** both Rust backends now preserve the declared width for their
+single live result. Executed simulator tests prove `0x1234` in Z80 `HL` and
+8086 `AX`; byte results use Z80 `A` and zero-extended 8086 `AX`. Oversized
+`u8` literals and mismatched typed returns are rejected.
 
 ### WORD02 — two-live-value arithmetic
 

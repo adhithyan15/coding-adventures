@@ -6,13 +6,19 @@ Zilog Z80 backend for `jit-core` / `aot-core`. Seventh lane of the
 source/binary-compatible superset of the 8080, sharing the same
 `LD A, n` / `HALT` (`MVI A, n` / `HLT`) return convention).
 
-## Scope (v0.1.0)
+## Scope (WORD01)
 
 | CIR family | Status |
 |------------|--------|
-| `const_*` (8-bit immediate, single-var case) | `LD A, n` |
-| `ret_*`, `ret_void` | `HALT` (entry-function exit) |
+| `const_u8`, `const_bool` | `LD A, n` |
+| `const_u16` | `LD HL, nn` |
+| matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HALT` (entry-function exit) |
 | Anything else | `None` / `BackendError::UnsupportedOp` |
+
+The historical `const_i64`/`ret_i64` byte-sized smoke path remains for
+compatibility. Exactly one value may be live: typed returns must match the
+current value's width. The observable result ABI is `A` for `u8`/`bool` and
+`HL` for `u16`.
 
 `Backend::run` panics — this backend is emit-only. Load the emitted
 bytes into `z80-simulator` to execute them.

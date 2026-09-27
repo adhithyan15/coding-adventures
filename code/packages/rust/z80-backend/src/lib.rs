@@ -18,8 +18,9 @@
 //!
 //! | CIR family | Status |
 //! |------------|--------|
-//! | `const_*` (8-bit immediate, single-var case) | ✓ → `LD A, n` |
-//! | `ret_*`, `ret_void` | ✓ → `HALT` (entry-function exit) |
+//! | `const_u8`, `const_bool` (single-var case) | ✓ → `LD A, n` |
+//! | `const_u16` (single-var case) | ✓ → `LD HL, nn` |
+//! | matching typed returns, `ret_void` | ✓ → `HALT` (entry-function exit) |
 //! | Anything else | returns `None` |
 //!
 //! Per the GUIDING CONSTRAINT (see
@@ -34,7 +35,7 @@ use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use std::fmt;
 use vm_core::value::Value;
-use z80_encoder::{encode_ld_a_n, HALT, LD_A_N_MAX};
+use z80_encoder::{encode_ld_a_n, encode_ld_rp_nn, HALT, LD_A_N_MAX, PAIR_HL};
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Z80Backend;
@@ -63,7 +64,7 @@ impl fmt::Display for BackendError {
             }
             Self::ImmediateOutOfRange(n) => write!(
                 f,
-                "z80-backend: const {n} exceeds 8-bit LD A,n immediate range [0, 255]"
+                "z80-backend: const {n} is outside the selected unsigned result width"
             ),
         }
     }
@@ -81,7 +82,7 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     }
 
     let mut bytes = Vec::new();
-    let mut last_const_var: Option<String> = None;
+    let mut current_value: Option<CurrentValue> = None;
     // Tracks whether a REAL HALT was emitted -- NOT whether `bytes` is
     // non-empty. CIR that ends in `const_*` with no following `ret_*`
     // would otherwise fall through with `bytes` non-empty (the LD A,n
@@ -99,11 +100,22 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         }
 
         if op.strip_prefix("ret_").is_some() {
+            let expected_width = result_width_for_ret(op)
+                .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
             let src_name = parse_var_src(instr, 0, op)?;
-            if last_const_var.as_deref() != Some(src_name.as_str()) {
+            let Some(value) = current_value.as_ref() else {
+                return Err(BackendError::UndefinedVariable(src_name));
+            };
+            if value.name != src_name {
                 return Err(BackendError::UnsupportedOp(format!(
                     "ret of {src_name:?} which is not the current accumulator var; \
                      multi-register allocation lands in a future increment"
+                )));
+            }
+            if value.width != expected_width {
+                return Err(BackendError::UnsupportedOp(format!(
+                    "{op} cannot return the current {}-bit value",
+                    value.width.bits()
                 )));
             }
             bytes.push(HALT);
@@ -113,9 +125,23 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
 
         if op.strip_prefix("const_").is_some() {
             let dest = require_dest(instr, op)?;
-            let imm8 = encode_immediate_8(instr.srcs.first())?;
-            bytes.extend_from_slice(&encode_ld_a_n(imm8));
-            last_const_var = Some(dest.to_string());
+            let width = result_width_for_const(op)
+                .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
+            match width {
+                ResultWidth::Byte => {
+                    let imm = encode_byte_immediate(op, instr.srcs.first())?;
+                    bytes.extend_from_slice(&encode_ld_a_n(imm));
+                }
+                ResultWidth::Word => {
+                    let imm =
+                        encode_unsigned_immediate(instr.srcs.first(), u16::MAX as i64, false)?;
+                    bytes.extend_from_slice(&encode_ld_rp_nn(PAIR_HL, imm as u16));
+                }
+            }
+            current_value = Some(CurrentValue {
+                name: dest.to_string(),
+                width,
+            });
             terminated = false;
             continue;
         }
@@ -145,26 +171,74 @@ fn parse_var_src(instr: &CIRInstr, idx: usize, op: &str) -> Result<String, Backe
     }
 }
 
-fn encode_immediate_8(op: Option<&CIROperand>) -> Result<u8, BackendError> {
-    let n: i64 = match op {
-        Some(CIROperand::Int(n)) => *n,
-        Some(CIROperand::Bool(b)) => {
-            if *b {
-                1
-            } else {
-                0
-            }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ResultWidth {
+    Byte,
+    Word,
+}
+
+impl ResultWidth {
+    fn bits(self) -> u8 {
+        match self {
+            Self::Byte => 8,
+            Self::Word => 16,
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct CurrentValue {
+    name: String,
+    width: ResultWidth,
+}
+
+fn result_width_for_const(op: &str) -> Option<ResultWidth> {
+    match op {
+        "const_i64" | "const_u8" | "const_bool" => Some(ResultWidth::Byte),
+        "const_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+fn result_width_for_ret(op: &str) -> Option<ResultWidth> {
+    match op {
+        "ret_i64" | "ret_u8" | "ret_bool" => Some(ResultWidth::Byte),
+        "ret_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+fn encode_byte_immediate(op: &str, operand: Option<&CIROperand>) -> Result<u8, BackendError> {
+    if op == "const_bool" {
+        return match operand {
+            Some(CIROperand::Bool(value)) => Ok(u8::from(*value)),
+            _ => Err(BackendError::InvalidOperand(
+                "const_bool srcs[0] must be Bool".into(),
+            )),
+        };
+    }
+    encode_unsigned_immediate(operand, LD_A_N_MAX as i64, op == "const_i64")
+        .map(|value| value as u8)
+}
+
+fn encode_unsigned_immediate(
+    operand: Option<&CIROperand>,
+    max: i64,
+    allow_bool: bool,
+) -> Result<i64, BackendError> {
+    let value = match operand {
+        Some(CIROperand::Int(value)) => *value,
+        Some(CIROperand::Bool(value)) if allow_bool => i64::from(*value),
         _ => {
             return Err(BackendError::InvalidOperand(
-                "const_* srcs[0] must be Int or Bool".into(),
+                "integer const srcs[0] must be Int".into(),
             ));
         }
     };
-    if (0..=LD_A_N_MAX as i64).contains(&n) {
-        Ok(n as u8)
+    if (0..=max).contains(&value) {
+        Ok(value)
     } else {
-        Err(BackendError::ImmediateOutOfRange(n))
+        Err(BackendError::ImmediateOutOfRange(value))
     }
 }
 

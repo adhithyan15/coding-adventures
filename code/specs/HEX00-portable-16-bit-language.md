@@ -1,7 +1,9 @@
 # HEX00 — a portable 16-bit rung after Nib and Oct
 
-Status: design, 2026-09-27. No Hex frontend or executable Hex compiler is
-implemented by this document.
+Status: superseded by `WORD00-word-language.md`, 2026-09-27. This near-
+simultaneous proposal is retained as design history; do not start its H0-H4
+ladder. No Hex frontend or executable Hex compiler is implemented by this
+document.
 
 ## Decision and learning goal
 

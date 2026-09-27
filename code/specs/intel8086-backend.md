@@ -55,22 +55,23 @@ do — see `code/specs/07m-intel-8086-simulator.md` and
 `intel8086-simulator/src/simulator.rs`'s module doc (`phys_addr`) for
 the exact formula and its 20-bit wraparound behaviour.
 
-## Current scope — minimal viable
+## Current scope — WORD01 result ABI
 
 | CIR op family | Lowering |
 |----------------|----------|
-| `const_*` (unsigned 16-bit literal, `[0, 65535]`) | `MOV AX, #imm16` |
-| `ret_*` | `HLT` (only if returning the most recently `const_*`'d variable) |
+| `const_u8`, `const_bool` | `MOV AX, #imm16`, zero-extended (`AH = 0`) |
+| `const_u16` | `MOV AX, #imm16` |
+| matching `ret_u8`, `ret_bool`, `ret_u16` | `HLT` (only if returning the current value at the matching width) |
 | `ret_void` | `HLT` |
 | Empty CIR body | `HLT` |
 | Anything else | `UnsupportedOp` from `compile()`; `None` from the `Backend::compile` trait method |
 
 There is **no real register allocator** — a trivial "last const var"
-scheme tracks which single variable the most recent `const_*` wrote
-into the accumulator (`AX` — the 8086's primary 16-bit accumulator and
-return-value register); `ret_*` only succeeds if it returns exactly
-that variable. Programs needing more than one live value fall through
-to `UnsupportedOp`. AOT treats `None` as a per-function compile
+scheme tracks the name and width of the single current value in `AX`. Byte and
+bool values are zero-extended so `AL` contains the result and `AH == 0`; word
+values occupy all of `AX`. A typed return succeeds only for the current
+variable at the matching width. Programs needing more than one live value fall
+through to `UnsupportedOp`. AOT treats `None` as a per-function compile
 failure; JIT keeps execution on the interpreter tier.
 
 Full op coverage (arithmetic, register-to-register moves, control flow
@@ -165,6 +166,7 @@ straight to disk as a flat `.bin`.
 | Program | CIR | Emitted bytes |
 |---------|-----|----------------|
 | IIR `42` | `const_i64 v=42; ret_i64 v` | `[0xB8, 0x2A, 0x00, 0xF4]` |
+| Word `0x1234` | `const_u16 v=0x1234; ret_u16 v` | `[0xB8, 0x34, 0x12, 0xF4]` |
 | `ret_void` only | `ret_void` | `[0xF4]` |
 | Empty CIR | (none) | `[0xF4]` |
 
@@ -185,12 +187,20 @@ straight to disk as a flat `.bin`.
 |--------------------------|---------|
 | `UnsupportedOp(String)` | CIR operation outside `const_*`/`ret_*` |
 | `InvalidOperand(String)` | Malformed CIR operands or missing `dest` |
-| `UndefinedVariable(String)` | Reserved for a future register allocator (unused in v0.1.0's single-var scheme, where the "not the current AX var" case surfaces as `UnsupportedOp` instead) |
-| `ImmediateOutOfRange(i64)` | A `const_*` literal falls outside `[0, 65535]` — `MOV reg16,#imm16`'s unsigned 16-bit immediate field (`AX` is 16 bits wide) |
+| `UndefinedVariable(String)` | A typed return has no current value |
+| `ImmediateOutOfRange(i64)` | A literal falls outside its selected unsigned width (`u8` or `u16`) |
+
+## WORD01 execution proof
+
+`tests/test_backend.rs::word_u16_result_executes_in_ax` runs
+`MOV AX,0x1234; HLT` in `intel8086-simulator` and asserts the full word result.
+A companion test proves a `u8` boundary produces `AX == 0x00ff`, while other
+regressions reject 256 as a `u8` and reject a `ret_u8` for a current `u16`
+value.
 
 ## Tests
 
-19 unit/integration tests in `tests/test_backend.rs` (mirroring
+21 unit/integration tests in `tests/test_backend.rs` (mirroring
 `mos6502-backend`'s/`arm1-backend`'s test shape) pin the canonical byte
 sequence and edge cases (zero, 16-bit range boundaries — negative and
 `>65535` — bool, multi-var fallthrough, unsupported op, empty CIR,

@@ -22,14 +22,19 @@ machine code. Portable memory is a 16-bit logical offset (flat on Z80, near
 remain namespaced. The detailed contract and proof ladder are in
 `WORD00-word-language.md`.
 
+`HEX00-portable-16-bit-language.md` landed from a near-simultaneous design
+branch with a conflicting frontend-first H0-H4 ladder. The current
+prioritization selects Word's backend-first ladder; HEX00 is retained as
+superseded design history and must not create a parallel implementation.
+
 The next shared-platform queue is:
 
-1. **WORD01 / VM-072 (selected implementation):** establish the fixed-width
-   result ABI in both Rust backends. Execute `const_u16 0x1234; ret_u16` as
-   `HL == 0x1234` on Z80 and `AX == 0x1234` on 8086 while retaining the
-   single-live-value restriction.
-2. **WORD02 / VM-072:** add two-live-value allocation plus wrapping `u8`/`u16`
-   arithmetic and bitwise execution on both targets.
+1. **WORD01 / VM-072 (implementation in review):** the fixed-width result ABI
+   now executes `const_u16 0x1234; ret_u16` as `HL == 0x1234` on Z80 and
+   `AX == 0x1234` on 8086, with byte-boundary and width-mismatch regressions.
+   Keep this item first until its protected PR merges.
+2. **WORD02 / VM-072 (next after WORD01):** add two-live-value allocation plus
+   wrapping `u8`/`u16` arithmetic and bitwise execution on both targets.
 3. **VM-067:** add a useful Rust generated-grammar regeneration guard scoped
    against issue #14202's existing drift.
 4. **VM-073:** audit ets-backed `array_set` extent checks and add a real-Erlang
