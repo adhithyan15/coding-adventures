@@ -27,7 +27,14 @@ the same contract through `NSOpenPanel` / `NSSavePanel` on macOS; on iOS and
 iPadOS it fails each request with a message until UI89 step 6 adds the
 document picker, so an `Await` never wedges. It is tested with a fake host and
 fake panels by `conformance/swiftui/Sources/Conformance/PlatformEffectsChecks.swift`
-(`--platform-effects`). Qt, XAML and Flutter follow (UI87 §7.3).
+(`--platform-effects`).
+
+Qt's `MosaicPlatformEffects.{h,cpp}` (`qt_platform_effects()`) answers the same
+contract through `QFileDialog`. The Qt host delivers effects through one
+routed handler (`MosaicHost::setEffectHandler`) that the library's router
+occupies, falling back to the `effectRequested` signal for the app's own kinds
+(UI87 §7.4a). It is tested headless, with fake dialogs, by
+`tests/qt_effect_driver`. XAML and Flutter follow (UI87 §7.3).
 
 ## Persistence
 

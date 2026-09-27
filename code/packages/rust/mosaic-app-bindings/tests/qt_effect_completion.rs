@@ -125,6 +125,12 @@ fn the_emitted_qt_host_answers_effects() {
         mosaic_app_bindings::qt_runtime_binding_for_application("dev.mosaic.qt-effect-acceptance");
     std::fs::write(project.join("MosaicHost.h"), &binding.header).expect("write header");
     std::fs::write(project.join("MosaicHost.cpp"), &binding.source).expect("write source");
+    // And the platform library every generated Qt app gets (UI87 §7.4a).
+    let platform = mosaic_app_bindings::qt_platform_effects();
+    std::fs::write(project.join("MosaicPlatformEffects.h"), &platform.header)
+        .expect("write platform header");
+    std::fs::write(project.join("MosaicPlatformEffects.cpp"), &platform.source)
+        .expect("write platform source");
 
     let driver = Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("tests")
@@ -168,7 +174,9 @@ fn the_emitted_qt_host_answers_effects() {
             .env("MOSAIC_PROBE_STATE_D", project.join("state-d.json"))
             .env("MOSAIC_PROBE_STATE_E", project.join("state-e.json"))
             .env("MOSAIC_PROBE_STATE_F", project.join("state-f.json"))
-            .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json")),
+            .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json"))
+            .env("MOSAIC_PROBE_STATE_H", project.join("state-h.json"))
+            .env("MOSAIC_PROBE_STATE_I", project.join("state-i.json")),
         "qt effect driver",
     );
 
@@ -199,6 +207,18 @@ fn the_emitted_qt_host_answers_effects() {
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",
         "snapshot works again once the deferred effect is answered",
+        "an app kind reaches the connected handler once",
+        "the connected handler's answer reached the app",
+        "a second owner of a deferred effect is refused",
+        "an unclaimed non-standard kind reaches no handler",
+        "an unclaimed non-standard kind is failed, not left pending",
+        "the platform library routes by kind",
+        "files.save writes the bytes under the chosen name",
+        "files.save leaves no temporary file behind",
+        "files.save refuses names that are paths or disguises",
+        "files.save refuses a launcher when no type is named",
+        "files.open returns the name, type and bytes, never the path",
+        "files.open refuses something that is not a regular file",
     ] {
         assert!(
             stdout.contains(expected),

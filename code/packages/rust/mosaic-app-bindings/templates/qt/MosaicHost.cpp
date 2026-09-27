@@ -538,6 +538,12 @@ QVariantMap MosaicHost::deferEffect(const QVariant &effectId)
         return failure(QStringLiteral(
             "effect %1 is not awaiting an answer").arg(id));
     }
+    // One owner (UI87 §7.4a): a second handler taking the same effect would
+    // show a second dialog and have its answer refused.
+    if (deferred_.contains(id)) {
+        return failure(QStringLiteral(
+            "effect %1 is already owned by another handler").arg(id));
+    }
     // Left in `awaiting_` deliberately: the runtime is still waiting on it, and
     // that is what keeps `snapshot` refused until the answer arrives.
     // `deferred_` only excuses it from the fail sweep.
@@ -636,10 +642,22 @@ QVariantMap MosaicHost::settleEffects(QVariantMap update)
             // The application gets first refusal. A handler connected directly
             // may call completeEffect() from inside this emit, which removes
             // the id from awaiting_ and fills this frame's adoption slot.
-            emit effectRequested(effect.value(QStringLiteral("id")),
-                                 effect.value(QStringLiteral("kind")).toString(),
-                                 effect.value(QStringLiteral("payload")),
-                                 delivery);
+            //
+            // One owner per effect (UI87 §7.4a): the routed handler when one
+            // is set, the signal otherwise -- never both. Called through a
+            // copy, because a handler may replace itself mid-call.
+            if (effectHandler_) {
+                const EffectHandler handler = effectHandler_;
+                handler(effect.value(QStringLiteral("id")),
+                        effect.value(QStringLiteral("kind")).toString(),
+                        effect.value(QStringLiteral("payload")),
+                        delivery);
+            } else {
+                emit effectRequested(effect.value(QStringLiteral("id")),
+                                     effect.value(QStringLiteral("kind")).toString(),
+                                     effect.value(QStringLiteral("payload")),
+                                     delivery);
+            }
 
             // The handler may have deleted us. Nothing below may touch a member.
             if (!alive) {

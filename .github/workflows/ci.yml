@@ -2735,6 +2735,10 @@ jobs:
           # The handler is wired into the generated entry point, which is the
           # half a text assertion over the manifest cannot see.
           grep -q 'installEngramEffects(mosaicHost);' "$engram_output/qt/main.cpp"
+          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, and is in the
+          # build the cmake step below compiles.
+          grep -q 'installMosaicPlatformEffects(mosaicHost, std::nullopt);' "$engram_output/qt/main.cpp"
+          grep -q 'MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)' "$engram_output/qt/CMakeLists.txt"
 
           # The gate: it builds.
           cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
