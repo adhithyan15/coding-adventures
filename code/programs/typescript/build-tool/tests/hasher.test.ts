@@ -24,6 +24,7 @@ import {
   SPECIAL_FILENAMES,
 } from "../src/hasher.js";
 import { DirectedGraph } from "../src/resolver.js";
+import { GlobPatternError } from "../src/glob-match.js";
 import type { Package } from "../src/discovery.js";
 
 type SourceCollectionFixture = {
@@ -616,6 +617,15 @@ describe("collectSourceFilesGlob", () => {
     const files = collectSourceFilesGlob(pkg, []);
     expect(files.length).toBe(1);
     expect(path.basename(files[0])).toBe("BUILD");
+  });
+
+  it("validates every declared pattern before filesystem enumeration", () => {
+    const missingRoot = path.join(tmpDir, "does-not-exist");
+    const pkg = makePkg(missingRoot, "typescript");
+
+    expect(() =>
+      collectSourceFilesGlob(pkg, ["**/*.ts", "[z-a].ts"]),
+    ).toThrow(GlobPatternError);
   });
 
   it("should return sorted files", () => {

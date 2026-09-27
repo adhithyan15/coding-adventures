@@ -14839,6 +14839,44 @@ branch `codex/parity-ruby-glob-hardening-20260927` starts from the exact merge
 revision above. TypeScript glob hardening and Perl diff-selection adoption rank
 second and third respectively and remain pending.
 
+### PR #16181 merge and TypeScript glob selection
+
+PR #16181 completed every final-head check acceptably on
+`b71b83cc586073733b5f5086d1efcd89ffad9320`, including the protected CI gate
+and Ruby CodeQL analysis. GitHub reported the branch clean and mergeable,
+guarded squash auto-merge was enabled only then, and the PR merged
+automatically at `2026-09-27T21:51:43Z` as
+`ae30de3723c82bd73447665145a205d7237a77bb`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+unchanged at 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, 1,512 all-reported identities, 178 high-consensus
+packages, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown language buckets.
+
+The dependency/leverage refresh now selects
+`build-tool-typescript-glob-matcher-complexity-hardening`. Both prerequisites
+are merged, no live open PR overlaps the TypeScript build-tool paths, and this
+bounded leaf unlocks five direct and ten transitive unfinished children while
+closing recursive globstar revisitation and UTF-16 code-unit drift. Read-only
+preparation already established a green baseline of 350 tests, typecheck,
+coverage, and production plus full dependency audits. The fresh branch
+`codex/parity-typescript-glob-hardening-20260927` starts from the exact merge
+revision above. Perl diff-selection adoption ranks next and remains pending.
+
+The TypeScript implementation now compiles complete declared-source lists into
+immutable Unicode-scalar tokens, rejects ambiguous or descending character
+classes with one stable typed error, and reuses compiled patterns in both
+source hashing and Git-diff selection. Rolling-row path and segment dynamic
+programs plus a reverse bracket index replace recursive suffix exploration and
+UTF-16 code-unit semantics. The canonical BUILD front passes typecheck and 361
+tests with 91.45% statement, 85.27% branch, 95.61% function, and 91.37% line
+coverage; the matcher itself reaches 100% line and 98.41% branch coverage.
+Neutral corpus/schema checks, parity inventory, focused Go oracle tests and
+vet, exact-diff planning, package/audit checks, and independent correctness
+and security reviews are clean.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

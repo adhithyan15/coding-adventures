@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16181,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16181",
-    "branch": "codex/parity-ruby-glob-hardening-20260927",
-    "implementation_revision": "12c9919083805bcc9758856c3cfdd04373540243",
+    "number": 16188,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16188",
+    "branch": "codex/parity-typescript-glob-hardening-20260927",
+    "implementation_revision": "3797fadf731bd2dc5acd56e680f9456fc1ef41c8",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-27T20:56:44Z",
-    "pr_number": 16181,
+    "observed_at": "2026-09-27T22:17:35Z",
+    "pr_number": 16188,
     "status": "checks-pending",
-    "notes": "PR #16181 is open and ready for review at implementation revision 12c9919083805bcc9758856c3cfdd04373540243. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued; auto-merge remains disabled until every required check is terminal and acceptable."
+    "notes": "PR #16188 is open and ready for review at validated implementation revision 3797fadf731bd2dc5acd56e680f9456fc1ef41c8. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued; auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "96c35742c97202b04e81cc8da8391f932356fcb3",
+    "revision": "ae30de3723c82bd73447665145a205d7237a77bb",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -1097,7 +1097,7 @@
     {
       "id": "build-tool-ruby-glob-matcher-complexity-hardening",
       "title": "Harden Ruby build-tool glob matcher complexity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-ruby-glob-hardening-20260927",
       "pr_number": 16181,
@@ -1105,6 +1105,10 @@
       "opened_at": "2026-09-27T20:56:40Z",
       "opened_revision": "12c9919083805bcc9758856c3cfdd04373540243",
       "implementation_revision": "12c9919083805bcc9758856c3cfdd04373540243",
+      "merged_head_revision": "b71b83cc586073733b5f5086d1efcd89ffad9320",
+      "merged_at": "2026-09-27T21:51:43Z",
+      "merge_commit": "ae30de3723c82bd73447665145a205d7237a77bb",
+      "merge_notes": "All final-head checks reached terminal acceptable conclusions, GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled only then, and GitHub merged PR #16181 automatically without a plain manual merge command.",
       "selected_at": "2026-09-27T20:37:01Z",
       "selection_revision": "96c35742c97202b04e81cc8da8391f932356fcb3",
       "selection_notes": "Selected only after PR #16171 completed all 48 final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 inventory remains collision-free and unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Both formal prerequisites are merged; no live open PR overlaps the Ruby build-tool matcher paths; and the dependency refresh ranks this item above the matching TypeScript hardening and Perl diff-selection adoption because it closes both recursive-suffix complexity and host File.fnmatch semantic drift while unlocking five direct and ten transitive unfinished children.",
@@ -1135,10 +1139,22 @@
     {
       "id": "build-tool-typescript-glob-matcher-complexity-hardening",
       "title": "Harden TypeScript build-tool glob matcher complexity",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-typescript-glob-hardening-20260927",
+      "pr_number": 16188,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16188",
+      "opened_at": "2026-09-27T22:17:31Z",
+      "opened_revision": "a2cd33201d85755387427ab71e748c89533e5221",
+      "implementation_revision": "3797fadf731bd2dc5acd56e680f9456fc1ef41c8",
+      "selected_at": "2026-09-27T21:55:00Z",
+      "selection_revision": "ae30de3723c82bd73447665145a205d7237a77bb",
+      "selection_notes": "Selected only after PR #16181 completed every final-head check acceptably and merged through guarded squash auto-merge. The collision-checked exact-main schema-3 inventory remains unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 178 high-consensus packages, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Both formal prerequisites are merged; no live open PR overlaps the TypeScript build-tool paths; and the refreshed dependency/leverage audit ranks this bounded matcher hardening above Perl diff-selection adoption because it closes recursive globstar revisitation and UTF-16 code-unit drift while unlocking five direct and ten transitive unfinished children. Read-only baseline preparation already passes dependency installation, typecheck, 350 tests, coverage, and both production and full dependency audits.",
+      "progress_notes": "Replaced recursive suffix exploration and UTF-16 code-unit matching with immutable compiled Unicode-scalar patterns and rolling-row dynamic programs. Strict character classes now match the portable Python-fnmatchcase contract, rejected syntax raises GlobPatternError, and Hasher plus GitDiff compile complete declared-source lists before enumeration or short-circuiting. Exact parser, segment, and path state-count evidence pins the bounded work. The generic BUILD front passes typecheck and 361 tests with 91.45% statement, 85.27% branch, 95.61% function, and 91.37% line coverage; glob-match.ts reaches 100% line and 98.41% branch coverage.",
+      "validated_at": "2026-09-27T22:12:35Z",
+      "validation_revision": "3797fadf731bd2dc5acd56e680f9456fc1ef41c8",
+      "validation_notes": "Passed npm ci, strict typecheck, focused and full Vitest suites, coverage, the canonical BUILD front, npm pack dry-run, production and full audits, the 162-case/285-file neutral corpus validator, 25 conformance schema tests, 10 package-parity tests, collision and unknown-bucket checks, focused Go oracle tests and vet, Go trimpath build, an exact-diff TypeScript dry run selecting only typescript/programs/build-tool, state DAG checks, and git diff checks. Independent correctness review found zero mismatches across 39,050 generated legacy cases. Independent security review found zero mismatches across 30,000 valid segment cases versus Python fnmatchcase and 20,000 path cases versus Ruby, bounded a 100,000-character unmatched-bracket input exactly, confirmed deep freezing and complete-list preflight, and found no new authority, dependency, or vulnerability concern.",
+      "publication_notes": "Opened ready-for-review PR #16188 from the validated clean branch after a normal first push. GitHub reports the PR open, non-draft, and MERGEABLE; initial CI, CodeQL, and human-language checks are queued, so guarded auto-merge remains disabled.",
       "notes": "Replace recursive UTF-16 matching with bounded memoized Unicode-scalar matching, strict portable character classes, and stable failures without Node host authority."
     },
     {
