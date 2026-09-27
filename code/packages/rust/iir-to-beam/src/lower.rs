@@ -4543,6 +4543,9 @@ pub fn lower_iir_to_beam(
 
                         let trap_lbl = alloc_synth_label!("array_get bounds checks");
                         let ok_lbl = alloc_synth_label!("array_get bounds checks");
+                        instrs.push(BEAMInstruction::new(OP_IS_INTEGER, vec![
+                            BEAMOperand::f(trap_lbl), BEAMOperand::x(s_idx),
+                        ]));
                         instrs.push(BEAMInstruction::new(OP_IS_GE, vec![
                             BEAMOperand::f(trap_lbl), BEAMOperand::x(s_idx), BEAMOperand::i(0),
                         ]));

@@ -3872,16 +3872,17 @@ fn beam11_real_erl_unset_string_and_out_of_range_reads() {
         return;
     }
 
-    for (name, array_ty, elem_ty, index, expected) in [
-        ("beam11_string_default", "array<str>", "str", 1, Some("[]")),
-        ("beam11_float_negative", "array<f64>", "f64", -1, None),
-        ("beam11_float_upper", "array<f64>", "f64", 3, None),
-        ("beam11_string_upper", "array<str>", "str", 3, None),
+    for (name, array_ty, elem_ty, index, index_ty, expected) in [
+        ("beam11_string_default", "array<str>", "str", Operand::Int(1), "i64", Some("[]")),
+        ("beam11_float_negative", "array<f64>", "f64", Operand::Int(-1), "i64", None),
+        ("beam11_float_upper", "array<f64>", "f64", Operand::Int(3), "i64", None),
+        ("beam11_string_upper", "array<str>", "str", Operand::Int(3), "i64", None),
+        ("beam11_float_fractional", "array<f64>", "f64", Operand::Float(1.5), "f64", None),
     ] {
         let module = make_module_fn("main", vec![], elem_ty, vec![
             IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
             IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], array_ty),
-            IIRInstr::new("const", Some("i".into()), vec![Operand::Int(index)], "i64"),
+            IIRInstr::new("const", Some("i".into()), vec![index], index_ty),
             IIRInstr::new("array_get", Some("r".into()),
                 vec![Operand::Var("p".into()), Operand::Var("i".into())], elem_ty),
             IIRInstr::new("ret", None, vec![Operand::Var("r".into())], elem_ty),

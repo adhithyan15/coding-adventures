@@ -17,7 +17,7 @@ real Erlang (VM-071, issue #15880).
 For an `array<f64>` of declared length `N`, a read at an integer index in
 `0..N` returns the stored value, or `0.0` if that index has never been written.
 For `array<str>`, the unwritten value is the empty Erlang character list `[]`.
-An index below zero or at least `N` still raises `badarg`. `array_len` remains
+An index below zero, at least `N`, or not an integer still raises `badarg`. `array_len` remains
 the declared length, independent of the number of written elements. Repeated
 writes retain last-write-wins behavior. The integer-array `:atomics` path is
 unchanged.
@@ -26,7 +26,7 @@ unchanged.
 
 BEAM10's handle is `[Table | Length]`. `array_get` already extracts `Table`;
 retain `Length` in a scratch register. Before looking up the key, emit guards
-for `Index >= 0` and `Index < Length`, branching to the existing
+for an integer `Index`, `Index >= 0`, and `Index < Length`, branching to the existing
 `erlang:error(badarg)` trap on failure. On success, call
 `ets:lookup_element(Table, Index, 2, Default)` with arity 4, where `Default`
 is `0.0` for `f64` or `[]` for `str`. OTP 27, the CI runtime, supports this
@@ -43,7 +43,7 @@ calls; BEAM10's earlier table-handle failure demonstrates that risk.
 1. Execute direct `array<f64>` and `array<str>` IIR modules on real `erl`:
    in-range unwritten reads return the typed default, and written values
    still round-trip.
-2. Execute negative and upper-bound reads and assert a `badarg` trap.
+2. Execute negative, upper-bound, and fractional reads and assert a `badarg` trap.
 3. Retain BEAM10's declared-length and sparse-array tests, then execute the
    six affected ALGOL programs on real `erl` and report the exact before/after
    count. A separate ALGOL owner decides when to declare BEAM matrix cells.
