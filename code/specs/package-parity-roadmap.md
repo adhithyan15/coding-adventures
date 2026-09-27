@@ -14425,10 +14425,14 @@ The selected generic Extension tranche now implements the closed 48-case
 language-neutral profile in all 15 established lanes. Its collision-checked
 branch inventory contains 1,470 implementation identities, 4,737 slots, 178
 high-consensus packages, zero canonical collisions, and zero unknown buckets.
-Against fetched `origin/main` `475899c0075c61c825446366d4788ae401a05e44`,
-the branch is behind three unrelated TaskApp and curriculum commits with zero
-changed-path overlap; those commits add no package identity or newly eligible
-unowned parity gap.
+The branch is rebased onto exact fetched `origin/main`
+`9a5df7b77ac3f7a4048f5c29d43e8449ac99b28a`. The intervening TaskApp and
+curriculum commits have no implementation-path overlap and add no package
+identity or newly eligible unowned parity gap. A final live open-PR audit did
+find one same-hunk publication collision with TaskApp PR #16100 in the Lua
+repository-boundary runner and aggregate digest fixture. Publication therefore
+waits for that unrelated PR to resolve, after which the branch must rebase and
+regenerate the collision-checked digest before opening its parity PR.
 
 A pre-publication native review hardened the three weak boundaries without
 widening Extension semantics. Python OID and Extension values now use
@@ -14446,6 +14450,13 @@ Extension suites remain green at 100 percent Python coverage, 97.3 percent Go
 coverage, and 100 percent TypeScript statement, branch, function, and line
 coverage; the neutral fixture, all-lane coverage, capability, TypeScript
 portability, and package-parity tests remain green.
+
+The current-source Go build tool also evaluates all 45 Starlark files, selects
+50 affected dependency-shaped packages, and builds all 50 successfully across
+the 15 established lanes plus downstream Rust extension consumers. Windows
+validation uses a short drive mapping to avoid host-only .NET `MAX_PATH`
+failures and explicitly exposes the installed UV and Elixir toolchains; neither
+environment adjustment changes tracked package behavior.
 
 The audit also identified a distinct aggregate evidence improvement, now
 owned by pending `x509-extension-native-hardening-evidence`. It will record one
