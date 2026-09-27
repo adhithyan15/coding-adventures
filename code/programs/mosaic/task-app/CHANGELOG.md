@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.3.0` accumulate here until the next version is
 cut.
 
+### Fixed — release notes include every dated product change (#16116)
+
+The release publisher now summarizes the exact dated TaskApp changelog section
+before listing label-filtered GitHub history. Native and cross-package product
+changes can no longer disappear from the release delta merely because their
+pull requests lack the `task-app` label. Note generation fails when the selected
+release section has no reviewed change headings.
+
 ## [0.3.0] - 2026-09-27
 
 ### Fixed — WinUI startup failures stay visible and recoverable (#16097)
