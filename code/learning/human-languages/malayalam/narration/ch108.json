@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "The Marks on the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3db09f353829373c",
+  "sourceHash": "fnv1a64:89896627032a6f1f",
   "lessons": [
     {
       "id": "ML-W108-full-stop",
@@ -746,10 +746,10 @@
     {
       "id": "ML-W108-the-rest",
       "sequence": 3990,
-      "title": ": ( ) - / (colon, parentheses, hyphen, slash) — the four that are left",
+      "title": ": ( ) - / (colon, parentheses, hyphen, slash) — the four that are left, two at a time",
       "headword": ": ( ) - /",
       "romanization": "colon, parentheses, hyphen, slash",
-      "gloss": "the four remaining marks — and why two of them have barely appeared in any Malayalam word you have been taught",
+      "gloss": "the colon and the parentheses, the first two of the four remaining marks",
       "script": "malayalam",
       "modality": "pen",
       "derivedModality": "pen",
@@ -758,7 +758,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5f107dfbc17a69f",
+      "sourceHash": "fnv1a64:9d7b6d798caccd93",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -766,10 +766,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice:: ( ) - /",
+          "Script you'll notice:: ( )",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) - / and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -792,11 +792,11 @@
         {
           "index": 1,
           "type": "script",
-          "title": "Script you'll notice:: ( ) - /",
+          "title": "Script you'll notice:: ( )",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four marks, and all four behave the way their English counterparts do."
+              "text": "Four marks are left, and all four behave the way their English counterparts do. This lesson takes the first two; the next takes the hyphen and the slash."
             },
             {
               "kind": "table",
@@ -805,24 +805,154 @@
                 ""
               ],
               "columns": 2,
-              "rowCount": 4,
+              "rowCount": 2,
               "utterances": [
                 ":, (comma) the colon — before a list, or before the thing you are about to spell out.",
-                "( ), (comma) parentheses — a pair, around an aside.",
+                "( ), (comma) parentheses — a pair, around an aside."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The colon and the parentheses take no space on the inside and one on the outside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: the two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two dots, one above the other, on the line. A pair of curves facing each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither changes the Malayalam letter beside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "a colon, then a pair of parentheses",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: a colon, then a pair of parentheses]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the spaces go around each one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the spaces go around each one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark comes before a list? (The colon.) Which comes in a pair, around an aside? (The parentheses.) Next: the hyphen and the slash, and why you have barely met them in a Malayalam word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W108-the-rest-more",
+      "sequence": 3995,
+      "title": "(: ( ) - /, (comma) continued) ((colon, parentheses, hyphen, slash, continued)) — the hyphen and the slash",
+      "headword": "(: ( ) - /, continued)",
+      "romanization": "(colon, parentheses, hyphen, slash, continued)",
+      "gloss": "the hyphen and the slash — and why no Malayalam word you have learned contains a hyphen",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1251324d0b19242e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: - /",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: - / and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last two: which mark comes before a list, and which comes in a pair?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: - /",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
                 "-, (comma) the hyphen — a short stroke joining two pieces.",
                 "/, (comma) the slash — between two alternatives."
               ]
             },
             {
               "kind": "speech",
-              "text": "The colon and the parentheses take no space on the inside and one on the outside. The hyphen and the slash take none on either side."
+              "text": "The hyphen and the slash take no space on either side."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: two of these you have hardly seen",
+          "title": "Grammar Lens: two marks you have hardly seen",
           "segments": [
             {
               "kind": "speech",
@@ -858,21 +988,6 @@
         },
         {
           "index": 3,
-          "type": "writing",
-          "title": "Writing: the four",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two dots, one above the other, on the line. A pair of curves facing each other. A short stroke at mid-height. A leaning stroke."
-            },
-            {
-              "kind": "speech",
-              "text": "None of them changes the Malayalam letter beside it."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -894,11 +1009,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "a colon, a pair of parentheses, a hyphen and a slash, in that order",
+              "instruction": "a hyphen, then a slash",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: a colon, a pair of parentheses, a hyphen and a slash, in that order]"
+              "source": "[YOU WRITE: a hyphen, then a slash]"
             },
             {
               "kind": "prompt",
@@ -912,7 +1027,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -943,7 +1058,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa8b37eeeb01abe2",
+      "sourceHash": "fnv1a64:c4f66add353caccf",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C150-valutana",
+    "language": "malayalam",
+    "chapter": 150,
+    "sequence": 6120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34b9096b1f3095cb"
+  },
+  "findings": []
+}

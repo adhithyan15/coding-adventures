@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Aviyal, Pappadam, Hot, Cold, Long",
+  "label": "ch:ml-aviyal-pappadam-hot-cold-long",
+  "canDo": "I can say aviyal, a pappadam, hot, cold and long.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C164-nilamulla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: i can say aviyal, a pappadam, hot, cold and long.",
+    "assesses": [
+      "ML-LEX-C164-THINGS164-03",
+      "ML-LEX-C164-THINGS164-04",
+      "ML-LEX-C164-THINGS164-05"
+    ]
+  }
+}

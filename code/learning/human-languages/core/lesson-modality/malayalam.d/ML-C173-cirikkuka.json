@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C173-cirikkuka",
+    "language": "malayalam",
+    "chapter": 173,
+    "sequence": 7400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5070328a4991682"
+  },
+  "findings": []
+}

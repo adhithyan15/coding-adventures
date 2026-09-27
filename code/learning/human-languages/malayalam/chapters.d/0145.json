@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Wish, Dream, Hope, Aim, Plan",
+  "label": "ch:ml-wish-dream-hope-aim-plan",
+  "canDo": "I can say a wish, a dream, hope, an aim and a plan.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ML-C145-paddhati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: i can say a wish, a dream, hope, an aim and a plan.",
+    "assesses": [
+      "ML-LEX-C145-WANT145-03",
+      "ML-LEX-C145-WANT145-04",
+      "ML-LEX-C145-WANT145-05"
+    ]
+  }
+}

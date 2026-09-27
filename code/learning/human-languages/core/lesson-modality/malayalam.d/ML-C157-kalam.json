@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C157-kalam",
+    "language": "malayalam",
+    "chapter": 157,
+    "sequence": 6500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85a712cceb890ee4"
+  },
+  "findings": []
+}

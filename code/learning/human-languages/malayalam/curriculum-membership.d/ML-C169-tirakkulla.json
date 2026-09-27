@@ -1,0 +1,11 @@
+{
+  "id": "ML-C169-tirakkulla",
+  "pathSegment": "ML-PATH-169-QUAL169",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-169-QUAL169",
+      "order": 3
+    }
+  ]
+}

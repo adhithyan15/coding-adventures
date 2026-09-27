@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:986cb01f3f903451",
+  "lessonIds": [
+    "ML-C152-eli",
+    "ML-C152-tavala",
+    "ML-C152-ama",
+    "ML-C152-mayil",
+    "ML-C152-tatta"
+  ],
+  "tex": "malayalam/book/chapters/ch152-rat-frog-tortoise-peacock-parrot.tex"
+}

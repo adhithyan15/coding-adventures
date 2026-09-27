@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:975968e5284ff098",
+  "lessonIds": [
+    "ML-C175-snehikkuka",
+    "ML-C175-vilkkuka",
+    "ML-C175-ayaykkuka",
+    "ML-C175-eriyuka",
+    "ML-C175-kayaruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch175.txt",
+  "json": "malayalam/narration/ch175.json",
+  "textHash": "fnv1a64:797a12b02dcadcd0",
+  "jsonHash": "fnv1a64:d5b8b4ebf6372dee",
+  "findings": []
+}

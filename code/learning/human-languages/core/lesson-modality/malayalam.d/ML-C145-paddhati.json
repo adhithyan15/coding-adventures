@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C145-paddhati",
+    "language": "malayalam",
+    "chapter": 145,
+    "sequence": 5890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:095e9f4a342d5248"
+  },
+  "findings": []
+}

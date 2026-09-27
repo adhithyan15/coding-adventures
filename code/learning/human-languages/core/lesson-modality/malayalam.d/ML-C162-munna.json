@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C162-munna",
+    "language": "malayalam",
+    "chapter": 162,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2eda2f8a0c4bf04"
+  },
+  "findings": []
+}

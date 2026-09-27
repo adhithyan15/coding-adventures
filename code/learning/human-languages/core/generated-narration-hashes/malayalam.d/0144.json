@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:adfcecdc5d385d3b",
+  "lessonIds": [
+    "ML-C144-atukontu",
+    "ML-C144-uddesyam",
+    "ML-C144-phalam",
+    "ML-C144-hetu",
+    "ML-C144-nimittam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch144.txt",
+  "json": "malayalam/narration/ch144.json",
+  "textHash": "fnv1a64:4cab4043069fc1b6",
+  "jsonHash": "fnv1a64:ab92bff96bed499f",
+  "findings": []
+}

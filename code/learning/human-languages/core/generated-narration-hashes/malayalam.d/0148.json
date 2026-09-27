@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:6e8d63724824209b",
+  "lessonIds": [
+    "ML-C148-pati",
+    "ML-C148-kinaru",
+    "ML-C148-tatakam",
+    "ML-C148-dvipu",
+    "ML-C148-tiram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch148.txt",
+  "json": "malayalam/narration/ch148.json",
+  "textHash": "fnv1a64:435b10f050365932",
+  "jsonHash": "fnv1a64:3b980de74bc7a5c5",
+  "findings": []
+}

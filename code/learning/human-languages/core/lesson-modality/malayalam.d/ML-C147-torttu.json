@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C147-torttu",
+    "language": "malayalam",
+    "chapter": 147,
+    "sequence": 5960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da8699fc5ca2b3c4"
+  },
+  "findings": []
+}

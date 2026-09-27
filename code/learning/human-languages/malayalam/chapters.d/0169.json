@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Clever, Lazy, Calm, Busy, Expensive",
+  "label": "ch:ml-clever-lazy-calm-busy-expensive",
+  "canDo": "I can say clever, lazy, calm, busy and expensive.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C169-vilakutiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: i can say clever, lazy, calm, busy and expensive.",
+    "assesses": [
+      "ML-LEX-C169-QUAL169-03",
+      "ML-LEX-C169-QUAL169-04",
+      "ML-LEX-C169-QUAL169-05"
+    ]
+  }
+}

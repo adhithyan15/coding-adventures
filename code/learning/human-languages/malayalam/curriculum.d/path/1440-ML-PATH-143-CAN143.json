@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-143-CAN143",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "ML-EXT-143-CAN143"
+  ],
+  "after": []
+}

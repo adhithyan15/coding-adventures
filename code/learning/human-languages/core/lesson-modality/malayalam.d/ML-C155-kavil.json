@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C155-kavil",
+    "language": "malayalam",
+    "chapter": 155,
+    "sequence": 6400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eb4ccb35076f69e"
+  },
+  "findings": []
+}

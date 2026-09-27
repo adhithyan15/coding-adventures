@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Eyebrow, Palm, Rice gruel, Beans, Dal",
+  "label": "ch:ml-eyebrow-palm-rice-gruel-beans-dal",
+  "canDo": "I can say an eyebrow, a palm, rice gruel, beans and dal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C163-parippu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: i can say an eyebrow, a palm, rice gruel, beans and dal.",
+    "assesses": [
+      "ML-LEX-C163-THINGS163-03",
+      "ML-LEX-C163-THINGS163-04",
+      "ML-LEX-C163-THINGS163-05"
+    ]
+  }
+}

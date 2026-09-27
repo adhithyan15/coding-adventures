@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:922d3a62cd48dcb4",
+  "lessonIds": [
+    "ML-C167-nanavulla",
+    "ML-C167-unanniya",
+    "ML-C167-irunta",
+    "ML-C167-telinna",
+    "ML-C167-alamulla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch167.txt",
+  "json": "malayalam/narration/ch167.json",
+  "textHash": "fnv1a64:d80544e8e8b42ee0",
+  "jsonHash": "fnv1a64:b01e76b70750ce1a",
+  "findings": []
+}

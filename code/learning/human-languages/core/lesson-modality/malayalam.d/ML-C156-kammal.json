@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C156-kammal",
+    "language": "malayalam",
+    "chapter": 156,
+    "sequence": 6460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30a110d38c71d614"
+  },
+  "findings": []
+}

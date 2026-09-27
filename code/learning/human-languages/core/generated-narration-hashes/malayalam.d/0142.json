@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:ecac275bdd41fc93",
+  "lessonIds": [
+    "ML-C142-kalivu",
+    "ML-C142-sakti",
+    "ML-C142-avakasam",
+    "ML-C142-avasaram",
+    "ML-C142-upakaranam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch142.txt",
+  "json": "malayalam/narration/ch142.json",
+  "textHash": "fnv1a64:6c8723c9ac4fc7c3",
+  "jsonHash": "fnv1a64:9399cc6329401561",
+  "findings": []
+}

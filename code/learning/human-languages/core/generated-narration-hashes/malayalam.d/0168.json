@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:d085d3868d39e8a1",
+  "lessonIds": [
+    "ML-C168-vitiyulla",
+    "ML-C168-itunniya",
+    "ML-C168-talnna",
+    "ML-C168-palutta",
+    "ML-C168-dhairyamulla",
+    "ML-R168-first-pass-food-animals-and-the-body",
+    "ML-R168-second-pass-clothes-things-you-use-and-describing-wo"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch168.txt",
+  "json": "malayalam/narration/ch168.json",
+  "textHash": "fnv1a64:95fece8a31603006",
+  "jsonHash": "fnv1a64:d2eded90db35b389",
+  "findings": []
+}

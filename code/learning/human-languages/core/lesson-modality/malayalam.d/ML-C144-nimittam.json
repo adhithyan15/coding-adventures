@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C144-nimittam",
+    "language": "malayalam",
+    "chapter": 144,
+    "sequence": 5840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47001d9365869a14"
+  },
+  "findings": []
+}

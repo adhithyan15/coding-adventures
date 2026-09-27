@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 168,
+  "title": "Wide, Narrow, Low, Ripe, Brave",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d085d3868d39e8a1",
+  "lessons": [
+    {
+      "id": "ML-C168-vitiyulla",
+      "sequence": 7100,
+      "title": "വീതിയുള്ള (vītiyuḷḷa) — wide",
+      "headword": "വീതിയുള്ള",
+      "romanization": "vītiyuḷḷa",
+      "gloss": "wide",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1f8c0f5b222b6ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for clear, then the Malayalam for deep."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On a noun, what does -āl mean? (\"By means of,\" as in kattiyāl.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വീതിയുള്ള",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വീതിയുള്ള — vītiyuḷḷa — \"wide\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vītiyuḷḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vītiyuḷḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vītiyuḷḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vītiyuḷḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vītiyuḷḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vītiyuḷḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for clear, then the Malayalam for deep, then say vītiyuḷḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for clear, then the Malayalam for deep, then say *vītiyuḷḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വീതിയുള്ള (vītiyuḷḷa) mean? (\"Wide\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C168-itunniya",
+      "sequence": 7110,
+      "title": "ഇടുങ്ങിയ (iṭuṅṅiya) — narrow",
+      "headword": "ഇടുങ്ങിയ",
+      "romanization": "iṭuṅṅiya",
+      "gloss": "narrow",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc72179991f68fcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for deep, then the Malayalam for wide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇടുങ്ങിയ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇടുങ്ങിയ — iṭuṅṅiya — \"narrow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭuṅṅiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭuṅṅiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭuṅṅiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭuṅṅiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say iṭuṅṅiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *iṭuṅṅiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for deep, then the Malayalam for wide, then say iṭuṅṅiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for deep, then the Malayalam for wide, then say *iṭuṅṅiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇടുങ്ങിയ (iṭuṅṅiya) mean? (\"Narrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C168-talnna",
+      "sequence": 7120,
+      "title": "താഴ്ന്ന (tāḻnna) — low",
+      "headword": "താഴ്ന്ന",
+      "romanization": "tāḻnna",
+      "gloss": "low",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a444e7fe5a3e6fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for wide, then the Malayalam for narrow."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say twenty-one. (Irupattiyonnŭ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: താഴ്ന്ന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താഴ്ന്ന — tāḻnna — \"low\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḻnna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḻnna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḻnna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḻnna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tāḻnna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tāḻnna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for wide, then the Malayalam for narrow, then say tāḻnna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for wide, then the Malayalam for narrow, then say *tāḻnna* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does താഴ്ന്ന (tāḻnna) mean? (\"Low\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C168-palutta",
+      "sequence": 7130,
+      "title": "പഴുത്ത (paḻutta) — ripe",
+      "headword": "പഴുത്ത",
+      "romanization": "paḻutta",
+      "gloss": "ripe",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3170c6c775a96d6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for narrow, then the Malayalam for low."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പഴുത്ത",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പഴുത്ത — paḻutta — \"ripe\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻutta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻutta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḻutta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḻutta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say paḻutta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *paḻutta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for narrow, then the Malayalam for low, then say paḻutta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for narrow, then the Malayalam for low, then say *paḻutta* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പഴുത്ത (paḻutta) mean? (\"Ripe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C168-dhairyamulla",
+      "sequence": 7140,
+      "title": "ധൈര്യമുള്ള (dhairyamuḷḷa) — brave",
+      "headword": "ധൈര്യമുള്ള",
+      "romanization": "dhairyamuḷḷa",
+      "gloss": "brave",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2748f788e7dae939",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for low, then the Malayalam for ripe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ധൈര്യമുള്ള",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ധൈര്യമുള്ള — dhairyamuḷḷa — \"brave\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhairyamuḷḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhairyamuḷḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhairyamuḷḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhairyamuḷḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dhairyamuḷḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dhairyamuḷḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for low, then the Malayalam for ripe, then say dhairyamuḷḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for low, then the Malayalam for ripe, then say *dhairyamuḷḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ധൈര്യമുള്ള (dhairyamuḷḷa) mean? (\"Brave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R168-first-pass-food-animals-and-the-body",
+      "sequence": 7150,
+      "title": "Food, animals and the body — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 160-163",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ef0dfa782531e6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for ripe and brave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ladder, a verandah, a rainbow, a waterfall, a stone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ladder, a verandah, a rainbow, a waterfall, a stone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soil, a coconut palm, a banana plant, jasmine, a lotus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: soil, a coconut palm, a banana plant, jasmine, a lotus]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bear, a fox, a camel, a duck, an owl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bear, a fox, a camel, a duck, an owl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an eyebrow, a palm, rice gruel, beans, dal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an eyebrow, a palm, rice gruel, beans, dal]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A ladder? (കോണി, kōṇi.) A verandah? (വരാന്ത, varānta.) A rainbow? (മഴവില്ല്, maḻavillŭ.) A waterfall? (വെള്ളച്ചാട്ടം, veḷḷaccāṭṭaṁ.) A stone? (കല്ല്, kallŭ.) Soil? (മണ്ണ്, maṇṇŭ.) A coconut palm? (തെങ്ങ്, teṅṅŭ.) A banana plant? (വാഴ, vāḻa.) Jasmine? (മുല്ല, mulla.) A lotus? (താമര, tāmara.) A bear? (കരടി, karaṭi.) A fox? (കുറുക്കൻ, kuṟukkan.) A camel? (ഒട്ടകം, oṭṭakaṁ.) A duck? (താറാവ്, tāṟāvŭ.) An owl? (മൂങ്ങ, mūṅṅa.) An eyebrow? (പുരികം, purikaṁ.) A palm? (കൈവെള്ള, kaiveḷḷa.) Rice gruel? (കഞ്ഞി, kañji.) Beans? (പയറ്, payaṟŭ.) Dal? (പരിപ്പ്, parippŭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R168-second-pass-clothes-things-you-use-and-describing-wo",
+      "sequence": 7160,
+      "title": "Clothes, things you use and describing words — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 164-168",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65555c889e0bb942",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for aviyal and a pappadam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aviyal, a pappadam, hot, cold, long",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: aviyal, a pappadam, hot, cold, long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clean, sweet, bitter, spicy, sour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clean, sweet, bitter, spicy, sour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heavy, fast, thick, soft, hard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: heavy, fast, thick, soft, hard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wet, dry, dark, clear, deep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wet, dry, dark, clear, deep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wide, narrow, low, ripe, brave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wide, narrow, low, ripe, brave]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Aviyal? (അവിയൽ, aviyal.) A pappadam? (പപ്പടം, pappaṭaṁ.) Hot? (ചൂടുള്ള, cūṭuḷḷa.) Cold? (തണുപ്പുള്ള, taṇuppuḷḷa.) Long? (നീളമുള്ള, nīḷamuḷḷa.) Clean? (വൃത്തിയുള്ള, vṛttiyuḷḷa.) Sweet? (മധുരമുള്ള, madhuramuḷḷa.) Bitter? (കയ്പുള്ള, kaypuḷḷa.) Spicy? (എരിവുള്ള, erivuḷḷa.) Sour? (പുളിയുള്ള, puḷiyuḷḷa.) Heavy? (ഭാരമുള്ള, bhāramuḷḷa.) Fast? (വേഗമുള്ള, vēgamuḷḷa.) Thick? (കട്ടിയുള്ള, kaṭṭiyuḷḷa.) Soft? (മൃദുവായ, mṛduvāya.) Hard? (കഠിനമായ, kaṭhinamāya.) Wet? (നനവുള്ള, nanavuḷḷa.) Dry? (ഉണങ്ങിയ, uṇaṅṅiya.) Dark? (ഇരുണ്ട, iruṇṭa.) Clear? (തെളിഞ്ഞ, teḷiñña.) Deep? (ആഴമുള്ള, āḻamuḷḷa.) Wide? (വീതിയുള്ള, vītiyuḷḷa.) Narrow? (ഇടുങ്ങിയ, iṭuṅṅiya.) Low? (താഴ്ന്ന, tāḻnna.) Ripe? (പഴുത്ത, paḻutta.) Brave? (ധൈര്യമുള്ള, dhairyamuḷḷa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

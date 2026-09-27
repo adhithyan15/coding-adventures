@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C152-eli",
+    "language": "malayalam",
+    "chapter": 152,
+    "sequence": 6250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4583f274e89eef8"
+  },
+  "findings": []
+}

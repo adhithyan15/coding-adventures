@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C148-dvipu",
+    "language": "malayalam",
+    "chapter": 148,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a1e89c2b1be12b5"
+  },
+  "findings": []
+}

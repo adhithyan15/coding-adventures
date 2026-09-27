@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:0494d6b5be5fc24f",
+  "lessonIds": [
+    "ML-C145-agraham",
+    "ML-C145-svapnam",
+    "ML-C145-pratiksa",
+    "ML-C145-laksyam",
+    "ML-C145-paddhati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch145.txt",
+  "json": "malayalam/narration/ch145.json",
+  "textHash": "fnv1a64:fa5ea72a87bd803b",
+  "jsonHash": "fnv1a64:9e6e2fe32e0b1c94",
+  "findings": []
+}

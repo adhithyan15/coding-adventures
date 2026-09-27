@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C142-kalivu",
+    "language": "malayalam",
+    "chapter": 142,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cffbacad59d3b643"
+  },
+  "findings": []
+}

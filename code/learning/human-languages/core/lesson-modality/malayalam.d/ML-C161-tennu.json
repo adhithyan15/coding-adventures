@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C161-tennu",
+    "language": "malayalam",
+    "chapter": 161,
+    "sequence": 6760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2cde514e5fcdb28"
+  },
+  "findings": []
+}

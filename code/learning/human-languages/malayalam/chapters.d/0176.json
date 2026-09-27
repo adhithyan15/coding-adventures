@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Get down, Swim, Jump, Fall, Live",
+  "label": "ch:ml-get-down-swim-jump-fall-live",
+  "canDo": "I can say to get down, to swim, to jump, to fall and to live.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R176-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: i can say to get down, to swim, to jump, to fall and to live.",
+    "assesses": [
+      "ML-LEX-C176-ACT176-03",
+      "ML-LEX-C176-ACT176-04",
+      "ML-LEX-C176-ACT176-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C165-vrttiyulla",
+    "language": "malayalam",
+    "chapter": 165,
+    "sequence": 6950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5f77de4dfd9c707"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Trousers, Earring, Bangle, Ring, Cup",
+  "label": "ch:ml-trousers-earring-bangle-ring-cup",
+  "canDo": "I can say trousers, an earring, a bangle, a ring and a cup.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C156-koppa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: i can say trousers, an earring, a bangle, a ring and a cup.",
+    "assesses": [
+      "ML-LEX-C156-THINGS156-03",
+      "ML-LEX-C156-THINGS156-04",
+      "ML-LEX-C156-THINGS156-05"
+    ]
+  }
+}

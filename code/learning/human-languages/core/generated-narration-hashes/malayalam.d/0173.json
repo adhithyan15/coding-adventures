@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:2ec6c03357287daa",
+  "lessonIds": [
+    "ML-C173-cirikkuka",
+    "ML-C173-nokkuka",
+    "ML-C173-pathikkuka",
+    "ML-C173-pathippikkuka",
+    "ML-C173-tutannuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch173.txt",
+  "json": "malayalam/narration/ch173.json",
+  "textHash": "fnv1a64:8934122ff380c244",
+  "jsonHash": "fnv1a64:029200ea26dd1cbd",
+  "findings": []
+}

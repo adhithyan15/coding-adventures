@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C164-cutulla",
+    "language": "malayalam",
+    "chapter": 164,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f38b87b6f22ff58b"
+  },
+  "findings": []
+}

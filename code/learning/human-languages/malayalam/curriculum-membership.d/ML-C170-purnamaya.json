@@ -1,0 +1,11 @@
+{
+  "id": "ML-C170-purnamaya",
+  "pathSegment": "ML-PATH-170-QUAL170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-170-QUAL170",
+      "order": 2
+    }
+  ]
+}

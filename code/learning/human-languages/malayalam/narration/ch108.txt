@@ -1,8 +1,8 @@
 Malayalam, chapter 108: The Marks on the Page.
-6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 . (full stop) — how a Malayalam sentence ends.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:. and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -45,7 +45,7 @@ Wrap-up Recall.
 What closes a Malayalam sentence in print today? (A full stop — the same dot English uses.) What closed one in the classical tradition? (The daṇḍa, a single upright stroke.) How many punctuation marks does the Malayalam alphabet itself carry? (None.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 , — the comma, and the list that does not need one.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:, and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -88,7 +88,7 @@ Wrap-up Recall.
 How many commas are in വെള്ളവും അരിയും പാലും? (None.) What is doing their work? (-ഉം, on every item.) Which side of the comma takes the space? (After it.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 ? (question mark, exclamation mark) — the mark you have been reading all along.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:? and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -127,7 +127,7 @@ Wrap-up Recall.
 Where does a Malayalam question mark stand? (At the end, and nowhere else.) Does a full stop follow it? (No — it closes the sentence on its own.) What was making your questions questions before this lesson? (The question words, and the ending -ō.)
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 " " (quotation marks, dialogue dash) — quoting, when a word is already doing it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: " " and — and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -169,25 +169,53 @@ Wrap-up Recall.
 Where did you first read quotation marks? (Around the quoted sentence in front of എന്ന്.) Does the marker stop you using the marks? (No — a sentence can carry both.) What opens a line of dialogue instead of the marks? (A long dash.)
 
 
-Lesson 5 of 6.
-: ( ) - / (colon, parentheses, hyphen, slash) — the four that are left.
+Lesson 5 of 7.
+: ( ) - / (colon, parentheses, hyphen, slash) — the four that are left, two at a time.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) - / and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice:: ( ) and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
 Name the three marks you already own, and say where each one stands.
 
-Script you'll notice:: ( ) - /.
-Four marks, and all four behave the way their English counterparts do.
-[a table of 4 rows, read aloud]
+Script you'll notice:: ( ).
+Four marks are left, and all four behave the way their English counterparts do. This lesson takes the first two; the next takes the hyphen and the slash.
+[a table of 2 rows, read aloud]
 :, (comma) the colon — before a list, or before the thing you are about to spell out.
 ( ), (comma) parentheses — a pair, around an aside.
+The colon and the parentheses take no space on the inside and one on the outside.
+
+Writing: the two.
+Two dots, one above the other, on the line. A pair of curves facing each other.
+Neither changes the Malayalam letter beside it.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — write: a colon, then a pair of parentheses]
+[your turn — say: where the spaces go around each one]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which mark comes before a list? (The colon.) Which comes in a pair, around an aside? (The parentheses.) Next: the hyphen and the slash, and why you have barely met them in a Malayalam word.
+
+
+Lesson 6 of 7.
+(: ( ) - /, (comma) continued) ((colon, parentheses, hyphen, slash, continued)) — the hyphen and the slash.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: - / and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Before the last two: which mark comes before a list, and which comes in a pair?
+
+Script you'll notice: - /.
+[a table of 2 rows, read aloud]
 -, (comma) the hyphen — a short stroke joining two pieces.
 /, (comma) the slash — between two alternatives.
-The colon and the parentheses take no space on the inside and one on the outside. The hyphen and the slash take none on either side.
+The hyphen and the slash take no space on either side.
 
-Grammar Lens: two of these you have hardly seen.
+Grammar Lens: two marks you have hardly seen.
 Go back through every Malayalam word this book has taught you and count the hyphens in them. There are none.
 The compounds you have been taught run their pieces together — പള്ളിക്കൂടം, തലസ്ഥാനം — with no stroke marking the seam. Where the two pieces do stay apart, as in ശുഭ രാത്രി, what stands between them is a plain space. Neither way uses a hyphen. Where English writes twenty-one or mother-in-law, Malayalam writes one word or two, and never a stroke.
 So the hyphens you have seen on these pages are this book's notation, not Malayalam spelling:
@@ -197,15 +225,11 @@ So the hyphens you have seen on these pages are this book's notation, not Malaya
 i- / a- / e-, (comma) three stems, shown as beginnings, with a slash between them.
 That third row is the slash doing its ordinary job — this or this or this — and it is about as often as the slash turns up in ordinary Malayalam prose too.
 
-Writing: the four.
-Two dots, one above the other, on the line. A pair of curves facing each other. A short stroke at mid-height. A leaning stroke.
-None of them changes the Malayalam letter beside it.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: how many hyphens are inside പള്ളിക്കൂടം]
 [pause 8 seconds for the answer]
-[once you have stopped driving — write: a colon, a pair of parentheses, a hyphen and a slash, in that order]
+[once you have stopped driving — write: a hyphen, then a slash]
 [your turn — say: what the hyphen in -ആൻ is telling you]
 [pause 8 seconds for the answer]
 
@@ -214,7 +238,7 @@ Wrap-up Recall.
 How is a Malayalam compound written — joined by a hyphen, or solid? (Solid.) What are the hyphens in this book marking, then? (An ending or a stem shown on its own.) Which mark goes between two alternatives? (The slash.)
 
 
-Lesson 6 of 6.
+Lesson 7 of 7.
 (. (full stop), (comma)? (question mark, exclamation mark)! " " (quotation marks, dialogue dash) —: ( ) - / (colon, parentheses, hyphen, slash)) — from cold.
 
 Warm-up.

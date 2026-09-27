@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C170-vilakuranna",
+    "language": "malayalam",
+    "chapter": 170,
+    "sequence": 7250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f6a1c432bf5ef63"
+  },
+  "findings": []
+}

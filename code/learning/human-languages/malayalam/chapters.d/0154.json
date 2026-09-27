@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Elbow, Knee, Tongue, Skin, Forehead",
+  "label": "ch:ml-elbow-knee-tongue-skin-forehead",
+  "canDo": "I can say an elbow, a knee, a tongue, skin and a forehead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C154-nerri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: i can say an elbow, a knee, a tongue, skin and a forehead.",
+    "assesses": [
+      "ML-LEX-C154-THINGS154-03",
+      "ML-LEX-C154-THINGS154-04",
+      "ML-LEX-C154-THINGS154-05"
+    ]
+  }
+}

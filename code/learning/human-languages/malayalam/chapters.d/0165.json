@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Clean, Sweet, Bitter, Spicy, Sour",
+  "label": "ch:ml-clean-sweet-bitter-spicy-sour",
+  "canDo": "I can say clean, sweet, bitter, spicy and sour.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C165-puliyulla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: i can say clean, sweet, bitter, spicy and sour.",
+    "assesses": [
+      "ML-LEX-C165-QUAL165-03",
+      "ML-LEX-C165-QUAL165-04",
+      "ML-LEX-C165-QUAL165-05"
+    ]
+  }
+}

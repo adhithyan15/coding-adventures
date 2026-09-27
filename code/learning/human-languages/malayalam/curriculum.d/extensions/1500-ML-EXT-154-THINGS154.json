@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-154-THINGS154",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an elbow, a knee, a tongue, skin and a forehead.",
+  "prerequisites": []
+}

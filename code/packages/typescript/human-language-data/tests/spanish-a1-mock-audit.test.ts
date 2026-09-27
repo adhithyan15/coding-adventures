@@ -7,20 +7,21 @@ import {
   runSpanishA1MockAudit,
 } from "../src/spanish-a1-mock-audit-cli.js";
 
-// Each audit walks the whole Spanish corpus up to its level, so each is built
-// ONCE, here at import, and every test below reads the shared result. Import
-// time carries no per-test budget; a test body that rebuilt two audits under
-// full-suite parallel load on CI measured 35.9s against the 30s default (see
-// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md). The audits
-// are read-only here, so sharing them changes no assertion. The `--check`
-// tests still run the CLI end to end, because that path is what they test.
-const AUDIT_A1 = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A1");
-const AUDIT_PRE_A1 = buildSpanishA1MockAudit(defaultCurriculumRoot(), "pre-A1");
-const AUDIT_A2 = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
+// The three audits of the REAL corpus, built once at import. Each build parses
+// the whole corpus to derive a taught set, and the level-comparison tests used
+// to build two apiece inside a single test body -- about 15s under a full
+// suite run, half the 30s per-test budget, and rising with every content PR.
+// Import time carries no per-test budget. No test mutates an audit.
+const ROOT = defaultCurriculumRoot();
+const AUDITS = {
+  "pre-A1": buildSpanishA1MockAudit(ROOT, "pre-A1"),
+  A1: buildSpanishA1MockAudit(ROOT, "A1"),
+  A2: buildSpanishA1MockAudit(ROOT, "A2"),
+} as const;
 
 describe("Spanish A1 book-bounded mock audit", () => {
   it("pins the current whole-item residual and its reproducible credit policy", () => {
-    const audit = AUDIT_A1;
+    const audit = AUDITS.A1;
     expect(audit.objectiveFailed).toBe(0);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
@@ -59,7 +60,7 @@ describe("Spanish A1 book-bounded mock audit", () => {
 // ---------------------------------------------------------------------------
 describe("Spanish pre-A1 book-bounded mock audit", () => {
   it("proves every objective item on both forms is answerable from pre-A1 headwords", () => {
-    const audit = AUDIT_PRE_A1;
+    const audit = AUDITS["pre-A1"];
     expect(audit.level).toBe("pre-A1");
     expect(audit.objectiveFailed).toBe(0);
     expect(audit.missingObjectiveLexemes).toHaveLength(0);
@@ -74,8 +75,8 @@ describe("Spanish pre-A1 book-bounded mock audit", () => {
   });
 
   it("measures a SMALLER taught set than A1, which is what makes it a different gate", () => {
-    const preA1 = AUDIT_PRE_A1;
-    const a1 = AUDIT_A1;
+    const preA1 = AUDITS["pre-A1"];
+    const a1 = AUDITS.A1;
 
     // If the level argument were ignored, both would measure the same corpus and
     // the pre-A1 audit would be a second copy of the A1 one wearing a new name.
@@ -112,7 +113,7 @@ describe("Spanish pre-A1 book-bounded mock audit", () => {
 
 describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
-    const audit = AUDIT_A2;
+    const audit = AUDITS.A2;
     expect(audit.level).toBe("A2");
     // 6 -> 48, AND THE RISE IS THE POINT. This is the one movement the note
     // below forbids, taken deliberately, because the instrument was wrong in
@@ -519,8 +520,8 @@ describe("Spanish A2 book-bounded mock audit", () => {
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
-    const a1 = AUDIT_A1;
-    const a2 = AUDIT_A2;
+    const a1 = AUDITS.A1;
+    const a2 = AUDITS.A2;
 
     // The mirror of the pre-A1 assertion above: if the level argument were
     // ignored, A2 would measure the same corpus as A1 and the new gate would be

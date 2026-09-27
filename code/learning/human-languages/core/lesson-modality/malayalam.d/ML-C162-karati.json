@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C162-karati",
+    "language": "malayalam",
+    "chapter": 162,
+    "sequence": 6800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:567dd73adaedea9e"
+  },
+  "findings": []
+}

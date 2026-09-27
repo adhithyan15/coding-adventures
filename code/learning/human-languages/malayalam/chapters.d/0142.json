@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Ability, Strength, Right, Opportunity, Tool",
+  "label": "ch:ml-ability-strength-right-opportunity-tool",
+  "canDo": "I can say ability, strength, a right, an opportunity and a tool.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ML-C142-upakaranam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say ability, strength, a right, an opportunity and a tool.",
+    "assesses": [
+      "ML-LEX-C142-CAN142-03",
+      "ML-LEX-C142-CAN142-04",
+      "ML-LEX-C142-CAN142-05"
+    ]
+  }
+}

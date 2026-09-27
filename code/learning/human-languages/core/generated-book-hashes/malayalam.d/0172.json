@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:34802e29c8633b55",
+  "lessonIds": [
+    "ML-C172-vevikkuka",
+    "ML-C172-kotukkuka",
+    "ML-C172-kontuvaruka",
+    "ML-C172-vilikkuka",
+    "ML-C172-karayuka"
+  ],
+  "tex": "malayalam/book/chapters/ch172-cook-give-bring-call-cry.tex"
+}

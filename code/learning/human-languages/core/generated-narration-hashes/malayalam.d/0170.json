@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:162621a632b1ca99",
+  "lessonIds": [
+    "ML-C170-vilakuranna",
+    "ML-C170-terraya",
+    "ML-C170-purnamaya",
+    "ML-C170-otuka",
+    "ML-C170-natakkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch170.txt",
+  "json": "malayalam/narration/ch170.json",
+  "textHash": "fnv1a64:0e90e38fd07de6a5",
+  "jsonHash": "fnv1a64:fe86e3b5cbfa41d9",
+  "findings": []
+}

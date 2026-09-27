@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Pot, Stove, Hand fan, Electric fan, Bicycle",
+  "label": "ch:ml-pot-stove-hand-fan-electric-fan-bicycle",
+  "canDo": "I can say a pot, a stove, a hand fan, an electric fan and a bicycle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C157-saikkil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: i can say a pot, a stove, a hand fan, an electric fan and a bicycle.",
+    "assesses": [
+      "ML-LEX-C157-THINGS157-03",
+      "ML-LEX-C157-THINGS157-04",
+      "ML-LEX-C157-THINGS157-05"
+    ]
+  }
+}

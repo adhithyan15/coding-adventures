@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Potato, Tomato, Aubergine, Black pepper, Garlic",
+  "label": "ch:ml-potato-tomato-aubergine-black-pepper-garlic",
+  "canDo": "I can say a potato, a tomato, an aubergine, black pepper and garlic.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-R150-second-pass-why-and-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say a potato, a tomato, an aubergine, black pepper and garlic.",
+    "assesses": [
+      "ML-LEX-C150-THINGS150-03",
+      "ML-LEX-C150-THINGS150-04",
+      "ML-LEX-C150-THINGS150-05"
+    ]
+  }
+}

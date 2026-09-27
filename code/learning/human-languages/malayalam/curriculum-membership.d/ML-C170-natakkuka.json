@@ -1,0 +1,11 @@
+{
+  "id": "ML-C170-natakkuka",
+  "pathSegment": "ML-PATH-170-QUAL170",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-170-QUAL170",
+      "order": 4
+    }
+  ]
+}
