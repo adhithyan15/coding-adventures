@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:269a2363905a915d",
+  "lessonIds": [
+    "KA-C130-karadi",
+    "KA-C130-koti",
+    "KA-C130-mola",
+    "KA-C130-jinke",
+    "KA-C130-nari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch130.txt",
+  "json": "kannada/narration/ch130.json",
+  "textHash": "fnv1a64:1ffede8e5115c0a7",
+  "jsonHash": "fnv1a64:f1af22cb1c1f79c8",
+  "findings": []
+}

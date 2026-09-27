@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:b548145af8f2ac77",
+  "lessonIds": [
+    "KA-C144-apayakari",
+    "KA-C144-sullu",
+    "KA-C144-nerale",
+    "KA-C144-budu",
+    "KA-C144-khara",
+    "KA-R144-first-pass-animals-and-the-body",
+    "KA-R144-second-pass-the-body-and-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch144.txt",
+  "json": "kannada/narration/ch144.json",
+  "textHash": "fnv1a64:80f35458ab905d60",
+  "jsonHash": "fnv1a64:e5d04ecafc45624e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:0a17e460d08426ba",
+  "lessonIds": [
+    "KA-C135-galla",
+    "KA-C135-kenne",
+    "KA-C135-monakalu",
+    "KA-C135-monakai",
+    "KA-C135-manikattu",
+    "KA-R135-first-pass-food-and-nature",
+    "KA-R135-second-pass-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch135.txt",
+  "json": "kannada/narration/ch135.json",
+  "textHash": "fnv1a64:6550a2c188f8404a",
+  "jsonHash": "fnv1a64:4ce656e3b4443da0",
+  "findings": []
+}

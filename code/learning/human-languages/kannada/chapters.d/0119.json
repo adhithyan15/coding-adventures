@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Stove, Candle, Matchbox, Doll, Ball",
+  "label": "ch:ka-stove-candle-matchbox-doll-ball",
+  "canDo": "I can say a stove, a candle, a matchbox, a doll and a ball.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C119-cendu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a stove, a candle, a matchbox, a doll and a ball.",
+    "assesses": [
+      "KA-LEX-C119-THINGS119-03",
+      "KA-LEX-C119-THINGS119-04",
+      "KA-LEX-C119-THINGS119-05"
+    ]
+  }
+}

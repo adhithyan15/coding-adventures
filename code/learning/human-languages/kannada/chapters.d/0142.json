@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Beautiful, Deep, Wide, Narrow, Wet",
+  "label": "ch:ka-beautiful-deep-wide-narrow-wet",
+  "canDo": "I can say beautiful, deep, wide, narrow and wet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C142-odde",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say beautiful, deep, wide, narrow and wet.",
+    "assesses": [
+      "KA-LEX-C142-QUAL142-03",
+      "KA-LEX-C142-QUAL142-04",
+      "KA-LEX-C142-QUAL142-05"
+    ]
+  }
+}

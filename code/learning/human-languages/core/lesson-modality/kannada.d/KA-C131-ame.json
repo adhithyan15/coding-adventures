@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C131-ame",
+    "language": "kannada",
+    "chapter": 131,
+    "sequence": 5570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7d59311822f4572"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:a66b0b9d1c91f3ec",
+  "lessonIds": [
+    "KA-C117-suttige",
+    "KA-C117-kattari",
+    "KA-C117-bacanige",
+    "KA-C117-sabunu",
+    "KA-C117-tavel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch117.txt",
+  "json": "kannada/narration/ch117.json",
+  "textHash": "fnv1a64:6af81a86da50eee5",
+  "jsonHash": "fnv1a64:afaa2aa0c70ccdde",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C121-sambaru",
+    "language": "kannada",
+    "chapter": 121,
+    "sequence": 5070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ab891ae696acb93"
+  },
+  "findings": []
+}

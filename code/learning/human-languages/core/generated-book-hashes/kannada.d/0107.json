@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:36f50789e1edb315",
+  "lessonIds": [
+    "KA-C107-bala",
+    "KA-C107-eda",
+    "KA-C107-nera",
+    "KA-C107-dura",
+    "KA-C107-mele"
+  ],
+  "tex": "kannada/book/chapters/ch107-right-left-straight-far-above.tex"
+}

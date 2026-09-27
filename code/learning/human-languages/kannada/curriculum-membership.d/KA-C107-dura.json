@@ -1,0 +1,11 @@
+{
+  "id": "KA-C107-dura",
+  "pathSegment": "KA-PATH-107-LOC107",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-107-LOC107",
+      "order": 3
+    }
+  ]
+}

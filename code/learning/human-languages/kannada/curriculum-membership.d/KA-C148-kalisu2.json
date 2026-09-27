@@ -1,0 +1,11 @@
+{
+  "id": "KA-C148-kalisu2",
+  "pathSegment": "KA-PATH-148-ACT148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-148-ACT148",
+      "order": 3
+    }
+  ]
+}

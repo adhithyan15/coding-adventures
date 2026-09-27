@@ -1,0 +1,11 @@
+{
+  "id": "KA-C142-kiridu",
+  "pathSegment": "KA-PATH-142-QUAL142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-142-QUAL142",
+      "order": 3
+    }
+  ]
+}

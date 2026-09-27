@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C113-kanasu",
+    "language": "kannada",
+    "chapter": 113,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4250270ed48fc82"
+  },
+  "findings": []
+}

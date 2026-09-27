@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:ea06977bdfdecd81",
+  "lessonIds": [
+    "KA-C128-mimcu",
+    "KA-C128-birugali",
+    "KA-C128-ale",
+    "KA-C128-jalapata",
+    "KA-C128-dvipa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch128.txt",
+  "json": "kannada/narration/ch128.json",
+  "textHash": "fnv1a64:315f569bfb0677c8",
+  "jsonHash": "fnv1a64:e15652c85cae0be7",
+  "findings": []
+}

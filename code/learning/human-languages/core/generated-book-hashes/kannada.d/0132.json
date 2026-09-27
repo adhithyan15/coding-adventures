@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:8c191ea5503e70fb",
+  "lessonIds": [
+    "KA-C132-navilu",
+    "KA-C132-citte",
+    "KA-C132-iruve",
+    "KA-C132-solle",
+    "KA-C132-jeda"
+  ],
+  "tex": "kannada/book/chapters/ch132-peacock-butterfly-ant-mosquito-spider.tex"
+}

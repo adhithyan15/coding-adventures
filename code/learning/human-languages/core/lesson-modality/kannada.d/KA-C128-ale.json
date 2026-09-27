@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C128-ale",
+    "language": "kannada",
+    "chapter": 128,
+    "sequence": 5430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:916f5d16ec827df1"
+  },
+  "findings": []
+}

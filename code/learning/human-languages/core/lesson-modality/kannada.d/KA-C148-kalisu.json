@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C148-kalisu",
+    "language": "kannada",
+    "chapter": 148,
+    "sequence": 6470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2aa952269c996fb0"
+  },
+  "findings": []
+}

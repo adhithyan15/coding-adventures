@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Dangerous, Lie, Purple, Grey, Spicy",
+  "label": "ch:ka-dangerous-lie-purple-grey-spicy",
+  "canDo": "I can say dangerous, a lie, purple, grey and spicy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-R144-second-pass-the-body-and-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say dangerous, a lie, purple, grey and spicy.",
+    "assesses": [
+      "KA-LEX-C144-QUAL144-03",
+      "KA-LEX-C144-QUAL144-04",
+      "KA-LEX-C144-QUAL144-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:95d0194c3ddfb903",
+  "lessonIds": [
+    "KA-C121-topi",
+    "KA-C121-ungura",
+    "KA-C121-bale",
+    "KA-C121-saru",
+    "KA-C121-sambaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch121.txt",
+  "json": "kannada/narration/ch121.json",
+  "textHash": "fnv1a64:cf7cde27a822b496",
+  "jsonHash": "fnv1a64:4e004a8f47bed0ad",
+  "findings": []
+}

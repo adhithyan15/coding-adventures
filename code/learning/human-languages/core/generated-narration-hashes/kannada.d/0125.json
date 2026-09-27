@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:e5e0c5dfad586b9d",
+  "lessonIds": [
+    "KA-C125-idli",
+    "KA-C125-dose",
+    "KA-C125-vade",
+    "KA-C125-uppittu",
+    "KA-C125-ragi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch125.txt",
+  "json": "kannada/narration/ch125.json",
+  "textHash": "fnv1a64:6e73c5154d97215a",
+  "jsonHash": "fnv1a64:4e4c89a1ea958a47",
+  "findings": []
+}

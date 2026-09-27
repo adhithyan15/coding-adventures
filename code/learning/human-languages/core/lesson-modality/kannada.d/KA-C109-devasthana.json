@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C109-devasthana",
+    "language": "kannada",
+    "chapter": 109,
+    "sequence": 4420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e569ef60de0ed97e"
+  },
+  "findings": []
+}

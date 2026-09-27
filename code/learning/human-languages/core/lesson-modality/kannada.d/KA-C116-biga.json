@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C116-biga",
+    "language": "kannada",
+    "chapter": 116,
+    "sequence": 4780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bef7cc0e785d375"
+  },
+  "findings": []
+}

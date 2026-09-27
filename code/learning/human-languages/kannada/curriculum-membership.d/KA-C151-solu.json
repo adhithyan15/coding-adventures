@@ -1,0 +1,11 @@
+{
+  "id": "KA-C151-solu",
+  "pathSegment": "KA-PATH-151-ACT151",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-151-ACT151",
+      "order": 1
+    }
+  ]
+}

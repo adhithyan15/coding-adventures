@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C153-ele",
+    "language": "kannada",
+    "chapter": 153,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:537d32d33d023efa"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C124-alugadde",
+    "language": "kannada",
+    "chapter": 124,
+    "sequence": 5180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88dd5f7e2023b827"
+  },
+  "findings": []
+}

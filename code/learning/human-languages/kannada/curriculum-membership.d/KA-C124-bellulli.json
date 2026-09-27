@@ -1,0 +1,11 @@
+{
+  "id": "KA-C124-bellulli",
+  "pathSegment": "KA-PATH-124-THINGS124",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-124-THINGS124",
+      "order": 3
+    }
+  ]
+}

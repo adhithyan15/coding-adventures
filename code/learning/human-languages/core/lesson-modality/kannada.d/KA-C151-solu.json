@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C151-solu",
+    "language": "kannada",
+    "chapter": 151,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef6ad99c51da9bbb"
+  },
+  "findings": []
+}

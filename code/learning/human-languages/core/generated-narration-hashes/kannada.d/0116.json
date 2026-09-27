@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:a2c25a471815c47e",
+  "lessonIds": [
+    "KA-C116-dimbu",
+    "KA-C116-kambali",
+    "KA-C116-parade",
+    "KA-C116-biga",
+    "KA-C116-mole",
+    "KA-R116-first-pass-places-can-and-want",
+    "KA-R116-second-pass-why-and-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch116.txt",
+  "json": "kannada/narration/ch116.json",
+  "textHash": "fnv1a64:63234c1f61b74f3c",
+  "jsonHash": "fnv1a64:ce1e8c0c37485d4e",
+  "findings": []
+}

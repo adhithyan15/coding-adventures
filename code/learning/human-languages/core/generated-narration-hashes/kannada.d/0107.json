@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:d87c3c74e9d91ed7",
+  "lessonIds": [
+    "KA-C107-bala",
+    "KA-C107-eda",
+    "KA-C107-nera",
+    "KA-C107-dura",
+    "KA-C107-mele"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch107.txt",
+  "json": "kannada/narration/ch107.json",
+  "textHash": "fnv1a64:57580c5ba3112d92",
+  "jsonHash": "fnv1a64:dc65baecf51f585b",
+  "findings": []
+}

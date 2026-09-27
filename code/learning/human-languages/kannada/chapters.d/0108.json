@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Below, Outside, In front, In the middle, Road",
+  "label": "ch:ka-below-outside-in-front-in-the-middle-road",
+  "canDo": "I can say below, outside, in front, in the middle and a road.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C108-raste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say below, outside, in front, in the middle and a road.",
+    "assesses": [
+      "KA-LEX-C108-LOC108-03",
+      "KA-LEX-C108-LOC108-04",
+      "KA-LEX-C108-LOC108-05"
+    ]
+  }
+}

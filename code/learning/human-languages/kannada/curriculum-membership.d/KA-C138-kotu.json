@@ -1,0 +1,11 @@
+{
+  "id": "KA-C138-kotu",
+  "pathSegment": "KA-PATH-138-THINGS138",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-138-THINGS138",
+      "order": 4
+    }
+  ]
+}

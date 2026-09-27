@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:dee7b45cbfdeeee3",
+  "lessonIds": [
+    "KA-C110-sante",
+    "KA-C110-kadalatira",
+    "KA-C110-tota",
+    "KA-C110-mule",
+    "KA-C110-tiruvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch110.txt",
+  "json": "kannada/narration/ch110.json",
+  "textHash": "fnv1a64:4eedd8fd10ed52be",
+  "jsonHash": "fnv1a64:5a68af68423d5bfc",
+  "findings": []
+}

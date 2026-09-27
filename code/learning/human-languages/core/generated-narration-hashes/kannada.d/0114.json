@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:e0c2e0f5144abdf8",
+  "lessonIds": [
+    "KA-C114-uddesa",
+    "KA-C114-yojane",
+    "KA-C114-agatya",
+    "KA-C114-nirdhara",
+    "KA-C114-bayasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch114.txt",
+  "json": "kannada/narration/ch114.json",
+  "textHash": "fnv1a64:7f6eb2d5abdeb5ad",
+  "jsonHash": "fnv1a64:a2ca75b10ea0366e",
+  "findings": []
+}

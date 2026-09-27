@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Rat, Buffalo, Sheep, Face, Tongue",
+  "label": "ch:ka-rat-buffalo-sheep-face-tongue",
+  "canDo": "I can say a rat, a buffalo, a sheep, the face and the tongue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C134-nalige",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say a rat, a buffalo, a sheep, the face and the tongue.",
+    "assesses": [
+      "KA-LEX-C134-THINGS134-03",
+      "KA-LEX-C134-THINGS134-04",
+      "KA-LEX-C134-THINGS134-05"
+    ]
+  }
+}

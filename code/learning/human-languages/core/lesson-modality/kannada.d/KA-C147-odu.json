@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C147-odu",
+    "language": "kannada",
+    "chapter": 147,
+    "sequence": 6430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:916cca0bced200af"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Lightning, Storm, Wave, Waterfall, Island",
+  "label": "ch:ka-lightning-storm-wave-waterfall-island",
+  "canDo": "I can say lightning, a storm, a wave, a waterfall and an island.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C128-dvipa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say lightning, a storm, a wave, a waterfall and an island.",
+    "assesses": [
+      "KA-LEX-C128-THINGS128-03",
+      "KA-LEX-C128-THINGS128-04",
+      "KA-LEX-C128-THINGS128-05"
+    ]
+  }
+}

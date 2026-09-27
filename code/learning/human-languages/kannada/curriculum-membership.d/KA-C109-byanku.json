@@ -1,0 +1,11 @@
+{
+  "id": "KA-C109-byanku",
+  "pathSegment": "KA-PATH-109-LOC109",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-109-LOC109",
+      "order": 4
+    }
+  ]
+}

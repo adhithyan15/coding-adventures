@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C137-kannadi",
+    "language": "kannada",
+    "chapter": 137,
+    "sequence": 5910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38dd19b5189727fd"
+  },
+  "findings": []
+}

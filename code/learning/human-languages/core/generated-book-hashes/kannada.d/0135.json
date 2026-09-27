@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:af24a7bda1b8daa6",
+  "lessonIds": [
+    "KA-C135-galla",
+    "KA-C135-kenne",
+    "KA-C135-monakalu",
+    "KA-C135-monakai",
+    "KA-C135-manikattu",
+    "KA-R135-first-pass-food-and-nature",
+    "KA-R135-second-pass-nature-and-animals"
+  ],
+  "tex": "kannada/book/chapters/ch135-chin-cheek-knee-elbow-wrist.tex"
+}

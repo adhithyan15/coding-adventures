@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C122-palya",
+    "language": "kannada",
+    "chapter": 122,
+    "sequence": 5080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:676fcf12042a475e"
+  },
+  "findings": []
+}

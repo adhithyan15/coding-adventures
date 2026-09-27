@@ -1,0 +1,11 @@
+{
+  "id": "KA-C145-sihi",
+  "pathSegment": "KA-PATH-145-QUAL145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-145-QUAL145",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Frog, Duck, Pig, Donkey, Camel",
+  "label": "ch:ka-frog-duck-pig-donkey-camel",
+  "canDo": "I can say a frog, a duck, a pig, a donkey and a camel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C133-onte",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say a frog, a duck, a pig, a donkey and a camel.",
+    "assesses": [
+      "KA-LEX-C133-THINGS133-03",
+      "KA-LEX-C133-THINGS133-04",
+      "KA-LEX-C133-THINGS133-05"
+    ]
+  }
+}

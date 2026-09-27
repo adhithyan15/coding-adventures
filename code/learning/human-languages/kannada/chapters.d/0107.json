@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Right, Left, Straight, Far, Above",
+  "label": "ch:ka-right-left-straight-far-above",
+  "canDo": "I can say right, left, straight, far and above.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "KA-C107-mele",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say right, left, straight, far and above.",
+    "assesses": [
+      "KA-LEX-C107-LOC107-03",
+      "KA-LEX-C107-LOC107-04",
+      "KA-LEX-C107-LOC107-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:3e8e9e6162f19ac7",
+  "lessonIds": [
+    "KA-C108-kelage",
+    "KA-C108-horage",
+    "KA-C108-munde",
+    "KA-C108-naduve",
+    "KA-C108-raste"
+  ],
+  "tex": "kannada/book/chapters/ch108-below-outside-in-front-in-the-middle-road.tex"
+}

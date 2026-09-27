@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C108-munde",
+    "language": "kannada",
+    "chapter": 108,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6822ad90a8a702c"
+  },
+  "findings": []
+}

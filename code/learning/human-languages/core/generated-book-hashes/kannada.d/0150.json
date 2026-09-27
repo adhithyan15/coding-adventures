@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:0ee621a0b68858a6",
+  "lessonIds": [
+    "KA-C150-tole",
+    "KA-C150-oresu",
+    "KA-C150-gudisu",
+    "KA-C150-kattu",
+    "KA-C150-holi"
+  ],
+  "tex": "kannada/book/chapters/ch150-to-wash-to-wipe-to-sweep-to-tie-to-sew.tex"
+}

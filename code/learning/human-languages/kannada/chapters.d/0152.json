@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "To put out, To play, To sing, To sell, To walk",
+  "label": "ch:ka-to-put-out-to-play-to-sing-to-sell-to-walk",
+  "canDo": "I can say to put out, to play, to sing, to sell and to walk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C152-nade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: i can say to put out, to play, to sing, to sell and to walk.",
+    "assesses": [
+      "KA-LEX-C152-ACT152-03",
+      "KA-LEX-C152-ACT152-04",
+      "KA-LEX-C152-ACT152-05"
+    ]
+  }
+}

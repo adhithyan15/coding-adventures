@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C112-sadhana",
+    "language": "kannada",
+    "chapter": 112,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04031d2686d83c09"
+  },
+  "findings": []
+}

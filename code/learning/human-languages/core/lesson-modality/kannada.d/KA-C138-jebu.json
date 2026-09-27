@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C138-jebu",
+    "language": "kannada",
+    "chapter": 138,
+    "sequence": 5960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70241bc9c92a0f1b"
+  },
+  "findings": []
+}

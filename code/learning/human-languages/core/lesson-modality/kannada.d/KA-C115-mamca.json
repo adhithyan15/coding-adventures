@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C115-mamca",
+    "language": "kannada",
+    "chapter": 115,
+    "sequence": 4740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3aa2a3d49376d8fb"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "To open, To fill, To push, To pull, To cry",
+  "label": "ch:ka-to-open-to-fill-to-push-to-pull-to-cry",
+  "canDo": "I can say to open, to fill, to push, to pull and to cry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-R153-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: i can say to open, to fill, to push, to pull and to cry.",
+    "assesses": [
+      "KA-LEX-C153-ACT153-03",
+      "KA-LEX-C153-ACT153-04",
+      "KA-LEX-C153-ACT153-05"
+    ]
+  }
+}

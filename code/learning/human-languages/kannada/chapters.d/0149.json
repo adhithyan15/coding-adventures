@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To get down, To join, To wear, To call, To count",
+  "label": "ch:ka-to-get-down-to-join-to-wear-to-call-to-count",
+  "canDo": "I can say to get down, to join, to wear, to call and to count.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C149-enisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say to get down, to join, to wear, to call and to count.",
+    "assesses": [
+      "KA-LEX-C149-ACT149-03",
+      "KA-LEX-C149-ACT149-04",
+      "KA-LEX-C149-ACT149-05"
+    ]
+  }
+}

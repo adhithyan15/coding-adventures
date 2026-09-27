@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Bitter, Sour, Sweet, Lazy, Clever",
+  "label": "ch:ka-bitter-sour-sweet-lazy-clever",
+  "canDo": "I can say bitter, sour, sweet, lazy and clever.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "KA-C145-jana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: i can say bitter, sour, sweet, lazy and clever.",
+    "assesses": [
+      "KA-LEX-C145-QUAL145-03",
+      "KA-LEX-C145-QUAL145-04",
+      "KA-LEX-C145-QUAL145-05"
+    ]
+  }
+}

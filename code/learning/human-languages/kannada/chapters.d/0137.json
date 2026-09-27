@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Table, Window, Mirror, Television, Computer",
+  "label": "ch:ka-table-window-mirror-television-computer",
+  "canDo": "I can say a table, a window, a mirror, a television and a computer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "KA-C137-kampyutar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say a table, a window, a mirror, a television and a computer.",
+    "assesses": [
+      "KA-LEX-C137-THINGS137-03",
+      "KA-LEX-C137-THINGS137-04",
+      "KA-LEX-C137-THINGS137-05"
+    ]
+  }
+}

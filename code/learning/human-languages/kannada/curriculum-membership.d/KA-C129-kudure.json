@@ -1,0 +1,11 @@
+{
+  "id": "KA-C129-kudure",
+  "pathSegment": "KA-PATH-129-THINGS129",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-129-THINGS129",
+      "order": 1
+    }
+  ]
+}
