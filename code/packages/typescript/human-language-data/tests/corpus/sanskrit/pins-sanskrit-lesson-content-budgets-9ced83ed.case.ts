@@ -91,7 +91,11 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 745 -> 751: #13413's first word bridge adds six writing-only lessons.
     // They reuse मम and मम नाम plus the already-taught म, न, and long-ā sign;
     // no idiom, sense, culture claim, or vocabulary atom is added.
-    lessons: 751,
+    // 751 -> 754: #13413's visarga bridge adds three more writing-only
+    // lessons. They reuse the already-taught न, म, ः, and the *namas* "a bow"
+    // inside *namaste*. The existing visarga trace gains the observe/trace
+    // marker, and no vocabulary or content atom is added.
+    lessons: 754,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

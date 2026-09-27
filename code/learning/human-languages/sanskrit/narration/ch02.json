@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d3e3174984248c77",
+  "sourceHash": "fnv1a64:522c24f7d195ce6c",
   "lessons": [
     {
       "id": "SA-C02-nama",
@@ -231,7 +231,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f65a8d7b7e2068fb",
+      "sourceHash": "fnv1a64:cb849a56da55d050",
       "notice": {
         "modality": "pen",
         "needs": [
