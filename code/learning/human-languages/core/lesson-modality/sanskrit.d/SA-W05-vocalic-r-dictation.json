@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W05-vocalic-r-dictation",
+    "language": "sanskrit",
+    "chapter": 5,
+    "sequence": 284,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2119d01775267b9e",
+    "detachableSegments": [
+      "Writing — vocalic-r dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

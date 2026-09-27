@@ -95,7 +95,10 @@ it("pins Sanskrit lesson-content budgets", () =>
     // lessons. They reuse the already-taught न, म, ः, and the *namas* "a bow"
     // inside *namaste*. The existing visarga trace gains the observe/trace
     // marker, and no vocabulary or content atom is added.
-    lessons: 754,
+    // 754 -> 757: #13413's vocalic-r bridge adds guided copy, delayed copy,
+    // and sound/function dictation for the already-taught ◌ृ. The lessons
+    // reuse SA-SCRIPT-RECOG-205 and introduce no vocabulary or content atom.
+    lessons: 757,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

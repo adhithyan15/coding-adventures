@@ -3,7 +3,8 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "before": [],
   "inline": [
-    "SA-EXT-017-LANGUAGE-SPECIFIC"
+    "SA-EXT-017-LANGUAGE-SPECIFIC",
+    "SA-EXT-141-WRITING-VOCALIC-R-BRIDGE"
   ],
   "after": []
 }
