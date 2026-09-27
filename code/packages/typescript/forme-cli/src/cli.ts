@@ -31,6 +31,7 @@ import {
   type CancellationToken,
 } from "@coding-adventures/forme-stage";
 import { watchProject } from "./project-watcher.js";
+import { executeDeploy, materializeDeployInput, type DeployInvocation } from "./deploy.js";
 
 export const EXIT_OK = 0;
 export const EXIT_BUILD_FAILED = 1;
@@ -74,6 +75,7 @@ interface ParsedArgs {
   readonly reportPath: string | null;
   readonly port: number;
   readonly debounceMs: number;
+  readonly deployInput: string | null;
 }
 
 const defaultIO: CliIO = {
@@ -127,6 +129,31 @@ export async function run(
   if ("version" in parsed) {
     io.stdout.write(`${parsed.version}\n`);
     return EXIT_OK;
+  }
+
+  if (parsed.commandPath[1] === "deploy") {
+    const originalCwd = io.cwd();
+    try {
+      const args = deployInvocation(parsed, originalCwd, options.cancellation);
+      if (args.dryRun && typeof parsed.flags["report"] === "string") {
+        throw new Error("--dry-run cannot be combined with --report because dry-run performs zero writes");
+      }
+      const report = await executeDeploy(args);
+      const reportPath = parsed.flags["report"];
+      if (typeof reportPath === "string") {
+        await io.writeFile(isAbsolute(reportPath) ? reportPath : resolve(originalCwd, reportPath), report);
+      } else {
+        io.stdout.write(report);
+      }
+      return EXIT_OK;
+    } catch (error) {
+      if (options.cancellation?.cancelled === true) {
+        diagnostic(io, "E_CANCELLED", options.cancellation.reason ?? "deployment cancelled");
+        return EXIT_CANCELLED;
+      }
+      diagnostic(io, "E_DEPLOY", message(error));
+      return EXIT_USAGE_OR_CONFIG;
+    }
   }
 
   let args: ParsedArgs;
@@ -193,6 +220,12 @@ export async function run(
           : resolve(projectRoot, args.reportPath);
         await io.writeFile(reportPath, buildReport(config, result));
       }
+      if (args.deployInput !== null) {
+        const deployInput = isAbsolute(args.deployInput)
+          ? args.deployInput
+          : resolve(projectRoot, args.deployInput);
+        await materializeDeployInput(result.outputs, deployInput, projectRoot);
+      }
       io.stdout.write(
         `forme build: ${config.name} success (${count} stage${count === 1 ? "" : "s"}; outputs: ${outputs}; build: ${result.buildId})\n`,
       );
@@ -243,7 +276,51 @@ function invocation(parsed: ParseResult): ParsedArgs {
     reportPath: typeof report === "string" ? report : null,
     port,
     debounceMs,
+    deployInput: typeof parsed.flags["deploy-input"] === "string" ? parsed.flags["deploy-input"] : null,
   };
+}
+
+function deployInvocation(
+  parsed: ParseResult,
+  cwd: string,
+  cancellation?: CancellationToken,
+): DeployInvocation {
+  const manifest = parsed.flags["manifest"];
+  const target = parsed.flags["target"];
+  const targetConfig = parsed.flags["target-config"];
+  const retry = parsed.flags["retry"] ?? 3;
+  if (typeof manifest !== "string" || (target !== "fs" && target !== "github-pages") || typeof targetConfig !== "string") {
+    throw new Error("deploy requires --manifest, --target, and --target-config");
+  }
+  if (typeof retry !== "number" || !Number.isSafeInteger(retry) || retry < 0 || retry > 10) {
+    throw new Error("--retry must be an integer from 0 through 10");
+  }
+  let content: DeployInvocation["content"];
+  if (typeof parsed.flags["content-dir"] === "string") {
+    content = { kind: "directory", path: parsed.flags["content-dir"] };
+  } else if (typeof parsed.flags["content-bundle"] === "string") {
+    content = { kind: "bundle", path: parsed.flags["content-bundle"] };
+  } else if (typeof parsed.flags["content-inline-fd"] === "number") {
+    content = { kind: "inline", fd: parsed.flags["content-inline-fd"] };
+  } else {
+    throw new Error("deploy requires exactly one content store");
+  }
+  const controller = new AbortController();
+  cancellation?.onCancel(() => controller.abort());
+  const bootstrap = parsed.flags["bootstrap-ownership"];
+  const previous = parsed.flags["previous"];
+  return Object.freeze({
+    cwd,
+    manifestPath: manifest,
+    content,
+    target,
+    targetConfigPath: targetConfig,
+    ...(typeof bootstrap === "string" ? { bootstrapOwnershipPath: bootstrap } : {}),
+    ...(typeof previous === "string" ? { previousPath: previous } : {}),
+    dryRun: parsed.flags["dry-run"] === true,
+    retryLimit: retry,
+    signal: controller.signal,
+  });
 }
 
 async function runWatch(

@@ -2,6 +2,9 @@ cd ../directed-graph && npm install --silent
 cd ../state-machine && npm install --silent
 cd ../cli-builder && npm install --silent
 cd ../forme-dev-server && npm install --silent
+cd ../forme-deploy-runner-core && npm install --silent
+cd ../forme-deploy-runner-fs-adapter && npm install --silent
+cd ../forme-deploy-runner-github-pages-adapter && npm install --silent
 cd ../document-ast && npm install --silent
 cd ../forme-types && npm install --silent
 cd ../forme-errors && npm install --silent

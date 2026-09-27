@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## 0.5.0 — 2026-09-27
+
+- Added `forme deploy` through CLI Builder with mutually exclusive directory,
+  canonical bundle, and explicit-descriptor inline content stores; strict
+  filesystem and GitHub Pages target configuration; target-aware dry-run;
+  deterministic reporting; and explicit legacy ownership bootstrap.
+  Retained bootstrap configuration becomes a no-op after ownership exists, so
+  subsequent content changes do not require deleting migration evidence.
+- Added `forme build --deploy-input DIR` to merge named in-memory `dist-tree`
+  outputs into one collision-checked manifest-bound content store.
+- Restricted v0 hosted credentials to `GITHUB_TOKEN`, used a GET-only anonymous
+  GitHub boundary for dry-run, and rejected duplicate-key or oversized JSON,
+  unsafe descriptors, linked content files, bundle metadata ambiguity, and
+  manifest/store digest-set drift.
+- Made deploy-input replacement use the filesystem adapter's atomic,
+  caller-parent-bound publication path; bounded directory-store enumeration in
+  one pass; closed bundle handles on every configuration failure; and rejected
+  blocking inline descriptor types before reading.
+
 - Canonicalized nested output summaries in `--report` so fresh stage values and
   values restored from canonical checkpoints produce byte-identical output
   sections when their artifacts are equal.
