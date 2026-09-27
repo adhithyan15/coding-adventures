@@ -1059,7 +1059,7 @@ the manifest.
 
 - Linux payloads are portable archives rather than signed distribution packages.
 - The macOS app is unsigned/not notarized; the Windows app is unsigned and unpackaged.
-- Signing and platform-native installers remain tracked in [#13522]({issue_root}/13522).
+- Signing, notarization, and platform-native installers remain tracked in [#13977]({issue_root}/13977).
 - Mobile binaries are not release artifacts in this version.
 
 ## TaskApp GitHub history
