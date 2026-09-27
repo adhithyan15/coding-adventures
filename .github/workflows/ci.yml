@@ -2467,7 +2467,49 @@ jobs:
           # did not crash rendering the first frame. Drain all launchctl output:
           # grep -q can close the pipe early and make simctl fail with SIGPIPE.
           xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+
+          # State lives in the app's sandbox and is read back (UI89 §2.3,
+          # step 3). The host writes state only after the first event, so it
+          # is seeded: state the runtime rejects must be quarantined INSIDE
+          # the container (the host found and read that path), and the
+          # snapshot the macOS TaskApp run above persisted -- the same engine
+          # -- must be restored with nothing quarantined. Each time the app
+          # must still be running ten seconds later.
+          ios_container="$(xcrun simctl get_app_container "$simulator" dev.codingadventures.trestle data)"
+          ios_state_dir="$ios_container/Library/Application Support/task-app"
+          ios_state="$ios_state_dir/mosaic-state.v1.json"
+          test -s "$task_state_path"
+          xcrun simctl terminate "$simulator" dev.codingadventures.trestle || true
+          mkdir -p "$ios_state_dir"
+          rm -f "$ios_state" "$ios_state.corrupt"
+          printf '{}' > "$ios_state"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          test -f "$ios_state.corrupt"
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl terminate "$simulator" dev.codingadventures.trestle
+          rm -f "$ios_state" "$ios_state.corrupt"
+          cp "$task_state_path" "$ios_state"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          test ! -e "$ios_state.corrupt"
+          # Still there (the environment report is an event, so the host may
+          # have rewritten it; its bytes are not the point).
+          test -s "$ios_state"
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
           xcrun simctl shutdown "$simulator"
+
+          # The same app on iPadOS (UI89 §2.2: one target, TARGETED_DEVICE_FAMILY
+          # 1,2): it installs and keeps running on an iPad simulator.
+          ipad="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPad"))][0].udid')"
+          test -n "$ipad" && test "$ipad" != null
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.trestle
+          sleep 10
+          xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl shutdown "$ipad"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project
