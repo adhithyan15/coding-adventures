@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.22.0
+
+- Resolve Mermaid Architecture padding configuration into deterministic outer canvas margins.
+
 ## 0.21.0
 
 - Resolve Mermaid Architecture node-separation configuration into deterministic row and column spacing.

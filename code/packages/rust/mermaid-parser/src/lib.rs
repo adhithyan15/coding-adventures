@@ -1119,6 +1119,7 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
         font_size: positive_number("fontSize").unwrap_or(defaults.font_size),
         node_separation: positive_number("nodeSeparation")
             .unwrap_or(defaults.node_separation),
+        padding: positive_number("padding").unwrap_or(defaults.padding),
     }
 }
 
@@ -10674,7 +10675,7 @@ mod tests_dg04 {
     #[test]
     fn architecture_preserves_size_and_separation_configuration() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112}}}%%\narchitecture-beta\nservice api(server)[API]",
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48}}}%%\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         assert_eq!(
@@ -10683,17 +10684,19 @@ mod tests_dg04 {
                 icon_size: 104.0,
                 font_size: 19.0,
                 node_separation: 112.0,
+                padding: 48.0,
             })
         );
 
         let diagram = parse_architecture(
-            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n---\narchitecture-beta\nservice api(server)[API]",
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n---\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         let config = diagram.architecture_config.unwrap();
         assert_eq!(config.icon_size, 96.0);
         assert_eq!(config.font_size, 18.0);
         assert_eq!(config.node_separation, 104.0);
+        assert_eq!(config.padding, 52.0);
     }
 
     #[test]

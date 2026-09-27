@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -36,6 +36,10 @@ fn horizontal_gap(config: Option<&ArchitectureConfig>) -> f64 {
 
 fn vertical_gap(config: Option<&ArchitectureConfig>) -> f64 {
     config.map_or(ROW_GAP, |config| config.node_separation)
+}
+
+fn outer_padding(config: Option<&ArchitectureConfig>) -> f64 {
+    config.map_or(COMP_PAD, |config| config.padding)
 }
 
 fn structural_style(
@@ -82,8 +86,8 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         }
     }
     let groups = layout_groups(diagram, &nodes);
-    let canvas_w = canvas_width(&nodes, &groups);
-    let canvas_h = canvas_height(&nodes, &groups);
+    let canvas_w = canvas_width(&nodes, &groups, diagram.architecture_config.as_ref());
+    let canvas_h = canvas_height(&nodes, &groups, diagram.architecture_config.as_ref());
     let rels = layout_relationships(diagram, &nodes, &groups);
     LayoutedStructuralDiagram {
         width: canvas_w,
@@ -100,6 +104,7 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
 fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
     let column_gap = horizontal_gap(diagram.architecture_config.as_ref());
     let row_gap = vertical_gap(diagram.architecture_config.as_ref());
+    let padding = outer_padding(diagram.architecture_config.as_ref());
     for alignment in &diagram.alignments {
         let indices = alignment
             .members
@@ -125,11 +130,11 @@ fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDi
                         diagram.nodes.iter().find(|node| node.id == nodes[*index].id)
                     })
                     .map(|node| {
-                        COMP_PAD
+                        padding
                             + group_depth(node.parent_group.as_deref(), &diagram.groups) as f64
                                 * GROUP_HEADER_H
                     })
-                    .fold(COMP_PAD, f64::max);
+                    .fold(padding, f64::max);
                 let y = natural_y.max(group_header_y);
                 for index in indices {
                     nodes[index].x = cursor;
@@ -220,7 +225,8 @@ fn layout_nodes(
 ) -> Vec<LayoutedStructuralNode> {
     let mut out: Vec<LayoutedStructuralNode> = Vec::with_capacity(nodes.len());
     // Track max height per row so rows don't overlap.
-    let mut row_y: Vec<f64> = vec![COMP_PAD];
+    let padding = outer_padding(architecture_config);
+    let mut row_y: Vec<f64> = vec![padding];
 
     for (idx, node) in nodes.iter().enumerate() {
         let col = idx % COLS;
@@ -230,13 +236,13 @@ fn layout_nodes(
 
         // Ensure row_y has an entry for this row.
         while row_y.len() <= row {
-            row_y.push(*row_y.last().unwrap_or(&COMP_PAD));
+            row_y.push(*row_y.last().unwrap_or(&padding));
         }
 
         let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
             MIN_NODE_W * config.icon_size / 80.0
         });
-        let x = COMP_PAD + col as f64 * (minimum_width + horizontal_gap(architecture_config));
+        let x = padding + col as f64 * (minimum_width + horizontal_gap(architecture_config));
         let y =
             row_y[row] + group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
 
@@ -299,7 +305,8 @@ fn layout_directional_nodes(
         indices.reverse();
     }
 
-    let mut cursor = COMP_PAD;
+    let padding = outer_padding(architecture_config);
+    let mut cursor = padding;
     let mut positioned = Vec::with_capacity(nodes.len());
     for index in indices {
         let node = &nodes[index];
@@ -308,11 +315,11 @@ fn layout_directional_nodes(
         let group_offset =
             group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
         let (x, y) = if vertical {
-            let position = (COMP_PAD, cursor + group_offset);
+            let position = (padding, cursor + group_offset);
             cursor = position.1 + height + vertical_gap(architecture_config);
             position
         } else {
-            let position = (cursor, COMP_PAD + group_offset);
+            let position = (cursor, padding + group_offset);
             cursor = position.0 + width + horizontal_gap(architecture_config);
             position
         };
@@ -379,19 +386,29 @@ fn group_depth(parent_group: Option<&str>, groups: &[diagram_ir::StructuralGroup
     depth
 }
 
-fn canvas_width(nodes: &[LayoutedStructuralNode], groups: &[LayoutedStructuralGroup]) -> f64 {
+fn canvas_width(
+    nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
+    architecture_config: Option<&ArchitectureConfig>,
+) -> f64 {
+    let padding = outer_padding(architecture_config);
     nodes
         .iter()
-        .map(|n| n.x + n.width + COMP_PAD)
-        .chain(groups.iter().map(|g| g.x + g.width + COMP_PAD))
+        .map(|n| n.x + n.width + padding)
+        .chain(groups.iter().map(|g| g.x + g.width + padding))
         .fold(200.0_f64, f64::max)
 }
 
-fn canvas_height(nodes: &[LayoutedStructuralNode], groups: &[LayoutedStructuralGroup]) -> f64 {
+fn canvas_height(
+    nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
+    architecture_config: Option<&ArchitectureConfig>,
+) -> f64 {
+    let padding = outer_padding(architecture_config);
     nodes
         .iter()
-        .map(|n| n.y + n.height + COMP_PAD)
-        .chain(groups.iter().map(|g| g.y + g.height + COMP_PAD))
+        .map(|n| n.y + n.height + padding)
+        .chain(groups.iter().map(|g| g.y + g.height + padding))
         .fold(100.0_f64, f64::max)
 }
 
@@ -974,7 +991,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.21.0");
+        assert_eq!(crate::VERSION, "0.22.0");
     }
 
     #[test]
@@ -1253,6 +1270,7 @@ mod tests {
             icon_size: 120.0,
             font_size: 22.0,
             node_separation: 110.0,
+            padding: 48.0,
         });
         diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
             ArchitectureServiceMetadata {
@@ -1265,10 +1283,12 @@ mod tests {
         assert_eq!(layout.nodes[0].style.font_size, 22.0);
         assert!(layout.nodes[0].width >= 240.0);
         assert!(layout.nodes[0].height >= 108.0);
+        assert_eq!(layout.nodes[0].x, 48.0);
         assert_eq!(
             layout.nodes[1].x - (layout.nodes[0].x + layout.nodes[0].width),
             110.0
         );
+        assert_eq!(layout.width - (layout.nodes[1].x + layout.nodes[1].width), 48.0);
     }
 
     #[test]

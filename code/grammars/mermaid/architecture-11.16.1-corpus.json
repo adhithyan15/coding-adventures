@@ -52,7 +52,7 @@
     },
     {
       "id": "size-and-separation-config",
-      "source": "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110}}}%%\narchitecture-beta\nservice api(server)[API]\nservice db(database)[Database]"
+      "source": "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48}}}%%\narchitecture-beta\nservice api(server)[API]\nservice db(database)[Database]"
     }
   ]
 }
