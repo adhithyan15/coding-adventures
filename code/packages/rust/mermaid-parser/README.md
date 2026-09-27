@@ -42,8 +42,10 @@ geometry to the requested node or group boundary. Architecture edges resolve to
 deterministic orthogonal polylines before backend-neutral PaintScene lowering.
 Named service and group icons lower to canonical backend-neutral glyph geometry.
 Namespaced icon identifiers survive typed IR and use a generic glyph when vendor
-artwork is unavailable. Full vendor icon artwork, obstacle avoidance, and
-configuration remain outside the partial compatibility claim.
+artwork is unavailable. Orthogonal Architecture edges deterministically avoid
+unrelated service and junction bounds before backend-neutral lowering. Full vendor
+icon artwork, group-boundary obstacle avoidance, and configuration remain outside
+the partial compatibility claim.
 
 The initial `kanban` subset preserves indentation-defined columns and cards,
 including plain labels and explicit `id[label]` forms, in typed board IR.
