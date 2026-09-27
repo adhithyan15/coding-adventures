@@ -1,5 +1,14 @@
 # Changelog — intel8086-backend
 
+## Unreleased — WORD01 fixed-width result ABI
+
+- Enforce the `u8` range for `const_u8` and zero-extend byte/bool results in
+  `AX`, making the boundary observable as `AL` with `AH = 0`.
+- Lower `const_u16`/`ret_u16` through `AX` and reject mismatched typed returns
+  while retaining the single-live-value restriction.
+- Execute `const_u16 0x1234; ret_u16` in `intel8086-simulator`, plus the `u8`
+  boundary and overflow proofs.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

@@ -12,7 +12,7 @@
 //! following the pattern documented in
 //! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 //!
-//! ## Scope (v0.1.0 — minimal viable)
+//! ## Scope (WORD01)
 //!
 //! Minimal viable backend — covers the trivial-ROM case (`const_*`
 //! immediate + `ret_*`) needed by the `lang-aot` Intel 8086 e2e smoke
@@ -20,8 +20,9 @@
 //!
 //! | CIR op | Lowering |
 //! |--------|----------|
-//! | `const_*` (16-bit unsigned literal, `[0, 65535]`) | `MOV AX, #imm16` |
-//! | `ret_*`, `ret_void` | `HLT` (a genuine hardware halt — see below) |
+//! | `const_u8`, `const_bool` | `MOV AX, #imm16` with `AH = 0` |
+//! | `const_u16` | `MOV AX, #imm16` |
+//! | matching typed returns, `ret_void` | `HLT` (a genuine hardware halt — see below) |
 //! | Anything else | returns `None` |
 //!
 //! There is no real register allocator: a trivial "last const var"
@@ -96,9 +97,9 @@
 //! Emit-only target per the migration spec. Bytes go to
 //! `intel8086-simulator`.
 
+use intel8086_encoder::{encode_hlt, encode_mov_reg_imm16, REG_AX};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use intel8086_encoder::{encode_hlt, encode_mov_reg_imm16, REG_AX};
 use std::fmt;
 use vm_core::value::Value;
 
@@ -129,9 +130,7 @@ impl fmt::Display for BackendError {
             }
             Self::ImmediateOutOfRange(n) => write!(
                 f,
-                "intel8086-backend: const {n} exceeds the 16-bit MOV-immediate range \
-                 [0, 65535]; AX is 16 bits wide, so wider or negative CIR constants \
-                 have no direct `MOV AX,#imm16` lowering"
+                "intel8086-backend: const {n} is outside the selected unsigned result width"
             ),
         }
     }
@@ -154,7 +153,7 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     // v0.1.0 uses a trivial single-register allocator: the most recent
     // `const_*` puts its value into AX, and `ret_*` returns AX. Programs
     // that need more than one live var fall through to `UnsupportedOp`.
-    let mut last_const_var: Option<String> = None;
+    let mut current_value: Option<CurrentValue> = None;
 
     // Tracks "has a genuine halt-convention instruction (HLT) already
     // been pushed?" -- an explicit boolean, NOT a trailing-byte-value
@@ -173,14 +172,25 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
         }
 
         if op.strip_prefix("ret_").is_some() {
+            let expected_width = result_width_for_ret(op)
+                .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
             let src_name = parse_var_src(instr, 0, op)?;
             // We only support the case where src is the most recent
             // const'd var (i.e. it's already in AX). Multi-var requires
             // a real register allocator.
-            if last_const_var.as_deref() != Some(src_name.as_str()) {
+            let Some(value) = current_value.as_ref() else {
+                return Err(BackendError::UndefinedVariable(src_name));
+            };
+            if value.name != src_name {
                 return Err(BackendError::UnsupportedOp(format!(
                     "ret of {src_name:?} which is not the current AX var; \
                      multi-register allocation lands in a future increment"
+                )));
+            }
+            if value.width != expected_width {
+                return Err(BackendError::UnsupportedOp(format!(
+                    "{op} cannot return the current {}-bit value",
+                    value.width.bits()
                 )));
             }
             bytes.extend_from_slice(&encode_hlt());
@@ -190,10 +200,15 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
 
         if op.strip_prefix("const_").is_some() {
             let dest = require_dest(instr, op)?;
-            let imm = encode_immediate_16(instr.srcs.first())?;
+            let width = result_width_for_const(op)
+                .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
+            let imm = encode_typed_immediate(op, instr.srcs.first())?;
             // const_* always targets AX in this minimal backend.
             bytes.extend_from_slice(&encode_mov_reg_imm16(REG_AX, imm));
-            last_const_var = Some(dest.to_string());
+            current_value = Some(CurrentValue {
+                name: dest.to_string(),
+                width,
+            });
             // A non-terminating instruction was just emitted -- even if
             // the buffer's trailing byte now happens to numerically
             // equal HALT_BYTE (imm's high byte can be 0xF4), the program
@@ -236,21 +251,67 @@ fn parse_var_src(instr: &CIRInstr, idx: usize, op: &str) -> Result<String, Backe
     }
 }
 
-/// The Intel 8086's `MOV reg16,#imm16` carries a plain, unsigned 16-bit
-/// immediate. Accept the full unsigned range `[0, 65535]`; `AX` is 16
-/// bits wide, so wider or negative CIR constants have no direct
-/// lowering in this minimal-viable backend.
-fn encode_immediate_16(op: Option<&CIROperand>) -> Result<u16, BackendError> {
-    let n: i64 = match op {
+/// Width-preserving materialization through `MOV AX,#imm16`. Byte values are
+/// range-checked before being zero-extended into AX; word values accept the
+/// full unsigned 16-bit range.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ResultWidth {
+    Byte,
+    Word,
+}
+
+impl ResultWidth {
+    fn bits(self) -> u8 {
+        match self {
+            Self::Byte => 8,
+            Self::Word => 16,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct CurrentValue {
+    name: String,
+    width: ResultWidth,
+}
+
+fn result_width_for_const(op: &str) -> Option<ResultWidth> {
+    match op {
+        "const_u8" | "const_bool" => Some(ResultWidth::Byte),
+        "const_i64" | "const_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+fn result_width_for_ret(op: &str) -> Option<ResultWidth> {
+    match op {
+        "ret_u8" | "ret_bool" => Some(ResultWidth::Byte),
+        "ret_i64" | "ret_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+fn encode_typed_immediate(op: &str, operand: Option<&CIROperand>) -> Result<u16, BackendError> {
+    if op == "const_bool" {
+        return match operand {
+            Some(CIROperand::Bool(value)) => Ok(u16::from(*value)),
+            _ => Err(BackendError::InvalidOperand(
+                "const_bool srcs[0] must be Bool".into(),
+            )),
+        };
+    }
+
+    let n = match operand {
         Some(CIROperand::Int(n)) => *n,
-        Some(CIROperand::Bool(b)) => i64::from(*b),
+        Some(CIROperand::Bool(b)) if op == "const_i64" => i64::from(*b),
         _ => {
-            return Err(BackendError::InvalidOperand(
-                "const_* srcs[0] must be Int or Bool".into(),
-            ));
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[0] must be Int"
+            )));
         }
     };
-    if (0..=0xFFFF).contains(&n) {
+    let max = if op == "const_u8" { 0xFF } else { 0xFFFF };
+    if (0..=max).contains(&n) {
         Ok(n as u16)
     } else {
         Err(BackendError::ImmediateOutOfRange(n))

@@ -10,13 +10,19 @@ Lowers a `Vec<CIRInstr>` into Intel 8086 machine code bytes via
 to be loaded into `intel8086-simulator` (or any compatible external
 8086/8088 emulator).
 
-## Scope (v0.1.0 — minimal viable)
+## Scope (WORD01)
 
 | CIR op | Lowering |
 |--------|----------|
-| `const_*` (16-bit unsigned literal, `[0, 65535]`) | `MOV AX, #imm16` |
-| `ret_*`, `ret_void` | `HLT` |
+| `const_u8`, `const_bool` | `MOV AX, #imm16` with `AH = 0` |
+| `const_u16` | `MOV AX, #imm16` |
+| matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HLT` |
 | Anything else | `None` (compile failure — same graceful AOT/JIT fallback every other backend gets) |
+
+The historical `const_i64`/`ret_i64` 16-bit smoke path remains for
+compatibility. Exactly one value may be live, and typed returns must match its
+width. The observable result ABI is `AL` with `AH = 0` for `u8`/`bool`, and
+`AX` for `u16`.
 
 A trivial "last const var" single-register (`AX`) allocator — the same
 scheme `mips-r2000-backend`/`arm1-backend`/`mos6502-backend` use. Full op

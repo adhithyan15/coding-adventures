@@ -153,6 +153,71 @@ fn const_bool_true() {
 }
 
 #[test]
+fn word_u16_result_executes_in_hl() {
+    let cir = vec![
+        ci(
+            "const_u16",
+            Some("word"),
+            vec![CIROperand::Int(0x1234)],
+            "u16",
+        ),
+        ci("ret_u16", None, vec![CIROperand::Var("word".into())], "u16"),
+    ];
+    let bytes = compile(&ctx("word_result", &[], "u16"), &cir).expect("lowering");
+    assert_eq!(bytes, vec![0x21, 0x34, 0x12, 0x76]);
+
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(10).unwrap();
+    assert!(result.halted);
+    assert_eq!(result.steps, 2);
+    assert_eq!((sim.regs.h, sim.regs.l), (0x12, 0x34));
+}
+
+#[test]
+fn byte_result_executes_in_a_at_unsigned_boundary() {
+    let cir = vec![
+        ci("const_u8", Some("byte"), vec![CIROperand::Int(0xFF)], "u8"),
+        ci("ret_u8", None, vec![CIROperand::Var("byte".into())], "u8"),
+    ];
+    let bytes = compile(&ctx("byte_result", &[], "u8"), &cir).expect("lowering");
+    assert_eq!(bytes, vec![0x3E, 0xFF, 0x76]);
+
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(10).unwrap();
+    assert!(result.halted);
+    assert_eq!(sim.regs.a, 0xFF);
+}
+
+#[test]
+fn const_u8_rejects_word_sized_literal() {
+    let cir = vec![ci(
+        "const_u8",
+        Some("byte"),
+        vec![CIROperand::Int(0x100)],
+        "u8",
+    )];
+    let err = compile(&ctx("wide_byte", &[], "u8"), &cir).expect_err("u8 overflow");
+    assert!(matches!(err, BackendError::ImmediateOutOfRange(0x100)));
+}
+
+#[test]
+fn typed_return_must_match_current_result_width() {
+    let cir = vec![
+        ci(
+            "const_u16",
+            Some("word"),
+            vec![CIROperand::Int(0x1234)],
+            "u16",
+        ),
+        ci("ret_u8", None, vec![CIROperand::Var("word".into())], "u8"),
+    ];
+    let err = compile(&ctx("wrong_width", &[], "u8"), &cir).expect_err("width mismatch");
+    assert!(matches!(err, BackendError::UnsupportedOp(message) if message.contains("16-bit")));
+}
+
+#[test]
 fn unsupported_op_returns_err() {
     let cir = vec![ci(
         "add_i64",

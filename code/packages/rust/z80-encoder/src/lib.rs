@@ -10,15 +10,16 @@
 //! ## What's inside
 //!
 //! 1. **Encoder re-exports** — the canonical `encode_*` helpers (e.g.
-//!    `encode_ld_a_n`, `HALT`) come from [`z80_simulator::encoding`] /
+//!    `encode_ld_a_n`, `encode_ld_rp_nn`, `HALT`) come from
+//!    [`z80_simulator::encoding`] /
 //!    [`z80_simulator::opcodes`].  We re-export them here so that
 //!    `z80-backend` (Backend trait over CIR) can depend on a small,
 //!    IR-agnostic surface without pulling the full simulator's
 //!    decode/execute internals into every consumer.  Future ISA-spec
 //!    updates land in `z80-simulator::encoding` and propagate
 //!    automatically.
-//! 2. **Register constant** — `REG_A`, the only register the minimal-
-//!    viable `z80-backend` addresses directly.
+//! 2. **Register constants** — `REG_A` and `PAIR_HL`, the byte and word
+//!    result locations used by `z80-backend`.
 //! 3. **Capacity constant** — `LD_A_N_MAX` for the 8-bit immediate range.
 //!
 //! No IR knowledge lives here.  Consumers map their IR onto encoder calls
@@ -30,6 +31,7 @@
 //! |----------|--------|-------|--------|
 //! | `HALT` | `0x76` | 1 | halt — `01_110_110` |
 //! | `LD A,n` | `0x3E nn` | 2 | A ← 8-bit immediate `n` |
+//! | `LD HL,nn` | `0x21 lo hi` | 3 | HL ← 16-bit immediate `nn` |
 //! | `RET` | `0xC9` | 1 | return from subroutine |
 //!
 //! ## Byte-identity with `intel8080-encoder`
@@ -62,8 +64,8 @@
 // the instruction-byte-sequence packing logic lives.  We re-export the
 // subset `z80-backend` actually uses.
 
-pub use z80_simulator::encoding::{assemble, encode_ld_a_n};
-pub use z80_simulator::opcodes::{HALT, RET};
+pub use z80_simulator::encoding::{assemble, encode_ld_a_n, encode_ld_rp_nn};
+pub use z80_simulator::opcodes::{HALT, PAIR_HL, RET};
 
 // ===========================================================================
 // Register-role constant
@@ -109,6 +111,11 @@ mod tests {
     }
 
     #[test]
+    fn canonical_word_result_bytes() {
+        assert_eq!(encode_ld_rp_nn(PAIR_HL, 0x1234), vec![0x21, 0x34, 0x12]);
+    }
+
+    #[test]
     fn canonical_const_42_matches_intel8080_encoder_bytes() {
         // z80-encoder's LD A,n / HALT reuse the exact 8080-legacy
         // encoding -- this is the cross-architecture consistency check
@@ -122,7 +129,10 @@ mod tests {
 
     #[test]
     fn assemble_then_halt() {
-        assert_eq!(assemble(&[encode_ld_a_n(42), vec![HALT]]), vec![0x3E, 0x2A, 0x76]);
+        assert_eq!(
+            assemble(&[encode_ld_a_n(42), vec![HALT]]),
+            vec![0x3E, 0x2A, 0x76]
+        );
     }
 
     #[test]

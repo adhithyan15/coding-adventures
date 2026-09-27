@@ -1,5 +1,11 @@
 # Changelog — z80-encoder
 
+## Unreleased — WORD01 fixed-width result ABI
+
+Re-export `encode_ld_rp_nn` and `PAIR_HL` so `z80-backend` can materialize a
+`u16` result in `HL`. A unit test pins `LD HL,0x1234` to
+`[0x21, 0x34, 0x12]`.
+
 ## v0.1.0 — 2026-08-17 — seventh lane of the 9-architecture expansion
 
 Initial release. Re-exports `encode_ld_a_n`, `assemble`, `HALT`, `RET`,
