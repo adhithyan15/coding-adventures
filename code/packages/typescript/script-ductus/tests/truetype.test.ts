@@ -267,7 +267,9 @@ describe("hostile input", () => {
     expect(Date.now() - started).toBeLessThan(10_000);
   });
 
-  it("does not degrade to blank outlines over many lookups", () => {
+  // Thousands of lookups by design: 2.3s on a loaded CI runner with coverage
+  // on, near this package's 5s default, so it states its own budget.
+  it("does not degrade to blank outlines over many lookups", { timeout: 30_000 }, () => {
     // The component budget must be per-LOOKUP. An earlier version created it
     // once per Font and decremented it forever, so ordinary letters started
     // coming back with empty contours after a few thousand renders — silent
@@ -502,7 +504,10 @@ describe("Tamil letter shapes the lessons make claims about", () => {
   /** Count separate ink runs along a row — how many strokes it crosses. */
   const runs = (row: boolean[]) => row.reduce((n, v, i) => n + (v && !row[i - 1] ? 1 : 0), 0);
 
-  it("ண is ன with exactly one extra arch, and both end in a straight vertical", () => {
+  // The raster tests below are pure CPU over a fixed font: 0.8s locally, but
+  // 5.2s on a loaded CI runner with coverage on, past this package's 5s
+  // default. The work does not grow with the corpus, so each states a budget.
+  it("ண is ன with exactly one extra arch, and both end in a straight vertical", { timeout: 30_000 }, () => {
     const f = tamil();
     const retroflex = f.glyphFor("ண")!.contours;
     const alveolar = f.glyphFor("ன")!.contours;
@@ -576,7 +581,7 @@ describe("Tamil letter shapes the lessons make claims about", () => {
     expect(Math.max(...spreads)).toBeGreaterThan(1);
   });
 
-  it("the two letters share their opening: identical until the extra arch", () => {
+  it("the two letters share their opening: identical until the extra arch", { timeout: 30_000 }, () => {
     const f = tamil();
     const retroflex = f.glyphFor("ண")!.contours;
     const alveolar = f.glyphFor("ன")!.contours;
