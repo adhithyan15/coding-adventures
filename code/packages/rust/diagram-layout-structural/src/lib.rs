@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.22.0";
+pub const VERSION: &str = "0.23.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -40,6 +40,12 @@ fn vertical_gap(config: Option<&ArchitectureConfig>) -> f64 {
 
 fn outer_padding(config: Option<&ArchitectureConfig>) -> f64 {
     config.map_or(COMP_PAD, |config| config.padding)
+}
+
+fn alignment_gap(config: Option<&ArchitectureConfig>, fallback: f64) -> f64 {
+    config.map_or(fallback, |config| {
+        config.icon_size * config.ideal_edge_length_multiplier
+    })
 }
 
 fn structural_style(
@@ -102,8 +108,8 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
 }
 
 fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
-    let column_gap = horizontal_gap(diagram.architecture_config.as_ref());
-    let row_gap = vertical_gap(diagram.architecture_config.as_ref());
+    let column_gap = alignment_gap(diagram.architecture_config.as_ref(), COL_GAP);
+    let row_gap = alignment_gap(diagram.architecture_config.as_ref(), ROW_GAP);
     let padding = outer_padding(diagram.architecture_config.as_ref());
     for alignment in &diagram.alignments {
         let indices = alignment
@@ -991,7 +997,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.22.0");
+        assert_eq!(crate::VERSION, "0.23.0");
     }
 
     #[test]
@@ -1271,6 +1277,7 @@ mod tests {
             font_size: 22.0,
             node_separation: 110.0,
             padding: 48.0,
+            ideal_edge_length_multiplier: 1.25,
         });
         diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
             ArchitectureServiceMetadata {
@@ -1278,6 +1285,10 @@ mod tests {
                 icon_text: None,
             },
         ));
+        diagram.alignments.push(StructuralAlignment {
+            axis: StructuralAlignmentAxis::Row,
+            members: vec!["Animal".into(), "Dog".into()],
+        });
 
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.nodes[0].style.font_size, 22.0);
@@ -1286,7 +1297,7 @@ mod tests {
         assert_eq!(layout.nodes[0].x, 48.0);
         assert_eq!(
             layout.nodes[1].x - (layout.nodes[0].x + layout.nodes[0].width),
-            110.0
+            150.0
         );
         assert_eq!(layout.width - (layout.nodes[1].x + layout.nodes[1].width), 48.0);
     }
