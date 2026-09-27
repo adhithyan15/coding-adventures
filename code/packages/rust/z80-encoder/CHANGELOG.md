@@ -1,5 +1,10 @@
 # Changelog — z80-encoder
 
+## Unreleased — WORD02
+
+- Re-export register copies, byte ALU operations, `ADD HL,DE`, and the
+  `DE`/scratch register codes needed by the bounded Word backend.
+
 ## Unreleased — WORD01 fixed-width result ABI
 
 Re-export `encode_ld_rp_nn` and `PAIR_HL` so `z80-backend` can materialize a

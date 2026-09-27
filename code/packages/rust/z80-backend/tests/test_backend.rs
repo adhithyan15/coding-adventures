@@ -133,6 +133,158 @@ fn word02_rejects_three_live_values_without_spilling() {
     ));
 }
 
+#[test]
+fn word02_reversed_subtraction_preserves_primary_and_returns_secondary() {
+    let mut cir = word02_binary("sub_u16", "u16", 5, 2);
+    cir[2].srcs.reverse(); // 2 - 5 wraps, with the result in DE.
+    cir[3] = ci(
+        "add_u16",
+        Some("restored"),
+        vec![
+            CIROperand::Var("result".into()),
+            CIROperand::Var("left".into()),
+        ],
+        "u16",
+    );
+    cir.push(ci(
+        "ret_u16",
+        None,
+        vec![CIROperand::Var("restored".into())],
+        "u16",
+    ));
+    let bytes = compile(&ctx("reverse", &[], "u16"), &cir).unwrap();
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    assert!(sim.run_loaded_with_limit(100).unwrap().halted);
+    assert_eq!(u16::from_be_bytes([sim.regs.h, sim.regs.l]), 2);
+}
+
+#[test]
+fn word02_rejects_simultaneously_live_mixed_widths() {
+    let cir = vec![
+        ci("const_u8", Some("byte"), vec![CIROperand::Int(2)], "u8"),
+        ci("const_u16", Some("word"), vec![CIROperand::Int(3)], "u16"),
+        ci(
+            "add_u8",
+            Some("byte2"),
+            vec![
+                CIROperand::Var("byte".into()),
+                CIROperand::Var("byte".into()),
+            ],
+            "u8",
+        ),
+        ci(
+            "add_u16",
+            Some("word2"),
+            vec![
+                CIROperand::Var("word".into()),
+                CIROperand::Var("word".into()),
+            ],
+            "u16",
+        ),
+        ci(
+            "ret_u16",
+            None,
+            vec![CIROperand::Var("word2".into())],
+            "u16",
+        ),
+    ];
+    assert!(
+        matches!(compile(&ctx("mixed", &[], "u16"), &cir), Err(BackendError::UnsupportedOp(message)) if message.contains("mixed-width"))
+    );
+}
+
+#[test]
+fn word02_returns_secondary_byte_and_preserves_primary_byte() {
+    let mut cir = word02_binary("sub_u8", "u8", 5, 2);
+    cir[2].srcs.reverse();
+    cir[3] = ci(
+        "add_u8",
+        Some("restored"),
+        vec![
+            CIROperand::Var("result".into()),
+            CIROperand::Var("left".into()),
+        ],
+        "u8",
+    );
+    cir.push(ci(
+        "ret_u8",
+        None,
+        vec![CIROperand::Var("restored".into())],
+        "u8",
+    ));
+    let bytes = compile(&ctx("reverse_byte", &[], "u8"), &cir).unwrap();
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    assert!(sim.run_loaded_with_limit(100).unwrap().halted);
+    assert_eq!(sim.regs.a, 2);
+
+    let mut cir = word02_binary("add_u8", "u8", 5, 2);
+    cir[3].srcs[0] = CIROperand::Var("right".into());
+    let bytes = compile(&ctx("return_second", &[], "u8"), &cir).unwrap();
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    assert!(sim.run_loaded_with_limit(100).unwrap().halted);
+    assert_eq!(sim.regs.a, 2);
+}
+
+#[test]
+fn word02_reports_type_arity_and_missing_binding_errors() {
+    let cases = [
+        (
+            vec![ci("const_u8", Some("x"), vec![CIROperand::Int(1)], "u16")],
+            "requires u8 type",
+        ),
+        (
+            vec![ci(
+                "add_u16",
+                Some("x"),
+                vec![CIROperand::Var("a".into())],
+                "u16",
+            )],
+            "two variables",
+        ),
+        (
+            vec![ci(
+                "ret_u16",
+                None,
+                vec![CIROperand::Var("missing".into())],
+                "u16",
+            )],
+            "undefined variable",
+        ),
+        (
+            vec![ci(
+                "const_bool",
+                Some("x"),
+                vec![CIROperand::Int(1)],
+                "bool",
+            )],
+            "must be Bool",
+        ),
+    ];
+    for (cir, expected) in cases {
+        let error = compile(&ctx("invalid", &[], "u16"), &cir).unwrap_err();
+        assert!(error.to_string().contains(expected), "{error}");
+    }
+    let cir = vec![
+        ci("const_u16", Some("a"), vec![CIROperand::Int(1)], "u16"),
+        ci("const_u16", Some("b"), vec![CIROperand::Int(2)], "u16"),
+        ci(
+            "add_u8",
+            Some("c"),
+            vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+            "u8",
+        ),
+        ci("ret_u8", None, vec![CIROperand::Var("c".into())], "u8"),
+    ];
+    assert!(compile(&ctx("width", &[], "u8"), &cir)
+        .unwrap_err()
+        .to_string()
+        .contains("source width mismatch"));
+    assert_eq!(Z80Backend::new().name(), "z80");
+}
+
 fn const_42_ret_cir() -> Vec<CIRInstr> {
     vec![
         ci("const_i64", Some("v"), vec![CIROperand::Int(42)], "i64"),
@@ -348,15 +500,17 @@ fn unsupported_op_returns_err() {
 }
 
 #[test]
-fn multi_const_ret_falls_through() {
+fn multi_const_can_return_first_value() {
     let cir = vec![
         ci("const_i64", Some("a"), vec![CIROperand::Int(1)], "i64"),
         ci("const_i64", Some("b"), vec![CIROperand::Int(2)], "i64"),
         ci("ret_i64", None, vec![CIROperand::Var("a".into())], "i64"),
     ];
-    let err = compile(&ctx("two_const_ret_first", &[], "i64"), &cir)
-        .expect_err("multi-var ret should fall through");
-    assert!(matches!(err, BackendError::UnsupportedOp(_)));
+    let bytes = compile(&ctx("two_const_ret_first", &[], "i64"), &cir).unwrap();
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    assert!(sim.run_loaded_with_limit(10).unwrap().halted);
+    assert_eq!(sim.regs.a, 1);
 }
 
 #[test]

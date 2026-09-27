@@ -1,5 +1,12 @@
 # Changelog — z80-backend
 
+## Unreleased — WORD02 two-live arithmetic
+
+- Allocate two same-width live values in `A`/`D` or `HL`/`DE` and reuse dead
+  operand slots; reject a third live value and mixed live widths.
+- Execute wrapping byte/word add, subtract, and bitwise operations in the Z80
+  simulator, including `ADD HL,DE`, carry/borrow, and both result bytes.
+
 ## Unreleased — WORD01 fixed-width result ABI
 
 - Lower `const_u8`/`ret_u8` and `const_bool`/`ret_bool` through `A`.
