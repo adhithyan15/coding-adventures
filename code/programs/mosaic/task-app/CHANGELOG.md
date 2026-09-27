@@ -4,8 +4,18 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.0` accumulate here until the next version is
+Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
+
+## [0.5.1] - 2026-09-27
+
+### Fixed — release notes state the CI-only backend boundary (#16168)
+
+Generated notes now say directly that static HTML, Web Components, and Paint
+remain CI-only verification outputs rather than downloadable artifacts, and
+that Paint coverage does not imply a Paint host or interaction support. The
+immutable v0.5.0 release shipped the correct 11-payload web/native matrix, but
+its heading-only changelog summary omitted this explanatory boundary.
 
 ## [0.5.0] - 2026-09-27
 
