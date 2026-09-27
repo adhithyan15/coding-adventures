@@ -14572,6 +14572,34 @@ including the 50,000,000-unit preflight ceiling, exact closures, cycle handling,
 stable failures, and the separately hardened portable matcher. A live file-list
 audit found no competing open-PR overlap.
 
+### Python graph and diff-selection PR #16127 opened
+
+Ready-for-review PR #16127 carries the selected Python graph and diff-selection
+slice from validated implementation revision
+`c9409b8361d9aa3323cd3baf245a6ad246119be4`. The branch rebased cleanly onto
+exact `origin/main` `5420815ffd57c04cd01eca80e75044afbc6ce04a` before
+publication, and a fresh live file-list audit found no competing parity PR or
+implementation-path overlap.
+
+The production API is pure and process-free. It dynamically consumes all eight
+graph and eleven diff-selection fixtures with canonical edges and levels, exact
+downstream and prerequisite closures, cycle-wide empty results, exact recursive
+BUILD-front selection, repository-boundary digest and reverse selection, and
+the 50,000,000 Unicode-scalar match-work preflight. Direct bounded regressions
+cover structural limits, validation precedence, complete fixture identifiers,
+Unicode and case-folded paths, nested-root rejection, immutable snapshots, and
+schema-forbidden question-mark globs.
+
+Final-head verification passes 523 Python package tests with four platform
+skips and 91.95% total coverage, 86 conformance-runner tests, 33 parity and
+capability tests plus 787 subtests, focused Ruff/format/strict MyPy/Bandit and
+compileall, the valid 162-case/285-file neutral corpus, the zero-collision
+schema-3 inventory, and a Go BUILD-validation dry run selecting exactly the
+Python build tool. Packaging, isolated wheel/API and CLI smoke tests,
+dependency checks, and production vulnerability audit also pass. Initial CI,
+CodeQL, and human-language detection checks are queued; guarded auto-merge
+remains disabled until every required check is terminal and acceptable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
