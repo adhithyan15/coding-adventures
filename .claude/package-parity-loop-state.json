@@ -1100,10 +1100,13 @@
     {
       "id": "build-tool-rust-glob-matcher-complexity-hardening",
       "title": "Harden Rust build-tool glob matcher complexity",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
+      "branch": "codex/parity-rust-glob-hardening-20260927",
       "pr_number": null,
+      "selected_at": "2026-09-27T19:49:02Z",
+      "selection_revision": "cb6fe40a0819113a820cd9886e494a2f4d9f4f66",
+      "selection_notes": "Selected after PR #16153 completed all final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 inventory remains collision-free and unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Both formal prerequisites are merged, no open PR overlaps the Rust glob matcher or hasher paths, and dependency/leverage ranking places this bounded portable build-tool leaf ahead of the barcode lane follow-ups.",
       "notes": "Replace recursive byte-state revisitation with bounded memoized matching, Unicode-scalar accounting, strict character classes, and stable failures."
     },
     {
@@ -10701,7 +10704,7 @@
     {
       "id": "haskell-barcode-encoder-windows-build-front-coverage",
       "title": "Add Windows build fronts for five Haskell 2D barcode encoders",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-itf-existing-lanes-v1-20260927",
       "pr_number": 16153,
@@ -10712,6 +10715,10 @@
       "selection_revision": "b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649",
       "selection_notes": "Reconciled after the work was delivered as a bounded prerequisite repair inside the active ITF PR. The item now enters the recorded lifecycle before being associated with that already-reviewed PR; no second implementation branch or PR was created.",
       "publication_notes": "Associated with the already-open ITF PR #16153 because its five BUILD_windows fronts and metadata regression were included as the smallest focused Windows CI repair on that branch. No second PR was opened.",
+      "merged_head_revision": "b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649",
+      "merged_at": "2026-09-27T19:46:23Z",
+      "merge_revision": "cb6fe40a0819113a820cd9886e494a2f4d9f4f66",
+      "merge_notes": "The five Haskell 2D BUILD_windows fronts and their metadata regression passed the same terminal CI matrix as PR #16153. GitHub merged the conflict-free reviewed head through guarded squash auto-merge; no plain manual merge command was used.",
       "notes": "Discovered by the post-PR #16127 Haskell front audit. Add fail-closed BUILD_windows recipes for aztec-code, data-matrix, micro-qr, pdf417, and qr-code that preserve each package's current `cabal test` command. Their present POSIX `if command -v` fallback fails under cmd.exe, so cover exact Windows-front precedence with a repository metadata regression while reusing the existing Hspec suites."
     },
     {
