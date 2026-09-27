@@ -3,7 +3,7 @@
     "id": "SA-C03-na-cinta",
     "language": "sanskrit",
     "chapter": 3,
-    "sequence": 190,
+    "sequence": 192,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3ebbe9dd55cabd93"
+    "sourceHash": "fnv1a64:f4a84d26ee79e615"
   },
   "findings": []
 }

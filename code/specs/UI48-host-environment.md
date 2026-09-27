@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2); ENV4 on SwiftUI (§7.3) and Compose (§7.4)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -507,6 +507,50 @@ reports dropped, a props-less update keeping the current props). The CI
 SwiftUI lanes compile the generated app on macOS and for the iOS simulator.
 The resize-and-assert gate §7 asks for lands with the first app that reacts:
 ENV-last's TaskApp compact layout, launched on a phone.
+
+### 7.4 ENV4 on Compose, designed
+
+The same contract as §7.3, on the Compose shell (`MosaicAppShell.kt`, shared
+by desktop and Android since UI89 §3.4). Compose has no layout variants yet
+(ENV2/ENV3 on Compose are separate), so this is the report alone.
+
+- **Every runtime-backed app observes.** The strict shell's `MosaicApp`
+  wraps its root in `BoxWithConstraints` and reduces what it sees to the six
+  §4 values: `sizeClass` from the width against 600 dp and 1024 dp (the
+  thresholds SwiftUI's reader uses, so one window size gives one bucket on
+  every host), `orientation` from height against width, and `colorScheme`
+  from `isSystemInDarkTheme()`. A sample-props shell does not observe.
+- **Pointer, hover and reduced motion come from the host.** The runtime host
+  already knows its platform, so `MosaicRuntimeHost.initialEnvironment()`
+  answers them: `fine`/`hover`/`no-preference` on desktop, `coarse`/`none` on
+  Android. Compose Desktop exposes no reduced-motion setting, so that axis
+  stays `no-preference` until a platform probe is added. The same values go
+  into the start context, as on SwiftUI.
+- **Reported on bucket change only.** `LaunchedEffect(report)` is keyed on
+  the six values, so it runs once when the window is first measured and again
+  only when a bucket flips. The host also drops a report equal to the last
+  one it accepted, and remembers a report only once the runtime took it, so a
+  refused one is tried again with the next.
+- **Through the concrete host.** `MosaicComposeHost` is an interface shared
+  with test harnesses and the legacy bridge, and knows nothing about the
+  environment; the shell reaches `reportEnvironment` through
+  `as? MosaicRuntimeHost`, the same downcast the effect installs use.
+- **"No reaction" keeps the current props.** The Kotlin host keeps the props
+  it is showing when an update carries none *at the revision it is showing*
+  (§7.1), exactly as the Swift host does, and leaves a props-less update that
+  moves the revision alone. A runtime refusal (an invalid environment) comes
+  back as `{"error": …}` rather than an exception, and the shell applies a
+  report's answer only when it carries props, so a refused report never
+  replaces what is on screen.
+
+**Acceptance.** Rust tests pin the generated shell (the observer around every
+runtime-backed root, the wire names and thresholds, no observer in a sample
+shell) and the host template. The Compose conformance harness, run in CI's
+Linux lane against the conformance runtime (which ignores the event), checks
+that a report keeps the props and revision, an unchanged report is not
+resent, a changed one is, and an invalid one is refused, leaves the props and
+is not remembered. The resize-and-assert gate lands with the first app that
+reacts (ENV-last).
 
 ## 8. Open questions
 

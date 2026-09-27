@@ -5714,7 +5714,9 @@ fn build_compose_main_kt(
     };
     let startup_import = if require_runtime {
         concat!(
+            "import androidx.compose.foundation.isSystemInDarkTheme\n",
             "import androidx.compose.foundation.layout.Arrangement\n",
+            "import androidx.compose.foundation.layout.BoxWithConstraints\n",
             "import androidx.compose.foundation.layout.Column\n",
             "import androidx.compose.foundation.layout.fillMaxSize\n",
             "import androidx.compose.foundation.layout.padding\n",
@@ -5726,6 +5728,7 @@ fn build_compose_main_kt(
             "import androidx.compose.ui.Alignment\n",
             "import androidx.compose.ui.Modifier\n",
             "import androidx.compose.ui.platform.testTag\n",
+            "import androidx.compose.ui.unit.Dp\n",
             "import androidx.compose.ui.unit.dp\n",
             "import kotlinx.coroutines.Dispatchers\n",
             "import kotlinx.coroutines.withContext\n",
@@ -5788,7 +5791,56 @@ fn build_compose_main_kt(
             "    }\n",
         )
     };
-    let root_body = root;
+    // UI48 ENV4 (§7.4): a runtime-backed app measures its window and tells the
+    // runtime when a size class, orientation or colour scheme bucket flips.
+    // `LaunchedEffect` is keyed on the six reported values, so a resize sends
+    // nothing until it crosses a threshold. A sample shell has no runtime to
+    // tell, and does not observe.
+    let root_body = if require_runtime {
+        format!(
+            concat!(
+                "        BoxWithConstraints {{\n",
+                "            val environmentReport = mosaicEnvironmentReport(maxWidth, maxHeight, isSystemInDarkTheme())\n",
+                "            LaunchedEffect(environmentReport) {{\n",
+                "                val response = (mosaicHost as? MosaicRuntimeHost)?.reportEnvironment(environmentReport)\n",
+                "                // Only an answer with props replaces what is showing; a\n",
+                "                // refused report leaves the screen as it is.\n",
+                "                if (response?.get(\"props\") != null) {{\n",
+                "                    applyMosaicResponse(response)\n",
+                "                }} else {{\n",
+                "                    response?.get(\"error\")?.let {{ println(\"host error: $it\") }}\n",
+                "                }}\n",
+                "            }}\n",
+                "{root}\n",
+                "        }}",
+            ),
+            root = root,
+        )
+    } else {
+        root
+    };
+    let environment_helper = if require_runtime {
+        concat!(
+            "/**\n",
+            " * The six UI48 §4 values, under mosaic-app-runtime's wire names (ENV4).\n",
+            " * Width buckets at 600 dp and 1024 dp, the thresholds SwiftUI's reader\n",
+            " * uses, so one window size gives one bucket on every host; pointer, hover\n",
+            " * and reduced motion are the platform's, from the runtime host.\n",
+            " */\n",
+            "private fun mosaicEnvironmentReport(width: Dp, height: Dp, dark: Boolean): Map<String, String> =\n",
+            "    MosaicRuntimeHost.initialEnvironment() + mapOf(\n",
+            "        \"colorScheme\" to if (dark) \"dark\" else \"light\",\n",
+            "        \"sizeClass\" to when {\n",
+            "            width < 600.dp -> \"compact\"\n",
+            "            width < 1024.dp -> \"regular\"\n",
+            "            else -> \"expanded\"\n",
+            "        },\n",
+            "        \"orientation\" to if (height > width) \"portrait\" else \"landscape\",\n",
+            "    )\n\n",
+        )
+    } else {
+        ""
+    };
     let main_host = if require_runtime {
         ""
     } else {
@@ -5985,6 +6037,7 @@ fn build_compose_main_kt(
             "    }}\n",
             "}}\n\n",
             "{legacy_bridge}",
+            "{environment_helper}",
             "private fun mosaicMap(value: Any?): Map<String, Any?> {{\n",
             "    val source = value as? Map<*, *> ?: return emptyMap()\n",
             "    return source.entries.mapNotNull {{ entry ->\n",
@@ -6048,6 +6101,7 @@ fn build_compose_main_kt(
         lifecycle = lifecycle,
         root_body = root_body,
         legacy_bridge = legacy_bridge,
+        environment_helper = environment_helper,
         required_helpers = required_helpers,
     );
     ComposeShellSources { main, shell }
@@ -18114,5 +18168,61 @@ mod percentage_radius_tests {
             radius, "3",
             "composition must resolve the percentage before any emitter sees it"
         );
+    }
+}
+
+/// UI48 ENV4 on Compose (§7.4): the strict shell measures its window and
+/// reports the environment; a sample shell has no runtime and does not.
+#[cfg(test)]
+mod compose_environment_report_tests {
+    use super::*;
+
+    fn shell(require_runtime: bool) -> String {
+        build_compose_main_kt("Probe", &[], require_runtime, None).shell
+    }
+
+    #[test]
+    fn a_runtime_backed_shell_reports_its_environment_around_the_root() {
+        let shell = shell(true);
+        let observer = shell.find("BoxWithConstraints {").expect("observer");
+        let report = shell
+            .find("LaunchedEffect(environmentReport)")
+            .expect("reported on change of the six values");
+        let root = shell.find("Probe(").expect("root invocation");
+        assert!(observer < report && report < root, "{shell}");
+        // Through the concrete host: the interface knows nothing about it.
+        assert!(
+            shell.contains("(mosaicHost as? MosaicRuntimeHost)?.reportEnvironment(environmentReport)"),
+            "{shell}"
+        );
+        assert!(!shell.contains("fun reportEnvironment"), "{shell}");
+        // A refused report never replaces what is showing.
+        assert!(shell.contains("if (response?.get(\"props\") != null) {"), "{shell}");
+        assert!(shell.contains("import androidx.compose.foundation.layout.BoxWithConstraints"));
+        assert!(shell.contains("import androidx.compose.foundation.isSystemInDarkTheme"));
+        assert!(shell.contains("import androidx.compose.ui.unit.Dp\n"));
+    }
+
+    #[test]
+    fn the_report_uses_the_runtime_wire_names_and_swiftui_thresholds() {
+        let shell = shell(true);
+        for wire in [
+            "\"colorScheme\" to if (dark) \"dark\" else \"light\"",
+            "width < 600.dp -> \"compact\"",
+            "width < 1024.dp -> \"regular\"",
+            "else -> \"expanded\"",
+            "\"orientation\" to if (height > width) \"portrait\" else \"landscape\"",
+            "MosaicRuntimeHost.initialEnvironment() + mapOf(",
+        ] {
+            assert!(shell.contains(wire), "missing `{wire}`:\n{shell}");
+        }
+    }
+
+    #[test]
+    fn a_sample_shell_does_not_observe() {
+        let shell = shell(false);
+        assert!(!shell.contains("BoxWithConstraints"), "{shell}");
+        assert!(!shell.contains("reportEnvironment"), "{shell}");
+        assert!(!shell.contains("mosaicEnvironmentReport"), "{shell}");
     }
 }

@@ -13,17 +13,18 @@
 >
 > The native release P0 (#14249) and native startup-state epic (#13984) are now
 > closed. The product-scoped SemVer lane (#13543) has published
-> `task-app-v0.1.0`, `task-app-v0.2.0`, and the immutable
-> `task-app-v0.3.0` release from the complete native lifecycle gates. The next
-> incremental checkpoint is `task-app-v0.4.0` (#16134): it records the static
-> HTML and Web Component parity gates without adding either CI-only output to
-> the downloadable artifact set. Release
+> `task-app-v0.1.0`, `task-app-v0.2.0`, `task-app-v0.3.0`, and the immutable
+> `task-app-v0.4.0` release. The latter records the static HTML and Web
+> Component parity gates without adding either CI-only output to the
+> downloadable artifact set. Its final verification found that the generated
+> limitations linked closed #13522 instead of live signing tracker #13977;
+> #16142 owns the corrective `task-app-v0.4.1` patch. Release
 > verification found that label-filtered GitHub history can omit valid
 > cross-package product changes; #16116 was repaired in #16117 by making the
 > dated changelog authoritative. The static HTML shell gate shipped in #16121
 > and the Web Components lifecycle parity host in #16130. Both are coverage
 > work, not resumed feature composition or new release artifacts. After the
-> `v0.4.0` checkpoint, Paint is the remaining TaskApp-scoped backend gap.
+> `v0.4.1` correction, Paint is the remaining TaskApp-scoped backend gap.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
@@ -71,11 +72,13 @@ links existing Mosaic work instead of duplicating it.
    release lane builds a tested web bundle and strict generated native projects;
    installer packaging remains #13522. **Done in #13587, with follow-up clean-
    runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0`,
-   `task-app-v0.2.0`, and `task-app-v0.3.0` published. The `task-app-v0.4.0`
-   checkpoint is tracked by
-   [#16134](https://github.com/adhithyan15/coding-adventures/issues/16134) and
-   intentionally keeps the verified artifact matrix unchanged. The next
-   focused release-lane repair,
+   `task-app-v0.2.0`, `task-app-v0.3.0`, and `task-app-v0.4.0` published. The
+   `task-app-v0.4.0` checkpoint in
+   [#16134](https://github.com/adhithyan15/coding-adventures/issues/16134)
+   intentionally kept the verified artifact matrix unchanged. The generated-
+   note tracker correction and `task-app-v0.4.1` patch are tracked by
+   [#16142](https://github.com/adhithyan15/coding-adventures/issues/16142). The
+   earlier focused release-lane repair,
    [#16116](https://github.com/adhithyan15/coding-adventures/issues/16116),
    was completed in #16117; generated notes now make the dated changelog
    authoritative before supporting GitHub history.**
@@ -160,7 +163,8 @@ super-app feature roadmap. Six interactive/native targets are gated and shipped;
 static HTML is structurally gated by #16120/#16121, and Web Components is
 real-engine parity-gated by #16125/#16130. Paint is the only backend left
 without TaskApp-level coverage. The ordered queue below comes from that spec;
-the product-scoped `v0.4.0` checkpoint in #16134 is prioritized before Paint.
+the release-notes correction and product-scoped `v0.4.1` patch in #16142 are
+prioritized before Paint.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
@@ -214,6 +218,10 @@ before supporting, label-filtered GitHub history.
 - **P2 [#13977](https://github.com/adhithyan15/coding-adventures/issues/13977):**
   signing/notarization/installers, filed when #13522 closed while the README
   still pointed at it.
+- **P1 [#16142](https://github.com/adhithyan15/coding-adventures/issues/16142):**
+  generated v0.4.0 notes still linked closed #13522 instead of #13977. Selected
+  as the next release blocker, with an immutable `task-app-v0.4.1` correction
+  ahead of Paint.
 - **P2 [#14360](https://github.com/adhithyan15/coding-adventures/issues/14360):**
   a generated permissive XAML project for a component with zero events reads
   `MosaicName` from an empty event union that does not declare it. Discovered by

@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-140-WRITING-VISARGA-BRIDGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace the visarga and then write the known word नमः with a model, after a delay, and finally from sound and meaning alone, without using romanization as the answer.",
+  "prerequisites": [
+    "SA-EXT-139-WRITING-WORD-BRIDGE"
+  ]
+}

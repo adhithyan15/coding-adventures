@@ -143,6 +143,25 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         checks = (sources / "PlatformEffectsChecks.swift").read_text(encoding="utf-8")
         self.assertIn("#if MOSAIC_PLATFORM_EFFECTS", checks)
         self.assertIn("#else", checks)
+    def test_ios_state_lives_in_the_sandbox_and_is_restored(self) -> None:
+        """UI89 §2.3 (step 3): seeded state is quarantined inside the app's
+        container when rejected, and the macOS run's real snapshot is
+        restored without quarantine; the app also runs on an iPad."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# State lives in the app's sandbox and is read back (UI89 §2.3,")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn("xcrun simctl get_app_container", block)
+        self.assertIn('Library/Application Support/task-app"', block)
+        self.assertIn("printf '{}' > \"$ios_state\"", block)
+        self.assertIn('test -f "$ios_state.corrupt"', block)
+        self.assertIn('cp "$task_state_path" "$ios_state"', block)
+        self.assertIn('test ! -e "$ios_state.corrupt"', block)
+        self.assertEqual(block.count("launchctl list | grep 'dev.codingadventures.trestle'"), 2)
+        ipad_start = workflow.index("# The same app on iPadOS (UI89 §2.2")
+        ipad = workflow[ipad_start:workflow.index("\n\n", ipad_start)]
+        self.assertIn('select(.name | startswith("iPad"))', ipad)
+        self.assertIn('xcrun simctl install "$ipad" "$ios_app"', ipad)
 
     def test_ios_project_generator_requires_acceptance(self) -> None:
         self.assertIn("rust/mosaic-ios-project", MODULE.ACCEPTANCE_PACKAGES)
