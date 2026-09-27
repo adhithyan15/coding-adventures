@@ -31,3 +31,4 @@ Nodes are placed in a 3-column grid with:
 - Node height from compartment entry count (20 px/row)
 - Relationships routed to closest-side midpoints
 - Explicit orthogonal routes avoid unrelated node bounds with deterministic clearance
+- Architecture `iconSize` and `fontSize` configuration scales resolved node geometry and service typography

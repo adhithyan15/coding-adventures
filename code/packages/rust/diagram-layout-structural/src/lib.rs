@@ -7,14 +7,15 @@
 //! polyline paths for all relationships.
 
 use diagram_ir::{
-    resolve_style_with_base, DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram,
+    resolve_style_with_base, ArchitectureConfig, DiagramDirection, LayoutedCompartment,
+    LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
     StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.19.0";
+pub const VERSION: &str = "0.20.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -29,7 +30,11 @@ const TITLE_H: f64 = 44.0;
 const ROUTE_CLEARANCE: f64 = 12.0;
 const ROUTE_BEND_COST: f64 = 8.0;
 
-fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
+fn structural_style(
+    node: &StructuralNode,
+    architecture_config: Option<&ArchitectureConfig>,
+) -> diagram_ir::ResolvedDiagramStyle {
+    let font_size = architecture_config.map_or(14.0, |config| config.font_size);
     resolve_style_with_base(
         node.style.as_ref(),
         diagram_ir::ResolvedDiagramStyle {
@@ -38,7 +43,7 @@ fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
             stroke_width: 1.5,
             stroke_dash: None,
             text_color: "#111827".into(),
-            font_size: 14.0,
+            font_size,
             font_weight: 400,
             font_italic: false,
             font_family: "Helvetica".into(),
@@ -50,8 +55,17 @@ fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
 /// Lay out a `StructuralDiagram` using an explicit axis or the legacy grid.
 pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructuralDiagram {
     let mut nodes = match diagram.direction.as_ref() {
-        Some(direction) => layout_directional_nodes(&diagram.nodes, &diagram.groups, direction),
-        None => layout_nodes(&diagram.nodes, &diagram.groups),
+        Some(direction) => layout_directional_nodes(
+            &diagram.nodes,
+            &diagram.groups,
+            direction,
+            diagram.architecture_config.as_ref(),
+        ),
+        None => layout_nodes(
+            &diagram.nodes,
+            &diagram.groups,
+            diagram.architecture_config.as_ref(),
+        ),
     };
     apply_alignments(&mut nodes, diagram);
     if diagram.title.is_some() {
@@ -132,11 +146,11 @@ fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDi
     }
 }
 
-fn node_width(node: &StructuralNode) -> f64 {
+fn node_width(node: &StructuralNode, architecture_config: Option<&ArchitectureConfig>) -> f64 {
     if node.node_kind == StructuralNodeKind::Junction {
-        return 18.0;
+        return 18.0 * architecture_config.map_or(1.0, |config| config.icon_size / 80.0);
     }
-    let style = structural_style(node);
+    let style = structural_style(node, architecture_config);
     let max_entry = node
         .compartments
         .iter()
@@ -147,16 +161,19 @@ fn node_width(node: &StructuralNode) -> f64 {
     // Approximate 8 px/char + padding; header is the label
     let char_width = style.font_size * 0.57;
     let text_w = (node.label.len().max(max_entry) as f64 * char_width + 24.0).ceil();
-    text_w.max(MIN_NODE_W)
+    let minimum_width = architecture_config.map_or(MIN_NODE_W, |config| {
+        MIN_NODE_W * config.icon_size / 80.0
+    });
+    text_w.max(minimum_width)
 }
 
-fn node_height(node: &StructuralNode) -> f64 {
+fn node_height(node: &StructuralNode, architecture_config: Option<&ArchitectureConfig>) -> f64 {
     if node.node_kind == StructuralNodeKind::Junction {
-        return 18.0;
+        return 18.0 * architecture_config.map_or(1.0, |config| config.icon_size / 80.0);
     }
-    let font_size = structural_style(node).font_size;
+    let font_size = structural_style(node, architecture_config).font_size;
     let header_height = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
-        72.0_f64.max(font_size * 2.4)
+        architecture_config.map_or(72.0, |config| config.icon_size * 0.9).max(font_size * 2.4)
     } else {
         HEADER_H.max(font_size * 2.4)
     };
@@ -189,6 +206,7 @@ fn architecture_icon_text(node: &StructuralNode) -> Option<&str> {
 fn layout_nodes(
     nodes: &[StructuralNode],
     groups: &[diagram_ir::StructuralGroup],
+    architecture_config: Option<&ArchitectureConfig>,
 ) -> Vec<LayoutedStructuralNode> {
     let mut out: Vec<LayoutedStructuralNode> = Vec::with_capacity(nodes.len());
     // Track max height per row so rows don't overlap.
@@ -197,8 +215,8 @@ fn layout_nodes(
     for (idx, node) in nodes.iter().enumerate() {
         let col = idx % COLS;
         let row = idx / COLS;
-        let nw = node_width(node);
-        let nh = node_height(node);
+        let nw = node_width(node, architecture_config);
+        let nh = node_height(node, architecture_config);
 
         // Ensure row_y has an entry for this row.
         while row_y.len() <= row {
@@ -218,10 +236,11 @@ fn layout_nodes(
         }
 
         // Build layouted compartments.
-        let style = structural_style(node);
+        let style = structural_style(node, architecture_config);
         let row_height = ROW_H.max(style.font_size * 1.4);
         let mut y_off = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
-            72.0_f64.max(style.font_size * 2.4)
+            architecture_config.map_or(72.0, |config| config.icon_size * 0.9)
+                .max(style.font_size * 2.4)
         } else {
             HEADER_H.max(style.font_size * 2.4)
         };
@@ -247,7 +266,7 @@ fn layout_nodes(
             stereotype: node.stereotype.clone(),
             icon_name: architecture_icon_name(node).map(str::to_string),
             icon_text: architecture_icon_text(node).map(str::to_string),
-            style: structural_style(node),
+            style: structural_style(node, architecture_config),
             compartments: comps,
         });
     }
@@ -258,6 +277,7 @@ fn layout_directional_nodes(
     nodes: &[StructuralNode],
     groups: &[diagram_ir::StructuralGroup],
     direction: &DiagramDirection,
+    architecture_config: Option<&ArchitectureConfig>,
 ) -> Vec<LayoutedStructuralNode> {
     let reverse = matches!(direction, DiagramDirection::Bt | DiagramDirection::Rl);
     let vertical = matches!(direction, DiagramDirection::Tb | DiagramDirection::Bt);
@@ -270,8 +290,8 @@ fn layout_directional_nodes(
     let mut positioned = Vec::with_capacity(nodes.len());
     for index in indices {
         let node = &nodes[index];
-        let width = node_width(node);
-        let height = node_height(node);
+        let width = node_width(node, architecture_config);
+        let height = node_height(node, architecture_config);
         let group_offset =
             group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
         let (x, y) = if vertical {
@@ -284,10 +304,11 @@ fn layout_directional_nodes(
             position
         };
 
-        let style = structural_style(node);
+        let style = structural_style(node, architecture_config);
         let row_height = ROW_H.max(style.font_size * 1.4);
         let mut y_offset = if architecture_icon_name(node).is_some() || architecture_icon_text(node).is_some() {
-            72.0_f64.max(style.font_size * 2.4)
+            architecture_config.map_or(72.0, |config| config.icon_size * 0.9)
+                .max(style.font_size * 2.4)
         } else {
             HEADER_H.max(style.font_size * 2.4)
         };
@@ -319,7 +340,7 @@ fn layout_directional_nodes(
                 stereotype: node.stereotype.clone(),
                 icon_name: architecture_icon_name(node).map(str::to_string),
                 icon_text: architecture_icon_text(node).map(str::to_string),
-                style: structural_style(node),
+                style: structural_style(node, architecture_config),
                 compartments,
             },
         ));
@@ -885,6 +906,7 @@ mod tests {
     fn two_class_diagram() -> StructuralDiagram {
         StructuralDiagram {
             kind: StructuralKind::Class,
+            architecture_config: None,
             title: Some("Domain".into()),
             accessibility_title: None,
             accessibility_description: None,
@@ -939,7 +961,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.19.0");
+        assert_eq!(crate::VERSION, "0.20.0");
     }
 
     #[test]
@@ -1208,6 +1230,27 @@ mod tests {
         assert_eq!(layout.nodes[0].icon_name.as_deref(), Some("database"));
         assert!(layout.nodes[0].height >= 72.0);
         assert!(layout.nodes[0].height > layout.nodes[1].height);
+    }
+
+    #[test]
+    fn architecture_config_scales_icon_geometry_and_typography() {
+        let mut diagram = two_class_diagram();
+        diagram.kind = StructuralKind::Architecture;
+        diagram.architecture_config = Some(ArchitectureConfig {
+            icon_size: 120.0,
+            font_size: 22.0,
+        });
+        diagram.nodes[0].metadata = Some(StructuralNodeMetadata::ArchitectureService(
+            ArchitectureServiceMetadata {
+                icon_name: Some("server".into()),
+                icon_text: None,
+            },
+        ));
+
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes[0].style.font_size, 22.0);
+        assert!(layout.nodes[0].width >= 240.0);
+        assert!(layout.nodes[0].height >= 108.0);
     }
 
     #[test]
