@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:ab44fbbb11e59a20",
+  "lessonIds": [
+    "GU-C108-vasan",
+    "GU-C108-chari",
+    "GU-C108-katar",
+    "GU-C108-soy",
+    "GU-C108-doro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch108.txt",
+  "json": "gujarati/narration/ch108.json",
+  "textHash": "fnv1a64:540735ead21eab98",
+  "jsonHash": "fnv1a64:bf038ef12665fa2d",
+  "findings": []
+}

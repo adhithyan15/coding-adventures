@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C121-saslu",
+    "language": "gujarati",
+    "chapter": 121,
+    "sequence": 6330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bb4678de0d889be"
+  },
+  "findings": []
+}

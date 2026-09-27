@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C138-kudvu",
+    "language": "gujarati",
+    "chapter": 138,
+    "sequence": 7250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e462ea8a325d9161"
+  },
+  "findings": []
+}

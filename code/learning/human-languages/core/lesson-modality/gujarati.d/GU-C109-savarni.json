@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C109-savarni",
+    "language": "gujarati",
+    "chapter": 109,
+    "sequence": 5620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:098324310a22ce39"
+  },
+  "findings": []
+}

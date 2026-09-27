@@ -1,0 +1,11 @@
+{
+  "id": "GU-C103-sampatti",
+  "pathSegment": "GU-PATH-103-CAN103",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-103-CAN103",
+      "order": 3
+    }
+  ]
+}

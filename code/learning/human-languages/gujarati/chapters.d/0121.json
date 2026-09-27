@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Darkness, Light, Shade, Rabbit, Deer",
+  "label": "ch:gu-darkness-light-shade-rabbit-deer",
+  "canDo": "I can say darkness, light, shade, a rabbit and a deer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C121-haran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say darkness, light, shade, a rabbit and a deer.",
+    "assesses": [
+      "GU-LEX-C121-THINGS121-03",
+      "GU-LEX-C121-THINGS121-04",
+      "GU-LEX-C121-THINGS121-05"
+    ]
+  }
+}

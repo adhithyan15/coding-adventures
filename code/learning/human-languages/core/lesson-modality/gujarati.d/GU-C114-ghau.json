@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C114-ghau",
+    "language": "gujarati",
+    "chapter": 114,
+    "sequence": 5910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95edb78cce558783"
+  },
+  "findings": []
+}

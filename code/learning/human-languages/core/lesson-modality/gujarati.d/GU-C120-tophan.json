@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C120-tophan",
+    "language": "gujarati",
+    "chapter": 120,
+    "sequence": 6270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9117406e1405f531"
+  },
+  "findings": []
+}

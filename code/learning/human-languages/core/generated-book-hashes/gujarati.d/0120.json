@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:5988410e39ec3bd8",
+  "lessonIds": [
+    "GU-C120-ran",
+    "GU-C120-vijli",
+    "GU-C120-tophan",
+    "GU-C120-dharti",
+    "GU-C120-cadni"
+  ],
+  "tex": "gujarati/book/chapters/ch120-desert-lightning-storm-earth-moonlight.tex"
+}

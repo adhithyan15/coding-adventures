@@ -1,0 +1,11 @@
+{
+  "id": "GU-C137-jaruri",
+  "pathSegment": "GU-PATH-137-QUAL137",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-137-QUAL137",
+      "order": 4
+    }
+  ]
+}

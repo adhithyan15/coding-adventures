@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C134-sant",
+    "language": "gujarati",
+    "chapter": 134,
+    "sequence": 7010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6dc38de32c07cba"
+  },
+  "findings": []
+}

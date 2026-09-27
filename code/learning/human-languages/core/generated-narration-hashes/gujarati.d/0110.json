@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:11ad11427bbbd823",
+  "lessonIds": [
+    "GU-C110-peti",
+    "GU-C110-barni",
+    "GU-C110-minbatti",
+    "GU-C110-takiyo",
+    "GU-C110-dhigli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch110.txt",
+  "json": "gujarati/narration/ch110.json",
+  "textHash": "fnv1a64:4ec28bdd50457bd8",
+  "jsonHash": "fnv1a64:07209e54e9fb21e0",
+  "findings": []
+}

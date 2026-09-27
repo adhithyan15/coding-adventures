@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:c700ec714c9ce2ec",
+  "lessonIds": [
+    "GU-C117-kadhi",
+    "GU-C117-bhajiya",
+    "GU-C117-catni",
+    "GU-C117-halvo",
+    "GU-C117-khir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch117.txt",
+  "json": "gujarati/narration/ch117.json",
+  "textHash": "fnv1a64:4be841ec39f2b5c7",
+  "jsonHash": "fnv1a64:ff8e099c50498309",
+  "findings": []
+}

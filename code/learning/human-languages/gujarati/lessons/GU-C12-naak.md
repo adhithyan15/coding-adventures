@@ -9,21 +9,21 @@ headword: નાક
 romanization: nāk
 gloss: nose — the fourth body word, closing the chapter by running the whole face back through gender, sound, and certainty
 concept_tag: GU-BODY-NOSE
-prerequisites: [GU-C12-modhu]
+prerequisites: [GU-C12-modhu, GU-C04-kaale, GU-C04-pachha]
 sounds: [long-aa]
 roots: [sanskrit-nas, pie-nehas]
 etymology_hook: નાક is inherited from Prakrit ṇakka, from Sanskrit nas, "nose," plus a diminutive-like suffix -ka; the PIE root *nehas- is unbroken in English nose, Latin nasus (behind nasal), and Lithuanian nosis
 duration:
   max_seconds: 280
 requires:
-  knowledge: [GU-LEX-MODHU, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-ETYMON-MODHU-MUKHA, GU-LEX-KAAN, GU-ETYMON-KAAN-DISPUTED, GU-LEX-AANKH, GU-ETYMON-AANKH-EYE, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-FORM-JAVU-JOVU-CONTRAST, GU-SCRIPT-ANUSVARA-MEDIAL, GU-GRAMMAR-GENDER-NOT-BY-ENDING]
+  knowledge: [GU-LEX-MODHU, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-ETYMON-MODHU-MUKHA, GU-LEX-KAAN, GU-ETYMON-KAAN-DISPUTED, GU-LEX-AANKH, GU-ETYMON-AANKH-EYE, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-FORM-JAVU-JOVU-CONTRAST, GU-SCRIPT-ANUSVARA-MEDIAL, GU-GRAMMAR-GENDER-NOT-BY-ENDING, GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-PACHHA-01]
 introduces:
   knowledge: [GU-LEX-NAAK, GU-ETYMON-NAAK-NOSE]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-LEX-NAAK, GU-ETYMON-NAAK-NOSE, GU-LEX-MODHU, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-ETYMON-MODHU-MUKHA, GU-LEX-KAAN, GU-ETYMON-KAAN-DISPUTED, GU-LEX-AANKH, GU-ETYMON-AANKH-EYE, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-FORM-JAVU-JOVU-CONTRAST, GU-SCRIPT-ANUSVARA-MEDIAL, GU-GRAMMAR-GENDER-NOT-BY-ENDING]
+  knowledge: [GU-LEX-NAAK, GU-ETYMON-NAAK-NOSE, GU-LEX-MODHU, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-ETYMON-MODHU-MUKHA, GU-LEX-KAAN, GU-ETYMON-KAAN-DISPUTED, GU-LEX-AANKH, GU-ETYMON-AANKH-EYE, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-FORM-JAVU-JOVU-CONTRAST, GU-SCRIPT-ANUSVARA-MEDIAL, GU-GRAMMAR-GENDER-NOT-BY-ENDING, GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-PACHHA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,11 +35,13 @@ reviews_of: [GU-C12-modhu, GU-C12-kaan, GU-C12-aankh, GU-C07-jaanvun]
 # નાક — the whole face, run back
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-MODHU, GU-LEX-KAAN, GU-LEX-AANKH] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-MODHU, GU-LEX-KAAN, GU-LEX-AANKH, GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-PACHHA-01] -->
 
 [PAUSE 2s] **આંખ**, **કાન**, **મોઢું** — eye, ear, mouth. One more completes
 the face, and this one closes the chapter by tying its ending back to a
 pattern from three chapters ago.
+
+[PAUSE 2s] Before the face is finished, two farewells: say "see you tomorrow" and "we will meet again." (*Kāle maḷīshũ*; *pāchhā maḷīshũ*.)
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[GU-LEX-NAAK]; assesses=[] -->

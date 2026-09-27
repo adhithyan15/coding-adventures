@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:775748112a07129f",
+  "lessonIds": [
+    "GU-C98-vaisakh",
+    "GU-C98-jeth",
+    "GU-C98-sravan",
+    "GU-C98-bhadarvo",
+    "GU-C98-aso"
+  ],
+  "tex": "gujarati/book/chapters/ch98-vaishakh-jeth-shravan-bhadarvo-aso.tex"
+}

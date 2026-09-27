@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:ed50e007e7074d0f",
+  "lessonIds": [
+    "GU-C102-sakvu",
+    "GU-C102-pase",
+    "GU-C102-takat",
+    "GU-C102-sakti",
+    "GU-C102-hak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch102.txt",
+  "json": "gujarati/narration/ch102.json",
+  "textHash": "fnv1a64:b71661b412bbc3cb",
+  "jsonHash": "fnv1a64:c56b44ca362389c5",
+  "findings": []
+}

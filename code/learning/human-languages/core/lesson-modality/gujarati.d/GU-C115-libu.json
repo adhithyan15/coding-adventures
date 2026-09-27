@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C115-libu",
+    "language": "gujarati",
+    "chapter": 115,
+    "sequence": 5980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ce80f667b934d4d"
+  },
+  "findings": []
+}

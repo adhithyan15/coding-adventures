@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:3ac85acfc3102fe6",
+  "lessonIds": [
+    "GU-C93-mosam",
+    "GU-C93-unalo",
+    "GU-C93-siyalo",
+    "GU-C93-comasu",
+    "GU-C93-vasant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch93.txt",
+  "json": "gujarati/narration/ch93.json",
+  "textHash": "fnv1a64:9f5b912bc769d725",
+  "jsonHash": "fnv1a64:2b3b20791d111b90",
+  "findings": []
+}

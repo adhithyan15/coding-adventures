@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C133-sahelu",
+    "language": "gujarati",
+    "chapter": 133,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e406e2a22e141a45"
+  },
+  "findings": []
+}

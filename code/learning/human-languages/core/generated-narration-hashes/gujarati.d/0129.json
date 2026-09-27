@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:06e0316010fb70f5",
+  "lessonIds": [
+    "GU-C129-gali",
+    "GU-C129-bag",
+    "GU-C129-darvajo",
+    "GU-C129-pen",
+    "GU-C129-pensil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch129.txt",
+  "json": "gujarati/narration/ch129.json",
+  "textHash": "fnv1a64:9904c0be22937e44",
+  "jsonHash": "fnv1a64:2b33fbdac6f097cd",
+  "findings": []
+}

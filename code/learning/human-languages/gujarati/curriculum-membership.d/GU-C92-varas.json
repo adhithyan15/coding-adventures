@@ -1,0 +1,11 @@
+{
+  "id": "GU-C92-varas",
+  "pathSegment": "GU-PATH-92-TIME92",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-92-TIME92",
+      "order": 3
+    }
+  ]
+}

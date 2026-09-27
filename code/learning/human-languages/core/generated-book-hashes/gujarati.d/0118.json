@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:c718134ffda3dc9e",
+  "lessonIds": [
+    "GU-C118-masalo",
+    "GU-C118-haldar",
+    "GU-C118-jiru",
+    "GU-C118-ghas",
+    "GU-C118-tapu",
+    "GU-R118-first-pass-the-house-and-clothes",
+    "GU-R118-second-pass-clothes-and-food"
+  ],
+  "tex": "gujarati/book/chapters/ch118-spice-turmeric-cumin-grass-island.tex"
+}

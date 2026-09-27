@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:31b97163130d415a",
+  "lessonIds": [
+    "GU-C93-mosam",
+    "GU-C93-unalo",
+    "GU-C93-siyalo",
+    "GU-C93-comasu",
+    "GU-C93-vasant"
+  ],
+  "tex": "gujarati/book/chapters/ch93-season-summer-winter-monsoon-spring.tex"
+}

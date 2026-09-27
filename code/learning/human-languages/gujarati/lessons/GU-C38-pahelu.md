@@ -9,7 +9,7 @@ headword: પહેલું
 romanization: pahelũ
 gloss: "first — nothing of એક survives in it, and the ending it lost was the ending પાંચમું kept"
 concept_tag: GU-ORDINAL-PAHELU
-prerequisites: [GU-C38-chothu, GU-C37-ketla, GU-C34-tethi, GU-C06-numbers-1-5]
+prerequisites: [GU-C38-chothu, GU-C37-ketla, GU-C34-tethi, GU-C06-numbers-1-5, GU-C06-number-histories-more]
 sounds: [e-sign]
 roots: []
 etymology_hook: "Sanskrit made first and fifth with the same ending; Prakrit turned one of them into an l, and Gujarati kept the l"

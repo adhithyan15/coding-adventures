@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:641a0a839f04ed2a",
+  "lessonIds": [
+    "GU-C120-ran",
+    "GU-C120-vijli",
+    "GU-C120-tophan",
+    "GU-C120-dharti",
+    "GU-C120-cadni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch120.txt",
+  "json": "gujarati/narration/ch120.json",
+  "textHash": "fnv1a64:9aa854c1688e7a13",
+  "jsonHash": "fnv1a64:81a4fa922cb1b74b",
+  "findings": []
+}

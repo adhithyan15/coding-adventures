@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C131-paholu",
+    "language": "gujarati",
+    "chapter": 131,
+    "sequence": 6860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14b411e9c5eaa4e6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C107-pagthiyu",
+  "pathSegment": "GU-PATH-107-THINGS107",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-107-THINGS107",
+      "order": 3
+    }
+  ]
+}

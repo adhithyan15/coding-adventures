@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:2fbeb62b4305096a",
+  "lessonIds": [
+    "GU-C96-epril",
+    "GU-C96-me",
+    "GU-C96-jun",
+    "GU-C96-julai",
+    "GU-C96-saptembar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch96.txt",
+  "json": "gujarati/narration/ch96.json",
+  "textHash": "fnv1a64:1c4353920230a832",
+  "jsonHash": "fnv1a64:96d6ddca3bb55a40",
+  "findings": []
+}

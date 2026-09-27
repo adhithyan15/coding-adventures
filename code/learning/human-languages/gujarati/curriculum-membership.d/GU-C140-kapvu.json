@@ -1,0 +1,11 @@
+{
+  "id": "GU-C140-kapvu",
+  "pathSegment": "GU-PATH-140-ACT140",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-140-ACT140",
+      "order": 0
+    }
+  ]
+}

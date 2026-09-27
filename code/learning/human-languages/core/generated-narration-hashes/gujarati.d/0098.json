@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:40d0c7f3ab328d89",
+  "lessonIds": [
+    "GU-C98-vaisakh",
+    "GU-C98-jeth",
+    "GU-C98-sravan",
+    "GU-C98-bhadarvo",
+    "GU-C98-aso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch98.txt",
+  "json": "gujarati/narration/ch98.json",
+  "textHash": "fnv1a64:e1ca9f707b438951",
+  "jsonHash": "fnv1a64:99d8b73276b3cea6",
+  "findings": []
+}

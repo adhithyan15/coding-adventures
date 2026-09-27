@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Authority, Chance, Property, Wealth, Owner",
+  "label": "ch:gu-authority-chance-property-wealth-owner",
+  "canDo": "I can say authority, a chance, property, wealth and an owner.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C103-malik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say authority, a chance, property, wealth and an owner.",
+    "assesses": [
+      "GU-LEX-C103-CAN103-03",
+      "GU-LEX-C103-CAN103-04",
+      "GU-LEX-C103-CAN103-05"
+    ]
+  }
+}

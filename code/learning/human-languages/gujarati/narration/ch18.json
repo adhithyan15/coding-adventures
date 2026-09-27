@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8706604a2c346c59",
+  "sourceHash": "fnv1a64:6f8ee7c51e59e55f",
   "lessons": [
     {
       "id": "GU-C12-aankh",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:48249b7092164f9d",
+      "sourceHash": "fnv1a64:16551a98a534eb5e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -339,6 +339,16 @@
             {
               "kind": "speech",
               "text": "કાન (kān)'s own gender shifted away from Sanskrit's. The next body part wears its gender in plain sight — the same nasalized ending you have heard on nearly every verb in this book."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my name,\" then \"my name is Mira.\" (Mārũ nām; mārũ nām Mīrā chhe.)"
             }
           ]
         },
@@ -465,7 +475,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3220c5b4bc4ba1a4",
+      "sourceHash": "fnv1a64:2a4cc6bf84699f47",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -492,6 +502,16 @@
             {
               "kind": "speech",
               "text": "આંખ (āṅkh), કાન (kān), મોઢું (moḍhũ) — eye, ear, mouth. One more completes the face, and this one closes the chapter by tying its ending back to a pattern from three chapters ago."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the face is finished, two farewells: say \"see you tomorrow\" and \"we will meet again.\" (Kāle maḷīshũ; pāchhā maḷīshũ.)"
             }
           ]
         },

@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Bear, Jackal, Wolf, Pigeon, Duck",
+  "label": "ch:gu-bear-jackal-wolf-pigeon-duck",
+  "canDo": "I can say a bear, a jackal, a wolf, a pigeon and a duck.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C122-batak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a bear, a jackal, a wolf, a pigeon and a duck.",
+    "assesses": [
+      "GU-LEX-C122-THINGS122-03",
+      "GU-LEX-C122-THINGS122-04",
+      "GU-LEX-C122-THINGS122-05"
+    ]
+  }
+}

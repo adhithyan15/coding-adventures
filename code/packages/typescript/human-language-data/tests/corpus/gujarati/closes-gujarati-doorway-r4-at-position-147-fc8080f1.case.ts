@@ -11,7 +11,7 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
-it("closes Gujarati doorway R4 at position 147", () => {
+it("closes Gujarati doorway R4 at position 149", () => {
   const lessons = loadTrackLessons("gujarati");
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
@@ -31,7 +31,11 @@ it("closes Gujarati doorway R4 at position 147", () => {
   // (one in chapter 1, twelve in chapters 3-7), each read before the letters it
   // holds. Nine of them sit between the doorway letters and this checkpoint, so
   // each distance grows by nine and stays inside R4 (80-250).
-  const checkpoint = ordered[147]!;
+  // Gujarati A1: every position here +2. Chapter 12's two over-budget number
+  // lessons split into -more continuations at positions 96 and 98, ahead of
+  // this bridge. Atoms introduced before them are two lessons further away;
+  // every window asserted below still closes.
+  const checkpoint = ordered[149]!;
   expect(checkpoint.realization.lessonId).toBe("GU-R19-doorway-nine-r4");
   expect(checkpoint.frontmatter["introduces.knowledge"]).toEqual([]);
   expect(
@@ -39,13 +43,13 @@ it("closes Gujarati doorway R4 at position 147", () => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 147 - introducedAt;
+      return 149 - introducedAt;
     }),
-  ).toEqual([117, 116, 115, 114, 113, 112, 111, 110, 109]);
+  ).toEqual([119, 118, 117, 116, 115, 114, 113, 112, 111]);
 
-  const beforeCheckpoint = measureContinuity(ordered.slice(0, 147));
+  const beforeCheckpoint = measureContinuity(ordered.slice(0, 149));
   const afterCheckpoint = measureContinuity(lessons);
-  expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(272);
+  expect(beforeCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(271); // Gujarati A1: 272 -> 271. The splits' R1/R3 gains and the new retrievals outweigh windows the +2 prefix newly measures.
   // HL-C286: 339 -> 283, and DOWN even though the track grew by 49 lessons.
   // The previous tranche's rise was eligibility, not neglect, and this one pays
   // that eligibility off: chapter 30 is the fifth-return slab HL-C271 filed,
@@ -146,7 +150,17 @@ it("closes Gujarati doorway R4 at position 147", () => {
   //        (ra, da, va, ya, bha, chha, ka, the vocalic-r sign and four chapter-2
   //        courtesy concepts) past a window edge; every one is answered by name
   //        in a new anchor lesson's warm-up at the right distance.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(900);
+  // 900 -> 1462. Gujarati A1: chapters 92-143 (260 words, twelve reviews) and
+  // the two chapter-12 continuations, decomposed against the corpus without them:
+  //   +465 on the new chapters' own atoms. They sit at the end of the track;
+  //        their R3 and R4 windows are measurable and no later lesson exists.
+  //    +99 on chapters 76-91, whose R2-R4 windows (3 R2, 18 R3, 78 R4) used to
+  //        fall past the end of a 532-lesson track and are now measurable.
+  //     -2 PRE-EXISTING closed: be's R1 and the headless clue's R3.
+  //      0 pre-existing windows lost. The continuations pushed four older atoms
+  //        (nām, mārũ, kāle, pāchhā) past R3 and the headless clue past R2;
+  //        each is retrieved by name in a warm-up at the right distance.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(1462);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

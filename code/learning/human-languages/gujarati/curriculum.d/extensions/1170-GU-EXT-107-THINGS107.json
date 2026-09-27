@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-107-THINGS107",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mattress, a bedsheet, a blanket, a step and a stove.",
+  "prerequisites": []
+}

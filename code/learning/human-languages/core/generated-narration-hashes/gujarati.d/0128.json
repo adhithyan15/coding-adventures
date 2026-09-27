@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:c5d3e837de2067c8",
+  "lessonIds": [
+    "GU-C128-kaceri",
+    "GU-C128-karkhanu",
+    "GU-C128-hotel",
+    "GU-C128-pustakalay",
+    "GU-C128-cok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch128.txt",
+  "json": "gujarati/narration/ch128.json",
+  "textHash": "fnv1a64:d418d1c1300882fd",
+  "jsonHash": "fnv1a64:43d84279497592f1",
+  "findings": []
+}

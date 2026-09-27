@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:1cd5bac53900bb76",
+  "lessonIds": [
+    "GU-C130-varg",
+    "GU-C130-guru",
+    "GU-C130-nokri",
+    "GU-C130-pagar",
+    "GU-C130-darji"
+  ],
+  "tex": "gujarati/book/chapters/ch130-class-teacher-job-salary-tailor.tex"
+}

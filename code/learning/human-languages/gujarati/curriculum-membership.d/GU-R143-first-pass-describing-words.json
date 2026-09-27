@@ -1,0 +1,11 @@
+{
+  "id": "GU-R143-first-pass-describing-words",
+  "pathSegment": "GU-PATH-143-ACT143",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-143-ACT143",
+      "order": 5
+    }
+  ]
+}

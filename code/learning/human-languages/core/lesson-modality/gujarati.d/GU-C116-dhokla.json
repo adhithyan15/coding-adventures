@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C116-dhokla",
+    "language": "gujarati",
+    "chapter": 116,
+    "sequence": 6040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd2d70fbfa966d02"
+  },
+  "findings": []
+}

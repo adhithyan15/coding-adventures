@@ -1,0 +1,11 @@
+{
+  "id": "GU-R118-second-pass-clothes-and-food",
+  "pathSegment": "GU-PATH-118-THINGS118",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GU-EXT-118-THINGS118",
+      "order": 6
+    }
+  ]
+}

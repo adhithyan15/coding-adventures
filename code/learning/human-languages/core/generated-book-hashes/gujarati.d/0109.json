@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:35b51f6c182be078",
+  "lessonIds": [
+    "GU-C109-batan",
+    "GU-C109-baldi",
+    "GU-C109-savarni",
+    "GU-C109-kacro",
+    "GU-C109-topli",
+    "GU-R109-first-pass-owning-and-being-able",
+    "GU-R109-second-pass-things-in-the-house"
+  ],
+  "tex": "gujarati/book/chapters/ch109-button-bucket-broom-rubbish-basket.tex"
+}

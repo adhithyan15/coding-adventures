@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:5fe21c988694a249",
+  "lessonIds": [
+    "GU-C105-sadhan",
+    "GU-C105-rakhvu",
+    "GU-C105-dharavvu",
+    "GU-C105-jitvu",
+    "GU-C105-harvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch105.txt",
+  "json": "gujarati/narration/ch105.json",
+  "textHash": "fnv1a64:ea9ce2d935033d22",
+  "jsonHash": "fnv1a64:92e98f4166b97daa",
+  "findings": []
+}

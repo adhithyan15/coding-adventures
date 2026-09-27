@@ -1,0 +1,11 @@
+{
+  "id": "GU-C142-kharcvu",
+  "pathSegment": "GU-PATH-142-ACT142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-142-ACT142",
+      "order": 2
+    }
+  ]
+}

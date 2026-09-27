@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:f01fa8f643fc63b4",
+  "lessonIds": [
+    "GU-C94-pankhar",
+    "GU-C94-vahelu",
+    "GU-C94-roj",
+    "GU-C94-tarikh",
+    "GU-C94-hamna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch94.txt",
+  "json": "gujarati/narration/ch94.json",
+  "textHash": "fnv1a64:e4eb873e0f030879",
+  "jsonHash": "fnv1a64:e61e35a0af226cca",
+  "findings": []
+}

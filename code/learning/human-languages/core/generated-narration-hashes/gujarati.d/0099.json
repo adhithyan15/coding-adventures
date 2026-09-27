@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:3d7bdf6bdda22202",
+  "lessonIds": [
+    "GU-C99-pelu",
+    "GU-C99-avu",
+    "GU-C99-evu",
+    "GU-C99-darek",
+    "GU-C99-koi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch99.txt",
+  "json": "gujarati/narration/ch99.json",
+  "textHash": "fnv1a64:e27df1d678289a98",
+  "jsonHash": "fnv1a64:8dc407d0de7eaf44",
+  "findings": []
+}

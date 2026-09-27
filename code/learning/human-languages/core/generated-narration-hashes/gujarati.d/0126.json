@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:641cab3fca9ef403",
+  "lessonIds": [
+    "GU-C126-pith",
+    "GU-C126-kamar",
+    "GU-C126-koni",
+    "GU-C126-hatheli",
+    "GU-C126-nakh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch126.txt",
+  "json": "gujarati/narration/ch126.json",
+  "textHash": "fnv1a64:61aa10013974177c",
+  "jsonHash": "fnv1a64:1f48c707c7d30153",
+  "findings": []
+}

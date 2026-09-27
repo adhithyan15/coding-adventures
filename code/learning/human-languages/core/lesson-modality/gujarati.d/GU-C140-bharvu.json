@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C140-bharvu",
+    "language": "gujarati",
+    "chapter": 140,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cfee5d085c8dd3a"
+  },
+  "findings": []
+}

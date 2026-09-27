@@ -1,0 +1,11 @@
+{
+  "id": "GU-C06-numbers-1-5-more",
+  "pathSegment": "GU-PATH-009",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-009-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

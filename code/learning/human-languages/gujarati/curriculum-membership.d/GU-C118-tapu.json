@@ -1,0 +1,11 @@
+{
+  "id": "GU-C118-tapu",
+  "pathSegment": "GU-PATH-118-THINGS118",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-118-THINGS118",
+      "order": 4
+    }
+  ]
+}

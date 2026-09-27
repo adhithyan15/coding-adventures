@@ -1,0 +1,11 @@
+{
+  "id": "GU-R118-first-pass-the-house-and-clothes",
+  "pathSegment": "GU-PATH-118-THINGS118",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-118-THINGS118",
+      "order": 5
+    }
+  ]
+}

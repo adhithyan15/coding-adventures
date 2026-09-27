@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:4901bc0ed3940e91",
+  "lessonIds": [
+    "GU-C111-kurto",
+    "GU-C111-payjamo",
+    "GU-C111-viti",
+    "GU-C111-butti",
+    "GU-C111-moja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch111.txt",
+  "json": "gujarati/narration/ch111.json",
+  "textHash": "fnv1a64:4583e88abf70ee97",
+  "jsonHash": "fnv1a64:101b9045ca006d21",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C102-hak",
+    "language": "gujarati",
+    "chapter": 102,
+    "sequence": 5290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed00d2845bf3cc34"
+  },
+  "findings": []
+}

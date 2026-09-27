@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:c05cf913259f37b1",
+  "lessonIds": [
+    "GU-C137-garib",
+    "GU-C137-juvan",
+    "GU-C137-majbut",
+    "GU-C137-nabalu",
+    "GU-C137-jaruri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch137.txt",
+  "json": "gujarati/narration/ch137.json",
+  "textHash": "fnv1a64:4ea4e0c521de2295",
+  "jsonHash": "fnv1a64:9d38275ae34beabc",
+  "findings": []
+}

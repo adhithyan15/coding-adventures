@@ -1,0 +1,11 @@
+{
+  "id": "GU-C126-koni",
+  "pathSegment": "GU-PATH-126-THINGS126",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-126-THINGS126",
+      "order": 2
+    }
+  ]
+}

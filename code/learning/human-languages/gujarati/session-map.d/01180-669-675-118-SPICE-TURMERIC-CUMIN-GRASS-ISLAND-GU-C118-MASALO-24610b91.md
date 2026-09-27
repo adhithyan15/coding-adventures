@@ -1,0 +1,1 @@
+| 669-675 | 118 | Spice, Turmeric, Cumin, Grass, Island | `GU-C118-masalo` -> `GU-C118-haldar` -> `GU-C118-jiru` -> `GU-C118-ghas` -> `GU-C118-tapu` -> `GU-R118-first-pass-the-house-and-clothes` -> `GU-R118-second-pass-clothes-and-food` |

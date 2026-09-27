@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-127-THINGS127",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "GU-EXT-127-THINGS127"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R135-second-pass-town-school-and-work",
+    "language": "gujarati",
+    "chapter": 135,
+    "sequence": 7110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a53eb333b78db810"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Kurta, Pyjamas, Ring, Earring, Socks",
+  "label": "ch:gu-kurta-pyjamas-ring-earring-socks",
+  "canDo": "I can say a kurta, pyjamas, a ring, an earring and socks.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C111-moja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say a kurta, pyjamas, a ring, an earring and socks.",
+    "assesses": [
+      "GU-LEX-C111-THINGS111-03",
+      "GU-LEX-C111-THINGS111-04",
+      "GU-LEX-C111-THINGS111-05"
+    ]
+  }
+}

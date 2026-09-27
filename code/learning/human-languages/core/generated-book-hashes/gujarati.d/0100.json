@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:fa332af68cb2504c",
+  "lessonIds": [
+    "GU-C100-kaik",
+    "GU-C100-kasu",
+    "GU-C100-pote",
+    "GU-C100-potanu",
+    "GU-C100-banne",
+    "GU-R100-first-pass-seasons-months-and-days",
+    "GU-R100-second-pass-months-this-and-that"
+  ],
+  "tex": "gujarati/book/chapters/ch100-something-anything-oneself-one-s-own-both.tex"
+}

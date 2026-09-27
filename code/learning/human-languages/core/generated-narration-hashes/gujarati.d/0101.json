@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:85cf1e4dfb0c16f2",
+  "lessonIds": [
+    "GU-C101-amuk",
+    "GU-C101-atlu",
+    "GU-C101-etlu",
+    "GU-C101-ahi",
+    "GU-C101-tya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch101.txt",
+  "json": "gujarati/narration/ch101.json",
+  "textHash": "fnv1a64:78e321785512578d",
+  "jsonHash": "fnv1a64:b72fee5a8ccc9721",
+  "findings": []
+}

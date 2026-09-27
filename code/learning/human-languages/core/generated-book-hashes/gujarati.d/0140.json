@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:9636755547f9422c",
+  "lessonIds": [
+    "GU-C140-kapvu",
+    "GU-C140-sivvu",
+    "GU-C140-bharvu",
+    "GU-C140-khecvu",
+    "GU-C140-phekvu"
+  ],
+  "tex": "gujarati/book/chapters/ch140-to-cut-to-sew-to-fill-to-pull-to-throw.tex"
+}

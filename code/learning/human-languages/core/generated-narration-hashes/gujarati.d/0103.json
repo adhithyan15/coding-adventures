@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:7df250a4b0c3939b",
+  "lessonIds": [
+    "GU-C103-adhikar",
+    "GU-C103-tak",
+    "GU-C103-milkat",
+    "GU-C103-sampatti",
+    "GU-C103-malik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch103.txt",
+  "json": "gujarati/narration/ch103.json",
+  "textHash": "fnv1a64:0eceb7ee1ab1b292",
+  "jsonHash": "fnv1a64:9f2ce2fce9eba8d5",
+  "findings": []
+}

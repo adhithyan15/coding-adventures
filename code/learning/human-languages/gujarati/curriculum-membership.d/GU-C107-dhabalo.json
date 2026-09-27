@@ -1,0 +1,11 @@
+{
+  "id": "GU-C107-dhabalo",
+  "pathSegment": "GU-PATH-107-THINGS107",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-107-THINGS107",
+      "order": 2
+    }
+  ]
+}
