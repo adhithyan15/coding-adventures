@@ -1048,7 +1048,8 @@ backend immediately) come before the enabler-dependent items.
   write in source order. A cycle may contain conditional expressions selected
   by the exact loop control or exact ordinary local snapshots, including
   snapshots that evolve through another supported recurrence in the graph or
-  recursively through their own supported recurrence.
+  recursively through their own supported recurrence, or through an exact
+  mutually recursive selector cycle.
   Those exact snapshots may also select conditional statement branches
   containing cycle writes. Unsupported selector writes remain conservative. A recurrence
   in the graph may use a conditional
