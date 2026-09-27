@@ -12,24 +12,24 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16133,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16133",
-    "title": "feat(build-tool): add Go graph and diff core",
-    "branch": "codex/parity-go-diff-selection-20260927",
-    "item_id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
-    "opened_at": "2026-09-27T09:43:28Z",
-    "head_revision": "2ef486e0544239f82eb04b1614a7e3efd595eeb9",
+    "number": 16139,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16139",
+    "title": "feat(build-tool): harden Elixir glob matching",
+    "branch": "codex/parity-elixir-glob-hardening-20260927",
+    "item_id": "build-tool-elixir-glob-matcher-complexity-hardening",
+    "opened_at": "2026-09-27T10:45:31Z",
+    "head_revision": "b76b705a3be0c18f97c7aec0b3e52b7402164351",
     "checks_status": "pending",
     "auto_merge_enabled": false
   },
   "last_ci_action": {
-    "observed_at": "2026-09-27T09:43:32Z",
+    "observed_at": "2026-09-27T10:20:02Z",
     "pr_number": 16133,
-    "status": "pending",
-    "notes": "Ready-for-review PR #16133 opened from rebased branch head 2ef486e0544239f82eb04b1614a7e3efd595eeb9 with validated implementation revision 69c13c7bbd92ffaaac324fd93d7a6cf665111a70 on exact origin/main 9cb5419fb3659e247f93b751c190add1ff238c91. GitHub reports MERGEABLE while initial CI, CodeQL, and human-language detection checks are queued. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 47 final-head checks reached terminal acceptable conclusions: 12 successes, 34 expected path-gated skips, and one neutral CodeQL result. GitHub reported the reviewed head conflict-free, guarded squash auto-merge was enabled, and PR #16133 merged automatically as d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "755891f4e8cd218d166a19acde18243166fb9f36",
+    "revision": "d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -1061,10 +1061,19 @@
     {
       "id": "build-tool-elixir-glob-matcher-complexity-hardening",
       "title": "Harden Elixir build-tool glob matcher complexity",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-elixir-glob-hardening-20260927",
+      "pr_number": 16139,
+      "selected_at": "2026-09-27T10:21:41Z",
+      "selection_revision": "d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57",
+      "selection_notes": "Selected after PR #16133 completed all 47 final-head checks acceptably and merged through guarded squash auto-merge, followed by an exact-main collision-checked schema-3 inventory refresh. The inventory remains at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The post-merge package-root audit registered five collision-free owners before selection and preserved existing ownership for Python alpha-axp-simulator, cdc6600-simulator, and pdp11-simulator. Both matcher-hardening prerequisites are merged, and a dependency/leverage pass ranks this ready Elixir leaf first with 13 unfinished transitive descendants. The fresh clean worktree starts from exact merge revision d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57.",
+      "validation_revision": "72a5ee3bf2519ecb8e49a43f26700101402300bc",
+      "progress_notes": "Replaced recursive grapheme and suffix-enumerating matching with a Unicode-scalar parser, linear closing-bracket index, and rolling-row dynamic programs for segment and path states. Strict classes implement literals, leading-! negation, ascending ranges, literal edge hyphens, literal leading ], and unmatched [ while rejecting descending and host-ambiguous syntax with one typed stable error. GitDiff and Hasher compile complete declared-source lists before BUILD, empty-change, earlier-match, or filesystem short-circuits. The package README and changelog document the process-free authority boundary.",
+      "validation_notes": "After a conflict-free rebase onto origin/main 4955681da18ec06c497932156056494b803aaee3, exact Elixir 1.18.4 compiled for OTP 27 ran on the available OTP 29 runtime. Warnings-as-errors compilation, scoped formatter checks, 256 package tests with two expected skips, escript build, Hex advisory audit, the 162-case/285-file neutral corpus, 234 schema and runner tests with 23 expected skips, the 288-root Elixir Windows-front audit, the real 288-package Go build-tool Elixir dry run, affected Go tests/vet/trimpath build, the schema-3 zero-collision inventory, strict 893-item/1,713-edge state DAG validation, diff hygiene, credential scan, and two independent correctness/security reviews pass. GlobMatch reaches 95.37% line coverage; the repository's full `mix test --cover` still reports the inherited 61.54% aggregate against a 90% threshold, and global formatting still reports only pre-existing drift in untouched files. `mix deps.audit` is not installed; `mix hex.audit` reports no advisories.",
+      "security_notes": "Independent review found linear parsing, bounded rolling-row DP, fixed failures, complete prevalidation, and no regex, wildcard expansion, dynamic atom, eval, credential, network, environment, process, Git, or added filesystem authority. Strict hashing retains only its existing caller-authorized file walk after every pattern validates, and this slice intentionally leaves the separate operation-wide diff-selection ceiling to its registered adoption owner. No dependency or lockfile changed.",
+      "opened_revision": "b76b705a3be0c18f97c7aec0b3e52b7402164351",
+      "publication_notes": "Opened ready-for-review PR #16139 after a normal first push from the fresh dedicated branch rebased conflict-free onto origin/main 4955681da18ec06c497932156056494b803aaee3. The live open-PR file audit found zero exact overlap across this tranche, GitHub reported the opening head MERGEABLE, and initial CI, CodeQL, and human-language detection checks were queued. Auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
       "notes": "Replace unbounded recursive grapheme matching with bounded memoized portable-glob behavior, strict character classes, Unicode-scalar accounting, and stable failures without adding host authority."
     },
     {
@@ -1139,10 +1148,14 @@
     {
       "id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 19-case process-free graph and diff-selection contract in the Go build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-go-diff-selection-20260927",
       "pr_number": 16133,
+      "merged_head_revision": "41dcede68256357961a87a3ce98c81e896921a0b",
+      "merged_at": "2026-09-27T10:20:02Z",
+      "merge_commit": "d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57",
+      "merge_notes": "All 47 final-head checks reached terminal acceptable conclusions: 12 successes, 34 expected path-gated skips, and one neutral result. GitHub reported the reviewed head conflict-free, guarded squash auto-merge was enabled, and GitHub merged PR #16133 automatically without a plain manual merge command.",
       "selected_at": "2026-09-27T09:18:00Z",
       "selection_revision": "755891f4e8cd218d166a19acde18243166fb9f36",
       "validation_revision": "69c13c7bbd92ffaaac324fd93d7a6cf665111a70",
@@ -4892,7 +4905,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the post-#13366 live-PR audit. Merged PR #13377 adds code/packages/rust/cdc6600-simulator beside the existing Python implementation, moving the identity from the singleton band into the two-to-four-lane band. Compare deterministic CPU state, instructions, stepping, diagnostics, and resource limits; define a language-neutral simulator corpus and dependency-shaped rollout or record narrowly reviewed target-specific exceptions. The former live-PR collision block is cleared."
+      "notes": "Discovered during the post-#13366 live-PR audit. Merged PR #13377 adds code/packages/rust/cdc6600-simulator beside the existing Python implementation, moving the identity from the singleton band into the two-to-four-lane band. Compare deterministic CPU state, instructions, stepping, diagnostics, and resource limits; define a language-neutral simulator corpus and dependency-shaped rollout or record narrowly reviewed target-specific exceptions. Restore the missing Python BUILD fronts so repository discovery schedules the existing implementation and tests. The former live-PR collision block is cleared."
     },
     {
       "id": "cdc6600-gatelevel-singleton-classification",
@@ -4911,7 +4924,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": false,
-      "notes": "Discovered during the post-#13388 live-PR topology refresh. Merged PR #13405 adds the Rust `pdp11-simulator` implementation beside Python and moves the identity from the singleton band into the two-to-four-lane band without adding a new identity. Classify their deterministic CPU state, addressing modes, instruction semantics, stepping, traps, stable diagnostics, tracing, and resource limits; define a language-neutral simulator corpus and dependency-shaped applicable-lane rollout or record narrowly reviewed target-specific exceptions. Keep the separately named gate-level PDP-11 work outside this functional-simulator owner. The former live-PR selection block is cleared."
+      "notes": "Discovered during the post-#13388 live-PR topology refresh. Merged PR #13405 adds the Rust `pdp11-simulator` implementation beside Python and moves the identity from the singleton band into the two-to-four-lane band without adding a new identity. Classify their deterministic CPU state, addressing modes, instruction semantics, stepping, traps, stable diagnostics, tracing, and resource limits; define a language-neutral simulator corpus and dependency-shaped applicable-lane rollout or record narrowly reviewed target-specific exceptions. Restore the missing Python BUILD fronts so repository discovery schedules the existing implementation and tests. Keep the separately named gate-level PDP-11 work outside this functional-simulator owner. The former live-PR selection block is cleared."
     },
     {
       "id": "pdp11-gatelevel-singleton-classification",
@@ -7724,10 +7737,11 @@
     },
     {
       "id": "build-tool-orphan-crate-validation-remaining-engines",
-      "title": "Enforce orphan-crate BUILD validation in every supported build tool",
+      "title": "Enforce orphan package-root BUILD validation in every supported build tool",
       "status": "pending",
       "depends_on": [
         "build-tool-orphan-crate-validation-corpus",
+        "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
         "build-tool-csharp-orphan-crate-validation-conformance",
         "build-tool-fsharp-orphan-crate-validation-conformance",
         "build-tool-elixir-orphan-crate-validation-conformance",
@@ -7746,7 +7760,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Completion umbrella for the independently reviewable C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript children. Review the current F# facade through its own explicit owner rather than inferring coverage from C#, and route later Dart/JVM engines through the same contract. Do not infer coverage from Go's repository gate."
+      "notes": "Completion umbrella for every supported engine to consume both the legacy orphan-crate cases and the generalized package-root contract. Keep the independently reviewable C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript children explicit; review the F# facade through its own owner rather than inferring coverage from C#; and route later Dart, JVM, and OCaml engines through the same contract. Go coverage is supplied only by build-tool-orphan-package-root-validation-corpus-and-go-adoption; do not infer any other engine coverage from Go's repository gate."
     },
     {
       "id": "build-tool-csharp-orphan-crate-validation-conformance",
@@ -10651,6 +10665,52 @@
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the engine audit to decompose into collision-safe native or reviewed shared-engine leaves. Final closure requires every established build-tool lane plus the OCaml promotion path to consume the same language-neutral ci_gate_selection fixtures or record a narrow reviewed exception."
+    },
+    {
+      "id": "kotlin-micro-qr-build-front-and-gradle-metadata-coverage",
+      "title": "Restore Kotlin micro-qr Gradle metadata and build-front coverage",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
+    },
+    {
+      "id": "go-activation-matrix-perceptron-build-front-coverage",
+      "title": "Add tested BUILD fronts for Go activation-functions, matrix, and perceptron",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16133 structural package-root audit. The tracked Go modules `activation-functions`, `matrix`, and `perceptron` have no BUILD front, so repository discovery cannot schedule the neural-primitives chain. Add fail-closed cross-platform fronts, preserve the module dependency order, run the existing activation-functions and matrix suites, add direct perceptron package coverage and missing package documentation, and validate the affected downstream closure."
+    },
+    {
+      "id": "go-algol-lexer-parser-build-front-coverage",
+      "title": "Add tested BUILD fronts for the Go ALGOL lexer and parser",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16133 structural package-root audit. The tracked `algol-lexer` and dependent `algol-parser` Go modules have native tests and package metadata but no BUILD fronts, so repository discovery cannot schedule either root. Add fail-closed cross-platform fronts in dependency order, preserve the existing generated grammar inputs and capability declarations, run both native suites, and validate the affected parser closure."
+    },
+    {
+      "id": "established-lane-unwatched-package-root-classification-20260927",
+      "title": "Classify established-lane package roots without BUILD fronts",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Classification-only umbrella for the 27 structurally unwatched roots left after assigning the concrete Kotlin and Go families and preserving existing simulator owners: 17 Python roots (`activation-functions`, `algol-lexer`, `algol-parser`, `block-ram`, `cas-fourier`, `cas-laplace`, `cas-mnewton`, `cas-ode`, `fpga`, `gradient-descent`, `intel8051-simulator`, `loss-functions`, `matrix`, `mips-r2000-simulator`, `perceptron`, `sparc-v8-simulator`, and `wave_physics`), three Ruby roots (`activation-functions`, `matrix`, and `perceptron`), and seven TypeScript roots (`activation-functions`, `macsyma-compiler`, `macsyma-lexer`, `macsyma-parser`, `matrix`, `perceptron`, and `symbolic-vm`). Decompose exact dependency-shaped owners before implementation. Do not duplicate Python `alpha-axp-simulator`, `cdc6600-simulator`, or `pdp11-simulator`; their existing classification owners remain authoritative. The CAS standalone-integrity and loss-function semantic owners do not own these missing BUILD fronts."
+    },
+    {
+      "id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
+      "title": "Generalize orphan package-root validation and adopt it in Go",
+      "status": "pending",
+      "depends_on": ["build-tool-orphan-crate-validation-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered when the post-PR #16133 audit found 36 tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define language-neutral fixtures and stable validation over the reviewed package-root and source-input registries, including every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics; then adopt the generalized process-free contract in the Go build tool. This validator owns discovery enforcement, not implementation of the missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary."
     }
   ]
 }

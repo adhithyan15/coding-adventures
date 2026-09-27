@@ -76,7 +76,8 @@ defmodule BuildTool.Hasher do
     "rust" => MapSet.new(["Cargo.lock"]),
     "typescript" => MapSet.new(["package-lock.json", "tsconfig.json"]),
     "elixir" => MapSet.new(["mix.lock"]),
-    "perl" => MapSet.new(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"]),
+    "perl" =>
+      MapSet.new(["Makefile.PL", "Build.PL", "cpanfile", "MANIFEST", "META.json", "META.yml"]),
     "haskell" => MapSet.new()
   }
 
@@ -108,9 +109,16 @@ defmodule BuildTool.Hasher do
     # collection. This mirrors the Go implementation's HashPackage function.
     declared_srcs = Map.get(package, :declared_srcs, [])
 
-    files =
+    compiled_srcs =
       if declared_srcs != [] do
-        resolve_declared_srcs(package, declared_srcs)
+        GlobMatch.compile_patterns!(declared_srcs)
+      else
+        []
+      end
+
+    files =
+      if compiled_srcs != [] do
+        resolve_declared_srcs(package, compiled_srcs)
       else
         collect_source_files(package)
       end
@@ -202,7 +210,7 @@ defmodule BuildTool.Hasher do
   # We use walk_files + GlobMatch instead of Path.wildcard because
   # Path.wildcard does NOT support ** the way build systems expect.
 
-  defp resolve_declared_srcs(package, declared_srcs) do
+  defp resolve_declared_srcs(package, compiled_srcs) do
     # Step 1: Always include BUILD files.
     build_files =
       ["BUILD", "BUILD_mac", "BUILD_linux", "BUILD_windows"]
@@ -218,9 +226,7 @@ defmodule BuildTool.Hasher do
         # Normalize to forward slashes for pattern matching.
         rel = String.replace(rel, "\\", "/")
 
-        Enum.any?(declared_srcs, fn pattern ->
-          GlobMatch.match_path?(pattern, rel)
-        end)
+        GlobMatch.match_any_compiled_path?(compiled_srcs, rel)
       end)
 
     # Step 3: Combine, deduplicate, and sort by relative path.

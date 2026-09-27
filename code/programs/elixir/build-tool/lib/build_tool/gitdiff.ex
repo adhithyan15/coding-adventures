@@ -127,7 +127,14 @@ defmodule BuildTool.GitDiff do
         is_starlark = Map.get(pkg, :is_starlark, false)
         declared_srcs = Map.get(pkg, :declared_srcs, [])
 
-        {pkg.name, rel_path, is_starlark, declared_srcs}
+        compiled_srcs =
+          if is_starlark and declared_srcs != [] do
+            BuildTool.GlobMatch.compile_patterns!(declared_srcs)
+          else
+            []
+          end
+
+        {pkg.name, rel_path, is_starlark, compiled_srcs}
       end)
 
     changed_files
@@ -191,9 +198,7 @@ defmodule BuildTool.GitDiff do
         true
       else
         # Check if the file matches any declared source pattern.
-        Enum.any?(declared_srcs, fn pattern ->
-          BuildTool.GlobMatch.match_path?(pattern, rel_to_package)
-        end)
+        BuildTool.GlobMatch.match_any_compiled_path?(declared_srcs, rel_to_package)
       end
     end
   end

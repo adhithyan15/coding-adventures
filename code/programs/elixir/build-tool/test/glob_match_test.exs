@@ -124,6 +124,88 @@ defmodule BuildTool.GlobMatchTest do
     test "?.py does NOT match two characters before extension" do
       refute GlobMatch.match_path?("?.py", "ab.py")
     end
+
+    test "question marks count Unicode scalars rather than graphemes" do
+      assert GlobMatch.match_path?("?", "🧪")
+      refute GlobMatch.match_path?("?", "é")
+      assert GlobMatch.match_path?("??", "é")
+    end
+  end
+
+  # ===========================================================================
+  # Portable character classes
+  # ===========================================================================
+
+  describe "portable character classes" do
+    test "supports literals, negation, and ascending scalar ranges" do
+      assert GlobMatch.match_path?("[abc].txt", "b.txt")
+      assert GlobMatch.match_path?("[!abc].txt", "z.txt")
+      refute GlobMatch.match_path?("[!abc].txt", "a.txt")
+      assert GlobMatch.match_path?("[a-c].txt", "b.txt")
+      assert GlobMatch.match_path?("[😀-😂].txt", "😁.txt")
+    end
+
+    test "treats caret and edge-position hyphens as literals" do
+      assert GlobMatch.match_path?("[^a].txt", "^.txt")
+      assert GlobMatch.match_path?("[^a].txt", "a.txt")
+      assert GlobMatch.match_path?("[-a].txt", "-.txt")
+      assert GlobMatch.match_path?("[a-].txt", "-.txt")
+    end
+
+    test "supports a leading closing bracket and a literal unmatched opening bracket" do
+      assert GlobMatch.match_path?("[]a].txt", "].txt")
+      assert GlobMatch.match_path?("[]a].txt", "a.txt")
+      assert GlobMatch.match_path?("[.txt", "[.txt")
+      assert GlobMatch.match_path?("[]", "[]")
+      assert GlobMatch.match_path?("[!]", "[!]")
+    end
+
+    test "keeps brace syntax literal" do
+      assert GlobMatch.match_path?("{a,b}.txt", "{a,b}.txt")
+      refute GlobMatch.match_path?("{a,b}.txt", "a.txt")
+    end
+
+    test "rejects descending and host-ambiguous classes with a stable error" do
+      for pattern <- ["[z-a]", "[a--b]", "[a&&b]", "[a~~b]", "[a||b]"] do
+        error =
+          assert_raise BuildTool.GlobMatch.PatternError, fn ->
+            GlobMatch.match_path?(pattern, "a")
+          end
+
+        assert error.message == "ambiguous or descending character class in glob pattern"
+      end
+    end
+  end
+
+  # ===========================================================================
+  # Complexity evidence
+  # ===========================================================================
+
+  describe "bounded state exploration" do
+    test "alternating globstars visit each path-DP cell once" do
+      pattern = "**/a*/**/b*/**/c.txt"
+      path = "x/aaaa/y/bbbb/z/not-c.txt"
+      stats = GlobMatch.match_path_with_stats(pattern, path)
+
+      refute stats.matched
+      assert stats.path_states == 7 * 7
+      assert stats.segment_states <= 4 * 6 * 8 * 10
+    end
+
+    test "star-heavy segment matching stays within one DP rectangle" do
+      stats = GlobMatch.match_path_with_stats("*a*a*a*a*a*b", "aaaaaaaaaaaaaaaaac")
+
+      refute stats.matched
+      assert stats.path_states == 4
+      assert stats.segment_states == 13 * 19
+    end
+
+    test "unmatched opening brackets compile in linear work" do
+      pattern = String.duplicate("[", 16_384)
+      stats = GlobMatch.validate_pattern_with_stats!(pattern)
+
+      assert stats.parser_steps <= 3 * String.length(pattern)
+    end
   end
 
   # ===========================================================================

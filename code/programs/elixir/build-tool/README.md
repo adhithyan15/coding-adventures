@@ -44,6 +44,7 @@ The build tool follows an 11-step pipeline:
 | `BuildTool.DirectedGraph` | Inline DAG implementation (Kahn's algorithm, affected nodes) |
 | `BuildTool.Resolver` | Parse dependency metadata, build the dependency graph |
 | `BuildTool.GitDiff` | Git-based change detection |
+| `BuildTool.GlobMatch` | Bounded Unicode-scalar portable-glob matching |
 | `BuildTool.Hasher` | SHA256 hashing of source files and dependencies |
 | `BuildTool.Cache` | Agent-based JSON build cache with atomic writes |
 | `BuildTool.Executor` | Parallel build execution with progress tracking |
@@ -167,6 +168,23 @@ CI repeats the real emitted-Elixir check on the pinned Elixir 1.18.4 / OTP
 27.3.4.11 toolchain with
 `--check --self-check-runtime elixir`; omitting `--self-check-runtime` retains
 the default local gate across every emitted runtime.
+
+## Portable glob matching
+
+`BuildTool.GlobMatch` implements the shared process-free portable-glob
+contract over Unicode scalars. It supports segment-local `*` and `?`,
+whole-segment `**`, Python-fnmatch character classes, leading-`!` negation,
+ascending ranges, literal edge hyphens, literal leading `]`, and unmatched `[`.
+Descending ranges and the ambiguous operators `--`, `&&`, `~~`, and `||`
+raise one stable typed error before any candidate can short-circuit validation.
+
+Pattern parsing is linear: closing brackets are indexed once. Path and segment
+matching use rolling-row dynamic programs, so adversarial star and globstar
+near-misses evaluate each state in their bounded rectangles once. Git-diff
+selection and strict hashing compile every declared source pattern before
+checking a BUILD-file fast path, an earlier matching pattern, or the package
+filesystem. Patterns remain inert strings; matching adds no filesystem, Git,
+process, environment, network, credential, or execution authority.
 
 ## Testing
 

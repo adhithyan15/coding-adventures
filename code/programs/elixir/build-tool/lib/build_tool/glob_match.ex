@@ -1,239 +1,380 @@
+defmodule BuildTool.GlobMatch.PatternError do
+  @moduledoc false
+
+  defexception message: "ambiguous or descending character class in glob pattern"
+end
+
 defmodule BuildTool.GlobMatch do
   @moduledoc """
-  Pure string-based glob pattern matching that correctly handles the `**`
-  (double-star / globstar) wildcard.
+  Pure, bounded, Unicode-scalar portable-glob matching.
 
-  ## Why not Path.wildcard?
+  Patterns and candidate paths are inert caller-supplied strings. The matcher
+  never expands a pattern against the filesystem and never consults Git, the
+  environment, a process, the network, or any other host authority.
 
-  Elixir's `Path.wildcard/2` expands patterns against the filesystem and
-  returns actual file paths. We need the opposite: match a *given* path
-  string against a pattern without touching the filesystem. This arises
-  in two situations:
+  `*` matches zero or more scalars inside one path segment, `?` matches exactly
+  one scalar, and a whole-segment `**` matches zero or more path segments.
+  Portable character classes support literals, leading-`!` negation, ascending
+  ranges, literal edge-position `-`, literal leading `]`, and unmatched `[` as
+  a literal. Descending ranges and the ambiguous operators `--`, `&&`, `~~`,
+  and `||` raise `BuildTool.GlobMatch.PatternError` before matching.
 
-    1. **Git diff filtering** — does a changed file (a path string from
-       `git diff --name-only`) match a package's declared srcs? No
-       filesystem access, just string matching.
-    2. **Hasher filtering** — after walking a package directory, which of
-       the discovered files match the declared srcs? We already have the
-       file paths; we just need to test each one against the patterns.
-
-  ## Pattern syntax
-
-  This module supports the same glob syntax used by Bazel, Buck, and most
-  build systems:
-
-    | Pattern  | Meaning                                              |
-    |----------|------------------------------------------------------|
-    | `*`      | Matches any sequence of non-`/` characters within a  |
-    |          | single path segment. `*.py` matches `foo.py` but     |
-    |          | NOT `dir/foo.py`.                                    |
-    | `**`     | Matches zero or more complete path segments.          |
-    |          | `src/**/*.py` matches `src/foo.py` and also          |
-    |          | `src/a/b/c.py`.                                      |
-    | `?`      | Matches exactly one non-`/` character.                |
-
-  All matching uses forward slashes (`/`) as the path separator. Callers
-  should normalize paths before calling.
-
-  ## Algorithm
-
-  The matcher splits both pattern and path into segments on `/`, then
-  walks them in lockstep with a recursive `match_segments/2` function:
-
-    - A `**` segment tries consuming 0, 1, 2, ... path segments.
-    - Any other segment must match exactly one path segment using
-      `match_segment/2` (which handles `*`, `?`, and literals).
-    - Both lists empty → match. Pattern empty but path remains → no match.
-    - Path empty but pattern remains → match only if all remaining
-      pattern segments are `**`.
-
-  This is a direct port of the Go implementation at
-  `code/programs/go/build-tool/internal/globmatch/globmatch.go`.
-
-  ## Examples
-
-      iex> BuildTool.GlobMatch.match_path?("src/**/*.py", "src/foo/bar.py")
-      true
-
-      iex> BuildTool.GlobMatch.match_path?("*.py", "dir/foo.py")
-      false
-
-      iex> BuildTool.GlobMatch.match_path?("**", "anything/at/all")
-      true
+  Pattern parsing is linear. Segment and path matching use rolling-row dynamic
+  programs, so each state in their respective rectangles is evaluated once
+  and recursive suffix enumeration cannot amplify adversarial near-misses.
   """
 
-  # ---------------------------------------------------------------------------
-  # Public API
-  # ---------------------------------------------------------------------------
+  alias BuildTool.GlobMatch.PatternError
+
+  @typedoc false
+  @type compiled_pattern :: %{segments: [compiled_segment()]}
+  @typep compiled_segment :: :globstar | {:segment, [token()]}
+
+  @typep token ::
+           :star
+           | :question
+           | {:literal, non_neg_integer()}
+           | {:class, boolean(), MapSet.t(), list()}
 
   @doc """
-  Reports whether a relative file path matches the given glob pattern.
-
-  Both `pattern` and `path` should use forward slashes as separators.
-  Trailing slashes are stripped before matching.
-
-  ## Parameters
-
-    - `pattern` — the glob pattern (e.g., `"src/**/*.py"`)
-    - `path` — the file path to test (e.g., `"src/foo/bar.py"`)
-
-  ## Returns
-
-    `true` if the path matches the pattern, `false` otherwise.
-
-  ## Examples
-
-      iex> BuildTool.GlobMatch.match_path?("src/**/*.py", "src/foo.py")
-      true
-
-      iex> BuildTool.GlobMatch.match_path?("src/**/*.py", "tests/foo.py")
-      false
-
-      iex> BuildTool.GlobMatch.match_path?("**", "")
-      true
+  Reports whether a relative path matches one portable glob pattern.
   """
+  @spec match_path?(String.t(), String.t()) :: boolean()
   def match_path?(pattern, path) do
-    # Normalize: strip trailing slashes for consistent matching.
-    pattern = String.trim_trailing(pattern, "/")
-    path = String.trim_trailing(path, "/")
-
-    # Split into segments. Empty strings produce empty lists.
-    pattern_parts = split_path(pattern)
-    path_parts = split_path(path)
-
-    match_segments(pattern_parts, path_parts)
+    match_path_with_stats(pattern, path).matched
   end
-
-  # ---------------------------------------------------------------------------
-  # Path splitting
-  # ---------------------------------------------------------------------------
-  #
-  # Splits a path string on "/" and filters out empty strings (from leading,
-  # trailing, or double slashes). An empty input returns an empty list.
-  #
-  # Examples:
-  #   split_path("")        → []
-  #   split_path("a/b/c")   → ["a", "b", "c"]
-  #   split_path("/a/b/")   → ["a", "b"]
-  #   split_path("a//b")    → ["a", "b"]
 
   @doc false
-  def split_path(""), do: []
+  @spec match_path_with_stats(String.t(), String.t()) :: map()
+  def match_path_with_stats(pattern, path) do
+    {compiled, parser_steps} = compile_pattern_with_stats!(pattern)
+    {matched, path_states, segment_states} = match_compiled_with_stats(compiled, path)
 
-  def split_path(p) do
-    p
-    |> String.split("/")
-    |> Enum.filter(&(&1 != ""))
+    %{
+      matched: matched,
+      parser_steps: parser_steps,
+      path_states: path_states,
+      segment_states: segment_states
+    }
   end
 
-  # ---------------------------------------------------------------------------
-  # Recursive segment matching
-  # ---------------------------------------------------------------------------
-  #
-  # This is the heart of the glob matcher. It processes pattern segments
-  # and path segments in lockstep, with special handling for "**".
-  #
-  # The recursion has three base cases:
-  #
-  #   1. Both lists empty → match (we consumed everything perfectly).
-  #   2. Pattern empty, path non-empty → no match (leftover path).
-  #   3. Path empty, pattern non-empty → match ONLY if all remaining
-  #      pattern segments are "**" (which can match zero segments).
-  #
-  # The recursive cases:
-  #
-  #   - Pattern starts with "**": try consuming 0, 1, 2, ... path
-  #     segments from the front. Consecutive "**" segments collapse
-  #     to a single one (optimization to avoid exponential blowup).
-  #
-  #   - Pattern starts with anything else: the current pattern segment
-  #     must match exactly one path segment via match_segment/2. If it
-  #     matches, recurse on the tails. If not, fail.
-
-  defp match_segments([], []), do: true
-  defp match_segments([], _path), do: false
-
-  defp match_segments(pattern, []) do
-    # Path is empty. Match only if all remaining pattern segments are "**".
-    Enum.all?(pattern, &(&1 == "**"))
+  @doc """
+  Validates one portable glob pattern without matching a candidate path.
+  """
+  @spec validate_pattern!(String.t()) :: :ok
+  def validate_pattern!(pattern) do
+    {_compiled, _parser_steps} = compile_pattern_with_stats!(pattern)
+    :ok
   end
 
-  defp match_segments(["**" | rest_pattern], path) do
-    # Skip consecutive "**" segments — they're equivalent to a single one.
-    # This prevents exponential blowup on patterns like "**/**/**/**".
-    rest_pattern = Enum.drop_while(rest_pattern, &(&1 == "**"))
+  @doc false
+  @spec validate_pattern_with_stats!(String.t()) :: map()
+  def validate_pattern_with_stats!(pattern) do
+    {_compiled, parser_steps} = compile_pattern_with_stats!(pattern)
+    %{parser_steps: parser_steps}
+  end
 
-    # Try matching the rest of the pattern against path[i..] for every
-    # possible i from 0 to length(path). i=0 means ** matches zero
-    # segments; i=length(path) means ** matches all remaining segments.
-    Enum.any?(0..length(path), fn i ->
-      match_segments(rest_pattern, Enum.drop(path, i))
+  @doc false
+  @spec compile_patterns!([String.t()]) :: [compiled_pattern()]
+  def compile_patterns!(patterns) when is_list(patterns) do
+    Enum.map(patterns, fn pattern ->
+      {compiled, _parser_steps} = compile_pattern_with_stats!(pattern)
+      compiled
     end)
   end
 
-  defp match_segments([pat_seg | rest_pattern], [path_seg | rest_path]) do
-    # Normal segment: must match exactly one path segment.
-    if match_segment(pat_seg, path_seg) do
-      match_segments(rest_pattern, rest_path)
-    else
-      false
+  @doc false
+  @spec match_any_compiled_path?([compiled_pattern()], String.t()) :: boolean()
+  def match_any_compiled_path?(compiled_patterns, path) do
+    Enum.any?(compiled_patterns, &match_compiled_path?(&1, path))
+  end
+
+  @doc false
+  @spec match_compiled_path?(compiled_pattern(), String.t()) :: boolean()
+  def match_compiled_path?(compiled, path) do
+    {matched, _path_states, _segment_states} = match_compiled_with_stats(compiled, path)
+    matched
+  end
+
+  @doc false
+  @spec split_path(String.t()) :: [String.t()]
+  def split_path(""), do: []
+
+  def split_path(path) do
+    path
+    |> String.split("/")
+    |> Enum.reject(&(&1 == ""))
+  end
+
+  defp compile_pattern_with_stats!(pattern) do
+    pattern = String.trim_trailing(pattern, "/")
+
+    {segments, parser_steps} =
+      pattern
+      |> split_path()
+      |> Enum.reduce({[], 0}, fn
+        "**", {[:globstar | _] = segments, steps} ->
+          {segments, steps + 2}
+
+        "**", {segments, steps} ->
+          {[:globstar | segments], steps + 2}
+
+        segment, {segments, steps} ->
+          {tokens, segment_steps} = compile_segment!(segment)
+          {[{:segment, tokens} | segments], steps + segment_steps}
+      end)
+
+    {%{segments: Enum.reverse(segments)}, parser_steps}
+  end
+
+  defp compile_segment!(segment) do
+    scalars = String.to_charlist(segment)
+    scalar_tuple = List.to_tuple(scalars)
+    length = tuple_size(scalar_tuple)
+    next_close = next_close_indices(scalars)
+
+    {tokens, parse_steps} =
+      compile_tokens(scalar_tuple, next_close, length, 0, [], length)
+
+    {Enum.reverse(tokens), length + parse_steps}
+  end
+
+  defp next_close_indices(scalars) do
+    {indices, _next} =
+      scalars
+      |> Enum.with_index()
+      |> Enum.reverse()
+      |> Enum.reduce({[], nil}, fn {scalar, index}, {indices, next} ->
+        next = if scalar == ?], do: index, else: next
+        {[next | indices], next}
+      end)
+
+    List.to_tuple(indices)
+  end
+
+  defp compile_tokens(_scalars, _next_close, length, length, tokens, steps),
+    do: {tokens, steps}
+
+  defp compile_tokens(scalars, next_close, length, index, tokens, steps) do
+    scalar = elem(scalars, index)
+
+    cond do
+      scalar == ?* ->
+        tokens = if List.first(tokens) == :star, do: tokens, else: [:star | tokens]
+        compile_tokens(scalars, next_close, length, index + 1, tokens, steps + 1)
+
+      scalar == ?? ->
+        compile_tokens(scalars, next_close, length, index + 1, [:question | tokens], steps + 1)
+
+      scalar == ?[ ->
+        case character_class(scalars, next_close, length, index) do
+          :unmatched ->
+            compile_tokens(
+              scalars,
+              next_close,
+              length,
+              index + 1,
+              [{:literal, ?[} | tokens],
+              steps + 1
+            )
+
+          {:ok, class_token, close_index, class_steps} ->
+            compile_tokens(
+              scalars,
+              next_close,
+              length,
+              close_index + 1,
+              [class_token | tokens],
+              steps + class_steps
+            )
+        end
+
+      true ->
+        compile_tokens(
+          scalars,
+          next_close,
+          length,
+          index + 1,
+          [{:literal, scalar} | tokens],
+          steps + 1
+        )
     end
   end
 
-  # ---------------------------------------------------------------------------
-  # Single-segment matching
-  # ---------------------------------------------------------------------------
-  #
-  # Matches a single pattern segment against a single path segment.
-  # Supports:
-  #   - `*`  — matches any sequence of characters (including empty)
-  #   - `?`  — matches exactly one character
-  #   - Literal characters — must match exactly
-  #
-  # This is implemented as a recursive character-by-character walk.
-  #
-  # Truth table for match_segment:
-  #
-  #   | Pattern | Path     | Result | Reason                            |
-  #   |---------|----------|--------|-----------------------------------|
-  #   | ""      | ""       | true   | Both empty                        |
-  #   | ""      | "a"      | false  | Pattern exhausted, path remains   |
-  #   | "*"     | "foo"    | true   | * matches any sequence            |
-  #   | "*"     | ""       | true   | * matches empty too               |
-  #   | "?"     | "a"      | true   | ? matches one character           |
-  #   | "?"     | ""       | false  | ? needs exactly one character     |
-  #   | "?.py"  | "a.py"   | true   | ? + literal                       |
-  #   | "*.py"  | "foo.py" | true   | * + literal                       |
-  #   | "*.py"  | "foo.rb" | false  | * matches but .rb != .py          |
+  defp character_class(scalars, next_close, length, open_index) do
+    raw_start = open_index + 1
 
-  defp match_segment(pattern, path) do
-    do_match_segment(String.graphemes(pattern), String.graphemes(path))
+    {negated, body_start} =
+      if raw_start < length and elem(scalars, raw_start) == ?! do
+        {true, raw_start + 1}
+      else
+        {false, raw_start}
+      end
+
+    close_search =
+      if body_start < length and elem(scalars, body_start) == ?] do
+        body_start + 1
+      else
+        body_start
+      end
+
+    close_index =
+      if close_search < length do
+        elem(next_close, close_search)
+      end
+
+    if is_nil(close_index) do
+      :unmatched
+    else
+      body = tuple_slice(scalars, body_start, close_index)
+      {literals, ranges} = parse_class_body!(body)
+      {:ok, {:class, negated, literals, ranges}, close_index, length(body) + 2}
+    end
   end
 
-  # Base cases.
-  defp do_match_segment([], []), do: true
-  defp do_match_segment([], _), do: false
+  defp tuple_slice(_tuple, start, stop) when start >= stop, do: []
 
-  # Star: try matching zero or more characters from path.
-  defp do_match_segment(["*" | rest_pat], path_chars) do
-    # Try consuming 0, 1, 2, ... characters from the path.
-    Enum.any?(0..length(path_chars), fn i ->
-      do_match_segment(rest_pat, Enum.drop(path_chars, i))
-    end)
+  defp tuple_slice(tuple, start, stop) do
+    for index <- start..(stop - 1), do: elem(tuple, index)
   end
 
-  # Question mark: match exactly one character.
-  defp do_match_segment(["?" | rest_pat], [_char | rest_path]) do
-    do_match_segment(rest_pat, rest_path)
+  defp parse_class_body!(body) do
+    if ambiguous_class_operator?(body) do
+      raise PatternError
+    end
+
+    parse_class_members(body, MapSet.new(), [])
   end
 
-  defp do_match_segment(["?" | _rest_pat], []), do: false
-
-  # Literal character: must match exactly.
-  defp do_match_segment([c | rest_pat], [c | rest_path]) do
-    do_match_segment(rest_pat, rest_path)
+  defp ambiguous_class_operator?([left, right | rest]) do
+    (left == right and left in [?-, ?&, ?~, ?|]) or
+      ambiguous_class_operator?([right | rest])
   end
 
-  # Mismatch.
-  defp do_match_segment([_c | _rest_pat], _path), do: false
+  defp ambiguous_class_operator?(_), do: false
+
+  defp parse_class_members([low, ?-, high | rest], literals, ranges) do
+    if low > high do
+      raise PatternError
+    end
+
+    parse_class_members(rest, literals, [{low, high} | ranges])
+  end
+
+  defp parse_class_members([literal | rest], literals, ranges) do
+    parse_class_members(rest, MapSet.put(literals, literal), ranges)
+  end
+
+  defp parse_class_members([], literals, ranges), do: {literals, Enum.reverse(ranges)}
+
+  defp match_compiled_with_stats(%{segments: segments}, path) do
+    path_parts =
+      path
+      |> String.trim_trailing("/")
+      |> split_path()
+      |> Enum.map(&String.to_charlist/1)
+      |> List.to_tuple()
+
+    path_count = tuple_size(path_parts)
+    base_row = false_row_with_terminal_true(path_count)
+
+    {result_row, segment_states} =
+      segments
+      |> Enum.reverse()
+      |> Enum.reduce({base_row, 0}, fn
+        :globstar, {next_row, states} ->
+          {globstar_row(next_row, path_count), states}
+
+        {:segment, tokens}, {next_row, states} ->
+          {row, added_states} = segment_path_row(tokens, next_row, path_parts, path_count)
+          {row, states + added_states}
+      end)
+
+    path_states = (length(segments) + 1) * (path_count + 1)
+    {elem(result_row, 0), path_states, segment_states}
+  end
+
+  defp false_row_with_terminal_true(last_index) do
+    List.duplicate(false, last_index) |> Kernel.++([true]) |> List.to_tuple()
+  end
+
+  defp globstar_row(next_row, path_count) do
+    {_right, row} =
+      Enum.reduce(path_count..0//-1, {false, []}, fn index, {right, row} ->
+        value = elem(next_row, index) or (index < path_count and right)
+        {value, [value | row]}
+      end)
+
+    List.to_tuple(row)
+  end
+
+  defp segment_path_row(tokens, next_row, path_parts, path_count) do
+    {row, states} =
+      Enum.reduce(path_count..0//-1, {[], 0}, fn
+        index, {row, states} when index == path_count ->
+          {[false | row], states}
+
+        index, {row, states} ->
+          {segment_match, segment_states} =
+            match_segment_with_stats(tokens, elem(path_parts, index))
+
+          value = segment_match and elem(next_row, index + 1)
+          {[value | row], states + segment_states}
+      end)
+
+    {List.to_tuple(row), states}
+  end
+
+  defp match_segment_with_stats(tokens, path_scalars) do
+    path_count = length(path_scalars)
+    path_tuple = List.to_tuple(path_scalars)
+    base_row = false_row_with_terminal_true(path_count)
+
+    result_row =
+      tokens
+      |> Enum.reverse()
+      |> Enum.reduce(base_row, fn
+        :star, next_row -> star_scalar_row(next_row, path_count)
+        token, next_row -> scalar_token_row(token, next_row, path_tuple, path_count)
+      end)
+
+    states = (length(tokens) + 1) * (path_count + 1)
+    {elem(result_row, 0), states}
+  end
+
+  defp star_scalar_row(next_row, path_count) do
+    {_right, row} =
+      Enum.reduce(path_count..0//-1, {false, []}, fn index, {right, row} ->
+        value = elem(next_row, index) or (index < path_count and right)
+        {value, [value | row]}
+      end)
+
+    List.to_tuple(row)
+  end
+
+  defp scalar_token_row(token, next_row, path_tuple, path_count) do
+    row =
+      Enum.reduce(path_count..0//-1, [], fn
+        index, row when index == path_count ->
+          [false | row]
+
+        index, row ->
+          value = token_matches?(token, elem(path_tuple, index)) and elem(next_row, index + 1)
+          [value | row]
+      end)
+
+    List.to_tuple(row)
+  end
+
+  defp token_matches?(:question, _scalar), do: true
+  defp token_matches?({:literal, scalar}, scalar), do: true
+  defp token_matches?({:literal, _expected}, _actual), do: false
+
+  defp token_matches?({:class, negated, literals, ranges}, scalar) do
+    included =
+      MapSet.member?(literals, scalar) or
+        Enum.any?(ranges, fn {low, high} -> scalar >= low and scalar <= high end)
+
+    if negated, do: not included, else: included
+  end
 end
