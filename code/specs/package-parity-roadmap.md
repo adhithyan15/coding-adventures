@@ -14865,6 +14865,18 @@ coverage, and production plus full dependency audits. The fresh branch
 `codex/parity-typescript-glob-hardening-20260927` starts from the exact merge
 revision above. Perl diff-selection adoption ranks next and remains pending.
 
+The TypeScript implementation now compiles complete declared-source lists into
+immutable Unicode-scalar tokens, rejects ambiguous or descending character
+classes with one stable typed error, and reuses compiled patterns in both
+source hashing and Git-diff selection. Rolling-row path and segment dynamic
+programs plus a reverse bracket index replace recursive suffix exploration and
+UTF-16 code-unit semantics. The canonical BUILD front passes typecheck and 361
+tests with 91.45% statement, 85.27% branch, 95.61% function, and 91.37% line
+coverage; the matcher itself reaches 100% line and 98.41% branch coverage.
+Neutral corpus/schema checks, parity inventory, focused Go oracle tests and
+vet, exact-diff planning, package/audit checks, and independent correctness
+and security reviews are clean.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
