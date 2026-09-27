@@ -119,6 +119,11 @@ That is about 380 filmstrips that could print today.
   body, then movements 4–6 restart for the outer arch, upper flourish and
   downward stem. The order comes from the same packaged tracing guide and is
   fitted to Noto Sans Telugu.
+- **Telugu చ starts the next ready consonant row.** The intervening `ఙ` still
+  needs the vocabulary-first lesson sequence recorded below, so the existing
+  `TE-S112` lesson is the next available owner. Its four-movement filmstrip
+  joins movements 1–3 for the main body and restarts for the upper flourish,
+  using the same packaged tracing guide and Noto Sans Telugu fit.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
