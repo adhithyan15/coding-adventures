@@ -38,6 +38,17 @@ Bulk pre-population would make every float/string array allocation O(N) and
 would have to preserve the newly created table through several GC-capable
 calls; BEAM10's earlier table-handle failure demonstrates that risk.
 
+## macOS CI repair
+
+The first BEAM11 PR run exposed a BEAM10 allocation hazard on macOS: an
+upper-bound read sometimes returned rather than trapping. `alloc_array` held
+the declared length in a scratch X register across `ets:new/2`. Imported
+calls clobber X registers, so the handle can acquire a wrong extent. Reserve
+one initialized Y stack slot in functions that allocate ets-backed arrays,
+store the length there before `ets:new/2`, and reload it for the handle after
+the call. This preserves the declared extent independently of call behavior
+without changing the O(1) allocation contract.
+
 ## Acceptance
 
 1. Execute direct `array<f64>` and `array<str>` IIR modules on real `erl`:
