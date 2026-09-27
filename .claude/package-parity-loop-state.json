@@ -11,7 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16139,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16139",
+    "title": "feat(build-tool): harden Elixir glob matching",
+    "branch": "codex/parity-elixir-glob-hardening-20260927",
+    "item_id": "build-tool-elixir-glob-matcher-complexity-hardening",
+    "opened_at": "2026-09-27T10:45:31Z",
+    "head_revision": "b76b705a3be0c18f97c7aec0b3e52b7402164351",
+    "checks_status": "pending",
+    "auto_merge_enabled": false
+  },
   "last_ci_action": {
     "observed_at": "2026-09-27T10:20:02Z",
     "pr_number": 16133,
@@ -1051,10 +1061,10 @@
     {
       "id": "build-tool-elixir-glob-matcher-complexity-hardening",
       "title": "Harden Elixir build-tool glob matcher complexity",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-elixir-glob-hardening-20260927",
-      "pr_number": null,
+      "pr_number": 16139,
       "selected_at": "2026-09-27T10:21:41Z",
       "selection_revision": "d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57",
       "selection_notes": "Selected after PR #16133 completed all 47 final-head checks acceptably and merged through guarded squash auto-merge, followed by an exact-main collision-checked schema-3 inventory refresh. The inventory remains at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The post-merge package-root audit registered five collision-free owners before selection and preserved existing ownership for Python alpha-axp-simulator, cdc6600-simulator, and pdp11-simulator. Both matcher-hardening prerequisites are merged, and a dependency/leverage pass ranks this ready Elixir leaf first with 13 unfinished transitive descendants. The fresh clean worktree starts from exact merge revision d7ff2ba3c4d7d16cbefa0e01be1879e2c638ab57.",
@@ -1062,6 +1072,8 @@
       "progress_notes": "Replaced recursive grapheme and suffix-enumerating matching with a Unicode-scalar parser, linear closing-bracket index, and rolling-row dynamic programs for segment and path states. Strict classes implement literals, leading-! negation, ascending ranges, literal edge hyphens, literal leading ], and unmatched [ while rejecting descending and host-ambiguous syntax with one typed stable error. GitDiff and Hasher compile complete declared-source lists before BUILD, empty-change, earlier-match, or filesystem short-circuits. The package README and changelog document the process-free authority boundary.",
       "validation_notes": "After a conflict-free rebase onto origin/main 4955681da18ec06c497932156056494b803aaee3, exact Elixir 1.18.4 compiled for OTP 27 ran on the available OTP 29 runtime. Warnings-as-errors compilation, scoped formatter checks, 256 package tests with two expected skips, escript build, Hex advisory audit, the 162-case/285-file neutral corpus, 234 schema and runner tests with 23 expected skips, the 288-root Elixir Windows-front audit, the real 288-package Go build-tool Elixir dry run, affected Go tests/vet/trimpath build, the schema-3 zero-collision inventory, strict 893-item/1,713-edge state DAG validation, diff hygiene, credential scan, and two independent correctness/security reviews pass. GlobMatch reaches 95.37% line coverage; the repository's full `mix test --cover` still reports the inherited 61.54% aggregate against a 90% threshold, and global formatting still reports only pre-existing drift in untouched files. `mix deps.audit` is not installed; `mix hex.audit` reports no advisories.",
       "security_notes": "Independent review found linear parsing, bounded rolling-row DP, fixed failures, complete prevalidation, and no regex, wildcard expansion, dynamic atom, eval, credential, network, environment, process, Git, or added filesystem authority. Strict hashing retains only its existing caller-authorized file walk after every pattern validates, and this slice intentionally leaves the separate operation-wide diff-selection ceiling to its registered adoption owner. No dependency or lockfile changed.",
+      "opened_revision": "b76b705a3be0c18f97c7aec0b3e52b7402164351",
+      "publication_notes": "Opened ready-for-review PR #16139 after a normal first push from the fresh dedicated branch rebased conflict-free onto origin/main 4955681da18ec06c497932156056494b803aaee3. The live open-PR file audit found zero exact overlap across this tranche, GitHub reported the opening head MERGEABLE, and initial CI, CodeQL, and human-language detection checks were queued. Auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no conflict.",
       "notes": "Replace unbounded recursive grapheme matching with bounded memoized portable-glob behavior, strict character classes, Unicode-scalar accounting, and stable failures without adding host authority."
     },
     {
