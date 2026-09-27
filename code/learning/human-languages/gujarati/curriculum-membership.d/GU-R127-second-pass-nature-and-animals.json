@@ -1,0 +1,11 @@
+{
+  "id": "GU-R127-second-pass-nature-and-animals",
+  "pathSegment": "GU-PATH-127-THINGS127",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GU-EXT-127-THINGS127",
+      "order": 6
+    }
+  ]
+}

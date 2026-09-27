@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:76068bb4f31924ae",
+  "lessonIds": [
+    "GU-C101-amuk",
+    "GU-C101-atlu",
+    "GU-C101-etlu",
+    "GU-C101-ahi",
+    "GU-C101-tya"
+  ],
+  "tex": "gujarati/book/chapters/ch101-some-this-much-that-much-here-there.tex"
+}

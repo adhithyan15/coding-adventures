@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:6dff3695d4bfe7d7",
+  "lessonIds": [
+    "GU-C127-magaj",
+    "GU-C127-saikal",
+    "GU-C127-vahan",
+    "GU-C127-musaphar",
+    "GU-C127-hospital",
+    "GU-R127-first-pass-food-and-nature",
+    "GU-R127-second-pass-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch127.txt",
+  "json": "gujarati/narration/ch127.json",
+  "textHash": "fnv1a64:d5ff854863ca4c7f",
+  "jsonHash": "fnv1a64:c10c891ed5f12197",
+  "findings": []
+}

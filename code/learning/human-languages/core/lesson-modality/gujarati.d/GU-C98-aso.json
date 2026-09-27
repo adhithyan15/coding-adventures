@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C98-aso",
+    "language": "gujarati",
+    "chapter": 98,
+    "sequence": 5040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:025b31ea8dfbcfa9"
+  },
+  "findings": []
+}

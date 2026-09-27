@@ -1,0 +1,11 @@
+{
+  "id": "GU-C110-minbatti",
+  "pathSegment": "GU-PATH-110-THINGS110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-110-THINGS110",
+      "order": 2
+    }
+  ]
+}

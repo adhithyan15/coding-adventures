@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C116-tarbuc",
+    "language": "gujarati",
+    "chapter": 116,
+    "sequence": 6000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4b0852754d4a347"
+  },
+  "findings": []
+}

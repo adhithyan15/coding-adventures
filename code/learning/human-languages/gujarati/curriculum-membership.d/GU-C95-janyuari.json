@@ -1,0 +1,11 @@
+{
+  "id": "GU-C95-janyuari",
+  "pathSegment": "GU-PATH-95-TIME95",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-95-TIME95",
+      "order": 2
+    }
+  ]
+}

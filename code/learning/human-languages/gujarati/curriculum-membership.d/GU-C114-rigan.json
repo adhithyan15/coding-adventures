@@ -1,0 +1,11 @@
+{
+  "id": "GU-C114-rigan",
+  "pathSegment": "GU-PATH-114-THINGS114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-114-THINGS114",
+      "order": 3
+    }
+  ]
+}

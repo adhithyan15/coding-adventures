@@ -1,0 +1,11 @@
+{
+  "id": "GU-C97-kartak",
+  "pathSegment": "GU-PATH-97-TIME97",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-97-TIME97",
+      "order": 1
+    }
+  ]
+}

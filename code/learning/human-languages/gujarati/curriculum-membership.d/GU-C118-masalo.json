@@ -1,0 +1,11 @@
+{
+  "id": "GU-C118-masalo",
+  "pathSegment": "GU-PATH-118-THINGS118",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-118-THINGS118",
+      "order": 0
+    }
+  ]
+}

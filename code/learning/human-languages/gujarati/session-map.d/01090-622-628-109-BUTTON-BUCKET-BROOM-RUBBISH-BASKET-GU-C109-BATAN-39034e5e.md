@@ -1,0 +1,1 @@
+| 622-628 | 109 | Button, Bucket, Broom, Rubbish, Basket | `GU-C109-batan` -> `GU-C109-baldi` -> `GU-C109-savarni` -> `GU-C109-kacro` -> `GU-C109-topli` -> `GU-R109-first-pass-owning-and-being-able` -> `GU-R109-second-pass-things-in-the-house` |

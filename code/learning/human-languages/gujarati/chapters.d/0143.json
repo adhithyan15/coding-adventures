@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "To run away, To go around, To stop, To believe, To change",
+  "label": "ch:gu-to-run-away-to-go-around-to-stop-to-believe-to-change",
+  "canDo": "I can say to run away, to go around, to stop, to believe and to change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GU-R143-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say to run away, to go around, to stop, to believe and to change.",
+    "assesses": [
+      "GU-LEX-C143-ACT143-03",
+      "GU-LEX-C143-ACT143-04",
+      "GU-LEX-C143-ACT143-05"
+    ]
+  }
+}

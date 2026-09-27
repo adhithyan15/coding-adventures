@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C112-svetar",
+    "language": "gujarati",
+    "chapter": 112,
+    "sequence": 5830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20d4c171f3eb9e24"
+  },
+  "findings": []
+}

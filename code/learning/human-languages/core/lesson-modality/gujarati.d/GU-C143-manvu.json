@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C143-manvu",
+    "language": "gujarati",
+    "chapter": 143,
+    "sequence": 7530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a012567a842f75ef"
+  },
+  "findings": []
+}

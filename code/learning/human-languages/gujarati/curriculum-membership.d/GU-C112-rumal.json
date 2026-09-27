@@ -1,0 +1,11 @@
+{
+  "id": "GU-C112-rumal",
+  "pathSegment": "GU-PATH-112-THINGS112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-112-THINGS112",
+      "order": 2
+    }
+  ]
+}

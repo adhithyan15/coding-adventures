@@ -1,0 +1,11 @@
+{
+  "id": "GU-R109-first-pass-owning-and-being-able",
+  "pathSegment": "GU-PATH-109-THINGS109",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-109-THINGS109",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Cupboard, Mirror, Comb, Soap, Towel",
+  "label": "ch:gu-cupboard-mirror-comb-soap-towel",
+  "canDo": "I can say a cupboard, a mirror, a comb, soap and a towel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C106-tuval",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say a cupboard, a mirror, a comb, soap and a towel.",
+    "assesses": [
+      "GU-LEX-C106-THINGS106-03",
+      "GU-LEX-C106-THINGS106-04",
+      "GU-LEX-C106-THINGS106-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Thirsty, Ill, Fresh, Ripe, Raw",
+  "label": "ch:gu-thirsty-ill-fresh-ripe-raw",
+  "canDo": "I can say thirsty, ill, fresh, ripe and raw.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GU-R135-second-pass-town-school-and-work",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say thirsty, ill, fresh, ripe and raw.",
+    "assesses": [
+      "GU-LEX-C135-QUAL135-03",
+      "GU-LEX-C135-QUAL135-04",
+      "GU-LEX-C135-QUAL135-05"
+    ]
+  }
+}

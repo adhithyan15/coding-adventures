@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C114-makai",
+    "language": "gujarati",
+    "chapter": 114,
+    "sequence": 5920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9d22299b60cc69e"
+  },
+  "findings": []
+}

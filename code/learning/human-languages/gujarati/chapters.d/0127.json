@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Brain, Bicycle, Ship, Traveller, Hospital",
+  "label": "ch:gu-brain-bicycle-ship-traveller-hospital",
+  "canDo": "I can say a brain, a bicycle, a ship, a traveller and a hospital.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-R127-second-pass-nature-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say a brain, a bicycle, a ship, a traveller and a hospital.",
+    "assesses": [
+      "GU-LEX-C127-THINGS127-03",
+      "GU-LEX-C127-THINGS127-04",
+      "GU-LEX-C127-THINGS127-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:43087331c7577d74",
+  "lessonIds": [
+    "GU-C131-nicu",
+    "GU-C131-paholu",
+    "GU-C131-patlu",
+    "GU-C131-bhinu",
+    "GU-C131-suku"
+  ],
+  "tex": "gujarati/book/chapters/ch131-low-wide-thin-wet-dry.tex"
+}

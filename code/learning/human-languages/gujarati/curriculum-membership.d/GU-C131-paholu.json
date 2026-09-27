@@ -1,0 +1,11 @@
+{
+  "id": "GU-C131-paholu",
+  "pathSegment": "GU-PATH-131-QUAL131",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-131-QUAL131",
+      "order": 1
+    }
+  ]
+}

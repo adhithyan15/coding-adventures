@@ -1,0 +1,11 @@
+{
+  "id": "GU-C104-layakat",
+  "pathSegment": "GU-PATH-104-CAN104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-104-CAN104",
+      "order": 3
+    }
+  ]
+}

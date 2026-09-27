@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C136-sacu",
+    "language": "gujarati",
+    "chapter": 136,
+    "sequence": 7170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:910aa27d7ecdb0bb"
+  },
+  "findings": []
+}

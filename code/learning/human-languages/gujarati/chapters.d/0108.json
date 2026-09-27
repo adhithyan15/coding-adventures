@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Vessel, Knife, Scissors, Needle, Thread",
+  "label": "ch:gu-vessel-knife-scissors-needle-thread",
+  "canDo": "I can say a vessel, a knife, scissors, a needle and a thread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C108-doro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say a vessel, a knife, scissors, a needle and a thread.",
+    "assesses": [
+      "GU-LEX-C108-THINGS108-03",
+      "GU-LEX-C108-THINGS108-04",
+      "GU-LEX-C108-THINGS108-05"
+    ]
+  }
+}

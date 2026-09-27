@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C115-gajar",
+    "language": "gujarati",
+    "chapter": 115,
+    "sequence": 5950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1bef2f42845d22c"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:9caae04ae5149b46",
+  "lessonIds": [
+    "GU-C123-kacbo",
+    "GU-C123-magar",
+    "GU-C123-macchar",
+    "GU-C123-makhi",
+    "GU-C123-madhmakhi"
+  ],
+  "tex": "gujarati/book/chapters/ch123-turtle-crocodile-mosquito-fly-bee.tex"
+}

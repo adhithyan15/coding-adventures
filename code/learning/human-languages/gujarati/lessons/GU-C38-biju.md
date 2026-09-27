@@ -9,7 +9,7 @@ headword: બીજું
 romanization: bījũ
 gloss: "second; other — the pair-mate of ત્રીજું, and the first ordinal with no number left in it"
 concept_tag: GU-ORDINAL-IJU
-prerequisites: [GU-C38-triju, GU-C37-kyaan-write, GU-C34-kemke-write, GU-C25-time-written, GU-C06-number-histories]
+prerequisites: [GU-C38-triju, GU-C37-kyaan-write, GU-C34-kemke-write, GU-C25-time-written, GU-C06-number-histories, GU-C06-numbers-1-5-more]
 sounds: [long-ii]
 roots: []
 etymology_hook: "Two Sanskrit words ending in -teeya gave Gujarati two ordinals ending in -eejun, and only one of them still shows its number"

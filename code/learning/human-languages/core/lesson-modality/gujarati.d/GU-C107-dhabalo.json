@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C107-dhabalo",
+    "language": "gujarati",
+    "chapter": 107,
+    "sequence": 5520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50c166e32e813026"
+  },
+  "findings": []
+}

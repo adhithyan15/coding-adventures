@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C120-dharti",
+    "language": "gujarati",
+    "chapter": 120,
+    "sequence": 6280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab9ebb48d362940b"
+  },
+  "findings": []
+}

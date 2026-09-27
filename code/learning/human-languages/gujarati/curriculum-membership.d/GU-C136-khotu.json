@@ -1,0 +1,11 @@
+{
+  "id": "GU-C136-khotu",
+  "pathSegment": "GU-PATH-136-QUAL136",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-136-QUAL136",
+      "order": 3
+    }
+  ]
+}

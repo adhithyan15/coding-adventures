@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "November, Kartak, Magshar, Phagan, Chaitra",
+  "label": "ch:gu-november-kartak-magshar-phagan-chaitra",
+  "canDo": "I can say November, Kartak, Magshar, Phagan and Chaitra.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GU-C97-caitra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say November, Kartak, Magshar, Phagan and Chaitra.",
+    "assesses": [
+      "GU-LEX-C97-TIME97-03",
+      "GU-LEX-C97-TIME97-04",
+      "GU-LEX-C97-TIME97-05"
+    ]
+  }
+}

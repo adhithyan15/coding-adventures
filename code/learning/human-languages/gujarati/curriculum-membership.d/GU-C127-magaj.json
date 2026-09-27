@@ -1,0 +1,11 @@
+{
+  "id": "GU-C127-magaj",
+  "pathSegment": "GU-PATH-127-THINGS127",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-127-THINGS127",
+      "order": 0
+    }
+  ]
+}

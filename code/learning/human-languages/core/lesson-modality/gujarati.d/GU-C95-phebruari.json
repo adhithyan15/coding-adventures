@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C95-phebruari",
+    "language": "gujarati",
+    "chapter": 95,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e60062ea2239dfd"
+  },
+  "findings": []
+}

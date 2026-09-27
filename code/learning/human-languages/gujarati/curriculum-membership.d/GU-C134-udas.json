@@ -1,0 +1,11 @@
+{
+  "id": "GU-C134-udas",
+  "pathSegment": "GU-PATH-134-QUAL134",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-134-QUAL134",
+      "order": 3
+    }
+  ]
+}

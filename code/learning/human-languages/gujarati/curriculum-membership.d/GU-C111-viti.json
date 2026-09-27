@@ -1,0 +1,11 @@
+{
+  "id": "GU-C111-viti",
+  "pathSegment": "GU-PATH-111-THINGS111",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-111-THINGS111",
+      "order": 2
+    }
+  ]
+}

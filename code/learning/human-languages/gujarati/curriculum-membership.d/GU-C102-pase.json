@@ -1,0 +1,11 @@
+{
+  "id": "GU-C102-pase",
+  "pathSegment": "GU-PATH-102-CAN102",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-102-CAN102",
+      "order": 1
+    }
+  ]
+}

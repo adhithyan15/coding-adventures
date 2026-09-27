@@ -1,0 +1,11 @@
+{
+  "id": "GU-C115-libu",
+  "pathSegment": "GU-PATH-115-THINGS115",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-115-THINGS115",
+      "order": 3
+    }
+  ]
+}

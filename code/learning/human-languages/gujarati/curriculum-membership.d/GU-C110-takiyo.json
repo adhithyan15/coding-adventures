@@ -1,0 +1,11 @@
+{
+  "id": "GU-C110-takiyo",
+  "pathSegment": "GU-PATH-110-THINGS110",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-110-THINGS110",
+      "order": 3
+    }
+  ]
+}

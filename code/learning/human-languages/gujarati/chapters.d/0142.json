@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "To say, To live, To spend, To save, To sow",
+  "label": "ch:gu-to-say-to-live-to-spend-to-save-to-sow",
+  "canDo": "I can say to say, to live, to spend, to save and to sow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C142-vavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say to say, to live, to spend, to save and to sow.",
+    "assesses": [
+      "GU-LEX-C142-ACT142-03",
+      "GU-LEX-C142-ACT142-04",
+      "GU-LEX-C142-ACT142-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "April, May, June, July, September",
+  "label": "ch:gu-april-may-june-july-september",
+  "canDo": "I can say April, May, June, July and September.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GU-C96-saptembar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say April, May, June, July and September.",
+    "assesses": [
+      "GU-LEX-C96-TIME96-03",
+      "GU-LEX-C96-TIME96-04",
+      "GU-LEX-C96-TIME96-05"
+    ]
+  }
+}

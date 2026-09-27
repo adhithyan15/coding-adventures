@@ -1,0 +1,11 @@
+{
+  "id": "GU-C116-magphali",
+  "pathSegment": "GU-PATH-116-THINGS116",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-116-THINGS116",
+      "order": 3
+    }
+  ]
+}

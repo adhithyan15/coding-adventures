@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Millet, Wheat, Maize, Aubergine, Cabbage",
+  "label": "ch:gu-millet-wheat-maize-aubergine-cabbage",
+  "canDo": "I can say millet, wheat, maize, an aubergine and cabbage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C114-kobi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say millet, wheat, maize, an aubergine and cabbage.",
+    "assesses": [
+      "GU-LEX-C114-THINGS114-03",
+      "GU-LEX-C114-THINGS114-04",
+      "GU-LEX-C114-THINGS114-05"
+    ]
+  }
+}

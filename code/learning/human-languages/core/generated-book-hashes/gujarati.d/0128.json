@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:5583e40e3487eb8d",
+  "lessonIds": [
+    "GU-C128-kaceri",
+    "GU-C128-karkhanu",
+    "GU-C128-hotel",
+    "GU-C128-pustakalay",
+    "GU-C128-cok"
+  ],
+  "tex": "gujarati/book/chapters/ch128-office-factory-hotel-library-town-square.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C110-peti",
+    "language": "gujarati",
+    "chapter": 110,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f12d2639638b9957"
+  },
+  "findings": []
+}

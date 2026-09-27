@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "To send, To forget, To look for, To use, To make",
+  "label": "ch:gu-to-send-to-forget-to-look-for-to-use-to-make",
+  "canDo": "I can say to send, to forget, to look for, to use and to make.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GU-C139-banavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say to send, to forget, to look for, to use and to make.",
+    "assesses": [
+      "GU-LEX-C139-ACT139-03",
+      "GU-LEX-C139-ACT139-04",
+      "GU-LEX-C139-ACT139-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C103-adhikar",
+    "language": "gujarati",
+    "chapter": 103,
+    "sequence": 5300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0eb98f30fab68ed9"
+  },
+  "findings": []
+}

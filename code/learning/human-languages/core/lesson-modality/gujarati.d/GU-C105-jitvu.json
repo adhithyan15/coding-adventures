@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C105-jitvu",
+    "language": "gujarati",
+    "chapter": 105,
+    "sequence": 5430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:987a42b0364e6168"
+  },
+  "findings": []
+}

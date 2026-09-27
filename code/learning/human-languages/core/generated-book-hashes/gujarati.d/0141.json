@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:61244e20e5ff25ec",
+  "lessonIds": [
+    "GU-C141-jagvu",
+    "GU-C141-nahvu",
+    "GU-C141-pahervu",
+    "GU-C141-calavvu",
+    "GU-C141-ganvu"
+  ],
+  "tex": "gujarati/book/chapters/ch141-to-wake-up-to-bathe-to-wear-to-drive-to-count.tex"
+}

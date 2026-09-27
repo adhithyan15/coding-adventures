@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:b25500221cdfd31f",
+  "lessonIds": [
+    "GU-C116-tarbuc",
+    "GU-C116-papaiyu",
+    "GU-C116-jamphal",
+    "GU-C116-magphali",
+    "GU-C116-dhokla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch116.txt",
+  "json": "gujarati/narration/ch116.json",
+  "textHash": "fnv1a64:1a5419dc9bdc0a8e",
+  "jsonHash": "fnv1a64:536da03446ae6874",
+  "findings": []
+}

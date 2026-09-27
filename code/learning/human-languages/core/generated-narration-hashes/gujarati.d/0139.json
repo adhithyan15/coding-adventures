@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:b72e547a2a6319d4",
+  "lessonIds": [
+    "GU-C139-mokalvu",
+    "GU-C139-bhulvu",
+    "GU-C139-sodhvu",
+    "GU-C139-vaparvu",
+    "GU-C139-banavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch139.txt",
+  "json": "gujarati/narration/ch139.json",
+  "textHash": "fnv1a64:0fc8a86ef4f32c61",
+  "jsonHash": "fnv1a64:5517b071884f65ee",
+  "findings": []
+}

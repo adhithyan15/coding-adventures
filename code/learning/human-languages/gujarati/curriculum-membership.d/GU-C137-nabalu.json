@@ -1,0 +1,11 @@
+{
+  "id": "GU-C137-nabalu",
+  "pathSegment": "GU-PATH-137-QUAL137",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-137-QUAL137",
+      "order": 3
+    }
+  ]
+}

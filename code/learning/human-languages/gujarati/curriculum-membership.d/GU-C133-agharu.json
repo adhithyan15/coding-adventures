@@ -1,0 +1,11 @@
+{
+  "id": "GU-C133-agharu",
+  "pathSegment": "GU-PATH-133-QUAL133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-133-QUAL133",
+      "order": 2
+    }
+  ]
+}

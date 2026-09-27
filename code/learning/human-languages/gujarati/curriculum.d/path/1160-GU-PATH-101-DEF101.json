@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-101-DEF101",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "GU-EXT-101-DEF101"
+  ],
+  "after": []
+}

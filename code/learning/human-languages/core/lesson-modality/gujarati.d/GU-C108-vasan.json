@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C108-vasan",
+    "language": "gujarati",
+    "chapter": 108,
+    "sequence": 5550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb7207c8f389d327"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:a95004e2bc399296",
+  "lessonIds": [
+    "GU-C137-garib",
+    "GU-C137-juvan",
+    "GU-C137-majbut",
+    "GU-C137-nabalu",
+    "GU-C137-jaruri"
+  ],
+  "tex": "gujarati/book/chapters/ch137-poor-young-strong-weak-necessary.tex"
+}

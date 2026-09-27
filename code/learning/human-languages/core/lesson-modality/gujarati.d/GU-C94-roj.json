@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C94-roj",
+    "language": "gujarati",
+    "chapter": 94,
+    "sequence": 4820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3b9a2ed51de31a9"
+  },
+  "findings": []
+}

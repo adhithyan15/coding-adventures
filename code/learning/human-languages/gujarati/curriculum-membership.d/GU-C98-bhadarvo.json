@@ -1,0 +1,11 @@
+{
+  "id": "GU-C98-bhadarvo",
+  "pathSegment": "GU-PATH-98-TIME98",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-98-TIME98",
+      "order": 3
+    }
+  ]
+}

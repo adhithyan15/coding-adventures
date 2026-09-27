@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Season, Summer, Winter, Monsoon, Spring",
+  "label": "ch:gu-season-summer-winter-monsoon-spring",
+  "canDo": "I can say a season, summer, winter, the monsoon and spring.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GU-C93-vasant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say a season, summer, winter, the monsoon and spring.",
+    "assesses": [
+      "GU-LEX-C93-TIME93-03",
+      "GU-LEX-C93-TIME93-04",
+      "GU-LEX-C93-TIME93-05"
+    ]
+  }
+}

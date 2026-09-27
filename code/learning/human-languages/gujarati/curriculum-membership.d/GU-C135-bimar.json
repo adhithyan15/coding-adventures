@@ -1,0 +1,11 @@
+{
+  "id": "GU-C135-bimar",
+  "pathSegment": "GU-PATH-135-QUAL135",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-135-QUAL135",
+      "order": 1
+    }
+  ]
+}
