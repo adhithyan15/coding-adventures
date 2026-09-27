@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-S124-letter-ya-filmstrip-D9PodgYv.svg`,import.meta.url).href;export{e as default};

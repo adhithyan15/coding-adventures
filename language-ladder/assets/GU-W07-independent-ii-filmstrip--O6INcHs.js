@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-W07-independent-ii-filmstrip-CNPQ6-I3.svg`,import.meta.url).href;export{e as default};

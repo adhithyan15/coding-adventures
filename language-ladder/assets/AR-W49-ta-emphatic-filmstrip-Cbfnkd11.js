@@ -1,0 +1,1 @@
+var e=``+new URL(`AR-W49-ta-emphatic-filmstrip-CbBEcWRF.svg`,import.meta.url).href;export{e as default};

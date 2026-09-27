@@ -1,0 +1,1 @@
+var e=``+new URL(`RU-W06-u-filmstrip-CFP_wrt7.svg`,import.meta.url).href;export{e as default};

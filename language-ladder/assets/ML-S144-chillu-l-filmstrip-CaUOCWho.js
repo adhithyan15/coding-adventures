@@ -1,0 +1,1 @@
+var e=``+new URL(`ML-S144-chillu-l-filmstrip-vf8VmqJ2.svg`,import.meta.url).href;export{e as default};

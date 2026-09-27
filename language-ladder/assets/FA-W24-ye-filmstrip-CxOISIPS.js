@@ -1,0 +1,1 @@
+var e=``+new URL(`FA-W24-ye-filmstrip-CnQ9oIJk.svg`,import.meta.url).href;export{e as default};

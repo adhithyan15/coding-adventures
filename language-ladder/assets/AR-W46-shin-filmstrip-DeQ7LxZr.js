@@ -1,0 +1,1 @@
+var e=``+new URL(`AR-W46-shin-filmstrip-gx4idnI0.svg`,import.meta.url).href;export{e as default};

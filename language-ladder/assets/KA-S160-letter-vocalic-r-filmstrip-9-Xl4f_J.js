@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S160-letter-vocalic-r-filmstrip-BNoNBP6J.svg`,import.meta.url).href;export{e as default};

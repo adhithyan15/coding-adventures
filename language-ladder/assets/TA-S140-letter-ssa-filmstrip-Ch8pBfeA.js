@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-S140-letter-ssa-filmstrip-isXxs73o.svg`,import.meta.url).href;export{e as default};

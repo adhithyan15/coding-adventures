@@ -1,0 +1,1 @@
+var e=``+new URL(`AR-W05-ya-and-my-name-filmstrip-BcKMANjb.svg`,import.meta.url).href;export{e as default};

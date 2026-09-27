@@ -1,0 +1,1 @@
+var e=``+new URL(`FA-W25-shin-filmstrip-DOJb1Al2.svg`,import.meta.url).href;export{e as default};

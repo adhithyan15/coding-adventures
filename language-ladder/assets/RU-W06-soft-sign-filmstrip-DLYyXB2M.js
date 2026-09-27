@@ -1,0 +1,1 @@
+var e=``+new URL(`RU-W06-soft-sign-filmstrip-B-J4jV98.svg`,import.meta.url).href;export{e as default};

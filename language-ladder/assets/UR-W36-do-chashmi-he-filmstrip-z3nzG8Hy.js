@@ -1,0 +1,1 @@
+var e=``+new URL(`UR-W36-do-chashmi-he-filmstrip-BbtXDbIS.svg`,import.meta.url).href;export{e as default};

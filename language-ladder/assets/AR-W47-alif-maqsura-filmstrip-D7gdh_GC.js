@@ -1,0 +1,1 @@
+var e=``+new URL(`AR-W47-alif-maqsura-filmstrip-DIP9yQAJ.svg`,import.meta.url).href;export{e as default};

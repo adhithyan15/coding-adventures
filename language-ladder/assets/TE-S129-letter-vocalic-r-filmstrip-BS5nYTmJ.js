@@ -1,0 +1,1 @@
+var e=``+new URL(`TE-S129-letter-vocalic-r-filmstrip-DmS8XafY.svg`,import.meta.url).href;export{e as default};

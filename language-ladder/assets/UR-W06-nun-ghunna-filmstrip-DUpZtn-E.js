@@ -1,0 +1,1 @@
+var e=``+new URL(`UR-W06-nun-ghunna-filmstrip-BZ2JIGHP.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`ZH-W15-tong-filmstrip-B71ruDNI.svg`,import.meta.url).href;export{e as default};

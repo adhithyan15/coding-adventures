@@ -1,0 +1,1 @@
+var e=``+new URL(`MR-W65-ai-independent-filmstrip-CstLZhb7.svg`,import.meta.url).href;export{e as default};

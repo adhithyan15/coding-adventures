@@ -1,0 +1,1 @@
+var e=``+new URL(`AR-W10-ayn-filmstrip-B95Ch72s.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W16-fu-filmstrip-25Ios_n3.svg`,import.meta.url).href;export{e as default};

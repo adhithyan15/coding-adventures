@@ -1,0 +1,1 @@
+var e=``+new URL(`HI-S135-letter-au-filmstrip-YMidWG7M.svg`,import.meta.url).href;export{e as default};
