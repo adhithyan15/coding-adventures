@@ -166,6 +166,11 @@ the patch version, new usable capabilities bump the minor version, and breaking
 compatibility changes bump the major version. Tags and releases are immutable;
 an existing version is never reused or overwritten.
 
+The `task-app-v0.5.0` checkpoint records honest TaskApp-level coverage for all
+nine Mosaic backends after the reviewed Paint visual-regression gate landed.
+It does not add Paint, static HTML, or Web Components to the downloadable
+artifact matrix; those outputs remain CI-only.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:
@@ -213,9 +218,10 @@ Release payloads distinguish directly runnable archives from generated projects:
 | Trestle.exe ZIP | Windows 10 2004+ / x64 | Verified self-contained portable app; unsigned and unpackaged |
 | XAML ZIP | Windows | Native-complete generated WinUI project with the Rust runtime |
 
-The TaskApp-scoped static HTML snapshot and Web Component parity bundle are
-CI-only verification outputs. They are not published artifacts and do not add
-runtime or platform coverage to this matrix.
+The TaskApp-scoped static HTML snapshot, Web Component parity bundle, and Paint
+goldens are CI-only verification outputs. They are not published artifacts and
+do not add runtime or platform coverage to this matrix. In particular, the
+Paint snapshots do not claim a Paint host or interaction support.
 
 The Linux archives are unpack-and-run bundles for compatible x86_64 systems, not
 signed distribution packages. Each includes exact prerequisites and a launcher
