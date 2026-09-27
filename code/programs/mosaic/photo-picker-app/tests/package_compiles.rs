@@ -1,7 +1,7 @@
 //! Compile-check for the PhotoPickerApp Mosaic package: the interface
 //! (.mil), layout (.mll), and both style themes (.msl) must compile, and
 //! the manifest must declare the exported component and the
-//! XAML/Qt/Flutter `[host_effects]` handlers (Compose and SwiftUI answer
+//! XAML/Flutter `[host_effects]` handlers (Compose, SwiftUI and Qt answer
 //! `files.open` from Mosaic's platform library, UI87 §7). Same shape of smoke
 //! test `task-app`/`engram-app` use.
 
@@ -38,7 +38,7 @@ fn photo_picker_app_sources_compile() {
 }
 
 #[test]
-fn manifest_declares_photo_picker_app_and_the_xaml_qt_and_flutter_files_open_handlers() {
+fn manifest_declares_photo_picker_app_and_the_xaml_and_flutter_files_open_handlers() {
     let manifest_src =
         fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"))
             .expect("mosaic-package.toml must exist");
@@ -69,37 +69,11 @@ fn manifest_declares_photo_picker_app_and_the_xaml_qt_and_flutter_files_open_han
     // something the build will hard-fail on.
     assert_eq!(xaml_handler.include, None);
 
-    // Qt names both its header and source under `files` (unlike SwiftUI/
-    // Compose, which compile whole directories) -- matching engram-app's own
-    // Qt `[host_effects]` entry exactly.
-    let qt_header = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "qt" && file.target == "PhotoPickerEffects.h")
-        .expect("must declare the Qt header file");
-    assert_eq!(qt_header.source, "host/qt/PhotoPickerEffects.h");
-    let qt_source = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "qt" && file.target == "PhotoPickerEffects.cpp")
-        .expect("must declare the Qt source file");
-    assert_eq!(qt_source.source, "host/qt/PhotoPickerEffects.cpp");
-
-    let qt_handler = package
-        .host_effects
-        .handlers
-        .iter()
-        .find(|handler| handler.backend == "qt")
-        .expect("must declare the Qt effect handler");
-    assert_eq!(qt_handler.install, "installPhotoPickerEffects");
-    assert_eq!(qt_handler.include.as_deref(), Some("PhotoPickerEffects.h"));
-
-    // No Compose or SwiftUI handler: Mosaic's platform library answers
+    // No Compose, SwiftUI or Qt handler: Mosaic's platform library answers
     // `files.open` on those backends (UI87 §7), and a package handler for a
-    // backend would wrap it for nothing (UI87 §7.4).
-    for backend in ["compose", "swiftui"] {
+    // backend would never be reached -- this app claims no kinds, so the
+    // router sends the standard ones to the library (UI87 §7.2, §7.4).
+    for backend in ["compose", "swiftui", "qt"] {
         assert!(
             package.host_effects.files.iter().all(|file| file.backend != backend),
             "no {backend} handler file: the platform library answers files.open"
@@ -167,29 +141,18 @@ fn xaml_handler_source_exists_and_declares_install() {
     assert!(source.contains("\"files.open\""));
 }
 
+/// UI87 §7.4: the Compose and Qt copies are gone for good, not merely unwired.
 #[test]
-fn qt_handler_sources_exist_and_declare_install() {
-    let header = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/qt/PhotoPickerEffects.h"),
-    )
-    .expect("host/qt/PhotoPickerEffects.h must exist");
-    assert!(header.contains("void installPhotoPickerEffects(MosaicHost &host)"));
-
-    let source = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/qt/PhotoPickerEffects.cpp"),
-    )
-    .expect("host/qt/PhotoPickerEffects.cpp must exist");
-    assert!(source.contains("void installPhotoPickerEffects(MosaicHost &host)"));
-    assert!(source.contains("effectRequested"));
-    assert!(source.contains("\"files.open\""));
-}
-
-/// UI87 §7.4: the Compose copy is gone for good, not merely unwired.
-#[test]
-fn the_compose_handler_is_retired_for_the_platform_library() {
-    assert!(!PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("host/compose")
-        .exists());
+fn the_compose_and_qt_handlers_are_retired_for_the_platform_library() {
+    for backend in ["compose", "qt"] {
+        assert!(
+            !PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("host")
+                .join(backend)
+                .exists(),
+            "host/{backend} is retired"
+        );
+    }
 }
 
 #[test]
