@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C129-cha",
+    "language": "punjabi",
+    "chapter": 129,
+    "sequence": 6970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47de47388fc8b262"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Crooked, Shiny, Wide, Narrow, Wet",
+  "label": "ch:pa-crooked-shiny-wide-narrow-wet",
+  "canDo": "I can say crooked, shiny, wide, narrow and wet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C142-gilla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say crooked, shiny, wide, narrow and wet.",
+    "assesses": [
+      "PA-LEX-C142-QUAL142-03",
+      "PA-LEX-C142-QUAL142-04",
+      "PA-LEX-C142-QUAL142-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C131-magarmacch",
+  "pathSegment": "PA-PATH-131-THINGS131",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-131-THINGS131",
+      "order": 3
+    }
+  ]
+}

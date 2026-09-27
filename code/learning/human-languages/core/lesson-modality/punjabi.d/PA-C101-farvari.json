@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C101-farvari",
+    "language": "punjabi",
+    "chapter": 101,
+    "sequence": 5420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d667ef8840c3884e"
+  },
+  "findings": []
+}

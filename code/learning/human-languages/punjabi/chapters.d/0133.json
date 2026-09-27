@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Rooster, Hen, Donkey, Owl, Crow",
+  "label": "ch:pa-rooster-hen-donkey-owl-crow",
+  "canDo": "I can say a rooster, a hen, a donkey, an owl and a crow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C133-ka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say a rooster, a hen, a donkey, an owl and a crow.",
+    "assesses": [
+      "PA-LEX-C133-THINGS133-03",
+      "PA-LEX-C133-THINGS133-04",
+      "PA-LEX-C133-THINGS133-05"
+    ]
+  }
+}

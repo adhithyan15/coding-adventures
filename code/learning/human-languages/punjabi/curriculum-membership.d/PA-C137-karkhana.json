@@ -1,0 +1,11 @@
+{
+  "id": "PA-C137-karkhana",
+  "pathSegment": "PA-PATH-137-THINGS137",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-137-THINGS137",
+      "order": 3
+    }
+  ]
+}

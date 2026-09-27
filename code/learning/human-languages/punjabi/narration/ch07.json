@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Six Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:acd65ee71d64de32",
+  "sourceHash": "fnv1a64:c34edd12bd9cfd72",
   "lessons": [
     {
       "id": "PA-C07-hona",
@@ -165,7 +165,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ac0d337851c33f8b",
+      "sourceHash": "fnv1a64:e30026567f8d243c",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 123,
+  "output": "punjabi/book/chapters/ch123-garlic-ginger-coconut-watermelon-papaya.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

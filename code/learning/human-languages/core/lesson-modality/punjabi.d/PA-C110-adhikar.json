@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C110-adhikar",
+    "language": "punjabi",
+    "chapter": 110,
+    "sequence": 5920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb44c74f9bb4a10c"
+  },
+  "findings": []
+}

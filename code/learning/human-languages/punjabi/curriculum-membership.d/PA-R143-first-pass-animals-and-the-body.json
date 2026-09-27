@@ -1,0 +1,11 @@
+{
+  "id": "PA-R143-first-pass-animals-and-the-body",
+  "pathSegment": "PA-PATH-143-QUAL143",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-143-QUAL143",
+      "order": 5
+    }
+  ]
+}

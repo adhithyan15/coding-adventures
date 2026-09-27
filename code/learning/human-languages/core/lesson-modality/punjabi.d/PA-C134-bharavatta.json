@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C134-bharavatta",
+    "language": "punjabi",
+    "chapter": 134,
+    "sequence": 7220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:311293f42cae5a7e"
+  },
+  "findings": []
+}

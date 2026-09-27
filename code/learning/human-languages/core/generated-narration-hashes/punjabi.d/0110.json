@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:1a8283a74be13e85",
+  "lessonIds": [
+    "PA-C110-shakti",
+    "PA-C110-hakk",
+    "PA-C110-adhikar",
+    "PA-C110-mauka",
+    "PA-C110-jaidad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch110.txt",
+  "json": "punjabi/narration/ch110.json",
+  "textHash": "fnv1a64:490113b910b3ab6a",
+  "jsonHash": "fnv1a64:536c473f889b7d5f",
+  "findings": []
+}

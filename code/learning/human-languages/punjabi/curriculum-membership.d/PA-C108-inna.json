@@ -1,0 +1,11 @@
+{
+  "id": "PA-C108-inna",
+  "pathSegment": "PA-PATH-108-DEF108",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-108-DEF108",
+      "order": 0
+    }
+  ]
+}

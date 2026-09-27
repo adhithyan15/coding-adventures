@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C146-sacca",
+    "language": "punjabi",
+    "chapter": 146,
+    "sequence": 7930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee6d69cea35b2606"
+  },
+  "findings": []
+}

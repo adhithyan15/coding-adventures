@@ -1,0 +1,11 @@
+{
+  "id": "PA-C145-taza",
+  "pathSegment": "PA-PATH-145-QUAL145",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-145-QUAL145",
+      "order": 4
+    }
+  ]
+}

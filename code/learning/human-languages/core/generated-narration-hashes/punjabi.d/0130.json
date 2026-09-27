@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:fdc3c37cde5712b5",
+  "lessonIds": [
+    "PA-C130-hiran",
+    "PA-C130-ricch",
+    "PA-C130-giddar",
+    "PA-C130-baghiar",
+    "PA-C130-kabutar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch130.txt",
+  "json": "punjabi/narration/ch130.json",
+  "textHash": "fnv1a64:83c26f5568b09638",
+  "jsonHash": "fnv1a64:179ecb24957c1672",
+  "findings": []
+}

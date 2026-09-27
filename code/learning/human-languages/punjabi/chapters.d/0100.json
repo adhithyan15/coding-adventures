@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Rainy season, Spring, Autumn, Every day, Date",
+  "label": "ch:pa-rainy-season-spring-autumn-every-day-date",
+  "canDo": "I can say the rainy season, spring, autumn, every day and a date.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PA-C100-tarikh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say the rainy season, spring, autumn, every day and a date.",
+    "assesses": [
+      "PA-LEX-C100-TIME100-03",
+      "PA-LEX-C100-TIME100-04",
+      "PA-LEX-C100-TIME100-05"
+    ]
+  }
+}

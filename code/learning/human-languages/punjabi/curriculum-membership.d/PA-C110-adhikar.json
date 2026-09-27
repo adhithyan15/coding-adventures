@@ -1,0 +1,11 @@
+{
+  "id": "PA-C110-adhikar",
+  "pathSegment": "PA-PATH-110-CAN110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-110-CAN110",
+      "order": 2
+    }
+  ]
+}

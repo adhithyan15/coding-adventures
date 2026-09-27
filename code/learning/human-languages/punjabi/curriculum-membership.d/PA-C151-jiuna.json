@@ -1,0 +1,11 @@
+{
+  "id": "PA-C151-jiuna",
+  "pathSegment": "PA-PATH-151-ACT151",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-151-ACT151",
+      "order": 1
+    }
+  ]
+}

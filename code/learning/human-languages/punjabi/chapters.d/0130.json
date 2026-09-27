@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Deer, Bear, Jackal, Wolf, Pigeon",
+  "label": "ch:pa-deer-bear-jackal-wolf-pigeon",
+  "canDo": "I can say a deer, a bear, a jackal, a wolf and a pigeon.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C130-kabutar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a deer, a bear, a jackal, a wolf and a pigeon.",
+    "assesses": [
+      "PA-LEX-C130-THINGS130-03",
+      "PA-LEX-C130-THINGS130-04",
+      "PA-LEX-C130-THINGS130-05"
+    ]
+  }
+}

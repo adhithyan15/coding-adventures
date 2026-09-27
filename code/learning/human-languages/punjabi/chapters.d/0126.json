@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Grass, Seed, Root, Bud, Island",
+  "label": "ch:pa-grass-seed-root-bud-island",
+  "canDo": "I can say grass, a seed, a root, a bud and an island.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C126-tapu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say grass, a seed, a root, a bud and an island.",
+    "assesses": [
+      "PA-LEX-C126-THINGS126-03",
+      "PA-LEX-C126-THINGS126-04",
+      "PA-LEX-C126-THINGS126-05"
+    ]
+  }
+}

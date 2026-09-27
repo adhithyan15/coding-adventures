@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C113-chatri",
+    "language": "punjabi",
+    "chapter": 113,
+    "sequence": 6050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2c570aea8126f2c"
+  },
+  "findings": []
+}

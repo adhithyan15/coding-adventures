@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C145-taza",
+    "language": "punjabi",
+    "chapter": 145,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cee358a3ff46cf4"
+  },
+  "findings": []
+}

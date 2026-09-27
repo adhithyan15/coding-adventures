@@ -1,0 +1,11 @@
+{
+  "id": "PA-C118-sirhana",
+  "pathSegment": "PA-PATH-118-THINGS118",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-118-THINGS118",
+      "order": 2
+    }
+  ]
+}

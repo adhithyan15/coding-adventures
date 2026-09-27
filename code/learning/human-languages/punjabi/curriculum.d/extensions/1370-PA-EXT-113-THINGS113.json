@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-113-THINGS113",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an umbrella, a bowl, a glass, a cooking pot and a comb.",
+  "prerequisites": []
+}

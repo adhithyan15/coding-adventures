@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-107-DEF107",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "PA-EXT-107-DEF107"
+  ],
+  "after": []
+}

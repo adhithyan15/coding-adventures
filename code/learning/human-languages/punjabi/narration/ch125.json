@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 125,
+  "title": "Halwa, Spice, Turmeric, Cumin, Fritter",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ecea9c4115dc89b4",
+  "lessons": [
+    {
+      "id": "PA-C125-halva",
+      "sequence": 6700,
+      "title": "ਹਲਵਾ (halvā) — halwa",
+      "headword": "ਹਲਵਾ",
+      "romanization": "halvā",
+      "gloss": "halwa",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b0e1dafebea3ec7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for lassi, then the Punjabi for rice pudding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹਲਵਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਲਵਾ — halvā — \"halwa\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "halvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *halvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "halvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *halvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say halvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *halvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for lassi, then the Punjabi for rice pudding, then say halvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for lassi, then the Punjabi for rice pudding, then say *halvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹਲਵਾ (halvā) mean? (\"Halwa\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C125-masala",
+      "sequence": 6710,
+      "title": "ਮਸਾਲਾ (masālā) — spice",
+      "headword": "ਮਸਾਲਾ",
+      "romanization": "masālā",
+      "gloss": "spice",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd411b4ffbd43d78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for rice pudding, then the Punjabi for halwa."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਸਾਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਸਾਲਾ — masālā — \"spice\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masālā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masālā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say masālā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *masālā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for rice pudding, then the Punjabi for halwa, then say masālā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for rice pudding, then the Punjabi for halwa, then say *masālā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਸਾਲਾ (masālā) mean? (\"Spice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C125-haldi",
+      "sequence": 6720,
+      "title": "ਹਲਦੀ (haldī) — turmeric",
+      "headword": "ਹਲਦੀ",
+      "romanization": "haldī",
+      "gloss": "turmeric",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2ec7350bb76fa7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for halwa, then the Punjabi for spice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹਲਦੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਲਦੀ — haldī — \"turmeric\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haldī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haldī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haldī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haldī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say haldī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *haldī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for halwa, then the Punjabi for spice, then say haldī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for halwa, then the Punjabi for spice, then say *haldī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹਲਦੀ (haldī) mean? (\"Turmeric\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C125-jira",
+      "sequence": 6730,
+      "title": "ਜੀਰਾ (jīrā) — cumin",
+      "headword": "ਜੀਰਾ",
+      "romanization": "jīrā",
+      "gloss": "cumin",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd3a17cf01eb95f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for spice, then the Punjabi for turmeric."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜੀਰਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੀਰਾ — jīrā — \"cumin\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jīrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jīrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for spice, then the Punjabi for turmeric, then say jīrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for spice, then the Punjabi for turmeric, then say *jīrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜੀਰਾ (jīrā) mean? (\"Cumin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C125-pakaura",
+      "sequence": 6740,
+      "title": "ਪਕੌੜਾ (pakauṛā) — a fritter",
+      "headword": "ਪਕੌੜਾ",
+      "romanization": "pakauṛā",
+      "gloss": "a fritter",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:545b4441c9f39447",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for turmeric, then the Punjabi for cumin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਕੌੜਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਕੌੜਾ — pakauṛā — \"a fritter\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakauṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakauṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakauṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakauṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pakauṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pakauṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for turmeric, then the Punjabi for cumin, then say pakauṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for turmeric, then the Punjabi for cumin, then say *pakauṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਕੌੜਾ (pakauṛā) mean? (\"A fritter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R125-first-pass-the-house-and-clothes",
+      "sequence": 6750,
+      "title": "The house and clothes — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 117-120",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69c3e75c99b2d9b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for cumin and a fritter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rubbish, a basket, a box, a clay water pot, a candle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rubbish, a basket, a box, a clay water pot, a candle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matches, a carpet, a pillow, a doll, a toy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: matches, a carpet, a pillow, a doll, a toy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cot, pyjamas, a salwar, a scarf, a belt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cot, pyjamas, a salwar, a scarf, a belt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a handkerchief, a sweater, a coat, a ring, a bangle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a handkerchief, a sweater, a coat, a ring, a bangle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rubbish? (ਕੂੜਾ, kūṛā.) A basket? (ਟੋਕਰੀ, ṭokrī.) A box? (ਡੱਬਾ, ḍabbā.) A clay water pot? (ਘੜਾ, ghaṛā.) A candle? (ਮੋਮਬੱਤੀ, mombattī.) Matches? (ਮਾਚਿਸ, mācis.) A carpet? (ਗਲੀਚਾ, galīcā.) A pillow? (ਸਿਰਹਾਣਾ, sirhāṇā.) A doll? (ਗੁੱਡੀ, guḍḍī.) A toy? (ਖਿਡੌਣਾ, khiḍauṇā.) A cot? (ਮੰਜਾ, mañjā.) Pyjamas? (ਪਜਾਮਾ, pajāmā.) A salwar? (ਸਲਵਾਰ, salvār.) A scarf? (ਚੁੰਨੀ, cunnī.) A belt? (ਪੇਟੀ, peṭī.) A handkerchief? (ਰੁਮਾਲ, rumāl.) A sweater? (ਸਵੈਟਰ, savaiṭar.) A coat? (ਕੋਟ, koṭ.) A ring? (ਅੰਗੂਠੀ, angūṭhī.) A bangle? (ਕੰਗਣ, kangaṇ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R125-second-pass-clothes-and-food",
+      "sequence": 6760,
+      "title": "Clothes and food — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 121-125",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d49a0eaed4b05b6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an earring and a steel bracelet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an earring, a steel bracelet, jaggery, chickpeas, mung beans",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an earring, a steel bracelet, jaggery, chickpeas, mung beans]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "millet, wheat, maize, an aubergine, a cauliflower",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: millet, wheat, maize, an aubergine, a cauliflower]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garlic, ginger, a coconut, a watermelon, a papaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: garlic, ginger, a coconut, a watermelon, a papaya]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a guava, peanuts, cooked greens, lassi, rice pudding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a guava, peanuts, cooked greens, lassi, rice pudding]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "halwa, spice, turmeric, cumin, a fritter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: halwa, spice, turmeric, cumin, a fritter]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An earring? (ਵਾਲੀ, vālī.) A steel bracelet? (ਕੜਾ, kaṛā.) Jaggery? (ਗੁੜ, guṛ.) Chickpeas? (ਛੋਲੇ, chole.) Mung beans? (ਮੂੰਗੀ, mū̃gī.) Millet? (ਬਾਜਰਾ, bājrā.) Wheat? (ਕਣਕ, kaṇak.) Maize? (ਮੱਕੀ, makkī.) An aubergine? (ਬੈਂਗਣ, baĩgaṇ.) A cauliflower? (ਗੋਭੀ, gobhī.) Garlic? (ਲਸਣ, lasaṇ.) Ginger? (ਅਦਰਕ, adrak.) A coconut? (ਨਾਰੀਅਲ, nārīal.) A watermelon? (ਤਰਬੂਜ਼, tarbūz.) A papaya? (ਪਪੀਤਾ, papītā.) A guava? (ਅਮਰੂਦ, amrūd.) Peanuts? (ਮੂੰਗਫਲੀ, mū̃gphalī.) Cooked greens? (ਸਾਗ, sāg.) Lassi? (ਲੱਸੀ, lassī.) Rice pudding? (ਖੀਰ, khīr.) Halwa? (ਹਲਵਾ, halvā.) Spice? (ਮਸਾਲਾ, masālā.) Turmeric? (ਹਲਦੀ, haldī.) Cumin? (ਜੀਰਾ, jīrā.) A fritter? (ਪਕੌੜਾ, pakauṛā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

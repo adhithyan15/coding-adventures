@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:b9b0174399dc9211",
+  "lessonIds": [
+    "PA-C104-jeth",
+    "PA-C104-har",
+    "PA-C104-savan",
+    "PA-C104-bhado",
+    "PA-C104-assu"
+  ],
+  "tex": "punjabi/book/chapters/ch104-jeth-harh-savan-bhadon-assu.tex"
+}

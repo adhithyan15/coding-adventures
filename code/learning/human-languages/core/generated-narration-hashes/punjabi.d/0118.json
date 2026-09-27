@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:0e589c7c3ac37429",
+  "lessonIds": [
+    "PA-C118-macis",
+    "PA-C118-galica",
+    "PA-C118-sirhana",
+    "PA-C118-guddi",
+    "PA-C118-khidauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch118.txt",
+  "json": "punjabi/narration/ch118.json",
+  "textHash": "fnv1a64:0f6c08d17b4509fb",
+  "jsonHash": "fnv1a64:3713c39b3587a85a",
+  "findings": []
+}

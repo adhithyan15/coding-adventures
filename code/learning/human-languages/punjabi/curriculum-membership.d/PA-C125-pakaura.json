@@ -1,0 +1,11 @@
+{
+  "id": "PA-C125-pakaura",
+  "pathSegment": "PA-PATH-125-THINGS125",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-125-THINGS125",
+      "order": 4
+    }
+  ]
+}

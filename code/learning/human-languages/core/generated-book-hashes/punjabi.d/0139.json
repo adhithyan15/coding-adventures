@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:6b13d5e8481dbddf",
+  "lessonIds": [
+    "PA-C139-tankhah",
+    "PA-C139-darzi",
+    "PA-C139-tarkhan",
+    "PA-C139-luhar",
+    "PA-C139-ghumiar"
+  ],
+  "tex": "punjabi/book/chapters/ch139-salary-tailor-carpenter-blacksmith-potter.tex"
+}

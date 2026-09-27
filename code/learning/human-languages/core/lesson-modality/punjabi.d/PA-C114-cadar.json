@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C114-cadar",
+    "language": "punjabi",
+    "chapter": 114,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1490032f89ca6ba"
+  },
+  "findings": []
+}

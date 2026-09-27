@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Salary, Tailor, Carpenter, Blacksmith, Potter",
+  "label": "ch:pa-salary-tailor-carpenter-blacksmith-potter",
+  "canDo": "I can say a salary, a tailor, a carpenter, a blacksmith and a potter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C139-ghumiar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say a salary, a tailor, a carpenter, a blacksmith and a potter.",
+    "assesses": [
+      "PA-LEX-C139-THINGS139-03",
+      "PA-LEX-C139-THINGS139-04",
+      "PA-LEX-C139-THINGS139-05"
+    ]
+  }
+}

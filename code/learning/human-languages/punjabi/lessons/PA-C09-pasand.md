@@ -9,7 +9,7 @@ headword: ਪਸੰਦ
 romanization: pasand
 gloss: liked, pleasing — a Persian noun, not a verb, in the one sentence that will not let you be its subject
 concept_tag: VERB-LIKE-LOVE
-prerequisites: [PA-C09-madad-karna, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora, PA-S06-kakka-aira-aara]
+prerequisites: [PA-C09-madad-karna, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora, PA-S06-kakka-aira-aara, PA-C06-numbers-1-5-more, PA-C06-panj-convergence-homegrown]
 sounds: [tippi-nasal, dental-da]
 roots: [persian-pasand, proto-iranian-pati-sand]
 etymology_hook: ਪਸੰਦ is Persian pasand, from *pati- “towards” plus *sand “to look good” — a prefix doing the same job as the ā- of ਆਉਣਾ; it entered Punjabi as a noun, and a noun cannot carry the person doing the liking, so that person moves into ਮੈਨੂੰ.

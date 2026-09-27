@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:5ca411ffcee55667",
+  "lessonIds": [
+    "PA-C133-kukkar",
+    "PA-C133-murgi",
+    "PA-C133-gadha",
+    "PA-C133-ullu",
+    "PA-C133-ka"
+  ],
+  "tex": "punjabi/book/chapters/ch133-rooster-hen-donkey-owl-crow.tex"
+}

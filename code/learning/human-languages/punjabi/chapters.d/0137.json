@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Ship, Traveller, Office, Factory, Library",
+  "label": "ch:pa-ship-traveller-office-factory-library",
+  "canDo": "I can say a ship, a traveller, an office, a factory and a library.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C137-laibreri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say a ship, a traveller, an office, a factory and a library.",
+    "assesses": [
+      "PA-LEX-C137-THINGS137-03",
+      "PA-LEX-C137-THINGS137-04",
+      "PA-LEX-C137-THINGS137-05"
+    ]
+  }
+}

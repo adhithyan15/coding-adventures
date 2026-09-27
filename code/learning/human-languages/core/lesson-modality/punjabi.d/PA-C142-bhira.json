@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C142-bhira",
+    "language": "punjabi",
+    "chapter": 142,
+    "sequence": 7680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13987c3e9ae5db9c"
+  },
+  "findings": []
+}

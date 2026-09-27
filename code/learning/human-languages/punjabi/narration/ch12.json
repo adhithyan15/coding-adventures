@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:537d1bf3391cdc1f",
+  "sourceHash": "fnv1a64:d8de05de83ba23e0",
   "lessons": [
     {
       "id": "PA-C12-akkh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:81a848ddf9ffcbba",
+      "sourceHash": "fnv1a64:e3df1b6e2fc2d102",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:59fa85b914283fbc",
+      "sourceHash": "fnv1a64:472010febd18393c",
       "notice": {
         "modality": "sight",
         "needs": [

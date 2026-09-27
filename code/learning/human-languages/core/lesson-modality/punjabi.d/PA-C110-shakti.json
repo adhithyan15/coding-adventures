@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C110-shakti",
+    "language": "punjabi",
+    "chapter": 110,
+    "sequence": 5900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd322b05eed75ec7"
+  },
+  "findings": []
+}

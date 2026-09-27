@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:4d17ffeb51058b8d",
+  "lessonIds": [
+    "PA-C128-maruthal",
+    "PA-C128-bijli",
+    "PA-C128-tufan",
+    "PA-C128-dharti",
+    "PA-C128-canni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch128.txt",
+  "json": "punjabi/narration/ch128.json",
+  "textHash": "fnv1a64:fc43f399de60f3bf",
+  "jsonHash": "fnv1a64:cdf9d7c4e907ab4b",
+  "findings": []
+}

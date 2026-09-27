@@ -1,0 +1,11 @@
+{
+  "id": "PA-C129-satrangipingh",
+  "pathSegment": "PA-PATH-129-THINGS129",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-129-THINGS129",
+      "order": 3
+    }
+  ]
+}

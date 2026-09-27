@@ -1,0 +1,11 @@
+{
+  "id": "PA-C142-caura",
+  "pathSegment": "PA-PATH-142-QUAL142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-142-QUAL142",
+      "order": 2
+    }
+  ]
+}

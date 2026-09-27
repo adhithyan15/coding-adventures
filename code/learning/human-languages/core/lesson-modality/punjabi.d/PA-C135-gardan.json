@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C135-gardan",
+    "language": "punjabi",
+    "chapter": 135,
+    "sequence": 7300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8826f5d7d206b19"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:8d4c98c2bb706f96",
+  "lessonIds": [
+    "PA-C102-mai",
+    "PA-C102-jun",
+    "PA-C102-julai",
+    "PA-C102-agast",
+    "PA-C102-satambar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch102.txt",
+  "json": "punjabi/narration/ch102.json",
+  "textHash": "fnv1a64:473d749d49147a52",
+  "jsonHash": "fnv1a64:28ddb0d705a7c20e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C148-cukkna",
+    "language": "punjabi",
+    "chapter": 148,
+    "sequence": 8030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b7b7bf361b33b20"
+  },
+  "findings": []
+}

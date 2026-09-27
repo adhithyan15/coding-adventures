@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:91c879e57d651bad",
+  "lessonIds": [
+    "PA-C113-chatri",
+    "PA-C113-kauli",
+    "PA-C113-galas",
+    "PA-C113-patila",
+    "PA-C113-kanghi"
+  ],
+  "tex": "punjabi/book/chapters/ch113-umbrella-bowl-glass-cooking-pot-comb.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C137-jahaz",
+    "language": "punjabi",
+    "chapter": 137,
+    "sequence": 7400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c1a48e513243448"
+  },
+  "findings": []
+}

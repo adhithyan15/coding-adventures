@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:c6378842ebb5d3a3",
+  "lessonIds": [
+    "PA-C145-bahadar",
+    "PA-C145-shat",
+    "PA-C145-bhukkha",
+    "PA-C145-piasa",
+    "PA-C145-taza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch145.txt",
+  "json": "punjabi/narration/ch145.json",
+  "textHash": "fnv1a64:bd79de583c6f1544",
+  "jsonHash": "fnv1a64:6fae9bad736e7470",
+  "findings": []
+}

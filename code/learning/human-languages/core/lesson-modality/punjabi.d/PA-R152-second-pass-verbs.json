@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R152-second-pass-verbs",
+    "language": "punjabi",
+    "chapter": 152,
+    "sequence": 8260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b633e5315b521b2e"
+  },
+  "findings": []
+}

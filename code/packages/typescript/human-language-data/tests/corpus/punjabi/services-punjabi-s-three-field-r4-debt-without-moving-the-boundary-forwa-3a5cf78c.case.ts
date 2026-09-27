@@ -51,7 +51,9 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
   );
   // HL-C443: +1, from ਮੌਸਮ (mausam), the anchor word placed before the
   // chapter-20 ੌ lesson. Every bridge lesson sits after it.
-  expect(bridge.map((lesson) => orderedAtR4.indexOf(lesson))).toEqual([159, 160, 161, 162, 163, 164, 165, 166]);
+  // Punjabi A1: chapter 6's two over-budget lessons split into three -more
+  // continuations ahead of this point, so these positions move by 3.
+  expect(bridge.map((lesson) => orderedAtR4.indexOf(lesson))).toEqual([162, 163, 164, 165, 166, 167, 168, 169]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
@@ -140,5 +142,7 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
   // the R4 window of ਨੱਕ (the word and its etymon) now begins inside it. The
   // whole track still services both, in PA-R27-nose-heart-r4, which this
   // prefix leaves out by design.
-  expect(report.summary.missedByWindow.R4).toBe(97);
+  // 97 -> 96. Punjabi A1: the prefix moves 3 later with the chapter-6
+  // continuations, and one R4 window it used to leave open is now closed.
+  expect(report.summary.missedByWindow.R4).toBe(96);
 });

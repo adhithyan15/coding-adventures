@@ -1,0 +1,11 @@
+{
+  "id": "PA-C143-kaura",
+  "pathSegment": "PA-PATH-143-QUAL143",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-143-QUAL143",
+      "order": 3
+    }
+  ]
+}

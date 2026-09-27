@@ -1,11 +1,14 @@
 {
   "language": "punjabi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:add43cc98212b004",
+  "sourceHash": "fnv1a64:68d898c1b3b6f1ea",
   "lessonIds": [
     "PA-S06-kakka-aira-aara",
     "PA-C06-numbers-1-5",
-    "PA-C06-panj-convergence"
+    "PA-C06-numbers-1-5-more",
+    "PA-C06-panj-convergence",
+    "PA-C06-panj-convergence-homegrown",
+    "PA-C06-panj-convergence-homegrown-persian"
   ],
   "tex": "punjabi/book/chapters/ch06-numbers-1-5.tex"
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C101-janvari",
+    "language": "punjabi",
+    "chapter": 101,
+    "sequence": 5410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eff1f6c4bbe7f774"
+  },
+  "findings": []
+}

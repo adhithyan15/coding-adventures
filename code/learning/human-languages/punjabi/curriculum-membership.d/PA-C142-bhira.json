@@ -1,0 +1,11 @@
+{
+  "id": "PA-C142-bhira",
+  "pathSegment": "PA-PATH-142-QUAL142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-142-QUAL142",
+      "order": 3
+    }
+  ]
+}

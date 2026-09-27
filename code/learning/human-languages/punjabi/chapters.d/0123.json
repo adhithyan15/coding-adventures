@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Garlic, Ginger, Coconut, Watermelon, Papaya",
+  "label": "ch:pa-garlic-ginger-coconut-watermelon-papaya",
+  "canDo": "I can say garlic, ginger, a coconut, a watermelon and a papaya.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C123-papita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say garlic, ginger, a coconut, a watermelon and a papaya.",
+    "assesses": [
+      "PA-LEX-C123-THINGS123-03",
+      "PA-LEX-C123-THINGS123-04",
+      "PA-LEX-C123-THINGS123-05"
+    ]
+  }
+}

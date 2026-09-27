@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Right now, January, February, March, April",
+  "label": "ch:pa-right-now-january-february-march-april",
+  "canDo": "I can say right now, January, February, March and April.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PA-C101-aprail",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say right now, January, February, March and April.",
+    "assesses": [
+      "PA-LEX-C101-TIME101-03",
+      "PA-LEX-C101-TIME101-04",
+      "PA-LEX-C101-TIME101-05"
+    ]
+  }
+}

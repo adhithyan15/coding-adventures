@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C123-lasan",
+    "language": "punjabi",
+    "chapter": 123,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b22856ce6327002"
+  },
+  "findings": []
+}

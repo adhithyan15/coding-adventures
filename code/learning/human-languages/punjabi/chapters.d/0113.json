@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Umbrella, Bowl, Glass, Cooking pot, Comb",
+  "label": "ch:pa-umbrella-bowl-glass-cooking-pot-comb",
+  "canDo": "I can say an umbrella, a bowl, a glass, a cooking pot and a comb.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C113-kanghi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say an umbrella, a bowl, a glass, a cooking pot and a comb.",
+    "assesses": [
+      "PA-LEX-C113-THINGS113-03",
+      "PA-LEX-C113-THINGS113-04",
+      "PA-LEX-C113-THINGS113-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C133-murgi",
+    "language": "punjabi",
+    "chapter": 133,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8442f699ddc98fc"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:5bc30429382e04e6",
+  "lessonIds": [
+    "PA-C146-beha",
+    "PA-C146-pakka",
+    "PA-C146-kacca",
+    "PA-C146-sacca",
+    "PA-C146-jhutha"
+  ],
+  "tex": "punjabi/book/chapters/ch146-stale-ripe-raw-true-false.tex"
+}

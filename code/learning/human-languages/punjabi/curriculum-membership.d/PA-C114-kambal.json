@@ -1,0 +1,11 @@
+{
+  "id": "PA-C114-kambal",
+  "pathSegment": "PA-PATH-114-THINGS114",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-114-THINGS114",
+      "order": 4
+    }
+  ]
+}

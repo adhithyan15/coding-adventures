@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C137-laibreri",
+    "language": "punjabi",
+    "chapter": 137,
+    "sequence": 7440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c14820609e5dabf"
+  },
+  "findings": []
+}

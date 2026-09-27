@@ -1,0 +1,11 @@
+{
+  "id": "PA-C122-kanak",
+  "pathSegment": "PA-PATH-122-THINGS122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-122-THINGS122",
+      "order": 1
+    }
+  ]
+}

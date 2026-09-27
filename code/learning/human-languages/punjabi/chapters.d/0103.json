@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "October, November, December, Chet, Visakh",
+  "label": "ch:pa-october-november-december-chet-visakh",
+  "canDo": "I can say October, November, December, Chet and Visakh.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PA-C103-visakh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say October, November, December, Chet and Visakh.",
+    "assesses": [
+      "PA-LEX-C103-TIME103-03",
+      "PA-LEX-C103-TIME103-04",
+      "PA-LEX-C103-TIME103-05"
+    ]
+  }
+}
