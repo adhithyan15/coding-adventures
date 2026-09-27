@@ -1,26 +1,26 @@
 {
   "lesson": {
-    "id": "SA-S201-sign-visarga",
+    "id": "SA-W03-namah-delayed-copy",
     "language": "sanskrit",
-    "chapter": 2,
-    "sequence": 81,
+    "chapter": 3,
+    "sequence": 190,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "sight-cue"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:cb849a56da55d050",
+    "sourceHash": "fnv1a64:b6dfb0cf9d34bc52",
     "detachableSegments": [
-      "Script you'll notice: ◌ः",
-      "Writing: ◌ः — copy what you see"
+      "Writing — delayed visarga copy"
     ],
     "delivery": "script"
   },

@@ -20,12 +20,16 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
     ["SA-S02-copy-the-three-strokes", "guided-copy"],
     ["SA-S02-delayed-copy", "delayed-copy"],
     ["SA-S02-dictation", "dictation-transcription"],
+    ["SA-S201-sign-visarga", "observe-trace"],
     ["SA-W03-mama-guided-copy", "guided-copy"],
     ["SA-W03-mama-delayed-copy", "delayed-copy"],
     ["SA-W03-mama-dictation", "dictation-transcription"],
     ["SA-W03-mama-nama-guided-copy", "guided-copy"],
     ["SA-W03-mama-nama-delayed-copy", "delayed-copy"],
     ["SA-W03-mama-nama-dictation", "dictation-transcription"],
+    ["SA-W03-namah-guided-copy", "guided-copy"],
+    ["SA-W03-namah-delayed-copy", "delayed-copy"],
+    ["SA-W03-namah-dictation", "dictation-transcription"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({
@@ -35,7 +39,7 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
   });
 });
 
-it("extends the sourced single-letter ladder through a known word and phrase", () => {
+it("extends the sourced single-letter ladder through a known word, phrase, and visarga", () => {
   const ids = [
     "SA-W03-mama-guided-copy",
     "SA-W03-mama-delayed-copy",
@@ -43,6 +47,9 @@ it("extends the sourced single-letter ladder through a known word and phrase", (
     "SA-W03-mama-nama-guided-copy",
     "SA-W03-mama-nama-delayed-copy",
     "SA-W03-mama-nama-dictation",
+    "SA-W03-namah-guided-copy",
+    "SA-W03-namah-delayed-copy",
+    "SA-W03-namah-dictation",
   ];
   const lessons = loadTrackLessons("sanskrit")
     .sort(readingOrder)
@@ -50,7 +57,7 @@ it("extends the sourced single-letter ladder through a known word and phrase", (
 
   expect(lessons.map((lesson) => lesson.realization.lessonId)).toEqual(ids);
   expect(lessons.map((lesson) => Number(lesson.frontmatter["duration.max_seconds"]))).toEqual([
-    150, 120, 120, 180, 150, 150,
+    150, 120, 120, 180, 150, 150, 150, 120, 120,
   ]);
   for (let index = 1; index < lessons.length; index += 1) {
     expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);
@@ -65,4 +72,9 @@ it("extends the sourced single-letter ladder through a known word and phrase", (
   expect(markdown[4]).toContain("Keep the two words apart");
   expect(markdown[5]).toContain("from sound and meaning alone");
   expect(markdown[5]).toContain("connected text");
+  expect(markdown[6]).toContain("not new vocabulary");
+  expect(markdown[7]).toContain("no visible answer and no");
+  expect(markdown[7]).toContain("romanization");
+  expect(markdown[8]).toContain("from sound and meaning alone");
+  expect(markdown[8]).toContain("Vocalic ṛ");
 });

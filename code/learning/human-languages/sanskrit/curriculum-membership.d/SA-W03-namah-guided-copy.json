@@ -1,0 +1,11 @@
+{
+  "id": "SA-W03-namah-guided-copy",
+  "pathSegment": "SA-PATH-005",
+  "pathOrder": 17,
+  "extensions": [
+    {
+      "id": "SA-EXT-140-WRITING-VISARGA-BRIDGE",
+      "order": 0
+    }
+  ]
+}
