@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:d55f4cac13c4f2dc",
+  "lessonIds": [
+    "FA-C79-zohr",
+    "FA-C79-pariruz",
+    "FA-C79-emshab",
+    "FA-C79-dishab",
+    "FA-C79-zaman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch79.txt",
+  "json": "persian/narration/ch79.json",
+  "textHash": "fnv1a64:ab9266bfc1a354ce",
+  "jsonHash": "fnv1a64:9f5ea235754de578",
+  "findings": []
+}

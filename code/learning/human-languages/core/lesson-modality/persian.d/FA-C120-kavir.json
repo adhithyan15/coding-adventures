@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C120-kavir",
+    "language": "persian",
+    "chapter": 120,
+    "sequence": 6110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51efe931ecc12e8d"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:f02483f0a9e6817a",
+  "lessonIds": [
+    "FA-C124-barik",
+    "FA-C124-gowd",
+    "FA-C124-khis",
+    "FA-C124-khoshk",
+    "FA-C124-narm"
+  ],
+  "tex": "persian/book/chapters/ch124-narrow-deep-wet-dry-soft.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:946b6d39d75169b3",
+  "lessonIds": [
+    "FA-C85-kodam",
+    "FA-C85-koja",
+    "FA-C85-kenar",
+    "FA-C85-vasat",
+    "FA-C85-zir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch85.txt",
+  "json": "persian/narration/ch85.json",
+  "textHash": "fnv1a64:4487d7d1089599a7",
+  "jsonHash": "fnv1a64:d366ff0b5512b761",
+  "findings": []
+}

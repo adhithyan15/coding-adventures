@@ -1,0 +1,11 @@
+{
+  "id": "FA-C94-sabun",
+  "pathSegment": "FA-PATH-94-THINGS94",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-94-THINGS94",
+      "order": 4
+    }
+  ]
+}

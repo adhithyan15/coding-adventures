@@ -1,0 +1,11 @@
+{
+  "id": "FA-C89-hagh",
+  "pathSegment": "FA-PATH-89-CAN89",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-89-CAN89",
+      "order": 3
+    }
+  ]
+}

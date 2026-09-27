@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:d306a547d3ae0ca9",
+  "lessonIds": [
+    "FA-C114-khatkesh",
+    "FA-C114-takhte",
+    "FA-C114-kelas",
+    "FA-C114-emtehan",
+    "FA-C114-amuzgar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch114.txt",
+  "json": "persian/narration/ch114.json",
+  "textHash": "fnv1a64:01f4717517979e36",
+  "jsonHash": "fnv1a64:b0bd152f544ae643",
+  "findings": []
+}

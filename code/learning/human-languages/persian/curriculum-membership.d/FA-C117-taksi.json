@@ -1,0 +1,11 @@
+{
+  "id": "FA-C117-taksi",
+  "pathSegment": "FA-PATH-117-THINGS117",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-117-THINGS117",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:dda11dddded51cb3",
+  "lessonIds": [
+    "FA-C115-shagerd",
+    "FA-C115-doktor",
+    "FA-C115-parastar",
+    "FA-C115-ashpaz",
+    "FA-C115-kargar"
+  ],
+  "tex": "persian/book/chapters/ch115-pupil-doctor-nurse-cook-worker.tex"
+}

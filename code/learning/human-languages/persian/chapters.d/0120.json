@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Jacket, Slippers, Pond, Spring, Salt desert",
+  "label": "ch:fa-jacket-slippers-pond-spring-salt-desert",
+  "canDo": "I can say a jacket, slippers, a pond, a spring and a salt desert.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C120-kavir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a jacket, slippers, a pond, a spring and a salt desert.",
+    "assesses": [
+      "FA-LEX-C120-THINGS120-03",
+      "FA-LEX-C120-THINGS120-04",
+      "FA-LEX-C120-THINGS120-05"
+    ]
+  }
+}

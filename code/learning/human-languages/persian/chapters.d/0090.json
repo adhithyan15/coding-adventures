@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Tool, Owner, Power, Wish, Hope",
+  "label": "ch:fa-tool-owner-power-wish-hope",
+  "canDo": "I can say a tool, an owner, power, a wish and hope.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "FA-C90-omid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say a tool, an owner, power, a wish and hope.",
+    "assesses": [
+      "FA-LEX-C90-CAN90-03",
+      "FA-LEX-C90-CAN90-04",
+      "FA-LEX-C90-CAN90-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Almond, Pistachio, Cucumber, Aubergine, Garlic",
+  "label": "ch:fa-almond-pistachio-cucumber-aubergine-garlic",
+  "canDo": "I can say an almond, a pistachio, a cucumber, an aubergine and garlic.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C101-sir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say an almond, a pistachio, a cucumber, an aubergine and garlic.",
+    "assesses": [
+      "FA-LEX-C101-THINGS101-03",
+      "FA-LEX-C101-THINGS101-04",
+      "FA-LEX-C101-THINGS101-05"
+    ]
+  }
+}

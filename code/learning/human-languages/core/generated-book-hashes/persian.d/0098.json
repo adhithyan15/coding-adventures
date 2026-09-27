@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:a8316430c694f7a8",
+  "lessonIds": [
+    "FA-C98-sandal",
+    "FA-C98-khoresh",
+    "FA-C98-sup",
+    "FA-C98-salad",
+    "FA-C98-kabab",
+    "FA-R98-first-pass-can-want-and-why",
+    "FA-R98-second-pass-things-in-the-house-and-clothes"
+  ],
+  "tex": "persian/book/chapters/ch98-sandals-stew-soup-salad-kebab.tex"
+}

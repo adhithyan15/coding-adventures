@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C90-arezu",
+    "language": "persian",
+    "chapter": 90,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b184f4a6513de861"
+  },
+  "findings": []
+}

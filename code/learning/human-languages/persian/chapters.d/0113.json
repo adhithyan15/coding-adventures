@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Card, Ticket, Stamp, Envelope, Pencil sharpener",
+  "label": "ch:fa-card-ticket-stamp-envelope-pencil-sharpener",
+  "canDo": "I can say a card, a ticket, a stamp, an envelope and a pencil sharpener.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C113-medadtarash",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a card, a ticket, a stamp, an envelope and a pencil sharpener.",
+    "assesses": [
+      "FA-LEX-C113-THINGS113-03",
+      "FA-LEX-C113-THINGS113-04",
+      "FA-LEX-C113-THINGS113-05"
+    ]
+  }
+}

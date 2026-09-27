@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:05a9498893b7920f",
+  "lessonIds": [
+    "FA-C110-lamp",
+    "FA-C110-telefon",
+    "FA-C110-kampyuter",
+    "FA-C110-televiziyon",
+    "FA-C110-parch"
+  ],
+  "tex": "persian/book/chapters/ch110-light-bulb-telephone-computer-television-jug.tex"
+}

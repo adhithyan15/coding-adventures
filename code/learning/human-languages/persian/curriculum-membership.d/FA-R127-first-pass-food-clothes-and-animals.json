@@ -1,0 +1,11 @@
+{
+  "id": "FA-R127-first-pass-food-clothes-and-animals",
+  "pathSegment": "FA-PATH-127-QUAL127",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-127-QUAL127",
+      "order": 5
+    }
+  ]
+}

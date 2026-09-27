@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Beans, Chickpeas, Coin, Bracelet, Tie",
+  "label": "ch:fa-beans-chickpeas-coin-bracelet-tie",
+  "canDo": "I can say beans, chickpeas, a coin, a bracelet and a tie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C119-keravat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say beans, chickpeas, a coin, a bracelet and a tie.",
+    "assesses": [
+      "FA-LEX-C119-THINGS119-03",
+      "FA-LEX-C119-THINGS119-04",
+      "FA-LEX-C119-THINGS119-05"
+    ]
+  }
+}

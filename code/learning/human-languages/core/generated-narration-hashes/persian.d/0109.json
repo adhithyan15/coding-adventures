@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:d60371ba11448dfc",
+  "lessonIds": [
+    "FA-C109-abru",
+    "FA-C109-pust",
+    "FA-C109-ostokhan",
+    "FA-C109-farsh",
+    "FA-C109-mobl"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch109.txt",
+  "json": "persian/narration/ch109.json",
+  "textHash": "fnv1a64:e6124c0d3971d0db",
+  "jsonHash": "fnv1a64:48b1f37f473f0b7e",
+  "findings": []
+}

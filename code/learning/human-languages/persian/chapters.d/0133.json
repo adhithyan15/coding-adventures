@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "To plant, To pick, To turn, To arrive, To weep",
+  "label": "ch:fa-to-plant-to-pick-to-turn-to-arrive-to-weep",
+  "canDo": "I can say to plant, to pick, to turn, to arrive and to weep.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C133-geristan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say to plant, to pick, to turn, to arrive and to weep.",
+    "assesses": [
+      "FA-LEX-C133-ACT133-03",
+      "FA-LEX-C133-ACT133-04",
+      "FA-LEX-C133-ACT133-05"
+    ]
+  }
+}

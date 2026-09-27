@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 100,
+  "output": "persian/book/chapters/ch100-apricot-cherries-date-pomegranate-walnut.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

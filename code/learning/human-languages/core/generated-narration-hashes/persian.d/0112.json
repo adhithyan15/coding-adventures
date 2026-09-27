@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:afa26765c942f49e",
+  "lessonIds": [
+    "FA-C112-nardeban",
+    "FA-C112-sanduq",
+    "FA-C112-chamedan",
+    "FA-C112-kuleposhti",
+    "FA-C112-batri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch112.txt",
+  "json": "persian/narration/ch112.json",
+  "textHash": "fnv1a64:deef357f111fe744",
+  "jsonHash": "fnv1a64:66dad6915bd9e1a2",
+  "findings": []
+}

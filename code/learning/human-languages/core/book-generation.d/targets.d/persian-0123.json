@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 123,
+  "output": "persian/book/chapters/ch123-forehead-beard-moustache-long-wide.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

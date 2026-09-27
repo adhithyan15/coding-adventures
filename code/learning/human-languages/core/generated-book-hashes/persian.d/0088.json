@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:016ff68096526067",
+  "lessonIds": [
+    "FA-C88-ketabkhane",
+    "FA-C88-darukhane",
+    "FA-C88-nanvayi",
+    "FA-C88-sinema",
+    "FA-C88-muze",
+    "FA-R88-first-pass-time-and-this-and-that",
+    "FA-R88-second-pass-this-and-that-and-places"
+  ],
+  "tex": "persian/book/chapters/ch88-library-pharmacy-bakery-cinema-museum.tex"
+}

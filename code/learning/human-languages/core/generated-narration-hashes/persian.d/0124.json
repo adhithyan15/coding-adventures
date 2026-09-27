@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:88061f7506a6519a",
+  "lessonIds": [
+    "FA-C124-barik",
+    "FA-C124-gowd",
+    "FA-C124-khis",
+    "FA-C124-khoshk",
+    "FA-C124-narm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch124.txt",
+  "json": "persian/narration/ch124.json",
+  "textHash": "fnv1a64:37e2ee6df5d04175",
+  "jsonHash": "fnv1a64:37be64868047e360",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C116-ranande",
+  "pathSegment": "FA-PATH-116-THINGS116",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-116-THINGS116",
+      "order": 1
+    }
+  ]
+}

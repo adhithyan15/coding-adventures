@@ -1,0 +1,11 @@
+{
+  "id": "FA-C128-sade",
+  "pathSegment": "FA-PATH-128-QUAL128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-128-QUAL128",
+      "order": 3
+    }
+  ]
+}

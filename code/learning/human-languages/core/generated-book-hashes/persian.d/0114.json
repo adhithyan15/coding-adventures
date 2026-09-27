@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:3f24ebb87b8ab1ad",
+  "lessonIds": [
+    "FA-C114-khatkesh",
+    "FA-C114-takhte",
+    "FA-C114-kelas",
+    "FA-C114-emtehan",
+    "FA-C114-amuzgar"
+  ],
+  "tex": "persian/book/chapters/ch114-ruler-board-class-exam-teacher.tex"
+}

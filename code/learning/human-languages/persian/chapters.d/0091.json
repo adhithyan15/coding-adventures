@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Plan, Need, Decision, Goal, Request",
+  "label": "ch:fa-plan-need-decision-goal-request",
+  "canDo": "I can say a plan, a need, a decision, a goal and a request.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "FA-C91-khahesh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say a plan, a need, a decision, a goal and a request.",
+    "assesses": [
+      "FA-LEX-C91-WANT91-03",
+      "FA-LEX-C91-WANT91-04",
+      "FA-LEX-C91-WANT91-05"
+    ]
+  }
+}

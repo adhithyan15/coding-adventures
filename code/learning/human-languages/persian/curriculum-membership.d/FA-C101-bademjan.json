@@ -1,0 +1,11 @@
+{
+  "id": "FA-C101-bademjan",
+  "pathSegment": "FA-PATH-101-THINGS101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-101-THINGS101",
+      "order": 3
+    }
+  ]
+}

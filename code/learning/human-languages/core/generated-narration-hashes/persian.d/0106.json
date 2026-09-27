@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:d7d89d63fad4c5fb",
+  "lessonIds": [
+    "FA-C106-tuti",
+    "FA-C106-kabutar",
+    "FA-C106-tavus",
+    "FA-C106-ordak",
+    "FA-C106-zanbur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch106.txt",
+  "json": "persian/narration/ch106.json",
+  "textHash": "fnv1a64:5f696d7573a3db75",
+  "jsonHash": "fnv1a64:b789c227e01c3b3e",
+  "findings": []
+}

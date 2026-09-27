@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:e362fd2881424e58",
+  "lessonIds": [
+    "FA-C80-bahar",
+    "FA-C80-tabestan",
+    "FA-C80-payiz",
+    "FA-C80-zemestan",
+    "FA-C80-fasl"
+  ],
+  "tex": "persian/book/chapters/ch80-spring-summer-autumn-winter-season.tex"
+}

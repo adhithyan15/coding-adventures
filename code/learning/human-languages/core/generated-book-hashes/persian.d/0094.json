@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:71e7e8c6c4311265",
+  "lessonIds": [
+    "FA-C94-chakosh",
+    "FA-C94-gheychi",
+    "FA-C94-suzan",
+    "FA-C94-nakh",
+    "FA-C94-sabun"
+  ],
+  "tex": "persian/book/chapters/ch94-hammer-scissors-needle-thread-soap.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C105-ahu",
+    "language": "persian",
+    "chapter": 105,
+    "sequence": 5280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a56f5298f7e72ebb"
+  },
+  "findings": []
+}

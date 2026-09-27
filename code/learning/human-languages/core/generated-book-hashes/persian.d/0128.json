@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:d29b8193f69fbd09",
+  "lessonIds": [
+    "FA-C128-talayi",
+    "FA-C128-gerd",
+    "FA-C128-mehraban",
+    "FA-C128-sade",
+    "FA-C128-aram"
+  ],
+  "tex": "persian/book/chapters/ch128-golden-round-kind-simple-calm.tex"
+}

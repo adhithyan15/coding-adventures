@@ -1,0 +1,11 @@
+{
+  "id": "FA-C126-khatarnak",
+  "pathSegment": "FA-PATH-126-QUAL126",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-126-QUAL126",
+      "order": 3
+    }
+  ]
+}

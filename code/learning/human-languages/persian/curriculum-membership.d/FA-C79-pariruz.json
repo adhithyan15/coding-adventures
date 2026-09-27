@@ -1,0 +1,11 @@
+{
+  "id": "FA-C79-pariruz",
+  "pathSegment": "FA-PATH-79-TIME79",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-79-TIME79",
+      "order": 1
+    }
+  ]
+}

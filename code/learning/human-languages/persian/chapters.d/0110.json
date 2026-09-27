@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Light bulb, Telephone, Computer, Television, Jug",
+  "label": "ch:fa-light-bulb-telephone-computer-television-jug",
+  "canDo": "I can say a light bulb, a telephone, a computer, a television and a jug.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C110-parch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a light bulb, a telephone, a computer, a television and a jug.",
+    "assesses": [
+      "FA-LEX-C110-THINGS110-03",
+      "FA-LEX-C110-THINGS110-04",
+      "FA-LEX-C110-THINGS110-05"
+    ]
+  }
+}

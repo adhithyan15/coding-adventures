@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Towel, Cup, Pot, Frying pan, Stove",
+  "label": "ch:fa-towel-cup-pot-frying-pan-stove",
+  "canDo": "I can say a towel, a cup, a pot, a frying pan and a stove.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C95-ojagh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say a towel, a cup, a pot, a frying pan and a stove.",
+    "assesses": [
+      "FA-LEX-C95-THINGS95-03",
+      "FA-LEX-C95-THINGS95-04",
+      "FA-LEX-C95-THINGS95-05"
+    ]
+  }
+}

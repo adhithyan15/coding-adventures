@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:129436bb1ae5f6f7",
+  "lessonIds": [
+    "FA-C88-ketabkhane",
+    "FA-C88-darukhane",
+    "FA-C88-nanvayi",
+    "FA-C88-sinema",
+    "FA-C88-muze",
+    "FA-R88-first-pass-time-and-this-and-that",
+    "FA-R88-second-pass-this-and-that-and-places"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch88.txt",
+  "json": "persian/narration/ch88.json",
+  "textHash": "fnv1a64:86417e009df9fb18",
+  "jsonHash": "fnv1a64:97859be8a93e3be9",
+  "findings": []
+}

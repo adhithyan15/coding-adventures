@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "To be able to, Skill, Ability, Right, Chance",
+  "label": "ch:fa-to-be-able-to-skill-ability-right-chance",
+  "canDo": "I can say to be able to, a skill, ability, a right and a chance.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "FA-C89-forsat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say to be able to, a skill, ability, a right and a chance.",
+    "assesses": [
+      "FA-LEX-C89-CAN89-03",
+      "FA-LEX-C89-CAN89-04",
+      "FA-LEX-C89-CAN89-05"
+    ]
+  }
+}

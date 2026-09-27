@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Therefore, Pillow, Blanket, Curtain, Nail",
+  "label": "ch:fa-therefore-pillow-blanket-curtain-nail",
+  "canDo": "I can say therefore, a pillow, a blanket, a curtain and a nail.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FA-C93-mikh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say therefore, a pillow, a blanket, a curtain and a nail.",
+    "assesses": [
+      "FA-LEX-C93-WHY93-03",
+      "FA-LEX-C93-WHY93-04",
+      "FA-LEX-C93-WHY93-05"
+    ]
+  }
+}

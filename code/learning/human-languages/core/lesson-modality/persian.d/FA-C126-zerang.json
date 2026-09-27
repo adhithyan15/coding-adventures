@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C126-zerang",
+    "language": "persian",
+    "chapter": 126,
+    "sequence": 6370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:705de5021f742b70"
+  },
+  "findings": []
+}

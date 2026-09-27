@@ -1,0 +1,11 @@
+{
+  "id": "FA-C84-hich",
+  "pathSegment": "FA-PATH-84-DEF84",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-84-DEF84",
+      "order": 3
+    }
+  ]
+}

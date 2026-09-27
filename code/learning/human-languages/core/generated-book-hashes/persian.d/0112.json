@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:4de30af377378397",
+  "lessonIds": [
+    "FA-C112-nardeban",
+    "FA-C112-sanduq",
+    "FA-C112-chamedan",
+    "FA-C112-kuleposhti",
+    "FA-C112-batri"
+  ],
+  "tex": "persian/book/chapters/ch112-ladder-chest-suitcase-backpack-battery.tex"
+}

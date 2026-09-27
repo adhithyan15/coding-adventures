@@ -1,0 +1,11 @@
+{
+  "id": "FA-C106-tuti",
+  "pathSegment": "FA-PATH-106-THINGS106",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-106-THINGS106",
+      "order": 0
+    }
+  ]
+}

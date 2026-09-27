@@ -1,0 +1,11 @@
+{
+  "id": "FA-C131-amukhtan",
+  "pathSegment": "FA-PATH-131-QUAL131",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-131-QUAL131",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C124-narm",
+  "pathSegment": "FA-PATH-124-QUAL124",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-124-QUAL124",
+      "order": 4
+    }
+  ]
+}

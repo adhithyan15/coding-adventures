@@ -1,0 +1,11 @@
+{
+  "id": "FA-C110-kampyuter",
+  "pathSegment": "FA-PATH-110-THINGS110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-110-THINGS110",
+      "order": 2
+    }
+  ]
+}

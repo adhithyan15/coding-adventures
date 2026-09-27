@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:a6e5fa98714e1ce6",
+  "lessonIds": [
+    "FA-C117-nave",
+    "FA-C117-taksi",
+    "FA-C117-metro",
+    "FA-C117-kashti",
+    "FA-C117-havapeyma"
+  ],
+  "tex": "persian/book/chapters/ch117-grandchild-taxi-metro-ship-aeroplane.tex"
+}

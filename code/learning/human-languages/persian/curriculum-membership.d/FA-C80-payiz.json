@@ -1,0 +1,11 @@
+{
+  "id": "FA-C80-payiz",
+  "pathSegment": "FA-PATH-80-TIME80",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-80-TIME80",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C133-kashtan",
+    "language": "persian",
+    "chapter": 133,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0257e3aa4124d0db"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:85bbea5dd27dad58",
+  "lessonIds": [
+    "FA-C128-talayi",
+    "FA-C128-gerd",
+    "FA-C128-mehraban",
+    "FA-C128-sade",
+    "FA-C128-aram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch128.txt",
+  "json": "persian/narration/ch128.json",
+  "textHash": "fnv1a64:85de52bd6462d196",
+  "jsonHash": "fnv1a64:70dd08ffb9625f4c",
+  "findings": []
+}

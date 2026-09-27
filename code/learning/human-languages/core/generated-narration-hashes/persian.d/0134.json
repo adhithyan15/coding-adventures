@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:c268b36a217d95d4",
+  "lessonIds": [
+    "FA-C134-zadan",
+    "FA-C134-tarsidan",
+    "FA-C134-chashidan",
+    "FA-C134-buyidan",
+    "FA-C134-kandan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch134.txt",
+  "json": "persian/narration/ch134.json",
+  "textHash": "fnv1a64:5b752f693eeb1ee7",
+  "jsonHash": "fnv1a64:e8a61ade2109cb9c",
+  "findings": []
+}

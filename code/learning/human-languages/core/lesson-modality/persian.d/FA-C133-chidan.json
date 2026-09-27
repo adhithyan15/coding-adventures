@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C133-chidan",
+    "language": "persian",
+    "chapter": 133,
+    "sequence": 6760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a745da35a6db6858"
+  },
+  "findings": []
+}

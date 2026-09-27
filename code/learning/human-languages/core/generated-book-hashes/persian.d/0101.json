@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:8726554ff3a40a12",
+  "lessonIds": [
+    "FA-C101-badam",
+    "FA-C101-peste",
+    "FA-C101-khiyar",
+    "FA-C101-bademjan",
+    "FA-C101-sir"
+  ],
+  "tex": "persian/book/chapters/ch101-almond-pistachio-cucumber-aubergine-garlic.tex"
+}

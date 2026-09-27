@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:1a4a1bd67a7bbb84",
+  "lessonIds": [
+    "FA-C105-palang",
+    "FA-C105-khargush",
+    "FA-C105-ahu",
+    "FA-C105-rubah",
+    "FA-C105-khuk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch105.txt",
+  "json": "persian/narration/ch105.json",
+  "textHash": "fnv1a64:2dccf8bcf27daa6d",
+  "jsonHash": "fnv1a64:191dc76db899cf22",
+  "findings": []
+}

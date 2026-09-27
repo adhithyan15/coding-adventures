@@ -1,0 +1,11 @@
+{
+  "id": "FA-C127-torsh",
+  "pathSegment": "FA-PATH-127-QUAL127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-127-QUAL127",
+      "order": 1
+    }
+  ]
+}

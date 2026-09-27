@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Ladder, Chest, Suitcase, Backpack, Battery",
+  "label": "ch:fa-ladder-chest-suitcase-backpack-battery",
+  "canDo": "I can say a ladder, a chest, a suitcase, a backpack and a battery.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FA-C112-batri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say a ladder, a chest, a suitcase, a backpack and a battery.",
+    "assesses": [
+      "FA-LEX-C112-THINGS112-03",
+      "FA-LEX-C112-THINGS112-04",
+      "FA-LEX-C112-THINGS112-05"
+    ]
+  }
+}

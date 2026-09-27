@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:27c0da3bd94136a5",
+  "lessonIds": [
+    "FA-C94-chakosh",
+    "FA-C94-gheychi",
+    "FA-C94-suzan",
+    "FA-C94-nakh",
+    "FA-C94-sabun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch94.txt",
+  "json": "persian/narration/ch94.json",
+  "textHash": "fnv1a64:f43dde64ff331db8",
+  "jsonHash": "fnv1a64:f27c6e989bbcedef",
+  "findings": []
+}

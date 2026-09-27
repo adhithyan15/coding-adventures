@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:b1188e2ce878b131",
+  "lessonIds": [
+    "FA-C89-tavanestan",
+    "FA-C89-maharat",
+    "FA-C89-tavanayi",
+    "FA-C89-hagh",
+    "FA-C89-forsat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch89.txt",
+  "json": "persian/narration/ch89.json",
+  "textHash": "fnv1a64:1a8440dfd8e6200e",
+  "jsonHash": "fnv1a64:4d602701db5a2a1d",
+  "findings": []
+}
