@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C150-veluttulli",
+    "language": "malayalam",
+    "chapter": 150,
+    "sequence": 6140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65733e89c331729f"
+  },
+  "findings": []
+}

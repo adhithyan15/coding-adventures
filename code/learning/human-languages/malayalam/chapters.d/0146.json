@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Need, Decision, Bed, Mirror, Comb",
+  "label": "ch:ml-need-decision-bed-mirror-comb",
+  "canDo": "I can say a need, a decision, a bed, a mirror and a comb.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ML-C146-cippu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say a need, a decision, a bed, a mirror and a comb.",
+    "assesses": [
+      "ML-LEX-C146-WANT146-03",
+      "ML-LEX-C146-WANT146-04",
+      "ML-LEX-C146-WANT146-05"
+    ]
+  }
+}

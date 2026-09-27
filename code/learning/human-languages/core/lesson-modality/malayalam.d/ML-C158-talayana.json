@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C158-talayana",
+    "language": "malayalam",
+    "chapter": 158,
+    "sequence": 6570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e7f2c1d3ea4bfbb"
+  },
+  "findings": []
+}

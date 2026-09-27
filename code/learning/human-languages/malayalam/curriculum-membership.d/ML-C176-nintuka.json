@@ -1,0 +1,11 @@
+{
+  "id": "ML-C176-nintuka",
+  "pathSegment": "ML-PATH-176-ACT176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-176-ACT176",
+      "order": 1
+    }
+  ]
+}

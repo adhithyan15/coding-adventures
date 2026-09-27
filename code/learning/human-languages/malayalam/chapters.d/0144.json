@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "So, Purpose, Result, Cause, On account of",
+  "label": "ch:ml-so-purpose-result-cause-on-account-of",
+  "canDo": "I can say so, a purpose, a result, a cause and on account of.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ML-C144-nimittam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say so, a purpose, a result, a cause and on account of.",
+    "assesses": [
+      "ML-LEX-C144-WHY144-03",
+      "ML-LEX-C144-WHY144-04",
+      "ML-LEX-C144-WHY144-05"
+    ]
+  }
+}

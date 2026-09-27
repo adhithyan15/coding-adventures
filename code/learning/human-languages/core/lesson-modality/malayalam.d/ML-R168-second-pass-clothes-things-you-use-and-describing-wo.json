@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R168-second-pass-clothes-things-you-use-and-describing-wo",
+    "language": "malayalam",
+    "chapter": 168,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65555c889e0bb942"
+  },
+  "findings": []
+}

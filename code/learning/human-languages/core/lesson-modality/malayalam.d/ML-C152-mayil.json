@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C152-mayil",
+    "language": "malayalam",
+    "chapter": 152,
+    "sequence": 6280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8026b3ead0c7d03"
+  },
+  "findings": []
+}

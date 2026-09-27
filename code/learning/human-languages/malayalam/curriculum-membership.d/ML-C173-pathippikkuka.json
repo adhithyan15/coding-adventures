@@ -1,0 +1,11 @@
+{
+  "id": "ML-C173-pathippikkuka",
+  "pathSegment": "ML-PATH-173-ACT173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-173-ACT173",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Heavy, Fast, Thick, Soft, Hard",
+  "label": "ch:ml-heavy-fast-thick-soft-hard",
+  "canDo": "I can say heavy, fast, thick, soft and hard.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C166-kathinamaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: i can say heavy, fast, thick, soft and hard.",
+    "assesses": [
+      "ML-LEX-C166-QUAL166-03",
+      "ML-LEX-C166-QUAL166-04",
+      "ML-LEX-C166-QUAL166-05"
+    ]
+  }
+}

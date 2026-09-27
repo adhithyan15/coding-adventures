@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Boat, Train, Pillow, Blanket, Bucket",
+  "label": "ch:ml-boat-train-pillow-blanket-bucket",
+  "canDo": "I can say a boat, a train, a pillow, a blanket and a bucket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C158-bakkarru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: i can say a boat, a train, a pillow, a blanket and a bucket.",
+    "assesses": [
+      "ML-LEX-C158-THINGS158-03",
+      "ML-LEX-C158-THINGS158-04",
+      "ML-LEX-C158-THINGS158-05"
+    ]
+  }
+}

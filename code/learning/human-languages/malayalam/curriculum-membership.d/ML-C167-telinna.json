@@ -1,0 +1,11 @@
+{
+  "id": "ML-C167-telinna",
+  "pathSegment": "ML-PATH-167-QUAL167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-167-QUAL167",
+      "order": 3
+    }
+  ]
+}

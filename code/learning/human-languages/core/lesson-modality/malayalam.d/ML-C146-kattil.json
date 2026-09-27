@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C146-kattil",
+    "language": "malayalam",
+    "chapter": 146,
+    "sequence": 5920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fb8a69176975873"
+  },
+  "findings": []
+}

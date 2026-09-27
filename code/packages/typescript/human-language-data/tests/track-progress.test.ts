@@ -41,6 +41,13 @@ function canCreateSymlinks(): boolean {
 
 const symlinksAvailable = canCreateSymlinks();
 
+// Every progress card for the REAL corpus, rendered once at import. Rendering
+// parses all 23 tracks, and two tests below read the result; building it inside
+// each test body is what pushed the first of them toward the 30s per-test
+// budget as the corpus grew. Import time carries no per-test budget, and no
+// test mutates the map (the one that edits a card copies it first).
+const REAL_OUTPUTS = generatedTrackProgressOutputs(defaultCurriculumRoot());
+
 describe("track progress", () => {
   it("derives registry-ordered counts from lessons, maps, and book data", () => {
     const registry: LanguageRegistry = {
@@ -85,7 +92,7 @@ describe("track progress", () => {
 
   it("keeps every per-language card in memory and the tracked directory absent", () => {
     const root = defaultCurriculumRoot();
-    const outputs = generatedTrackProgressOutputs(root);
+    const outputs = REAL_OUTPUTS;
     expect(outputs.size).toBe(23);
     for (const [relative, expected] of outputs) {
       expect(relative.startsWith(`${TRACK_PROGRESS_DIR}/`)).toBe(true);
@@ -136,8 +143,7 @@ describe("track progress", () => {
   );
 
   it("changes only one output when one track changes", () => {
-    const root = defaultCurriculumRoot();
-    const outputs = generatedTrackProgressOutputs(root);
+    const outputs = REAL_OUTPUTS;
     const spanish = outputs.get("progress/spanish.md")!;
     const changed = new Map(outputs);
     changed.set("progress/spanish.md", spanish.replace("Canonical lessons:", "Canonical lessons changed:"));

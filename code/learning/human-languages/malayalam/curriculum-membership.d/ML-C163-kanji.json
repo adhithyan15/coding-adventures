@@ -1,0 +1,11 @@
+{
+  "id": "ML-C163-kanji",
+  "pathSegment": "ML-PATH-163-THINGS163",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-163-THINGS163",
+      "order": 2
+    }
+  ]
+}

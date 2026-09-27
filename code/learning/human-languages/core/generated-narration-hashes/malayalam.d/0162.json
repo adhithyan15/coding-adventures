@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:51d1fff9e0307016",
+  "lessonIds": [
+    "ML-C162-karati",
+    "ML-C162-kurukkan",
+    "ML-C162-ottakam",
+    "ML-C162-taravu",
+    "ML-C162-munna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch162.txt",
+  "json": "malayalam/narration/ch162.json",
+  "textHash": "fnv1a64:e4c161594155a34d",
+  "jsonHash": "fnv1a64:d98f7108c315c952",
+  "findings": []
+}

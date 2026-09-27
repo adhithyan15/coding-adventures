@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C153-urumpu",
+    "language": "malayalam",
+    "chapter": 153,
+    "sequence": 6320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:484e3dbfc7558810"
+  },
+  "findings": []
+}

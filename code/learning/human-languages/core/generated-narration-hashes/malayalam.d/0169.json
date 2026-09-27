@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:d15fa9ca031c38ac",
+  "lessonIds": [
+    "ML-C169-buddhiyulla",
+    "ML-C169-matiyulla",
+    "ML-C169-santamaya",
+    "ML-C169-tirakkulla",
+    "ML-C169-vilakutiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch169.txt",
+  "json": "malayalam/narration/ch169.json",
+  "textHash": "fnv1a64:b921383af83d7276",
+  "jsonHash": "fnv1a64:2065541d172ab485",
+  "findings": []
+}

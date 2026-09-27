@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-150-THINGS150",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a potato, a tomato, an aubergine, black pepper and garlic.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:07061df81654dbc4",
+  "lessonIds": [
+    "ML-C165-vrttiyulla",
+    "ML-C165-madhuramulla",
+    "ML-C165-kaypulla",
+    "ML-C165-erivulla",
+    "ML-C165-puliyulla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch165.txt",
+  "json": "malayalam/narration/ch165.json",
+  "textHash": "fnv1a64:01c91cb2796dec8e",
+  "jsonHash": "fnv1a64:68af0d987dce7dee",
+  "findings": []
+}

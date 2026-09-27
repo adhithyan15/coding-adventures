@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:2f0e630dc9db9816",
+  "lessonIds": [
+    "ML-C150-urulakkilannu",
+    "ML-C150-takkali",
+    "ML-C150-valutana",
+    "ML-C150-kurumulaku",
+    "ML-C150-veluttulli",
+    "ML-R150-first-pass-can-want-and-why",
+    "ML-R150-second-pass-why-and-the-house"
+  ],
+  "tex": "malayalam/book/chapters/ch150-potato-tomato-aubergine-black-pepper-garlic.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:1a0b8c1c6612733a",
+  "lessonIds": [
+    "ML-C152-eli",
+    "ML-C152-tavala",
+    "ML-C152-ama",
+    "ML-C152-mayil",
+    "ML-C152-tatta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch152.txt",
+  "json": "malayalam/narration/ch152.json",
+  "textHash": "fnv1a64:76b67292dcf6eff8",
+  "jsonHash": "fnv1a64:272d82ccc7f4786e",
+  "findings": []
+}

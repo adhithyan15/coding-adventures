@@ -7,9 +7,21 @@ import {
   runSpanishA1MockAudit,
 } from "../src/spanish-a1-mock-audit-cli.js";
 
+// The three audits of the REAL corpus, built once at import. Each build parses
+// the whole corpus to derive a taught set, and the level-comparison tests used
+// to build two apiece inside a single test body -- about 15s under a full
+// suite run, half the 30s per-test budget, and rising with every content PR.
+// Import time carries no per-test budget. No test mutates an audit.
+const ROOT = defaultCurriculumRoot();
+const AUDITS = {
+  "pre-A1": buildSpanishA1MockAudit(ROOT, "pre-A1"),
+  A1: buildSpanishA1MockAudit(ROOT, "A1"),
+  A2: buildSpanishA1MockAudit(ROOT, "A2"),
+} as const;
+
 describe("Spanish A1 book-bounded mock audit", () => {
   it("pins the current whole-item residual and its reproducible credit policy", () => {
-    const audit = buildSpanishA1MockAudit();
+    const audit = AUDITS.A1;
     expect(audit.objectiveFailed).toBe(0);
     expect(audit.mocks.map(({ reading, listening, objectiveFailed }) => ({
       reading,
@@ -48,7 +60,7 @@ describe("Spanish A1 book-bounded mock audit", () => {
 // ---------------------------------------------------------------------------
 describe("Spanish pre-A1 book-bounded mock audit", () => {
   it("proves every objective item on both forms is answerable from pre-A1 headwords", () => {
-    const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "pre-A1");
+    const audit = AUDITS["pre-A1"];
     expect(audit.level).toBe("pre-A1");
     expect(audit.objectiveFailed).toBe(0);
     expect(audit.missingObjectiveLexemes).toHaveLength(0);
@@ -63,9 +75,8 @@ describe("Spanish pre-A1 book-bounded mock audit", () => {
   });
 
   it("measures a SMALLER taught set than A1, which is what makes it a different gate", () => {
-    const root = defaultCurriculumRoot();
-    const preA1 = buildSpanishA1MockAudit(root, "pre-A1");
-    const a1 = buildSpanishA1MockAudit(root, "A1");
+    const preA1 = AUDITS["pre-A1"];
+    const a1 = AUDITS.A1;
 
     // If the level argument were ignored, both would measure the same corpus and
     // the pre-A1 audit would be a second copy of the A1 one wearing a new name.
@@ -102,7 +113,7 @@ describe("Spanish pre-A1 book-bounded mock audit", () => {
 
 describe("Spanish A2 book-bounded mock audit", () => {
   it("pins the CURRENT DEBT: the exam names the vocabulary that is still missing", () => {
-    const audit = buildSpanishA1MockAudit(defaultCurriculumRoot(), "A2");
+    const audit = AUDITS.A2;
     expect(audit.level).toBe("A2");
     // 6 -> 48, AND THE RISE IS THE POINT. This is the one movement the note
     // below forbids, taken deliberately, because the instrument was wrong in
@@ -509,9 +520,8 @@ describe("Spanish A2 book-bounded mock audit", () => {
   });
 
   it("measures a LARGER taught set than A1, which is what makes it a different gate", () => {
-    const root = defaultCurriculumRoot();
-    const a1 = buildSpanishA1MockAudit(root, "A1");
-    const a2 = buildSpanishA1MockAudit(root, "A2");
+    const a1 = AUDITS.A1;
+    const a2 = AUDITS.A2;
 
     // The mirror of the pre-A1 assertion above: if the level argument were
     // ignored, A2 would measure the same corpus as A1 and the new gate would be

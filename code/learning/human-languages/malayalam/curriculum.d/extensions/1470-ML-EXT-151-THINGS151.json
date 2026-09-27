@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-151-THINGS151",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a horse, a donkey, a buffalo, a pig and a lion.",
+  "prerequisites": []
+}

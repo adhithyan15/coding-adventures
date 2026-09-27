@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C172-kotukkuka",
+    "language": "malayalam",
+    "chapter": 172,
+    "sequence": 7360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cefcbc620d98ca3a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C148-kinaru",
+    "language": "malayalam",
+    "chapter": 148,
+    "sequence": 6010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d17e51d874dc0f9"
+  },
+  "findings": []
+}

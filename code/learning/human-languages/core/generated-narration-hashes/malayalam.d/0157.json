@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:46f6b6a84a4a61ff",
+  "lessonIds": [
+    "ML-C157-kalam",
+    "ML-C157-atuppu",
+    "ML-C157-visari",
+    "ML-C157-phan",
+    "ML-C157-saikkil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch157.txt",
+  "json": "malayalam/narration/ch157.json",
+  "textHash": "fnv1a64:e1ca568c2dddc24c",
+  "jsonHash": "fnv1a64:5fec608c06f5ef83",
+  "findings": []
+}
