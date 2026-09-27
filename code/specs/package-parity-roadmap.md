@@ -14633,6 +14633,17 @@ production-code consumption of the exact eight graph and eleven diff-selection
 fixtures, while leaving neutral-adapter, filesystem, Git, environment,
 credential, process, and network authority in their separately owned work.
 
+Validated implementation revision
+`be4518dff37e8e3feaf62263820d240b92bd6bde` passes focused Go root and
+graphdiff tests, race detection, vet, gofmt, module verification, the real Go
+BUILD-validation dry run, all 162 neutral cases and 285 fixture files, 25
+schema tests, the schema-3 zero-collision parity inventory, `govulncheck`, and
+an independent security review. The new core has 91.5% statement coverage.
+The repository-wide Windows test still reaches the inherited
+`internal/executor/b07probe_test.go` `syscall.Mkfifo` compile limitation; every
+other package reached by that full suite passes, and the focused Windows tests
+for this slice are green.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
