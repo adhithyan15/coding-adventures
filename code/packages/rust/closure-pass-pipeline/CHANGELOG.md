@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-pipeline` crate will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Ready passes now use their registration index as the global tie-breaker in
+  topological sorting. A newly ready dependent runs before an independent pass
+  registered later. This restores the scheduler's documented ordering contract
+  and removes repeated linear scans of the ready queue and output list.
+
 ## [0.3.0] - 2026-06-17
 
 ### Added — real fixed-point iteration (CLOC13.F)

@@ -34,14 +34,9 @@
 //!
 //! They assert the properties the fix is responsible for: a conditionally
 //! registered pass appears in the trace exactly when it was registered, and
-//! both levels agree with the scheduler. They do **not** assert that the
-//! execution order matches the registration order — because it does not. The
-//! scheduler's Kahn queue is FIFO, so a pass declaring no `depends_on` is
-//! scheduled ahead of every dependent pass no matter where it was registered;
-//! `rename` is registered eighth and executes second. That is a real defect in
-//! `closure-pass-pipeline` (tracked separately), and it is one the old
-//! constants were also concealing. Pinning the true order here is what keeps
-//! it visible until it is fixed.
+//! both levels agree with the scheduler. The scheduler now uses registration
+//! order to break every dependency tie, so the observed order also matches
+//! `closurec`'s registration list where its dependencies permit it.
 
 use std::process::Command;
 
@@ -203,12 +198,8 @@ fn every_reported_pass_is_a_known_pass() {
     }
 }
 
-/// The scheduler's real order, pinned. This is NOT the registration order and
-/// is not meant to be: it is what `closure-pass-pipeline` currently executes,
-/// and the point of CCR-041 is that the trace says so out loud. When the
-/// scheduler's FIFO tie-breaking is fixed so registration order is honoured,
-/// this test should fail — and updating it is how that fix proves it changed
-/// the observable schedule.
+/// The scheduler's real order, pinned. Its global registration-order
+/// tie-breaker makes this the registration list wherever dependencies permit.
 #[test]
 fn trace_pins_the_schedulers_real_order() {
     let src = "var x = 1 + 2; console.log(x);\n";
@@ -216,10 +207,10 @@ fn trace_pins_the_schedulers_real_order() {
         traced_passes("order", "SIMPLE", src),
         vec![
             "constant-fold",
-            "rename",
             "fold-control-flow",
             "dce",
             "inline-variables",
+            "rename",
         ],
         "SIMPLE schedule changed"
     );
@@ -227,14 +218,14 @@ fn trace_pins_the_schedulers_real_order() {
         traced_passes("order", "ADVANCED", src),
         vec![
             "constant-fold",
-            "rename",
-            "rename-globals",
             "fold-control-flow",
             "dce",
             "inline",
             "inline-variables",
-            "treeshake",
             "remove-unused-vars",
+            "treeshake",
+            "rename",
+            "rename-globals",
         ],
         "ADVANCED schedule changed"
     );
