@@ -52,6 +52,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S138-letter-gha",
+      "sourceHash": "fnv1a64:c23e7e98bcf790cf",
+      "svgHash": "fnv1a64:4143804db44b8a19",
+      "svg": "telugu/book/figures/TE-S138-letter-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S162-letter-a",
       "sourceHash": "fnv1a64:4ebabc1fbbe7ba7d",
       "svgHash": "fnv1a64:44599aad39a27900",
