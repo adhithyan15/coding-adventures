@@ -9,7 +9,7 @@ headword: ਸਮਝਣਾ
 romanization: samajhṇā
 gloss: to understand — from a root meaning “to wake up,” and the word carries a tone
 concept_tag: VERB-UNDERSTAND
-prerequisites: [PA-C08-sochna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin, PA-S02-mamma-rara-lava]
+prerequisites: [PA-C08-sochna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin, PA-S02-mamma-rara-lava, PA-C07-khana-tone]
 sounds: [tone-falling, breathy-jh, retroflex-na]
 roots: [sanskrit-sambudhyate, sanskrit-budh, pie-bhewdh]
 etymology_hook: samajhṇā continues Sanskrit sambudhyate, sam- “together” on budh- “to wake” — the root that named the Buddha, “the awakened one,” from PIE *bʰewdʰ-, English bode, forebode and forbid; and the very ਝ that came out of that old breathy dh is what gives the word its falling tone.

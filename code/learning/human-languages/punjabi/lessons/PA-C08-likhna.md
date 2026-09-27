@@ -9,7 +9,7 @@ headword: ਲਿਖਣਾ
 romanization: likhṇā
 gloss: to write — from a root meaning to scratch, which is how three unrelated languages named it
 concept_tag: VERB-WRITE
-prerequisites: [PA-C08-parhna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin]
+prerequisites: [PA-C08-parhna, PA-S07-naana-jajja-vavva, PA-S07-rara-ghagga-dadda, PA-S08-khakkha-jhajja-pairin, PA-C07-hona-two-roots]
 sounds: [sihari-i, aspirate-kh, retroflex-na]
 roots: [sanskrit-likhati]
 etymology_hook: likhṇā is Sanskrit likhati, “scratches, scrapes” — writing named as scratching, exactly as Latin scrībere and Old English wrītan named it, three languages arriving at the same picture on their own; likh-'s cousins outside Indo-Aryan are disputed, so none is claimed.

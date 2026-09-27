@@ -2,6 +2,8 @@
   "id": "PA-PATH-011",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "before": [],
-  "inline": [],
+  "inline": [
+    "PA-EXT-011-LANGUAGE-SPECIFIC"
+  ],
   "after": []
 }

@@ -45,7 +45,7 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
   // chapter-20 ੌ lesson. Every bridge lesson sits after it.
   // Punjabi A1: chapter 6's two over-budget lessons split into three -more
   // continuations ahead of this point, so these positions move by 3.
-  expect(bridge.map((lesson) => orderedBeforeBodyR4.indexOf(lesson))).toEqual([162, 171, 172, 173]);
+  expect(bridge.map((lesson) => orderedBeforeBodyR4.indexOf(lesson))).toEqual([164, 173, 174, 175]); // +2: chapter 7's continuations
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("reading"))).toBe(true);
@@ -96,7 +96,9 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
   // {37, 89, 149, 104} -> {37, 85, 145, 103}. Punjabi A1: the chapter-6 splits and their warm-up retrievals close windows inside this
   // prefix (the five numbers' and the five rivers' R2, the marks' R2, the
   // homegrown-panj etymon and evidence R3, two recognition R3s).
-  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 85, R3: 145, R4: 103 });
+  // Chapter 7's atom-budget continuations (hona, khana) move later retrievals
+  // into their windows: re-measured, no window lost.
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 84, R3: 143, R4: 102 });
 
   const bodyBoundaryAtoms = new Set([
     "PA-LEX-KANN",

@@ -1,14 +1,16 @@
 {
   "language": "punjabi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:97713416dd09c6b6",
+  "sourceHash": "fnv1a64:6f155149474e94cc",
   "lessonIds": [
     "PA-C07-hona",
+    "PA-C07-hona-two-roots",
     "PA-S07-naana-jajja-vavva",
     "PA-C07-jana",
     "PA-C07-auna",
     "PA-S07-rara-ghagga-dadda",
     "PA-C07-khana",
+    "PA-C07-khana-tone",
     "PA-C07-vekhna",
     "PA-R07-wellbeing-r3",
     "PA-C07-janna"

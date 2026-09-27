@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01]
 introduces:
-  knowledge: [PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA]
+  knowledge: [PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01]
+  knowledge: [PA-GRAMMAR-NA-INFINITIVE, PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,44 +52,15 @@ It comes straight from Sanskrit *khādati*, “chews, eats.” No English cousin
 has been securely traced from that root, and that is fine — the prize in this
 word is its **sound**.
 
-## Sounds you'll need — the tone that only Punjabi kept
-<!-- hl-knowledge: introduces=[PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA]; assesses=[] -->
-
-Gurmukhi keeps its consonants in rows of five. The *k*-row runs **ਕ** *ka*,
-**ਖ** *kha*, **ਗ** *ga*, **ਘ** — and that fourth letter was once *gha*, a *g*
-said with a breathy voice.
-
-Punjabi lost those breathy-voiced sounds. It did **not** lose the words. When
-**ਘ** *gh* starts a word it is now said as a plain *k*, and everything the old
-consonant carried moved onto the vowel as a **low, rising pitch**. Same
-elsewhere in the word, in mirror image: the pitch falls instead.
-
-That leaves pairs which are spelled differently and pronounced identically,
-apart from the tune:
-
-| Punjabi | said |
-|---|---|
-| **ਘੋੜਾ** horse | *kòṛā*, pitch dipping then rising |
-| **ਕੋੜਾ** whip | *koṛā*, pitch level |
-
-Two words, one string of consonants and vowels, and the only difference is
-music. That makes Punjabi the one major Indo-Aryan language with **tone** —
-Hindi, Urdu, Bengali, Gujarati, and Marathi have nothing like it.
-
-Your **ਖਾਣਾ** is safe: **ਖ** *kh* is voiceless, it never had the breathy
-voice, so it never traded anything for a tone. *Khāṇā* is said flat.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-GRAMMAR-NA-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-GRAMMAR-NA-INFINITIVE] -->
 
-- [YOU SAY: **khāṇā** — to eat — flat, no tune]
-- [YOU SAY: the pair — *kòṛā* horse, dipping; then *koṛā* whip, level]
-- [YOU SAY: the rule — the old breathy *gh* went and left a pitch behind]
+- [YOU SAY: **khāṇā** — to eat]
+- [YOU STRIP: **khāṇā** minus **-ṇā** leaves the stem **khā-**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-SOUND-PUNJABI-TONE, PA-EVIDENCE-GHORA-KORA, PA-GRAMMAR-NA-INFINITIVE, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KHANA, PA-ETYMON-KHANA-KHAD, PA-GRAMMAR-NA-INFINITIVE, PA-SCRIPT-RECOG-GHA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-NAANA-01, PA-SCRIPT-RECOG-RRA-01] -->
 
-[PAUSE 3s] What separates *kòṛā* “horse” from *koṛā* “whip”? (Pitch alone —
-the first dips and rises.) Where did that pitch come from? (From **ਘ**, an old
-breathy *gh* that stopped being breathy.) And does *khāṇā* carry one? (No —
-**ਖ** *kh* has no voice to lose.)
+[PAUSE 3s] Say "to eat." (**khāṇā**.) What is its stem? (**khā-**.) Which
+Sanskrit word does it come from? (*khādati*, "chews, eats.") Next: the tone
+that only Punjabi kept.

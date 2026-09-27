@@ -3,8 +3,8 @@
   "language": "russian",
   "chapter": 3,
   "title": "Six Verbs, and the One You Never Say",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5c87a0cda45a7676",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b512c8ae5ffa4bef",
   "lessons": [
     {
       "id": "RU-C03-byt",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8dc7b5afa8dc1ff",
+      "sourceHash": "fnv1a64:9fe9f15315ea8400",
       "notice": null,
       "blocks": [
         {
@@ -577,21 +577,6 @@
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart — and a false friend",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "говорить (govorít') is built on the old Slavic noun govorъ, \"a murmur, a din, the noise of many voices.\" Russian still keeps говор for the buzz of a crowd or a regional way of talking. Most etymologists read the root as imitative — the word sounds like what it names — which is honest but means there is no tidy English cousin to hand you. Where a root is uncertain, this book says so."
-            },
-            {
-              "kind": "speech",
-              "text": "What there is to hand you is a trap. Govern is not related. That is Latin gubernāre, \"to steer a ship,\" from Greek kybernân — the same word that gave English cybernetics and every cyber- since. A governor steers; a говор is a noise. Two roots that never met."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -640,7 +625,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -652,7 +637,96 @@
             },
             {
               "kind": "speech",
-              "text": "What sound is г? (A hard g, from Greek gamma.) Say \"I speak.\" (Я говорю.) Which vowel separates the two verb families in the you form? (-е- in знаешь against -и- in говоришь.) Is говорить (govorít') related to English govern? (No — govern is Greek kybernân, \"to steer.\") Next: видеть (vídet'), \"to see.\""
+              "text": "What sound is г? (A hard g, from Greek gamma.) Say \"I speak.\" (Я говорю.) Which vowel separates the two verb families in the you form? (-е- in знаешь against -и- in говоришь.) Next: why говорить (govorít') is not English govern."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C03-govorit-false-friend",
+      "sequence": 175,
+      "title": "(говорить, continued) ((govorít', continued)) — The word, taken apart — and a false friend",
+      "headword": "(говорить, continued)",
+      "romanization": "(govorít', continued)",
+      "gloss": "The word, taken apart — and a false friend",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:622108e41b975f6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say говорить (govorít') again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart — and a false friend",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "говорить (govorít') is built on the old Slavic noun govorъ, \"a murmur, a din, the noise of many voices.\" Russian still keeps говор for the buzz of a crowd or a regional way of talking. Most etymologists read the root as imitative — the word sounds like what it names — which is honest but means there is no tidy English cousin to hand you. Where a root is uncertain, this book says so."
+            },
+            {
+              "kind": "speech",
+              "text": "What there is to hand you is a trap. Govern is not related. That is Latin gubernāre, \"to steer a ship,\" from Greek kybernân — the same word that gave English cybernetics and every cyber- since. A governor steers; a говор is a noise. Two roots that never met."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"говорить (govorít')\" — and \"not govern\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"говорить\" — and \"not *govern*\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is говорить (govorít') related to English govern? (No — govern is Greek kybernân, \"to steer.\") Next: видеть (vídet'), \"to see.\""
             }
           ]
         }

@@ -1,0 +1,1 @@
+| 595 | 109 | PA-C109-takat | strength |

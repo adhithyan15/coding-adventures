@@ -1,1 +1,0 @@
-| 379 | 68 | PA-C68-kandh | a wall |

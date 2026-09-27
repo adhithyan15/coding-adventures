@@ -9,7 +9,7 @@ headword: ਜਾਣਨਾ
 romanization: jāṇnā
 gloss: to know — one letter away from “to go,” and the same word as English know
 concept_tag: VERB-KNOW
-prerequisites: [PA-C07-vekhna, PA-S07-naana-jajja-vavva]
+prerequisites: [PA-C07-vekhna, PA-S07-naana-jajja-vavva, PA-C07-khana-tone]
 sounds: [kanna-aa, retroflex-na, dental-na]
 roots: [sanskrit-janati, sanskrit-jna, pie-gneh3]
 etymology_hook: jāṇnā continues Sanskrit jānāti from jñā-, PIE *ǵneh₃- — English know, can, cunning, notice, diagnosis.

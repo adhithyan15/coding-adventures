@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 4,
-  "sourceHash": "fnv1a64:8dfbdf735211649a",
+  "sourceHash": "fnv1a64:002d4f3342f9267b",
   "lessonIds": [
     "RU-C04-dumat",
     "RU-C04-ponimat",
@@ -13,6 +13,6 @@
   "text": "russian/narration/ch04.txt",
   "json": "russian/narration/ch04.json",
   "textHash": "fnv1a64:ec4f9cfd7ee5cd80",
-  "jsonHash": "fnv1a64:62a7511e9f4ae00c",
+  "jsonHash": "fnv1a64:dfd7fd7013c4a9ea",
   "findings": []
 }

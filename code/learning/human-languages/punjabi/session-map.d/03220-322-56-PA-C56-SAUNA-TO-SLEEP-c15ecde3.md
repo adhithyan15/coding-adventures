@@ -1,1 +1,0 @@
-| 322 | 56 | PA-C56-sauna | to sleep |

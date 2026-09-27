@@ -3,7 +3,8 @@
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "before": [],
   "inline": [
-    "PA-EXT-022-WELLBEING-R3"
+    "PA-EXT-022-WELLBEING-R3",
+    "PA-EXT-011-C-LANGUAGE-SPECIFIC"
   ],
   "after": []
 }

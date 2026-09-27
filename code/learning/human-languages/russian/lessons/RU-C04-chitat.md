@@ -9,7 +9,7 @@ headword: читать
 gloss: "to read — and why Russian has no separate way to say I am reading"
 concept_tag: VERB-READ
 romanization: chitát'
-prerequisites: [RU-C04-ponimat]
+prerequisites: [RU-C04-ponimat, RU-C03-govorit-false-friend]
 sounds: [stress-unmarked]
 roots: [slavic-chit]
 etymology_hook: "читать sits with честь 'honour' and число 'number' on a root meaning count, heed — no secure English cousin"
