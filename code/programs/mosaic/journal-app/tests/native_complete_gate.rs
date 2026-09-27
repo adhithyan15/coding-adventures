@@ -50,12 +50,10 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // components it composes, which pin the same drops themselves:
     //
     // - `border-radius` on DraftEditor's two text fields;
-    // - `color` on DraftEditor's labels, and on EmptyState's and RecordList's
-    //   secondary `Text`s;
+    // - `color` on those composed Text parts is implemented by #15285;
     // - `font-size` on DraftEditor's action buttons and RecordList's row
     //   titles.
     (Backend::Flutter, "border-radius"),
-    (Backend::Flutter, "color"),
     (Backend::Flutter, "font-size"),
 ];
 
