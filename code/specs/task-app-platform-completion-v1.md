@@ -135,20 +135,26 @@ rather than letting them read as silent gaps.
    all-nine-backend product-coverage checkpoint. This minor release recognizes
    a newly verified capability, but does not promote Paint, static HTML, or Web
    Components into a shipped host. The verified web and strict-native artifact
-   matrix remains unchanged.
+   matrix remains unchanged. **Published from #16166.** The artifact set and
+   provenance verified, but generated notes copied only the change heading and
+   omitted this explicit CI-only boundary.
+9. **P1 [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168)
+   — publish corrective `task-app-v0.5.1` notes.** Put the CI-only backend
+   boundary directly in the release-note template, protect it with a focused
+   test, and publish an immutable patch from the same verified artifact matrix.
 
 ### Tier C — reach, stated honestly
 
-9. **iOS: run, don't just compile.** Today's gate proves the generated SwiftUI
+10. **iOS: run, don't just compile.** Today's gate proves the generated SwiftUI
    sources compile for iOS 16. Promoting that to a real claim needs a simulator
    launch and a driven lifecycle against an iOS-built `task-mosaic-app`.
    Until then the README's phrasing — "source portability rather than a claim" —
    stays exactly as written.
-10. **Android has no backend.** `compose` is Compose Desktop. An Android target
+11. **Android has no backend.** `compose` is Compose Desktop. An Android target
    is a new Mosaic backend, not a TaskApp task, and belongs to
    [#12017](https://github.com/adhithyan15/coding-adventures/issues/12017), not
    here. Recorded so its absence is a decision rather than an oversight.
-11. **Signing, notarization, and installers**
+12. **Signing, notarization, and installers**
     ([#13977](https://github.com/adhithyan15/coding-adventures/issues/13977)).
     macOS is unsigned and un-notarized; Windows is an unsigned portable folder,
     not MSIX; Linux ships tarballs, not packages. Writing this spec turned up

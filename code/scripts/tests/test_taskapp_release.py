@@ -531,6 +531,13 @@ def test_release_notes_are_product_scoped_and_filter_previous_history() -> None:
     assert "issues/13977" in notes
     assert "issues/13522" not in notes
     assert "SHA256SUMS" in notes
+    assert (
+        "Static HTML, Web Components, and Paint are CI-only verification outputs"
+        in notes
+    )
+    assert "not\n  downloadable release artifacts" in notes
+    assert "Paint coverage does not provide a Paint host" in notes
+    assert "or interaction support" in notes
 
 
 def test_workflow_validates_before_building_and_has_one_publisher() -> None:

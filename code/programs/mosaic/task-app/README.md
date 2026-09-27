@@ -171,6 +171,10 @@ nine Mosaic backends after the reviewed Paint visual-regression gate landed.
 It does not add Paint, static HTML, or Web Components to the downloadable
 artifact matrix; those outputs remain CI-only.
 
+The corrective `task-app-v0.5.1` patch carries that same boundary into the
+generated GitHub release notes themselves. Its web/native artifact matrix is
+identical to v0.5.0; no CI-only backend is promoted into a downloadable asset.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:
