@@ -14,13 +14,16 @@
 > The native release P0 (#14249) and native startup-state epic (#13984) are now
 > closed. The product-scoped SemVer lane (#13543) has published
 > `task-app-v0.1.0`, `task-app-v0.2.0`, and the immutable
-> `task-app-v0.3.0` release from the complete native lifecycle gates. Release
+> `task-app-v0.3.0` release from the complete native lifecycle gates. The next
+> incremental checkpoint is `task-app-v0.4.0` (#16134): it records the static
+> HTML and Web Component parity gates without adding either CI-only output to
+> the downloadable artifact set. Release
 > verification found that label-filtered GitHub history can omit valid
 > cross-package product changes; #16116 was repaired in #16117 by making the
-> dated changelog authoritative. The static HTML shell gate shipped in #16121;
-> the next interactive backend gap is the Web Components parity host tracked by
-> #16125. This is coverage work, not resumed feature composition or a new
-> release artifact.
+> dated changelog authoritative. The static HTML shell gate shipped in #16121
+> and the Web Components lifecycle parity host in #16130. Both are coverage
+> work, not resumed feature composition or new release artifacts. After the
+> `v0.4.0` checkpoint, Paint is the remaining TaskApp-scoped backend gap.
 > The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
@@ -68,8 +71,12 @@ links existing Mosaic work instead of duplicating it.
    release lane builds a tested web bundle and strict generated native projects;
    installer packaging remains #13522. **Done in #13587, with follow-up clean-
    runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0`,
-   `task-app-v0.2.0`, and `task-app-v0.3.0` published. The next focused
-   release-lane repair, [#16116](https://github.com/adhithyan15/coding-adventures/issues/16116),
+   `task-app-v0.2.0`, and `task-app-v0.3.0` published. The `task-app-v0.4.0`
+   checkpoint is tracked by
+   [#16134](https://github.com/adhithyan15/coding-adventures/issues/16134) and
+   intentionally keeps the verified artifact matrix unchanged. The next
+   focused release-lane repair,
+   [#16116](https://github.com/adhithyan15/coding-adventures/issues/16116),
    was completed in #16117; generated notes now make the dated changelog
    authoritative before supporting GitHub history.**
 8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
@@ -151,9 +158,9 @@ The fresh pass this section used to defer to is now written down:
 It measures TaskApp against all nine Mosaic backends rather than against the
 super-app feature roadmap. Six interactive/native targets are gated and shipped;
 static HTML is structurally gated by #16120/#16121, and Web Components is
-selected as the real-engine parity gate in #16125. Paint is the only backend
-left without TaskApp-level coverage. The ordered queue below comes from that
-spec.
+real-engine parity-gated by #16125/#16130. Paint is the only backend left
+without TaskApp-level coverage. The ordered queue below comes from that spec;
+the product-scoped `v0.4.0` checkpoint in #16134 is prioritized before Paint.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
@@ -221,8 +228,8 @@ see the spec for the completion bar each one has to clear.
    interaction, or artifact claim.
 7. **P1 [#16125](https://github.com/adhithyan15/coding-adventures/issues/16125):**
    Web Components host — the last interactive backend without TaskApp-level
-   coverage. Selected as a real-engine, emitted-control parity gate; no release
-   artifact claim.
+   coverage. **Done in #16130** as a real-engine, emitted-control parity gate;
+   no release artifact claim.
 8. Paint visual-regression gate — the only mechanism that would catch a purely
    visual regression.
 

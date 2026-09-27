@@ -188,8 +188,10 @@ launches the archived bundle from `/` without a runtime override. On macOS it
 assembles the release-runner architecture into an unsigned `Trestle.app`, validates
 its stable metadata and bundled dylib, and checks state restoration across a
 replacement-style second extraction. One publisher job then creates checksums, a
-source-commit manifest, product-scoped notes from merged `task-app` pull requests,
-and one GitHub Release. On Windows it publishes a self-contained x64 folder,
+source-commit manifest, release notes led by the reviewed dated changelog section
+and supported by matching merged `task-app` history, and one GitHub Release. The
+changelog is authoritative; label-filtered GitHub history supplies context only.
+On Windows it publishes a self-contained x64 folder,
 drives the original and replacement `Trestle.exe` copies through UI Automation,
 and verifies the stable LocalApplicationData state plus console binding contract.
 The same exact matrix materializes the committed v0.1.0 upgrade fixture at each
@@ -208,6 +210,10 @@ Release payloads distinguish directly runnable archives from generated projects:
 | SwiftUI ZIP | macOS | Native-complete generated project with the Rust runtime |
 | Trestle.exe ZIP | Windows 10 2004+ / x64 | Verified self-contained portable app; unsigned and unpackaged |
 | XAML ZIP | Windows | Native-complete generated WinUI project with the Rust runtime |
+
+The TaskApp-scoped static HTML snapshot and Web Component parity bundle are
+CI-only verification outputs. They are not published artifacts and do not add
+runtime or platform coverage to this matrix.
 
 The Linux archives are unpack-and-run bundles for compatible x86_64 systems, not
 signed distribution packages. Each includes exact prerequisites and a launcher
