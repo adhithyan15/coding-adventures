@@ -1474,6 +1474,7 @@ pub struct ArchitectureConfig {
     pub icon_size: f64,
     pub font_size: f64,
     pub node_separation: f64,
+    pub padding: f64,
 }
 
 impl Default for ArchitectureConfig {
@@ -1482,6 +1483,7 @@ impl Default for ArchitectureConfig {
             icon_size: 80.0,
             font_size: 16.0,
             node_separation: 75.0,
+            padding: 40.0,
         }
     }
 }

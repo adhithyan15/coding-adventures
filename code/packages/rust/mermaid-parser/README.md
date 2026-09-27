@@ -45,9 +45,9 @@ Namespaced icon identifiers survive typed IR and use a generic glyph when vendor
 artwork is unavailable. Orthogonal Architecture edges deterministically avoid
 unrelated service and junction bounds before backend-neutral lowering. Mermaid
 `init` directives and YAML front matter preserve Architecture `iconSize`,
-`fontSize`, and `nodeSeparation` as typed semantic configuration; layout resolves
-them into backend-neutral node geometry, service typography, and deterministic
-row/column spacing. Full vendor icon artwork,
+`fontSize`, `nodeSeparation`, and `padding` as typed semantic configuration;
+layout resolves them into backend-neutral node geometry, service typography,
+deterministic row/column spacing, and outer canvas margins. Full vendor icon artwork,
 group-boundary obstacle avoidance, randomized layout, and the remaining
 fcose-specific tuning controls remain outside the partial compatibility claim.
 
