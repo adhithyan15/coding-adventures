@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+### Changed — one stricter plain-name rule on every host (UI87 §3.1)
+
+Following the SwiftUI library's security review, `files.save` suggested names
+are checked the same way by the Compose and SwiftUI libraries and the browser
+executor. Newly refused: a leading `.` (dot-files such as `.zshrc`), line and
+paragraph separators (U+2028/U+2029), leading or trailing whitespace of any
+kind (a no-break space included), and runs of two or more whitespace
+characters. Characters are checked by code point, so a format character
+outside the BMP (U+E0001) is caught too. When the app names no accepted type,
+a name ending in an extension that runs when opened (`.command`, `.terminal`,
+`.webloc`, `.exe`, `.desktop`, … — one shared list) is refused.
+
+- `isPlainFileName` gains the same checks, and `EXECUTABLE_EXTENSIONS` /
+  `hasExecutableExtension` are exported. A node test pins the list to the
+  Compose library's.
+
 ### Added — the browser answers the standard `files.*` kinds (UI87 §7)
 
 - `mosaic-file-effects.mjs` answers `files.open` and `files.save`, the kinds

@@ -71,20 +71,49 @@ function acceptedTypes(payload) {
 }
 
 /**
- * A suggested name is a plain file name (UI87 §3.1): no separators, no `:`
- * (a Windows drive or alternate data stream), no control or format characters
- * (a right-to-left override can disguise `.exe` as `.pdf`), no trailing dot or
- * space, at most 255 characters. The same rule as the Compose library.
+ * A suggested name is a plain file name (UI87 §3.1) -- one rule on every host
+ * (the Compose and SwiftUI libraries check the same things):
+ *  - no separators, and not `.` or `..`;
+ *  - no leading `.` (a hidden dot-file such as `.zshrc` is configuration a
+ *    shell runs, not a document);
+ *  - no `:` (a Windows drive or alternate data stream);
+ *  - no control, format, line- or paragraph-separator characters (a
+ *    right-to-left override can disguise `.exe` as `.pdf`);
+ *  - no leading or trailing whitespace of any kind, no trailing dot, and no
+ *    run of two or more whitespace characters -- `Invoice.pdf<30 spaces>.exe`
+ *    hides its extension that way;
+ *  - at most 255 UTF-16 units.
  */
 export function isPlainFileName(name) {
   return typeof name === 'string'
-    && name.trim() !== ''
+    && name !== ''
     && name.length <= 255
     && name !== '.' && name !== '..'
-    && !/[.\s]$/.test(name)
-    // Runs of spaces are how `Invoice.pdf<30 spaces>.exe` hides its extension.
-    && !/\s{2,}/.test(name)
-    && !/[\\/:\u0000-\u001f\u007f-\u009f\p{Cf}]/u.test(name);
+    && !name.startsWith('.')
+    && !/^\s|[.\s]$/u.test(name)
+    && !/\s{2,}/u.test(name)
+    && !/[\\/:\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u.test(name);
+}
+
+/**
+ * Extensions that run when the file is opened, on some platform. With no
+ * accepted type a save may not end in one -- the same set as the Compose and
+ * SwiftUI libraries.
+ */
+export const EXECUTABLE_EXTENSIONS = new Set([
+  // macOS: Terminal scripts and Finder location files open with no prompt.
+  'command', 'terminal', 'tool', 'webloc', 'inetloc', 'fileloc', 'app', 'pkg', 'dmg',
+  // Windows.
+  'exe', 'com', 'bat', 'cmd', 'scr', 'pif', 'msi', 'lnk', 'url', 'hta', 'cpl',
+  'vbs', 'vbe', 'js', 'jse', 'wsf', 'wsh', 'ps1', 'reg', 'jar',
+  // Linux desktops.
+  'desktop', 'sh',
+]);
+
+/** True when `name` ends in an extension from `EXECUTABLE_EXTENSIONS`. */
+export function hasExecutableExtension(name) {
+  const dot = String(name).lastIndexOf('.');
+  return dot >= 0 && EXECUTABLE_EXTENSIONS.has(String(name).slice(dot + 1).toLowerCase());
 }
 
 function mimeTypeFor(file) {
@@ -147,6 +176,9 @@ export function createBrowserFileEffects(host, environment = globalThis) {
         const extensions = Object.values(acceptedTypes(effect.payload)).flat();
         if (extensions.length > 0 && !extensions.some(extension => name.toLowerCase().endsWith(extension))) {
           throw new Error('suggestedName must end in an extension of an accepted type');
+        }
+        if (extensions.length === 0 && hasExecutableExtension(name)) {
+          throw new Error('suggestedName must not end in an executable extension');
         }
         if (typeof savedBytes !== 'string' || savedBytes.length > Math.ceil(MAX_FILE_BYTES / 3) * 4) {
           throw new Error('File bytes must be base64 and no larger than 16 MiB');

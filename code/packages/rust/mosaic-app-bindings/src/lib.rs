@@ -408,6 +408,40 @@ mod tests {
         assert_eq!(swift_rows, kotlin_rows);
     }
 
+    /// The executable-extension denylist is one set on both hosts, so an
+    /// app's `files.save` without a type is refused or allowed the same way.
+    #[test]
+    fn swift_and_compose_refuse_the_same_executable_extensions() {
+        fn listed(source: &str, start: &str, end: &str) -> Vec<String> {
+            let from = source.find(start).expect("list start") + start.len();
+            let to = from + source[from..].find(end).expect("list end");
+            let mut names: Vec<String> = source[from..to]
+                .lines()
+                .filter(|line| !line.trim_start().starts_with("//"))
+                .flat_map(|line| line.split(','))
+                .map(|item| item.trim().trim_matches('"').to_string())
+                .filter(|item| !item.is_empty())
+                .collect();
+            names.sort();
+            names
+        }
+        let swift = listed(
+            &swift_platform_effects(),
+            "let mosaicExecutableExtensions: Set<String> = [",
+            "]",
+        );
+        let kotlin = listed(
+            &compose_platform_effects(),
+            "val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(",
+            ")\n",
+        );
+        assert!(swift.len() >= 30, "{swift:?}");
+        assert_eq!(swift, kotlin);
+        for must in ["command", "terminal", "webloc", "exe", "desktop"] {
+            assert!(swift.iter().any(|name| name == must), "{must}");
+        }
+    }
+
     /// AppKit exists only on macOS; the iOS app target compiles this file too
     /// (UI89 §2.2 lists every `Sources/App/*.swift`), so every AppKit use must
     /// sit behind `#if os(macOS)`.

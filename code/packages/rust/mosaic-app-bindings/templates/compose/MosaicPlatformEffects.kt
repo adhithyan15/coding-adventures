@@ -158,22 +158,66 @@ private fun mosaicReadBounded(file: File, limit: Long): ByteArray? {
  * dialog, or disguise what it is saving:
  *
  * - no directory separators, and not `.` or `..` -- no other directory;
+ * - no leading `.` -- a hidden dot-file such as `.zshrc` is configuration a
+ *   shell or tool runs, not a document;
  * - no `:` -- on Windows `D:x` names another drive, and `x:y` an alternate
  *   data stream;
- * - no control or format characters -- a right-to-left override can make
- *   `invoice<RLO>fdp.exe` read as a PDF in the dialog;
- * - no trailing dot or space, which Windows silently strips;
- * - at most 255 characters.
+ * - no control, format, line- or paragraph-separator characters -- a
+ *   right-to-left override can make `invoice<RLO>fdp.exe` read as a PDF in the
+ *   dialog, and a separator breaks the name across lines;
+ * - no leading or trailing whitespace of any kind (a no-break space included),
+ *   no run of two or more whitespace characters, and no trailing dot, which
+ *   Windows silently strips -- `report.pdf` padded out and ending `.command`
+ *   hides its real extension;
+ * - at most 255 UTF-16 units.
+ *
+ * Checked by code point, so a format character outside the BMP (the tag
+ * characters, U+E0000..) is caught as well as one inside it.
  */
-fun mosaicIsPlainFileName(name: String): Boolean =
-    name.isNotEmpty() &&
-        name.length <= 255 &&
-        name != "." && name != ".." &&
-        !name.endsWith(".") && !name.endsWith(" ") &&
-        name.none {
-            it == '/' || it == '\\' || it == ':' ||
-                Character.isISOControl(it) || Character.getType(it) == Character.FORMAT.toInt()
-        }
+fun mosaicIsPlainFileName(name: String): Boolean {
+    if (name.isEmpty() || name.length > 255 || name == "." || name == "..") return false
+    if (name.startsWith(".") || name.endsWith(".")) return false
+    val first = name.codePointAt(0)
+    val last = name.codePointBefore(name.length)
+    if (mosaicIsSpace(first) || mosaicIsSpace(last)) return false
+    val points = name.codePoints().toArray()
+    for (index in 1 until points.size) {
+        if (mosaicIsSpace(points[index - 1]) && mosaicIsSpace(points[index])) return false
+    }
+    return name.codePoints().noneMatch { point ->
+        point == '/'.code || point == '\\'.code || point == ':'.code ||
+            when (Character.getType(point).toByte()) {
+                Character.CONTROL, Character.FORMAT,
+                Character.LINE_SEPARATOR, Character.PARAGRAPH_SEPARATOR -> true
+                else -> false
+            }
+    }
+}
+
+private fun mosaicIsSpace(point: Int): Boolean =
+    Character.isWhitespace(point) || Character.isSpaceChar(point)
+
+/**
+ * Extensions that run when the file is opened, on some platform: when an app
+ * names no type (`accept` empty) a save may not end in one of these, so a
+ * `files.save` cannot drop a launcher next to the person's documents. When the
+ * app does name types, the name must already end in one of theirs.
+ */
+val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(
+    // macOS: Terminal scripts and Finder location files open with no prompt.
+    "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "app", "pkg", "dmg",
+    // Windows.
+    "exe", "com", "bat", "cmd", "scr", "pif", "msi", "lnk", "url", "hta", "cpl",
+    "vbs", "vbe", "js", "jse", "wsf", "wsh", "ps1", "reg", "jar",
+    // Linux desktops.
+    "desktop", "sh",
+)
+
+/** True when [name] ends in an extension from [MOSAIC_EXECUTABLE_EXTENSIONS]. */
+fun mosaicHasExecutableExtension(name: String): Boolean {
+    val dot = name.lastIndexOf('.')
+    return dot >= 0 && name.substring(dot + 1).lowercase() in MOSAIC_EXECUTABLE_EXTENSIONS
+}
 
 /** `files.open`: the outcome map, never an exception. */
 fun mosaicRunFilesOpen(payload: Any?, dialogs: MosaicFileDialogs): Map<String, Any?> {
@@ -240,6 +284,9 @@ fun mosaicRunFilesSave(payload: Any?, dialogs: MosaicFileDialogs): Map<String, A
     val extensions = mosaicExtensionsFor(request)
     if (extensions.isNotEmpty() && extensions.none { suggestedName.lowercase().endsWith(".$it") }) {
         return mosaicFailed("suggestedName must end in an extension of an accepted type")
+    }
+    if (extensions.isEmpty() && mosaicHasExecutableExtension(suggestedName)) {
+        return mosaicFailed("suggestedName must not end in an executable extension")
     }
     val target = dialogs.chooseFileToSave(suggestedName, extensions)
         ?: return mosaicCancelled()

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
-import { createBrowserFileEffects, MAX_FILE_BYTES } from './mosaic-file-effects.mjs';
+import { createBrowserFileEffects, EXECUTABLE_EXTENSIONS, hasExecutableExtension, isPlainFileName, MAX_FILE_BYTES } from './mosaic-file-effects.mjs';
 import { loadMosaicModule } from './mosaic-host.mjs';
 
 const effect = (id = 1, kind = 'file.open', payload = {}) => ({ id, delivery: 'await', kind, payload });
@@ -217,6 +217,11 @@ test('files.save refuses names that are paths, disguises, or the wrong type, bef
     ['invoice‮fdp.exe', undefined], ['trailing.', undefined], ['trailing ', undefined],
     ['Invoice.pdf      .exe', undefined],
     ['notes.exe', ['application/json']],
+    // One rule on every host (UI87 §3.1, the native libraries' review):
+    ['.zshrc', undefined], [' leading.json', undefined], ['nbsp\u00A0', undefined],
+    ['line\u2028break.json', undefined], ['tag\u{E0001}.json', undefined],
+    // With no accepted type, nothing that runs when opened.
+    ['run.command', undefined], ['site.webloc', undefined], ['setup.EXE', undefined],
   ]) {
     const { files, calls, completions } = fixture();
     await files.run(effect(9, 'files.save', { suggestedName: name, ...(accept ? { accept } : {}), bytes: 'AA==' }));
@@ -265,4 +270,16 @@ test('the download fallback refuses a name with no accepted type', async () => {
     assert.equal(clicked.length, 0);
     assert.ok(completions[0][1].failed);
   }
+});
+
+test('the plain-name rule and executable list match the Compose library', async () => {
+  const kotlin = await readFile(new URL('../../mosaic-app-bindings/templates/compose/MosaicPlatformEffects.kt', import.meta.url), 'utf8');
+  const start = kotlin.indexOf('val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(');
+  const body = kotlin.slice(start, kotlin.indexOf(')\n', start));
+  const listed = [...body.matchAll(/"([a-z0-9]+)"/g)].map(match => match[1]).sort();
+  assert.deepEqual([...EXECUTABLE_EXTENSIONS].sort(), listed);
+  assert.equal(hasExecutableExtension('notes.txt'), false);
+  assert.equal(hasExecutableExtension('README'), false);
+  assert.equal(isPlainFileName('journal-2026-09-27.json'), true);
+  assert.equal(isPlainFileName('two words.json'), true);
 });

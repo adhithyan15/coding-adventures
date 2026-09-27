@@ -153,6 +153,9 @@ private func checkSaveRefusals(in directory: URL) {
   for name in [
     "", ".", "..", "../escape.json", "a/b.json", "a\\b.json", "C:x.json", "trailing.",
     "trailing ", "bell\u{7}.json", "invoice\u{202E}fdp.exe", String(repeating: "a", count: 256),
+    ".zshrc", " leading.json", "nbsp\u{00A0}", "\u{3000}ideographic.json",
+    "line\u{2028}break.json", "para\u{2029}break.json", "tag\u{E0001}.json",
+    "Invoice.pdf      .command",
   ] {
     let dialogs = FakeDialogs(target)
     let outcome = mosaicRunFilesSave(
@@ -169,6 +172,19 @@ private func checkSaveRefusals(in directory: URL) {
   check(
     failure(mismatched) == "suggestedName must end in an extension of an accepted type",
     "extension must match the accepted type")
+
+  // With no accepted type, a name that would run when opened is refused.
+  for name in ["run.command", "open.terminal", "site.webloc", "setup.EXE", "go.desktop", "a.ps1"] {
+    let dialogs = FakeDialogs(directory.appendingPathComponent(name))
+    let outcome = mosaicRunFilesSave(
+      ["suggestedName": name, "bytes": encoded("x")] as [String: Any], dialogs: dialogs)
+    check(
+      failure(outcome) == "suggestedName must not end in an executable extension",
+      "executable extension \(name)")
+    check(dialogs.opened == 0, "no panel for executable \(name)")
+  }
+  check(!mosaicHasExecutableExtension("notes.txt") && !mosaicHasExecutableExtension("README"),
+    "an ordinary document is not executable")
 
   let notBase64 = mosaicRunFilesSave(
     ["suggestedName": "a.txt", "bytes": "%%%"] as [String: Any], dialogs: FakeDialogs(target))

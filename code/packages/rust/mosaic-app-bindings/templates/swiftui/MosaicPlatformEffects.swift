@@ -206,25 +206,65 @@ func mosaicReadChosenFile(_ url: URL, limit: Int) -> MosaicOpenRead {
 }
 
 /// A suggested name is a plain file name (UI87 §3.1), so an app cannot steer
-/// the panel, or disguise what it is saving:
+/// the panel, or disguise what it is saving -- the same rule as the Compose
+/// library:
 ///
 /// - no directory separators, and not `.` or `..` -- no other directory;
+/// - no leading `.` -- a hidden dot-file such as `.zshrc` is configuration a
+///   shell or tool runs, not a document;
 /// - no `:` -- the Finder shows it as `/`, and on Windows it names a drive or
 ///   an alternate data stream;
-/// - no control or format characters -- a right-to-left override can make
-///   `invoice<RLO>fdp.exe` read as a PDF in the panel;
-/// - no trailing dot or space;
+/// - no control, format, line- or paragraph-separator characters -- a
+///   right-to-left override can make `invoice<RLO>fdp.exe` read as a PDF in
+///   the panel, and a separator breaks the name across lines;
+/// - no leading or trailing whitespace of any kind (a no-break space
+///   included), no run of two or more whitespace characters, and no trailing
+///   dot -- `report.pdf` padded out and ending `.command` hides its extension;
 /// - at most 255 UTF-16 units, the same count the Compose library makes.
 func mosaicIsPlainFileName(_ name: String) -> Bool {
   guard !name.isEmpty, name.utf16.count <= 255, name != ".", name != ".." else {
     return false
   }
-  if name.hasSuffix(".") || name.hasSuffix(" ") { return false }
-  return !name.unicodeScalars.contains { scalar in
-    scalar == "/" || scalar == "\\" || scalar == ":"
-      || scalar.properties.generalCategory == .control
-      || scalar.properties.generalCategory == .format
+  if name.hasPrefix(".") || name.hasSuffix(".") { return false }
+  guard let first = name.unicodeScalars.first, let last = name.unicodeScalars.last,
+    !first.properties.isWhitespace, !last.properties.isWhitespace
+  else {
+    return false
   }
+  var previousWasSpace = false
+  for scalar in name.unicodeScalars {
+    let isSpace = scalar.properties.isWhitespace
+    if isSpace && previousWasSpace { return false }
+    previousWasSpace = isSpace
+  }
+  return !name.unicodeScalars.contains { scalar in
+    if scalar == "/" || scalar == "\\" || scalar == ":" { return true }
+    switch scalar.properties.generalCategory {
+    case .control, .format, .lineSeparator, .paragraphSeparator: return true
+    default: return false
+    }
+  }
+}
+
+/// Extensions that run when the file is opened, on some platform: when an
+/// app names no type (`accept` empty) a save may not end in one of these, so
+/// a `files.save` cannot drop a launcher next to the person's documents. When
+/// the app does name types, the name must already end in one of theirs. The
+/// same set as the Compose library.
+let mosaicExecutableExtensions: Set<String> = [
+  // macOS: Terminal scripts and Finder location files open with no prompt.
+  "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "app", "pkg", "dmg",
+  // Windows.
+  "exe", "com", "bat", "cmd", "scr", "pif", "msi", "lnk", "url", "hta", "cpl",
+  "vbs", "vbe", "js", "jse", "wsf", "wsh", "ps1", "reg", "jar",
+  // Linux desktops.
+  "desktop", "sh",
+]
+
+/// True when `name` ends in an extension from `mosaicExecutableExtensions`.
+func mosaicHasExecutableExtension(_ name: String) -> Bool {
+  guard let dot = name.lastIndex(of: ".") else { return false }
+  return mosaicExecutableExtensions.contains(String(name[name.index(after: dot)...]).lowercased())
 }
 
 /// `files.open`: the outcome dictionary, never a thrown error.
@@ -277,6 +317,9 @@ func mosaicRunFilesSave(_ payload: Any, dialogs: MosaicFileDialogs) -> [String: 
   let lowered = suggestedName.lowercased()
   if !extensions.isEmpty && !extensions.contains(where: { lowered.hasSuffix(".\($0)") }) {
     return mosaicFailed("suggestedName must end in an extension of an accepted type")
+  }
+  if extensions.isEmpty && mosaicHasExecutableExtension(suggestedName) {
+    return mosaicFailed("suggestedName must not end in an executable extension")
   }
   guard let target = dialogs.chooseFileToSave(suggestedName: suggestedName, extensions: extensions)
   else {
