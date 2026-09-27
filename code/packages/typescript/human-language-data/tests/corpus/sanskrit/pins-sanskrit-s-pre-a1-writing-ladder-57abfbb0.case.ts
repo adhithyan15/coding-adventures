@@ -30,6 +30,9 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
     ["SA-W03-namah-guided-copy", "guided-copy"],
     ["SA-W03-namah-delayed-copy", "delayed-copy"],
     ["SA-W03-namah-dictation", "dictation-transcription"],
+    ["SA-W05-vocalic-r-guided-copy", "guided-copy"],
+    ["SA-W05-vocalic-r-delayed-copy", "delayed-copy"],
+    ["SA-W05-vocalic-r-dictation", "dictation-transcription"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({
@@ -39,7 +42,7 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
   });
 });
 
-it("extends the sourced single-letter ladder through a known word, phrase, and visarga", () => {
+it("extends the sourced single-letter ladder through words, visarga, and vocalic r", () => {
   const ids = [
     "SA-W03-mama-guided-copy",
     "SA-W03-mama-delayed-copy",
@@ -50,6 +53,9 @@ it("extends the sourced single-letter ladder through a known word, phrase, and v
     "SA-W03-namah-guided-copy",
     "SA-W03-namah-delayed-copy",
     "SA-W03-namah-dictation",
+    "SA-W05-vocalic-r-guided-copy",
+    "SA-W05-vocalic-r-delayed-copy",
+    "SA-W05-vocalic-r-dictation",
   ];
   const lessons = loadTrackLessons("sanskrit")
     .sort(readingOrder)
@@ -57,7 +63,7 @@ it("extends the sourced single-letter ladder through a known word, phrase, and v
 
   expect(lessons.map((lesson) => lesson.realization.lessonId)).toEqual(ids);
   expect(lessons.map((lesson) => Number(lesson.frontmatter["duration.max_seconds"]))).toEqual([
-    150, 120, 120, 180, 150, 150, 150, 120, 120,
+    150, 120, 120, 180, 150, 150, 150, 120, 120, 150, 120, 120,
   ]);
   for (let index = 1; index < lessons.length; index += 1) {
     expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);
@@ -77,4 +83,9 @@ it("extends the sourced single-letter ladder through a known word, phrase, and v
   expect(markdown[7]).toContain("romanization");
   expect(markdown[8]).toContain("from sound and meaning alone");
   expect(markdown[8]).toContain("Vocalic ṛ");
+  expect(markdown[9]).toContain("not a new word or a new shape");
+  expect(markdown[10]).toContain("no visible answer and no romanization");
+  expect(markdown[11]).toContain("no visible Devanagari model and no romanized answer");
+  expect(markdown[11]).toContain("sound and function alone");
+  expect(markdown[11]).toContain("Conjuncts, connected text");
 });

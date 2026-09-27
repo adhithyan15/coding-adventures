@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-141-WRITING-VOCALIC-R-BRIDGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can trace the dependent vowel sign ◌ृ and then write it with a model, after a delay, and finally from its sound and function alone, without using romanization as the answer.",
+  "prerequisites": [
+    "SA-EXT-140-WRITING-VISARGA-BRIDGE"
+  ]
+}

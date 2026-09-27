@@ -14,8 +14,12 @@ shapes to widen that evidence without a jump:
   three short lessons then move the already-known *namas* “a bow” through a
   visible copy, a delayed copy, and sound-and-meaning dictation. The written
   answer must be Devanagari: romanization remains a prompt, never credit.
+- **◌ृ** now moves from its existing observe/trace lesson through visible copy,
+  delayed copy, and sound-and-function dictation. The sign itself is the whole
+  answer, so this tranche adds no hidden word or untaught consonant; a
+  Latin-letter transliteration still earns no Devanagari credit.
 
 The next writing tranche must earn a full introduction only after every shape
-in it has been taught. Later tranches still owe vocalic ṛ, conjuncts,
-connected text, and independent recall; this word-and-mark bridge does not
-pretend that one pre-A1 stage marker completed those jobs.
+in it has been taught. Later tranches still owe conjuncts, connected text, and
+independent recall; this sign bridge does not pretend that one pre-A1 stage
+marker completed those jobs.

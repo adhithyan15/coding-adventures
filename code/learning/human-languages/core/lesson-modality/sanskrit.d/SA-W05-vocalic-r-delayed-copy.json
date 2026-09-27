@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "SA-W05-vocalic-r-delayed-copy",
+    "language": "sanskrit",
+    "chapter": 5,
+    "sequence": 283,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2bb967f30c16b19b",
+    "detachableSegments": [
+      "Writing — delayed vocalic-r copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
