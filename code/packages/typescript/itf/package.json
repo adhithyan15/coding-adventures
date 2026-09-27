@@ -12,7 +12,8 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/barcode-layout-1d": "file:../barcode-layout-1d"
+    "@coding-adventures/barcode-layout-1d": "file:../barcode-layout-1d",
+    "@coding-adventures/paint-instructions": "file:../paint-instructions"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

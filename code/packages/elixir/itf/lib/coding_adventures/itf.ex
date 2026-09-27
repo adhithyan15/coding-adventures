@@ -19,16 +19,37 @@ defmodule CodingAdventures.Itf do
   def default_render_config, do: @default_layout_config
 
   def normalize_itf(data) do
-    unless String.match?(data, ~r/^\d+$/) do
-      raise ArgumentError, "ITF input must contain digits only"
+    unless String.valid?(data) do
+      raise ArgumentError, "ITF input must contain valid Unicode scalar values"
     end
 
-    if data == "" or rem(String.length(data), 2) != 0 do
+    scalars = String.to_charlist(data)
+
+    if length(scalars) > 4096 do
+      raise ArgumentError, "ITF input must contain at most 4096 characters"
+    end
+
+    if scalars == [] or rem(length(scalars), 2) != 0 do
       raise ArgumentError, "ITF input must contain an even number of digits"
+    end
+
+    unless Enum.all?(scalars, &(&1 in ?0..?9)) do
+      raise ArgumentError, "ITF input must contain digits only"
     end
 
     data
   end
+
+  def error_id(%ArgumentError{message: "ITF input must contain at most 4096 characters"}),
+    do: "input-too-long"
+
+  def error_id(%ArgumentError{message: "ITF input must contain an even number of digits"}),
+    do: "invalid-length"
+
+  def error_id(%ArgumentError{message: "ITF input must contain digits only"}),
+    do: "invalid-character"
+
+  def error_id(_error), do: nil
 
   def encode_itf(data) do
     normalize_itf(data)
@@ -61,7 +82,13 @@ defmodule CodingAdventures.Itf do
   def expand_itf_runs(data) do
     encoded_pairs = encode_itf(data)
 
-    retag_runs(BarcodeLayout1D.runs_from_binary_pattern(@start_pattern, source_char: "start", source_index: -1), "start") ++
+    retag_runs(
+      BarcodeLayout1D.runs_from_binary_pattern(@start_pattern,
+        source_char: "start",
+        source_index: -1
+      ),
+      "start"
+    ) ++
       Enum.flat_map(encoded_pairs, fn entry ->
         BarcodeLayout1D.runs_from_binary_pattern(
           entry.binary_pattern,
@@ -70,7 +97,13 @@ defmodule CodingAdventures.Itf do
         )
         |> retag_runs("data")
       end) ++
-      retag_runs(BarcodeLayout1D.runs_from_binary_pattern(@stop_pattern, source_char: "stop", source_index: -2), "stop")
+      retag_runs(
+        BarcodeLayout1D.runs_from_binary_pattern(@stop_pattern,
+          source_char: "stop",
+          source_index: -2
+        ),
+        "stop"
+      )
   end
 
   def layout_itf(data, config \\ @default_layout_config) do
@@ -90,6 +123,8 @@ defmodule CodingAdventures.Itf do
   def draw_itf(data, config \\ @default_layout_config), do: layout_itf(data, config)
 
   defp retag_runs(runs, role) do
-    Enum.map(runs, fn run -> %{run | role: role, metadata: Map.new(Map.get(run, :metadata, %{}))} end)
+    Enum.map(runs, fn run ->
+      %{run | role: role, metadata: Map.new(Map.get(run, :metadata, %{}))}
+    end)
   end
 end

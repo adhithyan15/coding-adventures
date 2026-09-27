@@ -2,7 +2,12 @@
 name = "itf"
 version = "0.1.0"
 edition = "2021"
+description = "Interleaved 2 of 5 encoder with barcode-symbologies-v1 conformance"
 
 [dependencies]
 barcode-layout-1d = { path = "../barcode-layout-1d" }
 paint-instructions = { path = "../paint-instructions" }
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
+serde_json = "1"

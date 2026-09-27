@@ -5,6 +5,7 @@ defmodule CodingAdventures.Itf.MixProject do
     [
       app: :coding_adventures_itf,
       version: "0.1.0",
+      description: "Interleaved 2 of 5 encoder with barcode-symbologies-v1 conformance",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -19,7 +20,8 @@ defmodule CodingAdventures.Itf.MixProject do
   defp deps do
     [
       {:coding_adventures_paint_instructions, path: "../paint_instructions"},
-      {:coding_adventures_barcode_layout_1d, path: "../barcode_layout_1d"}
+      {:coding_adventures_barcode_layout_1d, path: "../barcode_layout_1d"},
+      {:jason, "~> 1.4", only: :test}
     ]
   end
 end

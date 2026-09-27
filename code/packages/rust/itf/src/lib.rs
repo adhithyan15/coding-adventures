@@ -32,15 +32,27 @@ const DIGIT_PATTERNS: [&str; 10] = [
 ];
 
 pub fn normalize_itf(data: &str) -> Result<String, String> {
-    if data.is_empty() || !data.chars().all(|ch| ch.is_ascii_digit()) {
+    let scalar_count = data.chars().count();
+    if scalar_count > 4096 {
+        return Err("ITF input must contain at most 4096 characters".to_string());
+    }
+    if scalar_count == 0 || !scalar_count.is_multiple_of(2) {
+        return Err("ITF input must contain an even number of digits".to_string());
+    }
+    if !data.chars().all(|ch| ch.is_ascii_digit()) {
         return Err("ITF input must contain digits only".to_string());
     }
 
-    if !data.len().is_multiple_of(2) {
-        return Err("ITF input must contain an even number of digits".to_string());
-    }
-
     Ok(data.to_string())
+}
+
+pub fn itf_error_id(error: &str) -> Option<&'static str> {
+    match error {
+        "ITF input must contain at most 4096 characters" => Some("input-too-long"),
+        "ITF input must contain an even number of digits" => Some("invalid-length"),
+        "ITF input must contain digits only" => Some("invalid-character"),
+        _ => None,
+    }
 }
 
 fn encode_pair(pair: &str, source_index: isize) -> EncodedPair {

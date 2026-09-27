@@ -14729,9 +14729,50 @@ contains 91 closed cases, pins every required encoding-table entry and compact
 boundary digest, rejects lexical and JSON parser ambiguities, and writes
 byte-deterministic LF-only UTF-8. Its fixture, schema, state, inventory,
 Python, TypeScript coverage, Rust, Clippy, build-plan, audit, diff, and secret
-checks pass. The pre-existing missing TypeScript paint-instructions build
-dependency is assigned to the existing-lane repair owner rather than widened
-into this contract PR.
+checks pass. The six pre-existing missing TypeScript paint-instructions build
+dependencies are assigned one-for-one to the corresponding existing-lane
+symbology children rather than widened into the neutral contract PR.
+
+PR #16145 completed 41 successful checks and seven expected path-gated skips
+on head `14100818f79afaff8addf022d770906f9239698a`. GitHub reported the branch
+clean and mergeable, guarded squash auto-merge was enabled, and the PR merged
+automatically as `0117283ca42564c87b1f9cbc8abab2664d06c159`. The exact merged-main
+schema-3 inventory remains unchanged and collision-free.
+
+The existing-lane repair is now six bounded symbology children, each depending
+only on the merged neutral contract: `itf-existing-lanes-v1-conformance` owns
+10 cases, `code39-existing-lanes-v1-conformance` owns 11,
+`codabar-existing-lanes-v1-conformance` owns 19,
+`code128-existing-lanes-v1-conformance` owns 19,
+`upc-a-existing-lanes-v1-conformance` owns 12, and
+`ean-13-existing-lanes-v1-conformance` owns 20. The retained
+`barcode-symbologies-existing-lanes-v1-conformance` aggregate is
+selection-blocked until all six children merge, then owns only the final
+72-root registry, metadata, capability, and facade-readiness integration pass.
+Each Java/Kotlin/Dart symbology owner waits only for its matching existing-lane
+child plus the already-recorded neutral and shared-layout prerequisites.
+
+The dependency/leverage refresh selected the ITF child first. Its twelve roots
+and twelve direct barcode-1d consumers have no live open-PR path overlap; the
+ten-case corpus is the smallest complete pilot for the shared registry and
+handwritten adapter pattern. The fresh branch
+`codex/parity-itf-existing-lanes-v1-20260927` starts from exact merged main
+`0117283ca42564c87b1f9cbc8abab2664d06c159` and owns only ITF normalization,
+encoding, fixture consumption, source-compatible stable errors, package docs
+and metadata, and direct downstream validation.
+
+The ITF implementation now registers and executes all ten neutral cases in
+the twelve established roots. Each lane applies the shared scalar-limit,
+length-before-character, and ASCII-only precedence while retaining its public
+exception or result shape. Exact normalized text, modules, run lengths, and
+compact boundary digests agree across the registry. All twelve package suites
+pass locally, including native coverage and lint/type/build checks. Direct
+`barcode-1d` consumers pass in C#, Elixir, F#, Go, Haskell, Lua, Python, Ruby,
+Rust, and TypeScript. Perl exercises and passes the ITF facade before its
+pre-existing Windows native-loader assertion fails on an absent XS binary;
+Swift's ITF suite passes, while the broader Windows facade remains stopped by
+its pre-existing Rust-static-library system-link imports. Those host-native
+front defects remain outside this pure symbology child.
 
 ## Autonomous Loop Protocol
 

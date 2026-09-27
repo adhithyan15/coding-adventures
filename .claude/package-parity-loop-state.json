@@ -11,25 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16145,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16145",
-    "title": "feat(specs): define portable barcode symbology contract",
-    "branch": "codex/parity-barcode-symbologies-contract-20260927",
-    "item_id": "barcode-symbologies-language-neutral-conformance",
-    "opened_at": "2026-09-27T11:57:58Z",
-    "head_revision": "48d6f5d23050e01f012f4b4792d6532884aa7a44",
-    "checks_status": "pending",
-    "auto_merge_enabled": false
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-27T11:20:55Z",
-    "pr_number": 16139,
+    "observed_at": "2026-09-27T13:08:28Z",
+    "pr_number": 16145,
     "status": "merged",
-    "notes": "All 47 final-head checks reached terminal acceptable conclusions: 24 successes and 23 expected path-gated skips. GitHub reported the reviewed head conflict-free, guarded squash auto-merge was enabled, and PR #16139 merged automatically as 04bbbe63a9eb041cc6e7548b8b74ed0204ad7771 without a plain manual merge command."
+    "notes": "All 48 final-head checks reached terminal acceptable conclusions: 41 successes and seven expected path-gated skips. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and PR #16145 merged automatically as 0117283ca42564c87b1f9cbc8abab2664d06c159 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "99025bf353450e280eebba530b28f101001f2127",
+    "revision": "dfde255876bc4d9ce01d05ec8a26f48b3e10b4bf",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -10044,7 +10034,7 @@
     {
       "id": "barcode-symbologies-language-neutral-conformance",
       "title": "Define neutral contracts for six one-dimensional barcode symbologies",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-barcode-symbologies-contract-20260927",
       "pr_number": 16145,
@@ -10059,16 +10049,79 @@
       "implementation_notes": "Defines one pure encoder-only contract for ITF, Code 39, Codabar, Code 128-B, UPC-A, and EAN-13 with ASCII-only normalization, closed stable errors and precedence, atomic failure, a 4,096-scalar ceiling, explicit ill-formed-host-string exclusion, fixed checksum/guard behavior, exact modules, maximal runs, and independently pinned compact boundary digests. The closed 91-case Draft 2020-12 corpus covers every required symbology table entry, every error class, checksum values 0 through 102, retail parity rows, Unicode traps, and length boundaries. The strict loader caps bytes and depth, rejects duplicate keys, non-finite numbers, lone surrogates, non-local references, trailing line terminators in lexical fields, and schema-invalid shapes; generation is deterministic LF-only UTF-8 at the byte level.",
       "validation_notes": "The generator byte-for-byte check, eight fixture/loader tests, Ruff check/format, ten package-parity reporter tests, fifteen CI-gate registry tests, JSON/state parsing, the 907-owner/1,733-edge acyclic state graph, collision check, diff check, and credential-pattern scan pass. Six Python canonical build fronts pass 45 tests with 93.48-100% package coverage. Six TypeScript coverage fronts pass 51 tests with 91.89-100% statement coverage, and all six production tsc attempts consistently expose the pre-existing missing @coding-adventures/paint-instructions workspace dependency now assigned to the existing-lanes repair owner. Six Rust packages pass all unit/doc tests and Clippy with warnings denied. The clean post-rebase Go build-tool dry plan validates 45 Starlark files, discovers 5,262 packages, detects that no package files changed, and retains the shared CI gate suite required by the workflow edit. Six npm production audits report zero vulnerabilities. actionlint is unavailable locally and is not claimed. Three independent read-only reviews drove closure of checksum/table coverage, schema lexical and normalization constraints, stable loader failures, LF-only generation, boundary digest pinning, and README commands.",
       "publication_notes": "Opened ready-for-review PR #16145 from validated implementation head 48d6f5d23050e01f012f4b4792d6532884aa7a44 after a normal first push. Immediately before publication, the branch was based on exact origin/main 99025bf353450e280eebba530b28f101001f2127, no other parity PR or target branch existed, and the only live path overlap was the additive ci.yml test registration versus Dependabot PR #15723's action-SHA updates. GitHub reports the PR open and non-draft; initial checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and the branch is conflict-free.",
-      "notes": "Freeze ITF, Code 39, Codabar, Code 128, UPC-A, and EAN-13 ASCII semantics, empty-input policy, checksums, stable errors, atomicity, checked resource ceilings, and exact module outputs in one bounded neutral corpus. Reject Unicode digit and case-folding ambiguity and keep layout, raster, font, device, filesystem, and native-paint authority outside this owner."
+      "notes": "Freeze ITF, Code 39, Codabar, Code 128, UPC-A, and EAN-13 ASCII semantics, empty-input policy, checksums, stable errors, atomicity, checked resource ceilings, and exact module outputs in one bounded neutral corpus. Reject Unicode digit and case-folding ambiguity and keep layout, raster, font, device, filesystem, and native-paint authority outside this owner.",
+      "merged_head_revision": "14100818f79afaff8addf022d770906f9239698a",
+      "merged_at": "2026-09-27T13:08:28Z",
+      "merge_revision": "0117283ca42564c87b1f9cbc8abab2664d06c159",
+      "merge_notes": "All 48 final-head checks reached terminal acceptable conclusions: 41 successes and seven expected path-gated skips. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and GitHub merged PR #16145 automatically without a plain manual merge command."
+    },
+    {
+      "id": "itf-existing-lanes-v1-conformance",
+      "title": "Reconcile existing ITF lanes with the neutral v1 contract",
+      "status": "in-progress",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "branch": "codex/parity-itf-existing-lanes-v1-20260927",
+      "pr_number": null,
+      "selected_at": "2026-09-27T13:11:45Z",
+      "selection_revision": "0117283ca42564c87b1f9cbc8abab2664d06c159",
+      "selection_notes": "Selected only after PR #16145 completed all 48 final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 refresh remains collision-free at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The neutral aggregate was first decomposed into six symbology-aligned children so each owns exactly twelve current roots. ITF is the dependency-ready pilot: its ten cases establish the shared consumer-registry and handwritten adapter pattern, its twelve roots and twelve direct barcode-1d consumers have zero live open-PR overlap, and it unlocks the matching Java/Kotlin/Dart rollout without forcing unrelated symbologies to move together.",
+      "notes": "Dynamically execute all ten neutral ITF cases in the twelve current lanes; repair Unicode-scalar preflight, the 4,096-scalar ceiling, length-before-alphabet precedence, ASCII-only digits, stable payload-blind atomic errors, exact normalized/modules/runs/digests, truthful empty capability metadata, and the ITF TypeScript paint-instructions dependency. Preserve public exception and Result shapes, use handwritten per-language adapters behind one shared projection contract, and validate each direct barcode-1d consumer.",
+      "validation_notes": "All twelve ITF package suites pass with the shared ten-case corpus, plus lane-native coverage, lint, type, release-build, package-manager audit, and build-front checks. Direct barcode-1d consumers pass in C#, Elixir, F#, Go, Haskell, Lua, Python, Ruby, Rust, and TypeScript. Perl passes its ITF facade assertions before the pre-existing Windows XS loader expectation fails, and Swift ITF passes before the broader facade hits pre-existing Windows system-library link imports; both host-native failures are outside this pure child."
+    },
+    {
+      "id": "code39-existing-lanes-v1-conformance",
+      "title": "Reconcile existing Code 39 lanes with the neutral v1 contract",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Execute all eleven Code 39 cases in the twelve current lanes; repair the Unicode-scalar ceiling, ASCII-only folding and alphabet, reserved-asterisk precedence, empty-input behavior, the no-checksum rule, exact modules and runs, stable atomic errors, truthful metadata, and the TypeScript paint-instructions dependency."
+    },
+    {
+      "id": "codabar-existing-lanes-v1-conformance",
+      "title": "Reconcile existing Codabar lanes with the neutral v1 contract",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Execute all nineteen Codabar cases in the twelve current lanes; repair the Unicode-scalar ceiling, ASCII folding, guarded, unguarded, and default-option semantics and conflicts, stable atomic errors, exact modules and runs, the Rust Unicode byte-slice panic, truthful metadata, and the TypeScript paint-instructions dependency."
+    },
+    {
+      "id": "code128-existing-lanes-v1-conformance",
+      "title": "Reconcile existing Code 128-B lanes with the neutral v1 contract",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Execute all nineteen Code 128-B cases in the twelve current lanes; repair the Unicode-scalar ceiling, printable-ASCII-only Set B, fixed table, start, stop, and checksum semantics, stable atomic errors, exact modules, runs, and digests, truthful metadata, and the TypeScript paint-instructions dependency."
+    },
+    {
+      "id": "upc-a-existing-lanes-v1-conformance",
+      "title": "Reconcile existing UPC-A lanes with the neutral v1 contract",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Execute all twelve UPC-A cases in the twelve current lanes; repair the Unicode-scalar ceiling, 11-or-12-length-before-alphabet precedence, ASCII-only digits, checksum generation and validation, stable atomic errors, exact 95 modules, roles, and runs, truthful metadata, and the TypeScript paint-instructions dependency."
+    },
+    {
+      "id": "ean-13-existing-lanes-v1-conformance",
+      "title": "Reconcile existing EAN-13 lanes with the neutral v1 contract",
+      "status": "pending",
+      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Execute all twenty EAN-13 cases in the twelve current lanes; repair the Unicode-scalar ceiling, 12-or-13-length-before-alphabet precedence, ASCII-only digits, parity and checksum behavior, stable atomic errors, exact 95 modules, roles, and runs, truthful metadata, and the TypeScript paint-instructions dependency."
     },
     {
       "id": "barcode-symbologies-existing-lanes-v1-conformance",
       "title": "Reconcile existing barcode symbology lanes with the neutral v1 contract",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance"],
+      "depends_on": ["itf-existing-lanes-v1-conformance", "code39-existing-lanes-v1-conformance", "codabar-existing-lanes-v1-conformance", "code128-existing-lanes-v1-conformance", "upc-a-existing-lanes-v1-conformance", "ean-13-existing-lanes-v1-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "A read-only audit during the neutral-contract tranche found material divergence across the twelve existing lanes: Unicode digit and case-folding acceptance, payload-bearing errors, missing 4,096-scalar ceilings, Codabar guard-option conflicts, a Rust Codabar Unicode byte-slice panic risk, and all six TypeScript package production builds missing their @coding-adventures/paint-instructions workspace dependency. Dynamically consume every neutral case in each existing portable lane, repair stable atomic behavior and build metadata without host libraries or added authority, and preserve the separate Java/Kotlin/Dart rollout owners."
+      "selection_blocked": true,
+      "notes": "Selection-blocked integration owner for the six collision-free existing-lane symbology children. After every child merges, validate the complete 72-root consumer registry, cross-symbology metadata and capability invariants, and downstream facade readiness without absorbing any child implementation. Clear selection_blocked only for that final bounded integration tranche; it must still follow pending -> in-progress -> pr-open -> merged."
     },
     {
       "id": "barcode-layout-1d-java-kotlin-dart-lane-parity",
@@ -10083,7 +10136,7 @@
       "id": "itf-java-kotlin-dart-lane-parity",
       "title": "Complete ITF parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "itf-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral ITF encoder in all three missing lanes with strict nonempty even-length ASCII digits, exact patterns, checked bounds, stable payload-blind errors, and shared layout output."
@@ -10092,7 +10145,7 @@
       "id": "code39-java-kotlin-dart-lane-parity",
       "title": "Complete Code 39 parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "code39-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral Code 39 encoder in all three missing lanes with ASCII-only folding, reserved-asterisk handling, exact symbol/checksum behavior, checked bounds, and shared layout output."
@@ -10101,7 +10154,7 @@
       "id": "codabar-java-kotlin-dart-lane-parity",
       "title": "Complete Codabar parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "codabar-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral Codabar encoder in all three missing lanes with exact guard and alphabet rules, checked bounds, stable errors, and shared layout output."
@@ -10110,7 +10163,7 @@
       "id": "code128-java-kotlin-dart-lane-parity",
       "title": "Complete Code 128 parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "code128-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral Code 128 encoder in all three missing lanes with the exact printable-ASCII domain, complete symbol table, deterministic code-set policy, checksums, checked bounds, and shared layout output."
@@ -10119,7 +10172,7 @@
       "id": "upc-a-java-kotlin-dart-lane-parity",
       "title": "Complete UPC-A parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "upc-a-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral UPC-A encoder in all three missing lanes with ASCII-only digits, exact check-digit validation/generation, role metadata, checked bounds, and shared layout output."
@@ -10128,7 +10181,7 @@
       "id": "ean-13-java-kotlin-dart-lane-parity",
       "title": "Complete EAN-13 parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["barcode-symbologies-language-neutral-conformance", "barcode-symbologies-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["barcode-symbologies-language-neutral-conformance", "ean-13-existing-lanes-v1-conformance", "barcode-layout-1d-java-kotlin-dart-lane-parity"],
       "branch": null,
       "pr_number": null,
       "notes": "Implement the neutral EAN-13 encoder in all three missing lanes as a sibling of UPC-A, not a runtime dependent. Require ASCII-only digits, exact parity/check-digit behavior, role metadata, checked bounds, and shared layout output."
