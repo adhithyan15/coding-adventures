@@ -275,13 +275,13 @@ through one pipeline-wide permit budget. Filesystem emitters can replay
 validated artifacts to reconstruct a deleted output tree without rerunning
 unrelated pure stages. The capability-free deploy core now validates complete
 manifests, plans owned creates/updates/skips/deletes, verifies content hashes,
-and emits reproducible dry-run reports. Its filesystem adapter stages and
-reversibly swaps complete output trees. The GitHub Pages adapter preserves
-independently owned prefixes of a shared source branch and publishes each site
-through one atomic non-forced ref update. Forme is not yet a turnkey site
-generator: the remaining product layer includes deploy-command composition,
-plugin host and OS sandboxes,
-interactivity, and the authoring shell. Its canonical specification map now
+and emits reproducible reports. Its filesystem adapter stages and reversibly
+swaps complete output trees. The GitHub Pages adapter preserves independently
+owned prefixes of a shared source branch and publishes each site through one
+atomic non-forced ref update. Both live sites now build, inspect, and publish
+through `forme deploy`, completing the turnkey headless v0 path. The remaining
+product layers are the plugin host and OS sandboxes, interactivity, and the
+authoring shell. Its canonical specification map now
 runs collision-free from FM01 through FM08, with an implementation ledger in
 every Forme specification and an always-on CI contract guarding the map.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)

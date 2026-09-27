@@ -22,6 +22,14 @@ NUMBERED_SPECS = {
 }
 
 MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\(([^)]+\.md(?:#[^)]+)?)\)")
+ROADMAP_ROW = re.compile(
+    r"^\| (?P<priority>\d+) \| (?P<id>FM-B\d{3}) \| "
+    r"(?P<status>done|active|ready|blocked|later) \| "
+    r"(?P<work>[^|]+) \| (?P<gate>[^|]+) \|$"
+)
+
+ROADMAP_HEADER = "| Priority | ID | Status | Work item | Acceptance gate |"
+ROADMAP_SEPARATOR = "|---:|---|---|---|---|"
 
 
 class FormeSpecMapTests(unittest.TestCase):
@@ -55,6 +63,38 @@ class FormeSpecMapTests(unittest.TestCase):
         for number, filename in NUMBERED_SPECS.items():
             with self.subTest(spec=number):
                 self.assertIn(f"[{number}]({filename})", roadmap)
+
+    def test_roadmap_has_one_unique_active_item(self) -> None:
+        roadmap = (SPECS / "FM00-forme-completion-roadmap.md").read_text(
+            encoding="utf-8"
+        )
+        backlog = roadmap.split("## Prioritized backlog\n", 1)[1].split(
+            "## Dependency path\n", 1
+        )[0]
+        table_lines = [line for line in backlog.splitlines() if line.strip()]
+        self.assertGreaterEqual(len(table_lines), 3, "roadmap backlog table is empty")
+        self.assertEqual(table_lines[0], ROADMAP_HEADER)
+        self.assertEqual(table_lines[1], ROADMAP_SEPARATOR)
+
+        rows = []
+        for line in table_lines[2:]:
+            match = ROADMAP_ROW.fullmatch(line)
+            self.assertIsNotNone(match, f"malformed roadmap backlog row: {line}")
+            rows.append(match)
+
+        self.assertTrue(rows, "roadmap must contain backlog rows")
+        priorities = [int(row.group("priority")) for row in rows]
+        identifiers = [row.group("id") for row in rows]
+        active = [row.group("id") for row in rows if row.group("status") == "active"]
+        self.assertEqual(
+            priorities,
+            list(range(len(rows))),
+            "priorities must be ordered, unique, and contiguous from zero",
+        )
+        self.assertEqual(
+            len(identifiers), len(set(identifiers)), "backlog IDs must be unique"
+        )
+        self.assertEqual(len(active), 1, "exactly one backlog item must be active")
 
     def test_forme_spec_markdown_links_resolve(self) -> None:
         for path in sorted(SPECS.glob("FM[0-9][0-9]-*.md")):

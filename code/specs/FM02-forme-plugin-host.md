@@ -1,7 +1,7 @@
 # FM02 — Forme Plugin Host: Manifest, Sandboxing, Wire Protocol, Capability Mediation
 
-> **Status:** Code-ready specification. Read alongside FM00 (vision),
-> FM01 (kernel), and FM03 (orchestrator).
+> **Status:** Code-ready specification; host implementation active in FM-B014.
+> Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
 > `forme-manifest`, `forme-plugin-host`, `forme-plugin-runner-ts`,
@@ -17,8 +17,8 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Manifest parser | Implemented | `forme-manifest` validates the current first-party manifest shape. |
-| Plugin discovery and handshake | Pending | FM-B014 owns discovery, negotiation, and typed streaming. |
-| Capability mediation and crash isolation | Pending | FM-B014 must prove denial, cancellation, and failure boundaries. |
+| Plugin discovery and handshake | Active | FM-B014 owns discovery, negotiation, and typed streaming. |
+| Capability mediation and crash isolation | Active | FM-B014 must prove denial, cancellation, and failure boundaries. |
 | TypeScript/Python/Rust runners | Blocked | FM-B015 follows the host wire protocol. |
 | OS sandbox profiles | Blocked | FM-B015 owns macOS, Linux, and Windows enforcement. |
 | Install/trust CLI | Blocked | FM07 exposes it only after FM-B014/FM-B015 land. |
