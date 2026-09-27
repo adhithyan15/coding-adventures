@@ -20,8 +20,14 @@ first is Compose's `MosaicPlatformEffects.kt` (`compose_platform_effects()`):
 `files.open` and `files.save` through the native file dialog, and a router that
 sends each effect to the app's own `[host_effects]` handler or to this library
 by kind. Its behaviour is tested with fake dialogs by
-`conformance/compose/MosaicPlatformEffectsTest.kt`. The other backends follow
-(UI87 §7.3).
+`conformance/compose/MosaicPlatformEffectsTest.kt`.
+
+SwiftUI's `MosaicPlatformEffects.swift` (`swift_platform_effects()`) answers
+the same contract through `NSOpenPanel` / `NSSavePanel` on macOS; on iOS and
+iPadOS it fails each request with a message until UI89 step 6 adds the
+document picker, so an `Await` never wedges. It is tested with a fake host and
+fake panels by `conformance/swiftui/Sources/Conformance/PlatformEffectsChecks.swift`
+(`--platform-effects`). Qt, XAML and Flutter follow (UI87 §7.3).
 
 ## Persistence
 

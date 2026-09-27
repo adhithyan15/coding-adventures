@@ -88,13 +88,19 @@ private func run(libraryPath: String?) {
 private enum ConformanceMain {
   static func main() {
     let arguments = Array(CommandLine.arguments.dropFirst())
+    // The platform library's own checks (UI87 §7) need no Rust runtime; see
+    // PlatformEffectsChecks.swift for how they are built.
+    if arguments == ["--platform-effects"] {
+      runPlatformEffectsChecks()
+      return
+    }
     let libraryPath: String?
     if arguments.isEmpty {
       libraryPath = nil
     } else if arguments.count == 2, arguments[0] == "--library" {
       libraryPath = arguments[1]
     } else {
-      fatalError("usage: Conformance [--library <path>]")
+      fatalError("usage: Conformance [--library <path>] | --platform-effects")
     }
     run(libraryPath: libraryPath)
   }

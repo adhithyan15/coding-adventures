@@ -37,6 +37,16 @@ pub fn compose_platform_effects() -> String {
     include_str!("../templates/compose/MosaicPlatformEffects.kt").to_string()
 }
 
+/// The SwiftUI platform library (UI87 §7): `files.open` and `files.save`
+/// through `NSOpenPanel` / `NSSavePanel` on macOS, a clear failure on iOS and
+/// iPadOS until UI89 step 6, and the router that sends each effect to the
+/// app's own handler or to this library by kind -- the same contract the
+/// Compose library answers. Written beside `MosaicRuntimeHost.swift` in every
+/// SwiftUI project; installed by the generated `App.swift`.
+pub fn swift_platform_effects() -> String {
+    include_str!("../templates/swiftui/MosaicPlatformEffects.swift").to_string()
+}
+
 /// Files that make the fixed Mosaic application C ABI available to SwiftUI.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SwiftRuntimeBinding {
@@ -340,6 +350,65 @@ fn bind_application(template: &str, application_id: Option<&str>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
+    /// same kinds, limits and MIME table, so an app sees the same outcome on
+    /// either host. A drift in one template fails here, not on a Mac.
+    #[test]
+    fn swift_platform_effects_match_the_compose_contract() {
+        let swift = swift_platform_effects();
+        let kotlin = compose_platform_effects();
+        for kind in ["\"files.open\"", "\"files.save\""] {
+            assert!(swift.contains(kind) && kotlin.contains(kind), "{kind}");
+        }
+        assert!(swift.contains("let mosaicMaxOpenBytes = 50 * 1024 * 1024"));
+        assert!(kotlin.contains("MOSAIC_MAX_OPEN_BYTES: Long = 50L * 1024 * 1024"));
+        assert!(swift.contains("let mosaicMaxSaveBytes = 16 * 1024 * 1024"));
+        assert!(kotlin.contains("MOSAIC_MAX_SAVE_BYTES: Int = 16 * 1024 * 1024"));
+        // Every MIME -> extensions row, in the same order, in both tables.
+        let kotlin_rows: Vec<(String, String)> = kotlin
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix('"')?.split_once("\" to listOf(")?;
+                Some((mime.to_string(), rest.trim_end_matches("),").to_string()))
+            })
+            .collect();
+        let swift_rows: Vec<(String, String)> = swift
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix("(\"")?.split_once("\", [")?;
+                Some((mime.to_string(), rest.trim_end_matches("]),").to_string()))
+            })
+            .collect();
+        assert_eq!(kotlin_rows.len(), 13, "{kotlin_rows:?}");
+        assert_eq!(swift_rows, kotlin_rows);
+    }
+
+    /// AppKit exists only on macOS; the iOS app target compiles this file too
+    /// (UI89 §2.2 lists every `Sources/App/*.swift`), so every AppKit use must
+    /// sit behind `#if os(macOS)`.
+    #[test]
+    fn swift_platform_effects_fence_appkit_to_macos() {
+        let swift = swift_platform_effects();
+        let mut depth_macos = false;
+        for line in swift.lines() {
+            let trimmed = line.trim();
+            if trimmed == "#if os(macOS)" {
+                depth_macos = true;
+            } else if trimmed == "#else" || trimmed == "#endif" {
+                depth_macos = false;
+            } else if !trimmed.starts_with("//") && !trimmed.starts_with("///") {
+                for appkit in ["NSOpenPanel", "NSSavePanel", "import AppKit", "UTType("] {
+                    assert!(
+                        !trimmed.contains(appkit) || depth_macos,
+                        "`{appkit}` outside #if os(macOS): {line}"
+                    );
+                }
+            }
+        }
+    }
 
     #[test]
     fn compose_binding_owns_the_full_c_abi_lifecycle() {
