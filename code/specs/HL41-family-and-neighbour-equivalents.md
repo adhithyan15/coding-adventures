@@ -133,8 +133,8 @@ Each form is set in its own script's font. The book's script set must list
 every script its comparison set uses. The Tamil book's `tamil-comparisons`
 set already carries Telugu, Kannada, Malayalam and Devanagari.
 
-**The app** will render the same table under the lesson's first section
-(rollout step 2).
+**The app** renders the same table under the lesson's first teaching section,
+loading the owner files lazily, one chunk per track, when a lesson opens.
 
 **Narration** does not read the panel. **Duration** does not count it.
 
@@ -161,13 +161,12 @@ is only a candidate until review, and `sameRoot` is always hand-judged.
 
 ## Rollout
 
-1. The data layer, validator, comparison sets and book panel, together with
-   Tamil equivalents for the vocabulary lessons.
+1. The data layer, validator, comparison sets, book panel and app panel,
+   together with Tamil equivalents for the vocabulary lessons.
    **Pilot: Tamil.** The user, a native Tamil speaker, reviews it.
-2. The app panel, reading the same owner files.
-3. Telugu, Kannada and Malayalam.
-4. Hindi and the Indo-Aryan tracks.
-5. Romance, then the rest.
+2. Telugu, Kannada and Malayalam.
+3. Hindi and the Indo-Aryan tracks.
+4. Romance, then the rest.
 
 ## Not in scope
 

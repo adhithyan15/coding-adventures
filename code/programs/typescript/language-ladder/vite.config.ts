@@ -155,6 +155,20 @@ export default defineConfig({
               test: isBookLedgerModuleId,
             },
             {
+              // HL41 equivalents owner files, one small JSON per vocabulary
+              // lesson (521 for Tamil alone). Left ungrouped, each would be its
+              // own lazy chunk and opening lessons would cost one request per
+              // word. One lazy chunk per TRACK instead, loaded the first time
+              // any of that track's lessons opens; see equivalents-sources.ts.
+              name(moduleId) {
+                const match =
+                  /human-languages\/([a-z][a-z0-9-]*)\/equivalents\.d\/[^/]+\.json$/.exec(
+                    moduleId.replaceAll("\\", "/").split(/[?#]/, 1)[0]!,
+                  );
+                return match?.[1] ? `equivalents-data-${match[1]}` : null;
+              },
+            },
+            {
               // Handwriting grows one cited path at a time. Keep its model,
               // renderer, and font parser out of the interactive shell so
               // later source-backed letters do not consume shell headroom.

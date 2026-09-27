@@ -403,6 +403,14 @@ body {
 .lesson-body__heading { margin: 0 0 5px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.035em; color: var(--muted); }
 .lesson-body__section p { margin: 5px 0; font-size: 0.9rem; line-height: 1.58; }
 .lesson-body__bullet { padding-left: 10px; }
+.lesson-body__equivalents { margin: 10px 0 4px; }
+.lesson-body__equivalents-title { font-size: 0.8rem; font-weight: 650; color: var(--muted); margin-bottom: 4px; }
+.lesson-body__equivalents-table { border-collapse: collapse; font-size: 0.88rem; }
+.lesson-body__equivalents-table th { text-align: left; font-weight: 500; color: var(--muted); padding: 2px 12px 2px 0; white-space: nowrap; }
+.lesson-body__equivalents-table td { padding: 2px 12px 2px 0; }
+.lesson-body__equivalents-form { font-size: 1.05rem; }
+.lesson-body__equivalents-said { margin-left: 8px; font-style: italic; color: var(--muted); }
+.lesson-body__equivalents-root { font-size: 0.78rem; color: var(--accent); }
 .lesson-body__figure { margin: 12px 0; }
 .lesson-body__figure img {
   display: block;
