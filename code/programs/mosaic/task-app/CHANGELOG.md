@@ -4,6 +4,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — WinUI startup failures stay visible and recoverable (#16097)
+
+The strict generated WinUI app now opens on a native loading surface before
+probing its packaged Rust engine. Loader and initial-props failures remain in
+the first window with selectable diagnostic detail, saved-task reassurance,
+and a **Try again** action that closes partial runtime state and retries in the
+same process. CI and release validation temporarily remove the packaged DLL,
+verify the live failure surface, restore it, and drive the emitted retry into
+the normal TaskApp controls.
+
 ### Fixed — SwiftUI startup failures stay visible and recoverable (#16092)
 
 The strict generated SwiftUI app now mounts a system-theme loading surface

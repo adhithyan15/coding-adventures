@@ -601,6 +601,10 @@ mod tests {
             "sequence must commit only after dispatch succeeds"
         );
         assert!(source.contains("public static void LoadRequired()"));
+        assert!(source.contains("State ??= Load();"));
+        assert!(source.contains("Loader detail:"));
+        assert!(source.contains("State = null;"));
+        assert!(source.contains("ProcessExit += (_, _) => State?.Dispose();"));
         assert!(source.contains("public static string ApplyRequiredProps("));
         assert!(source.contains("public static Task<MosaicRuntimeResult> HandleRequiredEvent("));
         assert!(source.contains("native-complete requires the Mosaic Rust application runtime"));

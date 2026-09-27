@@ -9,6 +9,7 @@ on:
       - .github/workflows/release-task-app.yml
       - code/scripts/taskapp_release.py
       - code/scripts/taskapp-xaml-smoke.ps1
+      - code/scripts/taskapp-xaml-startup-smoke.ps1
       - code/programs/mosaic/task-app/**
       - code/packages/rust/task-mosaic-app/**
       - code/packages/rust/task-wasm/**
@@ -814,6 +815,12 @@ jobs:
           Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
           $state = Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) `
             'task-app/mosaic-state.v1.json'
+          Remove-Item $state, "$state.corrupt", "$state.tmp" -Force -ErrorAction SilentlyContinue
+          pwsh -NoProfile -ExecutionPolicy Bypass `
+            -File code/scripts/taskapp-xaml-startup-smoke.ps1 `
+            -ExePath $replacementExecutable `
+            -RuntimePath $replacementRuntime
+          if ($LASTEXITCODE -ne 0) { throw 'Packaged Windows recoverable-startup lifecycle failed' }
           Remove-Item $state, "$state.corrupt", "$state.tmp" -Force -ErrorAction SilentlyContinue
           python code/scripts/taskapp_release.py materialize-upgrade-fixture `
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json `
