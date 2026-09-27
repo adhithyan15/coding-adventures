@@ -11,12 +11,22 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16112,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16112",
+    "title": "feat(x509): bring generic extensions to all established lanes",
+    "branch": "codex/parity-x509-extension-portable-conformance-20260926",
+    "item_id": "x509-extension-portable-conformance",
+    "opened_at": "2026-09-27T04:28:40Z",
+    "head_revision": "814e1e38d494b8065863fcbc61bb19a911f210d3",
+    "checks_status": "pending",
+    "auto_merge_enabled": false
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-27T04:11:58Z",
-    "pr_number": 16100,
-    "status": "merged",
-    "notes": "All 77 reported final-head checks reached terminal acceptable conclusions at acd41e7b18872ca1207461114c51be4b463a552c: 68 successes and nine expected skips. GitHub reported the head CLEAN and MERGEABLE; guarded squash auto-merge was enabled, and GitHub merged PR #16100 automatically as 1b5b869a5ac2588a5251e314f04fafe6c47bec6c without a plain manual merge command."
+    "observed_at": "2026-09-27T04:29:05Z",
+    "pr_number": 16112,
+    "status": "pending",
+    "notes": "Ready-for-review PR #16112 opened from validated implementation head 814e1e38d494b8065863fcbc61bb19a911f210d3 on exact base d1afaf57915c1f9e2c813a13079034dfdefb5a44. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "d1afaf57915c1f9e2c813a13079034dfdefb5a44",
@@ -9747,10 +9757,10 @@
     {
       "id": "x509-extension-portable-conformance",
       "title": "Define portable generic X.509 Extension conformance and established-lane parity",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["der-asn1-portable-conformance"],
       "branch": "codex/parity-x509-extension-portable-conformance-20260926",
-      "pr_number": null,
+      "pr_number": 16112,
       "selected_at": "2026-09-26T23:11:02Z",
       "selection_revision": "69f1ec320c3eb0e6d2cca699468ebb6e12e3c575",
       "validation_revision": "0f817824f84dccf63e681d1d8d18bcd1e3553ee0",
