@@ -14634,7 +14634,7 @@ fixtures, while leaving neutral-adapter, filesystem, Git, environment,
 credential, process, and network authority in their separately owned work.
 
 Validated implementation revision
-`be4518dff37e8e3feaf62263820d240b92bd6bde` passes focused Go root and
+`69c13c7bbd92ffaaac324fd93d7a6cf665111a70` passes focused Go root and
 graphdiff tests, race detection, vet, gofmt, module verification, the real Go
 BUILD-validation dry run, all 162 neutral cases and 285 fixture files, 25
 schema tests, the schema-3 zero-collision parity inventory, `govulncheck`, and
