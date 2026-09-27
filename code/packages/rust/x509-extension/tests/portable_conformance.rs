@@ -16,7 +16,7 @@ fn fixture(name: &str) -> Value {
 fn hex_bytes(text: &str) -> Vec<u8> {
     assert_eq!(text.len() % 2, 0);
     text.as_bytes()
-        .chunks_exact(2)
+        .chunks(2)
         .map(|pair| {
             u8::from_str_radix(std::str::from_utf8(pair).expect("ASCII hex"), 16)
                 .expect("valid hex")
