@@ -11,7 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16153,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16153",
+    "title": "feat(itf): enforce barcode v1 parity",
+    "branch": "codex/parity-itf-existing-lanes-v1-20260927",
+    "item_id": "itf-existing-lanes-v1-conformance",
+    "opened_at": "2026-09-27T13:55:32Z",
+    "head_revision": "9d016d5b6939b0091112ad2f3e247eaa8e304dd9",
+    "checks_status": "pending",
+    "auto_merge_enabled": false
+  },
   "last_ci_action": {
     "observed_at": "2026-09-27T13:08:28Z",
     "pr_number": 16145,
@@ -10058,15 +10068,21 @@
     {
       "id": "itf-existing-lanes-v1-conformance",
       "title": "Reconcile existing ITF lanes with the neutral v1 contract",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["barcode-symbologies-language-neutral-conformance"],
       "branch": "codex/parity-itf-existing-lanes-v1-20260927",
-      "pr_number": null,
+      "pr_number": 16153,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16153",
+      "opened_at": "2026-09-27T13:55:32Z",
+      "opened_revision": "9d016d5b6939b0091112ad2f3e247eaa8e304dd9",
       "selected_at": "2026-09-27T13:11:45Z",
       "selection_revision": "0117283ca42564c87b1f9cbc8abab2664d06c159",
       "selection_notes": "Selected only after PR #16145 completed all 48 final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 refresh remains collision-free at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The neutral aggregate was first decomposed into six symbology-aligned children so each owns exactly twelve current roots. ITF is the dependency-ready pilot: its ten cases establish the shared consumer-registry and handwritten adapter pattern, its twelve roots and twelve direct barcode-1d consumers have zero live open-PR overlap, and it unlocks the matching Java/Kotlin/Dart rollout without forcing unrelated symbologies to move together.",
+      "rebase_base_revision": "dfde255876bc4d9ce01d05ec8a26f48b3e10b4bf",
+      "rebase_notes": "Before publication, origin/main advanced through unrelated merged work with zero overlap against the 68 intended ITF, fixture, roadmap, and state paths. The implementation rebased cleanly onto exact origin/main dfde255876bc4d9ce01d05ec8a26f48b3e10b4bf; the refreshed schema-3 inventory and every reported count remain unchanged.",
       "notes": "Dynamically execute all ten neutral ITF cases in the twelve current lanes; repair Unicode-scalar preflight, the 4,096-scalar ceiling, length-before-alphabet precedence, ASCII-only digits, stable payload-blind atomic errors, exact normalized/modules/runs/digests, truthful empty capability metadata, and the ITF TypeScript paint-instructions dependency. Preserve public exception and Result shapes, use handwritten per-language adapters behind one shared projection contract, and validate each direct barcode-1d consumer.",
-      "validation_notes": "All twelve ITF package suites pass with the shared ten-case corpus, plus lane-native coverage, lint, type, release-build, package-manager audit, and build-front checks. Direct barcode-1d consumers pass in C#, Elixir, F#, Go, Haskell, Lua, Python, Ruby, Rust, and TypeScript. Perl passes its ITF facade assertions before the pre-existing Windows XS loader expectation fails, and Swift ITF passes before the broader facade hits pre-existing Windows system-library link imports; both host-native failures are outside this pure child."
+      "validation_notes": "All twelve ITF package suites pass with the shared ten-case corpus, plus lane-native coverage, lint, type, release-build, package-manager audit, and build-front checks. Direct barcode-1d consumers pass in C#, Elixir, F#, Go, Haskell, Lua, Python, Ruby, Rust, and TypeScript. Perl passes its ITF facade assertions before the pre-existing Windows XS loader expectation fails, and Swift ITF passes before the broader facade hits pre-existing Windows system-library link imports; both host-native failures are outside this pure child.",
+      "publication_notes": "Opened ready-for-review PR #16153 from validated implementation head 9d016d5b6939b0091112ad2f3e247eaa8e304dd9 after a normal first push. GitHub reports the PR open, non-draft, and mergeable; initial checks are queued, so auto-merge remains disabled until every required check is terminal and acceptable and the branch remains conflict-free."
     },
     {
       "id": "code39-existing-lanes-v1-conformance",
