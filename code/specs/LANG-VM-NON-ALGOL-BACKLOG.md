@@ -8,6 +8,36 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## Prioritization run — 2026-09-27
+
+Fresh `origin/main` and the open PR list show no active LANG VM implementation
+PR. Keep one active PR in this loop, then rerank after its merge and log any
+new failure before selecting another item. The immediate queue is:
+
+1. **#12032 / VM-066 (separate ALGOL owner):** the executed JVM nested-array
+   capture failure keeps the full matrix and silent-skip guard out of normal
+   CI. Preserve its ownership; do not claim the guard is fixed before the
+   failing cell is fixed and the guard runs in CI.
+2. **VM-071 (selected shared-backend item):** six sparse ALGOL arrays trap on
+   real BEAM because unwritten `array<f64>`/`array<str>` keys do not read as
+   zero. Implement the bounded BEAM11 contract and rerun the measured corpus.
+   Issue #15882's scratch-register GC-root risk remains a separate backend
+   defect; the chosen BEAM11 lowering avoids new multi-call allocation work.
+3. **VM-067:** Rust generated grammars lack a CI regeneration guard; issue
+   #14202 also reports existing drift. Scope the guard against that baseline
+   before enabling it, so CI genuinely executes a useful assertion.
+4. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
+   `defined()` operand expansion before the C dialect; continue the preprocessor
+   PR ladder one slice at a time.
+5. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
+   4004 fidelity, VM-029/031 platform acceptance and native GC proofs, and
+   AOT00 exceptions/optimization/concurrency. Re-rank these against observed
+   failures after each merged PR.
+
+The VM-071 implementation uses `ets:lookup_element/4` with explicit length
+guards instead of the issue's tentative O(N) table pre-population. See
+`BEAM11-ets-array-default-reads.md` for the runtime and validation contract.
+
 ### VM-071 — BEAM04's pre-zero gap is no longer unreachable (opened by VM-070)
 
 Tracked as issue #15880.
