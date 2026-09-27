@@ -65,9 +65,12 @@ it("extends the sourced single-letter ladder through words, visarga, and vocalic
   expect(lessons.map((lesson) => Number(lesson.frontmatter["duration.max_seconds"]))).toEqual([
     150, 120, 120, 180, 150, 150, 150, 120, 120, 150, 120, 120,
   ]);
-  for (let index = 1; index < lessons.length; index += 1) {
-    expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);
+  for (const [start, end] of [[0, 8], [9, 11]]) {
+    for (let index = start + 1; index <= end; index += 1) {
+      expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);
+    }
   }
+  expect(lessons[9]?.frontmatter.prerequisites).toContain("SA-S205-vowel-sign-vocalic-r");
 
   const markdown = lessons.map((lesson) =>
     lesson.blocks.map((block) => block.markdown).join("\n"),
