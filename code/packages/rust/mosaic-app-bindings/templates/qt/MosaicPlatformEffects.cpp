@@ -19,6 +19,7 @@
 #include <QUuid>
 #include <QVariantList>
 
+#include <algorithm>
 #include <exception>
 #include <utility>
 
@@ -480,7 +481,14 @@ QVariantMap mosaicRunFilesSave(const QVariant &payload, MosaicFileDialogs &dialo
     // When the app says what it is saving, the name must agree; when it does
     // not, the name may not be one that runs when opened.
     const QStringList extensions = extensionsFor(request);
-    if (!extensions.isEmpty() && !extensions.contains(fileExtension(suggestedName))) {
+    // Compared as Compose compares it (lower case, no upper-case fold): the
+    // fold is for catching launchers, not for widening what matches a type.
+    const QString lowered = suggestedName.toLower();
+    const bool matchesType = std::any_of(extensions.cbegin(), extensions.cend(),
+        [&lowered](const QString &extension) {
+            return lowered.endsWith(QLatin1Char('.') + extension);
+        });
+    if (!extensions.isEmpty() && !matchesType) {
         return failed(QStringLiteral("suggestedName must end in an extension of an accepted type"));
     }
     if (extensions.isEmpty() && mosaicHasExecutableExtension(suggestedName)) {
