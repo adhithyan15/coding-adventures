@@ -63,9 +63,10 @@ presentation controller and persistence contract with React, and drives create,
 complete, restore, and delete through the emitted Custom Element controls
 (#16125). It is deliberately a CI parity bundle, not a shipped release artifact.
 
-**Not exercised at TaskApp scope (1 of 9).** `mosaic-emit-paint` still contains
-no TaskApp product gate or release artifact. Emitter-local fixtures prove the
-general lowering, not that TaskApp's authored shell survives it.
+**Selected for coverage (1 of 9).** `mosaic-emit-paint` still contains no
+TaskApp product gate or release artifact. Emitter-local fixtures prove the
+general lowering, not that TaskApp's authored shell survives it. #16151 owns
+the final product-scoped gate.
 
 **Partial.** iOS compiles the generated SwiftUI sources against the iOS 16
 deployment target. That is source portability; nothing runs the app or its
@@ -112,10 +113,18 @@ rather than letting them read as silent gaps.
    simple-todo lifecycle through the emitted controls, and decide explicitly
    whether it earns a release artifact or is a parity gate only. **Implemented
    as the explicit parity-only gate in #16125.**
-7. **Paint visual-regression gate.** Rasterize the authored shell to a
-   deterministic PNG in both themes. This is the only mechanism in the stack
-   that would catch a purely visual regression; every existing gate asserts
-   structure, semantics, or behavior.
+7. **P1 [#16151](https://github.com/adhithyan15/coding-adventures/issues/16151)
+   — Paint visual-regression gate.** Package-expand TaskApp's real interface
+   and layout, compose the dependency and product styles for each authored
+   theme, and rasterize both at the declared 1280 x 900 desktop size through
+   the explicitly selected CPU Skia path. The PNG bytes are deterministic
+   within that pinned path and are compared with reviewed repository goldens;
+   the test also proves repeat rendering is byte-identical, the dimensions are
+   correct, and light and dark do not collapse to the same image. This is the
+   only mechanism in the stack that would catch a purely visual regression;
+   every existing gate asserts structure, semantics, or behavior. It remains
+   a CI-only raster snapshot, not a host, interaction claim, or release
+   artifact.
 
 ### Tier C — reach, stated honestly
 
