@@ -57,6 +57,25 @@ emits the root-redacted `Error: HASH_PACKAGE_FAILED "<package-identity>"`
 record with Go-escaped control characters and exits `2` instead of caching a
 sentinel digest or printing an uncontrolled stack trace.
 
+## Process-free graph and diff selection
+
+`internal/graphdiff` is the typed, host-authority-free core for graph planning
+and diff selection. It consumes only caller-supplied immutable package, edge,
+path, glob, and repository-boundary values; it does not read a checkout, invoke
+Git, inspect the environment, launch a process, or use the network. The core
+returns canonical prerequisite-first levels, exact dependent and prerequisite
+closures, and stable empty-output diagnostics for graph cycles, unknown paths,
+and match-work exhaustion.
+
+The package-local suite dynamically enumerates the exact eight graph and eleven
+diff-selection cases in the language-neutral v1 corpus. It covers the five
+recursive BUILD fronts, strict character classes, repository-boundary reverse
+selection and digest verification, both unknown-path policies, and the fixed
+50,000,000-unit Unicode-scalar preflight. Structural and boundary validation
+complete before the preflight; the preflight completes before any glob call or
+unknown-path decision. This module is a native domain core and does not claim a
+neutral adapter or any additional execution authority.
+
 ## Bounded CI gate selection
 
 CI-gate evaluation remains process-free after the registry and change

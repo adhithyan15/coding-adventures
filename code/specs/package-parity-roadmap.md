@@ -14600,6 +14600,39 @@ dependency checks, and production vulnerability audit also pass. Initial CI,
 CodeQL, and human-language detection checks are queued; guarded auto-merge
 remains disabled until every required check is terminal and acceptable.
 
+### PR #16127 merge, exact-main audit, and Go graph/diff selection
+
+PR #16127 completed 47 terminal acceptable checks: 24 successes, 22 expected
+path-gated skips, and one neutral result. GitHub reported the reviewed head
+clean and mergeable. Guarded squash auto-merge was enabled only after that
+terminal state, and GitHub merged the Python graph/diff core automatically at
+`2026-09-27T09:16:31Z` as
+`755891f4e8cd218d166a19acde18243166fb9f36`; no manual merge was used.
+
+The collision-checked schema-3 inventory from that exact merged main remains at
+15 established lanes, 1,470 implementation identities, 4,737 implementation
+slots, and 1,512 all-reported identities. Its completion bands remain 178/265,
+123/934, 181/2,282, and 988/13,832. Rust retains 805 singleton identities,
+emerging OCaml remains at five packages, and canonical collisions and unknown
+language buckets remain zero.
+
+The accompanying all-lane audits registered six concrete gaps before another
+implementation was selected: missing Haskell arc2d BUILD discovery, two
+separate Haskell Windows-front families, a generic loop-state integrity gate,
+and post-promotion OCaml http-core and HTTP/1 work. The stale OCaml analyzer and
+lane-readiness documentation repair is now an explicit promotion dependency.
+Swift, Dart, Java, and Kotlin package gaps remain owned; the live frontier is
+three Dart identities rather than the older five-item roadmap snapshot.
+
+The dependency/leverage pass ranks
+`build-tool-go-diff-selection-match-work-ceiling-adoption` first among ready
+leaves with 26 unfinished transitive descendants. It is selected on fresh
+branch `codex/parity-go-diff-selection-20260927` from the exact merge commit.
+The coherent slice adds a typed process-free Go graph/diff module and dynamic
+production-code consumption of the exact eight graph and eleven diff-selection
+fixtures, while leaving neutral-adapter, filesystem, Git, environment,
+credential, process, and network authority in their separately owned work.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

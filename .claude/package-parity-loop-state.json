@@ -11,25 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16127,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16127",
-    "title": "feat(build-tool): add Python graph and diff core",
-    "branch": "codex/parity-python-diff-selection-20260927",
-    "item_id": "build-tool-python-diff-selection-match-work-ceiling-adoption",
-    "opened_at": "2026-09-27T08:18:38Z",
-    "head_revision": "c9409b8361d9aa3323cd3baf245a6ad246119be4",
-    "checks_status": "pending",
-    "auto_merge_enabled": false
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-27T08:18:42Z",
+    "observed_at": "2026-09-27T09:16:31Z",
     "pr_number": 16127,
-    "status": "pending",
-    "notes": "Ready-for-review PR #16127 opened from validated implementation head c9409b8361d9aa3323cd3baf245a6ad246119be4 after rebasing cleanly onto exact origin/main 5420815ffd57c04cd01eca80e75044afbc6ce04a. GitHub reports MERGEABLE with initial CI, CodeQL, and human-language detection checks queued. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "PR #16127 completed 47 terminal acceptable checks (24 successful, 22 skipped, and one neutral) with GitHub reporting CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that terminal state, and GitHub merged it without manual merge as 755891f4e8cd218d166a19acde18243166fb9f36."
   },
   "last_inventory": {
-    "revision": "ac8abbfd2b594dcc5572cbad7a44570a4911d14b",
+    "revision": "755891f4e8cd218d166a19acde18243166fb9f36",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -1139,10 +1129,14 @@
     {
       "id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 19-case process-free graph and diff-selection contract in the Go build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
-      "branch": null,
+      "branch": "codex/parity-go-diff-selection-20260927",
       "pr_number": null,
+      "selected_at": "2026-09-27T09:18:00Z",
+      "selection_revision": "755891f4e8cd218d166a19acde18243166fb9f36",
+      "selection_notes": "Selected after PR #16127 completed 47 terminal acceptable checks and merged through guarded squash auto-merge, followed by an exact-main collision-checked schema-3 inventory refresh. The inventory remains at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The post-merge audit registered six concrete unowned Haskell, OCaml, and state-integrity gaps before selection. A dependency/leverage pass ranked this ready Go graph/diff leaf first globally with 26 unfinished transitive descendants, and live open-PR file lists found no overlapping implementation owner.",
+      "progress_notes": "Added a typed authority-free Go graph and diff-selection core plus dynamic production-code consumption of the exact eight graph and eleven diff-selection cases. The core returns canonical graph levels and exact closures; validates portable paths, strict globs, case-folded root collisions, edges, references, and canonical UTF-8 repository-boundary digests in stable order; and enforces the 50,000,000 Unicode-scalar match-work ceiling before matching or unknown-path handling. Focused root and graphdiff tests, race detection, vet, gofmt, dependency verification, the real Go BUILD dry run, all 162 neutral cases and 285 fixture files, 25 schema tests, the schema-3 zero-collision parity inventory, govulncheck, and an independent security review pass; graphdiff statement coverage is 91.5%. The inherited Windows-only executor test still cannot compile syscall.Mkfifo, while every other package reached by the full Go suite passes.",
       "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production graph and diff code, including canonical edges and levels, cycle no-output, closures, exact BUILD fronts, strict character classes, boundary selection, Unicode-scalar preflight, stable errors, and unchanged process-free authority."
     },
     {
@@ -1193,13 +1187,15 @@
     {
       "id": "build-tool-python-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 19-case process-free graph and diff-selection contract in the Python build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-python-diff-selection-20260927",
       "pr_number": 16127,
       "selected_at": "2026-09-27T07:33:20Z",
       "selection_revision": "ac8abbfd2b594dcc5572cbad7a44570a4911d14b",
       "validation_revision": "c9409b8361d9aa3323cd3baf245a6ad246119be4",
+      "merge_commit": "755891f4e8cd218d166a19acde18243166fb9f36",
+      "merged_at": "2026-09-27T09:16:31Z",
       "selection_notes": "Selected after PR #16122 completed 47 terminal acceptable checks and merged through guarded squash auto-merge, followed by an exact-main collision-checked schema-3 inventory refresh. The inventory remains at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. A read-only dependency pass found exactly three Python build-tool children newly ready; this 19-case graph/diff-selection adoption ranks first with five unfinished transitive descendants, ahead of source-input registry adoption with four and CI-gate selection with three. Live open-PR file lists have no overlap with the Python build-tool, neutral build-tool fixtures/specs, or parity state beyond the now-merged PR.",
       "progress_notes": "Added a pure authority-free Python graph and diff-selection API that dynamically consumes all eight graph and eleven diff-selection neutral cases. It returns canonical graph results and exact downstream/prerequisite closures, recognizes only the five recursive BUILD fronts, verifies repository-boundary digests and reverse selection, and enforces the operation-wide 50,000,000 Unicode-scalar match-work ceiling before matching or unknown-path policy. Bounded direct tests close structural limits, validation precedence, exact fixture identifiers, Unicode/casefold/nested-root behavior, immutable snapshots, and schema-forbidden question-mark globs. Final-head validation passes 523 Python package tests with four platform skips and 91.95% total coverage, 86 conformance-runner tests, 33 parity/capability tests plus 787 subtests, focused Ruff/format/strict MyPy/Bandit/compileall, the 162-case/285-file neutral corpus, a zero-collision package inventory, and a Go BUILD-validation dry run selecting exactly the Python build tool. Source and wheel builds, isolated API/CLI smoke tests, dependency checks, and vulnerability audit also pass. The unchanged Windows syscall.Mkfifo Go-test boundary, stale exact-main Python-package-count assertion, and broad inherited Ruff/MyPy/Bandit findings remain disclosed baselines.",
       "notes": "Dynamically consume all eight graph and eleven diff-selection cases through production code with exact stable results, closures, boundary behavior, and the separately hardened portable matcher."
@@ -3465,7 +3461,8 @@
         "ocaml-capability-analyzer",
         "ocaml-representative-core",
         "ocaml-representative-package-ci-execution",
-        "ocaml-ci-toolchain"
+        "ocaml-ci-toolchain",
+        "ocaml-capability-analyzer-status-documentation-repair"
       ],
       "branch": null,
       "pr_number": null,
@@ -9524,13 +9521,13 @@
     },
     {
       "id": "ocaml-capability-analyzer-status-documentation-repair",
-      "title": "Correct the merged OCaml capability-analyzer specification status",
+      "title": "Correct merged OCaml capability-analyzer status documentation",
       "status": "pending",
       "depends_on": ["ocaml-capability-analyzer"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered by the post-PR #16088 OCaml readiness audit. `code/specs/OCAML06-capability-analyzer.md` still says `Status: in progress` even though the analyzer and its independent CI gate merged in PR #14519. Correct the stale status and any directly coupled roadmap wording in an OCaml documentation-maintenance tranche; do not treat this editorial defect as missing analyzer implementation or as a reason to select a second parity PR."
+      "notes": "Discovered by the post-PR #16088 OCaml readiness audit and reconfirmed after PR #16127. `code/specs/OCAML06-capability-analyzer.md` still says `Status: in progress`, and `code/packages/ocaml/README.md` retains stale lane-readiness wording even though the analyzer and its independent CI gate merged in PR #14519. Correct both directly coupled status surfaces before denominator promotion; do not treat this editorial defect as missing analyzer implementation or as a reason to select a second parity PR."
     },
     {
       "id": "ocaml-classical-cipher-denominator-consumers",
@@ -10579,6 +10576,60 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered after merged PRs #16013, #16037, and #16040 added Rust `v8-test262`. Audit the bounded header parser, classification, list comparison, parse budgets, and deterministic report core for a possible neutral fixture contract, while keeping corpus provenance, filesystem enumeration, environment access, baseline writes, stdout, and the Rust JavaScript-parser execution path in an explicit host-authority and applicability review. Do not treat the complete runner as an immediate fifteen-lane package gap."
+    },
+    {
+      "id": "haskell-arc2d-build-front-coverage",
+      "title": "Restore Haskell arc2d build-front discovery and Windows coverage",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16127 collision-checked Haskell front audit. `arc2d` is the only Cabal package without either BUILD front and is therefore absent from BUILD-root discovery. Add fail-closed BUILD and BUILD_windows recipes that run `cabal test all`, preserve its existing bezier2d, point2d, and trig package graph, and add a repository regression that makes undiscoverable Haskell packages impossible."
+    },
+    {
+      "id": "haskell-barcode-encoder-windows-build-front-coverage",
+      "title": "Add Windows build fronts for Haskell barcode encoders",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16127 Haskell front audit. Add fail-closed BUILD_windows recipes for aztec-code, data-matrix, micro-qr, pdf417, and qr-code that preserve each package's current `cabal test` command. Their present POSIX `if command -v` fallback fails under cmd.exe, so cover exact Windows-front precedence with a repository metadata regression while reusing the existing Hspec suites."
+    },
+    {
+      "id": "haskell-neural-examples-windows-build-front-coverage",
+      "title": "Add Windows build fronts for Haskell neural examples",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16127 Haskell front audit. Add fail-closed BUILD_windows recipes for single-layer-network and two-layer-network, each preserving its current `cabal test` command, and cover their Windows discoverability without inventing a dependency between the two standalone examples."
+    },
+    {
+      "id": "package-parity-loop-state-integrity-contract",
+      "title": "Enforce package-parity loop state integrity in CI",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16127 state audit. Add a generic validator and focused tests for JSON shape, unique item IDs, known dependencies, acyclicity, allowed lifecycle values, merged-dependency closure, at most one pr-open item, and active-PR crosslinks; invoke it from the repository metadata CI job. Document that opening, validation, live-head, and squash-merge revisions may differ, do not require historical ancestry after rebases, and repair the known malformed PR #16122 validation SHA under this owner."
+    },
+    {
+      "id": "ocaml-http-core",
+      "title": "Add OCaml http-core after denominator promotion",
+      "status": "pending",
+      "depends_on": ["ocaml-lane-promotion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16127 OCaml readiness audit. After the emerging lane passes its explicit promotion gate, add a representative OCaml http-core implementation with neutral portable behavior, bounded parsing, no ambient transport authority, package tests, build fronts, capability metadata, and CI coverage before treating HTTP-family parity as complete."
+    },
+    {
+      "id": "ocaml-http1",
+      "title": "Add OCaml HTTP/1 framing after http-core and safe-framing repair",
+      "status": "pending",
+      "depends_on": ["ocaml-http-core", "http1-safe-framing-backfill"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-PR #16127 OCaml readiness audit. Port the language-neutral HTTP/1 framing contract only after OCaml http-core exists and the cross-lane safe-framing backfill is merged; include deterministic fixtures, bounded message parsing and serialization, build fronts, capability metadata, and representative CI without introducing socket or transport authority."
     },
     {
       "id": "build-tool-ci-gate-registry-established-lane-parity",
