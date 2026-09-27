@@ -241,6 +241,11 @@ the wire contract in §3 — a future revision could add a request-side
 
 ## 7. Qt implementation
 
+> **Retired (UI87 §7.4).** This Qt handler no longer exists: Mosaic's
+> Qt platform library (UI87 §7.4a) answers `files.open` for every app,
+> and `photo-picker-app` claims no effect kinds, so the router sends it
+> there. The section is kept as the design record the library follows.
+
 ### 7.1 Where the handler lives
 
 `photo-picker-app`'s own `host/qt/PhotoPickerEffects.{h,cpp}`, mirroring
@@ -366,6 +371,11 @@ this same effect kind's XAML implementation.
    fixed after the fact.
 
 ## 10. Compose implementation
+
+> **Retired (UI87 §7.4).** This Compose handler no longer exists: Mosaic's
+> Compose platform library (UI87 §7) answers `files.open` for every app,
+> and `photo-picker-app` claims no effect kinds, so the router sends it
+> there. The section is kept as the design record the library follows.
 
 ### 10.1 Where the handler lives
 
