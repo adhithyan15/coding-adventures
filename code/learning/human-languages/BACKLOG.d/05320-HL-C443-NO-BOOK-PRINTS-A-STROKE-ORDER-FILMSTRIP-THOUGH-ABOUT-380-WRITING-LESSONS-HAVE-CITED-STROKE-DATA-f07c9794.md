@@ -176,9 +176,16 @@ The fixes, biggest first:
   follows the letter within the same chapter. The fix reorders the letter
   lesson to come after the word.
 
-Still to measure: inventory letters that appear in NO word. The unwritten list
-only sees letters some word already shows, so letters like Telugu ఙ ఛ ఝ ఱ need
-a script inventory to be counted.
+**Inventory-without-a-word: measured and ratcheted.** The report now joins each
+track to its script inventory and lists atomic letters that appear in no taught
+word. Generated abugida syllables count only their one-component base entries;
+composed consonant-plus-sign forms do not inflate the debt, and open-ended Han
+inventories remain outside this measure. There are 65 such letters across ten
+tracks: Marwadi 11; Gujarati and Malayalam 10 each; Japanese 9; Sanskrit and
+Telugu 8 each; Kannada 4; Hindi and Marathi 2 each; and Russian 1. The other
+seven measured tracks are at zero. Telugu's eight are exactly the motivating
+case: ఈ ఊ ఓ ఔ ఙ ఛ ఝ ఱ. Per-track ceilings now let this number fall but never
+rise, alongside cold, builds-toward, and unwritten.
 
 The filmstrip goes on the letter lesson, so it always lands right after the
 word that introduced the letter.

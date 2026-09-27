@@ -12,8 +12,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { measureLetterAnchoring } from "../src/letter-anchoring.js";
-import { defaultCurriculumRoot, loadLessons } from "../src/loader.js";
+import { defaultCurriculumRoot, loadLessons, loadScripts } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
+import type { ScriptData } from "../src/types.js";
 import { loadLetterAnchoringCeilingPins } from "./letter-anchoring-ceiling-pins.js";
 
 const CEILING_DIR = fileURLToPath(new URL("./letter-anchoring-ceilings/", import.meta.url));
@@ -174,9 +175,9 @@ describe("letter-anchoring ceiling owner discovery", () => {
       expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/real file/);
       rmSync(join(root, "nested.json"), { recursive: true });
 
-      writeFileSync(join(root, "toy.json"), '{"cold":0,"buildsToward":0,"unwritten":-1}\n');
+      writeFileSync(join(root, "toy.json"), '{"cold":0,"buildsToward":0,"unreadInventory":0,"unwritten":-1}\n');
       expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/non-negative/);
-      writeFileSync(join(root, "toy.json"), '{"cold":0,"buildsToward":0,"unwritten":0,"extra":0}\n');
+      writeFileSync(join(root, "toy.json"), '{"cold":0,"buildsToward":0,"unreadInventory":0,"unwritten":0,"extra":0}\n');
       expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/expected exactly/);
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -185,7 +186,7 @@ describe("letter-anchoring ceiling owner discovery", () => {
 
   it("rejects uppercase and case-fold-colliding owner names", () => {
     const root = fixture();
-    const pin = '{"cold":0,"buildsToward":0,"unwritten":0}\n';
+    const pin = '{"cold":0,"buildsToward":0,"unreadInventory":0,"unwritten":0}\n';
     try {
       writeFileSync(join(root, "Toy.json"), pin);
       expect(() => loadLetterAnchoringCeilingPins(root)).toThrow(/use lowercase/);
@@ -204,7 +205,7 @@ describe("letter-anchoring ceiling owner discovery", () => {
     const root = fixture();
     const outside = fixture();
     const target = join(outside, "target.json");
-    writeFileSync(target, '{"cold":0,"buildsToward":0,"unwritten":0}\n');
+    writeFileSync(target, '{"cold":0,"buildsToward":0,"unreadInventory":0,"unwritten":0}\n');
     try {
       try {
         symlinkSync(target, join(root, "toy.json"), "file");
@@ -287,13 +288,107 @@ describe("completeness", () => {
     expect(track(report).lettersRead).toBe(3);
     expect(track(report).lettersWritten).toBe(1);
   });
+
+  it("lists inventory letters that no taught word uses", () => {
+    const tamil: ScriptData = {
+      script: "tamil",
+      name: "Tamil",
+      font: "test.ttf",
+      direction: "ltr",
+      system: "abugida",
+      letters: [VA, KA, MA].map((glyph) => ({
+        glyph,
+        sound: "x",
+        role: "consonant",
+        components: [glyph],
+        strokeOrder: [],
+        strokeOrderNote: "",
+      })),
+    };
+    const report = measureLetterAnchoring(
+      [lesson("TA-C1", 10, { headword: `${VA}${KA}` })],
+      { tamil },
+    );
+    expect(track(report).unreadInventory).toEqual([MA]);
+    expect(report.summary.unreadInventory).toBe(1);
+  });
+
+  it("counts only atomic entries in a generated syllabary inventory", () => {
+    const telugu: ScriptData = {
+      script: "telugu",
+      name: "Telugu",
+      font: "test.ttf",
+      direction: "ltr",
+      system: "abugida",
+      letters: [
+        {
+          glyph: "క",
+          sound: "ka",
+          role: "syllable",
+          components: ["క"],
+          strokeOrder: [],
+          strokeOrderNote: "",
+        },
+        {
+          glyph: "కా",
+          sound: "kaa",
+          role: "syllable",
+          components: ["క", "ా"],
+          strokeOrder: [],
+          strokeOrderNote: "",
+        },
+        {
+          glyph: "ఖ",
+          sound: "kha",
+          role: "syllable",
+          components: ["ఖ"],
+          strokeOrder: [],
+          strokeOrderNote: "",
+        },
+      ],
+      independentVowels: [
+        { glyph: "ఈ", sound: "ii", role: "vowel", components: ["ఈ"], strokeOrder: [], strokeOrderNote: "" },
+      ],
+    };
+    const report = measureLetterAnchoring(
+      [lesson("TE-C1", 10, { headword: "క", language: "telugu" })],
+      { telugu },
+    );
+    expect(track(report, "telugu").unreadInventory).toEqual(["ఈ", "ఖ"]);
+  });
+
+  it("does not pretend a finite inventory covers an open-ended logographic script", () => {
+    const chinese: ScriptData = {
+      script: "chinese",
+      name: "Chinese",
+      font: "test.ttf",
+      direction: "ltr",
+      system: "logographic",
+      letters: [
+        {
+          glyph: REN,
+          sound: "ren",
+          role: "character",
+          components: [REN],
+          strokeOrder: [],
+          strokeOrderNote: "",
+        },
+      ],
+    };
+    const report = measureLetterAnchoring(
+      [lesson("ZH-C1", 10, { headword: "你", language: "chinese" })],
+      { chinese },
+    );
+    expect(track(report, "chinese").unreadInventory).toEqual([]);
+  });
 });
 
 describe("the real corpus", () => {
-  const report = measureLetterAnchoring(loadLessons(defaultCurriculumRoot()));
+  const root = defaultCurriculumRoot();
+  const report = measureLetterAnchoring(loadLessons(root), loadScripts(root));
 
-  // A RATCHET, per track: [cold, builds-toward, unwritten]. Each may fall and
-  // must not rise. A new letter lesson must come after a word that holds its
+  // A RATCHET, per track: [cold, builds-toward, unwritten, unread-inventory].
+  // Each may fall and must not rise. A new letter lesson must come after a word that holds its
   // letter. A new word must not bring a letter no letter lesson writes, unless
   // this pin moves in the same change and the commit says why.
   //
@@ -364,12 +459,16 @@ describe("the real corpus", () => {
     expect(report.tracks.map((entry) => entry.language)).toEqual(Object.keys(CEILINGS));
   });
 
-  for (const [language, { cold, buildsToward, unwritten }] of Object.entries(CEILINGS)) {
+  for (const [language, { cold, buildsToward, unreadInventory, unwritten }] of Object.entries(CEILINGS)) {
     it(`${language} does not get less gentle to write`, () => {
       const measured = track(report, language);
       expect(measured.cold, `${language} cold letter lessons`).toBeLessThanOrEqual(cold);
       expect(measured.buildsToward, `${language} builds-toward letter lessons`).toBeLessThanOrEqual(buildsToward);
       expect(measured.unwritten.length, `${language} unwritten: ${measured.unwritten.join(" ")}`).toBeLessThanOrEqual(unwritten);
+      expect(
+        measured.unreadInventory.length,
+        `${language} inventory letters in no word: ${measured.unreadInventory.join(" ")}`,
+      ).toBeLessThanOrEqual(unreadInventory);
     });
   }
 });
