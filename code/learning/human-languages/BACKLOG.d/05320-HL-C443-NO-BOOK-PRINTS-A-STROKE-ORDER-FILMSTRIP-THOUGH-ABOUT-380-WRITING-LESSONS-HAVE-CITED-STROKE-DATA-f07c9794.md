@@ -111,6 +111,9 @@ That is about 380 filmstrips that could print today.
   owns a six-movement filmstrip: movements 1–5 draw the joined main body and
   movement 6 restarts for the separate stem, again source-gated against the
   packaged tracing guide and fitted to Noto Sans Telugu.
+- **Telugu గ continues the consonant pass.** Its existing `TE-S118` lesson owns
+  a two-movement filmstrip: the broad lower arch and separate upper flourish
+  follow the packaged tracing guide and are fitted to Noto Sans Telugu.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

@@ -10,6 +10,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S118-letter-ga",
+      "sourceHash": "fnv1a64:422e82bc6d2c02c4",
+      "svgHash": "fnv1a64:68b5131b9911da59",
+      "svg": "telugu/book/figures/TE-S118-letter-ga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S122-letter-u",
       "sourceHash": "fnv1a64:a631fd3a8a2e22a7",
       "svgHash": "fnv1a64:ed93fe80d2fc4db4",
