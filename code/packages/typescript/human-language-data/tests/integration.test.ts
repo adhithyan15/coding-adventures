@@ -38,6 +38,12 @@ const {
   dataset,
 } = loadEverything();
 
+const curriculumGapReport = buildCurriculumGapReport({
+  registry,
+  lessons,
+  books,
+});
+
 describe("real curriculum", () => {
   it("registers a sound-tag vocabulary for every language track", () => {
     expect(Object.keys(soundTags.tracks).sort()).toEqual(
@@ -355,7 +361,7 @@ describe("real curriculum", () => {
   });
 
   it("produces a machine-readable migration gap baseline", () => {
-    const report = buildCurriculumGapReport({ registry, lessons, books });
+    const report = curriculumGapReport;
     expect(report.schemaVersion).toBe(1);
     expect(report.durationModel.version).toBe(2);
     // 20 -> 21 in HL-C39 (Mandarin Chinese) -> 22 in HL-C40 (Japanese) -> 23
@@ -396,6 +402,7 @@ describe("real curriculum", () => {
       seen.add(module.integrationTrackEvidence.id);
       module.integrationTrackEvidence.assert({
         taxonomy, registry, spine, curricula, books, lessons, scripts, soundTags, dataset,
+        curriculumGapReport,
       });
     }
     expect(seen.size).toBeGreaterThan(0);
