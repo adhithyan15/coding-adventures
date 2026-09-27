@@ -14361,6 +14361,148 @@ non-normative instead of requiring every language to expose Rust's borrowed,
 implemented lanes execute the refined corpus; this refinement remains part of
 the same serial work item and no second PR was opened.
 
+### PR #16088 merge, exact-main refresh, and X.509 Extension selection
+
+All 49 reported final-head checks for PR #16088 reached terminal acceptable
+conclusions at `865e53dd88a79930cfe39baa2df9c333176a22f8`: 19 successes
+and 30 expected path-gated skips. GitHub reported the reviewed head clean and
+mergeable. Guarded squash auto-merge was enabled only after that evidence was
+complete, and GitHub merged DER ASN.1 automatically at
+`2026-09-26T23:10:52Z` as
+`69f1ec320c3eb0e6d2cca699468ebb6e12e3c575`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory generated from that exact merged main
+contains 15 established lanes, 1,470 implementation identities, 4,723
+implementation slots, and 1,512 all-reported identities. Its completion bands
+remain 177/265, 123/934, 181/2,282, and 989/13,846. Rust has 806 singleton
+identities, emerging OCaml remains at five packages, and canonical collisions
+and unknown language buckets remain zero. A collision-checked ownership audit
+found no newly eligible unowned portable package. It did add the effectful
+`forme-deploy-runner-fs-adapter` to the existing Forme family classification,
+kept it outside autonomous parity selection, extended the Mosaic runtime owner
+with UI48 environment/start-context and `environmentChanged` behavior, and
+recorded the exact generated-wrapper identities `mosaic-emit-xaml`,
+`mosaic-package-artifact-builder`, `mosaic-emit-swiftui`, and
+`mosaic-app-bindings`.
+
+OCaml remains an emerging lane rather than entering the denominator. Its
+scaffold, reporter, capability analyzer, exact toolchain, and representative
+package chain are complete; its native build tool, current-contract adoption,
+three-platform build-tool execution, and final promotion remain pending. The
+readiness audit also found the stale `Status: in progress` line in the merged
+OCAML06 capability-analyzer specification. That editorial repair now has a
+separate pending, selection-blocked owner instead of being mistaken for missing
+implementation.
+
+The build-tool refresh confirms that full Dart, Java, and Kotlin engines remain
+missing and emerging OCaml still lacks its native engine. The neutral corpus has
+162 cases in 13 process-free domains but no execution-semantics cases, while
+every adapter remains unavailable. Preserve the dependency order: trusted
+platform execution authority, execution-semantics corpus, native
+current-contract engines, exact native adapter closures, then the all-language
+adapter/CI closure. C# and F# may share the reviewed C# engine, but both remain
+mandatory lanes: each needs a language-native facade and adapter, independent
+front-door invocation, and complete neutral-corpus evidence. Shared engine
+reuse is architecture, not a denominator exception.
+
+The dependency/leverage pass selects
+`x509-extension-portable-conformance` on fresh branch
+`codex/parity-x509-extension-portable-conformance-20260926`. Its sole
+dependency, DER ASN.1, is merged; no open pull request or branch collides with
+the owner; and the generic Extension contract directly unlocks five pending
+portable owners: Extensions, Basic Constraints, Key Usage, Extended Key Usage,
+and Subject Alternative Name. The selected tranche owns exact Extension
+SEQUENCE shape, validated OID, DEFAULT FALSE critical handling, opaque OCTET
+STRING value, shared budgets, transactional failures, local offsets, and
+payload-redacted diagnostics in all 15 established lanes. Extension-specific
+semantics, certificate policy, signatures, path validation, trust, revocation,
+TLS, transport, and ambient authority remain outside it. The reconciled graph
+has 871 owners and 1,606 dependency edges: 224 merged, 646 pending, and exactly
+this owner in progress.
+
+### X.509 Extension all-lane implementation and pre-publication hardening
+
+The selected generic Extension tranche now implements the closed 48-case
+language-neutral profile in all 15 established lanes. Its collision-checked
+branch inventory contains 1,470 implementation identities, 4,737 slots, 178
+high-consensus packages, zero canonical collisions, and zero unknown buckets.
+TaskApp PR #16100 completed 68 successful and nine expected-skipped checks and
+merged through guarded squash auto-merge as
+`1b5b869a5ac2588a5251e314f04fafe6c47bec6c`. The parity branch then rebased
+onto exact fetched `origin/main`
+`d1afaf57915c1f9e2c813a13079034dfdefb5a44`; two intervening human-language
+merges are package-topology-neutral. Reconciliation covered the runner assertions,
+the aggregate repository-source boundary, and ten boundary-derived corpus cases.
+The combined Lua boundary keeps both the new `der_asn1` root from #16100 and
+this branch's `x509_extension` root: 18 boundaries, 21 inputs, 489 scopes, 492
+authorizations, and digest
+`252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3`. The
+disjoint official OCaml content-addressed archive mirror repair is preserved.
+The regenerated exact-main inventory is topology-neutral at 1,470 identities,
+4,723 slots, and zero collisions; the branch remains 1,470 identities, 4,737
+slots, 178 high-consensus packages, 805 Rust singletons, and zero collisions or
+unknown buckets.
+
+A pre-publication native review hardened the three weak boundaries without
+widening Extension semantics. Python OID and Extension values now use
+decoder-only construction and detached immutable bytes. Go OID and Extension
+values reject zero-value use and return defensive snapshots. TypeScript
+downstream composition now reads brand-checked private DER element, decoder,
+and cursor state, including captured pristine cursor operations, rather than
+trusting overridable public accessors. Native regression suites cover source
+mutation, forged construction or zero values, returned-view mutation,
+prototype and own-property poisoning, and actual payload-redacted error text.
+The strengthened Python DER suite passes 124 tests at 97.25 percent coverage,
+Go DER passes race testing at 91.4 percent coverage plus vet and build, and
+TypeScript DER passes 133 tests at 96.72 percent statement coverage. Their
+Extension suites remain green at 100 percent Python coverage, 97.3 percent Go
+coverage, and 100 percent TypeScript statement, branch, function, and line
+coverage; the neutral fixture, all-lane coverage, capability, TypeScript
+portability, and package-parity tests remain green.
+
+The current-source Go build tool also evaluates all 45 Starlark files, selects
+50 affected dependency-shaped packages, and builds all 50 successfully across
+the 15 established lanes plus downstream Rust extension consumers. Windows
+validation uses a short drive mapping to avoid host-only .NET `MAX_PATH`
+failures and explicitly exposes the installed UV and Elixir toolchains; neither
+environment adjustment changes tracked package behavior.
+
+The audit also identified a distinct aggregate evidence improvement, now owned
+by pending `x509-extension-native-hardening-evidence`. It will register one
+native test path and the language-neutral claims `validated-origin`,
+`alias-safe-value`, and `payload-redacted-diagnostics` for every lane, including
+the existing Haskell and Perl native-test paths and the final Dart, Swift, and
+Rust rendered-error evidence. This follow-up depends on the selected Extension
+owner and does not block publishing the complete portable behavior contract.
+
+The post-merge backlog refresh adds nine exact terminal native-adapter closure
+owners for shared C#/F#, Elixir, Go, Lua, Perl, Python, Ruby, Rust, and
+TypeScript. Each waits on the three neutral graph/diff corpus layers and its
+remaining native correctness children before requiring a real adapter and the
+complete versioned corpus with zero undeclared skips or failures. C and C++ are
+kept outside the established-lane aggregate: their bounded graduation owner
+must choose a separate full-corpus native child or a reviewed not-applicable
+decision before either lane is promoted. The Haskell completion umbrella now
+has the missing FNT00 reconciliation edge.
+
+A separate CT01 semantic audit found selector branches or ternaries in the ten
+existing established `ct-compare` lanes, a retained Go branch in optimized
+output, choice-specific copy loops in emerging C/C++, selected-pointer copying
+in Rust, and permissive TypeScript byte coercion. The new
+`ct-compare-existing-lane-conformance-adoption` owner requires all ten existing
+lanes to consume CT01 with exact-work and optimized-code evidence where
+meaningful; it makes no wall-clock or universal hardware-timing claim.
+
+The ownership graph therefore has 882 owners and 1,706 dependency edges: 224
+merged, 657 pending, and exactly the Extension owner in progress. After this
+Extension PR merges, the dependency/leverage pass ranks
+`build-tool-python-glob-matcher-complexity-hardening` first: its dependencies
+are merged, it unlocks nine transitive descendants, and it has a bounded
+iterative dynamic-programming implementation and validation plan. The
+`sha512-existing-lane-hf04-conformance-audit` remains the fallback. No second
+implementation item starts while the Extension PR is active.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

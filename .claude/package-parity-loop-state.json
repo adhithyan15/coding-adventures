@@ -12,24 +12,24 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16088,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16088",
-    "title": "feat(der-asn1): complete portable conformance across established lanes",
-    "branch": "codex/parity-der-asn1-portable-conformance-20260920",
-    "item_id": "der-asn1-portable-conformance",
-    "opened_at": "2026-09-26T20:59:38Z",
-    "head_revision": "10ee16d7de0",
+    "number": 16112,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16112",
+    "title": "feat(x509): bring generic extensions to all established lanes",
+    "branch": "codex/parity-x509-extension-portable-conformance-20260926",
+    "item_id": "x509-extension-portable-conformance",
+    "opened_at": "2026-09-27T04:28:40Z",
+    "head_revision": "a2de2b1cd5b4c551c62cda016cb499645c1ffac0",
     "checks_status": "pending",
     "auto_merge_enabled": false
   },
   "last_ci_action": {
-    "observed_at": "2026-09-26T21:55:43Z",
-    "pr_number": 16088,
-    "status": "failed",
-    "notes": "Repo-wide metadata contracts next failed because the new TypeScript DER ASN.1 project made the portability audit's expected total, standalone-emission, isolated-standalone, and locked-compiler counts stale by one. The smallest in-scope repair updates only those assertions and their provenance comments; all 16 focused tests and diff hygiene pass locally."
+    "observed_at": "2026-09-27T05:00:25Z",
+    "pr_number": 16112,
+    "status": "pending",
+    "notes": "Ubuntu CI exposed Rust 1.98's chunks_exact_to_as_chunks lint in the portable X.509 conformance test. The fixture helper now uses chunks(2) behind its existing even-length assertion; local cargo test and cargo clippy --all-targets -- -D warnings passed, and remediation head a2de2b1cd5b4c551c62cda016cb499645c1ffac0 was pushed to PR #16112. Replacement checks are queued, so auto-merge remains disabled."
   },
   "last_inventory": {
-    "revision": "d66d76f43cbab8f2cbccbfff63a38b3207b1ea23",
+    "revision": "d1afaf57915c1f9e2c813a13079034dfdefb5a44",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -2944,7 +2944,7 @@
       "depends_on": ["build-tool-go-oracle", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-elixir-glob-matcher-complexity-hardening", "build-tool-python-glob-matcher-complexity-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-rust-glob-matcher-complexity-hardening", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Selection-blocked classification umbrella. Deliver one independent engine per PR, retain the reviewed shared C#/F# exception, consume the strengthened eight-graph/eleven-diff roster, and complete the explicit matcher children before claiming all front doors remediated. JVM, Dart, and OCaml remain governed by their exact core/current-contract owners."
+      "notes": "Selection-blocked classification umbrella. Deliver one independent engine per PR, consume the strengthened eight-graph/eleven-diff roster, and complete the explicit matcher children before claiming all front doors remediated. C# and F# may share the reviewed C# engine, but F# still requires its own language-native facade and adapter, independent front-door invocation, and full neutral-corpus evidence; shared implementation is not a lane exception. JVM, Dart, and OCaml remain governed by their exact core/current-contract owners."
     },
     {
       "id": "build-tool-haskell-neutral-adapter-closure",
@@ -2967,6 +2967,193 @@
       "notes": "Terminal Swift build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Swift front door with no undeclared expected failures. Keep this owner selection-blocked until all listed snapshot, path, hashing, registry, fixture, and validator children are complete."
     },
     {
+      "id": "build-tool-csharp-fsharp-neutral-adapter-closure",
+      "title": "Close C# and F# native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
+        "build-tool-csharp-fsharp-portable-dependency-hashing-conformance",
+        "build-tool-csharp-isolated-artifact-fixture-root-resolution",
+        "build-tool-csharp-fsharp-ci-gate-selection-conformance",
+        "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal shared-engine lane gate discovered by the post-#16100 adapter audit. After every listed correctness child lands, add distinct language-native C# and F# facades and adapters, invoke both front doors independently, and run the complete versioned neutral corpus with zero undeclared skips or failures. The reviewed shared C# engine is architecture reuse, not an F# denominator exception."
+    },
+    {
+      "id": "build-tool-elixir-neutral-adapter-closure",
+      "title": "Close Elixir native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-elixir-glob-matcher-complexity-hardening",
+        "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
+        "build-tool-elixir-portable-source-hashing-conformance",
+        "build-tool-elixir-native-source-snapshot-stability-hardening",
+        "build-tool-elixir-portable-dependency-hashing-conformance",
+        "build-tool-elixir-dune-build-discovery-fixture-adoption",
+        "build-tool-elixir-engine-rockspec-utf8-conformance",
+        "build-tool-elixir-resolution-semantic-parity",
+        "build-tool-elixir-ci-gate-selection-conformance",
+        "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Elixir build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Elixir front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
+      "id": "build-tool-go-neutral-adapter-closure",
+      "title": "Close Go native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-go-diff-selection-match-work-ceiling-adoption",
+        "build-tool-go-native-source-snapshot-stability-hardening",
+        "build-tool-go-portable-dependency-hashing-conformance",
+        "build-tool-go-oracle",
+        "build-tool-go-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Go build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter, prove two-way plan interchange where applicable, and run the complete versioned neutral corpus through the Go front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
+      "id": "build-tool-lua-neutral-adapter-closure",
+      "title": "Close Lua native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-lua-diff-selection-match-work-ceiling-adoption",
+        "build-tool-lua-hashing-cache-conformance",
+        "build-tool-lua-language-identity-registry",
+        "build-tool-lua-ci-gate-selection-conformance",
+        "build-tool-lua-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Lua build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Lua front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
+      "id": "build-tool-perl-neutral-adapter-closure",
+      "title": "Close Perl native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-perl-diff-selection-match-work-ceiling-adoption",
+        "build-tool-perl-blib-generated-directory-registry-repair",
+        "build-tool-perl-portable-source-hashing-conformance",
+        "build-tool-perl-portable-dependency-hashing-conformance",
+        "build-tool-perl-hashing-cache-front-door-integration",
+        "build-tool-perl-dune-build-discovery-fixture-adoption",
+        "build-tool-perl-runtime-security-floor",
+        "build-tool-perl-ci-gate-selection-conformance",
+        "build-tool-perl-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Perl build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Perl front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
+      "id": "build-tool-python-neutral-adapter-closure",
+      "title": "Close Python native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-python-glob-matcher-complexity-hardening",
+        "build-tool-python-diff-selection-match-work-ceiling-adoption",
+        "build-tool-python-language-source-input-registry-adoption",
+        "build-tool-python-ci-gate-selection-conformance",
+        "build-tool-python-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Python build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Python front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
+      "id": "build-tool-ruby-neutral-adapter-closure",
+      "title": "Close Ruby native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-ruby-glob-matcher-complexity-hardening",
+        "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
+        "build-tool-ruby-language-source-input-registry-adoption",
+        "build-tool-ruby-portable-dependency-hashing-conformance",
+        "build-tool-ruby-ci-gate-selection-conformance",
+        "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Ruby build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Ruby front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
+      "id": "build-tool-rust-neutral-adapter-closure",
+      "title": "Close Rust native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-rust-glob-matcher-complexity-hardening",
+        "build-tool-rust-diff-selection-match-work-ceiling-adoption",
+        "build-tool-rust-starlark-evaluator-safety-conformance",
+        "build-tool-rust-declared-source-metadata-plumbing",
+        "build-tool-rust-portable-source-hashing-conformance",
+        "build-tool-rust-portable-dependency-hashing-conformance",
+        "build-tool-rust-windows-isolated-target-artifact-hygiene",
+        "build-tool-rust-ci-gate-selection-conformance",
+        "build-tool-rust-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal Rust build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Rust front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
+      "id": "build-tool-typescript-neutral-adapter-closure",
+      "title": "Close TypeScript native build-tool adapter conformance",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": [
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+        "build-tool-typescript-glob-matcher-complexity-hardening",
+        "build-tool-typescript-diff-selection-match-work-ceiling-adoption",
+        "build-tool-typescript-language-source-input-registry-adoption",
+        "build-tool-typescript-portable-dependency-hashing-conformance",
+        "build-tool-typescript-nanoid-dev-security-floor",
+        "build-tool-typescript-ci-gate-selection-conformance",
+        "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Terminal TypeScript build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the TypeScript front door with zero undeclared skips or failures and process-free fixture authority."
+    },
+    {
       "id": "build-tool-all-language-adapter-ci-closure",
       "title": "Close the all-language build-tool adapter and CI denominator",
       "status": "pending",
@@ -2974,6 +3161,15 @@
         "build-tool-existing-remediation",
         "build-tool-haskell-neutral-adapter-closure",
         "build-tool-swift-neutral-adapter-closure",
+        "build-tool-csharp-fsharp-neutral-adapter-closure",
+        "build-tool-elixir-neutral-adapter-closure",
+        "build-tool-go-neutral-adapter-closure",
+        "build-tool-lua-neutral-adapter-closure",
+        "build-tool-perl-neutral-adapter-closure",
+        "build-tool-python-neutral-adapter-closure",
+        "build-tool-ruby-neutral-adapter-closure",
+        "build-tool-rust-neutral-adapter-closure",
+        "build-tool-typescript-neutral-adapter-closure",
         "build-tool-jvm-current-contract-conformance",
         "build-tool-dart-current-contract-conformance",
         "ocaml-build-tool-current-contract-conformance",
@@ -2993,13 +3189,13 @@
         "build-tool-rockspec-utf8-remaining-engines",
         "build-tool-starlark-metering-remaining-engines",
         "build-tool-tracked-artifact-validation-remaining-engines",
-        "build-tool-validation-oracle-remaining-engines",
-        "c-cpp-graduation"
+        "build-tool-validation-oracle-remaining-engines"
       ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Terminal classification and integration gate discovered by the parallel all-language build-tool audit after PR #14352. All 16 current implementation-manifest entries still report adapter_status=missing, CI validates only the Python schema/reference path, and no terminal owner requires every applicable native front door to run the same versioned neutral corpus. After every dependency lands, require ready adapters and same-corpus CI for all supported implementations, two-way Go plan interchange where applicable, zero unreviewed failures, and explicit reviewed exceptions. This gate owns the final evidence-backed C#/F# shared-engine decision; F# is currently only an exception candidate, not an approved exception. Keep this owner selection-blocked until its implementation prerequisites and exact supported-lane/exception matrix are complete."
+      "notes": "Terminal classification and integration gate discovered by the parallel all-language build-tool audit after PR #14352 and decomposed into exact lane gates after PR #16100. All 16 current implementation-manifest entries still report adapter_status=missing, CI validates only the Python schema/reference path, and no terminal owner yet requires every applicable native front door to run the same versioned neutral corpus. After every dependency lands, require ready adapters and same-corpus CI for all supported implementations, two-way Go plan interchange where applicable, zero unreviewed failures, and explicit reviewed exceptions. C# and F# may share the reviewed C# engine, but both remain mandatory lanes with distinct language-native facades and adapters, independent front-door invocation, and full neutral-corpus evidence. Keep this owner selection-blocked until its implementation prerequisites and exact supported-lane/exception matrix are complete.",
+      "refresh_notes": "The post-PR #16100 read-only audit confirms that complete Dart, Java, and Kotlin build-tool implementations remain missing and emerging OCaml still lacks its native build tool. The neutral corpus has 162 cases across 13 process-free domains but no execution-semantics cases, and every adapter remains unavailable. Preserve the dependency order: trusted platform execution authority, execution-semantics corpus, native current-contract engines, exact native adapter closures, then this all-language closure. Shared C# engine reuse is approved architecture, not an F# denominator exception; both front doors require independent full-corpus evidence."
     },
     {
       "id": "build-tool-jvm",
@@ -3485,7 +3681,7 @@
       "title": "Close the remaining Haskell high-consensus tail",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["haskell-http1", "haskell-scaffold-capability-schema", "event-loop-haskell-lane-parity", "brotli-haskell-lane-parity", "ct-compare-haskell-lane-parity", "image-codec-png-haskell-lane-parity"],
+      "depends_on": ["haskell-http1", "haskell-scaffold-capability-schema", "event-loop-haskell-lane-parity", "brotli-haskell-lane-parity", "ct-compare-haskell-lane-parity", "image-codec-png-haskell-lane-parity", "font-parser-haskell-fnt00-reconciliation"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked completion umbrella corrected by the post-#14615 lane audit. Event-loop, Brotli, ct-compare, and image-codec-png are independent children and must not be bundled into one implementation PR. The reporter shows four structural Haskell gaps, while the separately owned FNT00 repair/reconciliation records that the counted generic font-parser wrapper is not yet semantic portable-package parity. Do not mark this umbrella complete until every exact child and the FNT00 reconciliation are resolved."
@@ -3603,7 +3799,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": false,
-      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, provenance, and deploy-planning kernels concrete enough for a dedicated family owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, asset/MIME derivation, and the merged `forme-deploy-runner-core` manifest-validation, complete-set planning, injected-content preflight, verified-snapshot, and dry-run/report behavior from browser, Vite, filesystem, network, credential, CLI, and UI authority; define fixtures and dependency order; and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, #13765, #15785, and #15820 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, `forme-deploy-runner-core`, and `forme-deploy-runner-github-pages-adapter`; all remain covered by this family rather than creating duplicate singleton owners. The GitHub Pages adapter's network, time, credentials, repository publication, filesystem, and CLI authority remains native/external classification work outside parity-loop selection."
+      "notes": "The roadmap already records the TypeScript-led forme-* static-site family, and merged fan-out/routed-blog expansions make its pure graph, routing, content-model, rendering, provenance, and deploy-planning kernels concrete enough for a dedicated family owner rather than indefinite retention under the singleton umbrella. Inventory the family, separate deterministic graph, routing, rendering, content-model, provenance, immutable classless-theme behavior, asset/MIME derivation, and the merged `forme-deploy-runner-core` manifest-validation, complete-set planning, injected-content preflight, verified-snapshot, and dry-run/report behavior from browser, Vite, filesystem, network, credential, CLI, and UI authority; define fixtures and dependency order; and record narrow applicability exceptions before any port. PRs #13244, #13251, #13268, #13368, #13395, #13401, #13409, #13420, #13455, #13765, #15785, and #15820 are merged. The collision-clean inventory includes TypeScript-only `forme-load-assets-fs`, `forme-theme-classless`, `forme-resolve-asset-refs-fs`, `forme-emit-site-fs`, `forme-cli`, `forme-dev-server`, `forme-deploy-runner-core`, `forme-deploy-runner-fs-adapter`, and `forme-deploy-runner-github-pages-adapter`; all remain covered by this family rather than creating duplicate singleton owners. The filesystem adapter is effectful native-authority work; the GitHub Pages adapter adds network, time, credentials, repository publication, filesystem, and CLI authority. Both stay outside autonomous parity-loop selection."
     },
     {
       "id": "rust-singletons-20260730-classification",
@@ -4809,7 +5005,7 @@
     },
     {
       "id": "c-cpp-graduation",
-      "title": "Review C/C++ graduation and native build-tool requirements",
+      "title": "Decide bounded C and C++ build-tool applicability before lane graduation",
       "status": "pending",
       "depends_on": [
         "build-tool-pure-domain-corpus",
@@ -4822,7 +5018,7 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Keep both emerging until package, scaffold, and build-tool maturity and applicability are explicit. Add C and C++ as emerging implementation-manifest entries and require exact 19-case native graph/diff evidence or an explicit reviewed not-applicable exception for each before either lane can graduate."
+      "notes": "Keep both emerging until package, scaffold, and build-tool maturity and applicability are explicit. For each lane, make a bounded reviewed decision: either register a separate native full-corpus implementation child before promotion or record a narrow evidence-backed not-applicable determination. This decision owner must not implement a native engine, run the promotion, or satisfy the established-lane adapter denominator by itself."
     },
     {
       "id": "chief-process-supervisor-native-authority-review",
@@ -5354,7 +5550,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PR #10250 added Rust mosaic-app-runtime as an authority-free deterministic state-machine identity without a capability manifest. Define language-neutral fixtures and established-lane implementations for protocol-version gating, startup cardinality, exact event-sequence and revision progression, overflow rejection, transactional no-advance failures, snapshot and restore behavior, effects, accessibility announcements, and stable errors. Native and web host transport remain outside this portable core. PR #14594 provides a real SPICE domain adapter proving versioned bounded snapshot/restore and retry without sequence consumption; retain that as consumer evidence without adding a reverse dependency."
+      "notes": "Discovered in the collision-checked 6e0a40b7a6 inventory after merged PR #10250 added Rust mosaic-app-runtime as an authority-free deterministic state-machine identity without a capability manifest. Define language-neutral fixtures and established-lane implementations for protocol-version gating, startup cardinality, exact event-sequence and revision progression, overflow rejection, transactional no-advance failures, snapshot and restore behavior, effects, accessibility announcements, environment/start-context handling from UI48 including `environmentChanged`, and stable errors. Native and web host transport remain outside this portable core. PR #14594 provides a real SPICE domain adapter proving versioned bounded snapshot/restore and retry without sequence consumption; retain that as consumer evidence without adding a reverse dependency."
     },
     {
       "id": "mosaic-app-capi-wrapper-native-abi-review",
@@ -5394,7 +5590,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
-      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Merged PR #10464 adds native Compose HostLink emission over mosaic-emit-compose, mosaic-compile, and UI38. Open PR #13011 adds test-only five-backend native-complete and degradation evidence for the same generated wrappers and artifact-builder boundary; it does not create a portable package or build-tool contract. Merged PR #16041 adds the deterministic Rust `mosaic-ios-project` Xcode-project generator; retain it as target-specific generated-native infrastructure inside this review rather than manufacturing an automatic fifteen-lane gap. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
+      "notes": "Discovered in the collision-checked c12372bc8784 inventory after merged PR #10257 added Rust mosaic-app-bindings without a capability manifest. Merged PRs #10270, #10275, #10279, and #10284 extend its generated Compose/JNA, SwiftUI/C-loader, XAML NativeLibrary, Flutter FFI, and Qt QLibrary hosts; #10261, #10290, #10294, and #10299 extend the native emitters and artifact-builder integration. Merged PRs #10304 and #10308 add customizable Qt Controls styling and collision-safe signal-name generation without adding identities. Merged PR #10464 adds native Compose HostLink emission over mosaic-emit-compose, mosaic-compile, and UI38. Open PR #13011 adds test-only five-backend native-complete and degradation evidence for the same generated wrappers and artifact-builder boundary; it does not create a portable package or build-tool contract. Merged PR #16041 adds the deterministic Rust `mosaic-ios-project` Xcode-project generator; retain it as target-specific generated-native infrastructure inside this review rather than manufacturing an automatic fifteen-lane gap. The exact generated-wrapper identity set also includes `mosaic-emit-xaml`, `mosaic-package-artifact-builder`, `mosaic-emit-swiftui`, and `mosaic-app-bindings`. Review opaque runtime-handle and returned-buffer ownership, dynamic-library and environment discovery, event sequencing, JSON decoding, generated-source reproducibility, target build evidence, and truthful capability metadata. Keep the deterministic Mosaic protocol with the portable runtime owner; do not manufacture fifteen reimplementations of generated native wrappers. This wrapper-applicability review is excluded from autonomous parity selection."
     },
     {
       "id": "smart-home-axis-snapshot-host-native-authority-review",
@@ -6263,6 +6459,15 @@
       "notes": "Discovered by the parallel high-consensus ownership audit after PR #14366. Define CT01 and a closed ct-compare-v1 corpus for byte equality, fixed-size aliases, equal-length byte selection, unsigned 64-bit equality, exact iteration counts, stable validation failures, and data-independent source/control-flow. Treat length as public, encode bytes and u64 values as hex, prohibit content-dependent exits and lookups, require source or optimized-code review where meaningful, and explicitly avoid universal hardware timing claims or noisy wall-clock ratio tests."
     },
     {
+      "id": "ct-compare-existing-lane-conformance-adoption",
+      "title": "Adopt CT01 across existing constant-time comparison lanes",
+      "status": "pending",
+      "depends_on": ["ct-compare-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#16100 semantic audit of the ten established ct-compare implementations. Make C#, Elixir, F#, Go, Java, Kotlin, Python, Ruby, Rust, and TypeScript consume the complete CT01 corpus, replace selector branches or ternaries and permissive byte coercion with data-independent validated operations, and record exact-iteration plus optimized-code evidence where meaningful. Audit emerging C and C++ implementations for compiler rewrites without adding them to the established denominator. Treat compiler and hardware limits as documented assurance boundaries and make no wall-clock timing claim."
+    },
+    {
       "id": "ct-compare-dart-lane-parity",
       "title": "Implement constant-time comparison conformance in Dart",
       "status": "pending",
@@ -6312,10 +6517,10 @@
       "title": "Complete constant-time comparison parity in the remaining lanes",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["ct-compare-dart-lane-parity", "ct-compare-haskell-lane-parity", "ct-compare-lua-lane-parity", "ct-compare-perl-lane-parity", "ct-compare-swift-lane-parity"],
+      "depends_on": ["ct-compare-existing-lane-conformance-adoption", "ct-compare-dart-lane-parity", "ct-compare-haskell-lane-parity", "ct-compare-lua-lane-parity", "ct-compare-perl-lane-parity", "ct-compare-swift-lane-parity"],
       "branch": null,
       "pr_number": null,
-      "notes": "Selection-blocked completion umbrella only; never select as an implementation PR. Mark merged only after CT01 and the Dart, Haskell, Lua, Perl, and Swift lane children merge. No lane exception is currently approved: managed-runtime, compiler, and hardware timing limits are reviewed assurance boundaries rather than applicability exclusions."
+      "notes": "Selection-blocked completion umbrella only; never select as an implementation PR. Mark merged only after CT01, the existing-lane adoption audit and repairs, and the Dart, Haskell, Lua, Perl, and Swift lane children merge. No lane exception is currently approved: managed-runtime, compiler, and hardware timing limits are reviewed assurance boundaries rather than applicability exclusions."
     },
     {
       "id": "sir-runtime-array-symbolic-portable-conformance",
@@ -9304,6 +9509,16 @@
       "notes": "Discovered by the parallel OCaml promotion-readiness audit after PR #14519. Own the real three-platform native-build-tool qualification separately from the atomic denominator switch: execute the current-contract OCaml build tool against the representative package chain on pinned Ubuntu, macOS, and Windows toolchains with no skips, deterministic two-way Go plan interchange, measured coverage, stable failure evidence, retained artifacts, and the same language-neutral corpora. Keep native execution, toolchain provisioning, and hosted-runner evidence in this CI owner; `ocaml-lane-promotion` remains blocked until it and the representative package execution owner are complete. No reviewed exception is currently justified."
     },
     {
+      "id": "ocaml-capability-analyzer-status-documentation-repair",
+      "title": "Correct the merged OCaml capability-analyzer specification status",
+      "status": "pending",
+      "depends_on": ["ocaml-capability-analyzer"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered by the post-PR #16088 OCaml readiness audit. `code/specs/OCAML06-capability-analyzer.md` still says `Status: in progress` even though the analyzer and its independent CI gate merged in PR #14519. Correct the stale status and any directly coupled roadmap wording in an OCaml documentation-maintenance tranche; do not treat this editorial defect as missing analyzer implementation or as a reason to select a second parity PR."
+    },
+    {
       "id": "ocaml-classical-cipher-denominator-consumers",
       "title": "Add OCaml consumers for the classical-cipher denominator",
       "status": "pending",
@@ -9514,7 +9729,7 @@
     {
       "id": "der-asn1-portable-conformance",
       "title": "Define portable typed ASN.1 DER value conformance and established-lane parity",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["der-tlv-portable-conformance"],
       "branch": "codex/parity-der-asn1-portable-conformance-20260920",
       "pr_number": 16088,
@@ -9523,8 +9738,12 @@
       "selection_notes": "Selected after PR #15761 merged through guarded auto-merge, followed by a collision-checked exact-main inventory refresh and bounded package, owner, fixture, and validation audits. DER ASN.1 is the sole dependency-shaped root immediately unlocked by DER TLV and now directly gates ten confirmed Rust X.509 consumers plus six registered extension-family owners. The dedicated worktree was rebased to origin/main 346be10b6e86467693e064eb9eba433d61fe3e60 after PR #15798 merged; that refresh added the Subject Alternative Name owner without changing the selected in-progress item.",
       "notes": "Own the portable empty-capability typed ASN.1 DER layer above the merged DER TLV contract. Freeze a language-neutral semantic suite that references rather than copies the DER TLV framing corpus, then deliver all 15 established lanes for canonical BOOLEAN, INTEGER, BIT STRING, OCTET STRING, IA5String, NULL, OID, implicit primitive values, exact SEQUENCE, SET, and context-specific wrappers, shared budgets, transactional failures, and payload-redacted local offsets. Keep X.509 schema, path validation, trust, signatures, TLS, network, credentials, and ambient authority outside this owner.",
       "progress_notes": "The neutral contract closes 122 cases and 22 stable errors. Its independent oracle and all fifteen completed lane adapters cover unsigned-64 OID boundaries, malformed and budget-limited implicit OIDs, exact explicit-tag rejection, nested exact/over-depth behavior, shared nested element budgets, and all 46 referenced DER TLV cases; a machine check reserves only the safely unreachable host-size bit-length-overflow error. Python passes 123 tests at 97.17% line coverage; Rust passes its full suite; Go passes race with 91.2% coverage; Dart passes 128 tests; Java and Kotlin pass tests plus JaCoCo; TypeScript passes 133 tests at 97.27% statements, 93.75% branches, 98.33% functions, and 98.29% lines; C# passes 126 tests at 95.66% line, 95.93% branch, and 98.57% method coverage. Ruby now passes all 122 cases and 46 delegated framing cases plus native immutability, sealed-wrapper, limit, OID equality, and redaction checks at 98.36% line and 95.79% branch coverage; StandardRB, gem packaging, Unix and Windows build fronts, and the real Go build-tool dependency plan pass. F# passes all 122 cases and 46 delegated framing cases plus all 22 error identifiers, native private-constructor, immutable-snapshot, bounded OID equality, limit, helper, and redaction checks at 96.55% line and 91.03% branch coverage; packaging, dependency audit, the Windows build front, and the real Go build-tool two-package dependency plan pass. Swift passes all 122 cases and 46 delegated framing cases plus all 22 error identifiers, immutable snapshots, exact-owner shared budgets, bounded UInt64 OID equality, limit, helper, and redaction checks at 97.87% source line coverage; formatter lint, release warnings-as-errors, package description, Unix and Windows build fronts, and the real Go build-tool two-package dependency plan pass. Haskell passes all 122 cases and 46 delegated framing cases plus native exact-owner, shared-budget, transactionality, concurrency, limit, wrapper, and redaction checks at 95% expression and alternative coverage; Cabal check and source packaging, warnings-as-errors, Unix and Windows build fronts, and the real Go build-tool two-package dependency plan pass. Perl passes all 122 cases and 46 delegated framing cases plus native provenance, owner, budget, transactionality, exact-u64, tag, finite-limit, packaging, and redaction checks at 98.7% statement and 96.3% subroutine coverage; Perl::Critic, POD, distribution testing, Unix and Windows build fronts, capability-schema validation, and the real Go build-tool two-package dependency plan pass. Elixir passes all 122 cases and 46 delegated framing cases plus native private-process-backed wrapper, exact-owner, replay-safe shared-budget, transactionality, exact-u64 including the first combined OID boundary, OID equality, tag, finite-limit, and redaction checks at 96.89% line coverage; formatting, warnings-as-errors compilation, Unix and Windows build fronts, Windows-front validation, capability-schema validation, and the real Go build-tool two-package dependency plan pass. The specification is representation-neutral about ownership, allocation, immutable wrappers, and exact unsigned values, and the 15-lane consumer registry is explicitly a target denominator rather than a completion assertion. Security review made validated element and primitive wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir, hid raw framing helpers from typed package surfaces, rejected oversized input before copying in Kotlin, C#, and Ruby, made Kotlin and C# OID arc lists runtime-immutable, bound Swift cursors to their originating decoder state, made Haskell shared budget checks concurrency-safe, kept Perl wrapper state and construction helpers lexical, rejected non-u32 Perl schema tags and host-oversized limits, kept Elixir decoder, element, cursor, and typed payloads behind private immutable handle processes and made shared budgets plus cursor progress replay-safe through a restricted decoder state process, rejected non-u32 Elixir tags plus non-finite or host-oversized limits, and added defensive zero-value, runtime-token, immutable-snapshot, published-surface, concurrency, and redaction tests. Lua completes the fifteenth established lane: all 122 cases and 46 delegated framing rows plus native private-registry, exact-owner, transactional-budget, exact two-limb u64/OID, tag, limit, equality, and redaction checks pass at 98.30% production line coverage; syntax, LuaCheck, LuaRocks metadata/install, both build fronts, capability validation, collision checks, and the real Go build-tool dependency plan pass.",
-      "refresh_notes": "The last full collision-checked schema-3 inventory was generated at origin/main d66d76f43cbab8f2cbccbfff63a38b3207b1ea23. The branch was subsequently rebased without overlap onto origin/main 04dfbed3935 and now contains 45 implementation and bookkeeping commits; the inventory counts below remain the explicitly preserved earlier snapshot pending the required post-merge regeneration. The refreshed collision-clean schema-3 inventory records 1,470 implementation identities, 4,723 implementation slots, 1,512 all-reported identities, 989 singleton packages with 13,846 missing slots, 806 Rust singletons, five OCaml packages, zero canonical collisions, and zero unknown buckets. All discovered identities remain assigned to an existing family owner, a pending portable owner, or an explicit native/applicability review; DER ASN.1 is the sole active parity item and ready-for-review PR #16088 is open.",
-      "fixture_audit_notes": "Completed and independently validated the 122-case refinement: unsigned-64 OID boundaries, malformed and budget-limited implicit OIDs, wrong-class, primitive, and wrong-number explicit wrappers, nested exact and over-depth boundaries, repeated shared nested-budget failure, and a machine-checked reserved disposition for bit-length-overflow. Allocation and ownership remain non-normative; Rust borrowed, Copy, iterator, and native u64 representations are reference-lane choices rather than portable requirements."
+      "refresh_notes": "The required post-merge collision-checked schema-3 inventory was regenerated at exact origin/main 69f1ec320c3eb0e6d2cca699468ebb6e12e3c575. It records 1,470 implementation identities, 4,723 implementation slots, 1,512 all-reported identities, 989 singleton packages with 13,846 missing slots, 806 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. All discovered identities remain assigned to an existing family owner, a pending portable owner, or an explicit native/applicability review; PR #16088 is merged and generic X.509 Extension is the sole selected parity item.",
+      "fixture_audit_notes": "Completed and independently validated the 122-case refinement: unsigned-64 OID boundaries, malformed and budget-limited implicit OIDs, wrong-class, primitive, and wrong-number explicit wrappers, nested exact and over-depth boundaries, repeated shared nested-budget failure, and a machine-checked reserved disposition for bit-length-overflow. Allocation and ownership remain non-normative; Rust borrowed, Copy, iterator, and native u64 representations are reference-lane choices rather than portable requirements.",
+      "merged_head_revision": "865e53dd88a79930cfe39baa2df9c333176a22f8",
+      "merged_at": "2026-09-26T23:10:52Z",
+      "merge_revision": "69f1ec320c3eb0e6d2cca699468ebb6e12e3c575",
+      "merge_notes": "All 49 reported final-head checks reached terminal acceptable conclusions: 19 successes and 30 expected path-gated skips. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and GitHub merged PR #16088 automatically without a plain manual merge command."
     },
     {
       "id": "x509-certificate-version-portable-conformance",
@@ -9538,11 +9757,29 @@
     {
       "id": "x509-extension-portable-conformance",
       "title": "Define portable generic X.509 Extension conformance and established-lane parity",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["der-asn1-portable-conformance"],
+      "branch": "codex/parity-x509-extension-portable-conformance-20260926",
+      "pr_number": 16112,
+      "selected_at": "2026-09-26T23:11:02Z",
+      "selection_revision": "69f1ec320c3eb0e6d2cca699468ebb6e12e3c575",
+      "validation_revision": "0f817824f84dccf63e681d1d8d18bcd1e3553ee0",
+      "selection_notes": "Selected after PR #16088 merged automatically, followed by a collision-checked exact-main schema-3 inventory refresh and bounded package, lane, build-tool, OCaml, fixture, and ownership audits. All package identities remain classified; the report contains 15 established lanes, 1,470 implementation identities, 4,723 implementation slots, 1,512 all-reported identities, 806 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. This owner has only the merged DER ASN.1 dependency, has no matching open PR or branch collision, and directly unlocks five pending X.509 owners: Extensions, Basic Constraints, Key Usage, Extended Key Usage, and Subject Alternative Name. It is therefore the highest-leverage dependency-ready portable item for one fresh serial tranche.",
+      "progress_notes": "Defined the closed 48-case language-neutral Extension profile and 15-lane consumer registry, added independent schema/oracle/coverage tests, wired the existing Rust owner to the fixture, and completed packages in all 15 established lanes: Rust, Python, Go, TypeScript, Dart, Swift, Java, Kotlin, C#, F#, Haskell, Perl, Ruby, Lua, and Elixir. Rust passes 14 tests plus rustfmt and clippy; Python passes all 48 cases with Ruff, formatting, MyPy, and 100% line coverage; Go passes all 48 cases with race detection, vet, build, and 97.3% statement coverage after native hardening; TypeScript passes all 48 cases with compilation, 100% statement/branch/function/line coverage, a clean production dependency audit, package dry-run, and the updated repository portability ratchet; Dart passes formatting, fatal-info analysis, all 48 cases, defensive-output tests, and its 90% coverage front; Swift passes format lint, all 48 cases, value-semantics checks, coverage-enabled tests, and a release warnings-as-errors build; Java and Kotlin each pass all 48 cases plus defensive-copy and redaction invariants, warnings-as-errors compilation, and their 95% JaCoCo line-coverage fronts; C# passes 50 tests with 99.05% line and 95.65% branch coverage, warnings-as-errors compilation, production and test formatting checks, defensive-copy and redaction invariants, and a clean standalone build; F# passes all 48 fixture cases plus native immutability and redaction checks with 100% line coverage, warnings-as-errors compilation, and a clean standalone build; Haskell passes all 48 fixture cases plus native immutability and redaction checks, 100% alternative and 97% expression coverage, warnings-as-errors compilation, Haddock generation, and its Windows build front; Perl passes all 48 fixture cases plus private-construction, defensive-copy, and error-text redaction checks, Perl::Critic, POD, MakeMaker and disttest, and 100% production statement, branch, and subroutine coverage; Ruby passes all 48 fixture cases plus private-construction, immutable-snapshot, and actual-error-text redaction checks, StandardRB, gem packaging, and 100% line and branch coverage; Lua passes all 48 fixture cases plus sealed-value, defensive-OID, unexpected-error, and actual-error-text redaction checks, Luacheck, LuaRocks packaging, its Windows build recipe, and 100% production line coverage; Elixir passes all 48 fixture cases plus opaque-handle, forgery, defensive-snapshot, and actual-error-text redaction checks, format and warnings-as-errors compilation, 95.65% production line coverage, and its Windows build-front audit. The language-neutral fixture, all-lane registry, capability, and aggregate portable-coverage ratchets are green. The Lua shared-lint boundary includes both the previously omitted der_asn1 root and new x509_extension root with its digest and count ratchets validated. The final pre-publication hardening closes decoder-only construction and immutable-byte ownership in Python, zero-value and alias resistance in Go, and brand-checked private-state composition plus actual error-string redaction in TypeScript. Their upstream DER packages and native tests were hardened in the same serial item; Python DER passes 124 tests at 97.25% coverage, Go DER passes race testing at 91.4% coverage plus vet/build, and TypeScript DER passes 133 tests at 96.72% statement coverage. A separate pending owner records the newly discovered cross-lane native-hardening evidence ratchet without expanding this already coherent implementation tranche.",
+      "validation_notes": "Rebased cleanly onto exact origin/main 9a5df7b77ac3f7a4048f5c29d43e8449ac99b28a with zero upstream path overlap. The current-source Go build tool validated all 45 Starlark files, discovered 5,262 packages, selected 50 affected packages, and built all 50 successfully from a short Windows drive mapping after separating environmental MAX_PATH and PATH failures from branch behavior. The repaired TypeScript Windows front now uses cmd.exe-compatible dependency commands and passes both its focused package build and the repository frontend-directory ratchet. Post-rebase X.509 fixture, portable-coverage, DER ASN.1 fixture, DER ASN.1 coverage, capability-taxonomy, Elixir build-front, TypeScript portability, TypeScript frontend-directory, and package-parity tests all pass. The schema-3 branch inventory has 1,470 implementation identities, 4,737 slots, 178 high-consensus packages, zero canonical collisions, and zero unknown buckets. Bandit is clean for changed Python production sources, both changed TypeScript packages have zero production audit findings, all 14 new capability manifests are empty and schema-valid, added-line secret and machine-path review is clean, git diff --check is clean, and no generated artifacts remain untracked.",
+      "final_validation_revision": "fb1344be4e3787e68cd45823d853e4f614a2bf53",
+      "final_refresh_notes": "After the exact d1afaf57915c1f9e2c813a13079034dfdefb5a44 rebase, the build-tool schema suite passed 25 tests, the semantic runner passed 86 tests, and the 162-case/285-file corpus validated with repository boundary digest 252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3. X.509 Extension, DER ASN.1, capability, Elixir Windows-front, TypeScript portability/frontend, OCaml capability, and package-parity ratchets passed. Current-source Go dry validation evaluated 45 Starlark files, discovered 5,262 packages, kept the five reviewed orphan exemptions clean, and selected the same 50 affected packages. The regenerated branch inventory remains 1,470 identities, 4,737 slots, 178 high-consensus packages, 805 Rust singletons, five OCaml packages, zero collisions, and zero unknown buckets; the 882-owner/1,706-edge graph is unique, dependency-complete, acyclic, and free of merged-to-unmerged edges with exactly this item in progress. Seven live open PRs have zero exact path overlap with the branch.",
+      "rebase_notes": "PR #16100 completed 68 successful and nine expected-skipped checks and merged automatically as 1b5b869a5ac2588a5251e314f04fafe6c47bec6c. The parity branch rebased through that collision and then onto exact current origin/main d1afaf57915c1f9e2c813a13079034dfdefb5a44 after two topology-neutral human-language merges. Twelve boundary-derived files required reconciliation: the runner count/digest assertions, the aggregate repository-source boundary, and ten corpus cases. The combined boundary now records 18 boundaries, 21 inputs, 489 scopes, 492 authorizations, and digest 252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3. The disjoint official OCaml content-addressed archive mirror repair from #16100 is preserved unchanged. Exact-main inventory remains 1,470 identities and 4,723 slots with zero collisions; branch inventory remains 1,470 identities and 4,737 slots with zero collisions.",
+      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15748 added the Rust-only x509-extension identity. Own the exact generic Extension sequence: validated extension OID, DEFAULT FALSE critical flag, opaque OCTET STRING value, shared budgets, transactional failure, local offsets, and redacted diagnostics. Keep extension-specific semantics, certificate policy, signatures, validation, trust, revocation, TLS, transport, and ambient authority outside this owner."
+    },
+    {
+      "id": "x509-extension-native-hardening-evidence",
+      "title": "Ratchet native X.509 Extension value-hardening evidence across established lanes",
+      "status": "pending",
+      "depends_on": ["x509-extension-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered by the collision-checked post-PR #15761 inventory after merged PR #15748 added the Rust-only x509-extension identity. Own the exact generic Extension sequence: validated extension OID, DEFAULT FALSE critical flag, opaque OCTET STRING value, shared budgets, transactional failure, local offsets, and redacted diagnostics. Keep extension-specific semantics, certificate policy, signatures, validation, trust, revocation, TLS, transport, and ambient authority outside this owner."
+      "notes": "Discovered during the selected generic Extension tranche's read-only hardening audit. Extend the all-lane consumer registry with one native test path and three language-neutral evidence claims per lane: validated-origin, alias-safe-value, and payload-redacted-diagnostics. Require a stable native-hardening profile marker centrally while leaving each language free to prove validated origin through private construction, invalid zero values, forged-receiver rejection, or type-system unforgeability, and alias safety through owned snapshots, immutable values, or borrow-checked immutable views. Register the native evidence already present across all 15 lanes, including the Haskell and Perl native-test paths and the final Dart, Swift, and Rust rendered-error evidence, before enabling the aggregate ratchet. Keep package semantics, new extension types, trust, policy, and cryptographic authority outside this owner."
     },
     {
       "id": "x509-extensions-portable-conformance",

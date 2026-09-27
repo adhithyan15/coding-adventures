@@ -1,0 +1,41 @@
+cabal-version: 3.0
+name:          x509-extension
+version:       0.1.0
+synopsis:      Bounded generic X.509 Extension decoding
+description:   Portable RFC 5280 Extension decoding over bounded ASN.1 DER values.
+category:      Development
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+extra-doc-files:
+    README.md
+    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.X509Extension
+    build-depends:    base >=4.14 && <5
+                    , bytestring >=0.11 && <0.13
+                    , der-asn1 >=0.1 && <0.2
+                    , der-tlv >=0.1 && <0.2
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    X509ExtensionSpec
+                    , PortableConformanceSpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14 && <5
+                    , x509-extension
+                    , der-asn1
+                    , der-tlv
+                    , aeson >=2 && <2.3
+                    , bytestring >=0.11 && <0.13
+                    , hspec ==2.*
+                    , scientific >=0.3 && <0.4
+                    , text >=1.2 && <2.2
+    ghc-options:      -Wall
+    default-language: Haskell2010

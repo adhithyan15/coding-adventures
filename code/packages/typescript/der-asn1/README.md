@@ -12,6 +12,8 @@ The typed layer adds canonical primitive decoders, exact constructed wrappers,
 shared depth and element budgets, transactional cursors, unsigned 64-bit
 INTEGER and OID support, and payload-redacted diagnostics. It has no ambient
 filesystem, network, process, environment, credential, or execution authority.
+Brand-checked composition helpers expose only validated private state to
+downstream syntax decoders, even when public accessors have been overridden.
 
 ## Development
 
