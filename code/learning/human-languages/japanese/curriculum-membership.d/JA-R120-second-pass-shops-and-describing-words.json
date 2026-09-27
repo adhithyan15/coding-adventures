@@ -1,0 +1,11 @@
+{
+  "id": "JA-R120-second-pass-shops-and-describing-words",
+  "pathSegment": "JA-PATH-120-QUAL120",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "JA-EXT-120-QUAL120",
+      "order": 6
+    }
+  ]
+}

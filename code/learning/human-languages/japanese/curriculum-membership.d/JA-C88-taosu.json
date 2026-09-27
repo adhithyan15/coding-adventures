@@ -1,0 +1,11 @@
+{
+  "id": "JA-C88-taosu",
+  "pathSegment": "JA-PATH-88-ACT88",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-88-ACT88",
+      "order": 4
+    }
+  ]
+}

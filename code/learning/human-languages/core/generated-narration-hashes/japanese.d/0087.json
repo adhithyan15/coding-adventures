@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:620f49c1e0c94bbb",
+  "lessonIds": [
+    "JA-C87-tsumu",
+    "JA-C87-tanomu",
+    "JA-C87-susumu",
+    "JA-C87-hosu",
+    "JA-C87-sasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch87.txt",
+  "json": "japanese/narration/ch87.json",
+  "textHash": "fnv1a64:6fbecbc4256b0577",
+  "jsonHash": "fnv1a64:29d5cacadfbf6262",
+  "findings": []
+}

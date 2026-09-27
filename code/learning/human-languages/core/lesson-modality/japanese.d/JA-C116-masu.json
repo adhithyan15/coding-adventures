@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C116-masu",
+    "language": "japanese",
+    "chapter": 116,
+    "sequence": 6900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:125a1d5a2fb47864"
+  },
+  "findings": []
+}

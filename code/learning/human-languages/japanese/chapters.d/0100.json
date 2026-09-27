@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Rubbish, Stick, Board, Scissors, Magazine",
+  "label": "ch:ja-rubbish-stick-board-scissors-magazine",
+  "canDo": "I can say rubbish, a stick, a board, scissors and a magazine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C100-zasshi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say rubbish, a stick, a board, scissors and a magazine.",
+    "assesses": [
+      "JA-LEX-C100-THINGS100-03",
+      "JA-LEX-C100-THINGS100-04",
+      "JA-LEX-C100-THINGS100-05"
+    ]
+  }
+}

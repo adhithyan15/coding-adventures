@@ -1,0 +1,11 @@
+{
+  "id": "JA-C120-hima",
+  "pathSegment": "JA-PATH-120-QUAL120",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-120-QUAL120",
+      "order": 2
+    }
+  ]
+}

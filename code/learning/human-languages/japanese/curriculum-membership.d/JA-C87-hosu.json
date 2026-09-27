@@ -1,0 +1,11 @@
+{
+  "id": "JA-C87-hosu",
+  "pathSegment": "JA-PATH-87-ACT87",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-87-ACT87",
+      "order": 3
+    }
+  ]
+}

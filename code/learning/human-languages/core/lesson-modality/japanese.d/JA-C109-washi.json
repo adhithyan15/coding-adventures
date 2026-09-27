@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C109-washi",
+    "language": "japanese",
+    "chapter": 109,
+    "sequence": 6460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db3b30acf9f1fffc"
+  },
+  "findings": []
+}

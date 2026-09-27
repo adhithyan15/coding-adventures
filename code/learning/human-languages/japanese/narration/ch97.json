@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 97,
+  "title": "Property, Use, Means, Method, Way of doing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:79bd34af4e7873cb",
+  "lessons": [
+    {
+      "id": "JA-C97-zaisan",
+      "sequence": 5750,
+      "title": "ざいさん (zaisan) — property, fortune",
+      "headword": "ざいさん",
+      "romanization": "zaisan",
+      "gloss": "property, fortune",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70c5c713ffbb47a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for room to spare, then the Japanese for convenience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ざいさん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざいさん — zaisan — \"property, fortune\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaisan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaisan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaisan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaisan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say zaisan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *zaisan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for room to spare, then the Japanese for convenience, then say zaisan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for room to spare, then the Japanese for convenience, then say *zaisan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ざいさん (zaisan) mean? (\"Property, fortune\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C97-zaisan-type",
+              "prompt": "Type the Japanese for 'property, fortune'.",
+              "assesses": [
+                "JA-LEX-C97-CAN97-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ざいさん",
+                "zaisan"
+              ],
+              "feedback": {
+                "correct": "Right: ざいさん (zaisan) is 'property, fortune'.",
+                "incorrect": "'property, fortune' is ざいさん (zaisan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C97-tsukaimichi",
+      "sequence": 5760,
+      "title": "つかいみち (tsukaimichi) — a use, a purpose",
+      "headword": "つかいみち",
+      "romanization": "tsukaimichi",
+      "gloss": "a use, a purpose",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c82d78e9a5de1fa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for convenience, then the Japanese for property."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つかいみち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つかいみち — tsukaimichi — \"a use, a purpose\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukaimichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukaimichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukaimichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukaimichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsukaimichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsukaimichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for convenience, then the Japanese for property, then say tsukaimichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for convenience, then the Japanese for property, then say *tsukaimichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つかいみち (tsukaimichi) mean? (\"A use, a purpose\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C97-tsukaimichi-type",
+              "prompt": "Type the Japanese for 'a use, a purpose'.",
+              "assesses": [
+                "JA-LEX-C97-CAN97-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つかいみち",
+                "tsukaimichi"
+              ],
+              "feedback": {
+                "correct": "Right: つかいみち (tsukaimichi) is 'a use, a purpose'.",
+                "incorrect": "'a use, a purpose' is つかいみち (tsukaimichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C97-shudan",
+      "sequence": 5770,
+      "title": "しゅだん (shudan) — a means",
+      "headword": "しゅだん",
+      "romanization": "shudan",
+      "gloss": "a means",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75c4e42714668d65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for property, then the Japanese for a use."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅだん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅだん — shudan — \"a means\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shudan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shudan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shudan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shudan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shudan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shudan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for property, then the Japanese for a use, then say shudan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for property, then the Japanese for a use, then say *shudan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅだん (shudan) mean? (\"A means\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C97-shudan-type",
+              "prompt": "Type the Japanese for 'a means'.",
+              "assesses": [
+                "JA-LEX-C97-CAN97-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅだん",
+                "shudan"
+              ],
+              "feedback": {
+                "correct": "Right: しゅだん (shudan) is 'a means'.",
+                "incorrect": "'a means' is しゅだん (shudan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C97-houhou",
+      "sequence": 5780,
+      "title": "ほうほう (houhou) — a method",
+      "headword": "ほうほう",
+      "romanization": "houhou",
+      "gloss": "a method",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31a8119c9080afd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a use, then the Japanese for a means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうほう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうほう — houhou — \"a method\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "houhou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *houhou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "houhou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *houhou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say houhou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *houhou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a use, then the Japanese for a means, then say houhou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a use, then the Japanese for a means, then say *houhou* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうほう (houhou) mean? (\"A method\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C97-houhou-type",
+              "prompt": "Type the Japanese for 'a method'.",
+              "assesses": [
+                "JA-LEX-C97-CAN97-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうほう",
+                "houhou"
+              ],
+              "feedback": {
+                "correct": "Right: ほうほう (houhou) is 'a method'.",
+                "incorrect": "'a method' is ほうほう (houhou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C97-yarikata",
+      "sequence": 5790,
+      "title": "やりかた (yarikata) — a way of doing",
+      "headword": "やりかた",
+      "romanization": "yarikata",
+      "gloss": "a way of doing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a9434f77dcb129f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a means, then the Japanese for a method."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やりかた",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やりかた — yarikata — \"a way of doing\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yarikata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yarikata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yarikata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yarikata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yarikata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yarikata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a means, then the Japanese for a method, then say yarikata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a means, then the Japanese for a method, then say *yarikata* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やりかた (yarikata) mean? (\"A way of doing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C97-yarikata-type",
+              "prompt": "Type the Japanese for 'a way of doing'.",
+              "assesses": [
+                "JA-LEX-C97-CAN97-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やりかた",
+                "yarikata"
+              ],
+              "feedback": {
+                "correct": "Right: やりかた (yarikata) is 'a way of doing'.",
+                "incorrect": "'a way of doing' is やりかた (yarikata)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

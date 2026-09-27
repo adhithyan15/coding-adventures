@@ -1,0 +1,11 @@
+{
+  "id": "JA-C113-katsuo",
+  "pathSegment": "JA-PATH-113-THINGS113",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-113-THINGS113",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C93-kouho",
+  "pathSegment": "JA-PATH-93-WANT93",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-93-WANT93",
+      "order": 3
+    }
+  ]
+}

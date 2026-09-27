@@ -5,7 +5,11 @@
 // this file exists for is behavioural: before the host completed effects, an
 // `await` was dropped and the app waited forever with nothing reporting it.
 #include "MosaicHost.h"
+#include "MosaicPlatformEffects.h"
 #include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QTemporaryDir>
 #include <QVariantMap>
 #include <cstdio>
 
@@ -260,6 +264,149 @@ int main(int argc, char **argv) {
         const auto snap = host.snapshot();
         check(snap.isValid() && !snap.toMap().contains(QStringLiteral("error")),
               "snapshot works again once the deferred effect is answered");
+    }
+
+    {
+        // UI87 §7.4a: the platform library's router owns dispatch. The
+        // conformance app's own kind (`conformance.counter`) is not standard,
+        // so with no claimed kinds it must still reach a handler connected the
+        // old way -- through the signal -- exactly once.
+        qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_H"));
+        MosaicHost host;
+        int signalled = 0;
+        QObject::connect(&host, &MosaicHost::effectRequested, &host,
+            [&host, &signalled](const QVariant &id, const QString &, const QVariant &,
+                                const QString &delivery) {
+                signalled++;
+                if (delivery.compare(QStringLiteral("await"), Qt::CaseInsensitive) != 0) return;
+                host.completeEffect(id, QVariantMap{{QStringLiteral("ok"),
+                    QVariantMap{{QStringLiteral("amount"), 5}}}});
+            }, Qt::DirectConnection);
+        installMosaicPlatformEffects(host, std::nullopt, nullptr);
+        installMosaicPlatformEffects(host, std::nullopt, nullptr); // idempotent
+        const auto props = requestAwait(host);
+        check(signalled == 1, "an app kind reaches the connected handler once");
+        check(props.value(QStringLiteral("count")).toInt() == 5,
+              "the connected handler's answer reached the app");
+        check(awaited(props, "routed-app") == 0, "a routed app kind leaves nothing outstanding");
+
+        // A second owner of one effect is refused.
+        QVariant firstId;
+        host.setEffectHandler([&host, &firstId](const QVariant &id, const QString &,
+                                                const QVariant &, const QString &) {
+            firstId = id;
+            host.deferEffect(id);
+        });
+        requestAwait(host);
+        const auto second = host.deferEffect(firstId);
+        check(second.value(QStringLiteral("error")).toString().contains(
+                  QStringLiteral("already owned")),
+              "a second owner of a deferred effect is refused");
+        host.completeEffect(firstId, QVariantMap{{QStringLiteral("cancelled"), QVariantMap{}}});
+    }
+
+    {
+        // Claimed kinds that do not include the app's: nobody answers here,
+        // the signal is not emitted, and the host fails the Await with a
+        // reason rather than leaving it pending.
+        qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_I"));
+        MosaicHost host;
+        int signalled = 0;
+        QObject::connect(&host, &MosaicHost::effectRequested, &host,
+            [&signalled](const QVariant &, const QString &, const QVariant &, const QString &) {
+                signalled++;
+            }, Qt::DirectConnection);
+        installMosaicPlatformEffects(host, QSet<QString>{QStringLiteral("importAnki")}, nullptr);
+        const auto props = requestAwait(host);
+        check(signalled == 0, "an unclaimed non-standard kind reaches no handler");
+        check(awaited(props, "routed-nobody") == 0 &&
+                  props.value(QStringLiteral("status")).toString().contains(QStringLiteral("no host handler")),
+              "an unclaimed non-standard kind is failed, not left pending");
+    }
+
+    {
+        // The library's own behaviour, with fake dialogs: no display needed.
+        struct FakeDialogs : MosaicFileDialogs {
+            QString choice;
+            int opened = 0;
+            QStringList lastExtensions;
+            QString chooseFileToOpen(const QStringList &extensions) override {
+                opened++; lastExtensions = extensions; return choice;
+            }
+            QString chooseFileToSave(const QString &, const QStringList &extensions) override {
+                opened++; lastExtensions = extensions; return choice;
+            }
+        };
+        QTemporaryDir directory;
+        check(directory.isValid(), "a scratch directory for the file checks");
+        const auto path = [&directory](const char *name) { return directory.filePath(QString::fromUtf8(name)); };
+
+        check(mosaicRoutesToPlatform(QStringLiteral("files.save"), QSet<QString>{QStringLiteral("files.save")}) == false &&
+                  mosaicRoutesToPlatform(QStringLiteral("files.open"), QSet<QString>{QStringLiteral("importAnki")}) == true &&
+                  mosaicRoutesToPlatform(QStringLiteral("files.save"), std::nullopt) == true &&
+                  mosaicRoutesToPlatform(QStringLiteral("importAnki"), std::nullopt) == false &&
+                  !mosaicRoutesToPlatform(QStringLiteral("other"), QSet<QString>{QStringLiteral("importAnki")}).has_value(),
+              "the platform library routes by kind");
+
+        FakeDialogs saving;
+        saving.choice = path("journal.json");
+        const auto saved = mosaicRunFilesSave(QVariantMap{
+            {QStringLiteral("suggestedName"), QStringLiteral("journal.json")},
+            {QStringLiteral("accept"), QVariantList{QStringLiteral("application/json")}},
+            {QStringLiteral("bytes"), QString::fromLatin1(QByteArray("{\"v\":1}").toBase64())}}, saving);
+        QFile savedFile(path("journal.json"));
+        check(saved.value(QStringLiteral("ok")).toMap().value(QStringLiteral("name")).toString() == QStringLiteral("journal.json") &&
+                  savedFile.open(QIODevice::ReadOnly) && savedFile.readAll() == QByteArray("{\"v\":1}"),
+              "files.save writes the bytes under the chosen name");
+        check(saving.lastExtensions == QStringList{QStringLiteral("json")}, "the save dialog filters to json");
+        check(QDir(directory.path()).entryList(QStringList{QStringLiteral("*.tmp")}, QDir::Hidden | QDir::Files).isEmpty(),
+              "files.save leaves no temporary file behind");
+
+        bool allRefused = true;
+        for (const QString &name : {QStringLiteral("../x.json"), QStringLiteral(".zshrc"), QStringLiteral("a:b.json"),
+                                    QStringLiteral("trailing."), QStringLiteral("trailing "), QStringLiteral("line\u2028break.json"),
+                                    QStringLiteral("Invoice.pdf ") + QString(QChar(0xFE00)) + QStringLiteral(" x.html"),
+                                    QString(QChar(0xD800)) + QStringLiteral(".json")}) {
+            FakeDialogs never;
+            const auto outcome = mosaicRunFilesSave(QVariantMap{{QStringLiteral("suggestedName"), name},
+                                                                {QStringLiteral("bytes"), QStringLiteral("AA==")}}, never);
+            allRefused = allRefused && outcome.contains(QStringLiteral("failed")) && never.opened == 0;
+        }
+        check(allRefused, "files.save refuses names that are paths or disguises");
+        FakeDialogs never;
+        const auto launcher = mosaicRunFilesSave(QVariantMap{{QStringLiteral("suggestedName"), QStringLiteral("run.command")},
+                                                             {QStringLiteral("bytes"), QStringLiteral("AA==")}}, never);
+        check(launcher.value(QStringLiteral("failed")).toMap().value(QStringLiteral("message")).toString()
+                  == QStringLiteral("suggestedName must not end in an executable extension") && never.opened == 0,
+              "files.save refuses a launcher when no type is named");
+        check(mosaicIsPlainFileName(QStringLiteral("\u2764\uFE0F list.txt")), "an emoji's own selector is fine");
+        const auto notBase64 = mosaicRunFilesSave(QVariantMap{{QStringLiteral("suggestedName"), QStringLiteral("a.txt")},
+                                                              {QStringLiteral("bytes"), QStringLiteral("%%%")}}, never);
+        check(notBase64.contains(QStringLiteral("failed")), "files.save refuses bytes that are not base64");
+
+        FakeDialogs cancelling;
+        check(mosaicRunFilesSave(QVariantMap{{QStringLiteral("suggestedName"), QStringLiteral("a.txt")},
+                                             {QStringLiteral("bytes"), QStringLiteral("AA==")}}, cancelling)
+                  .contains(QStringLiteral("cancelled")),
+              "a cancelled dialog is not a failure");
+
+        QFile photo(path("photo.PNG"));
+        photo.open(QIODevice::WriteOnly);
+        photo.write(QByteArray("\x01\x02\x03", 3));
+        photo.close();
+        FakeDialogs opening;
+        opening.choice = path("photo.PNG");
+        const auto opened = mosaicRunFilesOpen(QVariantMap{{QStringLiteral("accept"),
+            QVariantList{QStringLiteral("image/png")}}}, opening).value(QStringLiteral("ok")).toMap();
+        check(opened.value(QStringLiteral("name")).toString() == QStringLiteral("photo.PNG") &&
+                  opened.value(QStringLiteral("mimeType")).toString() == QStringLiteral("image/png") &&
+                  opened.value(QStringLiteral("bytes")).toString() == QStringLiteral("AQID"),
+              "files.open returns the name, type and bytes, never the path");
+        FakeDialogs folder;
+        folder.choice = directory.path();
+        check(mosaicRunFilesOpen(QVariantMap{}, folder).value(QStringLiteral("failed")).toMap()
+                  .value(QStringLiteral("message")).toString() == QStringLiteral("that is not a regular file"),
+              "files.open refuses something that is not a regular file");
     }
 
     if (failures) {

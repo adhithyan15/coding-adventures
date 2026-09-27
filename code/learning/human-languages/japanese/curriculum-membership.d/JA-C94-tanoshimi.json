@@ -1,0 +1,11 @@
+{
+  "id": "JA-C94-tanoshimi",
+  "pathSegment": "JA-PATH-94-LIKE94",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-94-LIKE94",
+      "order": 3
+    }
+  ]
+}

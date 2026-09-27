@@ -1,0 +1,11 @@
+{
+  "id": "JA-C110-katatsumuri",
+  "pathSegment": "JA-PATH-110-THINGS110",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-110-THINGS110",
+      "order": 1
+    }
+  ]
+}

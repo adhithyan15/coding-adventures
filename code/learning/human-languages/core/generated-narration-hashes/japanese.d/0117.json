@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:e2338296f213b95b",
+  "lessonIds": [
+    "JA-C117-hotate",
+    "JA-C117-nomi",
+    "JA-C117-koumori",
+    "JA-C117-kamoshika",
+    "JA-C117-suitou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch117.txt",
+  "json": "japanese/narration/ch117.json",
+  "textHash": "fnv1a64:5d6771a080c0154e",
+  "jsonHash": "fnv1a64:41b9b1f486a2b3bf",
+  "findings": []
+}

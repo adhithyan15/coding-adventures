@@ -1,0 +1,11 @@
+{
+  "id": "JA-C76-ichinichi",
+  "pathSegment": "JA-PATH-76-TIME76",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-76-TIME76",
+      "order": 2
+    }
+  ]
+}

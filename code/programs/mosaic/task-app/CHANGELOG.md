@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.4.1` accumulate here until the next version is
 cut.
 
+### Verified — Paint output is guarded by reviewed product goldens (#16151)
+
+TaskApp now package-expands its real interface, layout, dependency styles, and
+both authored themes through the typed Paint pipeline. The test pins explicit
+CPU Skia PNGs at the declared 1280 x 900 desktop size, proves repeated renders
+are byte-identical and the themes remain distinct, and compares both outputs
+with reviewed repository goldens. This is a CI-only visual-regression gate, not
+a Paint host, interaction claim, or release artifact.
+
 ## [0.4.1] - 2026-09-27
 
 ### Fixed — release notes link the live signing tracker (#16142)

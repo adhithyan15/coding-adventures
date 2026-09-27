@@ -1,0 +1,11 @@
+{
+  "id": "JA-C75-konshuu",
+  "pathSegment": "JA-PATH-75-TIME75",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-75-TIME75",
+      "order": 2
+    }
+  ]
+}

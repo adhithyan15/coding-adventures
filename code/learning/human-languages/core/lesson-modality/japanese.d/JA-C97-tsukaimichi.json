@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C97-tsukaimichi",
+    "language": "japanese",
+    "chapter": 97,
+    "sequence": 5760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c82d78e9a5de1fa2"
+  },
+  "findings": []
+}

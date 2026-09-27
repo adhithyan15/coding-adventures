@@ -1,0 +1,11 @@
+{
+  "id": "JA-C83-konna",
+  "pathSegment": "JA-PATH-83-DEF83",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-83-DEF83",
+      "order": 3
+    }
+  ]
+}

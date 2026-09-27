@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:3fcda44aaece8260",
+  "lessonIds": [
+    "JA-C77-futsuka",
+    "JA-C77-mikka",
+    "JA-C77-yokka",
+    "JA-C77-itsuka",
+    "JA-C77-muika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch77.txt",
+  "json": "japanese/narration/ch77.json",
+  "textHash": "fnv1a64:3d7c44ae8f8d0204",
+  "jsonHash": "fnv1a64:46a46539c21ab019",
+  "findings": []
+}

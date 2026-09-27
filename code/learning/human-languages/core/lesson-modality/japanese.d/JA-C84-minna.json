@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C84-minna",
+    "language": "japanese",
+    "chapter": 84,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46dcb3ebda43e6ac"
+  },
+  "findings": []
+}

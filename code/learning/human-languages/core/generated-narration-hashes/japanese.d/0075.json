@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:ab65950a97116660",
+  "lessonIds": [
+    "JA-C75-maitoshi",
+    "JA-C75-kotoshi",
+    "JA-C75-konshuu",
+    "JA-C75-ototoshi",
+    "JA-C75-asanebou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch75.txt",
+  "json": "japanese/narration/ch75.json",
+  "textHash": "fnv1a64:dc64d8816ed8e1bb",
+  "jsonHash": "fnv1a64:e000a76ae744c299",
+  "findings": []
+}

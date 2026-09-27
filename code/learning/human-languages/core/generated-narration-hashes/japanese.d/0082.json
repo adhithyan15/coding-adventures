@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:74682052b9975e9b",
+  "lessonIds": [
+    "JA-C82-machikado",
+    "JA-C82-shinai",
+    "JA-C82-kougai",
+    "JA-C82-hantaigawa",
+    "JA-C82-kawakami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch82.txt",
+  "json": "japanese/narration/ch82.json",
+  "textHash": "fnv1a64:cce87449c54b61d0",
+  "jsonHash": "fnv1a64:29b137ceea75917d",
+  "findings": []
+}

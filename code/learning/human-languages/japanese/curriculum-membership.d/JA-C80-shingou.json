@@ -1,0 +1,11 @@
+{
+  "id": "JA-C80-shingou",
+  "pathSegment": "JA-PATH-80-LOC80",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-80-LOC80",
+      "order": 1
+    }
+  ]
+}

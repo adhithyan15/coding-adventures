@@ -1,0 +1,11 @@
+{
+  "id": "JA-C79-kaidan",
+  "pathSegment": "JA-PATH-79-LOC79",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-79-LOC79",
+      "order": 3
+    }
+  ]
+}

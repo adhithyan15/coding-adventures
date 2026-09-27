@@ -1,0 +1,11 @@
+{
+  "id": "JA-C92-yokubou",
+  "pathSegment": "JA-PATH-92-WANT92",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-92-WANT92",
+      "order": 4
+    }
+  ]
+}

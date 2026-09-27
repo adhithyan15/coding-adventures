@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:7119d4e88b16a282",
+  "lessonIds": [
+    "JA-C100-gomi",
+    "JA-C100-bou",
+    "JA-C100-ita",
+    "JA-C100-hasami",
+    "JA-C100-zasshi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch100.txt",
+  "json": "japanese/narration/ch100.json",
+  "textHash": "fnv1a64:3482d64e7472168a",
+  "jsonHash": "fnv1a64:a79e0dc4c35bf63d",
+  "findings": []
+}

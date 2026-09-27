@@ -1,0 +1,11 @@
+{
+  "id": "JA-C80-chikamichi",
+  "pathSegment": "JA-PATH-80-LOC80",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-80-LOC80",
+      "order": 3
+    }
+  ]
+}

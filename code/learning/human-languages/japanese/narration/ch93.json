@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 93,
+  "title": "Long-awaited, Prayer, Order, Candidate, Plan",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e71a1c1da952e2d3",
+  "lessons": [
+    {
+      "id": "JA-C93-machidooshii",
+      "sequence": 5550,
+      "title": "まちどおしい (machidooshii) — long-awaited",
+      "headword": "まちどおしい",
+      "romanization": "machidooshii",
+      "gloss": "long-awaited",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b55b77b07f9eec7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a request, then the Japanese for a desire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まちどおしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まちどおしい — machidooshii — \"long-awaited\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "machidooshii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *machidooshii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "machidooshii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *machidooshii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say machidooshii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *machidooshii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a request, then the Japanese for a desire, then say machidooshii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a request, then the Japanese for a desire, then say *machidooshii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まちどおしい (machidooshii) mean? (\"Long-awaited\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C93-machidooshii-type",
+              "prompt": "Type the Japanese for 'long-awaited'.",
+              "assesses": [
+                "JA-LEX-C93-WANT93-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まちどおしい",
+                "machidooshii"
+              ],
+              "feedback": {
+                "correct": "Right: まちどおしい (machidooshii) is 'long-awaited'.",
+                "incorrect": "'long-awaited' is まちどおしい (machidooshii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C93-inori",
+      "sequence": 5560,
+      "title": "いのり (inori) — a prayer",
+      "headword": "いのり",
+      "romanization": "inori",
+      "gloss": "a prayer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af04aeeb74ae5747",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a desire, then the Japanese for long-awaited."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いのり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いのり — inori — \"a prayer\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inori",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inori*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inori, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inori*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say inori",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *inori*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a desire, then the Japanese for long-awaited, then say inori again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a desire, then the Japanese for long-awaited, then say *inori* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いのり (inori) mean? (\"A prayer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C93-inori-type",
+              "prompt": "Type the Japanese for 'a prayer'.",
+              "assesses": [
+                "JA-LEX-C93-WANT93-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いのり",
+                "inori"
+              ],
+              "feedback": {
+                "correct": "Right: いのり (inori) is 'a prayer'.",
+                "incorrect": "'a prayer' is いのり (inori)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C93-chuumon",
+      "sequence": 5570,
+      "title": "ちゅうもん (chuumon) — an order",
+      "headword": "ちゅうもん",
+      "romanization": "chuumon",
+      "gloss": "an order",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bb812ebd3d6383c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for long-awaited, then the Japanese for a prayer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちゅうもん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうもん — chuumon — \"an order\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chuumon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chuumon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chuumon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chuumon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chuumon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chuumon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for long-awaited, then the Japanese for a prayer, then say chuumon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for long-awaited, then the Japanese for a prayer, then say *chuumon* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちゅうもん (chuumon) mean? (\"An order\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C93-chuumon-type",
+              "prompt": "Type the Japanese for 'an order'.",
+              "assesses": [
+                "JA-LEX-C93-WANT93-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちゅうもん",
+                "chuumon"
+              ],
+              "feedback": {
+                "correct": "Right: ちゅうもん (chuumon) is 'an order'.",
+                "incorrect": "'an order' is ちゅうもん (chuumon)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C93-kouho",
+      "sequence": 5580,
+      "title": "こうほ (kouho) — a candidate, a choice",
+      "headword": "こうほ",
+      "romanization": "kouho",
+      "gloss": "a candidate, a choice",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:106ae23ebb4eadf1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a prayer, then the Japanese for an order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうほ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうほ — kouho — \"a candidate, a choice\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kouho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kouho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kouho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kouho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kouho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kouho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a prayer, then the Japanese for an order, then say kouho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a prayer, then the Japanese for an order, then say *kouho* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうほ (kouho) mean? (\"A candidate, a choice\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C93-kouho-type",
+              "prompt": "Type the Japanese for 'a candidate, a choice'.",
+              "assesses": [
+                "JA-LEX-C93-WANT93-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうほ",
+                "kouho"
+              ],
+              "feedback": {
+                "correct": "Right: こうほ (kouho) is 'a candidate, a choice'.",
+                "incorrect": "'a candidate, a choice' is こうほ (kouho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C93-yotei",
+      "sequence": 5590,
+      "title": "よてい (yotei) — a plan",
+      "headword": "よてい",
+      "romanization": "yotei",
+      "gloss": "a plan",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b335066511104f57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an order, then the Japanese for a candidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よてい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よてい — yotei — \"a plan\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yotei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yotei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yotei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yotei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yotei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yotei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an order, then the Japanese for a candidate, then say yotei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an order, then the Japanese for a candidate, then say *yotei* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よてい (yotei) mean? (\"A plan\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C93-yotei-type",
+              "prompt": "Type the Japanese for 'a plan'.",
+              "assesses": [
+                "JA-LEX-C93-WANT93-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よてい",
+                "yotei"
+              ],
+              "feedback": {
+                "correct": "Right: よてい (yotei) is 'a plan'.",
+                "incorrect": "'a plan' is よてい (yotei)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

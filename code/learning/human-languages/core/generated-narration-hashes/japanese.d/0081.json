@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:8f3713682881b875",
+  "lessonIds": [
+    "JA-C81-atari",
+    "JA-C81-fumoto",
+    "JA-C81-tokai",
+    "JA-C81-aida",
+    "JA-C81-chihou",
+    "JA-R81-first-pass-times-of-day-and-dates",
+    "JA-R81-second-pass-places-and-directions"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch81.txt",
+  "json": "japanese/narration/ch81.json",
+  "textHash": "fnv1a64:97a3c73872709608",
+  "jsonHash": "fnv1a64:4841a2fd71195ca9",
+  "findings": []
+}

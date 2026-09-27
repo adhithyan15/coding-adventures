@@ -1,0 +1,11 @@
+{
+  "id": "JA-C118-hashigo",
+  "pathSegment": "JA-PATH-118-THINGS118",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-118-THINGS118",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C111-kangoshi",
+    "language": "japanese",
+    "chapter": 111,
+    "sequence": 6560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4c29205f37093b2"
+  },
+  "findings": []
+}

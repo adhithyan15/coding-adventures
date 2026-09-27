@@ -1,0 +1,11 @@
+{
+  "id": "JA-C116-sanma",
+  "pathSegment": "JA-PATH-116-THINGS116",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-116-THINGS116",
+      "order": 3
+    }
+  ]
+}

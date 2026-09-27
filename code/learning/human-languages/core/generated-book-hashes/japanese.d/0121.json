@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:dcd1d911d4c921d0",
+  "lessonIds": [
+    "JA-C121-shikakui",
+    "JA-C121-momoiro",
+    "JA-C121-haiiro",
+    "JA-C121-usui",
+    "JA-C121-asai"
+  ],
+  "tex": "japanese/book/chapters/ch121-square-pink-grey-thin-shallow.tex"
+}

@@ -47,6 +47,24 @@ pub fn swift_platform_effects() -> String {
     include_str!("../templates/swiftui/MosaicPlatformEffects.swift").to_string()
 }
 
+/// The Qt platform library (UI87 §7, §7.4a).
+pub struct QtPlatformEffects {
+    pub header: String,
+    pub source: String,
+}
+
+/// The Qt platform library: `files.open` and `files.save` through
+/// `QFileDialog`, answered inline, and the router `installMosaicPlatformEffects`
+/// sets as the host's one effect handler -- the same contract as the Compose
+/// and SwiftUI libraries. Written beside `MosaicHost.{h,cpp}` in every Qt
+/// project; installed by the generated `main.cpp`.
+pub fn qt_platform_effects() -> QtPlatformEffects {
+    QtPlatformEffects {
+        header: include_str!("../templates/qt/MosaicPlatformEffects.h").to_string(),
+        source: include_str!("../templates/qt/MosaicPlatformEffects.cpp").to_string(),
+    }
+}
+
 /// Files that make the fixed Mosaic application C ABI available to SwiftUI.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SwiftRuntimeBinding {
@@ -440,6 +458,53 @@ mod tests {
         for must in ["command", "terminal", "webloc", "exe", "desktop"] {
             assert!(swift.iter().any(|name| name == must), "{must}");
         }
+    }
+
+    /// The Qt library answers the same contract (UI87 §7.4a): the same
+    /// executable list, MIME rows in the same order, and the same limits as
+    /// the Compose library. Pinned here because the Qt C++ is only compiled
+    /// where Qt is installed.
+    #[test]
+    fn qt_platform_effects_match_the_compose_contract() {
+        let qt = qt_platform_effects().source;
+        let header = qt_platform_effects().header;
+        let kotlin = compose_platform_effects();
+        let qt_list: std::collections::BTreeSet<String> = {
+            let from = qt.find("static const QSet<QString> extensions{").expect("qt list");
+            let to = from + qt[from..].find("};").expect("end");
+            qt[from..to]
+                .split("QStringLiteral(\"")
+                .skip(1)
+                .map(|item| item.split('"').next().unwrap().to_string())
+                .collect()
+        };
+        let kotlin_list: std::collections::BTreeSet<String> = {
+            let from = kotlin.find("val MOSAIC_EXECUTABLE_EXTENSIONS").expect("kotlin list");
+            let to = from + kotlin[from..].find(")\n").expect("end");
+            kotlin[from..to]
+                .lines()
+                .filter(|line| !line.trim_start().starts_with("//"))
+                .flat_map(|line| line.split(','))
+                .filter_map(|item| item.trim().strip_prefix('"').map(|rest| rest.trim_end_matches('"').to_string()))
+                .collect()
+        };
+        assert!(qt_list.len() >= 60, "{qt_list:?}");
+        assert_eq!(qt_list, kotlin_list);
+        let qt_mimes: Vec<&str> = qt
+            .lines()
+            .filter_map(|line| line.trim().strip_prefix("{QStringLiteral(\""))
+            .filter(|rest| rest.contains('/'))
+            .map(|rest| rest.split('"').next().unwrap())
+            .collect();
+        let kotlin_mimes: Vec<&str> = kotlin
+            .lines()
+            .filter_map(|line| line.trim().strip_prefix('"'))
+            .filter(|rest| rest.contains("\" to listOf("))
+            .map(|rest| rest.split('"').next().unwrap())
+            .collect();
+        assert_eq!(qt_mimes, kotlin_mimes);
+        assert!(header.contains("MosaicMaxOpenBytes = 50LL * 1024 * 1024"));
+        assert!(header.contains("MosaicMaxSaveBytes = 16LL * 1024 * 1024"));
     }
 
     /// AppKit exists only on macOS; the iOS app target compiles this file too

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C77-itsuka",
+  "pathSegment": "JA-PATH-77-TIME77",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-77-TIME77",
+      "order": 3
+    }
+  ]
+}

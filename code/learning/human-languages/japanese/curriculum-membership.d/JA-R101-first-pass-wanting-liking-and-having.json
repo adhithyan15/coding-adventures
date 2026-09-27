@@ -1,0 +1,11 @@
+{
+  "id": "JA-R101-first-pass-wanting-liking-and-having",
+  "pathSegment": "JA-PATH-101-THINGS101",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-101-THINGS101",
+      "order": 5
+    }
+  ]
+}

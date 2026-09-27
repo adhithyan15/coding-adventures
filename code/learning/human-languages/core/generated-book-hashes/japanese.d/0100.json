@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:ac289c9240d082e7",
+  "lessonIds": [
+    "JA-C100-gomi",
+    "JA-C100-bou",
+    "JA-C100-ita",
+    "JA-C100-hasami",
+    "JA-C100-zasshi"
+  ],
+  "tex": "japanese/book/chapters/ch100-rubbish-stick-board-scissors-magazine.tex"
+}

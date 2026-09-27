@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C130-makkuro",
+    "language": "japanese",
+    "chapter": 130,
+    "sequence": 7660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eb60eb163fe5d1e"
+  },
+  "findings": []
+}

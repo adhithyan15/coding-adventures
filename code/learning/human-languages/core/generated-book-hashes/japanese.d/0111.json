@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:0abb102ba5c33aba",
+  "lessonIds": [
+    "JA-C111-hitai",
+    "JA-C111-kangoshi",
+    "JA-C111-shiro",
+    "JA-C111-douro",
+    "JA-C111-hodou",
+    "JA-R111-first-pass-things-at-home-and-outdoors",
+    "JA-R111-second-pass-nature-and-animals"
+  ],
+  "tex": "japanese/book/chapters/ch111-forehead-nurse-castle-road-pavement.tex"
+}

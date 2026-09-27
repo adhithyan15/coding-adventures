@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 87,
+  "title": "To pile up, To ask for, To go forward, To hang out to dry, To point",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:620f49c1e0c94bbb",
+  "lessons": [
+    {
+      "id": "JA-C87-tsumu",
+      "sequence": 5150,
+      "title": "つむ (tsumu) — to pile up",
+      "headword": "つむ",
+      "romanization": "tsumu",
+      "gloss": "to pile up",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97aa8293f081efb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to step on, then the Japanese for to bite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つむ — tsumu — \"to pile up\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsumu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsumu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to step on, then the Japanese for to bite, then say tsumu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to step on, then the Japanese for to bite, then say *tsumu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つむ (tsumu) mean? (\"To pile up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C87-tsumu-type",
+              "prompt": "Type the Japanese for 'to pile up'.",
+              "assesses": [
+                "JA-LEX-C87-ACT87-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つむ",
+                "tsumu"
+              ],
+              "feedback": {
+                "correct": "Right: つむ (tsumu) is 'to pile up'.",
+                "incorrect": "'to pile up' is つむ (tsumu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C87-tanomu",
+      "sequence": 5160,
+      "title": "たのむ (tanomu) — to ask for",
+      "headword": "たのむ",
+      "romanization": "tanomu",
+      "gloss": "to ask for",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0394a5b5135e10f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to bite, then the Japanese for to pile up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たのむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たのむ — tanomu — \"to ask for\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanomu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanomu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tanomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tanomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to bite, then the Japanese for to pile up, then say tanomu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to bite, then the Japanese for to pile up, then say *tanomu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たのむ (tanomu) mean? (\"To ask for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C87-tanomu-type",
+              "prompt": "Type the Japanese for 'to ask for'.",
+              "assesses": [
+                "JA-LEX-C87-ACT87-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たのむ",
+                "tanomu"
+              ],
+              "feedback": {
+                "correct": "Right: たのむ (tanomu) is 'to ask for'.",
+                "incorrect": "'to ask for' is たのむ (tanomu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C87-susumu",
+      "sequence": 5170,
+      "title": "すすむ (susumu) — to go forward",
+      "headword": "すすむ",
+      "romanization": "susumu",
+      "gloss": "to go forward",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f688f6fec174ef0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pile up, then the Japanese for to ask for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すすむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すすむ — susumu — \"to go forward\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "susumu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *susumu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "susumu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *susumu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say susumu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *susumu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pile up, then the Japanese for to ask for, then say susumu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pile up, then the Japanese for to ask for, then say *susumu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すすむ (susumu) mean? (\"To go forward\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C87-susumu-type",
+              "prompt": "Type the Japanese for 'to go forward'.",
+              "assesses": [
+                "JA-LEX-C87-ACT87-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すすむ",
+                "susumu"
+              ],
+              "feedback": {
+                "correct": "Right: すすむ (susumu) is 'to go forward'.",
+                "incorrect": "'to go forward' is すすむ (susumu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C87-hosu",
+      "sequence": 5180,
+      "title": "ほす (hosu) — to hang out to dry",
+      "headword": "ほす",
+      "romanization": "hosu",
+      "gloss": "to hang out to dry",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a4beba204c049c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to ask for, then the Japanese for to go forward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほす — hosu — \"to hang out to dry\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to ask for, then the Japanese for to go forward, then say hosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to ask for, then the Japanese for to go forward, then say *hosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほす (hosu) mean? (\"To hang out to dry\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C87-hosu-type",
+              "prompt": "Type the Japanese for 'to hang out to dry'.",
+              "assesses": [
+                "JA-LEX-C87-ACT87-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほす",
+                "hosu"
+              ],
+              "feedback": {
+                "correct": "Right: ほす (hosu) is 'to hang out to dry'.",
+                "incorrect": "'to hang out to dry' is ほす (hosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C87-sasu",
+      "sequence": 5190,
+      "title": "さす (sasu) — to point; to hold up (an umbrella)",
+      "headword": "さす",
+      "romanization": "sasu",
+      "gloss": "to point; to hold up (an umbrella)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bfbf870a69031b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go forward, then the Japanese for to hang out to dry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さす — sasu — \"to point; to hold up (an umbrella)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go forward, then the Japanese for to hang out to dry, then say sasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go forward, then the Japanese for to hang out to dry, then say *sasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さす (sasu) mean? (\"To point; to hold up (an umbrella)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C87-sasu-type",
+              "prompt": "Type the Japanese for 'to point'.",
+              "assesses": [
+                "JA-LEX-C87-ACT87-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さす",
+                "sasu"
+              ],
+              "feedback": {
+                "correct": "Right: さす (sasu) is 'to point'.",
+                "incorrect": "'to point' is さす (sasu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:866a60f580a3ba4e",
+  "lessonIds": [
+    "JA-C129-kawaii",
+    "JA-C129-shitsukoi",
+    "JA-C129-yakamashii",
+    "JA-C129-atsukamashii",
+    "JA-C129-tanomoshii"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch129.txt",
+  "json": "japanese/narration/ch129.json",
+  "textHash": "fnv1a64:b6faf2255e3995f0",
+  "jsonHash": "fnv1a64:0a2647e72ea01b9e",
+  "findings": []
+}

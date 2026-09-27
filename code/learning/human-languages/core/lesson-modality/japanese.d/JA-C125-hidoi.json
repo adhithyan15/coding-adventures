@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C125-hidoi",
+    "language": "japanese",
+    "chapter": 125,
+    "sequence": 7410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8ef47c97c821ed8"
+  },
+  "findings": []
+}

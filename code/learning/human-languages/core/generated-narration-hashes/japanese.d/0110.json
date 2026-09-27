@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:d9787887db67837d",
+  "lessonIds": [
+    "JA-C110-hae",
+    "JA-C110-katatsumuri",
+    "JA-C110-shippo",
+    "JA-C110-kakato",
+    "JA-C110-sune"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch110.txt",
+  "json": "japanese/narration/ch110.json",
+  "textHash": "fnv1a64:457ee55c139adc23",
+  "jsonHash": "fnv1a64:0d9144ddcd23dcb0",
+  "findings": []
+}

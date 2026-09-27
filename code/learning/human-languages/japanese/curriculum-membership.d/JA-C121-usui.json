@@ -1,0 +1,11 @@
+{
+  "id": "JA-C121-usui",
+  "pathSegment": "JA-PATH-121-QUAL121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-121-QUAL121",
+      "order": 3
+    }
+  ]
+}

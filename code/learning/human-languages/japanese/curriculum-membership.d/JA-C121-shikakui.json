@@ -1,0 +1,11 @@
+{
+  "id": "JA-C121-shikakui",
+  "pathSegment": "JA-PATH-121-QUAL121",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-121-QUAL121",
+      "order": 0
+    }
+  ]
+}

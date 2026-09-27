@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C95-nigate",
+    "language": "japanese",
+    "chapter": 95,
+    "sequence": 5670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5976f90e2ac17d9f"
+  },
+  "findings": []
+}

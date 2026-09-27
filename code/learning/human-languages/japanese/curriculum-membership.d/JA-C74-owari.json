@@ -1,0 +1,11 @@
+{
+  "id": "JA-C74-owari",
+  "pathSegment": "JA-PATH-74-TIME74",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-74-TIME74",
+      "order": 2
+    }
+  ]
+}

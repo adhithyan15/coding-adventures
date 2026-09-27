@@ -1866,7 +1866,7 @@ fn native_project_shells_expose_engram_host_contract() {
         .expect("qt/CMakeLists.txt");
     assert_contains(
         &qt_cmake,
-        "target_sources(EngramApp PRIVATE MosaicHost.cpp MosaicHost.h)",
+        "target_sources(EngramApp PRIVATE MosaicHost.cpp MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)",
     );
     assert_contains(
         &qt_cmake,

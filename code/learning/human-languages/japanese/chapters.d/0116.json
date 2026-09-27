@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Trout, Crucian carp, Young yellowtail, Pacific saury, Short-neck clam",
+  "label": "ch:ja-trout-crucian-carp-young-yellowtail-pacific-saury-short-neck-clam",
+  "canDo": "I can say a trout, a crucian carp, a young yellowtail, a Pacific saury and a short-neck clam.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C116-asari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a trout, a crucian carp, a young yellowtail, a Pacific saury and a short-neck clam.",
+    "assesses": [
+      "JA-LEX-C116-THINGS116-03",
+      "JA-LEX-C116-THINGS116-04",
+      "JA-LEX-C116-THINGS116-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C102-senzai",
+    "language": "japanese",
+    "chapter": 102,
+    "sequence": 6110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be6c60a392ecf32c"
+  },
+  "findings": []
+}

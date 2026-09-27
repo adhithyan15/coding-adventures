@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:0d17919892107db0",
+  "lessonIds": [
+    "JA-C94-konomu",
+    "JA-C94-konomi",
+    "JA-C94-shumi",
+    "JA-C94-tanoshimi",
+    "JA-C94-ai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch94.txt",
+  "json": "japanese/narration/ch94.json",
+  "textHash": "fnv1a64:cf561863a06cac9d",
+  "jsonHash": "fnv1a64:461d08bb44fecfd9",
+  "findings": []
+}

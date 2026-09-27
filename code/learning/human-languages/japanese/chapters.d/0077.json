@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Second of the month, Third of the month, Fourth of the month, Fifth of the month, Sixth of the month",
+  "label": "ch:ja-second-of-the-month-third-of-the-month-fourth-of-the-month-fifth-of-the-month-sixth-of-the-month",
+  "canDo": "I can say the second of the month, the third of the month, the fourth of the month, the fifth of the month and the sixth of the month.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "JA-C77-muika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say the second of the month, the third of the month, the fourth of the month, the fifth of the month and the sixth of the month.",
+    "assesses": [
+      "JA-LEX-C77-TIME77-03",
+      "JA-LEX-C77-TIME77-04",
+      "JA-LEX-C77-TIME77-05"
+    ]
+  }
+}

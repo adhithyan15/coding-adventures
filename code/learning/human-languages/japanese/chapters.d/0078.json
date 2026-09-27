@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Where, Nearby, Behind, Beside, Very middle",
+  "label": "ch:ja-where-nearby-behind-beside-very-middle",
+  "canDo": "I can say where, nearby, behind, beside and the very middle.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "JA-C78-mannaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say where, nearby, behind, beside and the very middle.",
+    "assesses": [
+      "JA-LEX-C78-LOC78-03",
+      "JA-LEX-C78-LOC78-04",
+      "JA-LEX-C78-LOC78-05"
+    ]
+  }
+}

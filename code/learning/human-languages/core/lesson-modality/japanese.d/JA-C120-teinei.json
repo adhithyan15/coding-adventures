@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C120-teinei",
+    "language": "japanese",
+    "chapter": 120,
+    "sequence": 7140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fec4eaad78b68c8c"
+  },
+  "findings": []
+}

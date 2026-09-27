@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:9062aa1284fcae03",
+  "lessonIds": [
+    "JA-C119-hanaya",
+    "JA-C119-sakanaya",
+    "JA-C119-yaoya",
+    "JA-C119-tokoya",
+    "JA-C119-nikuya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch119.txt",
+  "json": "japanese/narration/ch119.json",
+  "textHash": "fnv1a64:da2c70775919bd6c",
+  "jsonHash": "fnv1a64:31bffb9ae31a3dde",
+  "findings": []
+}

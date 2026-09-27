@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Square, Pink, Grey, Thin, Shallow",
+  "label": "ch:ja-square-pink-grey-thin-shallow",
+  "canDo": "I can say square, pink, grey, thin and shallow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "JA-C121-asai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say square, pink, grey, thin and shallow.",
+    "assesses": [
+      "JA-LEX-C121-QUAL121-03",
+      "JA-LEX-C121-QUAL121-04",
+      "JA-LEX-C121-QUAL121-05"
+    ]
+  }
+}

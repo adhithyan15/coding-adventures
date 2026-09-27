@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:3e363db1baec6b16",
+  "lessonIds": [
+    "JA-C109-kamo",
+    "JA-C109-washi",
+    "JA-C109-taka",
+    "JA-C109-fukurou",
+    "JA-C109-kaiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch109.txt",
+  "json": "japanese/narration/ch109.json",
+  "textHash": "fnv1a64:87e8e02d7cb83173",
+  "jsonHash": "fnv1a64:4d8f4ef6404076ee",
+  "findings": []
+}

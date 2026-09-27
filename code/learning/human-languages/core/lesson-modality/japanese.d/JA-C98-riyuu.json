@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C98-riyuu",
+    "language": "japanese",
+    "chapter": 98,
+    "sequence": 5810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d59fe7bc5df10d9"
+  },
+  "findings": []
+}

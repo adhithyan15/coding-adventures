@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:ab691cd6f4f9768f",
+  "lessonIds": [
+    "JA-C107-doro",
+    "JA-C107-hokori",
+    "JA-C107-awa",
+    "JA-C107-tsuyu",
+    "JA-C107-saka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch107.txt",
+  "json": "japanese/narration/ch107.json",
+  "textHash": "fnv1a64:1640bedad597e479",
+  "jsonHash": "fnv1a64:a6aafd59fb499932",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Shellfish, Sea bream, Shark, Squirrel, Wild boar",
+  "label": "ch:ja-shellfish-sea-bream-shark-squirrel-wild-boar",
+  "canDo": "I can say a shellfish, a sea bream, a shark, a squirrel and a wild boar.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C108-inoshishi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say a shellfish, a sea bream, a shark, a squirrel and a wild boar.",
+    "assesses": [
+      "JA-LEX-C108-THINGS108-03",
+      "JA-LEX-C108-THINGS108-04",
+      "JA-LEX-C108-THINGS108-05"
+    ]
+  }
+}

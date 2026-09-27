@@ -1,0 +1,11 @@
+{
+  "id": "JA-C85-suu",
+  "pathSegment": "JA-PATH-85-ACT85",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-85-ACT85",
+      "order": 1
+    }
+  ]
+}

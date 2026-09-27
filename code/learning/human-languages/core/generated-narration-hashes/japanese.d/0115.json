@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:9c8804f318c50e8d",
+  "lessonIds": [
+    "JA-C115-futa",
+    "JA-C115-mato",
+    "JA-C115-hinata",
+    "JA-C115-namako",
+    "JA-C115-ayu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch115.txt",
+  "json": "japanese/narration/ch115.json",
+  "textHash": "fnv1a64:98ffde112e1e4a3d",
+  "jsonHash": "fnv1a64:25b02da68226b8f1",
+  "findings": []
+}

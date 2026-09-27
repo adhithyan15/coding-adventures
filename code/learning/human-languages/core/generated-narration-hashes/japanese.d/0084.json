@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:ebe94d0ae591d458",
+  "lessonIds": [
+    "JA-C84-donna",
+    "JA-C84-hoka",
+    "JA-C84-minna",
+    "JA-C84-kouiu",
+    "JA-C84-aaiu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch84.txt",
+  "json": "japanese/narration/ch84.json",
+  "textHash": "fnv1a64:d5da4ad6f82462f4",
+  "jsonHash": "fnv1a64:db3a7fdbd79d37c1",
+  "findings": []
+}

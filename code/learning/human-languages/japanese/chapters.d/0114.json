@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Chinese cabbage, Garlic, Sweet bean paste, Honey, Net",
+  "label": "ch:ja-chinese-cabbage-garlic-sweet-bean-paste-honey-net",
+  "canDo": "I can say Chinese cabbage, garlic, sweet bean paste, honey and a net.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C114-ami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say Chinese cabbage, garlic, sweet bean paste, honey and a net.",
+    "assesses": [
+      "JA-LEX-C114-THINGS114-03",
+      "JA-LEX-C114-THINGS114-04",
+      "JA-LEX-C114-THINGS114-05"
+    ]
+  }
+}

@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 125,
+  "title": "Amazing, Terrible, Young, Very young, Plentiful",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7683964fbddc20cb",
+  "lessons": [
+    {
+      "id": "JA-C125-sugoi",
+      "sequence": 7400,
+      "title": "すごい (sugoi) — amazing",
+      "headword": "すごい",
+      "romanization": "sugoi",
+      "gloss": "amazing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e60ce2bdd688444",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for funny; strange, then the Japanese for interesting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すごい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すごい — sugoi — \"amazing\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugoi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugoi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugoi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugoi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sugoi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sugoi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for funny; strange, then the Japanese for interesting, then say sugoi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for funny; strange, then the Japanese for interesting, then say *sugoi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すごい (sugoi) mean? (\"Amazing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C125-sugoi-type",
+              "prompt": "Type the Japanese for 'amazing'.",
+              "assesses": [
+                "JA-LEX-C125-QUAL125-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すごい",
+                "sugoi"
+              ],
+              "feedback": {
+                "correct": "Right: すごい (sugoi) is 'amazing'.",
+                "incorrect": "'amazing' is すごい (sugoi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C125-hidoi",
+      "sequence": 7410,
+      "title": "ひどい (hidoi) — terrible",
+      "headword": "ひどい",
+      "romanization": "hidoi",
+      "gloss": "terrible",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8ef47c97c821ed8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for interesting, then the Japanese for amazing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひどい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひどい — hidoi — \"terrible\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hidoi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hidoi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hidoi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hidoi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hidoi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hidoi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for interesting, then the Japanese for amazing, then say hidoi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for interesting, then the Japanese for amazing, then say *hidoi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひどい (hidoi) mean? (\"Terrible\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C125-hidoi-type",
+              "prompt": "Type the Japanese for 'terrible'.",
+              "assesses": [
+                "JA-LEX-C125-QUAL125-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひどい",
+                "hidoi"
+              ],
+              "feedback": {
+                "correct": "Right: ひどい (hidoi) is 'terrible'.",
+                "incorrect": "'terrible' is ひどい (hidoi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C125-wakai",
+      "sequence": 7420,
+      "title": "わかい (wakai) — young",
+      "headword": "わかい",
+      "romanization": "wakai",
+      "gloss": "young",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:721f84574cfdcb73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for amazing, then the Japanese for terrible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わかい — wakai — \"young\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say wakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *wakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for amazing, then the Japanese for terrible, then say wakai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for amazing, then the Japanese for terrible, then say *wakai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わかい (wakai) mean? (\"Young\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C125-wakai-type",
+              "prompt": "Type the Japanese for 'young'.",
+              "assesses": [
+                "JA-LEX-C125-QUAL125-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わかい",
+                "wakai"
+              ],
+              "feedback": {
+                "correct": "Right: わかい (wakai) is 'young'.",
+                "incorrect": "'young' is わかい (wakai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C125-osanai",
+      "sequence": 7430,
+      "title": "おさない (osanai) — very young",
+      "headword": "おさない",
+      "romanization": "osanai",
+      "gloss": "very young",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6a2d9918bc160d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for terrible, then the Japanese for young."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おさない",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おさない — osanai — \"very young\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osanai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osanai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osanai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osanai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say osanai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *osanai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for terrible, then the Japanese for young, then say osanai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for terrible, then the Japanese for young, then say *osanai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おさない (osanai) mean? (\"Very young\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C125-osanai-type",
+              "prompt": "Type the Japanese for 'very young'.",
+              "assesses": [
+                "JA-LEX-C125-QUAL125-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おさない",
+                "osanai"
+              ],
+              "feedback": {
+                "correct": "Right: おさない (osanai) is 'very young'.",
+                "incorrect": "'very young' is おさない (osanai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C125-yutaka",
+      "sequence": 7440,
+      "title": "ゆたか (yutaka) — plentiful, rich",
+      "headword": "ゆたか",
+      "romanization": "yutaka",
+      "gloss": "plentiful, rich",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1f030465b510e12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for young, then the Japanese for very young."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆたか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆたか — yutaka — \"plentiful, rich\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yutaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yutaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yutaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yutaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yutaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yutaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for young, then the Japanese for very young, then say yutaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for young, then the Japanese for very young, then say *yutaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆたか (yutaka) mean? (\"Plentiful, rich\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C125-yutaka-type",
+              "prompt": "Type the Japanese for 'plentiful, rich'.",
+              "assesses": [
+                "JA-LEX-C125-QUAL125-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆたか",
+                "yutaka"
+              ],
+              "feedback": {
+                "correct": "Right: ゆたか (yutaka) is 'plentiful, rich'.",
+                "incorrect": "'plentiful, rich' is ゆたか (yutaka)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

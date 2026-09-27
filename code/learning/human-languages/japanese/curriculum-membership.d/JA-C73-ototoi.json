@@ -1,0 +1,11 @@
+{
+  "id": "JA-C73-ototoi",
+  "pathSegment": "JA-PATH-73-TIME73",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-73-TIME73",
+      "order": 3
+    }
+  ]
+}

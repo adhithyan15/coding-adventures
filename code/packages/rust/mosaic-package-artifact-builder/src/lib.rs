@@ -2786,6 +2786,10 @@ fn build_package_inner(
                 host_effects: &manifest.host_effects,
                 initial_window_size: manifest.app.initial_window_size.as_ref(),
                 layouts: &manifest.app.layouts,
+                replaces_qt_host: manifest.host_assets.files.iter().any(|asset| {
+                    asset.backend == "qt"
+                        && matches!(asset.target.as_str(), "MosaicHost.h" | "MosaicHost.cpp")
+                }),
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -3650,6 +3654,11 @@ struct ProjectShellOptions<'a> {
     initial_window_size: Option<&'a WindowSize>,
     /// `[[app.layouts]]` (UI48 §7.2).
     layouts: &'a [mosaic_package_manifest::layouts::LayoutRule],
+    /// Whether `[host_assets]` replaces the Qt host (`MosaicHost.h/.cpp`).
+    /// Mosaic's Qt platform library is written against the standard host's
+    /// routed handler (UI87 §7.4a), so a package that brings its own host
+    /// (Venture) does not get it.
+    replaces_qt_host: bool,
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -3669,6 +3678,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         host_effects,
         initial_window_size,
         layouts,
+        replaces_qt_host,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -4070,6 +4080,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
             if let Some(proj) = r.project {
                 let bundled_runtime = runtime_library.map(runtime_file_name).transpose()?;
+                let platform_effects = !replaces_qt_host;
                 let cmake_lists = qt_cmake_with_host_effects(
                     &qt_cmake_with_package_exports(
                         &proj.cmake_lists,
@@ -4080,9 +4091,14 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     component,
                     host_effects,
                 );
+                let cmake_lists = if platform_effects {
+                    qt_cmake_with_platform_effects(&cmake_lists, component)?
+                } else {
+                    cmake_lists
+                };
                 let main_cpp = qt_main_with_startup_states(
                     &qt_main_with_initial_window_size(
-                        &qt_main_with_host_effects(&proj.main_cpp, host_effects)?,
+                        &qt_main_with_host_effects(&proj.main_cpp, host_effects, platform_effects)?,
                         initial_window_size,
                         component,
                     )?,
@@ -4135,6 +4151,19 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     let p = backend_dir.join(rel);
                     write_file(&p, body.as_bytes())?;
                     written.push(p);
+                }
+                // The platform library every Qt app gets (UI87 §7.4a), beside
+                // the host it routes for.
+                if platform_effects {
+                    let platform = mosaic_app_bindings::qt_platform_effects();
+                    for (rel, body) in [
+                        ("MosaicPlatformEffects.h", &platform.header),
+                        ("MosaicPlatformEffects.cpp", &platform.source),
+                    ] {
+                        let p = backend_dir.join(rel);
+                        write_file(&p, body.as_bytes())?;
+                        written.push(p);
+                    }
                 }
             }
         }
@@ -5034,16 +5063,23 @@ fn find_anchored(haystack: &str, needle: &str, prefix_ok: impl Fn(&str) -> bool)
 fn qt_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
+    platform_effects: bool,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "qt")
-    else {
+        .find(|handler| handler.backend == "qt");
+    if handler.is_none() && !platform_effects {
         return Ok(generated.to_string());
-    };
+    }
     const DECLARATION: &str = "MosaicHost mosaicHost;";
     let Some(declaration_start) = line_anchored_find(generated, DECLARATION) else {
+        // Without a declared handler, an entry point that does not look like
+        // the generated one is left as it is: nothing was declared, so there
+        // is nothing to refuse (the same rule as Compose and SwiftUI).
+        let Some(handler) = handler else {
+            return Ok(generated.to_string());
+        };
         // A declared handler that cannot be installed is a build failure, not a
         // quiet no-op.
         //
@@ -5069,29 +5105,65 @@ fn qt_main_with_host_effects(
         .find('\n')
         .map_or(generated.len(), |index| declaration_start + index + 1);
 
-    let mut out = String::with_capacity(generated.len() + 256);
+    let mut out = String::with_capacity(generated.len() + 384);
     out.push_str(&generated[..line_end]);
-    writeln!(
-        out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`."
-    )
-    .expect("write Qt host-effect comment");
-    writeln!(out, "{indent}{}(mosaicHost);", handler.install)
-        .expect("write Qt host-effect install");
+    if let Some(handler) = handler {
+        writeln!(
+            out,
+            "{indent}// Package-declared effect handler, from `[host_effects]`."
+        )
+        .expect("write Qt host-effect comment");
+        writeln!(out, "{indent}{}(mosaicHost);", handler.install)
+            .expect("write Qt host-effect install");
+    }
+    if platform_effects {
+        // After the package's handler: the router wraps the delivery that
+        // handler relies on (UI87 §7.4a). Its `kinds`, validated in the
+        // manifest to a dotted-name shape, become the set the router checks.
+        let claimed = match handler.and_then(|handler| handler.kinds.as_deref()) {
+            None => "std::nullopt".to_string(),
+            Some(kinds) => format!(
+                "QSet<QString>{{{}}}",
+                kinds
+                    .iter()
+                    .map(|kind| format!("QStringLiteral(\"{kind}\")"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+        };
+        writeln!(
+            out,
+            "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7)."
+        )
+        .expect("write Qt platform-effects comment");
+        writeln!(out, "{indent}installMosaicPlatformEffects(mosaicHost, {claimed});")
+            .expect("write Qt platform-effects install");
+    }
     out.push_str(&generated[line_end..]);
 
-    let Some(include) = handler.include.as_deref() else {
+    let mut includes: Vec<String> = Vec::new();
+    if let Some(include) = handler.and_then(|handler| handler.include.as_deref()) {
+        includes.push(include.to_string());
+    }
+    if platform_effects {
+        includes.push("MosaicPlatformEffects.h".to_string());
+    }
+    if includes.is_empty() {
         return Ok(out);
-    };
+    }
     // Includes are file-scope only, so this cannot sit beside the call. It goes
     // before `int main(`, and inside the same `#if` the rest of the host is
     // guarded by when that shape is the one being emitted -- otherwise a build
     // without a host would compile a header declaring a function that takes one.
     let guarded = out.contains("#if MOSAIC_HAS_HOST");
+    let lines: String = includes
+        .iter()
+        .map(|include| format!("#include \"{include}\"\n"))
+        .collect();
     let directive = if guarded {
-        format!("#if MOSAIC_HAS_HOST\n#include \"{include}\"\n#endif\n")
+        format!("#if MOSAIC_HAS_HOST\n{lines}#endif\n")
     } else {
-        format!("#include \"{include}\"\n")
+        lines
     };
     match out.find("int main(") {
         Some(index) => {
@@ -5111,6 +5183,27 @@ fn qt_main_with_host_effects(
         }
         None => Ok(out),
     }
+}
+
+/// Add Mosaic's Qt platform library (UI87 §7.4a) to the target's sources, on
+/// the same line -- and so under the same guard -- as the host it routes for.
+/// A build that compiles no host compiles no library either.
+fn qt_cmake_with_platform_effects(cmake: &str, component: &str) -> Result<String, BuildError> {
+    let host_sources = format!("target_sources({component} PRIVATE MosaicHost.cpp MosaicHost.h)");
+    if cmake.matches(&host_sources).count() != 1 {
+        return Err(BuildError::Io(format!(
+            "the generated Qt CMakeLists.txt does not list `{host_sources}` exactly once; \
+             refusing to guess where Mosaic's platform library belongs"
+        )));
+    }
+    Ok(cmake.replacen(
+        &host_sources,
+        &format!(
+            "target_sources({component} PRIVATE MosaicHost.cpp MosaicHost.h \
+             MosaicPlatformEffects.cpp MosaicPlatformEffects.h)"
+        ),
+        1,
+    ))
 }
 
 /// Install a package's effect handler in the generated SwiftUI app.
@@ -11802,7 +11895,7 @@ layout NativeEvents {
         assert!(!main.contains("root->setProperty"));
 
         let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt")).unwrap();
-        assert!(cmake.contains("target_sources(Card PRIVATE MosaicHost.cpp MosaicHost.h)"));
+        assert!(cmake.contains("target_sources(Card PRIVATE MosaicHost.cpp MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)"));
         assert!(!cmake.contains("if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/MosaicHost.cpp\")"));
         assert!(cmake.contains(
             "set(MOSAIC_APP_RUNTIME_SOURCE \"${CMAKE_CURRENT_SOURCE_DIR}/runtime/libmosaic_app.so\")"
@@ -15394,13 +15487,75 @@ version = "1"
         "}\n",
     );
 
+    /// UI87 §7.4a: with no package handler, the only change is the platform
+    /// library -- installed right after the host, and its header included.
+    #[test]
+    fn a_package_without_a_qt_handler_gets_only_the_platform_library() {
+        let empty = section("");
+        let wired = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty, true).expect("wiring");
+        let host = wired.find("MosaicHost mosaicHost;").expect("host");
+        let install = wired
+            .find("installMosaicPlatformEffects(mosaicHost, std::nullopt);")
+            .expect("platform install");
+        let use_ = wired.find("mosaicHost.requireRuntime();").expect("use");
+        assert!(host < install && install < use_, "{wired}");
+        let include = wired.find("#include \"MosaicPlatformEffects.h\"").expect("include");
+        assert!(include < wired.find("int main(").unwrap(), "{wired}");
+    }
+
+    /// After the package's handler, with the handler's claimed kinds.
+    #[test]
+    fn the_qt_platform_library_wraps_the_package_handler_with_its_kinds() {
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [ { backend = "qt", include = "probe.h", install = "installProbeEffects", kinds = ["importAnki", "files.save"] } ]
+"#,
+        );
+        let wired = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, true).expect("wiring");
+        let package = wired.find("installProbeEffects(mosaicHost);").expect("package install");
+        let platform = wired
+            .find(r#"installMosaicPlatformEffects(mosaicHost, QSet<QString>{QStringLiteral("importAnki"), QStringLiteral("files.save")});"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "{wired}");
+        assert!(wired.contains("#include \"probe.h\"\n#include \"MosaicPlatformEffects.h\"\n"), "{wired}");
+    }
+
+    /// In the guarded shape both the include and the install sit inside
+    /// `#if MOSAIC_HAS_HOST`, so a build without a host compiles neither.
+    #[test]
+    fn the_qt_platform_library_stays_inside_the_host_guard() {
+        let wired = qt_main_with_host_effects(GUARDED_MAIN, &section(""), true).expect("wiring");
+        assert!(
+            wired.contains("#if MOSAIC_HAS_HOST\n#include \"MosaicPlatformEffects.h\"\n#endif\n"),
+            "{wired}"
+        );
+        let guard = wired.rfind("#if MOSAIC_HAS_HOST\n  MosaicHost mosaicHost;").expect("guard");
+        let install = wired.find("installMosaicPlatformEffects").expect("install");
+        let end = wired[guard..].find("#endif").map(|at| guard + at).expect("end");
+        assert!(guard < install && install < end, "{wired}");
+    }
+
+    #[test]
+    fn the_qt_platform_library_joins_the_host_sources_under_its_guard() {
+        let strict = "target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h)\n";
+        assert_eq!(
+            qt_cmake_with_platform_effects(strict, "App").unwrap(),
+            "target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)\n"
+        );
+        let guarded = "if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/MosaicHost.cpp\")\n  target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h)\nendif()\n";
+        let wired = qt_cmake_with_platform_effects(guarded, "App").unwrap();
+        assert!(wired.contains("  target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)\nendif()"), "{wired}");
+        assert!(qt_cmake_with_platform_effects("project(App)\n", "App").is_err());
+    }
+
     #[test]
     fn a_package_without_the_section_changes_nothing() {
         // The overwhelmingly common case: every package that needs no host
         // capability must emit byte-identical output.
         let empty = section("");
         assert_eq!(
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty).expect("wiring must succeed"),
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty, false).expect("wiring must succeed"),
             NATIVE_COMPLETE_MAIN
         );
         assert_eq!(
@@ -15420,7 +15575,7 @@ handlers = [
 "#,
         );
         let main =
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed");
         let declaration = main.find("MosaicHost mosaicHost;").expect("declaration");
         let install = main
             .find("installProbeEffects(mosaicHost);")
@@ -15456,7 +15611,7 @@ handlers = [
 "#,
         );
         let guarded =
-            qt_main_with_host_effects(GUARDED_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(GUARDED_MAIN, &effects, false).expect("wiring must succeed");
         assert!(
             guarded.contains("#if MOSAIC_HAS_HOST\n#include \"probe_effects.h\"\n#endif"),
             "the include must inherit the host's guard:\n{guarded}"
@@ -15471,7 +15626,7 @@ handlers = [
         );
 
         let plain =
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed");
         assert!(
             plain.contains("#include \"probe_effects.h\"")
                 && !plain.contains("#if MOSAIC_HAS_HOST"),
@@ -15490,7 +15645,7 @@ handlers = [
 "#,
         );
         let main =
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed");
         assert!(main.contains("installProbeEffects(mosaicHost);"), "{main}");
         assert!(!main.contains("#include \"\""), "{main}");
     }
@@ -15506,7 +15661,7 @@ handlers = [
 "#,
         );
         assert_eq!(
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed"),
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed"),
             NATIVE_COMPLETE_MAIN
         );
     }

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:1a8beb4680d52ff9",
+  "lessonIds": [
+    "JA-C108-kai",
+    "JA-C108-tai",
+    "JA-C108-same",
+    "JA-C108-risu",
+    "JA-C108-inoshishi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch108.txt",
+  "json": "japanese/narration/ch108.json",
+  "textHash": "fnv1a64:98a8994682f43fdf",
+  "jsonHash": "fnv1a64:b796082aa08eea8a",
+  "findings": []
+}

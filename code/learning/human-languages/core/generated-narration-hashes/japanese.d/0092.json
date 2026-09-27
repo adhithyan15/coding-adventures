@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:7746262fe2dc5b44",
+  "lessonIds": [
+    "JA-C92-hoshii",
+    "JA-C92-negai",
+    "JA-C92-negau",
+    "JA-C92-tanomi",
+    "JA-C92-yokubou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch92.txt",
+  "json": "japanese/narration/ch92.json",
+  "textHash": "fnv1a64:e0efd153a5896bb9",
+  "jsonHash": "fnv1a64:9fee5c45c79d9f91",
+  "findings": []
+}

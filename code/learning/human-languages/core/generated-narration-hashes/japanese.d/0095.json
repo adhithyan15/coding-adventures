@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:37046902c0d11db0",
+  "lessonIds": [
+    "JA-C95-kanou",
+    "JA-C95-tokui",
+    "JA-C95-nigate",
+    "JA-C95-mochimono",
+    "JA-C95-okanemochi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch95.txt",
+  "json": "japanese/narration/ch95.json",
+  "textHash": "fnv1a64:fa3ad0c185cce55c",
+  "jsonHash": "fnv1a64:9c9292bd13aec556",
+  "findings": []
+}

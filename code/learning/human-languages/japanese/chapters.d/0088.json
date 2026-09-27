@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "To copy, To try out, To put back, To leave behind, To knock down",
+  "label": "ch:ja-to-copy-to-try-out-to-put-back-to-leave-behind-to-knock-down",
+  "canDo": "I can say to copy, to try out, to put back, to leave behind and to knock down.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C88-taosu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say to copy, to try out, to put back, to leave behind and to knock down.",
+    "assesses": [
+      "JA-LEX-C88-ACT88-03",
+      "JA-LEX-C88-ACT88-04",
+      "JA-LEX-C88-ACT88-05"
+    ]
+  }
+}
