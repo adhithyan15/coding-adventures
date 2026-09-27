@@ -16,11 +16,14 @@
 
 ### Verified
 
+- Added a decoder regression showing that the 8008 `JMP` byte `0x7C` is
+  `MOV A,H` on 8080, whereas an 8080 `JMP` uses `0xC3`. Ported source must
+  be assembled for its target instead of reusing 8008 ROM bytes.
 - Added exhaustive classification for all 256 first bytes and a full-state
   FNV-1a oracle over all 244 defined opcodes generated from the repository's
   Python reference implementation.
 - Added atomic load/fetch/data-access/run boundaries plus snapshot ownership,
-  reset, bounded-run, and repeatability tests. The simulator now has 45 tests
+  reset, bounded-run, and repeatability tests. The simulator now has 46 tests
   plus one doctest and 92.68% core line coverage (671/724).
 - Repaired strict rustdoc links; formatting, tests, strict Clippy, and strict
   rustdoc all pass.
