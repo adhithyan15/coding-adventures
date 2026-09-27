@@ -84,8 +84,9 @@ fn main() -> u16 {
 - Functions have fixed, typed parameters and one `u8`, `u16`, `bool`, or
   `void` result. Calls may be nested; recursion and indirect calls are
   excluded from v0 so maximum stack usage can be computed from the call graph.
-- A program has exactly one zero-argument `main`. Its return value is the
-  observable result; v0 has no console, operating-system calls, port I/O,
+- A program has exactly one zero-argument `main` returning `u8`, `u16`, or
+  `bool`. Its return value is the observable result; v0 has no console,
+  operating-system calls, port I/O,
   globals, arrays, pointers, dynamic allocation, interrupts, or inline
   assembly. These require separate memory and device contracts in later
   versions. Multiplication, division, shifts, and signed types are also
@@ -132,6 +133,13 @@ simulators execute its generated ROM under a finite step limit and the
 expected result is asserted. Python simulators and gate-level models are
 independent oracles for selected discriminating cases, not substitutes for
 running the emitted ROM.
+
+As in Oct, shared IIR may use wider storage slots, but every operation must
+carry or enforce its source width before a value is observed. In particular,
+H2 must test `u16` wrap and complement on both emitted targets; a widened
+intermediate that accidentally returns `65537` instead of `1` is a failed
+compiler even when the simulator itself is correct. Other LANG backends gain
+Hex support only after they also satisfy these width and execution tests.
 
 | Rung | New work | Required two-target source proof |
 |---|---|---|
