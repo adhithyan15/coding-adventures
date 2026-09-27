@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 17074,
+    "totalLessons": 17386,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 175,
+    "atomsNeverRevisited": 174,
     "forwardReferences": 921,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 15310,
+    "drivableLessons": 15622,
     "drivablePercent": 90,
     "chaptersWithoutDrivablePrefix": 274,
     "unexplainedModalityOverrides": 0
@@ -5517,7 +5517,67 @@
           86,
           87,
           88,
-          89
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149
         ],
         "bookChapters": [
           1,
@@ -5608,7 +5668,67 @@
           86,
           87,
           88,
-          89
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -8010,9 +8130,9 @@
       {
         "language": "marwadi",
         "status": "version-2",
-        "lessonCount": 584,
+        "lessonCount": 896,
         "versions": {
-          "2": 584
+          "2": 896
         }
       },
       {
@@ -8857,8 +8977,8 @@
       },
       {
         "language": "marwadi",
-        "bookChapters": 89,
-        "declaredChapters": 89,
+        "bookChapters": 149,
+        "declaredChapters": 149,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -8937,8 +9057,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 3477,
-      "declaredChapters": 3477,
+      "bookChapters": 3537,
+      "declaredChapters": 3537,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -8950,10 +9070,10 @@
     }
   },
   "levels": {
-    "totalLessons": 17074,
+    "totalLessons": 17386,
     "byLevel": {
       "pre-A1": 8756,
-      "A1": 7292,
+      "A1": 7604,
       "A2": 942,
       "B1": 39,
       "B2": 17,
@@ -9160,10 +9280,10 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 584,
+        "lessonCount": 896,
         "byLevel": {
           "pre-A1": 528,
-          "A1": 56,
+          "A1": 368,
           "A2": 0,
           "B1": 0,
           "B2": 0,
@@ -9888,8 +10008,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 584,
-        "measurable": 583,
+        "lessonCount": 896,
+        "measurable": 895,
         "unmeasurable": 1,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -10462,7 +10582,7 @@
           "language": "marwadi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 584,
+          "lessonCount": 896,
           "totalGlyphs": 55,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -15559,19 +15679,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "MW-SKILL-CONNECTED-READING",
-        "language": "marwadi",
-        "introducedBy": "MW-C40-pehlo-path",
-        "introducedAt": 344,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 0
       },
       {
         "atom": "PA-ETYMON-RAAT-RATRI",
@@ -54394,6 +54501,258 @@
         "revisits": 2
       },
       {
+        "atom": "MW-LEX-C106-ACT106-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C106-gerno",
+        "introducedAt": 668,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C106-ACT106-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C106-balno",
+        "introducedAt": 669,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C106-ACT106-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C106-sivno",
+        "introducedAt": 670,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C107-ACT107-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C107-bunno",
+        "introducedAt": 671,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C109-ACT109-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C109-jitno",
+        "introducedAt": 683,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C109-ACT109-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C109-harno",
+        "introducedAt": 684,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C109-ACT109-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C109-marno",
+        "introducedAt": 685,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C116-CAN116-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C116-gyan",
+        "introducedAt": 720,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C116-CAN116-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C116-hak",
+        "introducedAt": 721,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C116-CAN116-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C116-mauko",
+        "introducedAt": 722,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C117-WHY117-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C117-kyu",
+        "introducedAt": 723,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C119-THINGS119-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C119-gilas",
+        "introducedAt": 735,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C119-THINGS119-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C119-balti",
+        "introducedAt": 736,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C119-THINGS119-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C119-buhari",
+        "introducedAt": 737,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C126-THINGS126-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C126-boro",
+        "introducedAt": 772,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C126-THINGS126-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C126-rassi",
+        "introducedAt": 773,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C126-THINGS126-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C126-khuti",
+        "introducedAt": 774,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C127-THINGS127-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C127-khilo",
+        "introducedAt": 775,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C129-THINGS129-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C129-mochri",
+        "introducedAt": 787,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C129-THINGS129-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C129-karo",
+        "introducedAt": 788,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C129-THINGS129-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C129-churi",
+        "introducedAt": 789,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "MW-LEX-C51-VERBS51-02",
         "language": "marwadi",
         "introducedBy": "MW-C51-jano",
@@ -54730,6 +55089,402 @@
         "revisits": 3
       },
       {
+        "atom": "MW-LEX-C74-ADJ74-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C74-tej",
+        "introducedAt": 504,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C74-ADJ74-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C74-soro",
+        "introducedAt": 505,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C74-ADJ74-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C74-doro",
+        "introducedAt": 506,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C75-ADJ75-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C75-nicho",
+        "introducedAt": 507,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C75-ADJ75-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C75-khali",
+        "introducedAt": 508,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C75-ADJ75-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C75-garib",
+        "introducedAt": 509,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C75-ADJ75-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C75-mailo",
+        "introducedAt": 510,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C75-ADJ75-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C75-moto",
+        "introducedAt": 511,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C76-ADJ76-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C76-patlo",
+        "introducedAt": 512,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C76-ADJ76-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C76-bhari",
+        "introducedAt": 513,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C76-ADJ76-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C76-sacho",
+        "introducedAt": 514,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C76-ADJ76-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C76-haro",
+        "introducedAt": 515,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C76-ADJ76-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C76-pilo",
+        "introducedAt": 516,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C77-ADJ77-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C77-lal",
+        "introducedAt": 517,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C77-ADJ77-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C77-nilo",
+        "introducedAt": 518,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C77-ADJ77-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C77-kalo",
+        "introducedAt": 519,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C77-ADJ77-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C77-bhuro",
+        "introducedAt": 520,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C77-ADJ77-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C77-mitho",
+        "introducedAt": 521,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C78-TIME78-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C78-din",
+        "introducedAt": 522,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C86-NUMBERS86-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C86-pachas",
+        "introducedAt": 564,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C86-NUMBERS86-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C86-sath",
+        "introducedAt": 565,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C86-NUMBERS86-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C86-sittar",
+        "introducedAt": 566,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C87-NUMBERS87-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C87-assi",
+        "introducedAt": 567,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C89-WORLD89-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C89-des",
+        "introducedAt": 579,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C89-WORLD89-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C89-bat",
+        "introducedAt": 580,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C89-WORLD89-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C89-bhasa",
+        "introducedAt": 581,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C96-LOC96-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C96-agai",
+        "introducedAt": 616,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C96-LOC96-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C96-larai",
+        "introducedAt": 617,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C96-LOC96-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C96-mathai",
+        "introducedAt": 618,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C97-LOC97-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C97-hethai",
+        "introducedAt": 619,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C99-LOC99-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C99-baro",
+        "introducedAt": 631,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C99-LOC99-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C99-bavri",
+        "introducedAt": 632,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C99-LOC99-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C99-talav",
+        "introducedAt": 633,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "MW-PERFORMANCE-REFUSAL-FOUR-SKILL-01",
         "language": "marwadi",
         "introducedBy": "MW-C39-refusal-four",
@@ -54750,6 +55505,18 @@
           "R2",
           "R3",
           "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "MW-SKILL-CONNECTED-READING",
+        "language": "marwadi",
+        "introducedBy": "MW-C40-pehlo-path",
+        "introducedAt": 344,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
         ],
         "revisits": 2
       },
@@ -133994,6 +134761,1766 @@
         "revisits": 3
       },
       {
+        "atom": "MW-LEX-C100-LOC100-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C100-darvajo",
+        "introducedAt": 636,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C100-LOC100-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C100-pol",
+        "introducedAt": 637,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C100-LOC100-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C100-haveli",
+        "introducedAt": 638,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C100-LOC100-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C100-melo",
+        "introducedAt": 639,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C100-LOC100-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C100-hat",
+        "introducedAt": 640,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C101-DEF101-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C101-yo",
+        "introducedAt": 641,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C101-DEF101-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C101-iso",
+        "introducedAt": 642,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C101-DEF101-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C101-uso",
+        "introducedAt": 643,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C101-DEF101-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C101-kiso",
+        "introducedAt": 644,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C101-DEF101-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C101-kun",
+        "introducedAt": 645,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C102-DEF102-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C102-sagla",
+        "introducedAt": 646,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C102-DEF102-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C102-dujo",
+        "introducedAt": 647,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C102-DEF102-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C102-apno",
+        "introducedAt": 648,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C102-DEF102-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C102-koi",
+        "introducedAt": 649,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C102-DEF102-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C102-harek",
+        "introducedAt": 650,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C103-ACT103-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C103-nhavno",
+        "introducedAt": 651,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C103-ACT103-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C103-pakavno",
+        "introducedAt": 652,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C103-ACT103-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C103-banavno",
+        "introducedAt": 653,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C103-ACT103-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C103-torno",
+        "introducedAt": 654,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C103-ACT103-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C103-jorno",
+        "introducedAt": 655,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C104-ACT104-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C104-kharidno",
+        "introducedAt": 656,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C104-ACT104-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C104-ugharno",
+        "introducedAt": 657,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C104-ACT104-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C104-bulavno",
+        "introducedAt": 658,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C104-ACT104-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C104-mangno",
+        "introducedAt": 659,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C104-ACT104-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C104-jovno",
+        "introducedAt": 660,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C105-ACT105-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C105-raivno",
+        "introducedAt": 661,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C105-ACT105-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C105-bachno",
+        "introducedAt": 662,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C105-ACT105-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C105-janno",
+        "introducedAt": 663,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C105-ACT105-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C105-bharno",
+        "introducedAt": 664,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C105-ACT105-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C105-khichno",
+        "introducedAt": 665,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C106-ACT106-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C106-thelno",
+        "introducedAt": 666,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C106-ACT106-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C106-uthavno",
+        "introducedAt": 667,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C107-ACT107-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C107-rangno",
+        "introducedAt": 672,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C107-ACT107-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C107-lagavno",
+        "introducedAt": 673,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C107-ACT107-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C107-hatavno",
+        "introducedAt": 674,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C107-ACT107-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C107-bichhavno",
+        "introducedAt": 675,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C108-ACT108-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C108-jagavno",
+        "introducedAt": 676,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C108-ACT108-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C108-bachavno",
+        "introducedAt": 677,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C108-ACT108-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C108-utarno",
+        "introducedAt": 678,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C108-ACT108-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C108-tairno",
+        "introducedAt": 679,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C108-ACT108-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C108-kudno",
+        "introducedAt": 680,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C109-ACT109-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C109-parno",
+        "introducedAt": 681,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C109-ACT109-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C109-thakno",
+        "introducedAt": 682,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C110-ACT110-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C110-batno",
+        "introducedAt": 688,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C110-ACT110-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C110-gamavno",
+        "introducedAt": 689,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C110-ACT110-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C110-pugno",
+        "introducedAt": 690,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C110-ACT110-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C110-urno",
+        "introducedAt": 691,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C110-ACT110-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C110-tolno",
+        "introducedAt": 692,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C111-WANT111-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C111-chavno",
+        "introducedAt": 693,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C111-WANT111-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C111-ichchha",
+        "introducedAt": 694,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C111-WANT111-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C111-man",
+        "introducedAt": 695,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C111-WANT111-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C111-as",
+        "introducedAt": 696,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C111-WANT111-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C111-mag",
+        "introducedAt": 697,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C112-WANT112-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C112-jarurat",
+        "introducedAt": 698,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C112-WANT112-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C112-lalach",
+        "introducedAt": 699,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C112-WANT112-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C112-sapno",
+        "introducedAt": 700,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C112-WANT112-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C112-ummid",
+        "introducedAt": 701,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C112-WANT112-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C112-marji",
+        "introducedAt": 702,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C113-LIKE113-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C113-lagno",
+        "introducedAt": 703,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C113-LIKE113-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C113-pasand",
+        "introducedAt": 704,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C113-LIKE113-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C113-sauk",
+        "introducedAt": 705,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C113-LIKE113-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C113-het",
+        "introducedAt": 706,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C113-LIKE113-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C113-moh",
+        "introducedAt": 707,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C114-CAN114-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C114-sakno",
+        "introducedAt": 708,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C114-CAN114-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C114-hunar",
+        "introducedAt": 709,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C114-CAN114-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C114-takat",
+        "introducedAt": 710,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C114-CAN114-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C114-himmat",
+        "introducedAt": 711,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C114-CAN114-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C114-malak",
+        "introducedAt": 712,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C115-CAN115-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C115-jamin",
+        "introducedAt": 713,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C115-CAN115-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C115-jaydad",
+        "introducedAt": 714,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C115-CAN115-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C115-puji",
+        "introducedAt": 715,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C115-CAN115-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C115-kamai",
+        "introducedAt": 716,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C115-CAN115-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C115-naukri",
+        "introducedAt": 717,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C116-CAN116-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C116-gun",
+        "introducedAt": 718,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C116-CAN116-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C116-akal",
+        "introducedAt": 719,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C117-WHY117-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C117-karan",
+        "introducedAt": 724,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C117-WHY117-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C117-vastai",
+        "introducedAt": 725,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C117-WHY117-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C117-khatar",
+        "introducedAt": 726,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C117-WHY117-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C117-kyukai",
+        "introducedAt": 727,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C118-THINGS118-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C118-chulho",
+        "introducedAt": 728,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C118-THINGS118-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C118-tavo",
+        "introducedAt": 729,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C118-THINGS118-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C118-karahi",
+        "introducedAt": 730,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C118-THINGS118-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C118-hadi",
+        "introducedAt": 731,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C118-THINGS118-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C118-gharo",
+        "introducedAt": 732,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C119-THINGS119-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C119-matko",
+        "introducedAt": 733,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C119-THINGS119-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C119-loto",
+        "introducedAt": 734,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C120-THINGS120-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C120-supro",
+        "introducedAt": 740,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C120-THINGS120-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C120-chalni",
+        "introducedAt": 741,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C120-THINGS120-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C120-chakki",
+        "introducedAt": 742,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C120-THINGS120-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C120-musal",
+        "introducedAt": 743,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C120-THINGS120-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C120-belan",
+        "introducedAt": 744,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C121-THINGS121-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C121-chaklo",
+        "introducedAt": 745,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C121-THINGS121-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C121-parat",
+        "introducedAt": 746,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C121-THINGS121-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C121-katoro",
+        "introducedAt": 747,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C121-THINGS121-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C121-chimto",
+        "introducedAt": 748,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C121-THINGS121-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C121-talo",
+        "introducedAt": 749,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C122-THINGS122-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C122-dabbo",
+        "introducedAt": 750,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C122-THINGS122-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C122-peti",
+        "introducedAt": 751,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C122-THINGS122-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C122-sanduk",
+        "introducedAt": 752,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C122-THINGS122-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C122-rajai",
+        "introducedAt": 753,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C122-THINGS122-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C122-gadi",
+        "introducedAt": 754,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C123-THINGS123-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C123-takiyo",
+        "introducedAt": 755,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C123-THINGS123-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C123-chadar",
+        "introducedAt": 756,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C123-THINGS123-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C123-dari",
+        "introducedAt": 757,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C123-THINGS123-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C123-pardo",
+        "introducedAt": 758,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C123-THINGS123-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C123-arsi",
+        "introducedAt": 759,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C124-THINGS124-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C124-kagsi",
+        "introducedAt": 760,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C124-THINGS124-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C124-saban",
+        "introducedAt": 761,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C124-THINGS124-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C124-tauliyo",
+        "introducedAt": 762,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C124-THINGS124-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C124-sui",
+        "introducedAt": 763,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C124-THINGS124-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C124-doro",
+        "introducedAt": 764,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C125-THINGS125-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C125-kainchi",
+        "introducedAt": 765,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C125-THINGS125-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C125-lalten",
+        "introducedAt": 766,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C125-THINGS125-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C125-mombatti",
+        "introducedAt": 767,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C125-THINGS125-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C125-machis",
+        "introducedAt": 768,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C125-THINGS125-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C125-lakri",
+        "introducedAt": 769,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C126-THINGS126-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C126-koylo",
+        "introducedAt": 770,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C126-THINGS126-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C126-chhano",
+        "introducedAt": 771,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C127-THINGS127-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C127-hathoro",
+        "introducedAt": 776,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C127-THINGS127-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C127-kulhari",
+        "introducedAt": 777,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C127-THINGS127-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C127-hal",
+        "introducedAt": 778,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C127-THINGS127-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C127-bailgari",
+        "introducedAt": 779,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C128-THINGS128-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C128-pagri",
+        "introducedAt": 780,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C128-THINGS128-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C128-ghaghro",
+        "introducedAt": 781,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C128-THINGS128-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C128-lugro",
+        "introducedAt": 782,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C128-THINGS128-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C128-kachali",
+        "introducedAt": 783,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C128-THINGS128-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C128-angarkhi",
+        "introducedAt": 784,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C129-THINGS129-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C129-kamij",
+        "introducedAt": 785,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C129-THINGS129-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C129-chappal",
+        "introducedAt": 786,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C130-THINGS130-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C130-borlo",
+        "introducedAt": 792,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C130-THINGS130-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C130-nath",
+        "introducedAt": 793,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C130-THINGS130-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C130-payal",
+        "introducedAt": 794,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C130-THINGS130-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C130-bajro",
+        "introducedAt": 795,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C130-THINGS130-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C130-rabri",
+        "introducedAt": 796,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C131-THINGS131-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C131-khichro",
+        "introducedAt": 797,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C131-THINGS131-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C131-ker",
+        "introducedAt": 798,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C131-THINGS131-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C131-sagri",
+        "introducedAt": 799,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C131-THINGS131-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C131-gatta",
+        "introducedAt": 800,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C131-THINGS131-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C131-papar",
+        "introducedAt": 801,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C132-THINGS132-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C132-achar",
+        "introducedAt": 802,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C132-THINGS132-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C132-lapsi",
+        "introducedAt": 803,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C132-THINGS132-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C132-ghevar",
+        "introducedAt": 804,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C132-THINGS132-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C132-makki",
+        "introducedAt": 805,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C132-THINGS132-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C132-gehu",
+        "introducedAt": 806,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C133-THINGS133-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C133-chana",
+        "introducedAt": 807,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C133-THINGS133-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C133-mug",
+        "introducedAt": 808,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C133-THINGS133-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C133-moth",
+        "introducedAt": 809,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C133-THINGS133-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C133-til",
+        "introducedAt": 810,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C133-THINGS133-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C133-gur",
+        "introducedAt": 811,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C134-THINGS134-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C134-makkhan",
+        "introducedAt": 812,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C134-THINGS134-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C134-chhachh",
+        "introducedAt": 813,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C134-THINGS134-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C134-lassi",
+        "introducedAt": 814,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C134-THINGS134-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C134-kachori",
+        "introducedAt": 815,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C136-THINGS136-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C136-adrak",
+        "introducedAt": 824,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C136-THINGS136-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C136-haldi",
+        "introducedAt": 825,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C136-THINGS136-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C136-jiro",
+        "introducedAt": 826,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C137-THINGS137-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C137-masalo",
+        "introducedAt": 827,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C139-THINGS139-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C139-toto",
+        "introducedAt": 839,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C139-THINGS139-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C139-koyal",
+        "introducedAt": 840,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MW-LEX-C139-THINGS139-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C139-chil",
+        "introducedAt": 841,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "MW-LEX-C44-BODY44-01",
         "language": "marwadi",
         "introducedBy": "MW-C44-pag",
@@ -135358,211 +137885,1047 @@
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C74-ADJ74-03",
+        "atom": "MW-LEX-C78-TIME78-02",
         "language": "marwadi",
-        "introducedBy": "MW-C74-tej",
-        "introducedAt": 504,
+        "introducedBy": "MW-C78-rat",
+        "introducedAt": 523,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C74-ADJ74-04",
+        "atom": "MW-LEX-C78-TIME78-03",
         "language": "marwadi",
-        "introducedBy": "MW-C74-soro",
-        "introducedAt": 505,
+        "introducedBy": "MW-C78-savero",
+        "introducedAt": 524,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C74-ADJ74-05",
+        "atom": "MW-LEX-C78-TIME78-04",
         "language": "marwadi",
-        "introducedBy": "MW-C74-doro",
-        "introducedAt": 506,
+        "introducedBy": "MW-C78-mahino",
+        "introducedAt": 525,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C75-ADJ75-01",
+        "atom": "MW-LEX-C78-TIME78-05",
         "language": "marwadi",
-        "introducedBy": "MW-C75-nicho",
-        "introducedAt": 507,
+        "introducedBy": "MW-C78-baras",
+        "introducedAt": 526,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C75-ADJ75-02",
+        "atom": "MW-LEX-C79-TIME79-01",
         "language": "marwadi",
-        "introducedBy": "MW-C75-khali",
-        "introducedAt": 508,
+        "introducedBy": "MW-C79-ghanto",
+        "introducedAt": 527,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C75-ADJ75-03",
+        "atom": "MW-LEX-C79-TIME79-02",
         "language": "marwadi",
-        "introducedBy": "MW-C75-garib",
-        "introducedAt": 509,
+        "introducedBy": "MW-C79-minat",
+        "introducedAt": 528,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C75-ADJ75-04",
+        "atom": "MW-LEX-C79-TIME79-03",
         "language": "marwadi",
-        "introducedBy": "MW-C75-mailo",
-        "introducedAt": 510,
+        "introducedBy": "MW-C79-aj",
+        "introducedAt": 529,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C75-ADJ75-05",
+        "atom": "MW-LEX-C79-TIME79-04",
         "language": "marwadi",
-        "introducedBy": "MW-C75-moto",
-        "introducedAt": 511,
+        "introducedBy": "MW-C79-kal",
+        "introducedAt": 530,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C76-ADJ76-01",
+        "atom": "MW-LEX-C79-TIME79-05",
         "language": "marwadi",
-        "introducedBy": "MW-C76-patlo",
-        "introducedAt": 512,
+        "introducedBy": "MW-C79-abar",
+        "introducedAt": 531,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C76-ADJ76-02",
+        "atom": "MW-LEX-C80-TIME80-01",
         "language": "marwadi",
-        "introducedBy": "MW-C76-bhari",
-        "introducedAt": 513,
+        "introducedBy": "MW-C80-hamesa",
+        "introducedAt": 532,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C76-ADJ76-03",
+        "atom": "MW-LEX-C80-TIME80-02",
         "language": "marwadi",
-        "introducedBy": "MW-C76-sacho",
-        "introducedAt": 514,
+        "introducedBy": "MW-C80-kadi",
+        "introducedAt": 533,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C76-ADJ76-04",
+        "atom": "MW-LEX-C80-TIME80-03",
         "language": "marwadi",
-        "introducedBy": "MW-C76-haro",
-        "introducedAt": 515,
+        "introducedBy": "MW-C80-jaldi",
+        "introducedAt": 534,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C76-ADJ76-05",
+        "atom": "MW-LEX-C80-TIME80-04",
         "language": "marwadi",
-        "introducedBy": "MW-C76-pilo",
-        "introducedAt": 516,
+        "introducedBy": "MW-C80-der",
+        "introducedAt": 535,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C77-ADJ77-01",
+        "atom": "MW-LEX-C80-TIME80-05",
         "language": "marwadi",
-        "introducedBy": "MW-C77-lal",
-        "introducedAt": 517,
+        "introducedBy": "MW-C80-paila",
+        "introducedAt": 536,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C77-ADJ77-02",
+        "atom": "MW-LEX-C81-PLACE81-01",
         "language": "marwadi",
-        "introducedBy": "MW-C77-nilo",
-        "introducedAt": 518,
+        "introducedBy": "MW-C81-dur",
+        "introducedAt": 537,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C77-ADJ77-03",
+        "atom": "MW-LEX-C81-PLACE81-02",
         "language": "marwadi",
-        "introducedBy": "MW-C77-kalo",
-        "introducedAt": 519,
+        "introducedBy": "MW-C81-najik",
+        "introducedAt": 538,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C77-ADJ77-04",
+        "atom": "MW-LEX-C81-PLACE81-03",
         "language": "marwadi",
-        "introducedBy": "MW-C77-bhuro",
-        "introducedAt": 520,
+        "introducedBy": "MW-C81-may",
+        "introducedAt": 539,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C77-ADJ77-05",
+        "atom": "MW-LEX-C81-PLACE81-04",
         "language": "marwadi",
-        "introducedBy": "MW-C77-mitho",
-        "introducedAt": 521,
+        "introducedBy": "MW-C81-barai",
+        "introducedAt": 540,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C78-TIME78-01",
+        "atom": "MW-LEX-C81-PLACE81-05",
         "language": "marwadi",
-        "introducedBy": "MW-C78-din",
-        "introducedAt": 522,
+        "introducedBy": "MW-C81-niche",
+        "introducedAt": 541,
         "missed": [
           "R2",
-          "R3"
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C82-PLACE82-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C82-athai",
+        "introducedAt": 542,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C82-PLACE82-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C82-bathai",
+        "introducedAt": 543,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C82-PLACE82-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C82-sarak",
+        "introducedAt": 544,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C82-PLACE82-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C82-gali",
+        "introducedAt": 545,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C82-PLACE82-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C82-tesan",
+        "introducedAt": 546,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C83-TOWN83-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C83-pul",
+        "introducedAt": 547,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C83-TOWN83-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C83-hotal",
+        "introducedAt": 548,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C83-TOWN83-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C83-pulis",
+        "introducedAt": 549,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C83-TOWN83-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C83-nav",
+        "introducedAt": 550,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C83-TOWN83-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C83-saikal",
+        "introducedAt": 551,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C84-TOWN84-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C84-gav",
+        "introducedAt": 552,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C84-TOWN84-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C84-sahar",
+        "introducedAt": 553,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C84-TOWN84-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C84-kurto",
+        "introducedAt": 554,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C84-TOWN84-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C84-pajamo",
+        "introducedAt": 555,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C84-TOWN84-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C84-juti",
+        "introducedAt": 556,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C85-CLOTHES85-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C85-mojo",
+        "introducedAt": 557,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C85-CLOTHES85-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C85-jeb",
+        "introducedAt": 558,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C85-CLOTHES85-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C85-anguthi",
+        "introducedAt": 559,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C85-CLOTHES85-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C85-ghari",
+        "introducedAt": 560,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C85-CLOTHES85-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C85-topi",
+        "introducedAt": 561,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C86-NUMBERS86-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C86-tis",
+        "introducedAt": 562,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C86-NUMBERS86-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C86-chalis",
+        "introducedAt": 563,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C87-NUMBERS87-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C87-nabbai",
+        "introducedAt": 568,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C87-NUMBERS87-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C87-hajar",
+        "introducedAt": 569,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C87-NUMBERS87-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C87-lakh",
+        "introducedAt": 570,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C87-NUMBERS87-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C87-duniya",
+        "introducedAt": 571,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C88-WORLD88-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C88-rang",
+        "introducedAt": 572,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C88-WORLD88-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C88-git",
+        "introducedAt": 573,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C88-WORLD88-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C88-jatra",
+        "introducedAt": 574,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C88-WORLD88-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C88-chhutti",
+        "introducedAt": 575,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C88-WORLD88-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C88-prem",
+        "introducedAt": 576,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C89-WORLD89-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C89-sangit",
+        "introducedAt": 577,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C89-WORLD89-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C89-khabar",
+        "introducedAt": 578,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C90-TIME90-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C90-dopar",
+        "introducedAt": 584,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C90-TIME90-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C90-athan",
+        "introducedAt": 585,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C90-TIME90-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C90-dinugai",
+        "introducedAt": 586,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C90-TIME90-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C90-parbhat",
+        "introducedAt": 587,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C90-TIME90-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C90-parsu",
+        "introducedAt": 588,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C91-TIME91-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C91-pachhai",
+        "introducedAt": 589,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C91-TIME91-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C91-somvar",
+        "introducedAt": 590,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C91-TIME91-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C91-mangalvar",
+        "introducedAt": 591,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C91-TIME91-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C91-guruvar",
+        "introducedAt": 592,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C91-TIME91-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C91-sukarvar",
+        "introducedAt": 593,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C92-TIME92-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C92-sanivar",
+        "introducedAt": 594,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C92-TIME92-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C92-ravivar",
+        "introducedAt": 595,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C92-TIME92-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C92-chait",
+        "introducedAt": 596,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C92-TIME92-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C92-baisakh",
+        "introducedAt": 597,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C92-TIME92-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C92-jeth",
+        "introducedAt": 598,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C93-TIME93-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C93-savan",
+        "introducedAt": 599,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C93-TIME93-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C93-bhadvo",
+        "introducedAt": 600,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C93-TIME93-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C93-asoj",
+        "introducedAt": 601,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C93-TIME93-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C93-kati",
+        "introducedAt": 602,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C93-TIME93-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C93-migsar",
+        "introducedAt": 603,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C94-TIME94-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C94-pos",
+        "introducedAt": 604,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C94-TIME94-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C94-magh",
+        "introducedAt": 605,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C94-TIME94-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C94-unalo",
+        "introducedAt": 606,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C94-TIME94-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C94-siyalo",
+        "introducedAt": 607,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C94-TIME94-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C94-chaumaso",
+        "introducedAt": 608,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C95-TIME95-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C95-basant",
+        "introducedAt": 609,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C95-TIME95-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C95-tarkai",
+        "introducedAt": 610,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C95-TIME95-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C95-bagat",
+        "introducedAt": 611,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C95-TIME95-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C95-roj",
+        "introducedAt": 612,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C95-TIME95-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C95-ajkal",
+        "introducedAt": 613,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C96-LOC96-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C96-kathai",
+        "introducedAt": 614,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C96-LOC96-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C96-uthai",
+        "introducedAt": 615,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C97-LOC97-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C97-bichai",
+        "introducedAt": 620,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C97-LOC97-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C97-kanai",
+        "introducedAt": 621,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C97-LOC97-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C97-sami",
+        "introducedAt": 622,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C97-LOC97-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C97-davo",
+        "introducedAt": 623,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C98-LOC98-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C98-jimano",
+        "introducedAt": 624,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C98-LOC98-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C98-chauk",
+        "introducedAt": 625,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C98-LOC98-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C98-chauraho",
+        "introducedAt": 626,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C98-LOC98-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C98-mor",
+        "introducedAt": 627,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C98-LOC98-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C98-gelo",
+        "introducedAt": 628,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C99-LOC99-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C99-rasto",
+        "introducedAt": 629,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C99-LOC99-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C99-agano",
+        "introducedAt": 630,
+        "missed": [
+          "R3",
+          "R4"
         ],
         "revisits": 3
       },
@@ -191135,450 +194498,550 @@
         "revisits": 14
       },
       {
-        "atom": "MW-LEX-C78-TIME78-02",
+        "atom": "MW-LEX-C134-THINGS134-05",
         "language": "marwadi",
-        "introducedBy": "MW-C78-rat",
-        "introducedAt": 523,
+        "introducedBy": "MW-C134-bhujiya",
+        "introducedAt": 816,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C78-TIME78-03",
+        "atom": "MW-LEX-C135-THINGS135-01",
         "language": "marwadi",
-        "introducedBy": "MW-C78-savero",
-        "introducedAt": 524,
+        "introducedBy": "MW-C135-matiro",
+        "introducedAt": 817,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C78-TIME78-04",
+        "atom": "MW-LEX-C135-THINGS135-02",
         "language": "marwadi",
-        "introducedBy": "MW-C78-mahino",
-        "introducedAt": 525,
+        "introducedBy": "MW-C135-kakri",
+        "introducedAt": 818,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C78-TIME78-05",
+        "atom": "MW-LEX-C135-THINGS135-03",
         "language": "marwadi",
-        "introducedBy": "MW-C78-baras",
-        "introducedAt": 526,
+        "introducedBy": "MW-C135-bhidi",
+        "introducedAt": 819,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C79-TIME79-01",
+        "atom": "MW-LEX-C135-THINGS135-04",
         "language": "marwadi",
-        "introducedBy": "MW-C79-ghanto",
-        "introducedAt": 527,
+        "introducedBy": "MW-C135-baingan",
+        "introducedAt": 820,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C79-TIME79-02",
+        "atom": "MW-LEX-C135-THINGS135-05",
         "language": "marwadi",
-        "introducedBy": "MW-C79-minat",
-        "introducedAt": 528,
+        "introducedBy": "MW-C135-palak",
+        "introducedAt": 821,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C79-TIME79-03",
+        "atom": "MW-LEX-C136-THINGS136-01",
         "language": "marwadi",
-        "introducedBy": "MW-C79-aj",
-        "introducedAt": 529,
+        "introducedBy": "MW-C136-mulo",
+        "introducedAt": 822,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C79-TIME79-04",
+        "atom": "MW-LEX-C136-THINGS136-02",
         "language": "marwadi",
-        "introducedBy": "MW-C79-kal",
-        "introducedAt": 530,
+        "introducedBy": "MW-C136-lasan",
+        "introducedAt": 823,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C79-TIME79-05",
+        "atom": "MW-LEX-C137-THINGS137-02",
         "language": "marwadi",
-        "introducedBy": "MW-C79-abar",
-        "introducedAt": 531,
+        "introducedBy": "MW-C137-papito",
+        "introducedAt": 828,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C137-THINGS137-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C137-anar",
+        "introducedAt": 829,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C137-THINGS137-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C137-khajur",
+        "introducedAt": 830,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C137-THINGS137-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C137-narel",
+        "introducedAt": 831,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C138-THINGS138-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C138-balad",
+        "introducedAt": 832,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C138-THINGS138-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C138-bachhro",
+        "introducedAt": 833,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C138-THINGS138-03",
+        "language": "marwadi",
+        "introducedBy": "MW-C138-hiran",
+        "introducedAt": 834,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C138-THINGS138-04",
+        "language": "marwadi",
+        "introducedBy": "MW-C138-lukri",
+        "introducedAt": 835,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C138-THINGS138-05",
+        "language": "marwadi",
+        "introducedBy": "MW-C138-siyal",
+        "introducedAt": 836,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C139-THINGS139-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C139-kaglo",
+        "introducedAt": 837,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C139-THINGS139-02",
+        "language": "marwadi",
+        "introducedBy": "MW-C139-kabutar",
+        "introducedAt": 838,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MW-LEX-C140-THINGS140-01",
+        "language": "marwadi",
+        "introducedBy": "MW-C140-undro",
+        "introducedAt": 844,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C80-TIME80-01",
+        "atom": "MW-LEX-C140-THINGS140-02",
         "language": "marwadi",
-        "introducedBy": "MW-C80-hamesa",
-        "introducedAt": 532,
+        "introducedBy": "MW-C140-makhi",
+        "introducedAt": 845,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C80-TIME80-02",
+        "atom": "MW-LEX-C140-THINGS140-03",
         "language": "marwadi",
-        "introducedBy": "MW-C80-kadi",
-        "introducedAt": 533,
+        "introducedBy": "MW-C140-machchhar",
+        "introducedAt": 846,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C80-TIME80-03",
+        "atom": "MW-LEX-C140-THINGS140-04",
         "language": "marwadi",
-        "introducedBy": "MW-C80-jaldi",
-        "introducedAt": 534,
+        "introducedBy": "MW-C140-kiri",
+        "introducedAt": 847,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C80-TIME80-04",
+        "atom": "MW-LEX-C140-THINGS140-05",
         "language": "marwadi",
-        "introducedBy": "MW-C80-der",
-        "introducedAt": 535,
+        "introducedBy": "MW-C140-bichhu",
+        "introducedAt": 848,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C80-TIME80-05",
+        "atom": "MW-LEX-C141-QUAL141-01",
         "language": "marwadi",
-        "introducedBy": "MW-C80-paila",
-        "introducedAt": 536,
+        "introducedBy": "MW-C141-chokho",
+        "introducedAt": 849,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C81-PLACE81-01",
+        "atom": "MW-LEX-C141-QUAL141-02",
         "language": "marwadi",
-        "introducedBy": "MW-C81-dur",
-        "introducedAt": 537,
+        "introducedBy": "MW-C141-kharab",
+        "introducedAt": 850,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C81-PLACE81-02",
+        "atom": "MW-LEX-C141-QUAL141-03",
         "language": "marwadi",
-        "introducedBy": "MW-C81-najik",
-        "introducedAt": 538,
+        "introducedBy": "MW-C141-sakro",
+        "introducedAt": 851,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C81-PLACE81-03",
+        "atom": "MW-LEX-C141-QUAL141-04",
         "language": "marwadi",
-        "introducedBy": "MW-C81-may",
-        "introducedAt": 539,
+        "introducedBy": "MW-C141-chauro",
+        "introducedAt": 852,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C81-PLACE81-04",
+        "atom": "MW-LEX-C141-QUAL141-05",
         "language": "marwadi",
-        "introducedBy": "MW-C81-barai",
-        "introducedAt": 540,
+        "introducedBy": "MW-C141-gairo",
+        "introducedAt": 853,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C81-PLACE81-05",
+        "atom": "MW-LEX-C142-QUAL142-01",
         "language": "marwadi",
-        "introducedBy": "MW-C81-niche",
-        "introducedAt": 541,
+        "introducedBy": "MW-C142-halko",
+        "introducedAt": 854,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C82-PLACE82-01",
+        "atom": "MW-LEX-C142-QUAL142-02",
         "language": "marwadi",
-        "introducedBy": "MW-C82-athai",
-        "introducedAt": 542,
+        "introducedBy": "MW-C142-karak",
+        "introducedAt": 855,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C82-PLACE82-02",
+        "atom": "MW-LEX-C142-QUAL142-03",
         "language": "marwadi",
-        "introducedBy": "MW-C82-bathai",
-        "introducedAt": 543,
+        "introducedBy": "MW-C142-naram",
+        "introducedAt": 856,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C82-PLACE82-03",
+        "atom": "MW-LEX-C142-QUAL142-04",
         "language": "marwadi",
-        "introducedBy": "MW-C82-sarak",
-        "introducedAt": 544,
+        "introducedBy": "MW-C142-gilo",
+        "introducedAt": 857,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C82-PLACE82-04",
+        "atom": "MW-LEX-C142-QUAL142-05",
         "language": "marwadi",
-        "introducedBy": "MW-C82-gali",
-        "introducedAt": 545,
+        "introducedBy": "MW-C142-suko",
+        "introducedAt": 858,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C82-PLACE82-05",
+        "atom": "MW-LEX-C143-QUAL143-01",
         "language": "marwadi",
-        "introducedBy": "MW-C82-tesan",
-        "introducedAt": 546,
+        "introducedBy": "MW-C143-tato",
+        "introducedAt": 859,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C83-TOWN83-01",
+        "atom": "MW-LEX-C143-QUAL143-02",
         "language": "marwadi",
-        "introducedBy": "MW-C83-pul",
-        "introducedAt": 547,
+        "introducedBy": "MW-C143-kharo",
+        "introducedAt": 860,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C83-TOWN83-02",
+        "atom": "MW-LEX-C143-QUAL143-03",
         "language": "marwadi",
-        "introducedBy": "MW-C83-hotal",
-        "introducedAt": 548,
+        "introducedBy": "MW-C143-khato",
+        "introducedAt": 861,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C83-TOWN83-03",
+        "atom": "MW-LEX-C143-QUAL143-04",
         "language": "marwadi",
-        "introducedBy": "MW-C83-pulis",
-        "introducedAt": 549,
+        "introducedBy": "MW-C143-karvo",
+        "introducedAt": 862,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C83-TOWN83-04",
+        "atom": "MW-LEX-C143-QUAL143-05",
         "language": "marwadi",
-        "introducedBy": "MW-C83-nav",
-        "introducedAt": 550,
+        "introducedBy": "MW-C143-tikho",
+        "introducedAt": 863,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C83-TOWN83-05",
+        "atom": "MW-LEX-C144-QUAL144-01",
         "language": "marwadi",
-        "introducedBy": "MW-C83-saikal",
-        "introducedAt": 551,
+        "introducedBy": "MW-C144-sundar",
+        "introducedAt": 864,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C84-TOWN84-01",
+        "atom": "MW-LEX-C144-QUAL144-02",
         "language": "marwadi",
-        "introducedBy": "MW-C84-gav",
-        "introducedAt": 552,
+        "introducedBy": "MW-C144-rupalo",
+        "introducedAt": 865,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C84-TOWN84-02",
+        "atom": "MW-LEX-C144-QUAL144-03",
         "language": "marwadi",
-        "introducedBy": "MW-C84-sahar",
-        "introducedAt": 553,
+        "introducedBy": "MW-C144-javan",
+        "introducedAt": 866,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C84-TOWN84-03",
+        "atom": "MW-LEX-C144-QUAL144-04",
         "language": "marwadi",
-        "introducedBy": "MW-C84-kurto",
-        "introducedAt": 554,
+        "introducedBy": "MW-C144-dubalo",
+        "introducedAt": 867,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C84-TOWN84-04",
+        "atom": "MW-LEX-C144-QUAL144-05",
         "language": "marwadi",
-        "introducedBy": "MW-C84-pajamo",
-        "introducedAt": 555,
+        "introducedBy": "MW-C144-thigno",
+        "introducedAt": 868,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C84-TOWN84-05",
+        "atom": "MW-LEX-C145-QUAL145-01",
         "language": "marwadi",
-        "introducedBy": "MW-C84-juti",
-        "introducedAt": 556,
+        "introducedBy": "MW-C145-gulabi",
+        "introducedAt": 869,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C85-CLOTHES85-01",
+        "atom": "MW-LEX-C145-QUAL145-02",
         "language": "marwadi",
-        "introducedBy": "MW-C85-mojo",
-        "introducedAt": 557,
+        "introducedBy": "MW-C145-kesariyo",
+        "introducedAt": 870,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C85-CLOTHES85-02",
+        "atom": "MW-LEX-C145-QUAL145-03",
         "language": "marwadi",
-        "introducedBy": "MW-C85-jeb",
-        "introducedAt": 558,
+        "introducedBy": "MW-C145-asmani",
+        "introducedAt": 871,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C85-CLOTHES85-03",
+        "atom": "MW-LEX-C145-QUAL145-04",
         "language": "marwadi",
-        "introducedBy": "MW-C85-anguthi",
-        "introducedAt": 559,
+        "introducedBy": "MW-C145-baingni",
+        "introducedAt": 872,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C85-CLOTHES85-04",
+        "atom": "MW-LEX-C145-QUAL145-05",
         "language": "marwadi",
-        "introducedBy": "MW-C85-ghari",
-        "introducedAt": 560,
+        "introducedBy": "MW-C145-narangi",
+        "introducedAt": 873,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C85-CLOTHES85-05",
+        "atom": "MW-LEX-C146-QUAL146-01",
         "language": "marwadi",
-        "introducedBy": "MW-C85-topi",
-        "introducedAt": 561,
+        "introducedBy": "MW-C146-chamkilo",
+        "introducedAt": 874,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C86-NUMBERS86-01",
+        "atom": "MW-LEX-C146-QUAL146-02",
         "language": "marwadi",
-        "introducedBy": "MW-C86-tis",
-        "introducedAt": 562,
+        "introducedBy": "MW-C146-sant",
+        "introducedAt": 875,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C86-NUMBERS86-02",
+        "atom": "MW-LEX-C146-QUAL146-03",
         "language": "marwadi",
-        "introducedBy": "MW-C86-chalis",
-        "introducedAt": 563,
+        "introducedBy": "MW-C146-husiyar",
+        "introducedAt": 876,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C86-NUMBERS86-03",
+        "atom": "MW-LEX-C146-QUAL146-04",
         "language": "marwadi",
-        "introducedBy": "MW-C86-pachas",
-        "introducedAt": 564,
+        "introducedBy": "MW-C146-bavalo",
+        "introducedAt": 877,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C86-NUMBERS86-04",
+        "atom": "MW-LEX-C146-QUAL146-05",
         "language": "marwadi",
-        "introducedBy": "MW-C86-sath",
-        "introducedAt": 565,
+        "introducedBy": "MW-C146-alsi",
+        "introducedAt": 878,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MW-LEX-C86-NUMBERS86-05",
+        "atom": "MW-LEX-C147-QUAL147-01",
         "language": "marwadi",
-        "introducedBy": "MW-C86-sittar",
-        "introducedAt": 566,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MW-LEX-C87-NUMBERS87-01",
-        "language": "marwadi",
-        "introducedBy": "MW-C87-assi",
-        "introducedAt": 567,
+        "introducedBy": "MW-C147-mehanti",
+        "introducedAt": 879,
         "missed": [
           "R2"
         ],
@@ -208948,12 +212411,12 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 584,
+        "lessonCount": 896,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 531,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 831,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 0
       },
       {
@@ -209052,14 +212515,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 18195,
-      "atomsNeverRevisited": 175,
+      "atomsTaught": 18495,
+      "atomsNeverRevisited": 174,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1756,
-        "R2": 11680,
-        "R3": 10552,
-        "R4": 12693
+        "R2": 11914,
+        "R3": 10660,
+        "R4": 12994
       },
       "forwardReferences": 921
     }
@@ -209186,7 +212649,7 @@
       {
         "language": "marwadi",
         "script": "devanagari",
-        "lessonCount": 584,
+        "lessonCount": 896,
         "scriptLessons": 53,
         "taughtGlyphs": 55,
         "shownGlyphs": 55,
@@ -230201,8 +233664,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 584,
-        "atomMeasurableLessons": 583,
+        "lessonCount": 896,
+        "atomMeasurableLessons": 895,
         "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -230217,14 +233680,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 531,
-        "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 508,
+        "atomsTaught": 831,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 1151,
         "reinforcementMissesByWindow": {
           "R1": 1,
-          "R2": 210,
-          "R3": 148,
-          "R4": 149
+          "R2": 444,
+          "R3": 256,
+          "R4": 450
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 59,
@@ -230234,7 +233697,7 @@
           {
             "language": "marwadi",
             "kind": "reinforcement",
-            "count": 508,
+            "count": 1151,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -230249,7 +233712,7 @@
         "next": {
           "language": "marwadi",
           "kind": "reinforcement",
-          "count": 508,
+          "count": 1151,
           "unit": "missed window(s)",
           "detail": "add retrieval at the expanding R1-R4 intervals"
         }
@@ -231564,16 +235027,16 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "bengali",
+        "language": "marwadi",
         "kind": "reinforcement",
-        "count": 792,
+        "count": 1151,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "marwadi",
+        "language": "bengali",
         "kind": "reinforcement",
-        "count": 508,
+        "count": 792,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -232095,26 +235558,31 @@
       {
         "language": "marwadi",
         "touches": "A1",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A1",
+        "inProgressAt": "A2",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "1 cumulative writing stage(s) unproved at A2: connected-composition",
+            "shortfall": 1
+          },
+          {
             "criterion": "spine-nodes",
-            "detail": "10 of 12 A1 spine node(s) unrealized: SPINE-TIME-OF-DAY, SPINE-ASK-LOCATION, SPINE-DEFINITE-REFERENCE, SPINE-NAME-EVERYDAY-ACTIONS…",
-            "shortfall": 10
+            "detail": "5 of 5 A2 spine node(s) unrealized: SPINE-SAY-WHAT-I-DO, SPINE-NEGATE-AND-ASK, SPINE-TALK-ABOUT-PAST, SPINE-TALK-ABOUT-FUTURE…",
+            "shortfall": 5
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 324 distinct headwords at or below A1, against 600",
-            "shortfall": 276
+            "detail": "teaches 624 distinct headwords at or below A2, against 1200",
+            "shortfall": 576
           },
           {
-            "criterion": "reinforcement",
-            "detail": "1 atom(s) at or below A1 are revisited fewer than twice",
-            "shortfall": 1
+            "criterion": "verb-vocabulary",
+            "detail": "teaches 86 distinct verb headwords at or below A2, against 120",
+            "shortfall": 34
           }
         ],
-        "vocabulary": 324
+        "vocabulary": 624
       },
       {
         "language": "persian",
@@ -232269,11 +235737,11 @@
       }
     ],
     "summary": {
-      "tracksOverstating": 23,
+      "tracksOverstating": 22,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
-        "pre-A1": 14,
-        "A1": 8,
+        "pre-A1": 13,
+        "A1": 9,
         "A2": 0,
         "B1": 0,
         "B2": 0,
@@ -232284,11 +235752,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 17074,
-    "voice": 14733,
+    "totalLessons": 17386,
+    "voice": 15045,
     "sight": 991,
     "pen": 1350,
-    "coreVoice": 15310,
+    "coreVoice": 15622,
     "lessonsWithWritingSegments": 867,
     "drivablePercent": 90,
     "tracks": [
@@ -257802,13 +261270,13 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 584,
-        "voice": 487,
+        "lessonCount": 896,
+        "voice": 799,
         "sight": 40,
         "pen": 57,
-        "coreVoice": 493,
-        "drivablePercent": 84,
-        "drivablePrefixTotal": 324,
+        "coreVoice": 805,
+        "drivablePercent": 90,
+        "drivablePrefixTotal": 636,
         "chapters": [
           {
             "language": "marwadi",
@@ -259105,6 +262573,846 @@
           {
             "language": "marwadi",
             "chapter": 89,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 90,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 91,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 92,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 93,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 94,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 95,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 96,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 97,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 98,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 99,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 100,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 101,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 102,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 103,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 104,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 105,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 106,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 107,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 108,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 109,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 110,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 111,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 112,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 113,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 114,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 115,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 116,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 117,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 118,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 119,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 120,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 121,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 122,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 123,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 124,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 125,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 126,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 127,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 128,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 129,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 130,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 131,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 132,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 133,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 134,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 135,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 136,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 137,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 138,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 139,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 140,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 141,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 142,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 143,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 144,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 145,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 146,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 147,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 148,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marwadi",
+            "chapter": 149,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -282752,7 +287060,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 17074,
+    "lessons": 17386,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -282760,11 +287068,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 17074,
-    "measuredLessons": 12901,
-    "idiomMeasuredLessons": 12901,
-    "senseMeasuredLessons": 12902,
-    "cultureClaimMeasuredLessons": 12901,
+    "lessons": 17386,
+    "measuredLessons": 13213,
+    "idiomMeasuredLessons": 13213,
+    "senseMeasuredLessons": 13214,
+    "cultureClaimMeasuredLessons": 13213,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -282773,8 +287081,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 16163,
-    "usesBeforeIntroduction": 33624,
+    "lessonsUsingTerms": 16475,
+    "usesBeforeIntroduction": 33937,
     "technicalUsesBeforeIntroduction": 6317,
     "technicalLessons": 3551,
     "worstTerms": [
@@ -282805,12 +287113,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 17074,
+    "lessonsScanned": 17386,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 3546,
+    "filesScanned": 3606,
     "mainCharacters": 134,
     "scriptCharacters": 801,
     "gaps": 0
