@@ -16,6 +16,9 @@ Portable classes retain leading-`!` negation, ascending ranges, literal leading
 `&&`, `~~`, and `||` operators return one typed stable error before matching.
 Unmatched `[` remains literal, and no host glob, regular-expression, process,
 environment, or network authority enters the decision.
+The compatibility `match_path` helper converts invalid syntax to a non-match
+without panicking; BUILD-file hosts use the typed API and complete-list
+preflight above so invalid input remains distinguishable from a non-match.
 
 ## Building
 

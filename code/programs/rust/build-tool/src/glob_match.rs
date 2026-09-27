@@ -115,7 +115,7 @@ pub(crate) struct CompiledPattern {
     segments: Vec<CompiledSegment>,
 }
 
-/// Match a file path against a glob pattern.
+/// Match a file path against a glob pattern for compatibility callers.
 ///
 /// Supports the portable BUILD glob forms:
 ///   - `**` — matches zero or more path segments (crosses `/` boundaries)
@@ -125,6 +125,9 @@ pub(crate) struct CompiledPattern {
 ///
 /// Both the pattern and path are normalized to use `/` as the separator
 /// before matching, so this works correctly on all platforms.
+/// Invalid portable syntax does not panic: it returns `false`. BUILD-file
+/// hosts that must distinguish invalid syntax from a non-match use
+/// [`try_match_path`] or compile the complete declared list first.
 ///
 /// # Examples
 ///
@@ -144,7 +147,7 @@ pub(crate) struct CompiledPattern {
 /// assert!(!match_path("?.py", "ab.py"));
 /// ```
 pub fn match_path(pattern: &str, path: &str) -> bool {
-    try_match_path(pattern, path).unwrap_or_else(|error| panic!("{error}"))
+    try_match_path(pattern, path).unwrap_or(false)
 }
 
 /// Match a path while preserving invalid portable syntax as a typed error.
@@ -713,6 +716,11 @@ mod tests {
                 "{pattern}"
             );
         }
+    }
+
+    #[test]
+    fn compatibility_matcher_does_not_panic_on_invalid_syntax() {
+        assert!(!match_path("[z-a].txt", "z.txt"));
     }
 
     #[test]
