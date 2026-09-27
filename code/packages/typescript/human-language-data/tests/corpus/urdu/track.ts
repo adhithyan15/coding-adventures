@@ -3,7 +3,7 @@ import {
   expectLanguageContinuity,
   expectLanguageLessonBudgets,
   expectLanguageModality,
-} from "./assert-language-corpus.js";
+} from "../assert-language-corpus.js";
 it("pins Urdu continuity", () => expectLanguageContinuity("urdu"));
 it("pins Urdu modality", () => expectLanguageModality("urdu"));
 it("pins Urdu lesson-content budgets", () =>

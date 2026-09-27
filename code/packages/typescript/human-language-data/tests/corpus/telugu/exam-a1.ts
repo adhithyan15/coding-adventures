@@ -1,39 +1,21 @@
 import { expect, it } from "vitest";
-import { measureContinuity } from "../../src/continuity.js";
+import { measureContinuity } from "../../../src/continuity.js";
 import {
   defaultCurriculumRoot,
   loadEverything,
   loadExamInventory,
   loadTrackLessons,
-} from "../../src/loader.js";
+} from "../../../src/loader.js";
 import {
   formatExamCoverage,
   measureExamCoverage,
   trackIntroducedAtoms,
-} from "../../src/exam-inventory.js";
+} from "../../../src/exam-inventory.js";
 import {
   expectLanguageContinuity,
   expectLanguageModality,
   languageWritingStages,
-} from "./assert-language-corpus.js";
-it("pins Telugu continuity", () => expectLanguageContinuity("telugu"));
-it("pins Telugu modality", () => expectLanguageModality("telugu"));
-it("keeps Telugu's opening free of future farewells and pronouns", () => {
-  const references = measureContinuity(
-    loadTrackLessons("telugu", defaultCurriculumRoot()),
-  ).forwardReferences;
-  expect(references.length).toBeLessThanOrEqual(12);
-  expect(references.filter((reference) => /-C0[12]-/.test(reference.lessonId))).toEqual([]);
-});
-
-// ---------------------------------------------------------------------------
-// THE TELUGU A1 INVENTORY HAD NO ASSERTION AT ALL, and that is the failure mode
-// HL-C350's repairs were told to avoid: landing atoms and wiring probes, while
-// the coverage number nothing reads stays whatever it was. A stale pin that
-// agrees merges silently. These two tests are the pin, and they were falsified
-// before being kept -- a fabricated atom id fails the first, and nulling
-// TE-A1-NUM-04's probe fails the second.
-// ---------------------------------------------------------------------------
+} from "../assert-language-corpus.js";
 it("probes only Telugu atoms that EXIST, so a guessed id cannot under-report", () => {
   const { lessons } = loadEverything();
   const taught = trackIntroducedAtoms(lessons, "telugu");
@@ -119,27 +101,3 @@ it("pins Telugu A1 coverage, and the numeral column the ordinal tranche closed",
   );
 }, 60_000);
 
-it("pins Telugu's pre-A1 writing ladder", () => {
-  const track = languageWritingStages("telugu");
-
-  // The track had NO stage evidence at all -- 49 script lessons and not one
-  // writing-stage directive -- so every one of its writing-stage debts read as
-  // outstanding while the lessons that could discharge them sat unmarked.
-  //
-  // The ORDER is asserted rather than the set. `missing-stage-prerequisite`
-  // makes a delayed copy invalid unless the tracing and the guided copy come
-  // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
-  // whose rungs are in the wrong order and therefore prove nothing.
-  expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
-    ["TE-S01-letter-ta", "observe-trace"],
-    ["TE-S01-copy-in-a-word", "guided-copy"],
-    ["TE-S01-delayed-copy", "delayed-copy"],
-    ["TE-S01-dictation", "dictation-transcription"],
-  ]);
-  expect(track.defects).toEqual([]);
-  expect(track.levels[0]).toMatchObject({
-    level: "pre-A1",
-    missingStages: [],
-    complete: true,
-  });
-});

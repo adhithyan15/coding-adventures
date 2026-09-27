@@ -1,17 +1,22 @@
 # Language-owned corpus tests
 
-Each language owns its exact corpus assertions in this directory. A low-churn
-track may use `<language>.test.ts`. Once agents are working on the same track in
-parallel, give it a `<language>/` directory and put each stable concern or chapter
-regression in its own `*.test.ts` owner. Keep the top-level test files for
-algorithm fixtures and genuine cross-language invariants; do not add another
-language's expected totals there.
+Each language owns its exact corpus assertions in this directory. Indian tracks
+use a `<language>/` directory with each stable concern or chapter regression in
+its own plain TypeScript module. A tiny `index.test.ts` explicitly imports the
+sorted owner manifest, rejects duplicate or unsafe owner names, and prevents the
+retired `<language>.test.ts` aggregate from returning. Keeping the owner modules
+out of Vitest's `*.test.ts` discovery preserves one worker entry point and the
+original assertion count per language while still allowing independent edits.
+Keep the top-level test files for algorithm fixtures and genuine cross-language
+invariants; do not add another language's expected totals there.
 
-Malayalam and Hindi are the reference same-language layouts. Their track,
+Bengali, Gujarati, Hindi, Kannada, Malayalam, Marathi, Marwadi, Punjabi,
+Sanskrit, Tamil, Telugu, and Urdu now use this same-language layout. Their track,
 opening/writing, exam, romanization/script-order, and chapter regressions have
 independent owners under `corpus/<language>/`. A new chapter regression gets a
-new chapter-named test file; it must not recreate the retired flat aggregate or
-append to an unrelated concern. Their A1 tests derive totals from the inventory
+new chapter-named owner module and an explicit entrypoint import; it must not
+recreate the retired flat aggregate or append to an unrelated concern. The Hindi
+and Malayalam A1 tests derive totals from the inventory
 and prove every mapped probe is actually taught. Hindi's content-budget suite
 derives the canonical schema-v2 lesson count while retaining complete
 measurement and zero-excess gates. Point-specific audit history stays with the

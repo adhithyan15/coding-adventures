@@ -87,6 +87,13 @@ under `tests/exam-inventories/<language>.test.ts` or a track's older independent
 `tests/exam-inventory-<language>.test.ts`. Adding one track's lesson or probe must
 not edit a corpus-wide exam test.
 
+Exact Indian-track corpus regressions follow the same ownership rule. Bengali,
+Gujarati, Hindi, Kannada, Malayalam, Marathi, Marwadi, Punjabi, Sanskrit, Tamil,
+Telugu, and Urdu keep stable concern or chapter modules under
+`tests/corpus/<language>/`. Each language's tiny `index.test.ts` explicitly loads
+its sorted owner manifest, rejects duplicate or unsafe owner names, and blocks
+the retired flat aggregate without changing the language's assertion count.
+
 The Hindi and Malayalam A1 inventories are point-owned as well. Each `_meta.json` holds the
 stable source/scope contract plus the ordered point-id completeness manifest;
 each `NNNN-<point-id>.json` owns exactly one full point. The loader reconstructs

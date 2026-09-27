@@ -1069,6 +1069,12 @@ Tamil, and other script authors add or update only their inventory's evidence
 file; the integration gate remains a cross-corpus entry point rather than a
 shared edit surface.
 
+Indian-track corpus regressions are partitioned by stable concern or chapter
+under `tests/corpus/<language>/`. One explicit `index.test.ts` per language loads
+the sorted owner manifest and rejects duplicate names, unsafe slugs, or a
+restored flat aggregate. This keeps the original assertions and one Vitest
+worker entry point per language while removing the shared test-file bottleneck.
+
 For a lesson declaring `schema_version: 2`, `validateCurriculum()` additionally
 enforces its canonical spine node, unique per-language sequence, 1–299 second
 declared and computed duration, stable typed body sections, explicit

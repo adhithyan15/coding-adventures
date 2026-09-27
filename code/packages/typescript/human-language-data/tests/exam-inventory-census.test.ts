@@ -41,7 +41,7 @@
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { defaultCurriculumRoot, listExamInventories, loadEverything, loadExamInventory } from "../src/loader.js";
@@ -113,15 +113,28 @@ function committedInventories(root = defaultCurriculumRoot()): CommittedInventor
     });
 }
 
-/** Every `*.test.ts` under `tests/`, so a pin may live wherever it belongs. */
+/**
+ * Every `*.test.ts` under `tests/`, plus explicitly loaded corpus owner modules.
+ *
+ * The corpus entrypoint verifies that those plain `*.ts` owners are complete
+ * and imports them into the suite. Reading them here keeps coverage pins visible
+ * after a language aggregate is split without turning every owner into another
+ * Vitest worker entrypoint.
+ */
 function suiteSources(directory = TESTS_ROOT): { path: string; text: string }[] {
   const found: { path: string; text: string }[] = [];
+  const corpusRoot = resolve(TESTS_ROOT, "corpus");
+  const resolvedDirectory = resolve(directory);
+  const isCorpusTree =
+    resolvedDirectory === corpusRoot || resolvedDirectory.startsWith(`${corpusRoot}${sep}`);
   for (const entry of readdirSync(directory, { withFileTypes: true }).sort((a, b) =>
     a.name.localeCompare(b.name),
   )) {
     const path = join(directory, entry.name);
     if (entry.isDirectory()) found.push(...suiteSources(path));
-    else if (entry.name.endsWith(".test.ts")) found.push({ path, text: readFileSync(path, "utf8") });
+    else if (entry.name.endsWith(".test.ts") || (isCorpusTree && entry.name.endsWith(".ts"))) {
+      found.push({ path, text: readFileSync(path, "utf8") });
+    }
   }
   return found;
 }
