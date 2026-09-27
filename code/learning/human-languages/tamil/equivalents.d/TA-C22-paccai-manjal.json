@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C22-paccai-manjal",
+  "english": "green and yellow",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಸಿರು, ಹಳದಿ",
+      "romanization": "hasiru haḷadi"
+    },
+    {
+      "language": "telugu",
+      "form": "పచ్చ, పసుపు",
+      "romanization": "pacca pasupu"
+    },
+    {
+      "language": "malayalam",
+      "form": "പച്ച, മഞ്ഞ",
+      "romanization": "pacca, mañña",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "हरा",
+      "romanization": "harā"
+    }
+  ],
+  "source": "cross-track match: KA-C22-hasiru-haladi, TE-C22-pacha-pasupu, ML-C22-paccha-manja, HI-C24-hara-pila; sameRoot judged by the author, awaiting native review"
+}

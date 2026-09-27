@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C59-jaggery",
+  "english": "jaggery",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆಲ್ಲ",
+      "romanization": "bella",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ശർക്കര",
+      "romanization": "śarkkara"
+    }
+  ],
+  "source": "cross-track match: KA-C61-jaggery, ML-C61-jaggery; sameRoot judged by the author, awaiting native review"
+}

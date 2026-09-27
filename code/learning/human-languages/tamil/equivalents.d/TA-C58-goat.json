@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C58-goat",
+  "english": "a goat",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೇಕೆ",
+      "romanization": "mēke"
+    },
+    {
+      "language": "telugu",
+      "form": "మేక",
+      "romanization": "mēka"
+    },
+    {
+      "language": "malayalam",
+      "form": "ആട്",
+      "romanization": "āṭŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बकरी",
+      "romanization": "bakrī"
+    }
+  ],
+  "source": "cross-track match: KA-C60-goat, TE-C60-goat, ML-C60-goat, HI-C54-goat; sameRoot judged by the author, awaiting native review"
+}

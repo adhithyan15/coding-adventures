@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C48-set-out",
+  "english": "to set out",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೊರಡು",
+      "romanization": "horaḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "బయలుదేరు",
+      "romanization": "bayaludēru"
+    },
+    {
+      "language": "malayalam",
+      "form": "പുറപ്പെടുക",
+      "romanization": "puṟappeṭuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "निकलना",
+      "romanization": "nikalnā"
+    }
+  ],
+  "source": "cross-track match: KA-C50-set-out, TE-C50-set-out, ML-C50-set-out, HI-C49-set-out; sameRoot judged by the author, awaiting native review"
+}

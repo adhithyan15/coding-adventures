@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C44-cloth",
+  "english": "cloth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಟ್ಟೆ",
+      "romanization": "baṭṭe"
+    },
+    {
+      "language": "telugu",
+      "form": "బట్ట",
+      "romanization": "baṭṭa"
+    },
+    {
+      "language": "malayalam",
+      "form": "തുണി",
+      "romanization": "tuṇi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कपड़ा",
+      "romanization": "kapṛā"
+    }
+  ],
+  "source": "cross-track match: KA-C46-cloth, TE-C46-cloth, ML-C46-cloth, HI-C45-cloth; sameRoot judged by the author, awaiting native review"
+}

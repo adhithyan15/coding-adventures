@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C141-tivu",
+  "english": "an island",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದ್ವೀಪ",
+      "romanization": "dvīpa"
+    },
+    {
+      "language": "telugu",
+      "form": "దీవి",
+      "romanization": "dīvi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ദ്വീപ്",
+      "romanization": "dvīpŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C128-dvipa, TE-C122-divi, ML-C148-dvipu; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C02-magizhcci",
+  "english": "joy / pleased to meet you",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಂತೋಷ",
+      "romanization": "santōṣa"
+    },
+    {
+      "language": "telugu",
+      "form": "సంతోషం",
+      "romanization": "santōṣam"
+    },
+    {
+      "language": "malayalam",
+      "form": "സന്തോഷം",
+      "romanization": "santōṣaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "आपसे मिलकर ख़ुशी हुई",
+      "romanization": "āpse milkar khushī huī"
+    }
+  ],
+  "source": "cross-track match: KA-C02-santosha, TE-C02-santosham, ML-C02-santosham, HI-C02-khushi"
+}

@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C51-sun",
+  "english": "the sun",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸೂರ್ಯ",
+      "romanization": "sūrya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "సూర్యుడు",
+      "romanization": "sūryuḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "സൂര്യൻ",
+      "romanization": "sūryan",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "सूरज",
+      "romanization": "sūraj",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C129-surya, TE-C53-sun, ML-C53-sun, HI-C55-sun; sameRoot judged by the author, awaiting native review"
+}

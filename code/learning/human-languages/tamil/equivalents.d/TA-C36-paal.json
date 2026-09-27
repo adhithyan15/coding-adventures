@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C36-paal",
+  "english": "milk",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಾಲು",
+      "romanization": "hālu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పాలు",
+      "romanization": "pālu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പാൽ",
+      "romanization": "pāl",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "दूध",
+      "romanization": "dūdh"
+    }
+  ],
+  "source": "cross-track match: KA-C39-haalu, TE-C39-paalu, ML-C39-paal, HI-C37-dudh; sameRoot judged by the author, awaiting native review"
+}

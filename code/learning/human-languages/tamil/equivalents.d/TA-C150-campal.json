@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C150-campal",
+  "english": "grey",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೂದು",
+      "romanization": "būdu"
+    },
+    {
+      "language": "telugu",
+      "form": "బూడిద",
+      "romanization": "būḍida"
+    }
+  ],
+  "source": "cross-track match: KA-C144-budu, TE-C140-budida"
+}

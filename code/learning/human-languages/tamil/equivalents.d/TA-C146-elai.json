@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C146-elai",
+  "english": "poor",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಡ",
+      "romanization": "baḍa"
+    },
+    {
+      "language": "telugu",
+      "form": "పేద",
+      "romanization": "pēda"
+    },
+    {
+      "language": "hindi",
+      "form": "ग़रीब",
+      "romanization": "ġarīb"
+    }
+  ],
+  "source": "cross-track match: KA-C143-bada, TE-C139-peda, HI-C157-garib"
+}

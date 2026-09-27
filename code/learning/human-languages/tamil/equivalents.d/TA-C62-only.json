@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C62-only",
+  "english": "only",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "మాత్రమే",
+      "romanization": "mātramē",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "മാത്രം",
+      "romanization": "mātraṁ",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: TE-C64-only, ML-C64-only; sameRoot judged by the author, awaiting native review"
+}

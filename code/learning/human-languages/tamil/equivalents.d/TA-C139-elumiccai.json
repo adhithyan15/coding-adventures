@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C139-elumiccai",
+  "english": "a lemon",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಿಂಬೆ",
+      "romanization": "nimbe"
+    },
+    {
+      "language": "telugu",
+      "form": "నిమ్మకాయ",
+      "romanization": "nimmakāya"
+    },
+    {
+      "language": "malayalam",
+      "form": "നാരങ്ങ",
+      "romanization": "nāraṅṅa"
+    }
+  ],
+  "source": "cross-track match: KA-C126-nimbe, TE-C135-nimmakaya, ML-C133-lemon"
+}

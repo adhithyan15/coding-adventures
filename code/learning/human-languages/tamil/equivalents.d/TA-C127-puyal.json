@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C127-puyal",
+  "english": "a storm",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಿರುಗಾಳಿ",
+      "romanization": "birugāḷi",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "తుపాను",
+      "romanization": "tupānu"
+    },
+    {
+      "language": "hindi",
+      "form": "आँधी",
+      "romanization": "ā̃dhī"
+    }
+  ],
+  "source": "cross-track match: KA-C128-birugali, TE-C121-tupanu, HI-C145-adhi; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C82-fifth",
+  "english": "fifth",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "ఐదవ",
+      "romanization": "aidava",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "पाँचवाँ",
+      "romanization": "pā̃cvā̃"
+    }
+  ],
+  "source": "cross-track match: TE-C81-fifth, HI-C75-fifth; sameRoot judged by the author, awaiting native review"
+}

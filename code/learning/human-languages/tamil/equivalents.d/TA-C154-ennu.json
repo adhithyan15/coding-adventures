@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C154-ennu",
+  "english": "to count",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎಣಿಸು",
+      "romanization": "eṇisu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "లెక్కపెట్టు",
+      "romanization": "lekkapeṭṭu"
+    },
+    {
+      "language": "hindi",
+      "form": "गिनना",
+      "romanization": "ginnā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C149-enisu, TE-C146-lekkapettu, HI-C165-ginna; sameRoot judged by the author, awaiting native review"
+}

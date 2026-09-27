@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C91-sunshine",
+  "english": "sunshine, the heat of the sun",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಿಸಿಲು",
+      "romanization": "bisilu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "വെയിൽ",
+      "romanization": "veyil",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C53-sunshine, ML-C53-sunshine; sameRoot judged by the author, awaiting native review"
+}

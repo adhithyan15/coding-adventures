@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C118-tattu",
+  "english": "a plate",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತಟ್ಟೆ",
+      "romanization": "taṭṭe",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പ്ലേറ്റ്",
+      "romanization": "plēṟṟŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C94-plate, ML-C134-plate; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C147-tairiyamana",
+  "english": "brave",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಧೈರ್ಯವಂತ",
+      "romanization": "dhairyavanta",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ധൈര്യമുള്ള",
+      "romanization": "dhairyamuḷḷa",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C146-dhairyavanta, ML-C168-dhairyamulla; sameRoot judged by the author, awaiting native review"
+}

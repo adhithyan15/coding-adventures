@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C113-pinnal",
+  "english": "behind",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "వెనక",
+      "romanization": "venaka"
+    },
+    {
+      "language": "hindi",
+      "form": "के पीछे",
+      "romanization": "ke pīche"
+    }
+  ],
+  "source": "cross-track match: TE-C101-venaka, HI-C93-ke-piichhe"
+}

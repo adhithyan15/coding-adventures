@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C47-perhaps",
+  "english": "perhaps",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಹುಶಃ",
+      "romanization": "bahuśaḥ"
+    },
+    {
+      "language": "telugu",
+      "form": "ఏమో",
+      "romanization": "ēmō"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഒരുപക്ഷേ",
+      "romanization": "orupakṣē"
+    },
+    {
+      "language": "hindi",
+      "form": "शायद",
+      "romanization": "śāyad"
+    }
+  ],
+  "source": "cross-track match: KA-C49-perhaps, TE-C49-perhaps, ML-C49-perhaps, HI-C48-perhaps"
+}

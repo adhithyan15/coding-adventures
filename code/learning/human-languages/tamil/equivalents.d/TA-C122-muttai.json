@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C122-muttai",
+  "english": "an egg",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊಟ್ಟೆ",
+      "romanization": "moṭṭe",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గుడ్డు",
+      "romanization": "guḍḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "മുട്ട",
+      "romanization": "muṭṭa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "अंडा",
+      "romanization": "aṇḍā"
+    }
+  ],
+  "source": "cross-track match: KA-C122-motte, TE-C116-guddu, ML-C131-egg, HI-C137-anda; sameRoot judged by the author, awaiting native review"
+}

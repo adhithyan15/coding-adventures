@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C87-tiredness",
+  "english": "tiredness",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆಯಾಸ",
+      "romanization": "āyāsa"
+    },
+    {
+      "language": "telugu",
+      "form": "అలసట",
+      "romanization": "alasaṭa"
+    },
+    {
+      "language": "malayalam",
+      "form": "ക്ഷീണം",
+      "romanization": "kṣīṇaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "थकान",
+      "romanization": "thakān"
+    }
+  ],
+  "source": "cross-track match: KA-C82-tiredness, TE-C84-tiredness, ML-C63-tiredness, HI-C106-thakan"
+}

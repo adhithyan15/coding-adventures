@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C20-vaanilai",
+  "english": "weather",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹವಾಮಾನ",
+      "romanization": "havāmāna"
+    },
+    {
+      "language": "telugu",
+      "form": "వాతావరణం",
+      "romanization": "vātāvaraṇam"
+    },
+    {
+      "language": "malayalam",
+      "form": "കാലാവസ്ഥ",
+      "romanization": "kālāvastha"
+    },
+    {
+      "language": "hindi",
+      "form": "मौसम",
+      "romanization": "mausam"
+    }
+  ],
+  "source": "cross-track match: KA-C20-havamana, TE-C20-vatavaranam, ML-C20-kalavastha, HI-C20-mausam"
+}

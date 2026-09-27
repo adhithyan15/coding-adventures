@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C124-milakay",
+  "english": "a chilli",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "మిరప",
+      "romanization": "mirapa",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മുളക്",
+      "romanization": "muḷakŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मिर्च",
+      "romanization": "mirc"
+    }
+  ],
+  "source": "cross-track match: TE-C61-chilli, ML-C61-chilli, HI-C141-mirc; sameRoot judged by the author, awaiting native review"
+}

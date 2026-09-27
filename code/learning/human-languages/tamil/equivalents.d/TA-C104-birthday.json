@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C104-birthday",
+  "english": "a birthday",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹುಟ್ಟುಹಬ್ಬ",
+      "romanization": "huṭṭuhabba"
+    },
+    {
+      "language": "telugu",
+      "form": "పుట్టినరోజు",
+      "romanization": "puṭṭinarōju"
+    },
+    {
+      "language": "hindi",
+      "form": "जन्मदिन",
+      "romanization": "janmdin"
+    }
+  ],
+  "source": "cross-track match: KA-C91-birthday, TE-C96-birthday, HI-C119-janmdin"
+}

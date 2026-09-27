@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C33-ninai",
+  "english": "to think",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಯೋಚಿಸು",
+      "romanization": "yōcisu"
+    },
+    {
+      "language": "telugu",
+      "form": "అనుకో",
+      "romanization": "anukō"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചിന്തിക്കുക",
+      "romanization": "cintikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "सोचना",
+      "romanization": "sochnā"
+    }
+  ],
+  "source": "cross-track match: KA-C33-yocisu, TE-C33-anuko, ML-C33-cintikkuka, HI-C34-sochna"
+}

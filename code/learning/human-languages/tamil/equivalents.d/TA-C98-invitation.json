@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C98-invitation",
+  "english": "an invitation, a call",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆಹ್ವಾನ",
+      "romanization": "āhvāna"
+    },
+    {
+      "language": "telugu",
+      "form": "ఆహ్వానం",
+      "romanization": "āhvānaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "ക്ഷണം",
+      "romanization": "kṣaṇaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "निमंत्रण",
+      "romanization": "nimantraṇ"
+    }
+  ],
+  "source": "cross-track match: KA-C88-invitation, TE-C99-invitation, ML-C124-invitation, HI-C114-nimantran"
+}

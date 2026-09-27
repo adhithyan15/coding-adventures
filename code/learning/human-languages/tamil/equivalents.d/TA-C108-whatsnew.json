@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C108-whatsnew",
+  "english": "what's new?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಏನು ಸಮಾಚಾರ",
+      "romanization": "ēnu samācāra"
+    },
+    {
+      "language": "telugu",
+      "form": "ఏంటి సంగతి?",
+      "romanization": "ēṇṭi saṅgati?"
+    }
+  ],
+  "source": "cross-track match: KA-C96-whatsnew, TE-C91-whatsnew"
+}

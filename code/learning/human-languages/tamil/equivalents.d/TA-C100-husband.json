@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C100-husband",
+  "english": "a husband",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಂಡ",
+      "romanization": "gaṇḍa"
+    },
+    {
+      "language": "telugu",
+      "form": "భర్త",
+      "romanization": "bharta",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "ഭർത്താവ്",
+      "romanization": "bharttāvŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "पति",
+      "romanization": "pati"
+    }
+  ],
+  "source": "cross-track match: KA-C45-husband, TE-C45-husband, ML-C45-husband, HI-C118-pati; sameRoot judged by the author, awaiting native review"
+}

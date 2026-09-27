@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C114-teru",
+  "english": "a street",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೀದಿ",
+      "romanization": "bīdi"
+    },
+    {
+      "language": "telugu",
+      "form": "వీధి",
+      "romanization": "vīdhi"
+    },
+    {
+      "language": "malayalam",
+      "form": "തെരുവ്",
+      "romanization": "teruvŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C103-street, TE-C102-vidhi, ML-C155-teruvu; sameRoot judged by the author, awaiting native review"
+}

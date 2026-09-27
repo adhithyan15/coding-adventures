@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C68-money",
+  "english": "money",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "డబ్బు",
+      "romanization": "ḍabbu"
+    },
+    {
+      "language": "hindi",
+      "form": "पैसा",
+      "romanization": "paisā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: TE-C72-money, HI-C72-money; sameRoot judged by the author, awaiting native review"
+}

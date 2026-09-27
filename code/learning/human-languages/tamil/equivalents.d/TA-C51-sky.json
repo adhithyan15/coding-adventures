@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C51-sky",
+  "english": "the sky",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆಕಾಶ",
+      "romanization": "ākāśa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఆకాశం",
+      "romanization": "ākāśaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ആകാശം",
+      "romanization": "ākāśaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आसमान",
+      "romanization": "āsmān"
+    }
+  ],
+  "source": "cross-track match: KA-C53-sky, TE-C53-sky, ML-C53-sky, HI-C55-sky; sameRoot judged by the author, awaiting native review"
+}

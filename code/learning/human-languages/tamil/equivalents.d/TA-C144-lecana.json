@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C144-lecana",
+  "english": "light",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಗುರ",
+      "romanization": "hagura"
+    },
+    {
+      "language": "telugu",
+      "form": "తేలిక",
+      "romanization": "tēlika"
+    },
+    {
+      "language": "hindi",
+      "form": "हल्का",
+      "romanization": "halkā"
+    }
+  ],
+  "source": "cross-track match: KA-C141-hagura, TE-C137-telika, HI-C154-halka"
+}

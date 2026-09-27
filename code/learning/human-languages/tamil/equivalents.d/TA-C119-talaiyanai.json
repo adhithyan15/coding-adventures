@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C119-talaiyanai",
+  "english": "a pillow",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದಿಂಬು",
+      "romanization": "dimbu"
+    },
+    {
+      "language": "telugu",
+      "form": "దిండు",
+      "romanization": "diṇḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "തലയണ",
+      "romanization": "talayaṇa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "तकिया",
+      "romanization": "takiyā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C116-dimbu, TE-C109-dindu, ML-C158-talayana, HI-C129-takiya; sameRoot judged by the author, awaiting native review"
+}

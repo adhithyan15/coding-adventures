@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C114-punka",
+  "english": "a park",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಉದ್ಯಾನ",
+      "romanization": "udyāna"
+    },
+    {
+      "language": "telugu",
+      "form": "పార్కు",
+      "romanization": "pārku",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C109-udyana, TE-C102-parku; sameRoot judged by the author, awaiting native review"
+}

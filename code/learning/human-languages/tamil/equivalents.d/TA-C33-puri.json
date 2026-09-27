@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C33-puri",
+  "english": "to be understood, to become clear",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅರ್ಥಮಾಡಿಕೊ",
+      "romanization": "arthamāḍiko"
+    },
+    {
+      "language": "telugu",
+      "form": "అర్థం చేసుకో",
+      "romanization": "arthaṁ cēsukō"
+    },
+    {
+      "language": "malayalam",
+      "form": "മനസ്സിലാക്കുക",
+      "romanization": "manassilākkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "समझना",
+      "romanization": "samajhnā"
+    }
+  ],
+  "source": "cross-track match: KA-C33-artha-maadiko, TE-C33-artham-cesuko, ML-C33-manassilaakkuka, HI-C34-samajhna"
+}

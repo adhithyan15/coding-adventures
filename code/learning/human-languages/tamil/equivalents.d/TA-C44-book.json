@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C44-book",
+  "english": "a book",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪುಸ್ತಕ",
+      "romanization": "pustaka",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పుస్తకం",
+      "romanization": "pustakaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പുസ്തകം",
+      "romanization": "pustakaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "किताब",
+      "romanization": "kitāb"
+    }
+  ],
+  "source": "cross-track match: KA-C46-book, TE-C46-book, ML-C46-book, HI-C37-kitaab; sameRoot judged by the author, awaiting native review"
+}

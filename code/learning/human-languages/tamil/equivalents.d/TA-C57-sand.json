@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C57-sand",
+  "english": "sand",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮರಳು",
+      "romanization": "maraḷu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఇసుక",
+      "romanization": "isuka"
+    },
+    {
+      "language": "malayalam",
+      "form": "മണൽ",
+      "romanization": "maṇal",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "रेत",
+      "romanization": "ret"
+    }
+  ],
+  "source": "cross-track match: KA-C59-sand, TE-C59-sand, ML-C59-sand, HI-C144-ret; sameRoot judged by the author, awaiting native review"
+}

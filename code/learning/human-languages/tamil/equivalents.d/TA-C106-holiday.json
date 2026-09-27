@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C106-holiday",
+  "english": "a holiday",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ರಜೆ",
+      "romanization": "raje"
+    },
+    {
+      "language": "malayalam",
+      "form": "അവധി",
+      "romanization": "avadhi"
+    },
+    {
+      "language": "hindi",
+      "form": "छुट्टी",
+      "romanization": "chuṭṭī"
+    }
+  ],
+  "source": "cross-track match: KA-C89-holiday, ML-C127-holiday, HI-C122-chhutti"
+}

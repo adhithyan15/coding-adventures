@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C64-grass",
+  "english": "grass",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹುಲ್ಲು",
+      "romanization": "hullu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గడ్డి",
+      "romanization": "gaḍḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "പുല്ല്",
+      "romanization": "pullŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "घास",
+      "romanization": "ghās"
+    }
+  ],
+  "source": "cross-track match: KA-C66-grass, TE-C66-grass, ML-C66-grass, HI-C66-grass; sameRoot judged by the author, awaiting native review"
+}

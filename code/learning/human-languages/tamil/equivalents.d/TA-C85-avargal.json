@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C85-avargal",
+  "english": "they",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "അവർ",
+      "romanization": "avar",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "वे",
+      "romanization": "ve"
+    }
+  ],
+  "source": "cross-track match: ML-C71-avar, HI-C86-ve; sameRoot judged by the author, awaiting native review"
+}

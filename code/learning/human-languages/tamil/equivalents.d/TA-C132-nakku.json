@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C132-nakku",
+  "english": "the tongue",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಾಲಿಗೆ",
+      "romanization": "nālige"
+    },
+    {
+      "language": "telugu",
+      "form": "నాలుక",
+      "romanization": "nāluka",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "നാവ്",
+      "romanization": "nāvŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "जीभ",
+      "romanization": "jībh"
+    }
+  ],
+  "source": "cross-track match: KA-C134-nalige, TE-C127-naluka, ML-C154-navu, HI-C151-jibh; sameRoot judged by the author, awaiting native review"
+}

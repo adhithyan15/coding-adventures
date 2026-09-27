@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C128-yanai",
+  "english": "an elephant",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆನೆ",
+      "romanization": "āne",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఏనుగు",
+      "romanization": "ēnugu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ആന",
+      "romanization": "āna",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "हाथी",
+      "romanization": "hāthī"
+    }
+  ],
+  "source": "cross-track match: KA-C129-ane, TE-C122-enugu, ML-C60-elephant, HI-C146-hathi; sameRoot judged by the author, awaiting native review"
+}

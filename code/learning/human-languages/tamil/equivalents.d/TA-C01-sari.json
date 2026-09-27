@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C01-sari",
+  "english": "okay / alright / correct",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸರಿ",
+      "romanization": "sari",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "సరే",
+      "romanization": "sarē",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ശരി",
+      "romanization": "śari",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C01-sari, TE-C01-sare, ML-C01-sari; sameRoot judged by the author, awaiting native review"
+}

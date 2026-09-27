@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C131-erumpu",
+  "english": "an ant",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇರುವೆ",
+      "romanization": "iruve"
+    },
+    {
+      "language": "telugu",
+      "form": "చీమ",
+      "romanization": "cīma"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉറുമ്പ്",
+      "romanization": "uṟumpŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "चींटी",
+      "romanization": "cīṇṭī"
+    }
+  ],
+  "source": "cross-track match: KA-C132-iruve, TE-C60-ant, ML-C153-urumpu, HI-C149-cinti; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C42-read",
+  "english": "read",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಓದು",
+      "romanization": "ōdu"
+    },
+    {
+      "language": "telugu",
+      "form": "చదువు",
+      "romanization": "caduvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "വായിക്കുക",
+      "romanization": "vāyikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "पढ़ना",
+      "romanization": "paṛhnā"
+    }
+  ],
+  "source": "cross-track match: KA-C33-oodu, TE-C33-caduvu, ML-C33-vaayikkuka, HI-C34-padhna"
+}

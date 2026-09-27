@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C148-kurukiya",
+  "english": "narrow",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಿರಿದು",
+      "romanization": "kiridu"
+    },
+    {
+      "language": "telugu",
+      "form": "ఇరుకు",
+      "romanization": "iruku"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇടുങ്ങിയ",
+      "romanization": "iṭuṅṅiya"
+    }
+  ],
+  "source": "cross-track match: KA-C142-kiridu, TE-C138-iruku, ML-C168-itunniya"
+}

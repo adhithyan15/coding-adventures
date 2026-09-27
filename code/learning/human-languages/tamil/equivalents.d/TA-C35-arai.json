@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C35-arai",
+  "english": "room",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "മുറി",
+      "romanization": "muṟi"
+    },
+    {
+      "language": "hindi",
+      "form": "कमरा",
+      "romanization": "kamrā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: ML-C128-room, HI-C36-kamra; sameRoot judged by the author, awaiting native review"
+}

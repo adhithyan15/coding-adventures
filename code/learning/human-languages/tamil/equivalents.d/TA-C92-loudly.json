@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C92-loudly",
+  "english": "loudly",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜೋರಾಗಿ",
+      "romanization": "jōrāgi"
+    },
+    {
+      "language": "telugu",
+      "form": "గట్టిగా",
+      "romanization": "gaṭṭigā"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉറക്കെ",
+      "romanization": "uṟakke"
+    },
+    {
+      "language": "hindi",
+      "form": "ज़ोर से",
+      "romanization": "zor se"
+    }
+  ],
+  "source": "cross-track match: KA-C85-loudly, TE-C86-loudly, ML-C119-loudly, HI-C110-zorse"
+}

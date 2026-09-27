@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C104-english",
+  "english": "English, the language",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇಂಗ್ಲಿಷ್",
+      "romanization": "iṅgliṣ"
+    },
+    {
+      "language": "telugu",
+      "form": "ఇంగ్లీషు",
+      "romanization": "iṅglīṣu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇംഗ്ലീഷ്",
+      "romanization": "iṁglīṣ"
+    },
+    {
+      "language": "hindi",
+      "form": "अंग्रेज़ी",
+      "romanization": "angrezī"
+    }
+  ],
+  "source": "cross-track match: KA-C92-english, TE-C89-english, ML-C126-english, HI-C68-english"
+}

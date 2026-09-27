@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C92-oneminute",
+  "english": "one minute, a moment",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒಂದು ನಿಮಿಷ",
+      "romanization": "ondu nimiṣa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఒక్క నిమిషం",
+      "romanization": "okka nimiṣaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "एक मिनट",
+      "romanization": "ek minaṭ"
+    }
+  ],
+  "source": "cross-track match: KA-C86-oneminute, TE-C86-oneminute, HI-C110-ekminat; sameRoot judged by the author, awaiting native review"
+}

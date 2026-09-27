@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C89-calm",
+  "english": "calm, peace, quiet",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "ശാന്തമായ",
+      "romanization": "śāntamāya"
+    },
+    {
+      "language": "hindi",
+      "form": "शांत",
+      "romanization": "śānt"
+    }
+  ],
+  "source": "cross-track match: ML-C169-santamaya, HI-C125-shant"
+}

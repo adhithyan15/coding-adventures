@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C55-back",
+  "english": "the back",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆನ್ನು",
+      "romanization": "bennu"
+    },
+    {
+      "language": "telugu",
+      "form": "వీపు",
+      "romanization": "vīpu"
+    },
+    {
+      "language": "malayalam",
+      "form": "മുതുക്",
+      "romanization": "mutukŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "पीठ",
+      "romanization": "pīṭh"
+    }
+  ],
+  "source": "cross-track match: KA-C57-back, TE-C57-back, ML-C57-back, HI-C53-back; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C140-aruvi",
+  "english": "a waterfall",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜಲಪಾತ",
+      "romanization": "jalapāta"
+    },
+    {
+      "language": "telugu",
+      "form": "జలపాతం",
+      "romanization": "jalapātaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "വെള്ളച്ചാട്ടം",
+      "romanization": "veḷḷaccāṭṭaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C128-jalapata, TE-C122-jalapatam, ML-C160-vellaccattam"
+}

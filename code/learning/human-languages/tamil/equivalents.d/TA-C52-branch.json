@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C52-branch",
+  "english": "a branch",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೊಂಬೆ",
+      "romanization": "kombe"
+    },
+    {
+      "language": "telugu",
+      "form": "కొమ్మ",
+      "romanization": "komma"
+    },
+    {
+      "language": "malayalam",
+      "form": "കൊമ്പ്",
+      "romanization": "kompŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C54-branch, TE-C54-branch, ML-C54-branch"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C142-kannam",
+  "english": "a cheek",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೆನ್ನೆ",
+      "romanization": "kenne",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "బుగ్గ",
+      "romanization": "bugga"
+    },
+    {
+      "language": "malayalam",
+      "form": "കവിൾ",
+      "romanization": "kavil"
+    },
+    {
+      "language": "hindi",
+      "form": "गाल",
+      "romanization": "gāl"
+    }
+  ],
+  "source": "cross-track match: KA-C135-kenne, TE-C127-bugga, ML-C155-kavil, HI-C150-gal; sameRoot judged by the author, awaiting native review"
+}

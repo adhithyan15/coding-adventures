@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C01-illai",
+  "english": "no / there isn't (illai",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇಲ್ಲ",
+      "romanization": "illa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "లేదు",
+      "romanization": "lēdu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇല്ല",
+      "romanization": "illa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "नहीं",
+      "romanization": "nahīṃ"
+    }
+  ],
+  "source": "cross-track match: KA-C01-illa, TE-C01-ledu, ML-C01-illa, HI-C07-nahin; sameRoot judged by the author, awaiting native review"
+}

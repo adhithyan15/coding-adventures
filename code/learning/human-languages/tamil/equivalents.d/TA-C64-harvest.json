@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C64-harvest",
+  "english": "the harvest",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸುಗ್ಗಿ",
+      "romanization": "suggi"
+    },
+    {
+      "language": "telugu",
+      "form": "పంట",
+      "romanization": "paṇṭa"
+    },
+    {
+      "language": "malayalam",
+      "form": "കൊയ്ത്ത്",
+      "romanization": "koyttŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C66-harvest, TE-C66-harvest, ML-C66-harvest"
+}

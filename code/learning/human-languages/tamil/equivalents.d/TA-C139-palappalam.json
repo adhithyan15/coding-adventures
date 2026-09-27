@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C139-palappalam",
+  "english": "a jackfruit",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಲಸು",
+      "romanization": "halasu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ചക്ക",
+      "romanization": "cakka"
+    }
+  ],
+  "source": "cross-track match: KA-C126-halasu, ML-C133-jackfruit; sameRoot judged by the author, awaiting native review"
+}

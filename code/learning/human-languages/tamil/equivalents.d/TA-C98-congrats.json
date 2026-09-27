@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C98-congrats",
+  "english": "congratulations, good wishes",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಭಿನಂದನೆಗಳು",
+      "romanization": "abhinandanegaḷu"
+    },
+    {
+      "language": "telugu",
+      "form": "అభినందనలు",
+      "romanization": "abhinandanalu"
+    },
+    {
+      "language": "malayalam",
+      "form": "അഭിനന്ദനങ്ങൾ",
+      "romanization": "abhinandanaṅṅaḷ"
+    },
+    {
+      "language": "hindi",
+      "form": "बधाई",
+      "romanization": "badhāī"
+    }
+  ],
+  "source": "cross-track match: KA-C88-congratulations, TE-C99-congrats, ML-C124-congratulations, HI-C114-badhai"
+}

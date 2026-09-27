@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C72-laugh",
+  "english": "to laugh",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "ചിരിക്കുക",
+      "romanization": "cirikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "हँसना",
+      "romanization": "hãsnā"
+    }
+  ],
+  "source": "cross-track match: ML-C173-cirikkuka, HI-C162-hasna"
+}

@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C155-ilu",
+  "english": "to pull",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎಳೆ",
+      "romanization": "eḷe",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C153-ele; sameRoot judged by the author, awaiting native review"
+}

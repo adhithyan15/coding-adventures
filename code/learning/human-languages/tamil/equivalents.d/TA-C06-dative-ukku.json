@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C06-dative-ukku",
+  "english": "the dative suffix -ukku, 'to / for,' including its two surface forms and irregular enakku",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "-ಗೆ",
+      "romanization": "-ge"
+    },
+    {
+      "language": "telugu",
+      "form": "-కు",
+      "romanization": "-ku",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "-ിക്ക്",
+      "romanization": "-ikkŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C06-dative-ge, TE-C06-dative-ku, ML-C06-dative-ikku; sameRoot judged by the author, awaiting native review"
+}

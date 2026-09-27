@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C52-seed",
+  "english": "a seed",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೀಜ",
+      "romanization": "bīja"
+    },
+    {
+      "language": "telugu",
+      "form": "విత్తనం",
+      "romanization": "vittanaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "വിത്ത്",
+      "romanization": "vittŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बीज",
+      "romanization": "bīj"
+    }
+  ],
+  "source": "cross-track match: KA-C54-seed, TE-C54-seed, ML-C54-seed, HI-C66-seed; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C123-tenkay",
+  "english": "a coconut",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತೆಂಗು",
+      "romanization": "teṅgu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కొబ్బరి",
+      "romanization": "kobbari"
+    },
+    {
+      "language": "malayalam",
+      "form": "തേങ്ങ",
+      "romanization": "tēṅṅa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "नारियल",
+      "romanization": "nāriyal"
+    }
+  ],
+  "source": "cross-track match: KA-C123-tengu, TE-C117-kobbari, ML-C61-coconut, HI-C140-nariyal; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C126-man",
+  "english": "soil, earth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಣ್ಣು",
+      "romanization": "maṇṇu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మట్టి",
+      "romanization": "maṭṭi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മണ്ണ്",
+      "romanization": "maṇṇŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C127-mannu, TE-C120-matti, ML-C161-mannu; sameRoot judged by the author, awaiting native review"
+}

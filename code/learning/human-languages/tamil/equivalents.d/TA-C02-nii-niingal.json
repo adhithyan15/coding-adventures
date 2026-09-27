@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C02-nii-niingal",
+  "english": "you",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನೀನು",
+      "romanization": "nīnu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నువ్వు",
+      "romanization": "nuvvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "നീ",
+      "romanization": "nī",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आप",
+      "romanization": "āp"
+    }
+  ],
+  "source": "cross-track match: KA-C02-niinu-niivu, TE-C02-nuvvu-miiru, ML-C02-nii-ningal, HI-C02-aap-tum; sameRoot judged by the author, awaiting native review"
+}

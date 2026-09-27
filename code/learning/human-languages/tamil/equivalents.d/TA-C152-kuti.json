@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C152-kuti",
+  "english": "to jump",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜಿಗಿ",
+      "romanization": "jigi"
+    },
+    {
+      "language": "telugu",
+      "form": "దూకు",
+      "romanization": "dūku"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചാടുക",
+      "romanization": "cāṭuka"
+    }
+  ],
+  "source": "cross-track match: KA-C148-jigi, TE-C145-duku, ML-C176-catuka"
+}

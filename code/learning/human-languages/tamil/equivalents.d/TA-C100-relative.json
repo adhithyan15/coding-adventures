@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C100-relative",
+  "english": "a relative",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಂಬಂಧಿಕ",
+      "romanization": "sambandhika"
+    },
+    {
+      "language": "telugu",
+      "form": "బంధువు",
+      "romanization": "bandhuvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ബന്ധു",
+      "romanization": "bandhu"
+    },
+    {
+      "language": "hindi",
+      "form": "रिश्तेदार",
+      "romanization": "riśtedār",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C90-relative, TE-C88-relative, ML-C125-relative, HI-C118-rishtedar; sameRoot judged by the author, awaiting native review"
+}

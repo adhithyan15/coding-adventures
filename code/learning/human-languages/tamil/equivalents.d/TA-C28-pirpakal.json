@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C28-pirpakal",
+  "english": "afternoon",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಪರಾಹ್ನ",
+      "romanization": "aparāhna"
+    },
+    {
+      "language": "telugu",
+      "form": "మధ్యాహ్నం",
+      "romanization": "madhyāhnam"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉച്ചകഴിഞ്ഞ്",
+      "romanization": "uccakaḻiññŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "दोपहर",
+      "romanization": "dopahar"
+    }
+  ],
+  "source": "cross-track match: KA-C28-aparahna, TE-C28-madhyahnam-widened, ML-C28-uchakazhinju, HI-C30-dopahar-widened"
+}

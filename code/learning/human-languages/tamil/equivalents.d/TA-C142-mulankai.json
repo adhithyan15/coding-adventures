@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C142-mulankai",
+  "english": "an elbow",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊಣಕೈ",
+      "romanization": "moṇakai",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మోచేయి",
+      "romanization": "mōcēyi"
+    },
+    {
+      "language": "malayalam",
+      "form": "കൈമുട്ട്",
+      "romanization": "kaimuṭṭŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "कोहनी",
+      "romanization": "kohnī"
+    }
+  ],
+  "source": "cross-track match: KA-C135-monakai, TE-C128-moceyi, ML-C154-kaimuttu, HI-C150-kohni; sameRoot judged by the author, awaiting native review"
+}

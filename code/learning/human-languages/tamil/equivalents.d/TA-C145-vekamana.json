@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C145-vekamana",
+  "english": "fast",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "వేగం",
+      "romanization": "vēgaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "വേഗമുള്ള",
+      "romanization": "vēgamuḷḷa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "तेज़",
+      "romanization": "tez"
+    }
+  ],
+  "source": "cross-track match: TE-C138-vegam, ML-C166-vegamulla, HI-C155-tez; sameRoot judged by the author, awaiting native review"
+}

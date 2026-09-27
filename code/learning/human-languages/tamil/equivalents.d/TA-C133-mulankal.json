@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C133-mulankal",
+  "english": "a knee",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊಣಕಾಲು",
+      "romanization": "moṇakālu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మోకాలు",
+      "romanization": "mōkālu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കാൽമുട്ട്",
+      "romanization": "kālmuṭṭŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "घुटना",
+      "romanization": "ghuṭnā"
+    }
+  ],
+  "source": "cross-track match: KA-C135-monakalu, TE-C127-mokalu, ML-C154-kalmuttu, HI-C53-knee; sameRoot judged by the author, awaiting native review"
+}

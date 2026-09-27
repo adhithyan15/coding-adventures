@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C35-naarkaali",
+  "english": "chair",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕುರ್ಚಿ",
+      "romanization": "kurci"
+    },
+    {
+      "language": "telugu",
+      "form": "కుర్చీ",
+      "romanization": "kurcī"
+    },
+    {
+      "language": "malayalam",
+      "form": "കസേര",
+      "romanization": "kasēra"
+    },
+    {
+      "language": "hindi",
+      "form": "कुर्सी",
+      "romanization": "kursī"
+    }
+  ],
+  "source": "cross-track match: KA-C52-chair, TE-C52-chair, ML-C52-chair, HI-C36-kursi"
+}

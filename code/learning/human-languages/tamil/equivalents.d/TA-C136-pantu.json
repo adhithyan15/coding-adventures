@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C136-pantu",
+  "english": "a ball",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚೆಂಡು",
+      "romanization": "ceṇḍu"
+    },
+    {
+      "language": "telugu",
+      "form": "బంతి",
+      "romanization": "banti",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C119-cendu, TE-C113-banti; sameRoot judged by the author, awaiting native review"
+}

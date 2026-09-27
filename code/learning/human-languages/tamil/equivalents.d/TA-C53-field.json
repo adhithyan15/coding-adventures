@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C53-field",
+  "english": "a paddy field",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೊಲ",
+      "romanization": "hola"
+    },
+    {
+      "language": "telugu",
+      "form": "పొలం",
+      "romanization": "polaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "വയൽ",
+      "romanization": "vayal",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "खेत",
+      "romanization": "khet"
+    }
+  ],
+  "source": "cross-track match: KA-C66-field, TE-C66-field, ML-C55-field, HI-C56-field; sameRoot judged by the author, awaiting native review"
+}

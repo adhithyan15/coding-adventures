@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C157-eri2",
+  "english": "to burn",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸುಡು",
+      "romanization": "suḍu"
+    },
+    {
+      "language": "telugu",
+      "form": "కాల్చు",
+      "romanization": "kālcu"
+    }
+  ],
+  "source": "cross-track match: KA-C151-sudu, TE-C148-kalcu"
+}

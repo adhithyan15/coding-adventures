@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C151-utai",
+  "english": "to break",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒಡೆ",
+      "romanization": "oḍe"
+    },
+    {
+      "language": "telugu",
+      "form": "పగలగొట్టు",
+      "romanization": "pagalagoṭṭu"
+    },
+    {
+      "language": "hindi",
+      "form": "तोड़ना",
+      "romanization": "toṛnā"
+    }
+  ],
+  "source": "cross-track match: KA-C147-ode, TE-C144-pagalagottu, HI-C161-torna"
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C71-sleep",
+  "english": "to sleep",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಲಗು",
+      "romanization": "malagu"
+    },
+    {
+      "language": "telugu",
+      "form": "నిద్రపో",
+      "romanization": "nidrapō"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉറങ്ങുക",
+      "romanization": "uṟaṅṅuka"
+    },
+    {
+      "language": "hindi",
+      "form": "सोना",
+      "romanization": "sonā"
+    }
+  ],
+  "source": "cross-track match: KA-C147-malagu, TE-C143-nidrapo, ML-C171-urannuka, HI-C159-sona"
+}

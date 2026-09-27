@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C83-eleventh",
+  "english": "eleventh",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹನ್ನೊಂದನೆಯ",
+      "romanization": "hannondaneya",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പതിനൊന്നാം",
+      "romanization": "patinonnāṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C75-eleventh, ML-C68-eleventh; sameRoot judged by the author, awaiting native review"
+}

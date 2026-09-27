@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C39-vendum",
+  "english": "want, need",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನನಗೆ ಚಹಾ ಬೇಕು",
+      "romanization": "nanage cahā bēku"
+    },
+    {
+      "language": "hindi",
+      "form": "चाहना",
+      "romanization": "chāhnā"
+    }
+  ],
+  "source": "cross-track match: KA-C72-want, HI-C70-chahna"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C72-cry",
+  "english": "to cry",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಳು",
+      "romanization": "aḷu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఏడ్చు",
+      "romanization": "ēḍcu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കരയുക",
+      "romanization": "karayuka"
+    },
+    {
+      "language": "hindi",
+      "form": "रोना",
+      "romanization": "ronā"
+    }
+  ],
+  "source": "cross-track match: KA-C153-alu, TE-C149-edcu, ML-C172-karayuka, HI-C162-rona; sameRoot judged by the author, awaiting native review"
+}

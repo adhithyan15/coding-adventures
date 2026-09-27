@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C44-fruit",
+  "english": "a fruit",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಣ್ಣು",
+      "romanization": "haṇṇu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పండు",
+      "romanization": "paṇḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പഴം",
+      "romanization": "paḻaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "फल",
+      "romanization": "phal",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C46-fruit, TE-C46-fruit, ML-C46-fruit, HI-C45-fruit; sameRoot judged by the author, awaiting native review"
+}

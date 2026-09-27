@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C69-vehicle",
+  "english": "a vehicle, a cart",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "വണ്ടി",
+      "romanization": "vaṇṭi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गाड़ी",
+      "romanization": "gāṛī"
+    }
+  ],
+  "source": "cross-track match: ML-C137-vehicle, HI-C69-vehicle; sameRoot judged by the author, awaiting native review"
+}

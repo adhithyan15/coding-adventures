@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C156-tutai",
+  "english": "to wipe",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒರೆಸು",
+      "romanization": "oresu"
+    },
+    {
+      "language": "telugu",
+      "form": "తుడుచు",
+      "romanization": "tuḍucu"
+    }
+  ],
+  "source": "cross-track match: KA-C150-oresu, TE-C147-tuducu"
+}

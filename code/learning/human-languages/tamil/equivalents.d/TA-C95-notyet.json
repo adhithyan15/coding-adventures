@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C95-notyet",
+  "english": "not yet",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "ఇంకా లేదు",
+      "romanization": "iṅkā lēdu"
+    },
+    {
+      "language": "hindi",
+      "form": "अभी नहीं",
+      "romanization": "abhī nahīṁ"
+    }
+  ],
+  "source": "cross-track match: TE-C98-notyet, HI-C113-abhinahin"
+}

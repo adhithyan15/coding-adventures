@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C46-guest",
+  "english": "a guest",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅತಿಥಿ",
+      "romanization": "atithi"
+    },
+    {
+      "language": "telugu",
+      "form": "అతిథి",
+      "romanization": "atithi"
+    },
+    {
+      "language": "malayalam",
+      "form": "അതിഥി",
+      "romanization": "atithi"
+    },
+    {
+      "language": "hindi",
+      "form": "मेहमान",
+      "romanization": "mehmān"
+    }
+  ],
+  "source": "cross-track match: KA-C48-guest, TE-C48-guest, ML-C48-guest, HI-C47-guest"
+}

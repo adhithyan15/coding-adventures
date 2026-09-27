@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C131-kili",
+  "english": "a parrot",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಿಳಿ",
+      "romanization": "giḷi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "చిలక",
+      "romanization": "cilaka",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "തത്ത",
+      "romanization": "tatta"
+    },
+    {
+      "language": "hindi",
+      "form": "तोता",
+      "romanization": "totā"
+    }
+  ],
+  "source": "cross-track match: KA-C131-gili, TE-C124-cilaka, ML-C152-tatta, HI-C148-tota; sameRoot judged by the author, awaiting native review"
+}

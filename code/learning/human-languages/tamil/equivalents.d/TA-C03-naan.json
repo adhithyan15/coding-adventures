@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C03-naan",
+  "english": "I",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಾನು",
+      "romanization": "nānu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నేను",
+      "romanization": "nēnu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ഞാൻ",
+      "romanization": "ñān",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मैं",
+      "romanization": "maiṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C03-naanu, TE-C03-nenu, ML-C03-njaan, HI-C03-main; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C152-mara",
+  "english": "to forget",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "మరచిపో",
+      "romanization": "maracipō",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മറക്കുക",
+      "romanization": "maṟakkuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "भूलना",
+      "romanization": "bhūlnā"
+    }
+  ],
+  "source": "cross-track match: TE-C145-maracipo, ML-C174-marakkuka, HI-C162-bhulna; sameRoot judged by the author, awaiting native review"
+}

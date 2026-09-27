@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C135-ani",
+  "english": "a nail",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊಳೆ",
+      "romanization": "moḷe"
+    },
+    {
+      "language": "telugu",
+      "form": "మేకు",
+      "romanization": "mēku"
+    },
+    {
+      "language": "hindi",
+      "form": "कील",
+      "romanization": "kīl"
+    }
+  ],
+  "source": "cross-track match: KA-C116-mole, TE-C110-meku, HI-C130-kil"
+}

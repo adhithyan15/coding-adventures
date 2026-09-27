@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C69-station",
+  "english": "a station",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಿಲ್ದಾಣ",
+      "romanization": "nildāṇa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "స్టేషన్",
+      "romanization": "sṭēṣan"
+    },
+    {
+      "language": "malayalam",
+      "form": "സ്റ്റേഷൻ",
+      "romanization": "sṟṟēṣan"
+    },
+    {
+      "language": "hindi",
+      "form": "स्टेशन",
+      "romanization": "sṭeshan"
+    }
+  ],
+  "source": "cross-track match: KA-C100-station, TE-C105-stesan, ML-C121-station, HI-C69-station; sameRoot judged by the author, awaiting native review"
+}

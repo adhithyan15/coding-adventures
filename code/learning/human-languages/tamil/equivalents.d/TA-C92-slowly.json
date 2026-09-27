@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C92-slowly",
+  "english": "slowly",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಿಧಾನವಾಗಿ",
+      "romanization": "nidhānavāgi"
+    },
+    {
+      "language": "telugu",
+      "form": "నెమ్మదిగా",
+      "romanization": "nemmadigā"
+    },
+    {
+      "language": "malayalam",
+      "form": "പതുക്കെ",
+      "romanization": "patukke"
+    },
+    {
+      "language": "hindi",
+      "form": "धीरे",
+      "romanization": "dhīre"
+    }
+  ],
+  "source": "cross-track match: KA-C85-slowly, TE-C86-slowly, ML-C119-slowly, HI-C64-slowly"
+}

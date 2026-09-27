@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C108-howareyou",
+  "english": "how are you?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನೀವು ಹೇಗಿದ್ದೀರಾ?",
+      "romanization": "nīvu hēgiddīrā"
+    },
+    {
+      "language": "telugu",
+      "form": "మీరు ఎలా ఉన్నారు?",
+      "romanization": "mīru elā unnāru?"
+    },
+    {
+      "language": "malayalam",
+      "form": "സുഖമാണോ?",
+      "romanization": "sukhamāṇō?"
+    },
+    {
+      "language": "hindi",
+      "form": "आप कैसे हैं?",
+      "romanization": "āp kaise haiṁ?"
+    }
+  ],
+  "source": "cross-track match: KA-C03-niivu-hegiddiira, TE-C03-miiru-elaa-unnaaru, ML-C03-sukhamaano, HI-C03-aap-kaise-hain"
+}

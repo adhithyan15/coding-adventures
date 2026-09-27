@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C17-nanpakal-nalliravu",
+  "english": "noon and midnight",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ",
+      "romanization": "madhyāhna madhyarātri"
+    },
+    {
+      "language": "telugu",
+      "form": "మధ్యాహ్నం అర్ధరాత్రి",
+      "romanization": "madhyāhnam ardharātri"
+    },
+    {
+      "language": "hindi",
+      "form": "दोपहर आधी रात",
+      "romanization": "dopahar ādhī rāt"
+    }
+  ],
+  "source": "cross-track match: KA-C17-madhyaahna-madhyaraatri, TE-C17-madhyaahnam-ardharaatri, HI-C17-dopahar-aadhi-raat"
+}

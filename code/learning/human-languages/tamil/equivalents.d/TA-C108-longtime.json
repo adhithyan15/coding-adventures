@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C108-longtime",
+  "english": "it's been a long time",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತುಂಬಾ ದಿನ ಆಯ್ತು",
+      "romanization": "tumbā dina āytu"
+    },
+    {
+      "language": "telugu",
+      "form": "చాలా రోజులైంది",
+      "romanization": "cālā rōjulaindi"
+    },
+    {
+      "language": "hindi",
+      "form": "बहुत दिन हो गए",
+      "romanization": "bahut din ho gae"
+    }
+  ],
+  "source": "cross-track match: KA-C96-longtime, TE-C91-longtime, HI-C123-bahutdin"
+}

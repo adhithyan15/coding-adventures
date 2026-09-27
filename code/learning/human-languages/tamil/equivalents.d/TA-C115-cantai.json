@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C115-cantai",
+  "english": "a market",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಂತೆ",
+      "romanization": "sante",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "సంత",
+      "romanization": "santa",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ചന്ത",
+      "romanization": "canta",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बाज़ार",
+      "romanization": "bāzār"
+    }
+  ],
+  "source": "cross-track match: KA-C110-sante, TE-C103-santa, ML-C135-market, HI-C56-market; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C89-worry",
+  "english": "worry, anxiety",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚಿಂತೆ",
+      "romanization": "cinte"
+    },
+    {
+      "language": "malayalam",
+      "form": "ആശങ്ക",
+      "romanization": "āśaṅka"
+    },
+    {
+      "language": "hindi",
+      "form": "चिंता",
+      "romanization": "cintā"
+    }
+  ],
+  "source": "cross-track match: KA-C83-worry, ML-C116-worry, HI-C108-chinta"
+}

@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C101-grandfather",
+  "english": "a grandfather",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಜ್ಜ",
+      "romanization": "ajja"
+    },
+    {
+      "language": "telugu",
+      "form": "తాత",
+      "romanization": "tāta",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മുത്തച്ഛൻ",
+      "romanization": "muttacchan"
+    }
+  ],
+  "source": "cross-track match: KA-C45-grandfather, TE-C45-grandfather, ML-C45-grandfather; sameRoot judged by the author, awaiting native review"
+}

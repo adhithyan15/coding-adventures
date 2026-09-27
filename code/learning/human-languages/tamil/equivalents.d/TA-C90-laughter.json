@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C90-laughter",
+  "english": "laughter",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಗು",
+      "romanization": "nagu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചിരി",
+      "romanization": "ciri"
+    },
+    {
+      "language": "hindi",
+      "form": "हँसी",
+      "romanization": "hãsī"
+    }
+  ],
+  "source": "cross-track match: KA-C83-laughter, ML-C116-laughter, HI-C109-hansi"
+}

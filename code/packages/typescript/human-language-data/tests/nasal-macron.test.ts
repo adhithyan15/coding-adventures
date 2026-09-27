@@ -58,9 +58,10 @@ describe("the long nasal vowel", () => {
       .map((book) => book.language)
       .sort();
     // The set as measured today, so the test also reports when the convention
-    // spreads or retreats. Seven Indo-Aryan tracks; no other family uses it.
+    // spreads or retreats. Seven Indo-Aryan tracks, plus Tamil, whose HL41
+    // family panels print the Hindi neighbour's romanization.
     expect(needs).toEqual([
-      "bengali", "gujarati", "hindi", "marathi", "marwadi", "punjabi", "urdu",
+      "bengali", "gujarati", "hindi", "marathi", "marwadi", "punjabi", "tamil", "urdu",
     ]);
     const missing = needs.filter(
       (language) => !books.find((book) => book.language === language)!.preamble.includes(SHARED_INPUT),

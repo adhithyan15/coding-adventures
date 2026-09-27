@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C03-eppadi",
+  "english": "how",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೇಗೆ",
+      "romanization": "hēge"
+    },
+    {
+      "language": "telugu",
+      "form": "ఎలా",
+      "romanization": "elā"
+    },
+    {
+      "language": "malayalam",
+      "form": "എങ്ങനെ",
+      "romanization": "eṅṅane"
+    },
+    {
+      "language": "hindi",
+      "form": "कैसा",
+      "romanization": "kaisā"
+    }
+  ],
+  "source": "cross-track match: KA-C03-hege, TE-C03-elaa, ML-C03-engane, HI-C03-kaise"
+}

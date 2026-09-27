@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C133-tol",
+  "english": "a shoulder",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಭುಜ",
+      "romanization": "bhuja"
+    },
+    {
+      "language": "telugu",
+      "form": "భుజం",
+      "romanization": "bhujaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "തോൾ",
+      "romanization": "tōḷ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कंधा",
+      "romanization": "kandhā"
+    }
+  ],
+  "source": "cross-track match: KA-C57-shoulder, TE-C127-bhujam, ML-C153-tol, HI-C53-shoulder; sameRoot judged by the author, awaiting native review"
+}

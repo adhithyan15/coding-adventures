@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C131-mayil",
+  "english": "a peacock",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನವಿಲು",
+      "romanization": "navilu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నెమలి",
+      "romanization": "nemali",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മയിൽ",
+      "romanization": "mayil",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मोर",
+      "romanization": "mor"
+    }
+  ],
+  "source": "cross-track match: KA-C132-navilu, TE-C125-nemali, ML-C152-mayil, HI-C60-peacock; sameRoot judged by the author, awaiting native review"
+}

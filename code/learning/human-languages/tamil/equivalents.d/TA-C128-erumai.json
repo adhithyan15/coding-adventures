@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C128-erumai",
+  "english": "a buffalo",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎಮ್ಮೆ",
+      "romanization": "emme",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గేదె",
+      "romanization": "gēde"
+    },
+    {
+      "language": "malayalam",
+      "form": "പോത്ത്",
+      "romanization": "pōttŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "भैंस",
+      "romanization": "bhaĩs"
+    }
+  ],
+  "source": "cross-track match: KA-C134-emme, TE-C60-buffalo, ML-C151-pottu, HI-C60-buffalo; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C34-kel",
+  "english": "to ask",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೇಳು",
+      "romanization": "kēḷu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "అడుగు",
+      "romanization": "aḍugu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചോദിക്കുക",
+      "romanization": "cōdikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "पूछना",
+      "romanization": "pūchnā"
+    }
+  ],
+  "source": "cross-track match: KA-C34-keelu, TE-C34-adugu, ML-C34-codikkuka, HI-C35-puchna; sameRoot judged by the author, awaiting native review"
+}

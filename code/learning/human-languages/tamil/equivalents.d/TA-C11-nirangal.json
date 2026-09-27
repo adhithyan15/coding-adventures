@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C11-nirangal",
+  "english": "black, white, red, blue",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಪ್ಪು ಬಿಳಿ ಕೆಂಪು ನೀಲಿ",
+      "romanization": "kappu biḷi kempu nīli"
+    },
+    {
+      "language": "telugu",
+      "form": "నలుపు తెలుపు ఎరుపు నీలం",
+      "romanization": "nalupu telupu erupu nīlam"
+    },
+    {
+      "language": "malayalam",
+      "form": "കറുപ്പ് വെള്ള ചുവപ്പ് നീല",
+      "romanization": "karuppŭ veḷḷa cuvappŭ nīla",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C11-bannagalu, TE-C11-rangulu, ML-C11-nirangal; sameRoot judged by the author, awaiting native review"
+}

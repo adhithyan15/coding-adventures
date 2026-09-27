@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C149-patukappana",
+  "english": "safe",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸುರಕ್ಷಿತ",
+      "romanization": "surakṣita"
+    },
+    {
+      "language": "telugu",
+      "form": "సురక్షితం",
+      "romanization": "surakṣitaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C143-suraksita, TE-C140-suraksitam"
+}

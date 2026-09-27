@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C72-sorrow",
+  "english": "sorrow, regret",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "బాధ",
+      "romanization": "bādha"
+    },
+    {
+      "language": "hindi",
+      "form": "दुख",
+      "romanization": "dukh"
+    }
+  ],
+  "source": "cross-track match: TE-C85-sorrow, HI-C109-dukh"
+}

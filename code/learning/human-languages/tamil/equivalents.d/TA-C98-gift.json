@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C98-gift",
+  "english": "a gift, a prize",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಉಡುಗೊರೆ",
+      "romanization": "uḍugore"
+    },
+    {
+      "language": "telugu",
+      "form": "బహుమతి",
+      "romanization": "bahumati"
+    },
+    {
+      "language": "malayalam",
+      "form": "സമ്മാനം",
+      "romanization": "sammānaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C88-gift, TE-C99-gift, ML-C124-gift"
+}

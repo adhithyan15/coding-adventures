@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C26-kaalai",
+  "english": "morning",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆಳಗ್ಗೆ",
+      "romanization": "beḷagge"
+    },
+    {
+      "language": "telugu",
+      "form": "ఉదయం",
+      "romanization": "udayam"
+    },
+    {
+      "language": "malayalam",
+      "form": "രാവിലെ",
+      "romanization": "rāvile"
+    },
+    {
+      "language": "hindi",
+      "form": "सुबह",
+      "romanization": "subah"
+    }
+  ],
+  "source": "cross-track match: KA-C26-belagge, TE-C26-udayam, ML-C26-raavile, HI-C28-subah"
+}

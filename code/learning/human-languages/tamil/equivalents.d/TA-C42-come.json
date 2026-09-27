@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C42-come",
+  "english": "come",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "రా",
+      "romanization": "rā"
+    },
+    {
+      "language": "malayalam",
+      "form": "വരുക",
+      "romanization": "varuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आना",
+      "romanization": "ānā"
+    }
+  ],
+  "source": "cross-track match: TE-C43-come, ML-C32-varuka, HI-C42-come; sameRoot judged by the author, awaiting native review"
+}

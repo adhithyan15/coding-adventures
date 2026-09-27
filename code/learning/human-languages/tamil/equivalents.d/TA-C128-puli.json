@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C128-puli",
+  "english": "a tiger",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹುಲಿ",
+      "romanization": "huli",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పులి",
+      "romanization": "puli",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C129-huli, TE-C123-puli; sameRoot judged by the author, awaiting native review"
+}

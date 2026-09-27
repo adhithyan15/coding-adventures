@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C133-marpu",
+  "english": "the chest",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಎದೆ",
+      "romanization": "ede"
+    },
+    {
+      "language": "malayalam",
+      "form": "നെഞ്ച്",
+      "romanization": "neñcŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "छाती",
+      "romanization": "chātī"
+    }
+  ],
+  "source": "cross-track match: KA-C136-ede, ML-C38-nenchu, HI-C151-chati"
+}

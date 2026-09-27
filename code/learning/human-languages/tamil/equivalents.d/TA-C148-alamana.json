@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C148-alamana",
+  "english": "deep",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆಳ",
+      "romanization": "āḷa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "లోతు",
+      "romanization": "lōtu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ആഴമുള്ള",
+      "romanization": "āḻamuḷḷa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गहरा",
+      "romanization": "gahrā"
+    }
+  ],
+  "source": "cross-track match: KA-C142-ala, TE-C138-lotu, ML-C167-alamulla, HI-C158-gahra; sameRoot judged by the author, awaiting native review"
+}

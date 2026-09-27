@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C116-mulai",
+  "english": "a corner",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೂಲೆ",
+      "romanization": "mūle",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మూల",
+      "romanization": "mūla",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C110-mule, TE-C104-mula; sameRoot judged by the author, awaiting native review"
+}

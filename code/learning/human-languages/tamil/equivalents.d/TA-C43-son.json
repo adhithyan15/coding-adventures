@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C43-son",
+  "english": "son",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಗ",
+      "romanization": "maga",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కొడుకు",
+      "romanization": "koḍuku"
+    },
+    {
+      "language": "malayalam",
+      "form": "മകൻ",
+      "romanization": "makan",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बेटा",
+      "romanization": "beṭā"
+    }
+  ],
+  "source": "cross-track match: KA-C36-maga, TE-C36-koduku, ML-C36-makan, HI-C44-son; sameRoot judged by the author, awaiting native review"
+}

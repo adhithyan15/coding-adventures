@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C133-muti",
+  "english": "hair",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೂದಲು",
+      "romanization": "kūdalu"
+    },
+    {
+      "language": "telugu",
+      "form": "జుట్టు",
+      "romanization": "juṭṭu",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "മുടി",
+      "romanization": "muṭi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बाल",
+      "romanization": "bāl"
+    }
+  ],
+  "source": "cross-track match: KA-C47-hair, TE-C47-hair, ML-C47-hair, HI-C46-hair; sameRoot judged by the author, awaiting native review"
+}
