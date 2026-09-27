@@ -47,6 +47,35 @@ pub fn encode_mov_reg_reg16(dest: u8, src: u8) -> Vec<u8> {
     vec![opcodes::MOV_REG_RM16, 0b1100_0000 | (dest << 3) | src]
 }
 
+fn encode_alu_reg_reg16(opcode: u8, dest: u8, src: u8) -> Vec<u8> {
+    vec![opcode, 0b1100_0000 | (dest << 3) | src]
+}
+
+/// `ADD reg16, reg16` using the register-only `0x03 /r` form.
+pub fn encode_add_reg_reg16(dest: u8, src: u8) -> Vec<u8> {
+    encode_alu_reg_reg16(opcodes::ADD_REG_RM16, dest, src)
+}
+
+/// `SUB reg16, reg16` using the register-only `0x2B /r` form.
+pub fn encode_sub_reg_reg16(dest: u8, src: u8) -> Vec<u8> {
+    encode_alu_reg_reg16(opcodes::SUB_REG_RM16, dest, src)
+}
+
+/// `AND reg16, reg16` using the register-only `0x23 /r` form.
+pub fn encode_and_reg_reg16(dest: u8, src: u8) -> Vec<u8> {
+    encode_alu_reg_reg16(opcodes::AND_REG_RM16, dest, src)
+}
+
+/// `OR reg16, reg16` using the register-only `0x0B /r` form.
+pub fn encode_or_reg_reg16(dest: u8, src: u8) -> Vec<u8> {
+    encode_alu_reg_reg16(opcodes::OR_REG_RM16, dest, src)
+}
+
+/// `XOR reg16, reg16` using the register-only `0x33 /r` form.
+pub fn encode_xor_reg_reg16(dest: u8, src: u8) -> Vec<u8> {
+    encode_alu_reg_reg16(opcodes::XOR_REG_RM16, dest, src)
+}
+
 /// `INC reg16` — `[0x40+reg]`.
 pub fn encode_inc_reg16(reg: u8) -> Vec<u8> {
     vec![opcodes::INC_REG16_BASE + reg]
@@ -110,6 +139,30 @@ mod tests {
         assert_eq!(
             encode_mov_reg_reg16(opcodes::REG_CX, opcodes::REG_AX),
             vec![0x8B, 0xC8]
+        );
+    }
+
+    #[test]
+    fn register_alu_encodings() {
+        assert_eq!(
+            encode_add_reg_reg16(opcodes::REG_AX, opcodes::REG_BX),
+            vec![0x03, 0xC3]
+        );
+        assert_eq!(
+            encode_sub_reg_reg16(opcodes::REG_AX, opcodes::REG_BX),
+            vec![0x2B, 0xC3]
+        );
+        assert_eq!(
+            encode_and_reg_reg16(opcodes::REG_AX, opcodes::REG_BX),
+            vec![0x23, 0xC3]
+        );
+        assert_eq!(
+            encode_or_reg_reg16(opcodes::REG_AX, opcodes::REG_BX),
+            vec![0x0B, 0xC3]
+        );
+        assert_eq!(
+            encode_xor_reg_reg16(opcodes::REG_AX, opcodes::REG_BX),
+            vec![0x33, 0xC3]
         );
     }
 

@@ -12,29 +12,23 @@
 //! following the pattern documented in
 //! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 //!
-//! ## Scope (WORD01)
+//! ## Scope (WORD02)
 //!
-//! Minimal viable backend — covers the trivial-ROM case (`const_*`
-//! immediate + `ret_*`) needed by the `lang-aot` Intel 8086 e2e smoke
-//! test:
+//! The fixed-width result ABI now includes a bounded two-live-value allocator
+//! and wrapping arithmetic:
 //!
 //! | CIR op | Lowering |
 //! |--------|----------|
 //! | `const_u8`, `const_bool` | `MOV AX, #imm16` with `AH = 0` |
 //! | `const_u16` | `MOV AX, #imm16` |
+//! | `add`/`sub`/`and`/`or`/`xor`/`not` on `u8` and `u16` | register ALU lowering through `AX`/`BX` (`CX` scratch) |
 //! | matching typed returns, `ret_void` | `HLT` (a genuine hardware halt — see below) |
 //! | Anything else | returns `None` |
 //!
-//! There is no real register allocator: a trivial "last const var"
-//! scheme tracks which single variable the most recent `const_*` wrote
-//! (into the accumulator `AX` — the 8086's primary 16-bit accumulator/
-//! return-value register), and `ret_*` only succeeds if it returns
-//! exactly that variable — the same scheme `mips-r2000-backend`/
-//! `arm1-backend`/`armv7-backend`/`mos6502-backend` use. Full op
-//! coverage (arithmetic, register-to-register moves, control flow — all
-//! of which `intel8086-simulator` implements for its curated subset) is
-//! intentionally **not** wired into this backend yet; future increments
-//! can extend `compile_to_bytes` to emit them.
+//! Up to two same-width values are live in `AX` and `BX`. Binary operations
+//! consume both and leave their result in `AX`; `CX` is scratch for reversed
+//! subtraction and byte-width masks. Comparisons and control flow remain
+//! outside this increment.
 //!
 //! Per the migration spec, this is acceptable: the architectural
 //! correctness win (IIR → CIR via `Backend` trait) is delivered as soon
@@ -97,7 +91,11 @@
 //! Emit-only target per the migration spec. Bytes go to
 //! `intel8086-simulator`.
 
-use intel8086_encoder::{encode_hlt, encode_mov_reg_imm16, REG_AX};
+use intel8086_encoder::{
+    encode_add_reg_reg16, encode_and_reg_reg16, encode_hlt, encode_mov_reg_imm16,
+    encode_mov_reg_reg16, encode_or_reg_reg16, encode_sub_reg_reg16, encode_xor_reg_reg16, REG_AX,
+    REG_BX, REG_CX,
+};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use std::fmt;
@@ -150,10 +148,9 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     }
 
     let mut bytes = Vec::new();
-    // v0.1.0 uses a trivial single-register allocator: the most recent
-    // `const_*` puts its value into AX, and `ret_*` returns AX. Programs
-    // that need more than one live var fall through to `UnsupportedOp`.
-    let mut current_value: Option<CurrentValue> = None;
+    // WORD02 keeps at most two same-width values in AX/BX. Operations consume
+    // those inputs and place their result back in AX.
+    let mut live_values: Vec<LiveValue> = Vec::new();
 
     // Tracks "has a genuine halt-convention instruction (HLT) already
     // been pushed?" -- an explicit boolean, NOT a trailing-byte-value
@@ -175,24 +172,17 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             let expected_width = result_width_for_ret(op)
                 .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
             let src_name = parse_var_src(instr, 0, op)?;
-            // We only support the case where src is the most recent
-            // const'd var (i.e. it's already in AX). Multi-var requires
-            // a real register allocator.
-            let Some(value) = current_value.as_ref() else {
+            // A secondary result is copied from BX into the AX result ABI.
+            let Some(value) = live_values.iter().find(|value| value.name == src_name) else {
                 return Err(BackendError::UndefinedVariable(src_name));
             };
-            if value.name != src_name {
-                return Err(BackendError::UnsupportedOp(format!(
-                    "ret of {src_name:?} which is not the current AX var; \
-                     multi-register allocation lands in a future increment"
-                )));
-            }
             if value.width != expected_width {
                 return Err(BackendError::UnsupportedOp(format!(
                     "{op} cannot return the current {}-bit value",
                     value.width.bits()
                 )));
             }
+            materialize_primary(&mut bytes, value.location);
             bytes.extend_from_slice(&encode_hlt());
             terminated = true;
             continue;
@@ -202,12 +192,17 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             let dest = require_dest(instr, op)?;
             let width = result_width_for_const(op)
                 .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
+            let location = allocate_location(&live_values, width)?;
             let imm = encode_typed_immediate(op, instr.srcs.first())?;
-            // const_* always targets AX in this minimal backend.
-            bytes.extend_from_slice(&encode_mov_reg_imm16(REG_AX, imm));
-            current_value = Some(CurrentValue {
+            let register = match location {
+                ValueLocation::Primary => REG_AX,
+                ValueLocation::Secondary => REG_BX,
+            };
+            bytes.extend_from_slice(&encode_mov_reg_imm16(register, imm));
+            live_values.push(LiveValue {
                 name: dest.to_string(),
                 width,
+                location,
             });
             // A non-terminating instruction was just emitted -- even if
             // the buffer's trailing byte now happens to numerically
@@ -216,6 +211,42 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             // terminated:bool pattern: a byte-value check has no
             // equivalent "reset" step, which is exactly how the bug
             // class this avoids slips in.
+            terminated = false;
+            continue;
+        }
+
+        if let Some((width, binary_op)) = binary_op(op) {
+            let dest = require_dest(instr, op)?;
+            let lhs_name = parse_var_src(instr, 0, op)?;
+            let rhs_name = parse_var_src(instr, 1, op)?;
+            let lhs = find_live_value(&live_values, &lhs_name, width, op)?;
+            let rhs = find_live_value(&live_values, &rhs_name, width, op)?;
+            emit_binary(&mut bytes, width, binary_op, lhs.location, rhs.location);
+            live_values = vec![LiveValue {
+                name: dest.to_string(),
+                width,
+                location: ValueLocation::Primary,
+            }];
+            terminated = false;
+            continue;
+        }
+
+        if let Some(width) = unary_not_width(op) {
+            let dest = require_dest(instr, op)?;
+            let src_name = parse_var_src(instr, 0, op)?;
+            let src = find_live_value(&live_values, &src_name, width, op)?;
+            materialize_primary(&mut bytes, src.location);
+            let mask = match width {
+                ResultWidth::Byte => 0x00FF,
+                ResultWidth::Word => 0xFFFF,
+            };
+            bytes.extend_from_slice(&encode_mov_reg_imm16(REG_CX, mask));
+            bytes.extend_from_slice(&encode_xor_reg_reg16(REG_AX, REG_CX));
+            live_values = vec![LiveValue {
+                name: dest.to_string(),
+                width,
+                location: ValueLocation::Primary,
+            }];
             terminated = false;
             continue;
         }
@@ -270,9 +301,130 @@ impl ResultWidth {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-struct CurrentValue {
+struct LiveValue {
     name: String,
     width: ResultWidth,
+    location: ValueLocation,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ValueLocation {
+    Primary,
+    Secondary,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum BinaryOp {
+    Add,
+    Sub,
+    And,
+    Or,
+    Xor,
+}
+
+fn allocate_location(
+    live_values: &[LiveValue],
+    width: ResultWidth,
+) -> Result<ValueLocation, BackendError> {
+    match live_values {
+        [] => Ok(ValueLocation::Primary),
+        [value] if value.width == width => Ok(ValueLocation::Secondary),
+        [value] => Err(BackendError::UnsupportedOp(format!(
+            "cannot keep a {}-bit and {}-bit value live together in WORD02",
+            value.width.bits(),
+            width.bits()
+        ))),
+        _ => Err(BackendError::UnsupportedOp(
+            "WORD02 supports at most two live values".into(),
+        )),
+    }
+}
+
+fn find_live_value<'a>(
+    live_values: &'a [LiveValue],
+    name: &str,
+    width: ResultWidth,
+    op: &str,
+) -> Result<&'a LiveValue, BackendError> {
+    let value = live_values
+        .iter()
+        .find(|value| value.name == name)
+        .ok_or_else(|| BackendError::UndefinedVariable(name.to_string()))?;
+    if value.width == width {
+        Ok(value)
+    } else {
+        Err(BackendError::UnsupportedOp(format!(
+            "{op} requires {}-bit operands",
+            width.bits()
+        )))
+    }
+}
+
+fn binary_op(op: &str) -> Option<(ResultWidth, BinaryOp)> {
+    let (name, width) = op.rsplit_once('_')?;
+    let width = match width {
+        "u8" => ResultWidth::Byte,
+        "u16" => ResultWidth::Word,
+        _ => return None,
+    };
+    let operation = match name {
+        "add" => BinaryOp::Add,
+        "sub" => BinaryOp::Sub,
+        "and" => BinaryOp::And,
+        "or" => BinaryOp::Or,
+        "xor" => BinaryOp::Xor,
+        _ => return None,
+    };
+    Some((width, operation))
+}
+
+fn unary_not_width(op: &str) -> Option<ResultWidth> {
+    match op {
+        "not_u8" => Some(ResultWidth::Byte),
+        "not_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+fn materialize_primary(bytes: &mut Vec<u8>, location: ValueLocation) {
+    if location == ValueLocation::Secondary {
+        bytes.extend_from_slice(&encode_mov_reg_reg16(REG_AX, REG_BX));
+    }
+}
+
+fn emit_binary(
+    bytes: &mut Vec<u8>,
+    width: ResultWidth,
+    op: BinaryOp,
+    lhs: ValueLocation,
+    rhs: ValueLocation,
+) {
+    if lhs == rhs {
+        materialize_primary(bytes, lhs);
+        emit_reg_binary(bytes, op, REG_AX);
+    } else if lhs == ValueLocation::Secondary && op == BinaryOp::Sub {
+        bytes.extend_from_slice(&encode_mov_reg_reg16(REG_CX, REG_AX));
+        bytes.extend_from_slice(&encode_mov_reg_reg16(REG_AX, REG_BX));
+        bytes.extend_from_slice(&encode_sub_reg_reg16(REG_AX, REG_CX));
+    } else {
+        emit_reg_binary(bytes, op, REG_BX);
+    }
+
+    if width == ResultWidth::Byte && matches!(op, BinaryOp::Add | BinaryOp::Sub) {
+        bytes.extend_from_slice(&encode_mov_reg_imm16(REG_CX, 0x00FF));
+        bytes.extend_from_slice(&encode_and_reg_reg16(REG_AX, REG_CX));
+    }
+}
+
+fn emit_reg_binary(bytes: &mut Vec<u8>, op: BinaryOp, rhs: u8) {
+    let encoded = match op {
+        BinaryOp::Add => encode_add_reg_reg16(REG_AX, rhs),
+        BinaryOp::Sub => encode_sub_reg_reg16(REG_AX, rhs),
+        BinaryOp::And => encode_and_reg_reg16(REG_AX, rhs),
+        BinaryOp::Or => encode_or_reg_reg16(REG_AX, rhs),
+        BinaryOp::Xor => encode_xor_reg_reg16(REG_AX, rhs),
+    };
+    bytes.extend_from_slice(&encoded);
 }
 
 fn result_width_for_const(op: &str) -> Option<ResultWidth> {

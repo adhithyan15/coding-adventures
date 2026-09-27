@@ -22,6 +22,88 @@ fn const_42_ret_cir() -> Vec<CIRInstr> {
     ]
 }
 
+fn run_binary(op: &str, ty: &str, lhs: i64, rhs: i64) -> Z80Simulator {
+    run_binary_sources(op, ty, lhs, rhs, "lhs", "rhs")
+}
+
+fn run_binary_sources(
+    op: &str,
+    ty: &str,
+    lhs: i64,
+    rhs: i64,
+    first: &str,
+    second: &str,
+) -> Z80Simulator {
+    let cir = vec![
+        ci(
+            &format!("const_{ty}"),
+            Some("lhs"),
+            vec![CIROperand::Int(lhs)],
+            ty,
+        ),
+        ci(
+            &format!("const_{ty}"),
+            Some("rhs"),
+            vec![CIROperand::Int(rhs)],
+            ty,
+        ),
+        ci(
+            &format!("{op}_{ty}"),
+            Some("result"),
+            vec![
+                CIROperand::Var(first.into()),
+                CIROperand::Var(second.into()),
+            ],
+            ty,
+        ),
+        ci(
+            &format!("ret_{ty}"),
+            None,
+            vec![CIROperand::Var("result".into())],
+            ty,
+        ),
+    ];
+    let bytes = compile(&ctx("word02_binary", &[], ty), &cir).expect("WORD02 lowering");
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(100).unwrap();
+    assert!(result.halted);
+    sim
+}
+
+fn run_not(ty: &str, value: i64) -> Z80Simulator {
+    let cir = vec![
+        ci(
+            &format!("const_{ty}"),
+            Some("value"),
+            vec![CIROperand::Int(value)],
+            ty,
+        ),
+        ci(
+            &format!("not_{ty}"),
+            Some("result"),
+            vec![CIROperand::Var("value".into())],
+            ty,
+        ),
+        ci(
+            &format!("ret_{ty}"),
+            None,
+            vec![CIROperand::Var("result".into())],
+            ty,
+        ),
+    ];
+    let bytes = compile(&ctx("word02_not", &[], ty), &cir).expect("WORD02 lowering");
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    let result = sim.run_loaded_with_limit(100).unwrap();
+    assert!(result.halted);
+    sim
+}
+
+fn hl(sim: &Z80Simulator) -> u16 {
+    u16::from_be_bytes([sim.regs.h, sim.regs.l])
+}
+
 #[test]
 fn empty_cir_emits_halt() {
     let bytes = compile(&ctx("empty", &[], "void"), &[]).expect("lowering");
@@ -230,15 +312,80 @@ fn unsupported_op_returns_err() {
 }
 
 #[test]
-fn multi_const_ret_falls_through() {
+fn word02_bounded_allocation() {
     let cir = vec![
         ci("const_i64", Some("a"), vec![CIROperand::Int(1)], "i64"),
         ci("const_i64", Some("b"), vec![CIROperand::Int(2)], "i64"),
         ci("ret_i64", None, vec![CIROperand::Var("a".into())], "i64"),
     ];
-    let err = compile(&ctx("two_const_ret_first", &[], "i64"), &cir)
-        .expect_err("multi-var ret should fall through");
+    let bytes = compile(&ctx("two_const_ret_first", &[], "i64"), &cir).expect("two live values");
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    sim.run_loaded_with_limit(10).unwrap();
+    assert_eq!(sim.regs.a, 1);
+
+    let mut return_second = cir.clone();
+    return_second[2] = ci("ret_i64", None, vec![CIROperand::Var("b".into())], "i64");
+    let bytes = compile(&ctx("two_const_ret_second", &[], "i64"), &return_second)
+        .expect("secondary result");
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    sim.run_loaded_with_limit(10).unwrap();
+    assert_eq!(sim.regs.a, 2);
+
+    let third = ci("const_u8", Some("c"), vec![CIROperand::Int(3)], "u8");
+    let err = compile(
+        &ctx("three_live", &[], "u8"),
+        &[
+            ci("const_u8", Some("a"), vec![CIROperand::Int(1)], "u8"),
+            ci("const_u8", Some("b"), vec![CIROperand::Int(2)], "u8"),
+            third,
+        ],
+    )
+    .expect_err("third live value must be rejected");
     assert!(matches!(err, BackendError::UnsupportedOp(_)));
+
+    let err = compile(
+        &ctx("mixed_width", &[], "u16"),
+        &[
+            ci("const_u8", Some("a"), vec![CIROperand::Int(1)], "u8"),
+            ci("const_u16", Some("b"), vec![CIROperand::Int(2)], "u16"),
+        ],
+    )
+    .expect_err("mixed-width live values must be rejected");
+    assert!(matches!(err, BackendError::UnsupportedOp(_)));
+}
+
+#[test]
+fn word02_wrapping_add_proofs() {
+    assert_eq!(run_binary("add", "u8", 0xFF, 2).regs.a, 1);
+    assert_eq!(hl(&run_binary("add", "u16", 0xFFFF, 2)), 1);
+}
+
+#[test]
+fn word02_subtract_and_bitwise_proofs() {
+    assert_eq!(run_binary("sub", "u8", 0, 1).regs.a, 0xFF);
+    assert_eq!(hl(&run_binary("sub", "u16", 0, 1)), 0xFFFF);
+    assert_eq!(run_binary("and", "u8", 0xF0, 0x3C).regs.a, 0x30);
+    assert_eq!(run_binary("or", "u8", 0xF0, 0x0F).regs.a, 0xFF);
+    assert_eq!(run_binary("xor", "u8", 0xAA, 0xFF).regs.a, 0x55);
+    assert_eq!(run_not("u8", 0x0F).regs.a, 0xF0);
+    assert_eq!(hl(&run_binary("and", "u16", 0xF0F0, 0x0FF0)), 0x00F0);
+    assert_eq!(hl(&run_binary("or", "u16", 0xF000, 0x0F0F)), 0xFF0F);
+    assert_eq!(hl(&run_binary("xor", "u16", 0x1234, 0x00FF)), 0x12CB);
+    assert_eq!(hl(&run_not("u16", 0x00FF)), 0xFF00);
+    assert_eq!(
+        run_binary_sources("sub", "u8", 3, 9, "rhs", "lhs").regs.a,
+        6
+    );
+    assert_eq!(
+        hl(&run_binary_sources("sub", "u16", 3, 0x1234, "rhs", "lhs")),
+        0x1231
+    );
+    assert_eq!(
+        hl(&run_binary_sources("add", "u16", 7, 99, "lhs", "lhs")),
+        14
+    );
 }
 
 #[test]

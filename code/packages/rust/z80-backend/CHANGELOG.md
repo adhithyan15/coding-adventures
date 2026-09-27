@@ -1,6 +1,15 @@
 # Changelog — z80-backend
 
-## Unreleased — WORD01 fixed-width result ABI
+## Unreleased — WORD02 two-live-value arithmetic
+
+- Allocate two byte values in `A`/`B` and two word values in `HL`/`DE`.
+- Lower wrapping add/subtract and `and`/`or`/`xor`/`not` for `u8` and `u16`.
+  Z80 word subtraction and logical operations are synthesized bytewise where
+  the ISA has no matching 16-bit instruction.
+- Execute the emitted wraparound and full-word XOR proofs in `z80-simulator`,
+  inspecting both halves of `HL`.
+
+## WORD01 fixed-width result ABI
 
 - Lower `const_u8`/`ret_u8` and `const_bool`/`ret_bool` through `A`.
 - Lower `const_u16`/`ret_u16` through `HL` using `LD HL,nn`.

@@ -11,6 +11,10 @@ The WORD01 surface also re-exports `encode_ld_rp_nn` and `PAIR_HL`, allowing
 the backend to materialize a 16-bit result with `LD HL,nn` while keeping all
 opcode construction in `z80-simulator`.
 
+WORD02 additionally exposes register loads/moves, `ADD HL,rp`, the base ALU
+register encoder, and the register/opcode constants needed for the backend's
+bounded `A`/`B` and `HL`/`DE` allocation.
+
 ## Byte-identity with `intel8080-encoder`
 
 `encode_ld_a_n(n)` and `HALT` are byte-identical to

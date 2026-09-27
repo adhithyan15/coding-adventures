@@ -1,5 +1,10 @@
 # Changelog — intel8086-simulator
 
+## Unreleased
+
+- Add public register-to-register `ADD`, `SUB`, `AND`, `OR`, and `XOR`
+  encoding helpers, with exact-byte tests, for WORD02 backend lowering.
+
 ## [0.2.0] - 2026-08-28
 
 ### Added

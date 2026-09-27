@@ -1,6 +1,12 @@
 # Changelog — z80-encoder
 
-## Unreleased — WORD01 fixed-width result ABI
+## Unreleased — WORD02 arithmetic surface
+
+Re-export the register load/move and ALU helpers plus the byte-register,
+register-pair, ALU selector, and complement constants needed by WORD02. A unit
+test pins representative byte and word arithmetic encodings.
+
+## WORD01 fixed-width result ABI
 
 Re-export `encode_ld_rp_nn` and `PAIR_HL` so `z80-backend` can materialize a
 `u16` result in `HL`. A unit test pins `LD HL,0x1234` to

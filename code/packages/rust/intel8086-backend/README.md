@@ -10,26 +10,22 @@ Lowers a `Vec<CIRInstr>` into Intel 8086 machine code bytes via
 to be loaded into `intel8086-simulator` (or any compatible external
 8086/8088 emulator).
 
-## Scope (WORD01)
+## Scope (WORD02)
 
 | CIR op | Lowering |
 |--------|----------|
 | `const_u8`, `const_bool` | `MOV AX, #imm16` with `AH = 0` |
 | `const_u16` | `MOV AX, #imm16` |
+| `add`/`sub`/`and`/`or`/`xor` on `u8` and `u16` | register-to-register ALU operations in `AX`/`BX` |
+| `not_u8`, `not_u16` | width mask followed by `XOR` |
 | matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HLT` |
 | Anything else | `None` (compile failure — same graceful AOT/JIT fallback every other backend gets) |
 
 The historical `const_i64`/`ret_i64` 16-bit smoke path remains for
-compatibility. Exactly one value may be live, and typed returns must match its
-width. The observable result ABI is `AL` with `AH = 0` for `u8`/`bool`, and
-`AX` for `u16`.
-
-A trivial "last const var" single-register (`AX`) allocator — the same
-scheme `mips-r2000-backend`/`arm1-backend`/`mos6502-backend` use. Full op
-coverage (arithmetic, register-to-register moves, control flow) is
-intentionally not wired into this backend yet, even though
-`intel8086-simulator` implements a curated core of them — a future
-increment can extend `compile_to_bytes`.
+compatibility. Up to two same-width values may be live in `AX` and `BX`.
+Binary operations consume both and leave the result in `AX`; byte arithmetic
+is masked back to eight bits. The observable result ABI is `AL` with `AH = 0`
+for `u8`/`bool`, and `AX` for `u16`.
 
 ## Why `HLT`, not a pseudo-halt?
 
@@ -66,7 +62,7 @@ See `tests/test_backend.rs`'s
 for the regression test that would fail against a naive trailing-byte-
 comparison implementation.
 
-## Tests (19 tests across `tests/test_backend.rs`)
+## Tests (23 tests across `tests/test_backend.rs`)
 
 Byte-for-byte parity for the canonical `const 42; ret` program
 (`[0xB8, 0x2A, 0x00, 0xF4]`), verified both as a hand-derived byte array
@@ -74,4 +70,5 @@ and by actually executing the emitted bytes in `intel8086-simulator`
 (through non-zero-`CS` segmented addressing) and asserting `sim.ax == 42`
 and `sim.halted == true` — plus the byte-collision regression test above
 and its sibling covering the low-byte-collision case, immediate-range
-validation, `Backend` trait conformance, and the `run()` emit-only panic.
+validation, `Backend` trait conformance, the `run()` emit-only panic, and
+executed WORD02 wraparound, subtraction, and bitwise proofs at both widths.

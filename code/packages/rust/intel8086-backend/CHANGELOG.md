@@ -1,6 +1,15 @@
 # Changelog — intel8086-backend
 
-## Unreleased — WORD01 fixed-width result ABI
+## Unreleased — WORD02 two-live-value arithmetic
+
+- Allocate two values in `AX`/`BX` and materialize either one at the result
+  boundary.
+- Lower wrapping add/subtract and `and`/`or`/`xor`/`not` for `u8` and `u16`,
+  masking byte arithmetic through `CX` so `AH` remains zero at the boundary.
+- Execute the emitted wraparound and full-word XOR proofs through segmented
+  fetch in `intel8086-simulator`.
+
+## WORD01 fixed-width result ABI
 
 - Enforce the `u8` range for `const_u8` and zero-extend byte/bool results in
   `AX`, making the boundary observable as `AL` with `AH = 0`.

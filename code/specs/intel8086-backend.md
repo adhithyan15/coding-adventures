@@ -55,32 +55,27 @@ do — see `code/specs/07m-intel-8086-simulator.md` and
 `intel8086-simulator/src/simulator.rs`'s module doc (`phys_addr`) for
 the exact formula and its 20-bit wraparound behaviour.
 
-## Current scope — WORD01 result ABI
+## Current scope — WORD02 arithmetic
 
 | CIR op family | Lowering |
 |----------------|----------|
 | `const_u8`, `const_bool` | `MOV AX, #imm16`, zero-extended (`AH = 0`) |
 | `const_u16` | `MOV AX, #imm16` |
+| `add`/`sub`/`and`/`or`/`xor` on `u8` and `u16` | register-to-register ALU operations through `AX`/`BX` |
+| `not_u8`, `not_u16` | width mask followed by register `XOR` |
 | matching `ret_u8`, `ret_bool`, `ret_u16` | `HLT` (only if returning the current value at the matching width) |
 | `ret_void` | `HLT` |
 | Empty CIR body | `HLT` |
 | Anything else | `UnsupportedOp` from `compile()`; `None` from the `Backend::compile` trait method |
 
-There is **no real register allocator** — a trivial "last const var"
-scheme tracks the name and width of the single current value in `AX`. Byte and
-bool values are zero-extended so `AL` contains the result and `AH == 0`; word
-values occupy all of `AX`. A typed return succeeds only for the current
-variable at the matching width. Programs needing more than one live value fall
-through to `UnsupportedOp`. AOT treats `None` as a per-function compile
-failure; JIT keeps execution on the interpreter tier.
-
-Full op coverage (arithmetic, register-to-register moves, control flow
-— a mature backend's worth) is **intentionally not wired into this
-backend** in this PR, even though `intel8086-simulator` already
-implements a curated core of those mnemonics. Future increments can
-extend `intel8086-backend::compile_to_bytes` to emit `ADD`/`SUB`/`MOV
-reg,reg` using the encoder helpers `intel8086-encoder` already
-re-exports — the simulator-side work to execute them is already done.
+The bounded allocator supports two same-width live values in `AX`/`BX`; `CX`
+is scratch for reversed subtraction and byte-result masking. Binary operations
+consume both operands and leave their result in `AX`. Byte and bool values are
+zero-extended so `AL` contains the result and `AH == 0`; word values occupy all
+of `AX`. More than two live values and mixed-width live sets fall through to
+`UnsupportedOp`. AOT treats `None` as a per-function compile failure; JIT keeps
+execution on the interpreter tier. Comparisons and control flow remain outside
+this increment.
 
 ## Why `ret_*` lowers to real `HLT`, not a pseudo-halt
 
@@ -198,16 +193,24 @@ A companion test proves a `u8` boundary produces `AX == 0x00ff`, while other
 regressions reject 256 as a `u8` and reject a `ret_u8` for a current `u16`
 value.
 
+## WORD02 execution proof
+
+The backend tests execute `u8(0xff) + u8(2) == 1`,
+`u16(0xffff) + u16(2) == 1`, and
+`u16(0x1234) ^ u16(0x00ff) == 0x12cb` in `intel8086-simulator` through
+non-zero-`CS` segmented fetch. Companion tests cover subtraction and every
+bitwise operation at both widths.
+
 ## Tests
 
-21 unit/integration tests in `tests/test_backend.rs` (mirroring
+23 unit/integration tests in `tests/test_backend.rs` (mirroring
 `mos6502-backend`'s/`arm1-backend`'s test shape) pin the canonical byte
 sequence and edge cases (zero, 16-bit range boundaries — negative and
-`>65535` — bool, multi-var fallthrough, unsupported op, empty CIR,
+`>65535` — bool, bounded allocation, unsupported op, empty CIR,
 `ret_void`, `Backend::run` panics, `Backend::compile` vs the free
 `compile` function agree).
 
-Two tests additionally load the compiled bytes into
+Several tests additionally load the compiled bytes into
 `intel8086-simulator` and genuinely execute them (through non-zero-`CS`
 segmented addressing, not a flat-memory shortcut) — byte-for-byte
 parity is necessary but not sufficient; the emitted bytes must actually
@@ -224,27 +227,19 @@ execute correctly (and actually halt) in the new simulator:
 
 ## Backlog
 
-1. [ ] Real register allocator using the 8086's other general-purpose
-   registers (`BX`/`CX`/`DX`) and the stack, removing the single-var
-   limitation.
-2. [ ] Arithmetic/logical CIR ops (`add`/`sub`/`and`/`or`/`xor`/`cmp`)
-   via the accumulator-immediate and register-to-register ALU
-   instructions `intel8086-simulator` already implements — only the
-   backend-side lowering + a wider `intel8086-encoder` re-export list
-   are missing.
+1. [ ] Expand the bounded two-value allocator with stack spills when later
+   Word programs require it.
+2. [ ] Comparisons and conditional branches using `CMP` plus conditional
+   jumps.
 3. [ ] Memory-operand support (loads/stores through `[BX+SI]` and
    friends) — this needs the effective-address computation
    `intel8086-simulator`'s `decode.rs` explicitly defers, so this item
    is gated on a simulator-side increment first.
-4. [ ] Comparisons and conditional branches. Unlike ARM1's per-
-   instruction condition-code field, the 8086 needs an explicit
-   `CMP`-then-conditional-jump pairing (closer to
-   `mips-r2000-backend`'s branch story than ARM1's).
-5. [ ] Direct calls (`CALL`/`RET` pairing) and a stack frame — once
+4. [ ] Direct calls (`CALL`/`RET` pairing) and a stack frame — once
    this lands, `ret_*` could switch from `HLT` to `RET` for called
    functions (the `HLT` would remain for the outermost program-exit
    case, matching how other lanes' backlogs plan to keep their halt
    convention for program exit even after adding real calls).
-6. [ ] `Backend::run` wired to `intel8086-simulator` for JIT execution
+5. [ ] `Backend::run` wired to `intel8086-simulator` for JIT execution
    (best-effort per the migration spec — "no working JIT" is an
    acceptable outcome for a historical-arch target).

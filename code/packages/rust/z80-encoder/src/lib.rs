@@ -64,8 +64,14 @@
 // the instruction-byte-sequence packing logic lives.  We re-export the
 // subset `z80-backend` actually uses.
 
-pub use z80_simulator::encoding::{assemble, encode_ld_a_n, encode_ld_rp_nn};
-pub use z80_simulator::opcodes::{HALT, PAIR_HL, RET};
+pub use z80_simulator::encoding::{
+    assemble, encode_add_hl_rp, encode_alu_reg, encode_ld_a_n, encode_ld_r_n, encode_ld_r_r,
+    encode_ld_rp_nn,
+};
+pub use z80_simulator::opcodes::{
+    ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, PAIR_DE, PAIR_HL, REG_A, REG_B,
+    REG_C, REG_D, REG_E, REG_H, REG_L, RET,
+};
 
 // ===========================================================================
 // Register-role constant
@@ -74,8 +80,6 @@ pub use z80_simulator::opcodes::{HALT, PAIR_HL, RET};
 // Like the 8080, the Z80 names its working registers (A, B, C, D, E, H,
 // L) rather than numbering them, so `z80-backend` addresses the
 // accumulator directly rather than through an indexed register file.
-
-pub use z80_simulator::opcodes::REG_A;
 
 // ===========================================================================
 // Capacity constants
@@ -113,6 +117,14 @@ mod tests {
     #[test]
     fn canonical_word_result_bytes() {
         assert_eq!(encode_ld_rp_nn(PAIR_HL, 0x1234), vec![0x21, 0x34, 0x12]);
+    }
+
+    #[test]
+    fn word02_two_value_arithmetic_bytes() {
+        assert_eq!(encode_ld_r_n(REG_B, 2), vec![0x06, 0x02]);
+        assert_eq!(encode_alu_reg(ALU_ADD, REG_B), 0x80);
+        assert_eq!(encode_ld_rp_nn(PAIR_DE, 2), vec![0x11, 0x02, 0x00]);
+        assert_eq!(encode_add_hl_rp(PAIR_DE), 0x19);
     }
 
     #[test]

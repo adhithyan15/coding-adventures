@@ -29,19 +29,21 @@ superseded design history and must not create a parallel implementation.
 
 The next shared-platform queue is:
 
-1. **WORD01 / VM-072 (implementation in review):** the fixed-width result ABI
-   now executes `const_u16 0x1234; ret_u16` as `HL == 0x1234` on Z80 and
-   `AX == 0x1234` on 8086, with byte-boundary and width-mismatch regressions.
-   Keep this item first until its protected PR merges.
-2. **WORD02 / VM-072 (next after WORD01):** add two-live-value allocation plus
-   wrapping `u8`/`u16` arithmetic and bitwise execution on both targets.
-3. **VM-067:** add a useful Rust generated-grammar regeneration guard scoped
+1. **WORD01 / VM-072 (done):** PR #16187 merged as
+   `9d1b5e446ad50ac70a432fcd35b8eafd6a82f999`; the fixed-width result ABI
+   executes `0x1234` in Z80 `HL` and 8086 `AX`.
+2. **WORD02 / VM-072 (implementation active):** two-live-value allocation and
+   wrapping `u8`/`u16` arithmetic/bitwise lowering now execute on both
+   simulators; keep this item first until its protected PR merges.
+3. **WORD03 / VM-072 (next):** add comparisons and structured control flow,
+   including a loop that proves both taken and untaken branches.
+4. **VM-067:** add a useful Rust generated-grammar regeneration guard scoped
    against issue #14202's existing drift.
-4. **VM-073:** audit ets-backed `array_set` extent checks and add a real-Erlang
+5. **VM-073:** audit ets-backed `array_set` extent checks and add a real-Erlang
    regression if an out-of-range insertion is reachable.
-5. **VM-069 / PREP01:** continue the bounded preprocessor ladder with
+6. **VM-069 / PREP01:** continue the bounded preprocessor ladder with
    expansion-definition provenance and `defined()` operand expansion.
-6. **Remaining semantic/runtime work:** VM-013 Oct intrinsics, VM-028 4004
+7. **Remaining semantic/runtime work:** VM-013 Oct intrinsics, VM-028 4004
    fidelity, VM-029/031 platform acceptance/native GC proofs, and AOT00.
 
 WORD03 through WORD05 then add control flow, static memory/I/O/direct calls,

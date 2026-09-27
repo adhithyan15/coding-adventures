@@ -35,27 +35,29 @@ every other arch backend (including `aarch64-backend` /
 migrate away from — like `mips-r2000-backend`/`arm1-backend`, this crate
 starts at the correct layer from day one.
 
-## Current scope — WORD01 result ABI
+## Current scope — WORD02 arithmetic
 
 | CIR op family | Lowering |
 |----------------|----------|
 | `const_u8`, `const_bool` | `LD A, imm` |
 | `const_u16` | `LD HL, imm16` |
+| `add`/`sub`/`and`/`or`/`xor` on `u8` and `u16` | native and synthesized ALU sequences over `A`/`B` or `HL`/`DE` |
+| `not_u8`, `not_u16` | `CPL`, applied bytewise for `u16` |
 | matching `ret_u8`, `ret_bool`, `ret_u16` | `HALT` (only if returning the current value at the matching width) |
 | `ret_void` | `HALT` |
 | Empty CIR body | `HALT` |
 | Anything else | `UnsupportedOp` from `compile()`; `None` from the `Backend::compile` trait method |
 
-There is **no real register allocator** — a trivial "last const var"
-scheme tracks the name and width of the single current value. Byte and bool
-values occupy `A`; word values occupy `HL`. A typed return succeeds only for
-that variable at the matching width. Programs needing more than one live value
-fall through to `UnsupportedOp`.
+The bounded allocator supports two same-width live values. Byte and bool
+values occupy `A`/`B`; word values occupy `HL`/`DE`. Binary operations consume
+both operands and retain their result in `A` or `HL`. A typed return can also
+materialize the secondary value into the result location. More than two live
+values and mixed-width live sets fall through to `UnsupportedOp`.
 
-Full op coverage (arithmetic, comparisons, branches, calls, the
+Full op coverage (comparisons, branches, calls, the
 alternate register bank, `CB`-prefixed bit ops, IX/IY-relative
 addressing) that a mature backend would carry is **intentionally not
-ported** in this PR — `z80-simulator` already implements a substantial
+ported** yet — `z80-simulator` already implements a substantial
 subset of the ISA these could lower to (see that crate's README for the
 full inventory and the deliberate `ED`-prefix scope cut), so a future
 increment to `z80-backend` has comparatively little ISA groundwork left
@@ -137,13 +139,21 @@ if the lowering logic changes.
 `L == 0x34`. Companion tests execute the `u8` boundary in `A`, reject 256 as a
 `u8`, and reject a `ret_u8` for a current `u16` value.
 
+## WORD02 execution proof
+
+The backend tests execute `u8(0xff) + u8(2) == 1`,
+`u16(0xffff) + u16(2) == 1`, and
+`u16(0x1234) ^ u16(0x00ff) == 0x12cb` in `z80-simulator`. Word results assert
+both `H` and `L`. Companion tests cover subtraction and every bitwise operation
+at both widths.
+
 ## Tests
 
-20 unit/integration tests in `tests/test_backend.rs` (mirroring
+22 unit/integration tests in `tests/test_backend.rs` (mirroring
 `intel8080-backend`'s test shape, plus the cross-architecture and
 halt-byte-value regression tests above) pin the canonical byte sequence
-and edge cases (zero, 8-bit max, immediate overflow, bool, multi-var
-fallthrough, unsupported op, empty CIR, `ret_void`, `Backend::run`
+and edge cases (zero, 8-bit max, immediate overflow, bool, bounded allocation,
+unsupported op, empty CIR, `ret_void`, `Backend::run`
 panics, `Backend::compile` vs the free `compile` function agree).
 
 Multiple tests additionally load the compiled bytes into `z80-simulator` and
@@ -152,25 +162,20 @@ necessary but not sufficient; the emitted bytes must actually execute.
 
 ## Backlog
 
-1. [ ] Real register allocator using the Z80's B/C/D/E/H/L temp
-   registers (and, eventually, the alternate bank via `EX AF,AF'`/
-   `EXX` for spill-free context switches), removing the single-var
-   limitation.
-2. [ ] Arithmetic/bitwise CIR ops (`add`/`sub`/`and`/`or`/`xor`) —
-   `z80-simulator` already implements `ADD`/`SUB`/`AND`/`XOR`/`OR`/`CP`,
-   so this is CIR-to-encoder wiring only.
-3. [ ] Comparisons and conditional branches (`JP cc`/`JR cc`/`DJNZ`) —
+1. [ ] Expand the bounded two-value allocator with spills and the alternate
+   bank via `EX AF,AF'`/`EXX` when later Word programs require it.
+2. [ ] Comparisons and conditional branches (`JP cc`/`JR cc`/`DJNZ`) —
    the simulator already implements all 8 condition codes plus the
    Z80-only relative-jump forms.
-4. [ ] Direct calls (`CALL`/`RET` pairing) and a stack frame — the
+3. [ ] Direct calls (`CALL`/`RET` pairing) and a stack frame — the
    simulator already implements `CALL`/`RET`/`PUSH`/`POP`.
-5. [ ] `CB`-prefixed bit test/manipulation ops as CIR bitwise
+4. [ ] `CB`-prefixed bit test/manipulation ops as CIR bitwise
    primitives — the simulator already implements the full `BIT`/`RES`/
    `SET`/rotate-shift group.
-6. [ ] IX/IY-relative addressing for stack-frame-like local variables —
+5. [ ] IX/IY-relative addressing for stack-frame-like local variables —
    the simulator currently only ports the "IX/IY basics"
    (`LD IX/IY,nn`, `INC IX/IY`); full `(IX+d)` addressing is a
    simulator-side prerequisite before the backend could use it.
-7. [ ] `Backend::run` wired to `z80-simulator` for JIT execution
+6. [ ] `Backend::run` wired to `z80-simulator` for JIT execution
    (best-effort per the migration spec — "no working JIT" is an
    acceptable outcome for a historical-arch target).

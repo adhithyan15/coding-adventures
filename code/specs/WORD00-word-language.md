@@ -1,8 +1,8 @@
 # WORD00 — Word cross-target language contract
 
 > **Status:** design selected for VM-072; WORD01 implements the fixed-width
-> result boundary. This document does not claim a frontend or arithmetic,
-> control-flow, memory, I/O, or call lowering.
+> result boundary and WORD02 implements bounded arithmetic. This document does
+> not claim a frontend, control-flow, memory, I/O, or call lowering.
 
 ## Purpose
 
@@ -47,11 +47,11 @@ complete language pipeline.
 
 | Component | Current evidence | Gap before Word |
 |---|---|---|
-| shared AOT/CIR typing | `u8`, `u16`, `bool`, and control-flow operations are allowlisted | historical backends do not lower the required operations |
-| `z80-backend` | `const_*` to `LD A,n`; `ret_*` to `HALT`; executed in `z80-simulator` | literals stop at 255, only one live variable, no arithmetic/memory/branch/call/I/O lowering |
-| Z80 ISA support | simulator covers register pairs, ALU, jumps, calls, stack, memory, and I/O; its internal encoder has helpers for several of these | the public encoder/backend surface is still minimal |
-| `intel8086-backend` | unsigned 16-bit constant to `MOV AX,imm16`; `ret_*` to `HLT`; executed through segmented fetch | only one live variable and no arithmetic/memory/branch/call/I/O lowering |
-| 8086 ISA support | the behavioral simulator has broad instruction coverage; the stable encoder already exports register moves and accumulator add/sub helpers | backend allocation and the remaining encoder-facing lowering contract are absent |
+| shared AOT/CIR typing | `u8`, `u16`, `bool`, arithmetic, and control-flow operations are allowlisted | later Word stages still need comparison, control, memory, I/O, and calls |
+| `z80-backend` | fixed-width constants/results plus two-live-value arithmetic; executed in `z80-simulator` | no comparison/memory/branch/call/I/O lowering |
+| Z80 ISA support | simulator covers register pairs, ALU, jumps, calls, stack, memory, and I/O; the public encoder now exposes WORD02 ALU primitives | comparison/control and later-stage encoder/backend wiring remain |
+| `intel8086-backend` | fixed-width constants/results plus two-live-value arithmetic; executed through segmented fetch | no comparison/memory/branch/call/I/O lowering |
+| 8086 ISA support | the behavioral simulator has broad instruction coverage; the stable encoder now exports WORD02 register ALU helpers | comparison/control and later-stage encoder/backend wiring remain |
 | Oct | a complete hardware-shaped 8008 language pipeline | its carry, rotation, port, register, and binary assumptions are 8008-specific; its machine code is not reusable |
 
 The existing constant-return smoke tests prove that both targets can execute a
@@ -166,6 +166,12 @@ Add bounded allocation plus wrapping add/subtract and bitwise operations for
 The Z80 proof must exercise a real 16-bit pair path rather than comparing only
 the low byte. The 8086 proof must use 16-bit registers rather than a host-side
 calculation.
+
+**Implemented:** both backends now allocate two same-width live values and
+lower wrapping add/subtract plus `&`, `|`, `^`, and `~`. Executed simulator
+tests prove both wraparound cases and `0x1234 ^ 0x00ff == 0x12cb`; the Z80
+tests inspect `H` and `L`, while the 8086 tests inspect the full `AX` after
+segmented instruction fetch.
 
 ### WORD03 — comparisons and structured control
 

@@ -1,5 +1,11 @@
 # Changelog — intel8086-encoder
 
+## Unreleased — WORD02 arithmetic surface
+
+- Re-export register-to-register `ADD`, `SUB`, `AND`, `OR`, and `XOR`
+  encoders plus `REG_BX` and `REG_CX` for the bounded backend allocator.
+- Pin representative `AX, BX` ModRM encodings in unit tests.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

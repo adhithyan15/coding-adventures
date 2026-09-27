@@ -15,6 +15,90 @@ fn ci(op: &str, dest: Option<&str>, srcs: Vec<CIROperand>, ty: &str) -> CIRInstr
     CIRInstr::new(op, dest, srcs, ty)
 }
 
+fn run_binary(op: &str, ty: &str, lhs: i64, rhs: i64) -> Intel8086Simulator {
+    run_binary_sources(op, ty, lhs, rhs, "lhs", "rhs")
+}
+
+fn run_binary_sources(
+    op: &str,
+    ty: &str,
+    lhs: i64,
+    rhs: i64,
+    first: &str,
+    second: &str,
+) -> Intel8086Simulator {
+    let cir = vec![
+        ci(
+            &format!("const_{ty}"),
+            Some("lhs"),
+            vec![CIROperand::Int(lhs)],
+            ty,
+        ),
+        ci(
+            &format!("const_{ty}"),
+            Some("rhs"),
+            vec![CIROperand::Int(rhs)],
+            ty,
+        ),
+        ci(
+            &format!("{op}_{ty}"),
+            Some("result"),
+            vec![
+                CIROperand::Var(first.into()),
+                CIROperand::Var(second.into()),
+            ],
+            ty,
+        ),
+        ci(
+            &format!("ret_{ty}"),
+            None,
+            vec![CIROperand::Var("result".into())],
+            ty,
+        ),
+    ];
+    let bytes = compile(&ctx("word02_binary", &[], ty), &cir).expect("WORD02 lowering");
+    let mut sim = Intel8086Simulator::new(1 << 20);
+    let cs = 0x0010;
+    sim.cs = cs;
+    let origin = intel8086_simulator::simulator::phys_addr(cs, 0);
+    sim.load_program_at(&bytes, origin);
+    let result = sim.run_loaded_with_limit(100);
+    assert!(result.halted);
+    sim
+}
+
+fn run_not(ty: &str, value: i64) -> Intel8086Simulator {
+    let cir = vec![
+        ci(
+            &format!("const_{ty}"),
+            Some("value"),
+            vec![CIROperand::Int(value)],
+            ty,
+        ),
+        ci(
+            &format!("not_{ty}"),
+            Some("result"),
+            vec![CIROperand::Var("value".into())],
+            ty,
+        ),
+        ci(
+            &format!("ret_{ty}"),
+            None,
+            vec![CIROperand::Var("result".into())],
+            ty,
+        ),
+    ];
+    let bytes = compile(&ctx("word02_not", &[], ty), &cir).expect("WORD02 lowering");
+    let mut sim = Intel8086Simulator::new(1 << 20);
+    let cs = 0x0010;
+    sim.cs = cs;
+    let origin = intel8086_simulator::simulator::phys_addr(cs, 0);
+    sim.load_program_at(&bytes, origin);
+    let result = sim.run_loaded_with_limit(100);
+    assert!(result.halted);
+    sim
+}
+
 #[test]
 fn empty_cir_emits_hlt() {
     let bytes = compile(&ctx("empty", &[], "void"), &[]).expect("lowering");
@@ -220,17 +304,73 @@ fn unsupported_op_returns_err() {
 }
 
 #[test]
-fn multi_const_ret_falls_through_to_unsupported() {
-    // Two consts where ret targets the first -- currently unsupported
-    // since v0.1.0 only handles single-var-in-AX case.
+fn word02_bounded_allocation() {
     let cir = vec![
         ci("const_i64", Some("a"), vec![CIROperand::Int(1)], "i64"),
         ci("const_i64", Some("b"), vec![CIROperand::Int(2)], "i64"),
         ci("ret_i64", None, vec![CIROperand::Var("a".into())], "i64"),
     ];
-    let err = compile(&ctx("two_const_ret_first", &[], "i64"), &cir)
-        .expect_err("multi-var ret should fall through");
+    let bytes = compile(&ctx("two_const_ret_first", &[], "i64"), &cir).expect("two live values");
+    let mut sim = Intel8086Simulator::new(65536);
+    sim.load_program(&bytes);
+    sim.run_loaded_with_limit(10);
+    assert_eq!(sim.ax, 1);
+
+    let mut return_second = cir.clone();
+    return_second[2] = ci("ret_i64", None, vec![CIROperand::Var("b".into())], "i64");
+    let bytes = compile(&ctx("two_const_ret_second", &[], "i64"), &return_second)
+        .expect("secondary result");
+    let mut sim = Intel8086Simulator::new(65536);
+    sim.load_program(&bytes);
+    sim.run_loaded_with_limit(10);
+    assert_eq!(sim.ax, 2);
+
+    let err = compile(
+        &ctx("three_live", &[], "u8"),
+        &[
+            ci("const_u8", Some("a"), vec![CIROperand::Int(1)], "u8"),
+            ci("const_u8", Some("b"), vec![CIROperand::Int(2)], "u8"),
+            ci("const_u8", Some("c"), vec![CIROperand::Int(3)], "u8"),
+        ],
+    )
+    .expect_err("third live value must be rejected");
     assert!(matches!(err, BackendError::UnsupportedOp(_)));
+
+    let err = compile(
+        &ctx("mixed_width", &[], "u16"),
+        &[
+            ci("const_u8", Some("a"), vec![CIROperand::Int(1)], "u8"),
+            ci("const_u16", Some("b"), vec![CIROperand::Int(2)], "u16"),
+        ],
+    )
+    .expect_err("mixed-width live values must be rejected");
+    assert!(matches!(err, BackendError::UnsupportedOp(_)));
+}
+
+#[test]
+fn word02_wrapping_add_proofs() {
+    assert_eq!(run_binary("add", "u8", 0xFF, 2).ax, 1);
+    assert_eq!(run_binary("add", "u16", 0xFFFF, 2).ax, 1);
+}
+
+#[test]
+fn word02_subtract_and_bitwise_proofs() {
+    assert_eq!(run_binary("sub", "u8", 0, 1).ax, 0x00FF);
+    assert_eq!(run_binary("sub", "u16", 0, 1).ax, 0xFFFF);
+    assert_eq!(run_binary("and", "u8", 0xF0, 0x3C).ax, 0x0030);
+    assert_eq!(run_binary("or", "u8", 0xF0, 0x0F).ax, 0x00FF);
+    assert_eq!(run_binary("xor", "u8", 0xAA, 0xFF).ax, 0x0055);
+    assert_eq!(run_not("u8", 0x0F).ax, 0x00F0);
+    assert_eq!(run_binary("and", "u16", 0xF0F0, 0x0FF0).ax, 0x00F0);
+    assert_eq!(run_binary("or", "u16", 0xF000, 0x0F0F).ax, 0xFF0F);
+    assert_eq!(run_binary("xor", "u16", 0x1234, 0x00FF).ax, 0x12CB);
+    assert_eq!(run_not("u16", 0x00FF).ax, 0xFF00);
+    assert_eq!(run_binary_sources("sub", "u8", 3, 9, "rhs", "lhs").ax, 6);
+    assert_eq!(
+        run_binary_sources("sub", "u16", 3, 0x1234, "rhs", "lhs").ax,
+        0x1231
+    );
+    assert_eq!(run_binary_sources("add", "u16", 7, 99, "lhs", "lhs").ax, 14);
 }
 
 #[test]
@@ -316,21 +456,20 @@ fn const_whose_low_byte_collides_with_halt_opcode_is_unaffected() {
 }
 
 #[test]
-fn multiple_consts_in_a_row_with_no_ret_still_gets_exactly_one_terminator() {
+fn two_live_consts_with_no_ret_still_get_exactly_one_terminator() {
     // Proves the `terminated` flag correctly resets on each subsequent
     // const_* -- if it didn't reset, a stale `true` from some
     // intermediate state could suppress the final HLT.
     let cir = vec![
         ci("const_i64", Some("a"), vec![CIROperand::Int(1)], "i64"),
         ci("const_i64", Some("b"), vec![CIROperand::Int(2)], "i64"),
-        ci("const_i64", Some("c"), vec![CIROperand::Int(3)], "i64"),
     ];
-    let bytes = compile(&ctx("three_consts", &[], "i64"), &cir).expect("lowering");
-    // 3 x MOV AX,#imm16 (3 bytes each) + 1 HLT = 10 bytes.
-    assert_eq!(bytes.len(), 10);
+    let bytes = compile(&ctx("two_consts", &[], "i64"), &cir).expect("lowering");
+    // MOV AX,#1 + MOV BX,#2 + one HLT = 7 bytes.
+    assert_eq!(bytes.len(), 7);
     assert_eq!(bytes.last(), Some(&0xF4));
     // Confirm there is exactly one HLT byte at the very end preceded by
     // the last MOV's non-HLT-opcode bytes (0xB8 is the MOV opcode, not
     // 0xF4), i.e. this isn't an accidental double-halt.
-    assert_eq!(&bytes[6..10], &[0xB8, 0x03, 0x00, 0xF4]);
+    assert_eq!(&bytes[3..7], &[0xBB, 0x02, 0x00, 0xF4]);
 }

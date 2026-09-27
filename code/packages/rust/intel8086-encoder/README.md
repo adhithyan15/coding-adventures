@@ -15,13 +15,17 @@ documented in
   decode/execute machinery.
 - `HALT_BYTE` (`0xF4`) — the `HLT` opcode byte every program
   `intel8086-backend` compiles ends with.
-- `REG_AX` — the accumulator register index, re-exported from
+- `REG_AX`, `REG_BX`, and `REG_CX` — the working register indices, re-exported from
   `intel8086_simulator::opcodes` so `intel8086-backend` doesn't need a
   direct dependency on the simulator crate just to name the register it
   targets.
 
 No IR knowledge lives here — `intel8086-backend` maps CIR onto these
 `encode_*` calls.
+
+WORD02 also exposes register-to-register `ADD`, `SUB`, `AND`, `OR`, and `XOR`
+encoders. Their ModRM bytes are constructed by the simulator's shared encoding
+module, which remains the instruction-format source of truth.
 
 ## Why `HLT`, not a pseudo-halt or repurposed opcode?
 
