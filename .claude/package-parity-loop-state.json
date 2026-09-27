@@ -11,12 +11,22 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16133,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16133",
+    "title": "feat(build-tool): add Go graph and diff core",
+    "branch": "codex/parity-go-diff-selection-20260927",
+    "item_id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
+    "opened_at": "2026-09-27T09:43:28Z",
+    "head_revision": "2ef486e0544239f82eb04b1614a7e3efd595eeb9",
+    "checks_status": "pending",
+    "auto_merge_enabled": false
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-27T09:16:31Z",
-    "pr_number": 16127,
-    "status": "merged",
-    "notes": "PR #16127 completed 47 terminal acceptable checks (24 successful, 22 skipped, and one neutral) with GitHub reporting CLEAN and MERGEABLE. Guarded squash auto-merge was enabled only after that terminal state, and GitHub merged it without manual merge as 755891f4e8cd218d166a19acde18243166fb9f36."
+    "observed_at": "2026-09-27T09:43:32Z",
+    "pr_number": 16133,
+    "status": "pending",
+    "notes": "Ready-for-review PR #16133 opened from rebased branch head 2ef486e0544239f82eb04b1614a7e3efd595eeb9 with validated implementation revision 69c13c7bbd92ffaaac324fd93d7a6cf665111a70 on exact origin/main 9cb5419fb3659e247f93b751c190add1ff238c91. GitHub reports MERGEABLE while initial CI, CodeQL, and human-language detection checks are queued. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "755891f4e8cd218d166a19acde18243166fb9f36",
@@ -1129,10 +1139,10 @@
     {
       "id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 19-case process-free graph and diff-selection contract in the Go build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-go-diff-selection-20260927",
-      "pr_number": null,
+      "pr_number": 16133,
       "selected_at": "2026-09-27T09:18:00Z",
       "selection_revision": "755891f4e8cd218d166a19acde18243166fb9f36",
       "validation_revision": "69c13c7bbd92ffaaac324fd93d7a6cf665111a70",
