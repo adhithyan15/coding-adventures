@@ -1,8 +1,8 @@
 # WORD00 — Word cross-target language contract
 
-> **Status:** design selected for VM-072; WORD01 and the bounded binary WORD02
-> proof are implemented. Unary complement and later control-flow, memory,
-> I/O, calls, and frontend work remain open.
+> **Status:** design selected for VM-072; WORD01, bounded binary WORD02, and
+> WORD02b unary complement are implemented. Control-flow, memory, I/O, calls,
+> and frontend work remain open.
 
 ## Purpose
 
