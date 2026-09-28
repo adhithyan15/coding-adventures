@@ -22,6 +22,135 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:ఞ",
+    {
+      script: "telugu",
+      glyph: "ఞ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep up around the upper-left loop",
+              path: [
+                { x: 126, y: 305 },
+                { x: 72, y: 330 },
+                { x: 62, y: 385 },
+                { x: 88, y: 440 },
+                { x: 140, y: 468 },
+                { x: 200, y: 468 },
+                { x: 255, y: 442 },
+                { x: 300, y: 398 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right around the upper-right loop",
+              path: [
+                { x: 338, y: 398 },
+                { x: 378, y: 442 },
+                { x: 430, y: 468 },
+                { x: 490, y: 468 },
+                { x: 548, y: 438 },
+                { x: 594, y: 390 },
+                { x: 620, y: 330 },
+                { x: 615, y: 270 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve down and left around the broad lower bowl",
+              path: [
+                { x: 615, y: 235 },
+                { x: 600, y: 175 },
+                { x: 565, y: 115 },
+                { x: 515, y: 72 },
+                { x: 455, y: 42 },
+                { x: 390, y: 25 },
+                { x: 325, y: 25 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl upward around the inner-left loop",
+              path: [
+                { x: 145, y: 90 },
+                { x: 125, y: 120 },
+                { x: 132, y: 150 },
+                { x: 160, y: 180 },
+                { x: 205, y: 205 },
+                { x: 255, y: 220 },
+                { x: 310, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl down and right around the inner bowl",
+              path: [
+                { x: 365, y: 186 },
+                { x: 415, y: 175 },
+                { x: 465, y: 150 },
+                { x: 505, y: 120 },
+                { x: 535, y: 82 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the short downward tail",
+              path: [
+                { x: 548, y: 68 },
+                { x: 570, y: 35 },
+                { x: 582, y: 0 },
+                { x: 580, y: -55 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the right horizontal bar",
+              path: [
+                { x: 700, y: 320 },
+                { x: 760, y: 320 },
+                { x: 825, y: 320 },
+                { x: 900, y: 320 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "draw the separate upper vertical stem downward",
+              path: [
+                { x: 780, y: 475 },
+                { x: 780, y: 430 },
+                { x: 780, y: 385 },
+                { x: 780, y: 350 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఞ"),
+    },
+  ],
+  [
     "telugu:ఙ",
     {
       script: "telugu",

@@ -136,6 +136,11 @@ That is about 380 filmstrips that could print today.
   `జ` after `రోజు`. Its four separately numbered movements draw the upper-left
   arch, the two lower bowls, and the upper-right flourish, using the same
   packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఞ is the next consonant with a word-first owner.** Both `ఛ` and `ఝ`
+  still need vocabulary before they can enter the writing ramp, while
+  `TE-S132` already extracts `ఞ` from `కృతజ్ఞత`. Its eight separately numbered
+  movements trace the two upper loops, lower body, right bar and upper stem,
+  again following the packaged tracing guide and Noto Sans Telugu fit.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
