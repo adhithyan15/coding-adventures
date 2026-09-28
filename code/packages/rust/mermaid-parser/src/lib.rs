@@ -1120,6 +1120,8 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
         node_separation: positive_number("nodeSeparation")
             .unwrap_or(defaults.node_separation),
         padding: positive_number("padding").unwrap_or(defaults.padding),
+        ideal_edge_length_multiplier: positive_number("idealEdgeLengthMultiplier")
+            .unwrap_or(defaults.ideal_edge_length_multiplier),
     }
 }
 
@@ -10675,7 +10677,7 @@ mod tests_dg04 {
     #[test]
     fn architecture_preserves_size_and_separation_configuration() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48}}}%%\narchitecture-beta\nservice api(server)[API]",
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         assert_eq!(
@@ -10685,11 +10687,12 @@ mod tests_dg04 {
                 font_size: 19.0,
                 node_separation: 112.0,
                 padding: 48.0,
+                ideal_edge_length_multiplier: 1.25,
             })
         );
 
         let diagram = parse_architecture(
-            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n---\narchitecture-beta\nservice api(server)[API]",
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n---\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         let config = diagram.architecture_config.unwrap();
@@ -10697,6 +10700,7 @@ mod tests_dg04 {
         assert_eq!(config.font_size, 18.0);
         assert_eq!(config.node_separation, 104.0);
         assert_eq!(config.padding, 52.0);
+        assert_eq!(config.ideal_edge_length_multiplier, 1.75);
     }
 
     #[test]

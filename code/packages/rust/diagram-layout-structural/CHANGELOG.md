@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.23.0
+
+- Resolve Mermaid Architecture ideal-edge-length configuration into deterministic alignment-hint spacing.
+
 ## 0.22.0
 
 - Resolve Mermaid Architecture padding configuration into deterministic outer canvas margins.
