@@ -30,14 +30,26 @@ public static class Itf
     public static string NormalizeItf(string data)
     {
         ArgumentNullException.ThrowIfNull(data);
-        if (data.Length == 0 || data.Length % 2 != 0)
+        var scalarCount = data.EnumerateRunes().Count();
+        if (scalarCount > 4096)
         {
-            throw new InvalidItfInputException("ITF input must contain an even number of digits");
+            throw new InvalidItfInputException(
+                "ITF input must contain at most 4096 characters",
+                "input-too-long");
         }
 
-        if (data.Any(ch => !char.IsDigit(ch)))
+        if (scalarCount == 0 || scalarCount % 2 != 0)
         {
-            throw new InvalidItfInputException("ITF input must contain digits only");
+            throw new InvalidItfInputException(
+                "ITF input must contain an even number of digits",
+                "invalid-length");
+        }
+
+        if (data.EnumerateRunes().Any(rune => rune.Value is < '0' or > '9'))
+        {
+            throw new InvalidItfInputException(
+                "ITF input must contain digits only",
+                "invalid-character");
         }
 
         return data;
@@ -121,4 +133,16 @@ public sealed record EncodedPair(
     string BinaryPattern,
     int SourceIndex);
 
-public sealed class InvalidItfInputException(string message) : ArgumentException(message);
+public sealed class InvalidItfInputException : ArgumentException
+{
+    public InvalidItfInputException(string message) : base(message)
+    {
+    }
+
+    public InvalidItfInputException(string message, string errorId) : base(message)
+    {
+        ErrorId = errorId;
+    }
+
+    public string? ErrorId { get; }
+}

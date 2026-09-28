@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C127-minnal",
+  "english": "lightning",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಿಂಚು",
+      "romanization": "miṁcu"
+    },
+    {
+      "language": "telugu",
+      "form": "మెరుపు",
+      "romanization": "merupu"
+    }
+  ],
+  "source": "cross-track match: KA-C128-mimcu, TE-C121-merupu"
+}

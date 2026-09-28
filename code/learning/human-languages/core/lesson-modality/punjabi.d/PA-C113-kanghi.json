@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C113-kanghi",
+    "language": "punjabi",
+    "chapter": 113,
+    "sequence": 6090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:859439f36e70e964"
+  },
+  "findings": []
+}

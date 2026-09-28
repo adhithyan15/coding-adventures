@@ -1,0 +1,11 @@
+{
+  "id": "PA-C127-vadi",
+  "pathSegment": "PA-PATH-127-THINGS127",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-127-THINGS127",
+      "order": 3
+    }
+  ]
+}

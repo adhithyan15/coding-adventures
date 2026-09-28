@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:53d6180b68d33077",
+  "lessonIds": [
+    "PA-C142-vinga",
+    "PA-C142-camkila",
+    "PA-C142-caura",
+    "PA-C142-bhira",
+    "PA-C142-gilla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch142.txt",
+  "json": "punjabi/narration/ch142.json",
+  "textHash": "fnv1a64:626bd393f23487f7",
+  "jsonHash": "fnv1a64:86ea25d5e2a41330",
+  "findings": []
+}

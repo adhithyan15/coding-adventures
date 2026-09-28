@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C156-karrukkol",
+  "english": "to learn",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಲಿ",
+      "romanization": "kali",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నేర్చుకో",
+      "romanization": "nērcukō"
+    },
+    {
+      "language": "hindi",
+      "form": "सीखना",
+      "romanization": "sīkhnā"
+    }
+  ],
+  "source": "cross-track match: KA-C148-kali, TE-C145-nercuko, HI-C164-sikhna; sameRoot judged by the author, awaiting native review"
+}

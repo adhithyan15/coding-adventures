@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Pink, Saffron-coloured, Sky-blue, Purple, Orange",
+  "label": "ch:mw-pink-saffron-coloured-sky-blue-purple-orange",
+  "canDo": "I can say pink, saffron-coloured, sky-blue, purple and orange.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C145-narangi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: i can say pink, saffron-coloured, sky-blue, purple and orange.",
+    "assesses": [
+      "MW-LEX-C145-QUAL145-03",
+      "MW-LEX-C145-QUAL145-04",
+      "MW-LEX-C145-QUAL145-05"
+    ]
+  }
+}

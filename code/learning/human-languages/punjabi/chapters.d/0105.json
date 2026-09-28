@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Kattak, Magghar, Poh, Magh, Phaggan",
+  "label": "ch:pa-kattak-magghar-poh-magh-phaggan",
+  "canDo": "I can say Kattak, Magghar, Poh, Magh and Phaggan.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "PA-C105-phaggan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say Kattak, Magghar, Poh, Magh and Phaggan.",
+    "assesses": [
+      "PA-LEX-C105-TIME105-03",
+      "PA-LEX-C105-TIME105-04",
+      "PA-LEX-C105-TIME105-05"
+    ]
+  }
+}

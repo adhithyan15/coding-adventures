@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Parcel, Envelope, Gift, Ball, Bell",
+  "label": "ch:ja-parcel-envelope-gift-ball-bell",
+  "canDo": "I can say a parcel, an envelope, a gift, a ball and a bell.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C104-kane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say a parcel, an envelope, a gift, a ball and a bell.",
+    "assesses": [
+      "JA-LEX-C104-THINGS104-03",
+      "JA-LEX-C104-THINGS104-04",
+      "JA-LEX-C104-THINGS104-05"
+    ]
+  }
+}

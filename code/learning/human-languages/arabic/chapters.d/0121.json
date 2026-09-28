@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Cabbage, Mint, Parsley, Thyme, Cumin",
+  "label": "ch:ar-cabbage-mint-parsley-thyme-cumin",
+  "canDo": "I can say a cabbage, mint, parsley, thyme and cumin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C121-kammun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say a cabbage, mint, parsley, thyme and cumin.",
+    "assesses": [
+      "AR-LEX-C121-THINGS121-03",
+      "AR-LEX-C121-THINGS121-04",
+      "AR-LEX-C121-THINGS121-05"
+    ]
+  }
+}

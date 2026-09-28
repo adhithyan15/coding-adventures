@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Times of the Day",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:65a41b95be06f999",
+  "sourceHash": "fnv1a64:a99a7e65fa6f5b7a",
   "lessons": [
     {
       "id": "SA-C45-morning",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:017d814490cb013a",
+      "sourceHash": "fnv1a64:b68c80a58cc61d69",
       "notice": null,
       "blocks": [
         {
@@ -306,6 +306,16 @@
             {
               "kind": "speech",
               "text": "Before the new word: what did madhyāhnaḥ mean?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"night.\" (Rātriḥ.) This lesson's word is the time that comes before it."
             }
           ]
         },

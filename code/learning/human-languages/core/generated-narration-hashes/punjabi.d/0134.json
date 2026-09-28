@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:aeb408999c38def5",
+  "lessonIds": [
+    "PA-C134-gallh",
+    "PA-C134-mattha",
+    "PA-C134-bharavatta",
+    "PA-C134-darhi",
+    "PA-C134-mucch",
+    "PA-R134-first-pass-food-and-nature",
+    "PA-R134-second-pass-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch134.txt",
+  "json": "punjabi/narration/ch134.json",
+  "textHash": "fnv1a64:79c6b19b354ff772",
+  "jsonHash": "fnv1a64:6d9aaafe95e6a660",
+  "findings": []
+}

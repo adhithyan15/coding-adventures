@@ -1,0 +1,11 @@
+{
+  "id": "JA-C124-mushiatsui",
+  "pathSegment": "JA-PATH-124-QUAL124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-124-QUAL124",
+      "order": 2
+    }
+  ]
+}

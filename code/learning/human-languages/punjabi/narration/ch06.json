@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:da737f40bbfedf02",
+  "sourceHash": "fnv1a64:ecae28cee56a3f7f",
   "lessons": [
     {
       "id": "PA-S06-kakka-aira-aara",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c36df9e704ff93e0",
+      "sourceHash": "fnv1a64:be8c770259183dde",
       "notice": null,
       "blocks": [
         {
@@ -235,7 +235,98 @@
             {
               "kind": "speech",
               "text": "This is Gurmukhi, not Devanagari — a related but distinct script. It does have a top line like Devanagari's, so words hang from a bar in the same way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ikk, do, tinn, chār, panj\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ikk, do, tinn, chār, panj\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five in Punjabi. (Ikk, do, tinn, chār, panj.) What script is this? (Gurmukhi — related to Devanagari, and it has a top line too.) Next: the two small marks riding on ikk, tinn and panj."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C06-numbers-1-5-more",
+      "sequence": 345,
+      "title": "ੱ and ੰ — two marks, and five as a number",
+      "headword": "(ਇੱਕ ਦੋ ਤਿੰਨ ਚਾਰ ਪੰਜ, continued)",
+      "romanization": "(ikk do tinn chār panj, continued)",
+      "gloss": "the addak and the tippi, and panj as a number",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:245f2c45006775a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five once more: ikk, do, tinn, chār, panj. Three of those words carry a small mark above them. Which? (Ikk, tinn and panj.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the script you are reading: what does Gurmukhi share with Devanagari across the top of each word? (The top line.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built: two marks that look alike",
+          "segments": [
             {
               "kind": "speech",
               "text": "Two marks worth telling apart, because they look similar and do different jobs:"
@@ -287,15 +378,6 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ikk, do, tinn, chār, panj\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ikk, do, tinn, chār, panj\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "the two marks — \"addak doubles, tippi nasalises\"",
               "spoken": true,
               "scored": false,
@@ -326,7 +408,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count to five in Punjabi. (Ikk, do, tinn, chār, panj.) What script is this? (Gurmukhi — related to Devanagari, and it has a top line too.) What does ੱ and ੰ each do? (Addak doubles the following consonant; tippi marks a nasal.) Chapter 5 told you panjābī means \"of the five rivers.\" What has changed now? (Panj is a number you can count with, not just a piece of a name.) Next: learn why Punjabi and Persian both say panj."
+              "text": "What do ੱ and ੰ each do? (Addak doubles the following consonant; tippi marks a nasal.) Chapter 5 told you panjābī means \"of the five rivers.\" What has changed now? (Panj is a number you can count with, not just a piece of a name.) Next: learn why Punjabi and Persian both say panj."
             }
           ]
         }
@@ -335,17 +417,17 @@
     {
       "id": "PA-C06-panj-convergence",
       "sequence": 350,
-      "title": "Why two branches both arrived at panj",
+      "title": "Panj: the odd one out among its neighbours",
       "headword": "ਪੰਜ · panj",
       "romanization": "panj · panj",
-      "gloss": "why Punjabi and Persian independently reached the same word-shape for five",
+      "gloss": "why Punjabi five looks like Persian, not like its neighbours",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a731337dc95f5cd6",
+      "sourceHash": "fnv1a64:b6c2eb349b442cee",
       "notice": null,
       "blocks": [
         {
@@ -362,6 +444,16 @@
             {
               "kind": "speech",
               "text": "Say “five” in Punjabi. (Panj.) Where did Chapter 5 first show that shape? (Inside Persian panj + āb, “five waters.”)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In ਪੰਜ, which mark sits on top, and what does it do? (The tippi, ੰ: a nasal.) And the addak, ੱ? (It doubles the next consonant.)"
             }
           ]
         },
@@ -395,6 +487,89 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the neighbours' -ch — Hindi pāṁch, Bengali and Gujarati pā̃ch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the neighbours' *-ch* — Hindi *pāṁch*, Bengali and Gujarati *pā̃ch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the language whose \"five\" matches Punjabi's — Persian panj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the language whose \"five\" matches Punjabi's — Persian *panj*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which neighbours keep a -ch in \"five\"? (Hindi, Bengali, Gujarati.) Which language says panj, exactly as Punjabi does? (Persian.) So did Punjabi borrow it? Next: the answer is no."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C06-panj-convergence-homegrown",
+      "sequence": 355,
+      "title": "Punjabi's panj is homegrown",
+      "headword": "(ਪੰਜ · panj, continued)",
+      "romanization": "(panj, continued)",
+      "gloss": "Punjabi panj inherits Sanskrit pañca",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5c886da0cbdc2eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which other language says panj, exactly as Punjabi does? (Persian.) Was Punjabi's number borrowed from it?"
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "etymology",
           "title": "The word, taken apart — Punjabi's numeral is homegrown",
           "segments": [
@@ -409,7 +584,101 @@
           ]
         },
         {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Punjabi's path and proof — Sanskrit pañca becomes post-nasal -nj-; panjāh / pacās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Punjabi's path and proof — Sanskrit *pañca* → post-nasal *-nj-*; *panjāh / pacās*]"
+            }
+          ]
+        },
+        {
           "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Borrowed from Persian? (No: Punjabi panj inherits Sanskrit pañca.) What made -nj-? (A post-nasal stop voiced.) Evidence? (Panjāh / pacās.) Next: how Persian reached the same shape."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "PA-C06-panj-convergence-homegrown-borrowing",
+              "prompt": "Was Punjabi panj borrowed from Persian?",
+              "assesses": [
+                "PA-ETYMON-PANJ-PANCA-INHERITANCE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no",
+                "no it was not",
+                "it inherits sanskrit pañca",
+                "it comes from sanskrit pañca"
+              ],
+              "feedback": {
+                "correct": "Right: Punjabi panj inherits Sanskrit pañca; Persian reached a similar shape separately.",
+                "incorrect": "No. Punjabi panj is inherited from Sanskrit pañca, not borrowed from Persian."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C06-panj-convergence-homegrown-persian",
+      "sequence": 358,
+      "title": "Persian reached panj separately",
+      "headword": "(ਪੰਜ · panj, the Persian path)",
+      "romanization": "(panj, the Persian path)",
+      "gloss": "Persian reached panj on its own: convergence, not borrowing",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0619e5e0961fef38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Punjabi's panj comes from which Sanskrit word? (Pañca.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "etymology",
           "title": "The word, taken apart — Persian reached the shape separately",
           "segments": [
@@ -437,7 +706,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -446,15 +715,6 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "Punjabi's path and proof — Sanskrit pañca becomes post-nasal -nj-; panjāh / pacās",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: Punjabi's path and proof — Sanskrit *pañca* → post-nasal *-nj-*; *panjāh / pacās*]"
             },
             {
               "kind": "prompt",
@@ -477,7 +737,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -489,27 +749,7 @@
             },
             {
               "kind": "speech",
-              "text": "Borrowed from Persian? (No: Punjabi panj inherits Sanskrit pañca.) What made -nj-? (A post-nasal stop voiced.) Evidence? (Panjāh / pacās.) Persian's path? (Its ancestral č voiced separately.) In Punjab, what is Persian? (The place-name; Punjabi's number is homegrown.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "PA-C06-panj-convergence-borrowing",
-              "prompt": "Was Punjabi panj borrowed from Persian?",
-              "assesses": [
-                "PA-ETYMON-PANJ-PANCA-INHERITANCE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "no",
-                "no it was not",
-                "it inherits sanskrit pañca",
-                "it comes from sanskrit pañca"
-              ],
-              "feedback": {
-                "correct": "Right: Punjabi panj inherits Sanskrit pañca; Persian reached a similar shape separately.",
-                "incorrect": "No. Punjabi panj is inherited from Sanskrit pañca, not borrowed from Persian."
-              }
+              "text": "Persian's path? (Its ancestral č voiced separately.) In Punjab, what is Persian? (The place-name; Punjabi's number is homegrown.)"
             }
           ]
         }

@@ -12,18 +12,18 @@ headword: मित्रम्
 romanization: mitram
 gloss: friend — the word behind a covenant-god's name, naming a person while itself being neuter
 concept_tag: SA-PEOPLE-FRIEND
-prerequisites: [SA-C10-annam]
+prerequisites: [SA-C10-annam, SA-C09-snihyati]
 sounds: [conjunct-tra, inherent-a]
 roots: [mitra-bind, pie-mei]
 etymology_hook: "मित्रम् is from Proto-Indo-Iranian *mitras, '(that which) causes binding,' from a PIE root meaning 'to bind' — the very word behind Avestan Mithra, the Zoroastrian divinity of covenant and contract. It sits nearly unchanged in Hindi, Gujarati and Marathi मित्र/mitra, a तत्सम each time; and though it names a person, मित्रम् is grammatically NEUTER, the same -म् that has now marked water, milk and food — a noun's gender tracks its grammatical class, not the person it names"
 duration:
   max_seconds: 255
 requires:
-  knowledge: [SA-LEX-ANNAM-FOOD, SA-GRAMMAR-NOUN-GENDER-THREE, SA-LEX-PANIYAM-WATER]
+  knowledge: [SA-LEX-ANNAM-FOOD, SA-GRAMMAR-NOUN-GENDER-THREE, SA-LEX-PANIYAM-WATER, SA-LEX-SNIHYATI-PRIYAM-LOVE]
 introduces:
   knowledge: [SA-LEX-MITRAM-FRIEND, SA-ETYMON-MEI-BIND]
 practises:
-  knowledge: [SA-LEX-ANNAM-FOOD, SA-GRAMMAR-NOUN-GENDER-THREE, SA-LEX-PANIYAM-WATER, SA-LEX-MITRAM-FRIEND, SA-ETYMON-MEI-BIND]
+  knowledge: [SA-LEX-ANNAM-FOOD, SA-GRAMMAR-NOUN-GENDER-THREE, SA-LEX-PANIYAM-WATER, SA-LEX-MITRAM-FRIEND, SA-ETYMON-MEI-BIND, SA-LEX-SNIHYATI-PRIYAM-LOVE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,11 +35,13 @@ reviews_of: [SA-C10-annam, SA-C10-paniyam]
 # मित्रम् (mitram) — "friend," and the god of the given word
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-ANNAM-FOOD, SA-GRAMMAR-NOUN-GENDER-THREE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-ANNAM-FOOD, SA-GRAMMAR-NOUN-GENDER-THREE, SA-LEX-SNIHYATI-PRIYAM-LOVE] -->
 
 [PAUSE 2s] Say "food," and its gender. (*Annam*; **neuter**.) The last three
 words named things you would ask for. This one names someone you would
 introduce.
+
+[PAUSE 1s] Say "dear to me." (*Mama priyam*.) A friend is someone who is.
 
 ## You'll want to know: मित्रम्
 <!-- hl-knowledge: introduces=[SA-LEX-MITRAM-FRIEND]; assesses=[] -->

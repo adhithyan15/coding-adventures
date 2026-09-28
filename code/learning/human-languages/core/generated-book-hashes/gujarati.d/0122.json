@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:6579ece3be7c71a6",
+  "lessonIds": [
+    "GU-C122-rich",
+    "GU-C122-siyal",
+    "GU-C122-varu",
+    "GU-C122-kabutar",
+    "GU-C122-batak"
+  ],
+  "tex": "gujarati/book/chapters/ch122-bear-jackal-wolf-pigeon-duck.tex"
+}

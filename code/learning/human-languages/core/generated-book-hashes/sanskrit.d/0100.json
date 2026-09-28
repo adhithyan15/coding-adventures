@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:0061e82d05c1272f",
+  "lessonIds": [
+    "SA-C100-kilah",
+    "SA-C100-mudgarah",
+    "SA-C100-kartari",
+    "SA-C100-sucih",
+    "SA-C100-sutram"
+  ],
+  "tex": "sanskrit/book/chapters/ch100-nail-hammer-scissors-needle-thread.tex"
+}

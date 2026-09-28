@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C113-katsuo",
+    "language": "japanese",
+    "chapter": 113,
+    "sequence": 6780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3519d1be6a5466ed"
+  },
+  "findings": []
+}

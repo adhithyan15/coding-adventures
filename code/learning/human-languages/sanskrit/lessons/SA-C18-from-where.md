@@ -12,17 +12,17 @@ headword: "कुतः"
 gloss: "from where?"
 romanization: "kutaḥ"
 concept_tag: SA-Q-FROM-WHERE
-prerequisites: [SA-C18-how-many]
+prerequisites: [SA-C18-how-many, SA-C14-where]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C18-ASK-03]
+  knowledge: [SA-LEX-C18-ASK-03, SA-LEX-C14-DEIXIS-06]
 introduces:
   knowledge: [SA-LEX-C18-ASK-04]
 practises:
-  knowledge: [SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04]
+  knowledge: [SA-LEX-C18-ASK-03, SA-LEX-C18-ASK-04, SA-LEX-C14-DEIXIS-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C18-how-many]
 # कुतः (kutaḥ) — from where?
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-06] -->
 
 [PAUSE 2s] You can ask where something is. This asks where it came from.
+
+[PAUSE 1s] Say "where?" (*Kutra*.) This lesson's word asks where *from*.
 
 ## You'll want to know: कुतः
 <!-- hl-knowledge: introduces=[SA-LEX-C18-ASK-04]; assesses=[] -->

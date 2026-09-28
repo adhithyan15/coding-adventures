@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:81d1b93d2d5ea2c5",
+  "lessonIds": [
+    "PA-C133-kukkar",
+    "PA-C133-murgi",
+    "PA-C133-gadha",
+    "PA-C133-ullu",
+    "PA-C133-ka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch133.txt",
+  "json": "punjabi/narration/ch133.json",
+  "textHash": "fnv1a64:919ef6465335dbec",
+  "jsonHash": "fnv1a64:9363c83d95f43ab4",
+  "findings": []
+}

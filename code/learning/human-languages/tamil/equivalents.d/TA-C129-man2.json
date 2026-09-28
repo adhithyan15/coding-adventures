@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C129-man2",
+  "english": "a deer",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜಿಂಕೆ",
+      "romanization": "jiṅke"
+    },
+    {
+      "language": "telugu",
+      "form": "జింక",
+      "romanization": "jiṅka"
+    },
+    {
+      "language": "hindi",
+      "form": "हिरन",
+      "romanization": "hiran",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C130-jinke, TE-C124-jinka, HI-C147-hiran; sameRoot judged by the author, awaiting native review"
+}

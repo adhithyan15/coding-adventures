@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C105-hikari",
+    "language": "japanese",
+    "chapter": 105,
+    "sequence": 6290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ddaebeb6b602dff"
+  },
+  "findings": []
+}

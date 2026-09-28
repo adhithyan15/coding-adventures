@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C129-muyal",
+  "english": "a rabbit",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೊಲ",
+      "romanization": "mola",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కుందేలు",
+      "romanization": "kundēlu"
+    },
+    {
+      "language": "malayalam",
+      "form": "മുയൽ",
+      "romanization": "muyal",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "खरगोश",
+      "romanization": "khargoś"
+    }
+  ],
+  "source": "cross-track match: KA-C130-mola, TE-C123-kundelu, ML-C138-rabbit, HI-C147-khargos; sameRoot judged by the author, awaiting native review"
+}

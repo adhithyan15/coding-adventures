@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C110-mawhiba",
+    "language": "arabic",
+    "chapter": 110,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdf0ba1997718b29"
+  },
+  "findings": []
+}

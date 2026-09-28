@@ -9,21 +9,21 @@ headword: જાણવું
 romanization: jāṇvũ
 gloss: to know — the word English has been carrying all along
 concept_tag: VERB-KNOW
-prerequisites: [GU-C07-jovun]
+prerequisites: [GU-C07-jovun, GU-C06-numbers-1-5]
 sounds: [ja, long-aa, retroflex-na, u-nasal]
 roots: [sanskrit-janati, sanskrit-jna, pie-gno]
 etymology_hook: jāṇvũ from Sanskrit jānāti, root jñā-, PIE *gnō- — English know, cunning, notice, diagnosis
 duration:
   max_seconds: 260
 requires:
-  knowledge: [GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA]
+  knowledge: [GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA, GU-SCRIPT-HEADLESS-CLUE]
 introduces:
   knowledge: [GU-LEX-JAANVU, GU-ETYMON-JAANVU-KNOW]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA, GU-LEX-JAANVU, GU-ETYMON-JAANVU-KNOW]
+  knowledge: [GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA, GU-LEX-JAANVU, GU-ETYMON-JAANVU-KNOW, GU-SCRIPT-HEADLESS-CLUE]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,10 +35,12 @@ reviews_of: [GU-C07-hovun, GU-C07-javun, GU-C07-aavvun, GU-C07-khaavun, GU-C07-j
 # જાણવું — "to know," a word English has been carrying all along
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-HOVU, GU-LEX-JAVU, GU-LEX-AAVVU, GU-LEX-KHAAVU, GU-LEX-JOVU, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-SCRIPT-HEADLESS-CLUE] -->
 
 [PAUSE 2s] Run the five you have — *hovũ, javũ, āvvũ, khāvũ, jovũ* — and pull the
 ending off each one. The sixth is the closest of them all to English.
+
+[PAUSE 2s] One thing you already know about Gujarati writing: what does a Gujarati letter leave out that Devanagari draws? (The top line, the *shirorekhā*.)
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[GU-LEX-JAANVU]; assesses=[] -->

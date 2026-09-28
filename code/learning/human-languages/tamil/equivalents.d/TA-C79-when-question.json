@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C79-when-question",
+  "english": "when?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಯಾವಾಗ",
+      "romanization": "yāvāga"
+    },
+    {
+      "language": "telugu",
+      "form": "ఎప్పుడు వస్తారు?",
+      "romanization": "eppuḍu vastāru?"
+    },
+    {
+      "language": "malayalam",
+      "form": "എപ്പോൾ",
+      "romanization": "eppōḷ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C71-when, TE-C75-when, ML-C75-eppol; sameRoot judged by the author, awaiting native review"
+}

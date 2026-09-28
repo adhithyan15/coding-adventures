@@ -1,0 +1,11 @@
+{
+  "id": "JA-C125-wakai",
+  "pathSegment": "JA-PATH-125-QUAL125",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-125-QUAL125",
+      "order": 2
+    }
+  ]
+}

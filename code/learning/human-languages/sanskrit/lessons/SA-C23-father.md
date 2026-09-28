@@ -12,17 +12,17 @@ headword: "पिता"
 gloss: "father"
 romanization: "pitā"
 concept_tag: SA-NOUN-FATHER
-prerequisites: [SA-C22-burn, SA-C21-dance, SA-C22-hear]
+prerequisites: [SA-C22-burn, SA-C21-dance, SA-C22-hear, SA-C19-number-family]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-BURN]
+  knowledge: [SA-LEX-BURN, SA-GRAMMAR-C19-NUMBER-FAMILY]
 introduces:
   knowledge: [SA-LEX-FATHER]
 practises:
-  knowledge: [SA-LEX-BURN, SA-LEX-FATHER, SA-LEX-DANCE, SA-LEX-HEAR]
+  knowledge: [SA-LEX-BURN, SA-LEX-FATHER, SA-LEX-DANCE, SA-LEX-HEAR, SA-GRAMMAR-C19-NUMBER-FAMILY]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C22-burn]
 # पिता (pitā) — father
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-BURN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-BURN, SA-GRAMMAR-C19-NUMBER-FAMILY] -->
 
 [PAUSE 2s] Before the new one: what did *dahati* mean?
+
+[PAUSE 1s] The numbers lined up with Latin and English regularly, not by chance. Listen for the same regularity in *pitā* and *father*.
 
 ## You'll want to know: पिता
 <!-- hl-knowledge: introduces=[SA-LEX-FATHER]; assesses=[] -->

@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C152-vilu",
+  "english": "to fall",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "വീഴുക",
+      "romanization": "vīḻuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गिरना",
+      "romanization": "girnā"
+    }
+  ],
+  "source": "cross-track match: ML-C176-viluka, HI-C161-girna; sameRoot judged by the author, awaiting native review"
+}

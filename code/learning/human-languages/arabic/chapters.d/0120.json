@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Jam, Pomegranate, Strawberries, Lettuce, Aubergine",
+  "label": "ch:ar-jam-pomegranate-strawberries-lettuce-aubergine",
+  "canDo": "I can say jam, a pomegranate, strawberries, lettuce and an aubergine.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C120-badhinjan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say jam, a pomegranate, strawberries, lettuce and an aubergine.",
+    "assesses": [
+      "AR-LEX-C120-THINGS120-03",
+      "AR-LEX-C120-THINGS120-04",
+      "AR-LEX-C120-THINGS120-05"
+    ]
+  }
+}

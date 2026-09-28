@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-132-THINGS132",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fly, a bee, a butterfly, a spider and a squirrel.",
+  "prerequisites": []
+}

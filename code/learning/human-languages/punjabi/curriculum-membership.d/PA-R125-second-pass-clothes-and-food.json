@@ -1,0 +1,11 @@
+{
+  "id": "PA-R125-second-pass-clothes-and-food",
+  "pathSegment": "PA-PATH-125-THINGS125",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-125-THINGS125",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R109-first-pass-places-in-town-and-at-home",
+  "pathSegment": "AR-PATH-109-CAN109",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-109-CAN109",
+      "order": 5
+    }
+  ]
+}

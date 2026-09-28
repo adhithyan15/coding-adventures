@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "sets": {
+    "tamil": {
+      "family": [
+        "kannada",
+        "telugu",
+        "malayalam"
+      ],
+      "neighbours": [
+        "hindi"
+      ]
+    },
+    "telugu": {
+      "family": [
+        "tamil",
+        "kannada",
+        "malayalam"
+      ],
+      "neighbours": [
+        "hindi"
+      ]
+    },
+    "kannada": {
+      "family": [
+        "tamil",
+        "telugu",
+        "malayalam"
+      ],
+      "neighbours": [
+        "hindi"
+      ]
+    },
+    "malayalam": {
+      "family": [
+        "tamil",
+        "kannada",
+        "telugu"
+      ],
+      "neighbours": [
+        "hindi"
+      ]
+    },
+    "hindi": {
+      "family": [
+        "urdu",
+        "marathi",
+        "gujarati",
+        "bengali",
+        "punjabi"
+      ],
+      "neighbours": [
+        "persian"
+      ]
+    },
+    "marathi": {
+      "family": [
+        "hindi",
+        "gujarati",
+        "bengali"
+      ],
+      "neighbours": [
+        "kannada"
+      ]
+    },
+    "gujarati": {
+      "family": [
+        "hindi",
+        "marathi",
+        "marwadi"
+      ],
+      "neighbours": [
+        "persian"
+      ]
+    },
+    "bengali": {
+      "family": [
+        "hindi",
+        "marathi"
+      ],
+      "neighbours": [
+        "sanskrit"
+      ]
+    },
+    "punjabi": {
+      "family": [
+        "hindi",
+        "urdu"
+      ],
+      "neighbours": [
+        "persian"
+      ]
+    },
+    "marwadi": {
+      "family": [
+        "hindi",
+        "gujarati"
+      ],
+      "neighbours": [
+        "persian"
+      ]
+    },
+    "urdu": {
+      "family": [
+        "hindi",
+        "punjabi"
+      ],
+      "neighbours": [
+        "persian",
+        "arabic"
+      ]
+    },
+    "sanskrit": {
+      "family": [
+        "hindi",
+        "marathi"
+      ],
+      "neighbours": [
+        "latin"
+      ]
+    },
+    "persian": {
+      "family": [],
+      "neighbours": [
+        "urdu",
+        "arabic"
+      ]
+    },
+    "arabic": {
+      "family": [],
+      "neighbours": [
+        "persian"
+      ]
+    },
+    "spanish": {
+      "family": [
+        "portuguese",
+        "italian",
+        "french"
+      ],
+      "neighbours": [
+        "latin"
+      ]
+    },
+    "portuguese": {
+      "family": [
+        "spanish",
+        "italian",
+        "french"
+      ],
+      "neighbours": [
+        "latin"
+      ]
+    },
+    "italian": {
+      "family": [
+        "spanish",
+        "portuguese",
+        "french"
+      ],
+      "neighbours": [
+        "latin"
+      ]
+    },
+    "french": {
+      "family": [
+        "spanish",
+        "portuguese",
+        "italian"
+      ],
+      "neighbours": [
+        "latin"
+      ]
+    },
+    "latin": {
+      "family": [
+        "spanish",
+        "portuguese",
+        "italian",
+        "french"
+      ],
+      "neighbours": []
+    },
+    "german": {
+      "family": [],
+      "neighbours": []
+    },
+    "russian": {
+      "family": [],
+      "neighbours": [
+        "german"
+      ]
+    },
+    "japanese": {
+      "family": [],
+      "neighbours": [
+        "chinese"
+      ]
+    },
+    "chinese": {
+      "family": [],
+      "neighbours": [
+        "japanese"
+      ]
+    }
+  }
+}

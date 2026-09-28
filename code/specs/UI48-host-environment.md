@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2) and Compose (§7.5); ENV4 on SwiftUI (§7.3) and Compose (§7.4)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -397,8 +397,9 @@ Decisions taken while implementing ENV1 in `mosaic-app-runtime`:
 - **The runtime remembers the environment** (`Runtime::environment()`), from
   the start context and each change, for hosts and tests.
 - **Reserved name.** `environmentChanged` is the runtime's; a package emitting
-  an event of that name would be intercepted. Refusing it in `mosmodel` is a
-  follow-up.
+  an event of that name would be intercepted. `mosmodel-compiler` refuses an
+  `emit environmentChanged` as `ReservedName` (UI13 §5), and a test there pins
+  its reserved list to `mosaic-app-runtime`'s `ENVIRONMENT_CHANGED`.
 ### 7.2 ENV2 and ENV3, designed
 
 Written before implementation, from what the pipeline does today (checked on
@@ -506,6 +507,95 @@ reports dropped, a props-less update keeping the current props). The CI
 SwiftUI lanes compile the generated app on macOS and for the iOS simulator.
 The resize-and-assert gate §7 asks for lands with the first app that reacts:
 ENV-last's TaskApp compact layout, launched on a phone.
+
+### 7.4 ENV4 on Compose, designed
+
+The same contract as §7.3, on the Compose shell (`MosaicAppShell.kt`, shared
+by desktop and Android since UI89 §3.4). Compose has no layout variants yet
+(ENV2/ENV3 on Compose are separate), so this is the report alone.
+
+- **Every runtime-backed app observes.** The strict shell's `MosaicApp`
+  wraps its root in `BoxWithConstraints` and reduces what it sees to the six
+  §4 values: `sizeClass` from the width against 600 dp and 1024 dp (the
+  thresholds SwiftUI's reader uses, so one window size gives one bucket on
+  every host), `orientation` from height against width, and `colorScheme`
+  from `isSystemInDarkTheme()`. A sample-props shell does not observe.
+- **Pointer, hover and reduced motion come from the host.** The runtime host
+  already knows its platform, so `MosaicRuntimeHost.initialEnvironment()`
+  answers them: `fine`/`hover`/`no-preference` on desktop, `coarse`/`none` on
+  Android. Compose Desktop exposes no reduced-motion setting, so that axis
+  stays `no-preference` until a platform probe is added. The same values go
+  into the start context, as on SwiftUI.
+- **Reported on bucket change only.** `LaunchedEffect(report)` is keyed on
+  the six values, so it runs once when the window is first measured and again
+  only when a bucket flips. The host also drops a report equal to the last
+  one it accepted, and remembers a report only once the runtime took it, so a
+  refused one is tried again with the next.
+- **Through the concrete host.** `MosaicComposeHost` is an interface shared
+  with test harnesses and the legacy bridge, and knows nothing about the
+  environment; the shell reaches `reportEnvironment` through
+  `as? MosaicRuntimeHost`, the same downcast the effect installs use.
+- **"No reaction" keeps the current props.** The Kotlin host keeps the props
+  it is showing when an update carries none *at the revision it is showing*
+  (§7.1), exactly as the Swift host does, and leaves a props-less update that
+  moves the revision alone. A runtime refusal (an invalid environment) comes
+  back as `{"error": …}` rather than an exception, and the shell applies a
+  report's answer only when it carries props, so a refused report never
+  replaces what is on screen.
+
+**Acceptance.** Rust tests pin the generated shell (the observer around every
+runtime-backed root, the wire names and thresholds, no observer in a sample
+shell) and the host template. The Compose conformance harness, run in CI's
+Linux lane against the conformance runtime (which ignores the event), checks
+that a report keeps the props and revision, an unchanged report is not
+resent, a changed one is, and an invalid one is refused, leaves the props and
+is not remembered. The resize-and-assert gate lands with the first app that
+reacts (ENV-last).
+
+### 7.5 ENV2 and ENV3 on Compose, designed
+
+§7.2 on the Compose shell, reusing what §7.4 already observes.
+
+**ENV2 — one app carries every variant.**
+
+- A variant's root is its own `@Composable`: `<Component><Variant>` in
+  PascalCase (`EngramApp.touch.mll` → `fun EngramAppTouch(`), validated the
+  way SwiftUI validates `<Component><Variant>View`.
+- A variant file carries only what differs: its composable (and its private
+  sections, named after it). The component's interface — the `<C>Event`
+  sealed class and the `<C>Props` data classes — is emitted once, by the
+  default layout's file, and the variant's composable takes and calls those
+  same types. Today a variant file repeats all three, so two variants could
+  not be compiled together.
+- The project shell copies every variant file (`<C>.<variant>.kt`) into
+  `src/main/kotlin`, beside the default, so Gradle compiles every layout.
+
+**ENV3 — the selector.**
+
+- The rules are the package's `[[app.layouts]]` (or the conventions),
+  computed by the same `effective_layout_rules` as SwiftUI and emitted into
+  `MosaicAppShell.kt` as data, in rule order. The generated
+  `mosaicLayoutVariant(environment)` returns the first variant whose
+  conditions all hold, or null for the default — `select_variant`'s semantics.
+- It reads the environment `MosaicApp` already builds for ENV4
+  (`environmentReport`), whose keys are the runtime's wire names; each rule
+  axis is written under its wire name (`EnvironmentAxis::wire_name`), pinned
+  to `mosaic-app-runtime` by a test, so a rule cannot silently test a key the
+  report does not carry.
+- The root becomes `when (mosaicLayoutVariant(environmentReport)) { "touch"
+  -> EngramAppTouch(...) else -> EngramApp(...) }`. The app's state lives in
+  the runtime, so swapping roots loses nothing but composition-local state.
+- A package without variants gets byte-identical output. A sample-props shell
+  with variants observes and selects too (it has no runtime to report to).
+
+**Acceptance.** Emitter tests pin the variant composable (its name, the
+default's event and props types, no redeclaration); builder tests mirror
+SwiftUI's four (convention, declared rules, a rule for a missing variant is
+refused, no variants → no selector). CI's Linux Compose lane compiles Engram,
+the one package with a variant (`EngramApp.touch.mll`), so both roots and the
+selector compile together. On desktop the pointer is `fine`, so the touch
+layout is compiled but not shown; the resize-and-assert gate still lands
+with ENV-last.
 
 ## 8. Open questions
 

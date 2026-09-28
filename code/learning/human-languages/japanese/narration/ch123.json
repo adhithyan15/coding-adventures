@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 123,
+  "title": "Well-behaved, Dear, Frustrating, Suspicious, Detailed",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6506829b404f82b1",
+  "lessons": [
+    {
+      "id": "JA-C123-otonashii",
+      "sequence": 7300,
+      "title": "おとなしい (otonashii) — well-behaved, quiet",
+      "headword": "おとなしい",
+      "romanization": "otonashii",
+      "gloss": "well-behaved, quiet",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afb65bd2201852f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for simple, then the Japanese for complicated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おとなしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おとなしい — otonashii — \"well-behaved, quiet\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otonashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otonashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otonashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otonashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say otonashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *otonashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for simple, then the Japanese for complicated, then say otonashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for simple, then the Japanese for complicated, then say *otonashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おとなしい (otonashii) mean? (\"Well-behaved, quiet\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C123-otonashii-type",
+              "prompt": "Type the Japanese for 'well-behaved, quiet'.",
+              "assesses": [
+                "JA-LEX-C123-QUAL123-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おとなしい",
+                "otonashii"
+              ],
+              "feedback": {
+                "correct": "Right: おとなしい (otonashii) is 'well-behaved, quiet'.",
+                "incorrect": "'well-behaved, quiet' is おとなしい (otonashii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C123-natsukashii",
+      "sequence": 7310,
+      "title": "なつかしい (natsukashii) — dear, missed",
+      "headword": "なつかしい",
+      "romanization": "natsukashii",
+      "gloss": "dear, missed",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a8e0c8f218fe63e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for complicated, then the Japanese for well-behaved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なつかしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なつかしい — natsukashii — \"dear, missed\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsukashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsukashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsukashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsukashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say natsukashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *natsukashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for complicated, then the Japanese for well-behaved, then say natsukashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for complicated, then the Japanese for well-behaved, then say *natsukashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なつかしい (natsukashii) mean? (\"Dear, missed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C123-natsukashii-type",
+              "prompt": "Type the Japanese for 'dear, missed'.",
+              "assesses": [
+                "JA-LEX-C123-QUAL123-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なつかしい",
+                "natsukashii"
+              ],
+              "feedback": {
+                "correct": "Right: なつかしい (natsukashii) is 'dear, missed'.",
+                "incorrect": "'dear, missed' is なつかしい (natsukashii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C123-kuyashii",
+      "sequence": 7320,
+      "title": "くやしい (kuyashii) — frustrating",
+      "headword": "くやしい",
+      "romanization": "kuyashii",
+      "gloss": "frustrating",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9da932bfc7687b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for well-behaved, then the Japanese for dear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くやしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くやしい — kuyashii — \"frustrating\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuyashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuyashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuyashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuyashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kuyashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kuyashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for well-behaved, then the Japanese for dear, then say kuyashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for well-behaved, then the Japanese for dear, then say *kuyashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くやしい (kuyashii) mean? (\"Frustrating\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C123-kuyashii-type",
+              "prompt": "Type the Japanese for 'frustrating'.",
+              "assesses": [
+                "JA-LEX-C123-QUAL123-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くやしい",
+                "kuyashii"
+              ],
+              "feedback": {
+                "correct": "Right: くやしい (kuyashii) is 'frustrating'.",
+                "incorrect": "'frustrating' is くやしい (kuyashii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C123-ayashii",
+      "sequence": 7330,
+      "title": "あやしい (ayashii) — suspicious",
+      "headword": "あやしい",
+      "romanization": "ayashii",
+      "gloss": "suspicious",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dbac0f5315f2dd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dear, then the Japanese for frustrating."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あやしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あやしい — ayashii — \"suspicious\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ayashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ayashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dear, then the Japanese for frustrating, then say ayashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dear, then the Japanese for frustrating, then say *ayashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あやしい (ayashii) mean? (\"Suspicious\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C123-ayashii-type",
+              "prompt": "Type the Japanese for 'suspicious'.",
+              "assesses": [
+                "JA-LEX-C123-QUAL123-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あやしい",
+                "ayashii"
+              ],
+              "feedback": {
+                "correct": "Right: あやしい (ayashii) is 'suspicious'.",
+                "incorrect": "'suspicious' is あやしい (ayashii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C123-kuwashii",
+      "sequence": 7340,
+      "title": "くわしい (kuwashii) — detailed",
+      "headword": "くわしい",
+      "romanization": "kuwashii",
+      "gloss": "detailed",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c20919059087a99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for frustrating, then the Japanese for suspicious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くわしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くわしい — kuwashii — \"detailed\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuwashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuwashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuwashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuwashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kuwashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kuwashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for frustrating, then the Japanese for suspicious, then say kuwashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for frustrating, then the Japanese for suspicious, then say *kuwashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くわしい (kuwashii) mean? (\"Detailed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C123-kuwashii-type",
+              "prompt": "Type the Japanese for 'detailed'.",
+              "assesses": [
+                "JA-LEX-C123-QUAL123-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くわしい",
+                "kuwashii"
+              ],
+              "feedback": {
+                "correct": "Right: くわしい (kuwashii) is 'detailed'.",
+                "incorrect": "'detailed' is くわしい (kuwashii)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

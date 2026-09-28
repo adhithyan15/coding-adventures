@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C108-areyouwell",
+  "english": "are you well?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕ್ಷೇಮವೇ",
+      "romanization": "kṣēmavē"
+    },
+    {
+      "language": "telugu",
+      "form": "బాగున్నారా?",
+      "romanization": "bāgunnārā?"
+    }
+  ],
+  "source": "cross-track match: KA-C96-wellbeing, TE-C91-areyouwell"
+}

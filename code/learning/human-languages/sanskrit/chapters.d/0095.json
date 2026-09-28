@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "In the middle, Beside, Everywhere, Elsewhere, Street",
+  "label": "ch:sa-in-the-middle-beside-everywhere-elsewhere-street",
+  "canDo": "I can say in the middle, beside, everywhere, elsewhere and a street.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "SA-C95-vithi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say in the middle, beside, everywhere, elsewhere and a street.",
+    "assesses": [
+      "SA-LEX-C95-LOC95-03",
+      "SA-LEX-C95-LOC95-04",
+      "SA-LEX-C95-LOC95-05"
+    ]
+  }
+}

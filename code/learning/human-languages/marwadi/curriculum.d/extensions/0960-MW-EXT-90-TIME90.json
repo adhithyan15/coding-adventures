@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-90-TIME90",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say midday, the evening, in the early morning, dawn and the day after tomorrow.",
+  "prerequisites": []
+}

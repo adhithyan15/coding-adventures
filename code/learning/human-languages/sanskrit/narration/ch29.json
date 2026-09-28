@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:969299e1a03b3d3c",
+  "sourceHash": "fnv1a64:21ec10f4d9080a5e",
   "lessons": [
     {
       "id": "SA-C29-please",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:337752b78fb63576",
+      "sourceHash": "fnv1a64:2ddf1585392de6e4",
       "notice": null,
       "blocks": [
         {
@@ -429,6 +429,16 @@
             {
               "kind": "speech",
               "text": "Before the new word: what did praṇāmaḥ mean, and which root was inside it?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"he helps.\" (Sāhāyyaṁ karoti.) A favour is help given."
             }
           ]
         },

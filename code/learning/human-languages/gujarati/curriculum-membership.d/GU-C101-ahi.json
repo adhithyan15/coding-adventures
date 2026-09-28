@@ -1,0 +1,11 @@
+{
+  "id": "GU-C101-ahi",
+  "pathSegment": "GU-PATH-101-DEF101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-101-DEF101",
+      "order": 3
+    }
+  ]
+}

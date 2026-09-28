@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:3a6c976629ba4df4",
+  "lessonIds": [
+    "GU-C122-rich",
+    "GU-C122-siyal",
+    "GU-C122-varu",
+    "GU-C122-kabutar",
+    "GU-C122-batak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch122.txt",
+  "json": "gujarati/narration/ch122.json",
+  "textHash": "fnv1a64:2834c2852e6b271b",
+  "jsonHash": "fnv1a64:cc54d40587a60469",
+  "findings": []
+}

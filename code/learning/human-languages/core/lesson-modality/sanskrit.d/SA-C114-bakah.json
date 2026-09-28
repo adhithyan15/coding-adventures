@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C114-bakah",
+    "language": "sanskrit",
+    "chapter": 114,
+    "sequence": 5590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8fb6795df523b5a"
+  },
+  "findings": []
+}

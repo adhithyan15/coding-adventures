@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Wealth, Owner, Experience, Habit, Skill",
+  "label": "ch:pa-wealth-owner-experience-habit-skill",
+  "canDo": "I can say wealth, an owner, experience, a habit and a skill.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C111-hunar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say wealth, an owner, experience, a habit and a skill.",
+    "assesses": [
+      "PA-LEX-C111-CAN111-03",
+      "PA-LEX-C111-CAN111-04",
+      "PA-LEX-C111-CAN111-05"
+    ]
+  }
+}

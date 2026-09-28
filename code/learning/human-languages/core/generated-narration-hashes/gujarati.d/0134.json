@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:be6ea6505c19d53f",
+  "lessonIds": [
+    "GU-C134-bahadur",
+    "GU-C134-sant",
+    "GU-C134-khus",
+    "GU-C134-udas",
+    "GU-C134-bhukhyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch134.txt",
+  "json": "gujarati/narration/ch134.json",
+  "textHash": "fnv1a64:54f157d946829390",
+  "jsonHash": "fnv1a64:67432d5a6d6d56a0",
+  "findings": []
+}

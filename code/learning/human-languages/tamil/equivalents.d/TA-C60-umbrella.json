@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C60-umbrella",
+  "english": "an umbrella",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೊಡೆ",
+      "romanization": "koḍe"
+    },
+    {
+      "language": "telugu",
+      "form": "గొడుగు",
+      "romanization": "goḍugu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കുട",
+      "romanization": "kuṭa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "छाता",
+      "romanization": "chātā"
+    }
+  ],
+  "source": "cross-track match: KA-C62-umbrella, TE-C62-umbrella, ML-C129-umbrella, HI-C133-chata; sameRoot judged by the author, awaiting native review"
+}

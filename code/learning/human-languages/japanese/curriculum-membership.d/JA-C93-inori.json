@@ -1,0 +1,11 @@
+{
+  "id": "JA-C93-inori",
+  "pathSegment": "JA-PATH-93-WANT93",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-93-WANT93",
+      "order": 1
+    }
+  ]
+}

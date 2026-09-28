@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C140-kunru",
+  "english": "a hill",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆಟ್ಟ",
+      "romanization": "beṭṭa"
+    },
+    {
+      "language": "telugu",
+      "form": "కొండ",
+      "romanization": "koṇḍa",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C55-hill, TE-C121-konda; sameRoot judged by the author, awaiting native review"
+}

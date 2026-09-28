@@ -1,0 +1,11 @@
+{
+  "id": "PA-C100-roz",
+  "pathSegment": "PA-PATH-100-TIME100",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-100-TIME100",
+      "order": 3
+    }
+  ]
+}

@@ -1,5 +1,10 @@
 # Changelog — intel8086-simulator
 
+## Unreleased — WORD02 encoder helpers
+
+- Add pure encoding helpers for byte register moves and byte/word register
+  ALU operations already executed by the full simulator.
+
 ## [0.2.0] - 2026-08-28
 
 ### Added

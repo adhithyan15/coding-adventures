@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R138-second-pass-verbs",
+    "language": "sanskrit",
+    "chapter": 138,
+    "sequence": 6880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a739a37f5a48fe4"
+  },
+  "findings": []
+}

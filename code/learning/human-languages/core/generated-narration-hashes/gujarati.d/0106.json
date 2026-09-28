@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:cd5e3009b22c97bf",
+  "lessonIds": [
+    "GU-C106-kabat",
+    "GU-C106-ariso",
+    "GU-C106-kasko",
+    "GU-C106-sabu",
+    "GU-C106-tuval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch106.txt",
+  "json": "gujarati/narration/ch106.json",
+  "textHash": "fnv1a64:2bc9b4f7bb514845",
+  "jsonHash": "fnv1a64:dd1d96ee0efc2018",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-101-THINGS101",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a comb, soap, a towel, glasses and a bag.",
+  "prerequisites": []
+}

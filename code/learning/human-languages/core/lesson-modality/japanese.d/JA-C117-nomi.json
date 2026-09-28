@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C117-nomi",
+    "language": "japanese",
+    "chapter": 117,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25857d5f6930e712"
+  },
+  "findings": []
+}

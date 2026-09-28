@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C95-nothing",
+  "english": "nothing, it's nothing",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಏನೂ ಇಲ್ಲ",
+      "romanization": "ēnū illa"
+    },
+    {
+      "language": "telugu",
+      "form": "ఏమీ లేదు",
+      "romanization": "ēmī lēdu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഒന്നുമില്ല",
+      "romanization": "onnumilla",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कुछ नहीं",
+      "romanization": "kuch nahīṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C87-nothing, TE-C98-nothing, ML-C122-nothing, HI-C113-kuchnahin; sameRoot judged by the author, awaiting native review"
+}

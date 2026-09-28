@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:c28e96838867371d",
+  "lessonIds": [
+    "PA-C101-hune",
+    "PA-C101-janvari",
+    "PA-C101-farvari",
+    "PA-C101-marc",
+    "PA-C101-aprail"
+  ],
+  "tex": "punjabi/book/chapters/ch101-right-now-january-february-march-april.tex"
+}

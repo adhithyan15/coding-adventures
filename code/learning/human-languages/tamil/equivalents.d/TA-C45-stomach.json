@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C45-stomach",
+  "english": "the stomach",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೊಟ್ಟೆ",
+      "romanization": "hoṭṭe"
+    },
+    {
+      "language": "telugu",
+      "form": "కడుపు",
+      "romanization": "kaḍupu"
+    },
+    {
+      "language": "malayalam",
+      "form": "വയറ്",
+      "romanization": "vayaṟŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "पेट",
+      "romanization": "peṭ"
+    }
+  ],
+  "source": "cross-track match: KA-C47-stomach, TE-C47-stomach, ML-C47-stomach, HI-C38-pet; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C143-kuttaiyana",
+  "english": "short",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಿಡ್ಡ",
+      "romanization": "giḍḍa"
+    },
+    {
+      "language": "telugu",
+      "form": "పొట్టి",
+      "romanization": "poṭṭi"
+    },
+    {
+      "language": "malayalam",
+      "form": "കുറിയ",
+      "romanization": "kuṟiya",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C140-gidda, TE-C136-potti, ML-C101-kuriya; sameRoot judged by the author, awaiting native review"
+}

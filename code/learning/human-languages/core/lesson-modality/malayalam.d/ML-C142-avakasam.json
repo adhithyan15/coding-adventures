@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C142-avakasam",
+    "language": "malayalam",
+    "chapter": 142,
+    "sequence": 5720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7424610a3ce94ab5"
+  },
+  "findings": []
+}

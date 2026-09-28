@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C73-before",
+  "english": "before, earlier",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "ముందు",
+      "romanization": "mundu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മുൻപ്",
+      "romanization": "munpŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: TE-C75-before, ML-C106-munpu; sameRoot judged by the author, awaiting native review"
+}

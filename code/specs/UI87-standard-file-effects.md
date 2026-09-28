@@ -1,8 +1,18 @@
 # UI87 — `files.save`, and file-effect handlers shared by every host
 
-**Status:** decided (revision 3, 2026-09-25); nothing implemented yet. The
-owner chose (A), generalised: **Mosaic provides shared per-OS host libraries**
-for platform capabilities, and no application carries its own copy (§7).
+**Status:** decided (revision 3, 2026-09-25); in progress. The owner chose
+(A), generalised: **Mosaic provides shared per-OS host libraries** for platform
+capabilities, and no application carries its own copy (§7).
+
+| host | platform library | state |
+| --- | --- | --- |
+| Compose (desktop) | `MosaicPlatformEffects.kt` | done (#16016) |
+| web family | `mosaic-file-effects.mjs` answers `files.*` | done (#16032) |
+| SwiftUI (macOS) | `MosaicPlatformEffects.swift` | done; iOS/iPadOS fail each request with a message until UI89 step 6 |
+| Qt | `MosaicPlatformEffects.{h,cpp}` | done (§7.4a) |
+| XAML, Flutter | — | not started |
+
+First consumer: Journal's Export (J6a, #16034).
 
 **Builds on:**
 - [UI47 — host capability effects](UI47-host-capability-effects.md), which
@@ -59,8 +69,21 @@ It uses the same `accept` MIME list as `files.open`, mapped per host to the
 picker's own filter, as UI59 §3 describes. The limits are the browser
 executor's, applied everywhere:
 - 16 MiB of bytes at most;
-- `suggestedName` is a plain name (no path separators, no NUL, at most 255
-  characters);
+- `suggestedName` is a plain name, checked identically by every host (the
+  Compose and SwiftUI libraries and the browser executor; tests pin the three
+  to one rule): no path separators or `:`, not `.`/`..`, no leading `.`
+  (dot-files), no control, format, line- or paragraph-separator characters,
+  no leading or trailing whitespace, no run of two or more whitespace
+  characters (characters that render blank — Hangul fillers, BRAILLE
+  PATTERN BLANK — count as whitespace), no surrogate, unassigned or
+  private-use code point, no trailing dot, at most 255 UTF-16 units. Hosts
+  check by code point (Swift by scalar, never by grapheme cluster: a
+  combining letter merged with a `.` would otherwise hide it);
+- when the app names no accepted type, the name may not end in an extension
+  that runs, installs or mounts when opened (`.command`, `.terminal`,
+  `.webloc`, `.exe`, `.scf`, `.iso`, `.desktop`, `.AppImage`, … — one list,
+  shared by every host, compared after folding case through upper case). With a type, the name must
+  already end in one of that type's extensions;
 - one file operation at a time; a second request gets `failed`, not a queue.
 
 ### 3.2 One name
@@ -124,7 +147,7 @@ generated project the same way:
 | backend | library | per-OS inside it |
 | --- | --- | --- |
 | Compose | `MosaicPlatformEffects.kt` | desktop: `java.awt.FileDialog` (the native macOS/Windows/GTK dialog, not Swing's); Android (UI89): `ActivityResultContracts` |
-| SwiftUI | `MosaicPlatformEffects.swift` | macOS: `NSOpenPanel` / `NSSavePanel`; iOS/iPadOS (UI89): `UIDocumentPickerViewController` |
+| SwiftUI | `MosaicPlatformEffects.swift` | macOS: `NSOpenPanel` / `NSSavePanel`; iOS/iPadOS (UI89): `UIDocumentPickerViewController` (until then each request fails with "… is not available on this platform yet", never a silent cancel) |
 | Flutter | `mosaic_platform_effects.dart` | `file_selector` on desktop; share sheet for save on mobile |
 | Qt | `MosaicPlatformEffects.{h,cpp}` | `QFileDialog` (native where the platform has one) |
 | XAML | `MosaicPlatformEffects.cs` | `FileOpenPicker` / `FileSavePicker` |
@@ -175,10 +198,41 @@ escape hatch, used deliberately and visibly.
 ### 7.4 Migration
 
 - `photo-picker-app` drops its four per-backend `files.open` handlers and uses
-  the platform library, becoming the second consumer.
+  the platform library, becoming the second consumer. *Compose done* (its
+  handler removed; SwiftUI never had one); XAML, Qt and Flutter follow their
+  libraries.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.
+
+### 7.4a Qt: one routed handler, the signal as the fallback
+
+Compose and SwiftUI hosts each have one `effectHandler` property, so the
+platform library wraps the app's handler and every effect has exactly one
+owner. The Qt host instead emitted a fan-out signal, `effectRequested`, that
+every connected handler receives, and handlers answer inline (a blocking
+`QFileDialog`). A library connected beside photo-picker's handler would have
+opened a second dialog for one `files.open`, and `deferEffect` accepted a
+second owner of an id. So on Qt:
+
+- `MosaicHost` gains one handler slot, `setEffectHandler(EffectHandler)`.
+  When it is set, the host calls it **instead of** emitting
+  `effectRequested`; when it is not, the signal is emitted as before. Never
+  both, so an effect never has two owners.
+- `installMosaicPlatformEffects(host, appKinds)` sets that slot to the
+  router (§7.2). A kind that goes to the app is delivered the old way: to a
+  handler previously set in the slot, or else by emitting `effectRequested`,
+  so `connect`ed package handlers (Engram's, photo-picker's) keep working
+  unchanged. A standard kind the app did not claim is answered by the
+  library, and the signal is not emitted for it.
+- `deferEffect` refuses an id that is already deferred: an effect has one
+  owner.
+- Dialogs are `QFileDialog`'s static functions, answered inline like the
+  existing Qt handlers; a fake can be injected, so the library's behaviour is
+  tested headless against Qt Core only.
+- `MosaicPlatformEffects.{h,cpp}` are compiled into every Qt project beside
+  `MosaicHost.{h,cpp}`, under the same guard, and `main.cpp` installs the
+  library after the package's own handler.
 
 ### 7.5 First PRs
 

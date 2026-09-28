@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:0bdc56a0dc4fef33",
+  "lessonIds": [
+    "JA-C80-kousaten",
+    "JA-C80-shingou",
+    "JA-C80-hougaku",
+    "JA-C80-chikamichi",
+    "JA-C80-mawari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch80.txt",
+  "json": "japanese/narration/ch80.json",
+  "textHash": "fnv1a64:b6191ad0b8695a0a",
+  "jsonHash": "fnv1a64:c1cb03b0b5bf3450",
+  "findings": []
+}

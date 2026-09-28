@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Cot, Pyjamas, Salwar, Scarf, Belt",
+  "label": "ch:pa-cot-pyjamas-salwar-scarf-belt",
+  "canDo": "I can say a cot, pyjamas, a salwar, a scarf and a belt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C119-peti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a cot, pyjamas, a salwar, a scarf and a belt.",
+    "assesses": [
+      "PA-LEX-C119-THINGS119-03",
+      "PA-LEX-C119-THINGS119-04",
+      "PA-LEX-C119-THINGS119-05"
+    ]
+  }
+}

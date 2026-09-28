@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C41-new",
+  "english": "new",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೊಸ",
+      "romanization": "hosa"
+    },
+    {
+      "language": "telugu",
+      "form": "కొత్త",
+      "romanization": "kotta"
+    },
+    {
+      "language": "malayalam",
+      "form": "പുതിയ",
+      "romanization": "putiya",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "नया",
+      "romanization": "nayā"
+    }
+  ],
+  "source": "cross-track match: KA-C42-new, TE-C42-new, ML-C42-new, HI-C41-new; sameRoot judged by the author, awaiting native review"
+}

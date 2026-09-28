@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Box, Jar, Candle, Pillow, Doll",
+  "label": "ch:gu-box-jar-candle-pillow-doll",
+  "canDo": "I can say a box, a jar, a candle, a pillow and a doll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C110-dhigli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a box, a jar, a candle, a pillow and a doll.",
+    "assesses": [
+      "GU-LEX-C110-THINGS110-03",
+      "GU-LEX-C110-THINGS110-04",
+      "GU-LEX-C110-THINGS110-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:7be6f66e2453cfd1",
+  "lessonIds": [
+    "PA-C142-vinga",
+    "PA-C142-camkila",
+    "PA-C142-caura",
+    "PA-C142-bhira",
+    "PA-C142-gilla"
+  ],
+  "tex": "punjabi/book/chapters/ch142-crooked-shiny-wide-narrow-wet.tex"
+}

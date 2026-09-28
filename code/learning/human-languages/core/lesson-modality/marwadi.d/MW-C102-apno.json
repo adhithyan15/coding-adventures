@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C102-apno",
+    "language": "marwadi",
+    "chapter": 102,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:152c76893a17c2ae"
+  },
+  "findings": []
+}

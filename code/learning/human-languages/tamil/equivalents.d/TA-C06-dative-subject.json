@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C06-dative-subject",
+  "english": "'I know Tamil'",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು",
+      "romanization": "nanage kannaḍa gottu"
+    },
+    {
+      "language": "telugu",
+      "form": "నాకు తెలుగు వచ్చు",
+      "romanization": "nāku telugu vaccu"
+    },
+    {
+      "language": "malayalam",
+      "form": "എനിക്ക് മലയാളം അറിയാം",
+      "romanization": "enikkŭ malayāḷaṁ aṟiyāṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C06-dative-subject, TE-C06-dative-subject, ML-C06-dative-subject"
+}

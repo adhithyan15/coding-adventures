@@ -1,0 +1,11 @@
+{
+  "id": "AR-C143-talib",
+  "pathSegment": "AR-PATH-143-THINGS143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-143-THINGS143",
+      "order": 2
+    }
+  ]
+}

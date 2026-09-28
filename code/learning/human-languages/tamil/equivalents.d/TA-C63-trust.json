@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C63-trust",
+  "english": "trust",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಂಬಿಕೆ",
+      "romanization": "nambike",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "నమ్మకం",
+      "romanization": "nammakaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "വിശ്വാസം",
+      "romanization": "viśvāsaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "भरोसा",
+      "romanization": "bharosā"
+    }
+  ],
+  "source": "cross-track match: KA-C65-trust, TE-C65-trust, ML-C65-trust, HI-C65-trust; sameRoot judged by the author, awaiting native review"
+}

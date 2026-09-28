@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:cbecdbace3111c2e",
+  "lessonIds": [
+    "SA-C97-karyalayah",
+    "SA-C97-bhojanalayah",
+    "SA-C97-sthanakam",
+    "SA-C97-karanam",
+    "SA-C97-yatah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch97.txt",
+  "json": "sanskrit/narration/ch97.json",
+  "textHash": "fnv1a64:4cd78a890d9904b4",
+  "jsonHash": "fnv1a64:af38902055cdd7c2",
+  "findings": []
+}

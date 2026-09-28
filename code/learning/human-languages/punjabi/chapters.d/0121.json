@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Earring, Steel bracelet, Jaggery, Chickpeas, Mung beans",
+  "label": "ch:pa-earring-steel-bracelet-jaggery-chickpeas-mung-beans",
+  "canDo": "I can say an earring, a steel bracelet, jaggery, chickpeas and mung beans.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C121-mugi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say an earring, a steel bracelet, jaggery, chickpeas and mung beans.",
+    "assesses": [
+      "PA-LEX-C121-THINGS121-03",
+      "PA-LEX-C121-THINGS121-04",
+      "PA-LEX-C121-THINGS121-05"
+    ]
+  }
+}

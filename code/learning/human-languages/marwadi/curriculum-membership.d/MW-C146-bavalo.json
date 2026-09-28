@@ -1,0 +1,11 @@
+{
+  "id": "MW-C146-bavalo",
+  "pathSegment": "MW-PATH-146-QUAL146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-146-QUAL146",
+      "order": 3
+    }
+  ]
+}

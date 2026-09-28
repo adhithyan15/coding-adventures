@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C93-antah",
+    "language": "sanskrit",
+    "chapter": 93,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f967932a97c824c"
+  },
+  "findings": []
+}

@@ -18,10 +18,20 @@ module CodingAdventures
     ].freeze
 
     def normalize_itf(data)
-      raise ArgumentError, "ITF input must contain digits only" unless /\A\d+\z/.match?(data)
+      raise EncodingError, "ITF input must contain valid Unicode scalar values" unless data.valid_encoding?
+      raise ArgumentError, "ITF input must contain at most 4096 characters" if data.length > 4096
       raise ArgumentError, "ITF input must contain an even number of digits" if data.empty? || data.length.odd?
+      raise ArgumentError, "ITF input must contain digits only" unless /\A[0-9]+\z/.match?(data)
 
       data
+    end
+
+    def error_id(error)
+      case error.message
+      when "ITF input must contain at most 4096 characters" then "input-too-long"
+      when "ITF input must contain an even number of digits" then "invalid-length"
+      when "ITF input must contain digits only" then "invalid-character"
+      end
     end
 
     def encode_itf(data)

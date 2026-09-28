@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Shirt, Sandals, Embroidered shoes, Thick bangle, Bangle",
+  "label": "ch:mw-shirt-sandals-embroidered-shoes-thick-bangle-bangle",
+  "canDo": "I can say a shirt, sandals, embroidered shoes, a thick bangle and a bangle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-R129-second-pass-tools-and-clothes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say a shirt, sandals, embroidered shoes, a thick bangle and a bangle.",
+    "assesses": [
+      "MW-LEX-C129-THINGS129-03",
+      "MW-LEX-C129-THINGS129-04",
+      "MW-LEX-C129-THINGS129-05"
+    ]
+  }
+}

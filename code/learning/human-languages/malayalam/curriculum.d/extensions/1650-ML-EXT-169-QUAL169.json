@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-169-QUAL169",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say clever, lazy, calm, busy and expensive.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C96-catuspathah",
+  "pathSegment": "SA-PATH-96-LOC96",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-96-LOC96",
+      "order": 1
+    }
+  ]
+}

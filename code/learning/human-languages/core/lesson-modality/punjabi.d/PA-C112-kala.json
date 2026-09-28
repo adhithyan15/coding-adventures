@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C112-kala",
+    "language": "punjabi",
+    "chapter": 112,
+    "sequence": 6000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5db0b96991f17d1"
+  },
+  "findings": []
+}

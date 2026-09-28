@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:7fb9f6f9119b137d",
+  "lessonIds": [
+    "JA-C89-kowasu",
+    "JA-C89-wakasu",
+    "JA-C89-mawasu",
+    "JA-C89-tsukamu",
+    "JA-C89-tatamu"
+  ],
+  "tex": "japanese/book/chapters/ch89-to-break-to-boil-to-turn-round-to-grab-to-fold.tex"
+}

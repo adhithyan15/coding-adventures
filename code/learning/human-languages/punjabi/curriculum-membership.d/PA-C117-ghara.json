@@ -1,0 +1,11 @@
+{
+  "id": "PA-C117-ghara",
+  "pathSegment": "PA-PATH-117-THINGS117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-117-THINGS117",
+      "order": 3
+    }
+  ]
+}

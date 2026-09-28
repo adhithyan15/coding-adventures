@@ -1,0 +1,11 @@
+{
+  "id": "MW-C115-puji",
+  "pathSegment": "MW-PATH-115-CAN115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-115-CAN115",
+      "order": 2
+    }
+  ]
+}

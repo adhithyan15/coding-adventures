@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:ecd31a8bdb2dc880",
+  "lessonIds": [
+    "SA-C103-kandukah",
+    "SA-C103-kridanakam",
+    "SA-C103-anguliyakam",
+    "SA-C103-kankanam",
+    "SA-C103-uttariyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch103.txt",
+  "json": "sanskrit/narration/ch103.json",
+  "textHash": "fnv1a64:a69913fad923f258",
+  "jsonHash": "fnv1a64:12999ea323517bc2",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C88-modosu",
+  "pathSegment": "JA-PATH-88-ACT88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-88-ACT88",
+      "order": 2
+    }
+  ]
+}

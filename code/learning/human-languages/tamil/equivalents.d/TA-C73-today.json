@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C73-today",
+  "english": "today",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇವತ್ತು",
+      "romanization": "ivattu"
+    },
+    {
+      "language": "telugu",
+      "form": "ఇవాళ",
+      "romanization": "ivāḷa"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇന്ന്",
+      "romanization": "innŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "आज",
+      "romanization": "āj"
+    }
+  ],
+  "source": "cross-track match: KA-C106-today, TE-C75-today, ML-C94-innu, HI-C71-today; sameRoot judged by the author, awaiting native review"
+}

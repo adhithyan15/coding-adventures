@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Wicked, Necessary, Special, Plain, Unusual",
+  "label": "ch:mw-wicked-necessary-special-plain-unusual",
+  "canDo": "I can say wicked, necessary, special, plain and unusual.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C148-anokho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say wicked, necessary, special, plain and unusual.",
+    "assesses": [
+      "MW-LEX-C148-QUAL148-03",
+      "MW-LEX-C148-QUAL148-04",
+      "MW-LEX-C148-QUAL148-05"
+    ]
+  }
+}

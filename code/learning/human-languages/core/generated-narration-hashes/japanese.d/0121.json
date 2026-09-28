@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:2cfda2e94c63453c",
+  "lessonIds": [
+    "JA-C121-shikakui",
+    "JA-C121-momoiro",
+    "JA-C121-haiiro",
+    "JA-C121-usui",
+    "JA-C121-asai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch121.txt",
+  "json": "japanese/narration/ch121.json",
+  "textHash": "fnv1a64:ac740684c43128cc",
+  "jsonHash": "fnv1a64:21fbae70e615e097",
+  "findings": []
+}

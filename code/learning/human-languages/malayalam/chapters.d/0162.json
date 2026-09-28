@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Bear, Fox, Camel, Duck, Owl",
+  "label": "ch:ml-bear-fox-camel-duck-owl",
+  "canDo": "I can say a bear, a fox, a camel, a duck and an owl.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C162-munna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: i can say a bear, a fox, a camel, a duck and an owl.",
+    "assesses": [
+      "ML-LEX-C162-THINGS162-03",
+      "ML-LEX-C162-THINGS162-04",
+      "ML-LEX-C162-THINGS162-05"
+    ]
+  }
+}

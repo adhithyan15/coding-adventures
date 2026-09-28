@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C40-this",
+  "english": "this one",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಇದು",
+      "romanization": "idu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఇది",
+      "romanization": "idi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇത്",
+      "romanization": "itŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "यह",
+      "romanization": "yah"
+    }
+  ],
+  "source": "cross-track match: KA-C41-this, TE-C41-this, ML-C41-this, HI-C40-this; sameRoot judged by the author, awaiting native review"
+}

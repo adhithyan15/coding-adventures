@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C130-guru",
+    "language": "gujarati",
+    "chapter": 130,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6df76a2e4adf4007"
+  },
+  "findings": []
+}

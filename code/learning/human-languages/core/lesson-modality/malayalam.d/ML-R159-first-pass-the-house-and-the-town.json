@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R159-first-pass-the-house-and-the-town",
+    "language": "malayalam",
+    "chapter": 159,
+    "sequence": 6650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f5281d6d68ebc6f"
+  },
+  "findings": []
+}

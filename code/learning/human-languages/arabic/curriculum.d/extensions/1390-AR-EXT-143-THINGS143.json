@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-143-THINGS143",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an eraser, a class, a student, a job and a salary.",
+  "prerequisites": []
+}

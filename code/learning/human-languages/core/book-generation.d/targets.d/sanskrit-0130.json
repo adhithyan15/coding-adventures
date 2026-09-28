@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 130,
+  "output": "sanskrit/book/chapters/ch130-foolish-lazy-strong-weak-clear.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

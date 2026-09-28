@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C51-moon",
+  "english": "the moon",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಚಂದ್ರ",
+      "romanization": "candra"
+    },
+    {
+      "language": "telugu",
+      "form": "చంద్రుడు",
+      "romanization": "candruḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചന്ദ്രൻ",
+      "romanization": "candran"
+    },
+    {
+      "language": "hindi",
+      "form": "चाँद",
+      "romanization": "chā̃d"
+    }
+  ],
+  "source": "cross-track match: KA-C53-moon, TE-C53-moon, ML-C53-moon, HI-C55-moon"
+}

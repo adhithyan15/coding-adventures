@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Something, Oneself, One's own, Both, Several",
+  "label": "ch:pa-something-oneself-one-s-own-both-several",
+  "canDo": "I can say something, oneself, one's own, both and several.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "PA-R107-second-pass-months-and-this-and-that",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say something, oneself, one's own, both and several.",
+    "assesses": [
+      "PA-LEX-C107-DEF107-03",
+      "PA-LEX-C107-DEF107-04",
+      "PA-LEX-C107-DEF107-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C161-tamara",
+    "language": "malayalam",
+    "chapter": 161,
+    "sequence": 6790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:826c8309b9f8f34d"
+  },
+  "findings": []
+}

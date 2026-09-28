@@ -1,0 +1,11 @@
+{
+  "id": "AR-C123-sullam",
+  "pathSegment": "AR-PATH-123-THINGS123",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-123-THINGS123",
+      "order": 2
+    }
+  ]
+}

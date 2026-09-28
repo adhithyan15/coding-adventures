@@ -37,7 +37,8 @@ Intel 4004 (07d), ARM1 (07e), Intel 8008 (07f), GE-225 (07g), and IBM 704 (07h).
 
 - **The Altair 8800** — the chip that made personal computing real (1975)
 - **CP/M target** — understanding this ISA unlocks the first mass-market OS
-- **Z80/x86 ancestor** — Z80 extended it; 8086 is binary-compatible with it
+- **Z80/x86 ancestor** — Z80 extended its machine-code encoding; 8086 followed
+  the architectural lineage but needs different machine code
 - **Transition chip** — 8-bit era's most influential design before 16-bit dominance
 - **Historical programming** — CP/M programs, early BASIC interpreters, games
 - **6,000 transistors** — 73% more than 8008; shows architectural progress at circuit level

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:79df0191d4e32bff",
+  "lessonIds": [
+    "GU-C113-khissu",
+    "GU-C113-gol",
+    "GU-C113-madh",
+    "GU-C113-cana",
+    "GU-C113-mag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch113.txt",
+  "json": "gujarati/narration/ch113.json",
+  "textHash": "fnv1a64:55742af8465fd3a4",
+  "jsonHash": "fnv1a64:b3814719d9420a8c",
+  "findings": []
+}

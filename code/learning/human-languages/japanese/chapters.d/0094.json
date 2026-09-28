@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "To like, Liking, Hobby, Something to look forward to, Love",
+  "label": "ch:ja-to-like-liking-hobby-something-to-look-forward-to-love",
+  "canDo": "I can say to like, a liking, a hobby, something to look forward to and love.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "JA-C94-ai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can say to like, a liking, a hobby, something to look forward to and love.",
+    "assesses": [
+      "JA-LEX-C94-LIKE94-03",
+      "JA-LEX-C94-LIKE94-04",
+      "JA-LEX-C94-LIKE94-05"
+    ]
+  }
+}

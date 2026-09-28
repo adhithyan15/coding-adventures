@@ -82,19 +82,65 @@ That is about 380 filmstrips that could print today.
 - **Tamil first,** then the four Devanagari tracks.
 - **Then every other track with any cited ductus.** 207 lessons now print a
   filmstrip.
-- **Next: headword formats the derivation does not read yet.**
-  - chinese (72 cited letters), russian (18) and urdu (12) print none
-  - arabic and japanese print one each
+- **Every currently cited glyph is now reached.** A fresh ledger-to-target
+  audit after #16111 corrected this entry's stale headword-format forecast.
+  Chinese resolves all 58 cited glyphs, Russian all 22, Urdu all 29, Arabic all
+  15, and Japanese all 23. The corpus changed underneath the forecast: the
+  surviving cited owners are single-grapheme lessons, while compound lessons
+  name letters that already have a separate single-letter owner. Across all
+  switched-on tracks, 431 lesson filmstrips now print.
 
-  In these tracks a writing lesson's headword is not one grapheme. It is a
-  character with its reading, or an upper and lower pair. The fix is a
-  per-track extractor that reads the letter out of such a headword, instead of
-  requiring the whole headword to be one grapheme.
+- **Filmstrips in the app: DONE, tracked by #16114.** The language-ladder app
+  keeps its ordinary figure map eager but puts the 431 filmstrip URL loaders in
+  a dynamically imported module. Opening a writing lesson loads its exact
+  `*-filmstrip.svg` into the first Writing or Script section; unopened lessons
+  add nothing to first paint. The largest eager chunk remains 495,771 bytes,
+  below the 500 kB budget.
 
-- **Filmstrips in the app.** The language-ladder app does not show filmstrips
-  yet. Its eager figure map excludes `*-filmstrip.svg`, because 370 URLs pushed
-  first paint over its 500 kB budget. Showing them there needs a lazily loaded
-  figure map.
+- **Next: fill cited-stroke gaps, one script at a time.** Telugu, Kannada and
+  Malayalam still have only partial sourced inventories; Bengali and Gurmukhi
+  still have none. Each added path needs its primary-source citation and its
+  own lesson owner before it can become a figure. Combination filmstrips remain
+  later work after the single-letter inventories.
+- **Telugu consonants started with క.** The first base consonant now has the
+  five-movement, two-run order from Sathish Shanmugam's packaged tracing guide,
+  fitted to the bundled Noto Sans Telugu outline. Its existing `TE-S03` lesson
+  is the figure owner; the rest of the consonant inventory remains one-letter-
+  at-a-time work under the same source gate.
+- **The next Telugu consonant, ఖ, now follows.** Its existing `TE-S137` lesson
+  owns a six-movement filmstrip: movements 1–5 draw the joined main body and
+  movement 6 restarts for the separate stem, again source-gated against the
+  packaged tracing guide and fitted to Noto Sans Telugu.
+- **Telugu గ continues the consonant pass.** Its existing `TE-S118` lesson owns
+  a two-movement filmstrip: the broad lower arch and separate upper flourish
+  follow the packaged tracing guide and are fitted to Noto Sans Telugu.
+- **Telugu ఘ now follows one letter later.** Its existing `TE-S138` lesson owns
+  a six-movement filmstrip: movements 1–3 form the connected left and middle
+  body, then movements 4–6 restart for the outer arch, upper flourish and
+  downward stem. The order comes from the same packaged tracing guide and is
+  fitted to Noto Sans Telugu.
+- **Telugu చ starts the next ready consonant row.** The intervening `ఙ` still
+  needs the vocabulary-first lesson sequence recorded below, so the existing
+  `TE-S112` lesson is the next available owner. Its four-movement filmstrip
+  joins movements 1–3 for the main body and restarts for the upper flourish,
+  using the same packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఙ now gets the word first.** Chapter 150 introduces **వాఙ్మయం**
+  (*vāṅmayaṁ*, literature) before `TE-S171` extracts the uncommon letter from
+  the word and gives it a five-movement filmstrip. Movements 1–3 form the
+  connected body; movements 4 and 5 restart for the inner bar and headstroke.
+  The order comes from the packaged `dot_stroke_c_1_5_nya.png` tracing guide
+  and is fitted to Noto Sans Telugu. This closes the earlier vocabulary-first
+  dependency instead of teaching the inventory shape cold.
+- **Telugu జ is the next ready consonant.** The intervening `ఛ` also remains
+  in the measured inventory-without-a-word debt, while `TE-S127` already owns
+  `జ` after `రోజు`. Its four separately numbered movements draw the upper-left
+  arch, the two lower bowls, and the upper-right flourish, using the same
+  packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఞ is the next consonant with a word-first owner.** Both `ఛ` and `ఝ`
+  still need vocabulary before they can enter the writing ramp, while
+  `TE-S132` already extracts `ఞ` from `కృతజ్ఞత`. Its eight separately numbered
+  movements trace the two upper loops, lower body, right bar and upper stem,
+  again following the packaged tracing guide and Noto Sans Telugu fit.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
@@ -169,9 +215,16 @@ The fixes, biggest first:
   follows the letter within the same chapter. The fix reorders the letter
   lesson to come after the word.
 
-Still to measure: inventory letters that appear in NO word. The unwritten list
-only sees letters some word already shows, so letters like Telugu ఙ ఛ ఝ ఱ need
-a script inventory to be counted.
+**Inventory-without-a-word: measured and ratcheted.** The report now joins each
+track to its script inventory and lists atomic letters that appear in no taught
+word. Generated abugida syllables count only their one-component base entries;
+composed consonant-plus-sign forms do not inflate the debt, and open-ended Han
+inventories remain outside this measure. There are 65 such letters across ten
+tracks: Marwadi 11; Gujarati and Malayalam 10 each; Japanese 9; Sanskrit and
+Telugu 8 each; Kannada 4; Hindi and Marathi 2 each; and Russian 1. The other
+seven measured tracks are at zero. Telugu's eight are exactly the motivating
+case: ఈ ఊ ఓ ఔ ఙ ఛ ఝ ఱ. Per-track ceilings now let this number fall but never
+rise, alongside cold, builds-toward, and unwritten.
 
 The filmstrip goes on the letter lesson, so it always lands right after the
 word that introduced the letter.

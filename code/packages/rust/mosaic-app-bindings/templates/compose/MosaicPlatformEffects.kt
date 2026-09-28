@@ -158,22 +158,110 @@ private fun mosaicReadBounded(file: File, limit: Long): ByteArray? {
  * dialog, or disguise what it is saving:
  *
  * - no directory separators, and not `.` or `..` -- no other directory;
+ * - no leading `.` -- a hidden dot-file such as `.zshrc` is configuration a
+ *   shell or tool runs, not a document;
  * - no `:` -- on Windows `D:x` names another drive, and `x:y` an alternate
  *   data stream;
- * - no control or format characters -- a right-to-left override can make
- *   `invoice<RLO>fdp.exe` read as a PDF in the dialog;
- * - no trailing dot or space, which Windows silently strips;
- * - at most 255 characters.
+ * - no control, format, line- or paragraph-separator characters -- a
+ *   right-to-left override can make `invoice<RLO>fdp.exe` read as a PDF in the
+ *   dialog, and a separator breaks the name across lines;
+ * - no leading or trailing whitespace of any kind (a no-break space included),
+ *   no run of two or more whitespace characters, and no trailing dot, which
+ *   Windows silently strips -- `report.pdf` padded out and ending `.command`
+ *   hides its real extension;
+ * - at most 255 UTF-16 units.
+ *
+ * - no lone surrogate, unassigned or private-use code point;
+ * - blank-rendering characters (Hangul fillers, BRAILLE PATTERN BLANK) count as
+ *   whitespace, and invisible (default-ignorable) characters are dropped
+ *   before the padding and dot rules.
+ *
+ * Checked by code point, so a format character outside the BMP (the tag
+ * characters, U+E0000..) is caught as well as one inside it.
  */
-fun mosaicIsPlainFileName(name: String): Boolean =
-    name.isNotEmpty() &&
-        name.length <= 255 &&
-        name != "." && name != ".." &&
-        !name.endsWith(".") && !name.endsWith(" ") &&
-        name.none {
-            it == '/' || it == '\\' || it == ':' ||
-                Character.isISOControl(it) || Character.getType(it) == Character.FORMAT.toInt()
-        }
+fun mosaicIsPlainFileName(name: String): Boolean {
+    if (name.isEmpty() || name.length > 255 || name == "." || name == "..") return false
+    val refused = name.codePoints().anyMatch { point ->
+        point == '/'.code || point == '\\'.code || point == ':'.code ||
+            when (Character.getType(point).toByte()) {
+                Character.CONTROL, Character.FORMAT,
+                Character.LINE_SEPARATOR, Character.PARAGRAPH_SEPARATOR,
+                // A lone surrogate cannot be written as a file name (Java
+                // saves it as `?`), and unassigned or private-use code points
+                // mean different things to different runtimes' Unicode tables.
+                Character.SURROGATE, Character.UNASSIGNED, Character.PRIVATE_USE -> true
+                else -> false
+            }
+    }
+    if (refused) return false
+    // The padding and dot rules look at what is visible: invisible characters
+    // cannot split a run of spaces or hide a leading or trailing dot.
+    val visible = name.codePoints().filter { !mosaicIsInvisible(it) }.toArray()
+    if (visible.isEmpty()) return false
+    if (visible.first() == '.'.code || visible.last() == '.'.code) return false
+    if (mosaicIsSpace(visible.first()) || mosaicIsSpace(visible.last())) return false
+    for (index in 1 until visible.size) {
+        if (mosaicIsSpace(visible[index - 1]) && mosaicIsSpace(visible[index])) return false
+    }
+    return true
+}
+
+private fun mosaicIsSpace(point: Int): Boolean =
+    Character.isWhitespace(point) || Character.isSpaceChar(point) || point in MOSAIC_BLANK_CHARACTERS
+
+/**
+ * Characters that are not whitespace to Unicode but render as a wide blank,
+ * so they pad a name just as well: the Hangul fillers and BRAILLE PATTERN
+ * BLANK. They count as whitespace for the padding rules.
+ */
+private val MOSAIC_BLANK_CHARACTERS: Set<Int> = setOf(0x115F, 0x1160, 0x2800, 0x3164, 0xFFA0)
+
+/**
+ * Unicode's Default_Ignorable_Code_Point (the JDK has no property for it),
+ * minus the blanks above: variation selectors, COMBINING GRAPHEME JOINER and
+ * the like. Dropped before the padding and dot rules, so `<space><VS1><space>`
+ * is still a run while an emoji's own selector (`❤️ list.txt`) is fine. The
+ * browser host uses `\p{DI}` and SwiftUI `isDefaultIgnorableCodePoint`.
+ */
+private fun mosaicIsInvisible(point: Int): Boolean =
+    point !in MOSAIC_BLANK_CHARACTERS && (
+        point == 0x00AD || point == 0x034F || point == 0x061C ||
+            point in 0x115F..0x1160 || point in 0x17B4..0x17B5 || point in 0x180B..0x180F ||
+            point in 0x200B..0x200F || point in 0x202A..0x202E || point in 0x2060..0x206F ||
+            point == 0x3164 || point in 0xFE00..0xFE0F || point == 0xFEFF || point == 0xFFA0 ||
+            point in 0xFFF0..0xFFF8 || point in 0x1BCA0..0x1BCA3 || point in 0x1D173..0x1D17A ||
+            point in 0xE0000..0xE0FFF
+        )
+
+/**
+ * Extensions that run when the file is opened, on some platform: when an app
+ * names no type (`accept` empty) a save may not end in one of these, so a
+ * `files.save` cannot drop a launcher next to the person's documents. When the
+ * app does name types, the name must already end in one of theirs.
+ */
+val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(
+    // macOS: Terminal scripts, Finder location files and installers open
+    // with no prompt, or install.
+    "command", "terminal", "tool", "webloc", "inetloc", "fileloc", "afploc", "ftploc",
+    "mailloc", "newsloc", "atloc", "app", "pkg", "mpkg", "dmg", "mobileconfig", "scpt",
+    "applescript", "workflow",
+    // Windows: run, install, or leak credentials when merely browsed.
+    "exe", "com", "bat", "cmd", "scr", "pif", "msi", "msp", "msc", "lnk", "url", "hta",
+    "cpl", "chm", "inf", "vbs", "vbe", "js", "jse", "wsf", "wsh", "ws", "wsc", "sct",
+    "ps1", "psm1", "reg", "jar", "jnlp", "gadget", "xll", "appref-ms", "application",
+    "settingcontent-ms", "appx", "msix", "appinstaller", "diagcab", "scf",
+    "library-ms", "searchconnector-ms", "iso", "img", "vhd", "vhdx",
+    // Linux desktops.
+    "desktop", "sh", "run", "appimage", "deb", "rpm", "flatpakref",
+)
+
+/** True when [name] ends in an extension from [MOSAIC_EXECUTABLE_EXTENSIONS]. */
+fun mosaicHasExecutableExtension(name: String): Boolean {
+    val dot = name.lastIndexOf('.')
+    // Folded through upper case first: `ſ` (LONG S) lowercases to itself but
+    // is `S` to a case-insensitive file system.
+    return dot >= 0 && name.substring(dot + 1).uppercase().lowercase() in MOSAIC_EXECUTABLE_EXTENSIONS
+}
 
 /** `files.open`: the outcome map, never an exception. */
 fun mosaicRunFilesOpen(payload: Any?, dialogs: MosaicFileDialogs): Map<String, Any?> {
@@ -240,6 +328,9 @@ fun mosaicRunFilesSave(payload: Any?, dialogs: MosaicFileDialogs): Map<String, A
     val extensions = mosaicExtensionsFor(request)
     if (extensions.isNotEmpty() && extensions.none { suggestedName.lowercase().endsWith(".$it") }) {
         return mosaicFailed("suggestedName must end in an extension of an accepted type")
+    }
+    if (extensions.isEmpty() && mosaicHasExecutableExtension(suggestedName)) {
+        return mosaicFailed("suggestedName must not end in an executable extension")
     }
     val target = dialogs.chooseFileToSave(suggestedName, extensions)
         ?: return mosaicCancelled()

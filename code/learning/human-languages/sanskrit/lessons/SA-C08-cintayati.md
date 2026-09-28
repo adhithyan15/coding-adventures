@@ -12,18 +12,18 @@ headword: चिन्तयति
 romanization: cintayati
 gloss: he, she, or it thinks — the tenth class, which plants a whole syllable अय between root and ending
 concept_tag: VERB-THINK
-prerequisites: [SA-C07-janati]
+prerequisites: [SA-C07-janati, SA-C06-number-cognates-more, SA-C03-na-cinta]
 sounds: [inherent-a, conjunct-nta]
 roots: [cint-think, pie-kweyt]
 etymology_hook: "चिन्त् goes back to PIE kweyt- 'to notice', and its च is the same rounded k you met in the numbers, merged and then palatalised; the Baltic and Slavic branches turned that root into their word for reading, while English got nothing from it at all"
 duration:
   max_seconds: 275
 requires:
-  knowledge: [SA-GRAMMAR-DHATU-GANA, SA-LEX-JANATI-KNOW, SA-ETYMON-GNO-DESCENDANTS, SA-SOUND-PIE-KW-OUTCOMES]
+  knowledge: [SA-GRAMMAR-DHATU-GANA, SA-LEX-JANATI-KNOW, SA-ETYMON-GNO-DESCENDANTS, SA-SOUND-PIE-KW-OUTCOMES, SA-PATTERN-NA-CINTA]
 introduces:
   knowledge: [SA-LEX-CINTAYATI-THINK, SA-GRAMMAR-GANA-TEN-AYA]
 practises:
-  knowledge: [SA-GRAMMAR-DHATU-GANA, SA-LEX-JANATI-KNOW, SA-ETYMON-GNO-DESCENDANTS, SA-SOUND-PIE-KW-OUTCOMES, SA-LEX-CINTAYATI-THINK, SA-GRAMMAR-GANA-TEN-AYA]
+  knowledge: [SA-GRAMMAR-DHATU-GANA, SA-LEX-JANATI-KNOW, SA-ETYMON-GNO-DESCENDANTS, SA-SOUND-PIE-KW-OUTCOMES, SA-LEX-CINTAYATI-THINK, SA-GRAMMAR-GANA-TEN-AYA, SA-PATTERN-NA-CINTA]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,9 @@ reviews_of: [SA-C07-janati, SA-C06-number-cognates, SA-C03-na-cinta]
 # चिन्तयति (cintayati) — "thinks," and a root that never reached English
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-JANATI-KNOW, SA-ETYMON-GNO-DESCENDANTS, SA-GRAMMAR-DHATU-GANA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-JANATI-KNOW, SA-ETYMON-GNO-DESCENDANTS, SA-GRAMMAR-DHATU-GANA, SA-PATTERN-NA-CINTA] -->
+
+[PAUSE 1s] Say "no worries." (*Na cintā*.) Keep that *cintā*, "worry, thought," in mind.
 
 [PAUSE 2s] Say "it knows." (*Jānāti*, root **ज्ञा** — the root English *know* is
 made of.) Here is what you do *before* you know.

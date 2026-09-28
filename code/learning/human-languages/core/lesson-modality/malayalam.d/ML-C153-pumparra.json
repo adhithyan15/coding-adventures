@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C153-pumparra",
+    "language": "malayalam",
+    "chapter": 153,
+    "sequence": 6310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32b8bbe295129aa6"
+  },
+  "findings": []
+}

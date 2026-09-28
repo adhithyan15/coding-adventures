@@ -1,0 +1,11 @@
+{
+  "id": "SA-C108-alukam",
+  "pathSegment": "SA-PATH-108-THINGS108",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-108-THINGS108",
+      "order": 1
+    }
+  ]
+}

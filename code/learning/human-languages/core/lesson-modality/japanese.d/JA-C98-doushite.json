@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C98-doushite",
+    "language": "japanese",
+    "chapter": 98,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62fe8859b4d3e51c"
+  },
+  "findings": []
+}

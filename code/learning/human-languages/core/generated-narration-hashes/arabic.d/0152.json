@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:fafab9ae916ca65f",
+  "lessonIds": [
+    "AR-C152-hamid",
+    "AR-C152-murr",
+    "AR-C152-naim",
+    "AR-C152-sulb",
+    "AR-C152-dhaki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch152.txt",
+  "json": "arabic/narration/ch152.json",
+  "textHash": "fnv1a64:ef63a06386e3c0f7",
+  "jsonHash": "fnv1a64:45ebc96b80f48884",
+  "findings": []
+}

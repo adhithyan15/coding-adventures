@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed — the Compose `files.open` handler (UI87 §7.4)
+
+`host/compose/PhotoPickerEffects.kt` and its `[host_effects]` file and handler
+entries are gone. Mosaic's platform library answers `files.open` on Compose
+(since #16016) and SwiftUI (since #16132) for every app, so the generated
+`Main.kt` now installs only `installMosaicPlatformEffects`. The XAML, Qt and
+Flutter handlers stay until those backends' platform libraries land. The
+smoke test now asserts there is no Compose or SwiftUI handler and that
+`host/compose/` is gone.
+
 ### Changed — Compose `files.open` is answered by Mosaic's platform library
 
 Every Compose app now gets `MosaicPlatformEffects.kt` (UI87 §7), which answers

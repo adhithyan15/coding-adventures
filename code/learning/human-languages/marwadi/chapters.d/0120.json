@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Winnowing basket, Sieve, Grinding mill, Pestle, Rolling pin",
+  "label": "ch:mw-winnowing-basket-sieve-grinding-mill-pestle-rolling-pin",
+  "canDo": "I can say a winnowing basket, a sieve, a grinding mill, a pestle and a rolling pin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C120-belan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a winnowing basket, a sieve, a grinding mill, a pestle and a rolling pin.",
+    "assesses": [
+      "MW-LEX-C120-THINGS120-03",
+      "MW-LEX-C120-THINGS120-04",
+      "MW-LEX-C120-THINGS120-05"
+    ]
+  }
+}

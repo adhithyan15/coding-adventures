@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C127-musaphar",
+    "language": "gujarati",
+    "chapter": 127,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04da4b1f384f8b28"
+  },
+  "findings": []
+}

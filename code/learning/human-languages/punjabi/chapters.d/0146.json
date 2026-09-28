@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Stale, Ripe, Raw, True, False",
+  "label": "ch:pa-stale-ripe-raw-true-false",
+  "canDo": "I can say stale, ripe, raw, true and false.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C146-jhutha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say stale, ripe, raw, true and false.",
+    "assesses": [
+      "PA-LEX-C146-QUAL146-03",
+      "PA-LEX-C146-QUAL146-04",
+      "PA-LEX-C146-QUAL146-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:7ba426de5be69bf5",
+  "lessonIds": [
+    "MW-C149-puro",
+    "MW-C149-khus",
+    "MW-C149-darpok",
+    "MW-C149-bahadur",
+    "MW-C149-gailo",
+    "MW-R149-first-pass-animals-and-describing-words",
+    "MW-R149-second-pass-describing-people"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch149.txt",
+  "json": "marwadi/narration/ch149.json",
+  "textHash": "fnv1a64:003aebb4e661824b",
+  "jsonHash": "fnv1a64:3744ce4a37c19e20",
+  "findings": []
+}

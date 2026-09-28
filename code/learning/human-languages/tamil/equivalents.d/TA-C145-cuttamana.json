@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C145-cuttamana",
+  "english": "clean",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "శుభ్రం",
+      "romanization": "śubhraṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "വൃത്തിയുള്ള",
+      "romanization": "vṛttiyuḷḷa"
+    },
+    {
+      "language": "hindi",
+      "form": "साफ़",
+      "romanization": "sāf"
+    }
+  ],
+  "source": "cross-track match: TE-C137-subhram, ML-C165-vrttiyulla, HI-C155-saf"
+}

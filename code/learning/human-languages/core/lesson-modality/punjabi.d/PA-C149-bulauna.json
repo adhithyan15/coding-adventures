@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C149-bulauna",
+    "language": "punjabi",
+    "chapter": 149,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:200079d0c284b915"
+  },
+  "findings": []
+}

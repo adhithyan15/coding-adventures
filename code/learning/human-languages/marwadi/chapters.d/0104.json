@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "To buy, To uncover, To call, To ask for, To look",
+  "label": "ch:mw-to-buy-to-uncover-to-call-to-ask-for-to-look",
+  "canDo": "I can say to buy, to uncover, to call, to ask for and to look.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C104-jovno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say to buy, to uncover, to call, to ask for and to look.",
+    "assesses": [
+      "MW-LEX-C104-ACT104-03",
+      "MW-LEX-C104-ACT104-04",
+      "MW-LEX-C104-ACT104-05"
+    ]
+  }
+}

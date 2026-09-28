@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C92-wait",
+  "english": "please wait",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಾಯಿರಿ",
+      "romanization": "kāyiri",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఆగండి",
+      "romanization": "āgaṇḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "കാത്തിരിക്കൂ",
+      "romanization": "kāttirikkū",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "रुकिए",
+      "romanization": "rukie"
+    }
+  ],
+  "source": "cross-track match: KA-C86-wait, TE-C86-wait, ML-C119-wait, HI-C110-rukie; sameRoot judged by the author, awaiting native review"
+}

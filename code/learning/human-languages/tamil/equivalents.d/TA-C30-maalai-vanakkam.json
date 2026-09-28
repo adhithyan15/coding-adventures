@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C30-maalai-vanakkam",
+  "english": "good evening",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶುಭ ಸಂಜೆ",
+      "romanization": "śubha sañje"
+    },
+    {
+      "language": "telugu",
+      "form": "శుభ సాయంత్రం",
+      "romanization": "śubha sāyantram"
+    },
+    {
+      "language": "malayalam",
+      "form": "ശുഭ സായാഹ്നം",
+      "romanization": "śubha sāyāhnaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "शुभ संध्या",
+      "romanization": "shubh sandhyā"
+    }
+  ],
+  "source": "cross-track match: KA-C30-shubha-sanje, TE-C30-subha-sayantram, ML-C30-shubha-sayaahnam, HI-C32-shubh-sandhya"
+}

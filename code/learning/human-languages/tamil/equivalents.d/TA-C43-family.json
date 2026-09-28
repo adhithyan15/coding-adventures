@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C43-family",
+  "english": "family",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕುಟುಂಬ",
+      "romanization": "kuṭumba",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కుటుంబం",
+      "romanization": "kuṭumbaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കുടുംബം",
+      "romanization": "kuṭumbaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "परिवार",
+      "romanization": "parivār"
+    }
+  ],
+  "source": "cross-track match: KA-C35-kutumba, TE-C35-kutumbam, ML-C35-kudumbam, HI-C44-family; sameRoot judged by the author, awaiting native review"
+}

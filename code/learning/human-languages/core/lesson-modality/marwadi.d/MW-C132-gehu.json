@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C132-gehu",
+    "language": "marwadi",
+    "chapter": 132,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93e58331d8f9bc5b"
+  },
+  "findings": []
+}

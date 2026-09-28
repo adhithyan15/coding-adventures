@@ -373,56 +373,56 @@ impl PassPipeline {
         // Unknown deps are dropped (with no warning in v1 — CLOC06
         // doesn't yet require us to surface them).
         let names: Vec<&'static str> = self.passes.iter().map(|p| p.name()).collect();
-        let name_set: std::collections::HashSet<&'static str> = names.iter().copied().collect();
+        let name_index: HashMap<&'static str, usize> = names
+            .iter()
+            .copied()
+            .enumerate()
+            .map(|(index, name)| (name, index))
+            .collect();
 
         // Detect duplicate pass names — they violate the CLOC06
         // contract that names are unique.
-        if name_set.len() != names.len() {
+        if name_index.len() != names.len() {
             return Err(PassError {
                 pass_name: "<duplicate>".to_string(),
                 message: "two or more registered passes share the same name()".into(),
             });
         }
 
+        // Indices retain registration order throughout the sort.
         // adj[pass] = passes that depend on `pass`.
-        let mut adj: HashMap<&'static str, Vec<&'static str>> = HashMap::new();
-        let mut in_degree: HashMap<&'static str, usize> = HashMap::new();
-        for &n in &names {
-            adj.entry(n).or_default();
-            in_degree.entry(n).or_insert(0);
-        }
-        for p in &self.passes {
+        let mut adj: Vec<Vec<usize>> = vec![Vec::new(); names.len()];
+        let mut in_degree = vec![0; names.len()];
+        for (index, p) in self.passes.iter().enumerate() {
             for &dep in p.depends_on() {
-                if !name_set.contains(dep) {
+                let Some(&dep_index) = name_index.get(dep) else {
                     // CLOC06 doesn't pin behavior for missing deps;
                     // v1 silently skips them.
                     continue;
-                }
-                adj.entry(dep).or_default().push(p.name());
-                *in_degree.entry(p.name()).or_insert(0) += 1;
+                };
+                adj[dep_index].push(index);
+                in_degree[index] += 1;
             }
         }
 
-        // Process passes in their registration order so stable
-        // tie-breaking holds.
-        let mut ready: Vec<&'static str> = names
+        // A newly ready dependent competes with every other ready pass by
+        // registration index, including independent passes registered later.
+        let mut ready: std::collections::BTreeSet<usize> = in_degree
             .iter()
-            .copied()
-            .filter(|n| in_degree.get(n).copied().unwrap_or(0) == 0)
+            .enumerate()
+            .filter_map(|(index, &degree)| (degree == 0).then_some(index))
             .collect();
         let mut order: Vec<String> = Vec::with_capacity(self.passes.len());
+        let mut processed = vec![false; names.len()];
 
-        while let Some(n) = ready.first().copied() {
-            ready.remove(0);
-            order.push(n.to_string());
-            // Process dependents in registration order (Vec preserves
-            // insertion order).
-            let dependents = adj.remove(n).unwrap_or_default();
-            for dep in dependents {
-                let d = in_degree.entry(dep).or_insert(0);
-                *d = d.saturating_sub(1);
-                if *d == 0 && !order.iter().any(|s| s == dep) && !ready.contains(&dep) {
-                    ready.push(dep);
+        while let Some(&index) = ready.first() {
+            ready.remove(&index);
+            processed[index] = true;
+            order.push(names[index].to_string());
+            for &dependent in &adj[index] {
+                in_degree[dependent] -= 1;
+                if in_degree[dependent] == 0 {
+                    ready.insert(dependent);
                 }
             }
         }
@@ -431,7 +431,8 @@ impl PassPipeline {
             let remaining: Vec<&'static str> = names
                 .iter()
                 .copied()
-                .filter(|n| !order.iter().any(|o| o == n))
+                .enumerate()
+                .filter_map(|(index, name)| (!processed[index]).then_some(name))
                 .collect();
             return Err(PassError {
                 pass_name: remaining.first().map(|s| s.to_string()).unwrap_or_default(),
@@ -769,6 +770,20 @@ mod tests {
             out.execution_order,
             vec!["alpha".to_string(), "beta".to_string()]
         );
+    }
+
+    #[test]
+    fn newly_ready_pass_precedes_later_registered_independent_pass() {
+        // After alpha runs, beta becomes ready. Gamma was ready from the
+        // start, but was registered later, so beta must run first.
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(NoOpPass::new("alpha")));
+        pipeline.add(Box::new(NoOpPass::new("beta").with_deps(&["alpha"])));
+        pipeline.add(Box::new(NoOpPass::new("gamma")));
+
+        let mut cv = CVLog::new(true);
+        let out = pipeline.run(program(), &Sidecar::new(), &mut cv).unwrap();
+        assert_eq!(out.execution_order, vec!["alpha", "beta", "gamma"]);
     }
 
     #[test]

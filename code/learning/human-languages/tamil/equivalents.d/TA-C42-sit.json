@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C42-sit",
+  "english": "sit",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕುಳಿತುಕೋ",
+      "romanization": "kuḷitukō",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "కూర్చో",
+      "romanization": "kūrcō"
+    },
+    {
+      "language": "hindi",
+      "form": "बैठना",
+      "romanization": "baiṭhnā"
+    }
+  ],
+  "source": "cross-track match: KA-C43-sit, TE-C43-sit, HI-C42-sit; sameRoot judged by the author, awaiting native review"
+}

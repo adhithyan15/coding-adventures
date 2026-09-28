@@ -1,13 +1,16 @@
 {
   "language": "sanskrit",
   "chapter": 5,
-  "sourceHash": "fnv1a64:acec5d795c484288",
+  "sourceHash": "fnv1a64:ad1a89364c3ca9fa",
   "lessonIds": [
     "SA-C05-vadami",
     "SA-S204-letter-ya",
     "SA-C05-aham-samskritam-vadami",
     "SA-C05-vasami",
     "SA-S205-vowel-sign-vocalic-r",
+    "SA-W05-vocalic-r-guided-copy",
+    "SA-W05-vocalic-r-delayed-copy",
+    "SA-W05-vocalic-r-dictation",
     "SA-C05-karomi",
     "SA-C05-practice",
     "SA-S03-letter-a"
@@ -16,7 +19,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch05.txt",
   "json": "sanskrit/narration/ch05.json",
-  "textHash": "fnv1a64:62bf7c35b8fea685",
-  "jsonHash": "fnv1a64:9cd96ec6d1f5c718",
+  "textHash": "fnv1a64:7aafb612ab125a69",
+  "jsonHash": "fnv1a64:8e42724eed121f56",
   "findings": []
 }

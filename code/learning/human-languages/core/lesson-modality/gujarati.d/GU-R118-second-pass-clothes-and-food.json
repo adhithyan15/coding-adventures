@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R118-second-pass-clothes-and-food",
+    "language": "gujarati",
+    "chapter": 118,
+    "sequence": 6160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b1e5dd1088541ef"
+  },
+  "findings": []
+}

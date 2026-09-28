@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C156-koppa",
+    "language": "malayalam",
+    "chapter": 156,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e429a6db0220c1b2"
+  },
+  "findings": []
+}

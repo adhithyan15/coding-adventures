@@ -1,0 +1,11 @@
+{
+  "id": "JA-C114-hachimitsu",
+  "pathSegment": "JA-PATH-114-THINGS114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-114-THINGS114",
+      "order": 3
+    }
+  ]
+}

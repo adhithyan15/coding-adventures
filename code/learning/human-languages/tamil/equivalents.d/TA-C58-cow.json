@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C58-cow",
+  "english": "a cow",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಸು",
+      "romanization": "hasu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఆవు",
+      "romanization": "āvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "പശു",
+      "romanization": "paśu",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गाय",
+      "romanization": "gāy"
+    }
+  ],
+  "source": "cross-track match: KA-C60-cow, TE-C122-avu, ML-C60-cow, HI-C54-cow; sameRoot judged by the author, awaiting native review"
+}

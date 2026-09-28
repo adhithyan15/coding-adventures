@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C20-pathinondru-irupathu",
+  "english": "11-20",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹನ್ನೊಂದು — ಇಪ್ಪತ್ತು",
+      "romanization": "hannondu — ippattu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పదకొండు — ఇరవై",
+      "romanization": "padakoṇḍu — iravai",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പതിനൊന്ന് — ഇരുപത്",
+      "romanization": "patinonnŭ — irupatŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C20-hannondu-ippattu, TE-C20-padakondu-iravai, ML-C20-pathinonnu-irupathu; sameRoot judged by the author, awaiting native review"
+}

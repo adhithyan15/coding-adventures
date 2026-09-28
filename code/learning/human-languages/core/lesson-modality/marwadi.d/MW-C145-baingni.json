@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C145-baingni",
+    "language": "marwadi",
+    "chapter": 145,
+    "sequence": 9180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7af6d01d2a190460"
+  },
+  "findings": []
+}

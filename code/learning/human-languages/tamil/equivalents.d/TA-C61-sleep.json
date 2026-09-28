@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C61-sleep",
+  "english": "sleep",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನಿದ್ದೆ",
+      "romanization": "nidde"
+    },
+    {
+      "language": "telugu",
+      "form": "నిద్ర",
+      "romanization": "nidra"
+    },
+    {
+      "language": "hindi",
+      "form": "नींद",
+      "romanization": "nīnd"
+    }
+  ],
+  "source": "cross-track match: KA-C63-sleep, TE-C63-sleep, HI-C63-sleep"
+}

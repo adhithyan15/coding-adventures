@@ -1,0 +1,11 @@
+{
+  "id": "MW-C132-lapsi",
+  "pathSegment": "MW-PATH-132-THINGS132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-132-THINGS132",
+      "order": 1
+    }
+  ]
+}

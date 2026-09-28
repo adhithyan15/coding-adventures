@@ -39,6 +39,7 @@ from taskapp_release import (
     archive_windows_app,
     artifact_names,
     build_manifest,
+    changelog_change_headings,
     materialize_upgrade_fixture,
     render_notes,
     validate_changelog,
@@ -94,6 +95,38 @@ def test_changelog_accepts_one_unreleased_section_and_the_next_release(
 
     validate_changelog(changelog)
     validate_changelog(changelog, "0.2.0")
+
+
+def test_changelog_change_headings_are_scoped_to_the_selected_release(
+    tmp_path: Path,
+) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(
+        "# Changelog\n\n"
+        "## [Unreleased]\n\n"
+        "## [0.3.0] - 2026-09-27\n\n"
+        "### Added — recoverable native startup\n\nDetails.\n\n"
+        "### Changed — adaptive navigation (#15486)\n\nDetails.\n\n"
+        "## [0.2.0] - 2026-09-13\n\n"
+        "### Added — older release\n",
+        encoding="utf-8",
+    )
+
+    assert changelog_change_headings(changelog, "0.3.0") == [
+        "Added — recoverable native startup",
+        "Changed — adaptive navigation (#15486)",
+    ]
+
+
+def test_changelog_change_headings_reject_an_empty_release(tmp_path: Path) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(
+        "# Changelog\n\n## [Unreleased]\n\n## [0.3.0] - 2026-09-27\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="has no change headings"):
+        changelog_change_headings(changelog, "0.3.0")
 
 
 @pytest.mark.parametrize(
@@ -477,19 +510,34 @@ def test_release_notes_are_product_scoped_and_filter_previous_history() -> None:
         "adhithyan15/coding-adventures",
         history,
         "2026-08-31T00:00:00Z",
+        [
+            "Added — native scheduling lifecycle (#13575)",
+            "Fixed — recoverable startup across native hosts",
+        ],
     )
 
     assert "# TaskApp v0.1.0" in notes
     assert "(#13575)" in notes
     assert "(#13542)" not in notes
+    assert "## Changes in this release" in notes
+    assert "native scheduling lifecycle" in notes
+    assert "recoverable startup across native hosts" in notes
     assert "no installer" in notes.lower()
     assert "portable bundle" in notes.lower()
     assert "task-app-compose-linux-bundle-v0.1.0.tar.gz" in notes
     assert "task-app-swiftui-macos-bundle-v0.1.0.zip" in notes
     assert "task-app-xaml-windows-bundle-v0.1.0.zip" in notes
     assert "not notarized" in notes.lower()
-    assert "issues/13522" in notes
+    assert "issues/13977" in notes
+    assert "issues/13522" not in notes
     assert "SHA256SUMS" in notes
+    assert (
+        "Static HTML, Web Components, and Paint are CI-only verification outputs"
+        in notes
+    )
+    assert "not\n  downloadable release artifacts" in notes
+    assert "Paint coverage does not provide a Paint host" in notes
+    assert "or interaction support" in notes
 
 
 def test_workflow_validates_before_building_and_has_one_publisher() -> None:
@@ -511,6 +559,7 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "if: github.event_name == 'workflow_dispatch'" in workflow
     assert workflow.count('gh release create "$RELEASE_TAG"') == 1
     assert "sha256sum --check SHA256SUMS" in workflow
+    assert "--changelog code/programs/mosaic/task-app/CHANGELOG.md" in workflow
     assert "--latest=false" in workflow
     assert 'RUST_VERSION: "1.97.0"' in workflow
     assert "git diff --exit-code" in workflow

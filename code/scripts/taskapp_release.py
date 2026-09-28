@@ -229,6 +229,29 @@ def validate_changelog(changelog: Path, release_version: str | None = None) -> N
             )
 
 
+def changelog_change_headings(changelog: Path, release_version: str) -> list[str]:
+    """Return the reviewed change headings for one exact release section."""
+
+    validate_changelog(changelog, release_version)
+    text = changelog.read_text(encoding="utf-8")
+    section = re.search(
+        rf"^## \[{re.escape(release_version)}\] - \d{{4}}-\d{{2}}-\d{{2}}\s*$"
+        r"(?P<body>.*?)(?=^## |\Z)",
+        text,
+        re.MULTILINE | re.DOTALL,
+    )
+    if section is None:
+        raise ValueError(
+            f"changelog has no dated release section for {release_version!r}"
+        )
+    headings = re.findall(r"^### (.+?)\s*$", section.group("body"), re.MULTILINE)
+    if not headings:
+        raise ValueError(
+            f"changelog release {release_version!r} has no change headings"
+        )
+    return headings
+
+
 def artifact_names(version: str) -> list[str]:
     """Return the complete, stable payload set for one release."""
 
@@ -969,8 +992,9 @@ def render_notes(
     repository: str,
     history: list[dict[str, Any]],
     since: str | None,
+    changes: list[str],
 ) -> str:
-    """Render honest, product-scoped notes from GitHub pull-request history."""
+    """Render honest, product-scoped notes from changelog and PR history."""
 
     validate_identifiers(version, tag, commit)
     if REPOSITORY.fullmatch(repository) is None:
@@ -981,12 +1005,21 @@ def render_notes(
         if history_lines
         else "- No labeled TaskApp PRs in this interval."
     )
+    if not changes or any(
+        not isinstance(change, str) or not change.strip() for change in changes
+    ):
+        raise ValueError("release notes require at least one changelog change heading")
+    changes_section = "\n".join(f"- {change.strip()}" for change in changes)
     issue_root = f"https://github.com/{repository}/issues"
     return f"""# TaskApp v{version}
 
 This is an intentionally incremental TaskApp/Trestle release from commit
 `{commit.lower()}`. Task data remains local, and scheduling is owned by the shared
 Rust engine.
+
+## Changes in this release
+
+{changes_section}
 
 ## What is usable now
 
@@ -1026,8 +1059,11 @@ the manifest.
 
 - Linux payloads are portable archives rather than signed distribution packages.
 - The macOS app is unsigned/not notarized; the Windows app is unsigned and unpackaged.
-- Signing and platform-native installers remain tracked in [#13522]({issue_root}/13522).
+- Signing, notarization, and platform-native installers remain tracked in [#13977]({issue_root}/13977).
 - Mobile binaries are not release artifacts in this version.
+- Static HTML, Web Components, and Paint are CI-only verification outputs, not
+  downloadable release artifacts; Paint coverage does not provide a Paint host
+  or interaction support.
 
 ## TaskApp GitHub history
 
@@ -1114,6 +1150,7 @@ def _parser() -> argparse.ArgumentParser:
     notes_parser.add_argument("--commit", required=True)
     notes_parser.add_argument("--repository", required=True)
     notes_parser.add_argument("--history", type=Path, required=True)
+    notes_parser.add_argument("--changelog", type=Path, required=True)
     notes_parser.add_argument("--since")
     notes_parser.add_argument("--output", type=Path, required=True)
     return parser
@@ -1186,6 +1223,7 @@ def main(argv: list[str] | None = None) -> int:
             history = json.loads(args.history.read_text(encoding="utf-8"))
             if not isinstance(history, list):
                 raise ValueError("GitHub history must be a JSON list")
+            changes = changelog_change_headings(args.changelog, args.version)
             notes = render_notes(
                 args.version,
                 args.tag,
@@ -1193,6 +1231,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.repository,
                 history,
                 args.since,
+                changes,
             )
             args.output.write_text(notes, encoding="utf-8")
     except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:

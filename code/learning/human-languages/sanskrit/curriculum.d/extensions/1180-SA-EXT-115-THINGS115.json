@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-115-THINGS115",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fly, a mosquito, an ant, a butterfly and a rooster.",
+  "prerequisites": []
+}

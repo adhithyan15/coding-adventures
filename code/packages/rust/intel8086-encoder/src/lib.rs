@@ -46,15 +46,17 @@
 // more exercised by this crate's own tests).
 
 pub use intel8086_simulator::encoding::{
-    assemble, encode_add_ax_imm16, encode_dec_reg16, encode_hlt, encode_inc_reg16,
-    encode_mov_reg_imm16, encode_mov_reg_imm8, encode_mov_reg_reg16, encode_nop,
-    encode_sub_ax_imm16,
+    assemble, encode_add_ax_imm16, encode_alu_reg_reg, encode_dec_reg16, encode_hlt,
+    encode_inc_reg16, encode_mov_reg_imm16, encode_mov_reg_imm8, encode_mov_reg_reg16,
+    encode_mov_reg_reg8, encode_nop, encode_sub_ax_imm16,
 };
 
 /// The accumulator register index (`AX`) — re-exported so
 /// `intel8086-backend` can name its always-target register without a
 /// direct `intel8086-simulator` dependency.
-pub use intel8086_simulator::opcodes::REG_AX;
+pub use intel8086_simulator::opcodes::{
+    REG_AH, REG_AL, REG_AX, REG_BH, REG_BL, REG_BX, REG_CL, REG_CX,
+};
 
 // ===========================================================================
 // Canonical byte constant
@@ -95,6 +97,19 @@ mod tests {
     fn canonical_const_42_bytes() {
         // First instruction of the IIR `42` lowering: MOV AX, 42
         assert_eq!(encode_mov_reg_imm16(REG_AX, 42), vec![0xB8, 42, 0x00]);
+    }
+
+    #[test]
+    fn word02_register_alu_encodings() {
+        assert_eq!(
+            encode_alu_reg_reg(0, false, REG_AL, REG_BL),
+            vec![0x02, 0xC3]
+        );
+        assert_eq!(
+            encode_alu_reg_reg(6, true, REG_AX, REG_BX),
+            vec![0x33, 0xC3]
+        );
+        assert_eq!(encode_mov_reg_reg8(REG_CL, REG_AL), vec![0x8A, 0xC8]);
     }
 
     #[test]

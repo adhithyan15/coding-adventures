@@ -1,0 +1,11 @@
+{
+  "id": "AR-R129-first-pass-the-house-clothes-and-food",
+  "pathSegment": "AR-PATH-129-THINGS129",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-129-THINGS129",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+| 758-764 | 135 | Thirsty, Ill, Fresh, Ripe, Raw | `GU-C135-tarasyu` -> `GU-C135-bimar` -> `GU-C135-taju` -> `GU-C135-paku` -> `GU-C135-kacu` -> `GU-R135-first-pass-animals-and-the-body` -> `GU-R135-second-pass-town-school-and-work` |

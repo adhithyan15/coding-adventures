@@ -1,0 +1,11 @@
+{
+  "id": "JA-C115-hinata",
+  "pathSegment": "JA-PATH-115-THINGS115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-115-THINGS115",
+      "order": 2
+    }
+  ]
+}

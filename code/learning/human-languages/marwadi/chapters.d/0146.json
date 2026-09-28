@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Shiny, Calm, Clever, Silly, Lazy",
+  "label": "ch:mw-shiny-calm-clever-silly-lazy",
+  "canDo": "I can say shiny, calm, clever, silly and lazy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C146-alsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say shiny, calm, clever, silly and lazy.",
+    "assesses": [
+      "MW-LEX-C146-QUAL146-03",
+      "MW-LEX-C146-QUAL146-04",
+      "MW-LEX-C146-QUAL146-05"
+    ]
+  }
+}

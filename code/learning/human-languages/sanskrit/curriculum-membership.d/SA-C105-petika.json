@@ -1,0 +1,11 @@
+{
+  "id": "SA-C105-petika",
+  "pathSegment": "SA-PATH-105-THINGS105",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-105-THINGS105",
+      "order": 4
+    }
+  ]
+}

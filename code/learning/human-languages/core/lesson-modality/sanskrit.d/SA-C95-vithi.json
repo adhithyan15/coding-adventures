@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C95-vithi",
+    "language": "sanskrit",
+    "chapter": 95,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:579a49940fbf479c"
+  },
+  "findings": []
+}

@@ -15,6 +15,7 @@ from der_asn1 import (
     Asn1Element,
     Asn1Error,
     Asn1Limits,
+    ObjectIdentifier,
     decode_bit_string,
     decode_boolean,
     decode_ia5_string,
@@ -287,3 +288,14 @@ def test_limit_validation_and_oid_equality() -> None:
     oid = decode_object_identifier(decoder.decode_exact(bytes.fromhex("06032a0304")))
     assert oid.equals([1, 2, 3, 4])
     assert not oid.equals([1, 2, 3])
+
+
+def test_oid_is_private_detached_and_immutable() -> None:
+    source = bytearray.fromhex("0603551d11")
+    decoder = Asn1Decoder()
+    oid = decode_object_identifier(decoder.decode_exact(source))
+    source[-1] = 0x2A
+    assert oid.encoded == bytes.fromhex("551d11")
+    assert isinstance(oid.encoded, bytes)
+    with pytest.raises(TypeError, match="created by DER decoding"):
+        ObjectIdentifier(b"\x55\x1d\x11", (2, 5, 29, 17))  # type: ignore[call-arg]

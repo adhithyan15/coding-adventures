@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C150-vettu",
+  "english": "to cut",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕತ್ತರಿಸು",
+      "romanization": "kattarisu"
+    },
+    {
+      "language": "telugu",
+      "form": "కోయు",
+      "romanization": "kōyu"
+    },
+    {
+      "language": "hindi",
+      "form": "काटना",
+      "romanization": "kāṭnā"
+    }
+  ],
+  "source": "cross-track match: KA-C147-kattarisu, TE-C144-koyu, HI-C161-katna"
+}

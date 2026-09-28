@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Itchy, Smelly, Humid, Funny, Interesting",
+  "label": "ch:ja-itchy-smelly-humid-funny-interesting",
+  "canDo": "I can say itchy, smelly, humid, funny and interesting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "JA-C124-omoshiroi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say itchy, smelly, humid, funny and interesting.",
+    "assesses": [
+      "JA-LEX-C124-QUAL124-03",
+      "JA-LEX-C124-QUAL124-04",
+      "JA-LEX-C124-QUAL124-05"
+    ]
+  }
+}

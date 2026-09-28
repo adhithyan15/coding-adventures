@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:fefa662cb496b7cb",
+  "lessonIds": [
+    "AR-C104-janub",
+    "AR-C104-sharq",
+    "AR-C104-gharb",
+    "AR-C104-makan",
+    "AR-C104-unwan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch104.txt",
+  "json": "arabic/narration/ch104.json",
+  "textHash": "fnv1a64:e4ad4af964fbd5fa",
+  "jsonHash": "fnv1a64:0cf4de481d5143ea",
+  "findings": []
+}

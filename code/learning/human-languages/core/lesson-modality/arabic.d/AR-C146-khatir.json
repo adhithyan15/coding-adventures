@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C146-khatir",
+    "language": "arabic",
+    "chapter": 146,
+    "sequence": 6710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:480887001524538a"
+  },
+  "findings": []
+}

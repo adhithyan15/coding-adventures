@@ -1,0 +1,11 @@
+{
+  "id": "SA-C115-masakah",
+  "pathSegment": "SA-PATH-115-THINGS115",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-115-THINGS115",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:d9d21a0e6ed9e3b8",
+  "lessonIds": [
+    "AR-C137-ankabut",
+    "AR-C137-dik",
+    "AR-C137-qitta",
+    "AR-C137-buma",
+    "AR-C137-ghurab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch137.txt",
+  "json": "arabic/narration/ch137.json",
+  "textHash": "fnv1a64:5e78aeeb5d02872f",
+  "jsonHash": "fnv1a64:807596d3750810a5",
+  "findings": []
+}

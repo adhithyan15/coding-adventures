@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:b8179a0d774bb694",
+  "lessonIds": [
+    "ML-C166-bharamulla",
+    "ML-C166-vegamulla",
+    "ML-C166-kattiyulla",
+    "ML-C166-mrduvaya",
+    "ML-C166-kathinamaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch166.txt",
+  "json": "malayalam/narration/ch166.json",
+  "textHash": "fnv1a64:efb84d56ce8d7ff8",
+  "jsonHash": "fnv1a64:744348a3533a695b",
+  "findings": []
+}

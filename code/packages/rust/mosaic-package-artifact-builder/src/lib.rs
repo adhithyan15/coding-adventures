@@ -2786,6 +2786,10 @@ fn build_package_inner(
                 host_effects: &manifest.host_effects,
                 initial_window_size: manifest.app.initial_window_size.as_ref(),
                 layouts: &manifest.app.layouts,
+                replaces_qt_host: manifest.host_assets.files.iter().any(|asset| {
+                    asset.backend == "qt"
+                        && matches!(asset.target.as_str(), "MosaicHost.h" | "MosaicHost.cpp")
+                }),
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -3650,6 +3654,11 @@ struct ProjectShellOptions<'a> {
     initial_window_size: Option<&'a WindowSize>,
     /// `[[app.layouts]]` (UI48 §7.2).
     layouts: &'a [mosaic_package_manifest::layouts::LayoutRule],
+    /// Whether `[host_assets]` replaces the Qt host (`MosaicHost.h/.cpp`).
+    /// Mosaic's Qt platform library is written against the standard host's
+    /// routed handler (UI87 §7.4a), so a package that brings its own host
+    /// (Venture) does not get it.
+    replaces_qt_host: bool,
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -3669,6 +3678,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         host_effects,
         initial_window_size,
         layouts,
+        replaces_qt_host,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -3981,11 +3991,13 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 written.push(p);
             }
 
+            let layout_choices = compose_layout_choices(src_dir, component, layouts)?;
             let sources = build_compose_main_kt(
                 component,
                 &mosmodel_out.component.slots,
                 require_runtime,
                 initial_window_size,
+                &layout_choices,
             );
             let main_nested = backend_dir.join("src/main/kotlin/Main.kt");
             let main_kt = compose_main_with_host_effects(&sources.main, host_effects)?;
@@ -4012,6 +4024,22 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     backend_dir.join(format!("src/main/kotlin/{exported_component}.kt"));
                 write_file(&component_nested, component_source.as_bytes())?;
                 written.push(component_nested);
+                // Every layout variant too (UI48 §7.5): the root's are selected
+                // at run time, and every export's is compiled, for the same
+                // reason as above.
+                for variant in discover_variants(src_dir, exported_component)?
+                    .into_iter()
+                    .flatten()
+                {
+                    let variant_file = format!("{exported_component}.{variant}.kt");
+                    let variant_source = backend_dir.join(&variant_file);
+                    if variant_source.is_file() {
+                        let variant_nested =
+                            backend_dir.join(format!("src/main/kotlin/{variant_file}"));
+                        write_file(&variant_nested, read_to_string(&variant_source)?.as_bytes())?;
+                        written.push(variant_nested);
+                    }
+                }
             }
 
             let host_nested = backend_dir.join("src/main/kotlin/MosaicRuntimeHost.kt");
@@ -4052,6 +4080,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
             if let Some(proj) = r.project {
                 let bundled_runtime = runtime_library.map(runtime_file_name).transpose()?;
+                let platform_effects = !replaces_qt_host;
                 let cmake_lists = qt_cmake_with_host_effects(
                     &qt_cmake_with_package_exports(
                         &proj.cmake_lists,
@@ -4062,9 +4091,14 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     component,
                     host_effects,
                 );
+                let cmake_lists = if platform_effects {
+                    qt_cmake_with_platform_effects(&cmake_lists, component)?
+                } else {
+                    cmake_lists
+                };
                 let main_cpp = qt_main_with_startup_states(
                     &qt_main_with_initial_window_size(
-                        &qt_main_with_host_effects(&proj.main_cpp, host_effects)?,
+                        &qt_main_with_host_effects(&proj.main_cpp, host_effects, platform_effects)?,
                         initial_window_size,
                         component,
                     )?,
@@ -4117,6 +4151,19 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     let p = backend_dir.join(rel);
                     write_file(&p, body.as_bytes())?;
                     written.push(p);
+                }
+                // The platform library every Qt app gets (UI87 §7.4a), beside
+                // the host it routes for.
+                if platform_effects {
+                    let platform = mosaic_app_bindings::qt_platform_effects();
+                    for (rel, body) in [
+                        ("MosaicPlatformEffects.h", &platform.header),
+                        ("MosaicPlatformEffects.cpp", &platform.source),
+                    ] {
+                        let p = backend_dir.join(rel);
+                        write_file(&p, body.as_bytes())?;
+                        written.push(p);
+                    }
                 }
             }
         }
@@ -4194,6 +4241,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 let runtime_host = backend_dir.join("Sources/App/MosaicRuntimeHost.swift");
                 write_file(&runtime_host, runtime_binding.host_swift.as_bytes())?;
                 written.push(runtime_host);
+
+                // The platform library every SwiftUI app gets (UI87 §7): the
+                // standard file effects, and the router App.swift installs.
+                let platform_effects = backend_dir.join("Sources/App/MosaicPlatformEffects.swift");
+                write_file(
+                    &platform_effects,
+                    mosaic_app_bindings::swift_platform_effects().as_bytes(),
+                )?;
+                written.push(platform_effects);
 
                 let runtime_header =
                     backend_dir.join("Sources/CMosaicRuntime/include/CMosaicRuntime.h");
@@ -4668,6 +4724,59 @@ fn swiftui_layout_choices(
         .collect()
 }
 
+/// One layout a Compose shell can switch to (UI48 §7.5): the variant, its
+/// root composable, and the environment it needs, keyed by the wire names the
+/// shell's `environmentReport` uses.
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ComposeLayoutChoice {
+    variant: String,
+    root: String,
+    conditions: Vec<(&'static str, String)>,
+}
+
+/// The layout variants a Compose shell switches between: the same rules as
+/// SwiftUI's (`[[app.layouts]]`, or the conventions), each with its
+/// composable. A rule for a variant with no `.mll`, or one whose name cannot
+/// become a Kotlin identifier, fails the build.
+fn compose_layout_choices(
+    src_dir: &Path,
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+) -> Result<Vec<ComposeLayoutChoice>, BuildError> {
+    let variants: Vec<String> = discover_variants(src_dir, component)?
+        .into_iter()
+        .flatten()
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            if !variants.contains(&rule.variant) {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            }
+            let root = mosaic_emit_compose::pipeline::variant_composable_name(component, &rule.variant)
+                .ok_or_else(|| {
+                    BuildError::Io(format!(
+                        "layout variant `{}` of {component} cannot name a Kotlin composable",
+                        rule.variant
+                    ))
+                })?;
+            Ok(ComposeLayoutChoice {
+                root,
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.wire_name(), value))
+                    .collect(),
+                variant: rule.variant,
+            })
+        })
+        .collect()
+}
+
 /// The color scheme a stylesheet was written for, from its file name:
 /// `<Component>.dark.msl` is dark, `<Component>.light.msl` light, anything
 /// else (a theme-neutral `<Component>.msl`, another theme name) none (UI32).
@@ -4954,16 +5063,23 @@ fn find_anchored(haystack: &str, needle: &str, prefix_ok: impl Fn(&str) -> bool)
 fn qt_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
+    platform_effects: bool,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "qt")
-    else {
+        .find(|handler| handler.backend == "qt");
+    if handler.is_none() && !platform_effects {
         return Ok(generated.to_string());
-    };
+    }
     const DECLARATION: &str = "MosaicHost mosaicHost;";
     let Some(declaration_start) = line_anchored_find(generated, DECLARATION) else {
+        // Without a declared handler, an entry point that does not look like
+        // the generated one is left as it is: nothing was declared, so there
+        // is nothing to refuse (the same rule as Compose and SwiftUI).
+        let Some(handler) = handler else {
+            return Ok(generated.to_string());
+        };
         // A declared handler that cannot be installed is a build failure, not a
         // quiet no-op.
         //
@@ -4989,29 +5105,65 @@ fn qt_main_with_host_effects(
         .find('\n')
         .map_or(generated.len(), |index| declaration_start + index + 1);
 
-    let mut out = String::with_capacity(generated.len() + 256);
+    let mut out = String::with_capacity(generated.len() + 384);
     out.push_str(&generated[..line_end]);
-    writeln!(
-        out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`."
-    )
-    .expect("write Qt host-effect comment");
-    writeln!(out, "{indent}{}(mosaicHost);", handler.install)
-        .expect("write Qt host-effect install");
+    if let Some(handler) = handler {
+        writeln!(
+            out,
+            "{indent}// Package-declared effect handler, from `[host_effects]`."
+        )
+        .expect("write Qt host-effect comment");
+        writeln!(out, "{indent}{}(mosaicHost);", handler.install)
+            .expect("write Qt host-effect install");
+    }
+    if platform_effects {
+        // After the package's handler: the router wraps the delivery that
+        // handler relies on (UI87 §7.4a). Its `kinds`, validated in the
+        // manifest to a dotted-name shape, become the set the router checks.
+        let claimed = match handler.and_then(|handler| handler.kinds.as_deref()) {
+            None => "std::nullopt".to_string(),
+            Some(kinds) => format!(
+                "QSet<QString>{{{}}}",
+                kinds
+                    .iter()
+                    .map(|kind| format!("QStringLiteral(\"{kind}\")"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+        };
+        writeln!(
+            out,
+            "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7)."
+        )
+        .expect("write Qt platform-effects comment");
+        writeln!(out, "{indent}installMosaicPlatformEffects(mosaicHost, {claimed});")
+            .expect("write Qt platform-effects install");
+    }
     out.push_str(&generated[line_end..]);
 
-    let Some(include) = handler.include.as_deref() else {
+    let mut includes: Vec<String> = Vec::new();
+    if let Some(include) = handler.and_then(|handler| handler.include.as_deref()) {
+        includes.push(include.to_string());
+    }
+    if platform_effects {
+        includes.push("MosaicPlatformEffects.h".to_string());
+    }
+    if includes.is_empty() {
         return Ok(out);
-    };
+    }
     // Includes are file-scope only, so this cannot sit beside the call. It goes
     // before `int main(`, and inside the same `#if` the rest of the host is
     // guarded by when that shape is the one being emitted -- otherwise a build
     // without a host would compile a header declaring a function that takes one.
     let guarded = out.contains("#if MOSAIC_HAS_HOST");
+    let lines: String = includes
+        .iter()
+        .map(|include| format!("#include \"{include}\"\n"))
+        .collect();
     let directive = if guarded {
-        format!("#if MOSAIC_HAS_HOST\n#include \"{include}\"\n#endif\n")
+        format!("#if MOSAIC_HAS_HOST\n{lines}#endif\n")
     } else {
-        format!("#include \"{include}\"\n")
+        lines
     };
     match out.find("int main(") {
         Some(index) => {
@@ -5033,6 +5185,27 @@ fn qt_main_with_host_effects(
     }
 }
 
+/// Add Mosaic's Qt platform library (UI87 §7.4a) to the target's sources, on
+/// the same line -- and so under the same guard -- as the host it routes for.
+/// A build that compiles no host compiles no library either.
+fn qt_cmake_with_platform_effects(cmake: &str, component: &str) -> Result<String, BuildError> {
+    let host_sources = format!("target_sources({component} PRIVATE MosaicHost.cpp MosaicHost.h)");
+    if cmake.matches(&host_sources).count() != 1 {
+        return Err(BuildError::Io(format!(
+            "the generated Qt CMakeLists.txt does not list `{host_sources}` exactly once; \
+             refusing to guess where Mosaic's platform library belongs"
+        )));
+    }
+    Ok(cmake.replacen(
+        &host_sources,
+        &format!(
+            "target_sources({component} PRIVATE MosaicHost.cpp MosaicHost.h \
+             MosaicPlatformEffects.cpp MosaicPlatformEffects.h)"
+        ),
+        1,
+    ))
+}
+
 /// Install a package's effect handler in the generated SwiftUI app.
 ///
 /// SwiftUI needs no build-list half. SwiftPM's generated `Package.swift` gives
@@ -5049,17 +5222,24 @@ fn qt_main_with_host_effects(
 /// `effectHandler`. The `if let` also makes the permissive generated code
 /// correct when the standard host is absent and the app falls back to the
 /// reflection bridge -- there is no host to install onto then.
+///
+/// Every SwiftUI app also gets the platform library (UI87 §7), as on Compose:
+/// after the package's handler, if any, `App.swift` installs
+/// `installMosaicPlatformEffects`, which wraps that handler and routes each
+/// effect by kind.
 fn swift_app_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "swiftui")
-    else {
-        return Ok(generated.to_string());
-    };
+        .find(|handler| handler.backend == "swiftui");
+    // Named in errors: the package's handler when there is one, otherwise the
+    // platform library, which every app now gets (UI87 §7).
+    let installing = handler.map_or("installMosaicPlatformEffects", |handler| {
+        handler.install.as_str()
+    });
     // Scoped to the class body, THEN line-anchored within it.
     //
     // `self.bridge = ` is not a token only this generator produces: the file
@@ -5075,35 +5255,52 @@ fn swift_app_with_host_effects(
             // package author's slot default carrying a raw newline -- and
             // picking either one would be silently installing the handler
             // somewhere nobody chose.
-            BuildError::Io(format!(
-                "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
-                 app declares `MosaicHostState` {} times; refusing to guess which one \
-                 to install it in",
-                handler.install, ambiguity.count
-            ))
+            BuildError::Io(match handler {
+                Some(_) => format!(
+                    "`[host_effects]` declares a SwiftUI handler `{installing}`, but the generated \
+                     app declares `MosaicHostState` {} times; refusing to guess which one \
+                     to install it in",
+                    ambiguity.count
+                ),
+                None => format!(
+                    "the generated SwiftUI app declares `MosaicHostState` {} times; refusing \
+                     to guess which one to install Mosaic's platform library \
+                     (`{installing}`) in",
+                    ambiguity.count
+                ),
+            })
         })?;
-    let Some(class_start) = class_match else {
-        return Err(BuildError::Io(format!(
-            "`[host_effects]` declares a SwiftUI handler `{}`, but the generated \
-             app has no `MosaicHostState` to install it in",
-            handler.install
-        )));
-    };
     // Matches whichever form the runtime-binding rewrite left behind: the plain
     // load, or the bundled-runtime one carrying a library path.
-    let Some(relative) = line_anchored_find(&generated[class_start..], "self.bridge = ") else {
+    let assignment =
+        class_match.and_then(|class_start| {
+            line_anchored_find(&generated[class_start..], "self.bridge = ")
+                .map(|relative| class_start + relative)
+        });
+    let Some(assignment_start) = assignment else {
+        // Without a declared handler, an app that does not look like the
+        // generated one is left as it is: nothing was declared, so there is
+        // nothing to refuse (the same rule as Compose).
+        if handler.is_none() {
+            return Ok(generated.to_string());
+        }
         // Loud, for the same reason as Qt -- and more so here. SwiftPM compiles
         // every file under `Sources/App`, so an uninstalled handler still
         // compiles, links, and ships: there is no diagnostic at all until an
         // `Await` effect goes unanswered at runtime and takes the session's
         // persistence with it.
-        return Err(BuildError::Io(format!(
-            "`[host_effects]` declares a SwiftUI handler `{}`, but \
-             `MosaicHostState` has no host assignment to install it after",
-            handler.install
-        )));
+        return Err(BuildError::Io(if class_match.is_none() {
+            format!(
+                "`[host_effects]` declares a SwiftUI handler `{installing}`, but the generated \
+                 app has no `MosaicHostState` to install it in"
+            )
+        } else {
+            format!(
+                "`[host_effects]` declares a SwiftUI handler `{installing}`, but \
+                 `MosaicHostState` has no host assignment to install it after"
+            )
+        }));
     };
-    let assignment_start = class_start + relative;
     let line_end = generated[assignment_start..]
         .find('\n')
         .map_or(generated.len(), |index| assignment_start + index + 1);
@@ -5112,21 +5309,52 @@ fn swift_app_with_host_effects(
         .map_or(0, |index| index + 1);
     let indent: String = generated[line_start..assignment_start].to_string();
 
-    let mut out = String::with_capacity(generated.len() + 256);
+    let mut out = String::with_capacity(generated.len() + 384);
     out.push_str(&generated[..line_end]);
+    if let Some(handler) = handler {
+        writeln!(
+            out,
+            "{indent}// Package-declared effect handler, from `[host_effects]`."
+        )
+        .expect("write SwiftUI host-effect comment");
+        writeln!(
+            out,
+            "{indent}if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ {}(mosaicEffectHost) }}",
+            handler.install
+        )
+        .expect("write SwiftUI host-effect install");
+    }
     writeln!(
         out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`."
+        "{}",
+        swift_platform_install_line(&indent, handler.and_then(|handler| handler.kinds.as_deref()))
     )
-    .expect("write SwiftUI host-effect comment");
-    writeln!(
-        out,
-        "{indent}if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ {}(mosaicEffectHost) }}",
-        handler.install
-    )
-    .expect("write SwiftUI host-effect install");
+    .expect("write SwiftUI platform-effects install");
     out.push_str(&generated[line_end..]);
     Ok(out)
+}
+
+/// The `App.swift` lines that install the platform library (UI87 §7.2), after
+/// the package's own handler so the router wraps it. The handler's `kinds`
+/// (validated in the manifest to a dotted-name shape with no quote or
+/// backslash) become the set the router checks; without `kinds`, `nil` keeps
+/// the original meaning.
+fn swift_platform_install_line(indent: &str, kinds: Option<&[String]>) -> String {
+    let claimed = match kinds {
+        None => "nil".to_string(),
+        Some(kinds) => format!(
+            "[{}]",
+            kinds
+                .iter()
+                .map(|kind| format!("\"{kind}\""))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+    };
+    format!(
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n\
+         {indent}if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ installMosaicPlatformEffects(mosaicEffectHost, appKinds: {claimed}) }}"
+    )
 }
 
 /// Install a package's effect handler in the generated Compose entry point.
@@ -5640,8 +5868,29 @@ fn build_compose_main_kt(
     slots: &[SlotDecl],
     require_runtime: bool,
     initial_window_size: Option<&WindowSize>,
+    layouts: &[ComposeLayoutChoice],
 ) -> ComposeShellSources {
-    let root = build_compose_root_invocation(component_name, slots, require_runtime);
+    // UI48 §7.5 (ENV3): with layout variants, the root is chosen from the
+    // observed environment -- the first rule that matches, else the default.
+    let root = if layouts.is_empty() {
+        build_compose_root_invocation(component_name, component_name, slots, require_runtime)
+    } else {
+        let mut chooser = String::from("            when (mosaicLayoutVariant(environmentReport)) {\n");
+        for layout in layouts {
+            let call = build_compose_root_invocation(component_name, &layout.root, slots, require_runtime);
+            writeln!(chooser, "                \"{}\" -> {}", layout.variant, call.trim_start())
+                .expect("write layout branch");
+        }
+        let default_call =
+            build_compose_root_invocation(component_name, component_name, slots, require_runtime);
+        writeln!(chooser, "                else -> {}", default_call.trim_start())
+            .expect("write default layout branch");
+        chooser.push_str("            }");
+        chooser
+    };
+    // A sample shell has no runtime to report to, but with variants it still
+    // measures the window to choose one.
+    let observes = require_runtime || !layouts.is_empty();
     let component_label = escape_kotlin_string(component_name);
     let host_loader = if require_runtime {
         "requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }"
@@ -5650,7 +5899,9 @@ fn build_compose_main_kt(
     };
     let startup_import = if require_runtime {
         concat!(
+            "import androidx.compose.foundation.isSystemInDarkTheme\n",
             "import androidx.compose.foundation.layout.Arrangement\n",
+            "import androidx.compose.foundation.layout.BoxWithConstraints\n",
             "import androidx.compose.foundation.layout.Column\n",
             "import androidx.compose.foundation.layout.fillMaxSize\n",
             "import androidx.compose.foundation.layout.padding\n",
@@ -5662,9 +5913,20 @@ fn build_compose_main_kt(
             "import androidx.compose.ui.Alignment\n",
             "import androidx.compose.ui.Modifier\n",
             "import androidx.compose.ui.platform.testTag\n",
+            "import androidx.compose.ui.unit.Dp\n",
             "import androidx.compose.ui.unit.dp\n",
             "import kotlinx.coroutines.Dispatchers\n",
             "import kotlinx.coroutines.withContext\n",
+        )
+    } else {
+        ""
+    };
+    let layout_import = if !require_runtime && !layouts.is_empty() {
+        concat!(
+            "import androidx.compose.foundation.isSystemInDarkTheme\n",
+            "import androidx.compose.foundation.layout.BoxWithConstraints\n",
+            "import androidx.compose.ui.unit.Dp\n",
+            "import androidx.compose.ui.unit.dp\n",
         )
     } else {
         ""
@@ -5724,7 +5986,100 @@ fn build_compose_main_kt(
             "    }\n",
         )
     };
-    let root_body = root;
+    // UI48 ENV4 (§7.4): a runtime-backed app measures its window and tells the
+    // runtime when a size class, orientation or colour scheme bucket flips.
+    // `LaunchedEffect` is keyed on the six reported values, so a resize sends
+    // nothing until it crosses a threshold. A sample shell has no runtime to
+    // tell, and does not observe.
+    let root_body = if !require_runtime && observes {
+        format!(
+            concat!(
+                "        BoxWithConstraints {{\n",
+                "            val environmentReport = mosaicEnvironmentReport(maxWidth, maxHeight, isSystemInDarkTheme())\n",
+                "{root}\n",
+                "        }}",
+            ),
+            root = root,
+        )
+    } else if require_runtime {
+        format!(
+            concat!(
+                "        BoxWithConstraints {{\n",
+                "            val environmentReport = mosaicEnvironmentReport(maxWidth, maxHeight, isSystemInDarkTheme())\n",
+                "            LaunchedEffect(environmentReport) {{\n",
+                "                val response = (mosaicHost as? MosaicRuntimeHost)?.reportEnvironment(environmentReport)\n",
+                "                // Only an answer with props replaces what is showing; a\n",
+                "                // refused report leaves the screen as it is.\n",
+                "                if (response?.get(\"props\") != null) {{\n",
+                "                    applyMosaicResponse(response)\n",
+                "                }} else {{\n",
+                "                    response?.get(\"error\")?.let {{ println(\"host error: $it\") }}\n",
+                "                }}\n",
+                "            }}\n",
+                "{root}\n",
+                "        }}",
+            ),
+            root = root,
+        )
+    } else {
+        root
+    };
+    let environment_helper = if observes {
+        concat!(
+            "/**\n",
+            " * The six UI48 §4 values, under mosaic-app-runtime's wire names (ENV4).\n",
+            " * Width buckets at 600 dp and 1024 dp, the thresholds SwiftUI's reader\n",
+            " * uses, so one window size gives one bucket on every host; pointer, hover\n",
+            " * and reduced motion are the platform's, from the runtime host.\n",
+            " */\n",
+            "private fun mosaicEnvironmentReport(width: Dp, height: Dp, dark: Boolean): Map<String, String> =\n",
+            "    MosaicRuntimeHost.initialEnvironment() + mapOf(\n",
+            "        \"colorScheme\" to if (dark) \"dark\" else \"light\",\n",
+            "        \"sizeClass\" to when {\n",
+            "            width < 600.dp -> \"compact\"\n",
+            "            width < 1024.dp -> \"regular\"\n",
+            "            else -> \"expanded\"\n",
+            "        },\n",
+            "        \"orientation\" to if (height > width) \"portrait\" else \"landscape\",\n",
+            "    )\n\n",
+        )
+    } else {
+        ""
+    };
+    // The selector (UI48 §7.5): the rules as data, in order, keyed by the
+    // wire names `environmentReport` uses -- `select_variant`'s semantics:
+    // the first rule whose conditions all hold, else the default (null).
+    // Variant names are `[A-Za-z0-9_-]` and values a closed set, so both are
+    // safe as Kotlin string literals.
+    let layout_selector = if layouts.is_empty() {
+        String::new()
+    } else {
+        let mut rules = String::new();
+        for layout in layouts {
+            let conditions = layout
+                .conditions
+                .iter()
+                .map(|(axis, value)| format!("\"{axis}\" to \"{value}\""))
+                .collect::<Vec<_>>()
+                .join(", ");
+            writeln!(rules, "    \"{}\" to mapOf<String, String>({conditions}),", layout.variant)
+                .expect("write layout rule");
+        }
+        format!(
+            concat!(
+                "/** Which layout variant the environment selects, in rule order (UI48 §7.5). */\n",
+                "private val mosaicLayoutRules: List<Pair<String, Map<String, String>>> = listOf(\n",
+                "{rules}",
+                ")\n\n",
+                "/** The first variant whose conditions all hold, or null for the default layout. */\n",
+                "private fun mosaicLayoutVariant(environment: Map<String, String>): String? =\n",
+                "    mosaicLayoutRules.firstOrNull {{ (_, conditions) ->\n",
+                "        conditions.all {{ (axis, value) -> environment[axis] == value }}\n",
+                "    }}?.first\n\n",
+            ),
+            rules = rules,
+        )
+    };
     let main_host = if require_runtime {
         ""
     } else {
@@ -5890,6 +6245,7 @@ fn build_compose_main_kt(
             "// The app shell shared by every Compose platform (UI89 §3.4).\n",
             "import androidx.compose.material.MaterialTheme\n",
             "{startup_import}",
+            "{layout_import}",
             "import androidx.compose.runtime.Composable\n",
             "import androidx.compose.runtime.DisposableEffect\n",
             "import androidx.compose.runtime.LaunchedEffect\n",
@@ -5921,6 +6277,8 @@ fn build_compose_main_kt(
             "    }}\n",
             "}}\n\n",
             "{legacy_bridge}",
+            "{environment_helper}",
+            "{layout_selector}",
             "private fun mosaicMap(value: Any?): Map<String, Any?> {{\n",
             "    val source = value as? Map<*, *> ?: return emptyMap()\n",
             "    return source.entries.mapNotNull {{ entry ->\n",
@@ -5977,6 +6335,7 @@ fn build_compose_main_kt(
             "    props[name] as? (@Composable () -> Unit) ?: fallback\n",
         ),
         startup_import = startup_import,
+        layout_import = layout_import,
         strict_startup = strict_startup,
         app_signature = app_signature,
         initial_props_decl = initial_props_decl,
@@ -5984,6 +6343,8 @@ fn build_compose_main_kt(
         lifecycle = lifecycle,
         root_body = root_body,
         legacy_bridge = legacy_bridge,
+        environment_helper = environment_helper,
+        layout_selector = layout_selector,
         required_helpers = required_helpers,
     );
     ComposeShellSources { main, shell }
@@ -6041,6 +6402,7 @@ fn build_compose_required_prop_helpers() -> &'static str {
 
 fn build_compose_root_invocation(
     component_name: &str,
+    root_composable: &str,
     slots: &[SlotDecl],
     require_runtime: bool,
 ) -> String {
@@ -6051,7 +6413,7 @@ fn build_compose_root_invocation(
     // function -- if they disagree, the generated project does not compile,
     // which is a loud failure rather than a subtle one.
     let grouped = mosaic_emit_compose::needs_props_object(slots);
-    let mut out = format!("            {component_name}(\n");
+    let mut out = format!("            {root_composable}(\n");
     if grouped {
         // The props object is chunked into groups, because a constructor is a
         // method signature too and one flat class would overflow its own. The
@@ -6572,11 +6934,22 @@ fn compile_one_component(
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
-        Backend::Compose => mosaic_emit_compose::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant shares one app with the default (UI48 §7.5): it
+        // reuses the default's event and props types rather than redeclaring
+        // them, and names its own root composable.
+        Backend::Compose => match variant {
+            Some(variant) => mosaic_emit_compose::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+            None => mosaic_emit_compose::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
     };
@@ -11007,6 +11380,81 @@ layout NativeEvents {
         assert!(!app.contains("MosaicLayoutSelector"), "{app}");
     }
 
+    // UI48 §7.5: the same on Compose -- every variant in one app, and a
+    // selector generated from the same rules.
+
+    #[test]
+    fn a_compose_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let kotlin = out.path().join("compose/src/main/kotlin");
+        let variant = fs::read_to_string(kotlin.join("Card.touch.kt")).unwrap();
+        assert!(variant.contains("\nfun CardTouch(\n"), "{variant}");
+        // The interface is the default's: no second event type to collide.
+        assert!(!variant.contains("sealed class CardEvent"), "{variant}");
+        assert!(variant.contains("(CardEvent) -> Unit"), "{variant}");
+        let default = fs::read_to_string(kotlin.join("Card.kt")).unwrap();
+        assert!(default.contains("sealed class CardEvent"), "{default}");
+        assert!(default.contains("\nfun Card(\n"), "{default}");
+        let shell = fs::read_to_string(kotlin.join("MosaicAppShell.kt")).unwrap();
+        assert!(shell.contains("when (mosaicLayoutVariant(environmentReport)) {"), "{shell}");
+        assert!(shell.contains("\"touch\" -> CardTouch("), "{shell}");
+        assert!(shell.contains("else -> Card("), "{shell}");
+        // Keyed by the wire name the environment report uses.
+        assert!(
+            shell.contains("\"touch\" to mapOf<String, String>(\"pointer\" to \"coarse\"),"),
+            "{shell}"
+        );
+        // A sample shell still measures, to choose, but reports to nobody.
+        assert!(shell.contains("BoxWithConstraints {"), "{shell}");
+        assert!(!shell.contains("reportEnvironment"), "{shell}");
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_compose_selector_under_wire_names() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let shell =
+            fs::read_to_string(out.path().join("compose/src/main/kotlin/MosaicAppShell.kt")).unwrap();
+        // `size-class` in the manifest, `sizeClass` in the report.
+        assert!(
+            shell.contains("\"touch\" to mapOf<String, String>(\"sizeClass\" to \"compact\"),"),
+            "{shell}"
+        );
+        assert!(!shell.contains("\"pointer\" to \"coarse\""), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_compose_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::Compose)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_compose_app_without_variants_is_unchanged() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let shell =
+            fs::read_to_string(out.path().join("compose/src/main/kotlin/MosaicAppShell.kt")).unwrap();
+        assert!(!shell.contains("mosaicLayoutVariant"), "{shell}");
+        // A sample shell without variants does not observe at all.
+        assert!(!shell.contains("BoxWithConstraints"), "{shell}");
+        assert!(shell.contains("            Card(\n"), "{shell}");
+    }
+
     #[test]
     fn compiled_color_scheme_reads_the_stylesheet_name() {
         let scheme = |name: &str| compiled_color_scheme(Some(Path::new(name)), "Card");
@@ -11447,7 +11895,7 @@ layout NativeEvents {
         assert!(!main.contains("root->setProperty"));
 
         let cmake = fs::read_to_string(out.path().join("qt/CMakeLists.txt")).unwrap();
-        assert!(cmake.contains("target_sources(Card PRIVATE MosaicHost.cpp MosaicHost.h)"));
+        assert!(cmake.contains("target_sources(Card PRIVATE MosaicHost.cpp MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)"));
         assert!(!cmake.contains("if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/MosaicHost.cpp\")"));
         assert!(cmake.contains(
             "set(MOSAIC_APP_RUNTIME_SOURCE \"${CMAKE_CURRENT_SOURCE_DIR}/runtime/libmosaic_app.so\")"
@@ -15039,13 +15487,75 @@ version = "1"
         "}\n",
     );
 
+    /// UI87 §7.4a: with no package handler, the only change is the platform
+    /// library -- installed right after the host, and its header included.
+    #[test]
+    fn a_package_without_a_qt_handler_gets_only_the_platform_library() {
+        let empty = section("");
+        let wired = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty, true).expect("wiring");
+        let host = wired.find("MosaicHost mosaicHost;").expect("host");
+        let install = wired
+            .find("installMosaicPlatformEffects(mosaicHost, std::nullopt);")
+            .expect("platform install");
+        let use_ = wired.find("mosaicHost.requireRuntime();").expect("use");
+        assert!(host < install && install < use_, "{wired}");
+        let include = wired.find("#include \"MosaicPlatformEffects.h\"").expect("include");
+        assert!(include < wired.find("int main(").unwrap(), "{wired}");
+    }
+
+    /// After the package's handler, with the handler's claimed kinds.
+    #[test]
+    fn the_qt_platform_library_wraps_the_package_handler_with_its_kinds() {
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [ { backend = "qt", include = "probe.h", install = "installProbeEffects", kinds = ["importAnki", "files.save"] } ]
+"#,
+        );
+        let wired = qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, true).expect("wiring");
+        let package = wired.find("installProbeEffects(mosaicHost);").expect("package install");
+        let platform = wired
+            .find(r#"installMosaicPlatformEffects(mosaicHost, QSet<QString>{QStringLiteral("importAnki"), QStringLiteral("files.save")});"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "{wired}");
+        assert!(wired.contains("#include \"probe.h\"\n#include \"MosaicPlatformEffects.h\"\n"), "{wired}");
+    }
+
+    /// In the guarded shape both the include and the install sit inside
+    /// `#if MOSAIC_HAS_HOST`, so a build without a host compiles neither.
+    #[test]
+    fn the_qt_platform_library_stays_inside_the_host_guard() {
+        let wired = qt_main_with_host_effects(GUARDED_MAIN, &section(""), true).expect("wiring");
+        assert!(
+            wired.contains("#if MOSAIC_HAS_HOST\n#include \"MosaicPlatformEffects.h\"\n#endif\n"),
+            "{wired}"
+        );
+        let guard = wired.rfind("#if MOSAIC_HAS_HOST\n  MosaicHost mosaicHost;").expect("guard");
+        let install = wired.find("installMosaicPlatformEffects").expect("install");
+        let end = wired[guard..].find("#endif").map(|at| guard + at).expect("end");
+        assert!(guard < install && install < end, "{wired}");
+    }
+
+    #[test]
+    fn the_qt_platform_library_joins_the_host_sources_under_its_guard() {
+        let strict = "target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h)\n";
+        assert_eq!(
+            qt_cmake_with_platform_effects(strict, "App").unwrap(),
+            "target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)\n"
+        );
+        let guarded = "if(EXISTS \"${CMAKE_CURRENT_SOURCE_DIR}/MosaicHost.cpp\")\n  target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h)\nendif()\n";
+        let wired = qt_cmake_with_platform_effects(guarded, "App").unwrap();
+        assert!(wired.contains("  target_sources(App PRIVATE MosaicHost.cpp MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)\nendif()"), "{wired}");
+        assert!(qt_cmake_with_platform_effects("project(App)\n", "App").is_err());
+    }
+
     #[test]
     fn a_package_without_the_section_changes_nothing() {
         // The overwhelmingly common case: every package that needs no host
         // capability must emit byte-identical output.
         let empty = section("");
         assert_eq!(
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty).expect("wiring must succeed"),
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &empty, false).expect("wiring must succeed"),
             NATIVE_COMPLETE_MAIN
         );
         assert_eq!(
@@ -15065,7 +15575,7 @@ handlers = [
 "#,
         );
         let main =
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed");
         let declaration = main.find("MosaicHost mosaicHost;").expect("declaration");
         let install = main
             .find("installProbeEffects(mosaicHost);")
@@ -15101,7 +15611,7 @@ handlers = [
 "#,
         );
         let guarded =
-            qt_main_with_host_effects(GUARDED_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(GUARDED_MAIN, &effects, false).expect("wiring must succeed");
         assert!(
             guarded.contains("#if MOSAIC_HAS_HOST\n#include \"probe_effects.h\"\n#endif"),
             "the include must inherit the host's guard:\n{guarded}"
@@ -15116,7 +15626,7 @@ handlers = [
         );
 
         let plain =
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed");
         assert!(
             plain.contains("#include \"probe_effects.h\"")
                 && !plain.contains("#if MOSAIC_HAS_HOST"),
@@ -15135,7 +15645,7 @@ handlers = [
 "#,
         );
         let main =
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed");
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed");
         assert!(main.contains("installProbeEffects(mosaicHost);"), "{main}");
         assert!(!main.contains("#include \"\""), "{main}");
     }
@@ -15151,7 +15661,7 @@ handlers = [
 "#,
         );
         assert_eq!(
-            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects).expect("wiring must succeed"),
+            qt_main_with_host_effects(NATIVE_COMPLETE_MAIN, &effects, false).expect("wiring must succeed"),
             NATIVE_COMPLETE_MAIN
         );
     }
@@ -16169,11 +16679,79 @@ handlers = [
         )
     }
 
+    /// The platform lines, as `App.swift` carries them after the assignment.
+    fn platform_lines(claimed: &str) -> String {
+        format!(
+            "    // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n    \
+             if let mosaicEffectHost = self.bridge as? MosaicRuntimeHost {{ \
+             installMosaicPlatformEffects(mosaicEffectHost, appKinds: {claimed}) }}\n"
+        )
+    }
+
+    /// UI87 §7: with no package handler, the only change is the platform
+    /// library, installed right after the host with no claimed kinds.
     #[test]
-    fn a_package_without_the_section_changes_nothing() {
+    fn a_package_without_the_section_gets_only_the_platform_library() {
+        let expected = APP_SWIFT.replace(
+            "MosaicHostBridge.load()\n",
+            &format!("MosaicHostBridge.load()\n{}", platform_lines("nil")),
+        );
         assert_eq!(
             swift_app_with_host_effects(APP_SWIFT, &section("")).expect("wiring must succeed"),
-            APP_SWIFT
+            expected
+        );
+    }
+
+    /// The package's handler is installed first; the platform library wraps it
+    /// with the kinds the package claimed, as a Swift set literal.
+    #[test]
+    fn claimed_kinds_reach_the_platform_router_after_the_package_handler() {
+        let effects = section(
+            r#"
+[host_effects]
+handlers = [ { backend = "swiftui", install = "installProbeEffects", kinds = ["importAnki", "files.save"] } ]
+"#,
+        );
+        let app = swift_app_with_host_effects(APP_SWIFT, &effects).expect("wiring");
+        let package = app
+            .find("installProbeEffects(mosaicEffectHost)")
+            .expect("package install");
+        let platform = app
+            .find(r#"installMosaicPlatformEffects(mosaicEffectHost, appKinds: ["importAnki", "files.save"])"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "the platform library must wrap the package handler:\n{app}");
+        let refresh = app.find("refreshProps()").expect("refresh");
+        assert!(platform < refresh, "the router must exist before the first refresh:\n{app}");
+    }
+
+    /// A handler without `kinds` keeps the original meaning: it receives every
+    /// non-standard kind, which the router expresses as `nil`.
+    #[test]
+    fn a_handler_without_kinds_gives_the_router_nil() {
+        let app = swift_app_with_host_effects(APP_SWIFT, &swiftui_handler()).expect("wiring");
+        assert!(app.contains(&platform_lines("nil")), "{app}");
+    }
+
+    /// Two classes and no handler: still refused, and the message names the
+    /// platform library rather than inventing a handler the package never had.
+    #[test]
+    fn an_ambiguous_class_without_a_handler_names_the_platform_library() {
+        let app = concat!(
+            "public final class MosaicHostState\n",
+            "private final class MosaicHostState: ObservableObject {\n",
+            "  init() {\n",
+            "    self.bridge = MosaicRuntimeHost.load() ?? MosaicHostBridge.load()\n",
+            "  }\n",
+            "}\n",
+        );
+        let message = format!(
+            "{:?}",
+            swift_app_with_host_effects(app, &section(""))
+                .expect_err("an ambiguous declaration must fail the build")
+        );
+        assert!(
+            message.contains("platform library") && !message.contains("declares a SwiftUI handler"),
+            "{message}"
         );
     }
 
@@ -16227,10 +16805,10 @@ handlers = [
 ]
 "#,
         );
-        assert_eq!(
-            swift_app_with_host_effects(APP_SWIFT, &qt_only).expect("wiring must succeed"),
-            APP_SWIFT
-        );
+        let wired = swift_app_with_host_effects(APP_SWIFT, &qt_only).expect("wiring must succeed");
+        assert!(!wired.contains("installProbeEffects"), "{wired}");
+        // Only the platform library, with nothing claimed.
+        assert!(wired.contains(&platform_lines("nil")), "{wired}");
     }
 
     #[test]
@@ -16922,7 +17500,7 @@ handlers = [
             required: false,
             default: Some(SlotDefault::Text("AUTHORDEFAULTVALUE".to_string())),
         }];
-        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None);
+        let sources = build_compose_main_kt("AuthorComponentName", &slots, false, None, &[]);
         // The anchor is in Main.kt, which is what the installer edits.
         let generated = sources.main.clone();
 
@@ -16961,7 +17539,7 @@ handlers = [
     #[test]
     fn the_anchor_matches_a_genuinely_emitted_compose_main() {
         for require_runtime in [false, true] {
-            let generated = build_compose_main_kt("Probe", &[], require_runtime, None).main;
+            let generated = build_compose_main_kt("Probe", &[], require_runtime, None, &[]).main;
             assert_eq!(
                 generated.contains("requireNotNull(MosaicRuntimeHost.load())"),
                 require_runtime,
@@ -17982,5 +18560,61 @@ mod percentage_radius_tests {
             radius, "3",
             "composition must resolve the percentage before any emitter sees it"
         );
+    }
+}
+
+/// UI48 ENV4 on Compose (§7.4): the strict shell measures its window and
+/// reports the environment; a sample shell has no runtime and does not.
+#[cfg(test)]
+mod compose_environment_report_tests {
+    use super::*;
+
+    fn shell(require_runtime: bool) -> String {
+        build_compose_main_kt("Probe", &[], require_runtime, None, &[]).shell
+    }
+
+    #[test]
+    fn a_runtime_backed_shell_reports_its_environment_around_the_root() {
+        let shell = shell(true);
+        let observer = shell.find("BoxWithConstraints {").expect("observer");
+        let report = shell
+            .find("LaunchedEffect(environmentReport)")
+            .expect("reported on change of the six values");
+        let root = shell.find("Probe(").expect("root invocation");
+        assert!(observer < report && report < root, "{shell}");
+        // Through the concrete host: the interface knows nothing about it.
+        assert!(
+            shell.contains("(mosaicHost as? MosaicRuntimeHost)?.reportEnvironment(environmentReport)"),
+            "{shell}"
+        );
+        assert!(!shell.contains("fun reportEnvironment"), "{shell}");
+        // A refused report never replaces what is showing.
+        assert!(shell.contains("if (response?.get(\"props\") != null) {"), "{shell}");
+        assert!(shell.contains("import androidx.compose.foundation.layout.BoxWithConstraints"));
+        assert!(shell.contains("import androidx.compose.foundation.isSystemInDarkTheme"));
+        assert!(shell.contains("import androidx.compose.ui.unit.Dp\n"));
+    }
+
+    #[test]
+    fn the_report_uses_the_runtime_wire_names_and_swiftui_thresholds() {
+        let shell = shell(true);
+        for wire in [
+            "\"colorScheme\" to if (dark) \"dark\" else \"light\"",
+            "width < 600.dp -> \"compact\"",
+            "width < 1024.dp -> \"regular\"",
+            "else -> \"expanded\"",
+            "\"orientation\" to if (height > width) \"portrait\" else \"landscape\"",
+            "MosaicRuntimeHost.initialEnvironment() + mapOf(",
+        ] {
+            assert!(shell.contains(wire), "missing `{wire}`:\n{shell}");
+        }
+    }
+
+    #[test]
+    fn a_sample_shell_does_not_observe() {
+        let shell = shell(false);
+        assert!(!shell.contains("BoxWithConstraints"), "{shell}");
+        assert!(!shell.contains("reportEnvironment"), "{shell}");
+        assert!(!shell.contains("mosaicEnvironmentReport"), "{shell}");
     }
 }

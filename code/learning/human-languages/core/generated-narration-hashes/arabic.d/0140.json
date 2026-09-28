@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:ca47d28dc14bd6da",
+  "lessonIds": [
+    "AR-C140-kaff",
+    "AR-C140-zufr",
+    "AR-C140-dimagh",
+    "AR-C140-kab",
+    "AR-C140-shafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch140.txt",
+  "json": "arabic/narration/ch140.json",
+  "textHash": "fnv1a64:69a6f7de1e625e22",
+  "jsonHash": "fnv1a64:da2896ae9b9d1c4e",
+  "findings": []
+}

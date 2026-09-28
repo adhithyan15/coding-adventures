@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C83-sixth",
+  "english": "sixth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆರನೆಯ",
+      "romanization": "āraneya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఆరవ",
+      "romanization": "ārava",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ആറാം",
+      "romanization": "āṟāṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "छठा",
+      "romanization": "chaṭhā"
+    }
+  ],
+  "source": "cross-track match: KA-C75-sixth, TE-C82-sixth, ML-C68-sixth, HI-C76-sixth; sameRoot judged by the author, awaiting native review"
+}

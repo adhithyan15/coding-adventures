@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C120-pena",
+  "english": "a pen",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಲೇಖನಿ",
+      "romanization": "lēkhani",
+      "sameRoot": false
+    },
+    {
+      "language": "telugu",
+      "form": "కలం",
+      "romanization": "kalaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "പേന",
+      "romanization": "pēna",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C118-lekhani, TE-C112-kalam, ML-C140-pen; sameRoot judged by the author, awaiting native review"
+}

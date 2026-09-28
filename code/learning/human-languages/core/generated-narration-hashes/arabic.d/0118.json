@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:b668db1968b6d26f",
+  "lessonIds": [
+    "AR-C118-hadiyya",
+    "AR-C118-tadhkira",
+    "AR-C118-jawaz",
+    "AR-C118-mihfaza",
+    "AR-C118-mizalla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch118.txt",
+  "json": "arabic/narration/ch118.json",
+  "textHash": "fnv1a64:d643c8aa82f8f4c4",
+  "jsonHash": "fnv1a64:8594454a3647d5df",
+  "findings": []
+}

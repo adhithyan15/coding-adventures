@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C137-anar",
+    "language": "marwadi",
+    "chapter": 137,
+    "sequence": 8670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c64bb7d175070d0"
+  },
+  "findings": []
+}

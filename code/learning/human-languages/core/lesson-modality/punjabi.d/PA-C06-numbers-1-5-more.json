@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C06-numbers-1-5-more",
+    "language": "punjabi",
+    "chapter": 6,
+    "sequence": 345,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:245f2c45006775a9"
+  },
+  "findings": []
+}

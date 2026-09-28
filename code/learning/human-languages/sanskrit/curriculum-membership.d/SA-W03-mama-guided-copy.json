@@ -1,0 +1,11 @@
+{
+  "id": "SA-W03-mama-guided-copy",
+  "pathSegment": "SA-PATH-005",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "SA-EXT-139-WRITING-WORD-BRIDGE",
+      "order": 0
+    }
+  ]
+}

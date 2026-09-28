@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Office, Factory, Hotel, Library, Town square",
+  "label": "ch:gu-office-factory-hotel-library-town-square",
+  "canDo": "I can say an office, a factory, a hotel, a library and a town square.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C128-cok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say an office, a factory, a hotel, a library and a town square.",
+    "assesses": [
+      "GU-LEX-C128-THINGS128-03",
+      "GU-LEX-C128-THINGS128-04",
+      "GU-LEX-C128-THINGS128-05"
+    ]
+  }
+}

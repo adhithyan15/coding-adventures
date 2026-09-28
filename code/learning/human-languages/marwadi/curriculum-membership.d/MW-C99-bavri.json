@@ -1,0 +1,11 @@
+{
+  "id": "MW-C99-bavri",
+  "pathSegment": "MW-PATH-99-LOC99",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-99-LOC99",
+      "order": 3
+    }
+  ]
+}

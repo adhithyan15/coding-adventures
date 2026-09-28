@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:f502256b780ea437",
+  "lessonIds": [
+    "JA-C128-kashikoi",
+    "JA-C128-oroka",
+    "JA-C128-isamashii",
+    "JA-C128-komakai",
+    "JA-C128-minikui"
+  ],
+  "tex": "japanese/book/chapters/ch128-clever-foolish-brave-fine-ugly.tex"
+}

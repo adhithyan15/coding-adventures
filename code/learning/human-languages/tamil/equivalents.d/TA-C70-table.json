@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C70-table",
+  "english": "a table",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೇಜು",
+      "romanization": "mēju",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "టేబుల్",
+      "romanization": "ṭēbul"
+    },
+    {
+      "language": "hindi",
+      "form": "मेज़",
+      "romanization": "mez",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C137-meju, TE-C129-tebul, HI-C51-table; sameRoot judged by the author, awaiting native review"
+}

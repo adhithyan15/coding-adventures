@@ -1,0 +1,11 @@
+{
+  "id": "MW-C90-parsu",
+  "pathSegment": "MW-PATH-90-TIME90",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-90-TIME90",
+      "order": 4
+    }
+  ]
+}

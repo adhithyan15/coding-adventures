@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C151-tetu",
+  "english": "to look for",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹುಡುಕು",
+      "romanization": "huḍuku"
+    },
+    {
+      "language": "telugu",
+      "form": "వెతుకు",
+      "romanization": "vetuku",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "ढूँढना",
+      "romanization": "ḍhū̃ḍhnā"
+    }
+  ],
+  "source": "cross-track match: KA-C148-huduku, TE-C144-vetuku, HI-C163-dhudhna; sameRoot judged by the author, awaiting native review"
+}

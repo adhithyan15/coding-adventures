@@ -12,18 +12,18 @@ headword: अस्ति · भवति
 romanization: asti · bhavati
 gloss: is, and becomes — the two be-verbs Sanskrit keeps apart, and the root-plus-class system behind every Sanskrit verb
 concept_tag: VERB-BE
-prerequisites: [SA-C06-pancha-travels]
+prerequisites: [SA-C06-pancha-travels, SA-C05-practice]
 sounds: [inherent-a, conjunct-sta]
 roots: [pie-es, pie-bheu]
 etymology_hook: "अस्ति is English is and Latin est; भवति is English be and been; English runs one ragged verb off both roots while Sanskrit keeps them standing as two"
 duration:
   max_seconds: 275
 requires:
-  knowledge: []
+  knowledge: [SA-HISTORY-VERB-ROOTS-BOTH-WAYS]
 introduces:
   knowledge: [SA-LEX-ASTI-BHAVATI-BE, SA-GRAMMAR-DHATU-GANA]
 practises:
-  knowledge: [SA-LEX-ASTI-BHAVATI-BE, SA-GRAMMAR-DHATU-GANA]
+  knowledge: [SA-LEX-ASTI-BHAVATI-BE, SA-GRAMMAR-DHATU-GANA, SA-HISTORY-VERB-ROOTS-BOTH-WAYS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,10 +35,12 @@ reviews_of: [SA-C02-asti, SA-C05-vadami]
 # अस्ति and भवति — Sanskrit's two words for "is"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-HISTORY-VERB-ROOTS-BOTH-WAYS] -->
 
 [PAUSE 2s] Six chapters of words. Now the machinery. A Sanskrit verb is never
 quoted the way an English one is, and this pair shows why.
+
+[PAUSE 1s] Three roots you already use: *vad* "speak," *vas* "dwell," *kṛ* "do." Which one is behind English *was*? (*Vas*.)
 
 ## You'll want to know: अस्ति and भवति
 <!-- hl-knowledge: introduces=[SA-LEX-ASTI-BHAVATI-BE]; assesses=[] -->

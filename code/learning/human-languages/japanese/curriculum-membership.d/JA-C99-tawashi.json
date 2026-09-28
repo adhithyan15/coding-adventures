@@ -1,0 +1,11 @@
+{
+  "id": "JA-C99-tawashi",
+  "pathSegment": "JA-PATH-99-THINGS99",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-99-THINGS99",
+      "order": 3
+    }
+  ]
+}

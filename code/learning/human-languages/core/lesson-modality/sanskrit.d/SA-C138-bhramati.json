@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C138-bhramati",
+    "language": "sanskrit",
+    "chapter": 138,
+    "sequence": 6850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:779b0dbf4c121d05"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Sunset, Tonight, Day after tomorrow, Day before yesterday, Every morning",
+  "label": "ch:ja-sunset-tonight-day-after-tomorrow-day-before-yesterday-every-morning",
+  "canDo": "I can say sunset, tonight, the day after tomorrow, the day before yesterday and every morning.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "JA-C73-maiasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say sunset, tonight, the day after tomorrow, the day before yesterday and every morning.",
+    "assesses": [
+      "JA-LEX-C73-TIME73-03",
+      "JA-LEX-C73-TIME73-04",
+      "JA-LEX-C73-TIME73-05"
+    ]
+  }
+}

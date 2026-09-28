@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C125-mombatti",
+    "language": "marwadi",
+    "chapter": 125,
+    "sequence": 7970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3125ac1c03cc16c5"
+  },
+  "findings": []
+}

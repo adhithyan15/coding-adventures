@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Which One in the Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:21f914e051fe549c",
+  "sourceHash": "fnv1a64:8cfc1f962a9ff1cb",
   "lessons": [
     {
       "id": "PA-C44-duja",
@@ -754,7 +754,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83435783aa5e26fe",
+      "sourceHash": "fnv1a64:396cac7a1f0f701e",
       "notice": null,
       "blocks": [
         {

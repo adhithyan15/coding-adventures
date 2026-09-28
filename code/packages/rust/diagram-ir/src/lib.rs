@@ -1470,6 +1470,27 @@ pub struct ArchitectureServiceMetadata {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct ArchitectureConfig {
+    pub icon_size: f64,
+    pub font_size: f64,
+    pub node_separation: f64,
+    pub padding: f64,
+    pub ideal_edge_length_multiplier: f64,
+}
+
+impl Default for ArchitectureConfig {
+    fn default() -> Self {
+        Self {
+            icon_size: 80.0,
+            font_size: 16.0,
+            node_separation: 75.0,
+            padding: 40.0,
+            ideal_edge_length_multiplier: 1.5,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum StructuralNodeMetadata {
     ArchitectureService(ArchitectureServiceMetadata),
     Requirement(RequirementMetadata),
@@ -1559,6 +1580,7 @@ pub struct StructuralAlignment {
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralDiagram {
     pub kind: StructuralKind,
+    pub architecture_config: Option<ArchitectureConfig>,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -2346,6 +2368,7 @@ mod tests {
         };
         let d = StructuralDiagram {
             kind: StructuralKind::Class,
+            architecture_config: None,
             title: None,
             accessibility_title: None,
             accessibility_description: None,

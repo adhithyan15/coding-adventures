@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:c8c2d4f97cb396d7",
+  "lessonIds": [
+    "SA-C98-atah",
+    "SA-C98-tasmat",
+    "SA-C98-hetuh",
+    "SA-C98-tadartham",
+    "SA-C98-yasmat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch98.txt",
+  "json": "sanskrit/narration/ch98.json",
+  "textHash": "fnv1a64:9455be1dad72604c",
+  "jsonHash": "fnv1a64:78f3d6fe38ab58c3",
+  "findings": []
+}

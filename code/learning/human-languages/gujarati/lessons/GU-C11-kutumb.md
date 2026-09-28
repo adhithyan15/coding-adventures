@@ -9,7 +9,7 @@ headword: કુટુંબ
 romanization: kuṭumb
 gloss: family — the whole group, and a word that arrived in Gujarati already finished rather than growing there
 concept_tag: GU-FAMILY-WHOLE
-prerequisites: [GU-C11-mitra]
+prerequisites: [GU-C11-mitra, GU-C06-number-histories-more]
 sounds: [retroflex-ta, medial-anusvara]
 roots: [sanskrit-kutumba, dravidian-kuti]
 etymology_hook: કુટુંબ is a learned borrowing from Sanskrit kuṭumba, "family, household" — taken up as a whole word rather than shaped by Gujarati's own sound changes, the same way it took કૃપા-style words later; and Sanskrit kuṭumba is itself thought to be borrowed FROM Dravidian, compared to Tamil kuṭimai, "family, lineage," and built on kuṭi, "hut"

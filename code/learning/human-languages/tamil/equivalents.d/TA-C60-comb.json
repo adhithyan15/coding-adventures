@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C60-comb",
+  "english": "a comb",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾಚಣಿಗೆ",
+      "romanization": "bācaṇige"
+    },
+    {
+      "language": "telugu",
+      "form": "దువ్వెన",
+      "romanization": "duvvena"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചീപ്പ്",
+      "romanization": "cīppŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कंघी",
+      "romanization": "kaṅghī"
+    }
+  ],
+  "source": "cross-track match: KA-C117-bacanige, TE-C111-duvvena, ML-C146-cippu, HI-C130-kanghi; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:98c2ec84b638ff63",
+  "lessonIds": [
+    "ML-C147-soppu",
+    "ML-C147-torttu",
+    "ML-C147-bagu",
+    "ML-C147-bhitti",
+    "ML-C147-melkkura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch147.txt",
+  "json": "malayalam/narration/ch147.json",
+  "textHash": "fnv1a64:834a6d6cde7508f1",
+  "jsonHash": "fnv1a64:7d94125b9d764649",
+  "findings": []
+}

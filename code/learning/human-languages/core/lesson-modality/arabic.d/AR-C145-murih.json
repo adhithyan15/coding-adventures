@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C145-murih",
+    "language": "arabic",
+    "chapter": 145,
+    "sequence": 6680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e81b9338db7f08f3"
+  },
+  "findings": []
+}

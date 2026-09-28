@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Kadhi, Fritters, Chutney, Halwa, Rice pudding",
+  "label": "ch:gu-kadhi-fritters-chutney-halwa-rice-pudding",
+  "canDo": "I can say kadhi, fritters, chutney, halwa and rice pudding.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C117-khir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say kadhi, fritters, chutney, halwa and rice pudding.",
+    "assesses": [
+      "GU-LEX-C117-THINGS117-03",
+      "GU-LEX-C117-THINGS117-04",
+      "GU-LEX-C117-THINGS117-05"
+    ]
+  }
+}

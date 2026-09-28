@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Interest, To hate, Desire, Dream, Hope",
+  "label": "ch:ar-interest-to-hate-desire-dream-hope",
+  "canDo": "I can say interest, to hate, a desire, a dream and hope.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "AR-C113-amal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say interest, to hate, a desire, a dream and hope.",
+    "assesses": [
+      "AR-LEX-C113-WANT113-03",
+      "AR-LEX-C113-WANT113-04",
+      "AR-LEX-C113-WANT113-05"
+    ]
+  }
+}

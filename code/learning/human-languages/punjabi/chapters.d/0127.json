@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Shore, Waterfall, Cave, Valley, Sand hill",
+  "label": "ch:pa-shore-waterfall-cave-valley-sand-hill",
+  "canDo": "I can say a shore, a waterfall, a cave, a valley and a sand hill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C127-tibba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say a shore, a waterfall, a cave, a valley and a sand hill.",
+    "assesses": [
+      "PA-LEX-C127-THINGS127-03",
+      "PA-LEX-C127-THINGS127-04",
+      "PA-LEX-C127-THINGS127-05"
+    ]
+  }
+}

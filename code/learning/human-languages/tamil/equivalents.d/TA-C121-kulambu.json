@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C121-kulambu",
+  "english": "a curry, a gravy",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "కూర",
+      "romanization": "kūra"
+    },
+    {
+      "language": "malayalam",
+      "form": "കറി",
+      "romanization": "kaṟi"
+    }
+  ],
+  "source": "cross-track match: TE-C115-kura, ML-C132-curry"
+}

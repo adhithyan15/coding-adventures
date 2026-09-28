@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C45-nose",
+  "english": "a nose",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೂಗು",
+      "romanization": "mūgu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ముక్కు",
+      "romanization": "mukku",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "മൂക്ക്",
+      "romanization": "mūkkŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "नाक",
+      "romanization": "nāk"
+    }
+  ],
+  "source": "cross-track match: KA-C37-moogu, TE-C37-mukku, ML-C37-mookku, HI-C46-nose; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:900e7f52fdf35ec2",
+  "lessonIds": [
+    "AR-C128-nazzara",
+    "AR-C128-filfil",
+    "AR-C128-qamh",
+    "AR-C128-adas",
+    "AR-C128-hummus"
+  ],
+  "tex": "arabic/book/chapters/ch128-glasses-pepper-wheat-lentils-chickpeas.tex"
+}

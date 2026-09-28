@@ -1,0 +1,11 @@
+{
+  "id": "MW-C101-yo",
+  "pathSegment": "MW-PATH-101-DEF101",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-101-DEF101",
+      "order": 0
+    }
+  ]
+}

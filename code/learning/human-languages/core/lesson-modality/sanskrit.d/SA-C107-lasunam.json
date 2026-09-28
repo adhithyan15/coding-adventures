@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C107-lasunam",
+    "language": "sanskrit",
+    "chapter": 107,
+    "sequence": 5220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b40563d1ef97b6b3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R149-first-pass-animals-and-describing-words",
+    "language": "marwadi",
+    "chapter": 149,
+    "sequence": 9400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:588c8a8a1b6c9859"
+  },
+  "findings": []
+}

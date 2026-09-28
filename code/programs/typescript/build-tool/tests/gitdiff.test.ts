@@ -5,6 +5,7 @@ import * as path from "node:path";
 import { execFileSync } from "node:child_process";
 
 import { getChangedFiles, mapFilesToPackages } from "../src/gitdiff.js";
+import { GlobPatternError } from "../src/glob-match.js";
 
 // Helper: create a tiny git repo on disk with a couple of commits so that
 // `git diff` actually has something to talk about.  We return the repo
@@ -142,4 +143,22 @@ describe("mapFilesToPackages", () => {
     );
     expect(out).toEqual(new Set(["python/foo"]));
   });
+
+  it.each([
+    ["an earlier matching pattern", ["src/gates.py", "[z-a].py"], ["code/packages/python/foo/src/gates.py"]],
+    ["an empty changed-file list", ["[z-a].py"], []],
+    ["the BUILD-file shortcut", ["[z-a].py"], ["code/packages/python/foo/BUILD"]],
+  ] as const)(
+    "validates every declared pattern before %s can short-circuit",
+    (_label, patterns, changedFiles) => {
+      expect(() =>
+        mapFilesToPackages(
+          [...changedFiles],
+          pkgPaths,
+          repoRoot,
+          new Map([["python/foo", [...patterns]]]),
+        ),
+      ).toThrow(GlobPatternError);
+    },
+  );
 });

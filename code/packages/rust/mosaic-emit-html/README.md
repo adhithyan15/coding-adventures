@@ -173,3 +173,12 @@ the marker format is neutral about what resolves it.
 - **Screenshot tests** — feed to headless Chrome / Playwright.
 - **Static documentation** — embed in generated docs.
 - **e2e test fixtures** — stable reference HTML for integration tests.
+
+## Product acceptance
+
+`tests/task_app_shell_snapshot.rs` compiles TaskApp/Trestle's own three-file
+sources after resolving its Mosaic package dependencies. It verifies that the
+List composer, repeated task-row template, and toolkit SegmentedControl view
+switch survive static HTML lowering. The gate is structural: event markers are
+required to say which interactions were dropped, and no interactive-host or
+release-artifact coverage is implied.

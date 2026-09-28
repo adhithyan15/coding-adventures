@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C99-welcomeformal",
+  "english": "welcome",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸ್ವಾಗತ",
+      "romanization": "svāgata"
+    },
+    {
+      "language": "telugu",
+      "form": "స్వాగతం",
+      "romanization": "svāgataṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "സ്വാഗതം",
+      "romanization": "svāgataṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C88-welcome, TE-C65-welcome, ML-C124-welcome"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:16a9564b3324b42e",
+  "lessonIds": [
+    "AR-C101-hayy",
+    "AR-C101-zuqaq",
+    "AR-C101-mabna",
+    "AR-C101-hammam",
+    "AR-C101-shurfa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch101.txt",
+  "json": "arabic/narration/ch101.json",
+  "textHash": "fnv1a64:53eb79827a22ccab",
+  "jsonHash": "fnv1a64:04099d2d962f7f09",
+  "findings": []
+}

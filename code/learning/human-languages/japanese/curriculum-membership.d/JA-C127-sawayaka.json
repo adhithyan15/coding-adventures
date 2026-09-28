@@ -1,0 +1,11 @@
+{
+  "id": "JA-C127-sawayaka",
+  "pathSegment": "JA-PATH-127-QUAL127",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-127-QUAL127",
+      "order": 2
+    }
+  ]
+}

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:webcomponent": "tsc -p tsconfig.webcomponent.json && vite build --config vite.webcomponent.config.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"

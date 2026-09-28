@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C53-hill",
+  "english": "a hill",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆಟ್ಟ",
+      "romanization": "beṭṭa"
+    },
+    {
+      "language": "telugu",
+      "form": "గుట్ట",
+      "romanization": "guṭṭa"
+    }
+  ],
+  "source": "cross-track match: KA-C55-hill, TE-C55-hill"
+}

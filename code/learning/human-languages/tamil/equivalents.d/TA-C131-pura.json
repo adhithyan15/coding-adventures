@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C131-pura",
+  "english": "a pigeon",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪಾರಿವಾಳ",
+      "romanization": "pārivāḷa"
+    },
+    {
+      "language": "telugu",
+      "form": "పావురం",
+      "romanization": "pāvuraṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "कबूतर",
+      "romanization": "kabūtar"
+    }
+  ],
+  "source": "cross-track match: KA-C131-parivala, TE-C125-pavuram, HI-C148-kabutar"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:2afaf9df64953b3c",
+  "lessonIds": [
+    "AR-C127-sitara",
+    "AR-C127-qifl",
+    "AR-C127-mindil",
+    "AR-C127-siwar",
+    "AR-C127-qurt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch127.txt",
+  "json": "arabic/narration/ch127.json",
+  "textHash": "fnv1a64:031bf19c0796b49d",
+  "jsonHash": "fnv1a64:1059a2b0690101cf",
+  "findings": []
+}

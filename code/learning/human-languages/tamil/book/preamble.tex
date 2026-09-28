@@ -30,6 +30,12 @@
 \usepackage[raggedright]{titlesec}
 \input{../../_shared/visual.tex}
 
+% A macron vowel followed by U+0303 is a LONG nasal vowel, and Latin Modern sets
+% it as the short one -- the macron is dropped. The HL41 family panels print
+% Hindi romanizations that use it. Must come after visual.tex (graphicx) and
+% after hyperref, both of which it uses. See the file itself for the diagnosis.
+\input{../../_shared/nasal-macron.tex}
+
 \usepackage{polyglossia}
 \setmainlanguage{english}
 \setotherlanguage{tamil}
@@ -206,6 +212,14 @@
   \fi}
 \renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
 \renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+% Page numbers in the table of contents. `book.cls` gives them a 1.55em box,
+% which holds three digits. The HL41 family panels take this book's lesson
+% pages past 999, and every contents line with a four-digit page ("1000" is
+% 4.93pt wider than the box) reported an overfull \hbox. 2.4em holds four
+% bold digits; the right margin that keeps titles clear of the numbers widens
+% by the same 0.85em so the dotted leaders still stop short of them.
+\renewcommand\@pnumwidth{2.4em}
+\renewcommand\@tocrmarg{3.4em}
 \makeatother
 
 % ---------------------------------------------------------------------------

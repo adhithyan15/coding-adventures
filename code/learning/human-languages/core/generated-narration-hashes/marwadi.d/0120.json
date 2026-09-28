@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:8f9622e6983afb98",
+  "lessonIds": [
+    "MW-C120-supro",
+    "MW-C120-chalni",
+    "MW-C120-chakki",
+    "MW-C120-musal",
+    "MW-C120-belan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch120.txt",
+  "json": "marwadi/narration/ch120.json",
+  "textHash": "fnv1a64:c39bfc26f180d7bb",
+  "jsonHash": "fnv1a64:0c0ed0497ec1ca72",
+  "findings": []
+}

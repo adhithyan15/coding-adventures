@@ -1,0 +1,11 @@
+{
+  "id": "SA-C104-usnisam",
+  "pathSegment": "SA-PATH-104-THINGS104",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-104-THINGS104",
+      "order": 2
+    }
+  ]
+}

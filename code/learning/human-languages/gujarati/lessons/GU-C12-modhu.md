@@ -9,21 +9,21 @@ headword: મોઢું
 romanization: moḍhũ
 gloss: mouth — the clearest example yet of Gujarati's neuter tell, the nasalized -ũ you have been hearing on every verb
 concept_tag: GU-BODY-MOUTH
-prerequisites: [GU-C12-kaan]
+prerequisites: [GU-C12-kaan, GU-C02-naam, GU-C02-maarun]
 sounds: [retroflex-dha, u-nasal]
 roots: [sanskrit-mukha]
 etymology_hook: મોઢું is inherited, as a doublet of formal મુખ, from Sauraseni Prakrit muha, from Sanskrit mukha, "mouth, face" — mukha's own root beyond Proto-Indo-Aryan is not agreed upon, so this is named as a second open question rather than an invented ancestor
 duration:
   max_seconds: 260
 requires:
-  knowledge: [GU-LEX-KAAN, GU-GRAMMAR-GENDER-SHIFT-INHERITANCE, GU-GRAMMAR-VU-NEUTER-INFINITIVE]
+  knowledge: [GU-LEX-KAAN, GU-GRAMMAR-GENDER-SHIFT-INHERITANCE, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-MAARUN-01]
 introduces:
   knowledge: [GU-LEX-MODHU, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-ETYMON-MODHU-MUKHA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [GU-CULTURE-MODHU-EVERYDAY-MUKH-FORMAL-REGISTER-01]
 practises:
-  knowledge: [GU-LEX-MODHU, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-ETYMON-MODHU-MUKHA, GU-LEX-KAAN, GU-GRAMMAR-GENDER-SHIFT-INHERITANCE, GU-GRAMMAR-VU-NEUTER-INFINITIVE]
+  knowledge: [GU-LEX-MODHU, GU-GRAMMAR-NEUTER-U-NASAL-TELL, GU-ETYMON-MODHU-MUKHA, GU-LEX-KAAN, GU-GRAMMAR-GENDER-SHIFT-INHERITANCE, GU-GRAMMAR-VU-NEUTER-INFINITIVE, GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-MAARUN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,11 +35,13 @@ reviews_of: [GU-C12-kaan, GU-C07-jaanvun]
 # મોઢું — the tell you have been hearing all along
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-KAAN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-KAAN, GU-CONCEPT-C02-NAAM-01, GU-CONCEPT-C02-MAARUN-01] -->
 
 [PAUSE 2s] **કાન** (*kān*)'s own gender shifted away from Sanskrit's. The next body
 part wears its gender in plain sight — the same nasalized ending you have
 heard on nearly every verb in this book.
+
+[PAUSE 2s] Say "my name," then "my name is Mira." (*Mārũ nām*; *mārũ nām Mīrā chhe*.)
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[GU-LEX-MODHU]; assesses=[] -->

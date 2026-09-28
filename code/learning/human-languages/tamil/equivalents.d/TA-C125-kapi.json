@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C125-kapi",
+  "english": "coffee",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಾಫಿ",
+      "romanization": "kāphi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కాఫీ",
+      "romanization": "kāphī",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കാപ്പി",
+      "romanization": "kāppi",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C39-kaapi, TE-C119-kaphi, ML-C39-kaapi; sameRoot judged by the author, awaiting native review"
+}

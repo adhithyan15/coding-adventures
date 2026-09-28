@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:03618861b032e616",
+  "lessonIds": [
+    "AR-C125-dalw",
+    "AR-C125-miknasa",
+    "AR-C125-qumama",
+    "AR-C125-salla",
+    "AR-C125-sunduq"
+  ],
+  "tex": "arabic/book/chapters/ch125-bucket-broom-rubbish-basket-box.tex"
+}

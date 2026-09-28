@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "To push, To lift, To drop, To burn, To sew",
+  "label": "ch:mw-to-push-to-lift-to-drop-to-burn-to-sew",
+  "canDo": "I can say to push, to lift, to drop, to burn and to sew.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C106-sivno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say to push, to lift, to drop, to burn and to sew.",
+    "assesses": [
+      "MW-LEX-C106-ACT106-03",
+      "MW-LEX-C106-ACT106-04",
+      "MW-LEX-C106-ACT106-05"
+    ]
+  }
+}

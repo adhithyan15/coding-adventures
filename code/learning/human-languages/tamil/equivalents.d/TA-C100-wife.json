@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C100-wife",
+  "english": "a wife",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೆಂಡತಿ",
+      "romanization": "heṇḍati"
+    },
+    {
+      "language": "telugu",
+      "form": "భార్య",
+      "romanization": "bhārya"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഭാര്യ",
+      "romanization": "bhārya"
+    },
+    {
+      "language": "hindi",
+      "form": "पत्नी",
+      "romanization": "patnī"
+    }
+  ],
+  "source": "cross-track match: KA-C45-wife, TE-C45-wife, ML-C45-wife, HI-C118-patni"
+}

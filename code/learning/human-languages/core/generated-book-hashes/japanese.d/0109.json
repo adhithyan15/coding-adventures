@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:fd803858fbbcce53",
+  "lessonIds": [
+    "JA-C109-kamo",
+    "JA-C109-washi",
+    "JA-C109-taka",
+    "JA-C109-fukurou",
+    "JA-C109-kaiko"
+  ],
+  "tex": "japanese/book/chapters/ch109-wild-duck-eagle-hawk-owl-silkworm.tex"
+}

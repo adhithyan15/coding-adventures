@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C142-manikkattu",
+  "english": "a wrist",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಣಿಕಟ್ಟು",
+      "romanization": "maṇikaṭṭu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "మణికట్టు",
+      "romanization": "maṇikaṭṭu",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कलाई",
+      "romanization": "kalāī"
+    }
+  ],
+  "source": "cross-track match: KA-C135-manikattu, TE-C128-manikattu, HI-C150-kalai; sameRoot judged by the author, awaiting native review"
+}

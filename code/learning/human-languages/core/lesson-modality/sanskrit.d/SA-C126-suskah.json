@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C126-suskah",
+    "language": "sanskrit",
+    "chapter": 126,
+    "sequence": 6230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c44f50c4a3752a00"
+  },
+  "findings": []
+}

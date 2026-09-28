@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:5e1284ae4b1702bc",
+  "lessonIds": [
+    "GU-C129-gali",
+    "GU-C129-bag",
+    "GU-C129-darvajo",
+    "GU-C129-pen",
+    "GU-C129-pensil"
+  ],
+  "tex": "gujarati/book/chapters/ch129-lane-park-gate-pen-pencil.tex"
+}

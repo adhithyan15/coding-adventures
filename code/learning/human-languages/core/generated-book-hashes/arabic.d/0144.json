@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:7415aa6f2ef18667",
+  "lessonIds": [
+    "AR-C144-khayyat",
+    "AR-C144-najjar",
+    "AR-C144-khabbaz",
+    "AR-C144-muzari",
+    "AR-C144-jamia"
+  ],
+  "tex": "arabic/book/chapters/ch144-tailor-carpenter-baker-farmer-university.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C98-jimano",
+    "language": "marwadi",
+    "chapter": 98,
+    "sequence": 6300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:021b9716d0365f30"
+  },
+  "findings": []
+}

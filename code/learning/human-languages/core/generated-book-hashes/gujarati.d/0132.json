@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:2de3222076429ede",
+  "lessonIds": [
+    "GU-C132-cokhkhu",
+    "GU-C132-gandu",
+    "GU-C132-khatu",
+    "GU-C132-tikhu",
+    "GU-C132-naram"
+  ],
+  "tex": "gujarati/book/chapters/ch132-clean-dirty-sour-spicy-soft.tex"
+}

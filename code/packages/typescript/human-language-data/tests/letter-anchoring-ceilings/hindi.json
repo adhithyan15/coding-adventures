@@ -1,5 +1,6 @@
 {
   "cold": 0,
   "buildsToward": 1,
+  "unreadInventory": 2,
   "unwritten": 0
 }

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:ad9979d5b3f9d6e4",
+  "lessonIds": [
+    "AR-C151-nahif",
+    "AR-C151-samin",
+    "AR-C151-muballal",
+    "AR-C151-jaff",
+    "AR-C151-mutassikh"
+  ],
+  "tex": "arabic/book/chapters/ch151-thin-fat-wet-dry-dirty.tex"
+}

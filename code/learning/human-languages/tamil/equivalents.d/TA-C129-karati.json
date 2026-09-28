@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C129-karati",
+  "english": "a bear",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕರಡಿ",
+      "romanization": "karaḍi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఎలుగుబంటి",
+      "romanization": "elugubaṇṭi"
+    },
+    {
+      "language": "malayalam",
+      "form": "കരടി",
+      "romanization": "karaṭi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "भालू",
+      "romanization": "bhālū"
+    }
+  ],
+  "source": "cross-track match: KA-C130-karadi, TE-C123-elugubanti, ML-C162-karati, HI-C146-bhalu; sameRoot judged by the author, awaiting native review"
+}

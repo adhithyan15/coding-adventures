@@ -1,0 +1,1852 @@
+import { buildTimeline, type GanttBar } from "./timeline";
+
+const DAY_MS = 86_400_000;
+
+// The view the task list renders: which columns, in which order, sorted by name.
+// This is the entire "what to show" decision — the engine does filtering, sorting,
+// grouping, and formatting from it. `visibleFields` order defines the cell order.
+const TASK_VIEW = (projectStart: number) => ({
+  view: {
+    id: "tasks",
+    name: "Tasks",
+    shape: "table",
+    filter: { statuses: [], completed: null, search: null },
+    groupBy: null,
+    sort: [{ field: { builtin: "name" }, ascending: true }],
+    visibleFields: [
+      { builtin: "completed" },
+      { builtin: "name" },
+      { builtin: "deadline" },
+      { builtin: "start" },
+      { builtin: "finish" },
+      { builtin: "overdue" },
+      { builtin: "priority" },
+      { builtin: "labels" },
+    ],
+  },
+  projectStart,
+});
+// The sheet's column catalogue: one entry per column the sheet can show, in
+// display order. `editable` gates whether clicking a cell in that column
+// enters edit mode at all (a computed column like Overdue never does — see
+// the "sheetNavigate" case below). `write` turns a committed cell edit into
+// the ONE engine op that expresses it; absent for non-editable columns.
+// `sortable` controls whether the column appears as a Select option in the
+// sort toolbar.
+//
+// This is a SECOND consumer of table(view) — same engine call the list view
+// already makes, just with a broader visibleFields and a different
+// filter/sort built from the sheet's own toolbar state. Fat engine, dumb
+// UI: nothing here recomputes what the engine already returned formatted.
+interface SheetField {
+  field: { builtin: string };
+  label: string;
+  width: number;
+  editable: boolean;
+  sortable: boolean;
+  // `ctx` is optional and only the Labels column reads it (name→id lookup) — every
+  // other column's `write` ignores the third argument entirely.
+  write?: (id: string, value: string, ctx?: { labelsByName: Map<string, string> }) => any;
+}
+const PRIORITY_VALUES = ["low", "normal", "high", "urgent"];
+const SHEET_FIELDS: SheetField[] = [
+  {
+    field: { builtin: "completed" },
+    label: "Done",
+    width: 60,
+    editable: true,
+    sortable: false,
+    write: (id, value) => ({
+      op: "setCompleted",
+      args: { id, completed: value.trim().toLowerCase() === "true" || value.trim() === "✓" },
+    }),
+  },
+  {
+    field: { builtin: "name" },
+    label: "Name",
+    width: 240,
+    editable: true,
+    sortable: true,
+    write: (id, value) => (value.trim() ? { op: "renameTask", args: { id, name: value.trim() } } : null),
+  },
+  {
+    field: { builtin: "deadline" },
+    label: "Deadline",
+    width: 110,
+    editable: true,
+    sortable: true,
+    write: (id, value) => {
+      const trimmed = value.trim();
+      if (!trimmed) return { op: "setDeadline", args: { id, deadline: null } };
+      const days = isoToDays(trimmed);
+      return days == null ? null : { op: "setDeadline", args: { id, deadline: days } };
+    },
+  },
+  {
+    field: { builtin: "percentComplete" },
+    label: "% Complete",
+    width: 90,
+    editable: true,
+    sortable: true,
+    write: (id, value) => {
+      const n = Number(value.trim().replace(/%$/, ""));
+      if (!Number.isFinite(n)) return null;
+      return { op: "setPercentComplete", args: { id, percent: Math.max(0, Math.min(100, n)) } };
+    },
+  },
+  {
+    field: { builtin: "priority" },
+    label: "Priority",
+    width: 90,
+    editable: true,
+    sortable: true,
+    write: (id, value) => {
+      const trimmed = value.trim().toLowerCase();
+      if (!trimmed) return { op: "setPriority", args: { id, priority: null } };
+      // Reject an unrecognised value rather than sending it through — the wire type is
+      // a fixed Rust enum, and a typo would otherwise fail the ABI parse silently.
+      return PRIORITY_VALUES.includes(trimmed)
+        ? { op: "setPriority", args: { id, priority: trimmed } }
+        : null;
+    },
+  },
+  {
+    field: { builtin: "status" },
+    label: "Status",
+    width: 110,
+    editable: true,
+    sortable: true,
+    // Status is a free-form workflow id (not a fixed enum), so any non-empty text is
+    // accepted verbatim; empty clears it back to unset.
+    write: (id, value) => ({ op: "setStatus", args: { id, status: value.trim() || null } }),
+  },
+  {
+    field: { builtin: "notes" },
+    label: "Notes",
+    width: 240,
+    editable: true,
+    sortable: false,
+    write: (id, value) => ({ op: "setNotes", args: { id, notes: value } }),
+  },
+  { field: { builtin: "overdue" }, label: "Overdue", width: 90, editable: false, sortable: false },
+  { field: { builtin: "start" }, label: "Start", width: 100, editable: false, sortable: false },
+  { field: { builtin: "finish" }, label: "Finish", width: 100, editable: false, sortable: false },
+  {
+    field: { builtin: "labels" },
+    label: "Labels",
+    width: 160,
+    editable: true,
+    sortable: false,
+    // Comma-separated EXISTING label names, matched case-insensitively — the same
+    // "reject an unrecognised value rather than sending it through" discipline the
+    // Priority column above already uses. This deliberately does NOT create a label
+    // on an unmatched name: a typo would otherwise mint a throwaway label silently.
+    // Label *creation* is its own composer (see the label-composer row wrapping the
+    // Sheet in TaskApp.mll) — assignment here only ever references what already exists.
+    write: (id, value, ctx) => {
+      const names = value.split(",").map((s) => s.trim()).filter(Boolean);
+      const ids: string[] = [];
+      for (const name of names) {
+        const labelId = ctx?.labelsByName.get(name.toLowerCase());
+        if (!labelId) return null; // unknown name — reject the whole edit, not a partial one
+        ids.push(labelId);
+      }
+      return { op: "setTaskLabels", args: { id, labels: ids } };
+    },
+  },
+];
+
+// Sheet toolbar/state → the View the engine actually evaluates. Rebuilt every
+// render from the host's own filter/sort state, exactly like TASK_VIEW.
+// `fields` is the ACTIVE project's visible column set — see
+// visibleSheetFields() — not always the full SHEET_FIELDS catalogue, so a
+// Board-tier project's Sheet never asks the engine to project columns the
+// UI is about to hide anyway.
+const SHEET_VIEW = (
+  projectStart: number,
+  filterText: string,
+  sortField: string,
+  sortAscending: boolean,
+  fields: SheetField[],
+) => {
+  const sortEntry = fields.find((f) => f.label === sortField && f.sortable);
+  return {
+    view: {
+      id: "sheet",
+      name: "Sheet",
+      shape: "table",
+      filter: { statuses: [], completed: null, search: filterText.trim() || null },
+      groupBy: null,
+      sort: sortEntry ? [{ field: sortEntry.field, ascending: sortAscending }] : [],
+      visibleFields: fields.map((f) => f.field),
+    },
+    projectStart,
+  };
+};
+
+const isoToDays = (iso: string): number | null => {
+  const m = /^\s*(\d{4})-(\d{2})-(\d{2})\s*$/.exec(iso);
+  if (!m) return null;
+  const year = +m[1];
+  const month = +m[2];
+  const day = +m[3];
+  const date = new Date(0);
+  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCFullYear(year, month - 1, day);
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return null;
+  }
+  return Math.floor(date.getTime() / DAY_MS);
+};
+const daysToIso = (days: number): string =>
+  new Date(days * DAY_MS).toISOString().slice(0, 10);
+
+// The calendar view — the engine's calendar(range, view) projection, built with
+// the same "no filter, whole workspace" View every other view starts from.
+// `shape: "calendar"` matches task-core's ViewShape::Calendar; the engine
+// itself only reads filter/sort from this (calendar() doesn't group or show
+// columns), but the View type requires the field to be present regardless.
+const CALENDAR_VIEW = (projectStart: number, start: number, end: number) => ({
+  view: {
+    id: "calendar",
+    name: "Calendar",
+    shape: "calendar",
+    filter: { statuses: [], completed: null, search: null },
+    groupBy: null,
+    sort: [{ field: { builtin: "name" }, ascending: true }],
+    visibleFields: [{ builtin: "name" }],
+  },
+  projectStart,
+  start,
+  end,
+});
+
+// Calendar month arithmetic. All UTC — `days` is already a UTC day-count (see
+// DAY_MS above), so mixing in local-timezone Date methods here would skew the
+// grid by a day near a DST boundary or a non-UTC system clock.
+const daysToDateUtc = (days: number): Date => new Date(days * DAY_MS);
+// The first day (UTC) of the month containing `days`.
+const monthStartDays = (days: number): number => {
+  const d = daysToDateUtc(days);
+  return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / DAY_MS);
+};
+// `monthStart` shifted by `delta` whole months, landing on that month's 1st.
+const shiftMonth = (monthStart: number, delta: number): number => {
+  const d = daysToDateUtc(monthStart);
+  return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + delta, 1) / DAY_MS);
+};
+const monthLabel = (monthStart: number): string =>
+  daysToDateUtc(monthStart).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+// The Sunday on/before `monthStart` — the grid's top-left cell. A fixed 42-cell
+// (6×7) grid from here always covers the whole month, the same shape
+// design/ui-prototype.html's own renderCalendar() builds.
+const gridStartDays = (monthStart: number): number =>
+  monthStart - daysToDateUtc(monthStart).getUTCDay();
+
+// State the controller can be seeded with on boot (restored from storage).
+export interface ControllerInit {
+  initialOrder?: string[];
+  initialCounter?: number;
+  /** Deterministic UTC day used by the shared web/native behavior contract. */
+  today?: number;
+  /** Milliseconds since the epoch; stamps checklist runs. Tests pin it. */
+  now?: () => number;
+  // Called after every *structural* mutation with the data worth persisting.
+  onMutate?: (
+    snapshot: string,
+    order: string[],
+    counter: number,
+    activeProject?: string,
+  ) => void;
+}
+
+/** Framework-neutral semantic event envelope emitted by every TaskApp backend. */
+export type TaskAppEvent = { type: string } & Record<string, any>;
+
+// The controller is the web backend's native state container: it holds transient UI
+// state (the two input values, the display order) and turns TaskApp events into engine
+// operations, then re-derives the slot props from engine queries. After any mutation
+// that changes the project it calls onMutate so the host can persist.
+export function makeController(engine: any, init: ControllerInit = {}) {
+  const {
+    initialOrder = [],
+    initialCounter = 0,
+    today = Math.floor(Date.now() / DAY_MS),
+    now = Date.now,
+    onMutate,
+  } = init;
+  // task-core's bare workspace deliberately has no product-facing root name.
+  // The native adapter already repairs that root to Inbox; do the same at the
+  // web presentation boundary so first-run state and legacy blank snapshots do
+  // not expose the internal `project` id as UI copy.
+  const initialActiveId = engine.activeProject().data as string;
+  const initialActive = engine.workspace().data.projects?.[initialActiveId];
+  if (!String(initialActive?.name ?? "").trim()) {
+    engine.setProjectName({ name: "Inbox" });
+  }
+  let newName = "";
+  let newDue = "";
+  let newNameError = "";
+  let newDueError = "";
+  let newNameFocus = "";
+  let newDueFocus = "";
+  let editingTask: string | null = null;
+  let editTaskName = "";
+  let editTaskDue = "";
+  let editTaskNameError = "";
+  let editTaskDueError = "";
+  let newProject = "";
+  let newLabel = "";
+  // Which view is showing. A string rather than a set of booleans, so the six
+  // states can't contradict each other.
+  let view: "list" | "board" | "timeline" | "sheet" | "calendar" | "notes" | "checklists" = "list";
+  // The view switcher's order (#14016), shared with task-mosaic-app's
+  // ViewMode::SWITCHER_ORDER. Timeline is last and only offered to a Full
+  // project, so leaving it out never shifts another view's index.
+  const SWITCHER_VIEWS = [
+    ["list", "List"],
+    ["board", "Board"],
+    ["sheet", "Sheet"],
+    ["calendar", "Calendar"],
+    ["notes", "Notes"],
+    ["checklists", "Checklists"],
+    ["timeline", "Timeline"],
+  ] as const;
+  const switcherViews = () =>
+    activeProjectComplexity() === "full" ? SWITCHER_VIEWS : SWITCHER_VIEWS.slice(0, 6);
+  // Sheet toolbar state.
+  let sheetFilterText = "";
+  let sheetSortField = ""; // a SHEET_FIELDS label, or "" for unsorted
+  let sheetSortAscending = true;
+  let sheetSortOpen = false;
+  // Notes editor state. `selectedNoteId` is the open note's id, or "" for
+  // none — including while composing a brand-new, not-yet-saved note: its id
+  // is minted the moment "+ New note" is clicked (the same host-mints-ids-
+  // upfront pattern addTask/addProject already use), NOT deferred to Save.
+  // That keeps `selected-note-id` a reliable non-empty "editor is open"
+  // marker throughout — Notes.mll shows the editor purely off its
+  // truthiness. Cancelling (or navigating away) before ever saving simply
+  // discards the draft; the engine never heard about it.
+  let selectedNoteId = "";
+  let noteTitleDraft = "";
+  let noteBodyDraft = "";
+  // A task NAME (not id) — resolved to attachedTask on Save via
+  // tasksByName(), same "reject the whole save on an unmatched name"
+  // discipline the Sheet Labels column already uses. Empty means "no
+  // attachment." See code/specs/task-app-notes-ui-v1.md's addendum.
+  let noteTaskDraft = "";
+  // Checklists (C3b; spec task-app-checklists-view-v1.md). The same view and
+  // contract task-mosaic-app serves natively (C3a): the library selection
+  // (a template or a run id, "" for none) and the two composers. UI state,
+  // like the Notes drafts: not persisted.
+  let selectedChecklist = "";
+  let newChecklistName = "";
+  let newChecklistItem = "";
+  // The template outline item selected for editing (C3c), or "" for none.
+  let selectedOutlineItem = "";
+  // Grid's edit-cursor slots. -1/"" means "none", matching Grid's own contract
+  // (see Grid.mil).
+  let sheetSelectedRow = -1;
+  let sheetSelectedCol = -1;
+  let sheetEditRow = -1;
+  let sheetEditCol = -1;
+  let sheetEditContent = "";
+  // Which row is expanded, by task id (not index — an index would follow the wrong
+  // task the moment the list is re-sorted or something above it is deleted).
+  let expanded: string | null = null;
+  // Task ids are workspace-global, so this stays one list across every project. The
+  // per-project view falls out for free: `rows()` keeps only the ids the ACTIVE
+  // project's table() knows about.
+  const order: string[] = [...initialOrder]; // task ids in creation order
+  // The one id counter every minted id draws from. It is restored from
+  // storage, so it is validated: a counter that is not a safe non-negative
+  // integer (NaN, or at 2^53 where ++ stops advancing) would make every
+  // "skip taken ids" loop below spin forever. A bad one is RECOVERED from the
+  // highest number already used in the workspace, never reset to 0, which
+  // would re-mint ids that exist.
+  const recoverCounter = (): number => {
+    let max = 0;
+    const projects = (engine.workspace().data.projects ?? {}) as Record<string, any>;
+    for (const p of Object.values(projects) as any[]) {
+      for (const kind of ["tasks", "notes", "labels", "checklists"]) {
+        for (const id of Object.keys(p?.[kind] ?? {})) {
+          const m = /^(?:t|n|l|p|checklist-|run-)(\d{1,15})$/.exec(id);
+          if (m) max = Math.max(max, Number(m[1]));
+        }
+      }
+    }
+    return max;
+  };
+  let counter =
+    Number.isSafeInteger(initialCounter) && initialCounter >= 0 ? initialCounter : recoverCounter();
+  /// The next number, or null once the counter can no longer advance safely
+  /// (it fails, as the native app's checked counter does, instead of looping).
+  const bumpCounter = (): number | null => {
+    if (!Number.isSafeInteger(counter) || counter < 0 || counter >= Number.MAX_SAFE_INTEGER - 1) return null;
+    counter += 1;
+    return counter;
+  };
+  // Calendar nav state: the first day (UTC) of the currently shown month,
+  // seeded to the current month.
+  let calendarMonthStart = monthStartDays(today);
+
+  // Every project, flattened depth-first so a sub-project immediately follows its
+  // parent, carrying the depth so the bar can show the hierarchy. The engine stores
+  // nesting by `parent` on a flat map (children aren't listed on the parent), so the
+  // child lists are derived here.
+  //
+  // A malformed snapshot could in principle contain a parent cycle; the `seen` guard
+  // means we'd render such projects once rather than recursing forever.
+  const projects = (): {
+    ids: string[];
+    names: string[];
+    depths: number[];
+    activeId: string;
+  } => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const all: Record<string, any> = ws.projects ?? {};
+    // Bucket every project under its parent ONCE. Filtering the whole map per node
+    // instead would make the walk O(n^2) — fine for a dozen projects, needlessly
+    // quadratic for a big workspace.
+    // Siblings read in name order — sorting by raw id would put `p10` before `p2`.
+    const byParent = new Map<string | null, string[]>();
+    for (const id of Object.keys(all)) {
+      const parent = (all[id]?.parent ?? null) as string | null;
+      const bucket = byParent.get(parent);
+      if (bucket) bucket.push(id);
+      else byParent.set(parent, [id]);
+    }
+    for (const bucket of byParent.values()) {
+      bucket.sort((a, b) => String(all[a]?.name ?? a).localeCompare(String(all[b]?.name ?? b)));
+    }
+    const childrenOf = (parent: string | null): string[] => byParent.get(parent) ?? [];
+
+    const ids: string[] = [];
+    const depths: number[] = [];
+    const seen = new Set<string>();
+    // An explicit stack rather than recursion: a deeply nested chain (or a tampered
+    // snapshot) would otherwise blow the JS call stack inside getProps and take the
+    // whole render down. `seen` also makes a parent cycle terminate.
+    const walk = (rootId: string) => {
+      const stack: Array<[string, number]> = [[rootId, 0]];
+      while (stack.length > 0) {
+        const [id, depth] = stack.pop()!;
+        if (seen.has(id)) continue;
+        seen.add(id);
+        ids.push(id);
+        depths.push(depth);
+        // Reversed, so popping yields the children in name order.
+        const kids = childrenOf(id);
+        for (let i = kids.length - 1; i >= 0; i -= 1) stack.push([kids[i], depth + 1]);
+      }
+    };
+    // Roots first, in the engine's explicit display order...
+    for (const root of (ws.roots ?? []) as string[]) walk(root);
+    // ...then anything the roots list somehow missed, so no project is unreachable
+    // (an orphan whose `parent` names a project that no longer exists, say).
+    for (const id of childrenOf(null)) walk(id);
+    for (const id of Object.keys(all)) walk(id);
+
+    return { ids, names: ids.map((id) => all[id]?.name || id), depths, activeId };
+  };
+
+  // The board's columns — the real statuses of the workflow
+  // `ProjectState::ensure_default_workflow` seeds, in the fixed order the design
+  // calls for (not whatever order `kanban()` happens to return them in, which sorts
+  // by category then name — those happen to agree today, but this is pinned
+  // explicitly rather than relying on that being incidental).
+  const BOARD_STATUSES: Array<{ title: string; key: string }> = [
+    { title: "Up next", key: "next" },
+    { title: "In progress", key: "doing" },
+    { title: "In review", key: "review" },
+    { title: "Done", key: "done" },
+  ];
+
+  // The timeline: hand the engine's own gantt bars to the geometry module. Every
+  // date here was computed by the ENGINE; the host only asks how far across the track
+  // that falls. See timeline.ts for the inclusive-date rule that governs the maths.
+  const timeline = () => {
+    const bars = (engine.gantt(today).data?.bars ?? []) as GanttBar[];
+    return buildTimeline(bars, today);
+  };
+
+  // Snapshot the engine + host state and hand it to the persistence sink. Called
+  // only after structural mutations (add/toggle/delete/project switch) — never on
+  // keystrokes. The active project rides along because the engine deliberately keeps
+  // that cursor out of its snapshot, making it the host's to remember.
+  const persist = () =>
+    onMutate?.(engine.snapshot(), order, counter, engine.activeProject()?.data);
+
+  // Column order matches TASK_VIEW's visibleFields.
+  const [DONE, NAME, DEADLINE, START, FINISH, OVERDUE, PRIORITY, LABELS] = [0, 1, 2, 3, 4, 5, 6, 7];
+
+  /// The ONE source of truth for what's on screen: the engine's table selection,
+  /// keyed by task and ordered by creation. Both rendering and click-index resolution
+  /// must read this same list — deriving them from different queries (e.g. rows from
+  /// `table()` but indices from `todos()`) silently desyncs the moment the two disagree
+  /// about which tasks qualify (milestones, filters), making a click hit the wrong row.
+  const rows = (): { byTask: Map<string, any>; ids: string[] } => {
+    const cells = engine.table(TASK_VIEW(today)).data.groups.flatMap((g: any) =>
+      g.rows.map((r: any) => ({
+        task: r.task as string,
+        display: r.cells.map((c: any) => c.display as string),
+        value: r.cells.map((c: any) => c.value),
+      })),
+    );
+    const byTask = new Map<string, any>(cells.map((c: any) => [c.task, c]));
+    return { byTask, ids: order.filter((id) => byTask.has(id)) };
+  };
+  const visible = (): string[] => rows().ids;
+
+  // The list is drawn in GROUP order, so a click index refers to that order — not to
+  // creation order. Both the rows and every index lookup must go through this, or a
+  // click lands on the wrong task the moment the two disagree.
+  const displayIds = (): string[] => {
+    const { byTask, ids } = rows();
+    const groupRank = (id: string) => {
+      const c = byTask.get(id)!;
+      if (c.value[DONE]?.value === true) return 2;
+      return c.display[START] ? 0 : 1;
+    };
+    return [...ids].sort((a, b) => groupRank(a) - groupRank(b));
+  };
+
+  // The sheet's own row selection — same shape as `rows()`, but keyed to the
+  // sheet's own filter/sort state rather than TASK_VIEW's fixed one. Ordered
+  // task-id list is what turns a clicked (row, col) back into a task id.
+  const sheetRows = (): { ids: string[]; cells: any[][] } => {
+    const groups = engine.table(
+      SHEET_VIEW(
+        today,
+        sheetFilterText,
+        sheetSortField,
+        sheetSortAscending,
+        visibleSheetFields(activeProjectComplexity()),
+      ),
+    ).data.groups;
+    // groupBy is always null here, so there is exactly one group.
+    const rowsOut: any[] = (groups[0]?.rows ?? []) as any[];
+    return {
+      ids: rowsOut.map((r) => r.task as string),
+      cells: rowsOut.map((r) => r.cells.map((c: any) => c.display as string)),
+    };
+  };
+
+  // The calendar's own cell/event derivation — analogous to sheetRows(), keyed
+  // to whichever month `calendarMonthStart` currently names rather than a
+  // fixed range. Cell/event row shapes match Calendar.mil exactly.
+  const calendarData = (): { cells: string[][]; events: string[][] } => {
+    const gridStart = gridStartDays(calendarMonthStart);
+    const gridEnd = gridStart + 41; // 42 cells, inclusive
+    const cells: string[][] = [];
+    for (let i = 0; i < 42; i += 1) {
+      const day = gridStart + i;
+      cells.push([String(daysToDateUtc(day).getUTCDate()), daysToIso(day), day === today ? "today" : ""]);
+    }
+    const raw = engine.calendar(CALENDAR_VIEW(today, gridStart, gridEnd)).data;
+    const events: string[][] = [];
+    for (const ev of (raw?.events ?? []) as any[]) {
+      // One row PER DAY the event spans, clipped to the visible grid — a
+      // multi-day event renders on every day it covers rather than only its
+      // start day (see task-app-calendar-v1.md: the engine already computed
+      // the real span; collapsing to the start day would discard it).
+      const from = Math.max(ev.start as number, gridStart);
+      const to = Math.min(ev.finish as number, gridEnd);
+      for (let day = from; day <= to; day += 1) {
+        events.push([
+          ev.task as string,
+          ev.label as string,
+          daysToIso(day),
+          ev.critical ? "critical" : "",
+          ev.completed ? "done" : "",
+          ev.overdue ? "overdue" : "",
+        ]);
+      }
+    }
+    return { cells, events };
+  };
+
+  // The notes list — read straight off `workspace()` (no dedicated query
+  // exists, or is needed: see task-app-notes-entity-v1.md, the whole-project
+  // dump already includes `notes` for free once the field exists). Sorted
+  // alphabetically by title, the same "read the way a person would expect"
+  // call `projects()` already makes for sibling project names — raw
+  // BTreeMap/id order is just creation order, which reads worse for a list
+  // meant to be scanned.
+  const noteRows = (): { ids: string[]; rows: string[][] } => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const notesMap = (ws.projects?.[activeId]?.notes ?? {}) as Record<string, any>;
+    const entries = Object.values(notesMap) as any[];
+    entries.sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? "")));
+    return {
+      ids: entries.map((n) => n.id as string),
+      rows: entries.map((n) => [n.id as string, String(n.title ?? "").trim() || "Untitled"]),
+    };
+  };
+
+  // ── Checklists (C3b) ────────────────────────────────────────────────────
+  // A port of task-mosaic-app's checklist_props and handlers (C3a): the same
+  // slots, the same bounds, the same ids, so the web and native hosts agree.
+  const CHECKLIST_TEXT_MAX = 512; // characters, per composer
+  const CHECKLIST_ITEMS_MAX = 10_000; // task-core's MAX_CHECKLIST_ITEMS
+  const CHECKLIST_INDENT_MAX = 16; // depth in a restored snapshot is unbounded
+
+  const activeChecklists = (): Record<string, any> => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    return (ws.projects?.[activeId]?.checklists ?? {}) as Record<string, any>;
+  };
+
+  /// The library in display order: templates by name, then runs newest first.
+  /// Its rows and selectChecklist's index come from this ONE list.
+  const checklistLibrary = (): any[] => {
+    const all = ((engine.checklists().data ?? []) as any[]).slice();
+    const cmp = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+    all.sort((a, b) => {
+      const aRun = a.status != null;
+      const bRun = b.status != null;
+      if (aRun !== bRun) return aRun ? 1 : -1;
+      if (!aRun) {
+        return cmp(String(a.name).toLowerCase(), String(b.name).toLowerCase()) || cmp(a.id, b.id);
+      }
+      return (b.createdAt ?? 0) - (a.createdAt ?? 0) || cmp(b.id, a.id);
+    });
+    return all;
+  };
+
+  const progressLabel = (status: string, progress: any): string => {
+    if (status === "completed") return "Completed";
+    if (status === "abandoned") return "Abandoned";
+    const done = `${progress.checked} of ${progress.total} done`;
+    return progress.decisions > 0 ? `${done} · ${progress.answered} of ${progress.decisions} answered` : done;
+  };
+  const itemCountLabel = (n: number) => (n === 1 ? "1 item" : `${n} items`);
+  const displayName = (name: string) => (String(name).trim() ? String(name) : "Untitled checklist");
+  const checklistIndent = (depth: number) => "  ".repeat(Math.min(Math.max(depth, 0), CHECKLIST_INDENT_MAX));
+  const chars = (text: string) => [...text].length;
+
+  /// The selection, if it names a checklist of the wanted kind in THIS project.
+  const selectedOfKind = (wantRun: boolean): any | null => {
+    const c = selectedChecklist ? activeChecklists()[selectedChecklist] : undefined;
+    return c && (c.run != null) === wantRun ? c : null;
+  };
+
+  /// `{prefix}-{n}`, skipping any id (or derived root) already taken
+  /// anywhere; null when the counter cannot advance.
+  const nextChecklistId = (prefix: string): string | null => {
+    const projects = (engine.workspace().data.projects ?? {}) as Record<string, any>;
+    const taken = (id: string) =>
+      Object.values(projects).some((p: any) => p.checklists?.[id] || p.tasks?.[`${id}/root`]);
+    for (;;) {
+      const n = bumpCounter();
+      if (n === null) return null;
+      const id = `${prefix}-${n}`;
+      if (!taken(id)) return id;
+    }
+  };
+
+  /// The visible row at `index` of the selected run, as just rendered.
+  const runRow = (index: number): any | null => {
+    const run = selectedOfKind(true);
+    if (!run) return null;
+    const res = engine.checklistRun({ id: run.id });
+    return res?.ok === false ? null : (res.data?.rows?.[index] ?? null);
+  };
+
+  /// The selected template's outline rows (C3c), [] without a template.
+  const templateOutline = (template: any): any[] => {
+    const res = engine.checklistOutline({ id: template.id });
+    return res?.ok === false ? [] : ((res.data ?? []) as any[]);
+  };
+
+  /// The selected item's outline row, if the selected template still has it.
+  const selectedOutlineRow = (): any | null => {
+    const template = selectedOfKind(false);
+    if (!template || !selectedOutlineItem) return null;
+    return templateOutline(template).find((r) => r.task === selectedOutlineItem) ?? null;
+  };
+
+  /// The composer's text as a new item under `parent`, at the next sibling
+  /// order; for a branch, listed in that branch of the question `parent`.
+  /// Everything it did is undone if a step fails.
+  const addItemUnder = (template: any, parent: string, branch: boolean | null): boolean => {
+    const name = newChecklistItem.trim();
+    if (!name) return false;
+    // After this item the subtree is items + 2 tasks (root + this one);
+    // instantiate refuses more than task-core's cap.
+    if (templateOutline(template).length + 2 > CHECKLIST_ITEMS_MAX) {
+      console.error("This checklist is full.");
+      return false;
+    }
+    const ws = engine.workspace().data;
+    const tasks = (ws.projects?.[engine.activeProject().data as string]?.tasks ?? {}) as Record<string, any>;
+    // Siblings sort by (order, id), and minted ids do not sort by number
+    // (t10 < t9), so each new item takes the next order.
+    const orders = Object.values(tasks)
+      .filter((t: any) => t.parent === parent)
+      .map((t: any) => Number(t.order ?? 0));
+    const order = orders.length ? Math.max(...orders) + 1 : 0;
+    const decision = tasks[parent]?.decision ?? null;
+    if (branch !== null && !decision) return false;
+    const projects = (ws.projects ?? {}) as Record<string, any>;
+    let id: string | null = null;
+    for (let n = bumpCounter(); n !== null; n = bumpCounter()) {
+      if (!Object.values(projects).some((p: any) => p.tasks?.[`t${n}`])) {
+        id = `t${n}`;
+        break;
+      }
+    }
+    if (id === null) {
+      console.error("Could not add the item: the id counter is exhausted.");
+      return false;
+    }
+    const res = engine.createTask({ id, name, parent });
+    if (res?.ok === false) {
+      console.error("Could not add the item:", res.error ?? res);
+      return false;
+    }
+    engine.setOrder({ id, order });
+    if (branch !== null) {
+      const next = {
+        ...decision,
+        yesChildren: branch ? [...(decision.yesChildren ?? []), id] : decision.yesChildren ?? [],
+        noChildren: branch ? decision.noChildren ?? [] : [...(decision.noChildren ?? []), id],
+      };
+      const set = engine.setDecision({ id: parent, decision: next });
+      if (set?.ok === false) {
+        engine.deleteTask({ id }); // undo the item this event created
+        console.error("Could not add the item to the question:", set.error ?? set);
+        return false;
+      }
+    }
+    newChecklistItem = "";
+    return true;
+  };
+
+  const checklistProps = () => {
+    const empty = {
+      libraryRows: [] as string[][],
+      templateMode: false,
+      runMode: false,
+      outlineRows: [] as string[][],
+      outlineItemSelected: false,
+      outlineQuestionSelected: false,
+      outlineToggleLabel: "",
+      runTitle: "",
+      runProgress: "",
+      runRows: [] as string[][],
+      completeLabel: "",
+      abandonLabel: "",
+    };
+    if (view !== "checklists") return empty;
+    let lastHeading = "";
+    empty.libraryRows = checklistLibrary().map((c) => {
+      const group = c.status == null ? "Templates" : "Runs";
+      const heading = group === lastHeading ? "" : group;
+      lastHeading = group;
+      const subtitle = c.status == null ? itemCountLabel(c.items ?? 0) : progressLabel(c.status, c.progress);
+      const badge = c.status === "completed" ? "✓" : c.status === "abandoned" ? "✗" : "";
+      return [c.id, heading, displayName(c.name), subtitle, "", badge];
+    });
+    const run = selectedOfKind(true);
+    if (run) {
+      const res = engine.checklistRun({ id: run.id });
+      if (res?.ok !== false && res.data) {
+        const v = res.data;
+        const inProgress = v.status === "inProgress";
+        const marker = (on: boolean) => (on ? "1" : "");
+        empty.runMode = true;
+        empty.runTitle = displayName(v.name);
+        empty.runProgress = progressLabel(v.status, v.progress);
+        empty.runRows = (v.rows as any[]).map((r) => [
+          r.task,
+          checklistIndent(r.depth),
+          r.name,
+          marker(r.isDecision),
+          marker(r.isDecision ? r.answered === true : r.completed),
+          marker(r.isDecision && r.answered === false),
+        ]);
+        if (inProgress && v.progress.complete) empty.completeLabel = "Complete";
+        if (inProgress) empty.abandonLabel = "Abandon";
+      }
+      return empty;
+    }
+    const template = selectedOfKind(false);
+    if (template) {
+      const res = engine.checklistOutline({ id: template.id });
+      if (res?.ok !== false && res.data) {
+        empty.templateMode = true;
+        // [key, indent, name, question-marker, branch-label, selected-marker]:
+        // truthy markers only, as task-mosaic-app sends them (C3c).
+        empty.outlineRows = (res.data as any[]).map((r) => [
+          r.task,
+          checklistIndent(r.depth),
+          r.name,
+          r.isDecision ? "1" : "",
+          r.branch === true ? "Yes" : r.branch === false ? "No" : "",
+          r.task === selectedOutlineItem ? "1" : "",
+        ]);
+        const selected = (res.data as any[]).find((r) => r.task === selectedOutlineItem);
+        if (selected) {
+          empty.outlineItemSelected = true;
+          empty.outlineQuestionSelected = !!selected.isDecision;
+          empty.outlineToggleLabel = selected.isDecision ? "Make it a step" : "Make it a question";
+        }
+      }
+    }
+    return empty;
+  };
+
+  // Existing labels, keyed by lowercased name — read straight off `workspace()`
+  // (no dedicated query needed, same reasoning as `noteRows()`). The Sheet's Labels
+  // column uses this to resolve a typed name back to the id `setTaskLabels` needs;
+  // an unmatched name is rejected there, not created here.
+  const labelsByName = (): Map<string, string> => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const map = (ws.projects?.[activeId]?.labels ?? {}) as Record<string, any>;
+    const out = new Map<string, string>();
+    for (const l of Object.values(map) as any[]) {
+      out.set(String(l.name ?? "").toLowerCase(), l.id as string);
+    }
+    return out;
+  };
+
+  // Same shape as labelsByName() — the Notes editor's "attach to task" field
+  // resolves a typed task NAME back to the id upsertNote's attachedTask
+  // needs. Scoped to the active project only, same boundary labelsByName()
+  // uses (task names, like project/label names, aren't unique
+  // workspace-wide — see code/specs/task-app-notes-ui-v1.md's addendum).
+  const tasksByName = (): Map<string, string> => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const map = (ws.projects?.[activeId]?.tasks ?? {}) as Record<string, any>;
+    const out = new Map<string, string>();
+    for (const t of Object.values(map) as any[]) {
+      out.set(String(t.name ?? "").toLowerCase(), t.id as string);
+    }
+    return out;
+  };
+
+  // Reverse of tasksByName() — the editor needs to SHOW the attached task's
+  // name (not its id) when a note is selected.
+  const taskNameById = (id: string): string => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    const map = (ws.projects?.[activeId]?.tasks ?? {}) as Record<string, any>;
+    return String(map[id]?.name ?? "");
+  };
+
+  // The active project's scheduling-surface tier — see
+  // task-app-complexity-config-v1.md. Read the same "no dedicated query"
+  // way every other project-scoped field already is (labelsByName,
+  // tasksByName, noteRows above). Defaults to "full" if somehow absent
+  // (it never should be — every project gets this field now, board on
+  // create per ProjectState::empty(), full on load for pre-field
+  // snapshots) rather than silently hiding a project's own data.
+  const activeProjectComplexity = (): "board" | "full" => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    return (ws.projects?.[activeId]?.settings?.complexity as "board" | "full") ?? "full";
+  };
+
+  // SHEET_FIELDS, minus the CPM-derived columns (start/finish), for a
+  // Board-tier project. Both `sheetRows()` (which reads it into `visibleFields`
+  // for the engine's table() call) and every other SHEET_FIELDS-shaped read in
+  // getProps() below go through this — a single filtered array, so a column
+  // index always means the same field everywhere it's used (headers, widths,
+  // sort options, and the click/edit resolution in the dispatch cases below).
+  const visibleSheetFields = (complexity: "board" | "full"): SheetField[] =>
+    complexity === "full"
+      ? SHEET_FIELDS
+      : SHEET_FIELDS.filter((f) => f.field.builtin !== "start" && f.field.builtin !== "finish");
+
+  return {
+    getProps() {
+      // Ask the ENGINE for render-ready cells. The host no longer formats dates,
+      // picks the ✓/○ glyph, or decides what "overdue" means — those all come back
+      // already resolved and formatted, identically for every future host. Each row
+      // is handed to the layout as a *list of cells* in the order the interface
+      // documents — [ done-glyph, name, due, schedule, overdue ] — and the Mosaic
+      // layout places each cell in its own styled element (toggle, name, chips).
+      // Empty cells become empty strings, which the layout hides.
+      const { byTask, ids } = rows();
+      // The scheduling detail for the ONE open row. Everything here is the engine's
+      // answer — early/late dates, slack, criticality — merely phrased.
+      // Only when a row is open: this is a full CPM recompute, and getProps runs
+      // after every dispatch — including each keystroke in the composer.
+      const sched = expanded === null ? undefined : engine.schedule(today).data;
+      const detailFor = (id: string): [string, string, string] => {
+        const d = sched?.dates?.[id];
+        if (!d) return ["Not scheduled yet.", "", ""];
+        const mins = (m: number) => {
+          const days = m / (8 * 60);
+          // Pluralise on the number the reader sees: 479 minutes is 0.998 days, which
+          // renders as "1.0" and must not then say "1.0 days" vs "1.0 day" by accident.
+          const shown = Number.isInteger(days) ? String(days) : days.toFixed(1);
+          return `${shown} day${Number(shown) === 1 ? "" : "s"}`;
+        };
+        return [
+          `Scheduled ${daysToIso(d.scheduledStart)} → ${daysToIso(d.scheduledFinish)}` +
+            ` · earliest ${daysToIso(d.earlyStart)}, latest ${daysToIso(d.lateStart)}`,
+          d.critical
+            ? "On the critical path — any delay here delays the project."
+            : `${mins(d.totalSlack)} of slack — it can slip that much without moving the finish.`,
+          d.freeSlack > 0 && !d.critical
+            ? `${mins(d.freeSlack)} of it without disturbing the next task.`
+            : "",
+        ];
+      };
+
+      // Dependency list for the ONE open row — read from the same `flowchart()`
+      // projection the (currently unused-elsewhere) relation graph exposes:
+      // {nodes: [{task, name, kind}], edges: [{from, to, label, scheduling}]}.
+      // Only `scheduling` edges (real CPM dependencies, not generic links) belong
+      // in a task's dependency list. Computed only when a row is open, same
+      // "don't run a query the collapsed list doesn't need" discipline as `sched`.
+      const flow = expanded === null ? undefined : engine.flowchart().data;
+      const depsFor = (id: string): string => {
+        if (!flow) return "";
+        const names = new Map<string, string>();
+        for (const n of (flow.nodes ?? []) as any[]) {
+          names.set(n.task as string, n.name as string);
+        }
+        const parts: string[] = [];
+        for (const e of (flow.edges ?? []) as any[]) {
+          if (!e.scheduling) continue;
+          if (e.to === id) parts.push(`← ${names.get(e.from) ?? e.from} (${e.label})`);
+          if (e.from === id) parts.push(`→ ${names.get(e.to) ?? e.to} (${e.label})`);
+        }
+        return parts.join(" · ");
+      };
+
+      // Attached-notes paragraph for the ONE open row — read from the same
+      // whole-project `workspace()` dump `noteRows()`/`tasksByName()` already
+      // use (no dedicated query exists or is needed for this either). Reachable
+      // now that the Notes editor has a real write side — see the "attach to
+      // task" field wired above and code/specs/task-app-notes-ui-v1.md's
+      // addendum for why this was previously dead plumbing.
+      const notesFor = (id: string): string => {
+        if (expanded === null) return "";
+        const ws = engine.workspace().data;
+        const activeId = engine.activeProject().data as string;
+        const notesMap = (ws.projects?.[activeId]?.notes ?? {}) as Record<string, any>;
+        return (Object.values(notesMap) as any[])
+          .filter((n) => n.attachedTask === id)
+          .map((n) => String(n.body ?? "").trim())
+          .filter(Boolean)
+          .join(" · ");
+      };
+
+      // Group the list the way the design does: what's underway, what's next, and
+      // what's finished. The heading rides on the row that OPENS each group, so the
+      // layout can print it without knowing anything about grouping.
+      const groupOf = (id: string): string => {
+        const c = byTask.get(id)!;
+        if (c.value[DONE]?.value === true) return "Done";
+        return c.display[START] ? "In progress" : "Up next";
+      };
+      let lastGroup = "";
+
+      // Sizes for the group-count badge (task-app-icon-assets-v1.md) — tallied up
+      // front so the heading row (the only one that prints a count) can look its
+      // group's total up instead of the loop below tracking a running total.
+      const groupSizes = new Map<string, number>();
+      for (const id of displayIds()) {
+        const g = groupOf(id);
+        groupSizes.set(g, (groupSizes.get(g) ?? 0) + 1);
+      }
+
+      // displayIds() is the ONE ordering: the rows are drawn from it and every click
+      // index is resolved through it. Deriving them separately is how this app got a
+      // row-index desync before — a click landed on whatever task happened to sit at
+      // that position in the *other* ordering.
+      // Board-tier active project: blank the CPM-derived cells everywhere,
+      // not just while collapsed — the engine keeps computing start/finish/
+      // slack regardless (task-app-complexity-config-v1.md's own "display-
+      // time filter, not a computation toggle" note), so this is the ONE
+      // place that stops them reaching the row. due/overdue/deps/notes are
+      // untouched — they're basic todo-app concepts per the spec's Decision 4.
+      const complexity = activeProjectComplexity();
+      const taskRows: string[][] = displayIds().map((id) => {
+        const c = byTask.get(id)!;
+        const due = c.display[DEADLINE] ? `due ${c.display[DEADLINE]}` : "";
+        const window =
+          complexity === "full" && c.display[START]
+            ? `${c.display[START]} → ${c.display[FINISH]}`
+            : "";
+        const late = c.value[OVERDUE]?.value === true ? "⚠ overdue" : "";
+        const isOpen = id === expanded;
+        const [d1, d2, d3] = isOpen && complexity === "full" ? detailFor(id) : ["", "", ""];
+        const group = groupOf(id);
+        const heading = group === lastGroup ? "" : group;
+        lastGroup = group;
+        return [
+          c.display[DONE],
+          c.display[NAME],
+          due,
+          window,
+          late,
+          isOpen ? "open" : "",
+          d1,
+          d2,
+          d3,
+          heading,
+          // Appended rather than inserted, so the 0-9 contract TaskApp.mil
+          // already documents (and every existing row[n] reference in
+          // TaskApp.mll) stays untouched. The engine already formats these —
+          // `priority` resolves to its display name (e.g. "High"), `labels`
+          // to comma-joined label names — this is display only, no new
+          // engine work.
+          c.display[PRIORITY] ?? "",
+          c.display[LABELS] ?? "",
+          // Same "appended, not inserted" discipline as priority/labels above —
+          // and same progressive-disclosure gating as d1-d3: empty unless open.
+          isOpen ? depsFor(id) : "",
+          isOpen ? notesFor(id) : "",
+          // Present only alongside the heading cell above (row[9]) — TaskApp.mil's
+          // doc comment on task-rows documents this pairing.
+          heading ? String(groupSizes.get(group)) : "",
+          id === editingTask ? "editing" : "",
+          `${c.value[DONE]?.value === true ? "Reopen" : "Complete"} task: ${c.display[NAME]}`,
+        ];
+      });
+      const doneCount = ids.filter((id) => byTask.get(id)!.value[DONE]?.value === true).length;
+      const finish = engine.gantt(today).data.projectFinish;
+      // [ name, active-marker ] per project; the marker is non-empty for exactly the
+      // active one, which is what the layout keys its selected styling off.
+      const p = projects();
+      const projectRows: string[][] = p.ids.map((id, i) => [
+        p.names[i],
+        id === p.activeId ? "active" : "",
+        // Non-empty only for a nested project; the layout hides an empty cell, so a
+        // top-level row stays flush left.
+        p.depths[i] > 0 ? `${" ".repeat((p.depths[i] - 1) * 2)}↳` : "",
+      ]);
+      const tl = view === "timeline" ? timeline() : { scale: "", rows: [], grid: [] };
+      // Computed only while the sheet is showing — same reasoning as `boardCards`
+      // below: an engine query the current view doesn't need shouldn't run on every
+      // keystroke elsewhere in the app.
+      const sheet = view === "sheet" ? sheetRows() : { ids: [], cells: [] };
+      // Computed only while the calendar is showing — same "don't run a query
+      // the current view doesn't need" discipline as `sheet`/`boardCards`.
+      const cal = view === "calendar" ? calendarData() : { cells: [], events: [] };
+      // Computed only while the notes view is showing — same discipline.
+      const notes = view === "notes" ? noteRows() : { ids: [], rows: [] };
+      // Computed only while the checklists view is showing — same discipline.
+      const lists = checklistProps();
+      // The real Workflow/Status/kanban() engine, not the old completed/percent-
+      // complete heuristic — see task-core's CHANGELOG and BACKLOG.md's Board
+      // design-fidelity item. `ensureDefaultWorkflow` is idempotent and cheap
+      // after its first call, so — same "only compute what the current view
+      // needs" discipline as `sheet`/`cal`/`notes` above — this only runs while
+      // Board is actually showing.
+      const board: { columns: string[][]; cards: string[][] } = (() => {
+        if (view !== "board") return { columns: [], cards: [] };
+        engine.ensureDefaultWorkflow({});
+        const byStatus = new Map<string, any[]>(
+          ((engine.kanban("default").data ?? []) as any[])
+            .filter((c) => c.status)
+            .map((c) => [c.status as string, c.cards as any[]]),
+        );
+        const columns = BOARD_STATUSES.map((s) => [
+          s.title,
+          s.key,
+          String((byStatus.get(s.key) ?? []).length),
+          // Placeholder — a UI36-bound accent-bar color needs the resolved
+          // theme, which this controller never sees. Root overrides this
+          // cell with `boardAccent(theme, key)` from ./theme.ts, the same
+          // reasoning as `ringGradient`.
+          "",
+        ]);
+        const cards = BOARD_STATUSES.flatMap((s) =>
+          (byStatus.get(s.key) ?? []).map((c) => [
+            c.name as string,
+            s.key,
+            c.task as string,
+            byTask.get(c.task as string)?.value[OVERDUE]?.value === true ? "overdue" : "",
+          ]),
+        );
+        return { columns, cards };
+      })();
+      // The engine's verdict on the plan. Overdue work is the one thing worth
+      // colouring red in the header; everything else reads as on track.
+      const overdue = ids.filter(
+        (id) => byTask.get(id)!.value[OVERDUE]?.value === true,
+      ).length;
+      // Same filtered set sheetRows() above already queried the engine with —
+      // reused here so the headers/widths/sort-options line up with the cells
+      // sheetRows() returned (same array, same order, same length).
+      const sheetFields = visibleSheetFields(complexity);
+      // Project-wide percent-complete for the progress ring. `ringGradient` below is
+      // a placeholder — the actual `conic-gradient(...)` needs the resolved theme,
+      // which this controller (shared by both TaskAppLight and TaskAppDark) never
+      // sees, so Root overrides it with `ringGradient(theme, ringPercentValue)` from
+      // ./theme.ts before handing props to the emitted component. Same reasoning as
+      // `GROUND` in theme.ts: the host computes what the stylesheet can't know.
+      const ringPercentValue = ids.length ? Math.round((doneCount / ids.length) * 100) : 0;
+      return {
+        appTitle: "Tasks — auto-scheduled",
+        statusLabel: overdue > 0 ? `${overdue} overdue` : "On track",
+        statusWarn: overdue > 0 ? "warn" : "",
+        ringPercentValue,
+        ringPercent: `${ringPercentValue}%`,
+        ringGradient: "",
+        themeIsDark: "",
+        complexityLabel: complexity === "full" ? "Full CPM" : "Board",
+        allowTimeline: complexity === "full" ? "full" : "",
+        // One label per view for the toolkit SegmentedControl, which reports
+        // the selected view through the kernel's selected state (UI86).
+        navOptions: switcherViews().map(([, label]) => label),
+        navSelectedIndex: Math.max(
+          0,
+          switcherViews().findIndex(([key]) => key === view),
+        ),
+        timelineMode: view === "timeline" ? "timeline" : "",
+        boardMode: view === "board" ? "board" : "",
+        boardColumns: board.columns,
+        boardCards: board.cards,
+        sheetMode: view === "sheet" ? "sheet" : "",
+        sheetViewportRows: sheet.cells,
+        sheetColumnHeaders: sheetFields.map((f) => f.label),
+        sheetColumnWidths: sheetFields.map((f) => f.width),
+        sheetSelectedRow,
+        sheetSelectedCol,
+        sheetEditRow,
+        sheetEditCol,
+        sheetEditContent,
+        sheetFilterText,
+        // Select shows whatever `value` it's given verbatim — placeholder
+        // substitution when unset is the HOST's job (Select.mll deliberately
+        // doesn't branch on value-truthiness itself; see its own doc-comment).
+        // The underlying `sheetSortField` state (used by SHEET_VIEW above) stays
+        // "" for unsorted; this is only what's shown on the toggle.
+        sheetSortField: sheetSortField || "Sort by…",
+        sheetSortOptions: sheetFields.filter((f) => f.sortable).map((f) => f.label),
+        sheetSortOpen,
+        sheetSortAscending,
+        newLabelName: newLabel,
+        calendarMode: view === "calendar" ? "calendar" : "",
+        calendarTitle: view === "calendar" ? monthLabel(calendarMonthStart) : "",
+        calendarCells: cal.cells,
+        calendarEvents: cal.events,
+        notesMode: view === "notes" ? "notes" : "",
+        notesTitle: "Notes",
+        noteRows: notes.rows,
+        selectedNoteId,
+        noteTitleValue: noteTitleDraft,
+        noteBodyValue: noteBodyDraft,
+        noteTaskValue: noteTaskDraft,
+        // Checklists (C3b): the same slots task-mosaic-app fills natively.
+        checklistsMode: view === "checklists" ? "checklists" : "",
+        checklistsTitle: "Checklists",
+        checklistLibraryRows: lists.libraryRows,
+        checklistLibraryEmpty: Object.keys(activeChecklists()).length === 0,
+        selectedChecklistKey: selectedChecklist,
+        newChecklistName,
+        checklistTemplateMode: lists.templateMode,
+        checklistRunMode: lists.runMode,
+        checklistOutlineRows: lists.outlineRows,
+        selectedOutlineKey: selectedOutlineItem,
+        outlineItemSelected: lists.outlineItemSelected,
+        outlineQuestionSelected: lists.outlineQuestionSelected,
+        outlineToggleLabel: lists.outlineToggleLabel,
+        newChecklistItem,
+        checklistRunTitle: lists.runTitle,
+        checklistRunProgress: lists.runProgress,
+        checklistRunRows: lists.runRows,
+        checklistCompleteLabel: lists.completeLabel,
+        checklistAbandonLabel: lists.abandonLabel,
+        timelineScale: tl.scale,
+        timelineGrid: tl.grid,
+        timelineRows: tl.rows,
+        newTaskName: newName,
+        newTaskDue: newDue,
+        newTaskNameError: newNameError,
+        newTaskDueError: newDueError,
+        newTaskNameFocus: newNameFocus,
+        newTaskDueFocus: newDueFocus,
+        editTaskName,
+        editTaskDue,
+        editTaskNameError,
+        editTaskDueError,
+        emptyList: ids.length === 0 ? "empty" : "",
+        newProjectName: newProject,
+        projectRows,
+        summary: `${ids.length} task(s) · ${doneCount} done · projected finish ${
+          finish != null ? daysToIso(finish) : "—"
+        }`,
+        taskRows,
+      };
+    },
+
+    apply(event: TaskAppEvent) {
+      switch (event.type) {
+        case "newTaskNameChange":
+          newName = event.value;
+          if (newName.trim()) newNameError = "";
+          break;
+        case "newTaskDueChange":
+          newDue = event.value;
+          if (!newDue.trim() || isoToDays(newDue) != null) {
+            if (newDueError) newDueFocus = "focus";
+            newDueError = "";
+          }
+          break;
+        case "editTaskNameChange":
+          editTaskName = event.value;
+          if (editTaskName.trim()) {
+            editTaskNameError = "";
+          }
+          break;
+        case "editTaskDueChange":
+          editTaskDue = event.value;
+          if (!editTaskDue.trim() || isoToDays(editTaskDue) != null) {
+            editTaskDueError = "";
+          }
+          break;
+        case "editTask": {
+          const { byTask } = rows();
+          const id = displayIds()[event.index];
+          if (!id) break;
+          const row = byTask.get(id);
+          editingTask = id;
+          expanded = null;
+          editTaskName = String(row?.display[NAME] ?? "");
+          editTaskDue = String(row?.display[DEADLINE] ?? "");
+          editTaskNameError = "";
+          editTaskDueError = "";
+          break;
+        }
+        case "saveTaskEdit": {
+          if (!editingTask) break;
+          const name = editTaskName.trim();
+          if (!name) {
+            editTaskNameError = "Enter a task name.";
+            break;
+          }
+          editTaskNameError = "";
+          const dueText = editTaskDue.trim();
+          const due = dueText ? isoToDays(dueText) : null;
+          if (dueText && due == null) {
+            editTaskDueError = "Use a real date in YYYY-MM-DD format.";
+            break;
+          }
+          engine.renameTask({ id: editingTask, name });
+          engine.setDeadline({ id: editingTask, deadline: due });
+          editingTask = null;
+          editTaskName = "";
+          editTaskDue = "";
+          editTaskNameError = "";
+          editTaskDueError = "";
+          newNameFocus = "focus";
+          persist();
+          break;
+        }
+        case "cancelTaskEdit":
+          editingTask = null;
+          editTaskName = "";
+          editTaskDue = "";
+          editTaskNameError = "";
+          editTaskDueError = "";
+          newNameFocus = "focus";
+          break;
+        case "expandTask": {
+          // Resolve through the same ordered id list the rows were drawn from, so the
+          // clicked index can't drift onto a different task.
+          const id = displayIds()[event.index];
+          if (id) expanded = expanded === id ? null : id;
+          break;
+        }
+        case "showList":
+          view = "list";
+          break;
+        case "showBoard":
+          view = "board";
+          break;
+        case "showTimeline":
+          view = "timeline";
+          break;
+        case "showSheet":
+          view = "sheet";
+          break;
+        case "showCalendar":
+          view = "calendar";
+          break;
+        case "showNotes":
+          view = "notes";
+          break;
+        case "showChecklists":
+          view = "checklists";
+          break;
+        // ── Checklists (C3b) — task-mosaic-app's handlers, event for event ──
+        case "selectChecklist": {
+          const c = checklistLibrary()[event.index];
+          if (c) {
+            selectedChecklist = c.id;
+            selectedOutlineItem = "";
+            newChecklistItem = "";
+          }
+          break;
+        }
+        case "newChecklistNameChange":
+          // Refused past the bound, as the native app refuses it.
+          if (chars(event.value) <= CHECKLIST_TEXT_MAX) newChecklistName = event.value;
+          break;
+        case "newChecklistItemChange":
+          if (chars(event.value) <= CHECKLIST_TEXT_MAX) newChecklistItem = event.value;
+          break;
+        case "createChecklist": {
+          const name = newChecklistName.trim();
+          if (!name) break;
+          const id = nextChecklistId("checklist");
+          if (id === null) {
+            console.error("Could not create the checklist: the id counter is exhausted.");
+            break;
+          }
+          const res = engine.createChecklistTemplate({ id, root: `${id}/root`, name, description: "", now: now() });
+          if (res?.ok === false) {
+            console.error("Could not create the checklist:", res.error ?? res);
+            break;
+          }
+          selectedChecklist = id;
+          selectedOutlineItem = "";
+          newChecklistName = "";
+          newChecklistItem = "";
+          persist();
+          break;
+        }
+        case "addChecklistItem": {
+          const template = selectedOfKind(false);
+          if (template && addItemUnder(template, template.root, null)) persist();
+          break;
+        }
+        // ── C3c: writing questions into a template ──
+        case "selectOutlineItem": {
+          const template = selectedOfKind(false);
+          const row = template ? templateOutline(template)[event.index] : undefined;
+          if (!row) break;
+          // Clicking the selected item again clears the selection.
+          selectedOutlineItem = selectedOutlineItem === row.task ? "" : row.task;
+          break;
+        }
+        case "addChecklistItemYes":
+        case "addChecklistItemNo": {
+          const template = selectedOfKind(false);
+          const row = selectedOutlineRow();
+          if (!template || !row?.isDecision) break;
+          if (addItemUnder(template, row.task, event.type === "addChecklistItemYes")) persist();
+          break;
+        }
+        case "toggleOutlineQuestion": {
+          const row = selectedOutlineRow();
+          if (!row) break;
+          let res;
+          if (row.isDecision) {
+            // Back to a step: its branch items become ordinary sub-items.
+            res = engine.setDecision({ id: row.task, decision: null });
+          } else {
+            // A question; any sub-items it already has become its Yes branch,
+            // since a question may have no outline child outside its branches.
+            const ws = engine.workspace().data;
+            const tasks = (ws.projects?.[engine.activeProject().data as string]?.tasks ?? {}) as Record<string, any>;
+            const yesChildren = (Object.values(tasks) as any[])
+              .filter((t) => t.parent === row.task)
+              .sort((a, b) => Number(a.order ?? 0) - Number(b.order ?? 0) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+              .map((t) => t.id as string);
+            res = engine.setDecision({
+              id: row.task,
+              decision: { question: row.name, answer: null, yesChildren, noChildren: [] },
+            });
+          }
+          if (res?.ok === false) {
+            console.error("Could not change the item:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "deleteOutlineItem": {
+          const template = selectedOfKind(false);
+          const selected = selectedOutlineRow();
+          if (!template || !selected) break;
+          // The item and everything under it, deepest first: deleteTask only
+          // reparents, and a question's branch items reparented onto its
+          // parent would break the decision invariant. Outline rows are
+          // depth-first preorder, so the subtree is the selected row and the
+          // deeper rows right after it.
+          const outline = templateOutline(template);
+          const start = outline.findIndex((r) => r.task === selected.task);
+          const subtree: string[] = [];
+          for (let i = start; i < outline.length && (i === start || outline[i].depth > selected.depth); i++) {
+            subtree.push(outline[i].task);
+          }
+          for (const id of subtree.reverse()) {
+            const res = engine.deleteTask({ id });
+            if (res?.ok === false) {
+              console.error("Could not delete the item:", res.error ?? res);
+              break;
+            }
+          }
+          selectedOutlineItem = "";
+          persist();
+          break;
+        }
+        case "startChecklistRun": {
+          const template = selectedOfKind(false);
+          if (!template) break;
+          const run = nextChecklistId("run");
+          if (run === null) {
+            console.error("Could not start the run: the id counter is exhausted.");
+            break;
+          }
+          const res = engine.instantiateChecklist({ template: template.id, run, now: now() });
+          if (res?.ok === false) {
+            console.error("Could not start the run:", res.error ?? res);
+            break;
+          }
+          selectedChecklist = run;
+          selectedOutlineItem = "";
+          persist();
+          break;
+        }
+        case "checklistToggle": {
+          const row = runRow(event.index);
+          if (!row || row.isDecision) break; // a question is answered, not ticked
+          const res = engine.setCompleted({ id: row.task, completed: !row.completed });
+          if (res?.ok === false) {
+            console.error("Could not tick the item:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "checklistAnswerYes":
+        case "checklistAnswerNo": {
+          const row = runRow(event.index);
+          if (!row || !row.isDecision) break; // an item is ticked, not answered
+          const answer = event.type === "checklistAnswerYes";
+          // Answering with the answer it already has clears it (undo a mis-tap).
+          const res =
+            row.answered === answer
+              ? engine.clearDecisionAnswer({ id: row.task })
+              : engine.answerDecision({ id: row.task, answer });
+          if (res?.ok === false) {
+            console.error("Could not answer:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "completeChecklistRun":
+        case "abandonChecklistRun": {
+          const run = selectedOfKind(true);
+          if (!run) break;
+          const res =
+            event.type === "completeChecklistRun"
+              ? engine.completeChecklistRun({ id: run.id, now: now() })
+              : engine.abandonChecklistRun({ id: run.id, now: now() });
+          if (res?.ok === false) {
+            console.error("Could not finish the run:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "deleteChecklist": {
+          if (!selectedChecklist || !activeChecklists()[selectedChecklist]) break;
+          const res = engine.deleteChecklist({ id: selectedChecklist });
+          if (res?.ok === false) {
+            console.error("Could not delete the checklist:", res.error ?? res);
+            break;
+          }
+          selectedChecklist = "";
+          selectedOutlineItem = "";
+          newChecklistItem = "";
+          persist();
+          break;
+        }
+        case "showView": {
+          // An index into the views THIS project offers; anything else
+          // (Timeline on a Board-tier project, a stale or bogus index) is
+          // ignored rather than guessed at.
+          const entry = switcherViews()[event.index];
+          if (entry) view = entry[0];
+          break;
+        }
+        case "cardDropped": {
+          // A drop is a PROPOSAL. The engine owns what a status change means — as of
+          // ensure_default_workflow/set_status's completed-cascade fix (task-core
+          // CHANGELOG), that includes flipping `completed` when the target status is
+          // a workflow's done_status. The host just translates "landed in this
+          // column" into the one setStatus call expressing it.
+          const { byTask } = rows();
+          // Validate BOTH ends. The key guards a stale id (a card from a project you
+          // have since switched away from); the target guards an unknown column.
+          if (!byTask.has(event.key)) break;
+          if (!BOARD_STATUSES.some((s) => s.key === event.targetKey)) break;
+
+          const res = engine.setStatus({ id: event.key, status: event.targetKey });
+          if (res?.ok === false) {
+            console.error("Board move failed:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "calendarPrev":
+          calendarMonthStart = shiftMonth(calendarMonthStart, -1);
+          break;
+        case "calendarNext":
+          calendarMonthStart = shiftMonth(calendarMonthStart, 1);
+          break;
+        case "calendarEventDropped": {
+          // A drop is a PROPOSAL — same reasoning as cardDropped above. The
+          // calendar's own display precedence favours a computed schedule
+          // over the deadline fallback (see task-app-calendar-v1.md), so a
+          // MustStartOn constraint is what actually moves the event on
+          // screen — setDeadline alone would silently no-op for any task the
+          // CPM pass already dated.
+          const targetDay = isoToDays(event.targetKey);
+          if (targetDay == null) break; // not a valid day-key
+          // Only a task the views show may move. A checklist's items are not
+          // on the calendar, and setConstraint has no checklist guard (C3a).
+          if (!rows().byTask.has(event.key)) break;
+          const res = engine.setConstraint({
+            id: event.key,
+            constraint: { mustStartOn: targetDay },
+          });
+          if (res?.ok === false) {
+            console.error("Calendar reschedule failed:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "selectNote": {
+          // Resolve through the SAME ordered id list the rows were drawn
+          // from — same discipline as expandTask/selectProject, so a click
+          // can't land on the wrong note.
+          const { ids } = noteRows();
+          const id = ids[event.index];
+          if (!id) break;
+          const ws = engine.workspace().data;
+          const activeId = engine.activeProject().data as string;
+          const note = ws.projects?.[activeId]?.notes?.[id];
+          if (!note) break;
+          selectedNoteId = id;
+          noteTitleDraft = String(note.title ?? "");
+          noteBodyDraft = String(note.body ?? "");
+          noteTaskDraft = note.attachedTask ? taskNameById(note.attachedTask) : "";
+          break;
+        }
+        case "newNote":
+          // Mint the id now, not on Save — see selectedNoteId's own comment
+          // on why the editor needs a non-empty id to stay open at all.
+          {
+            const n = bumpCounter();
+            if (n === null) {
+              console.error("Could not start a note: the id counter is exhausted.");
+              break;
+            }
+            selectedNoteId = `n${n}`;
+          }
+          noteTitleDraft = "";
+          noteBodyDraft = "";
+          noteTaskDraft = "";
+          break;
+        case "noteTitleChange":
+          noteTitleDraft = event.value;
+          break;
+        case "noteBodyChange":
+          noteBodyDraft = event.value;
+          break;
+        case "noteTaskNameChange":
+          noteTaskDraft = event.value;
+          break;
+        case "saveNote": {
+          if (!selectedNoteId) break;
+          // Empty field → no attachment. A non-empty field must resolve
+          // against the active project's tasks or the WHOLE save is
+          // rejected — same discipline as the Sheet Labels column's
+          // write(), so a typo can't silently attach to nothing or drop an
+          // existing attachment.
+          const typedName = noteTaskDraft.trim();
+          let attachedTask: string | null = null;
+          if (typedName) {
+            const taskId = tasksByName().get(typedName.toLowerCase());
+            if (!taskId) {
+              console.error("Note save failed: no task named", JSON.stringify(typedName));
+              break;
+            }
+            attachedTask = taskId;
+          }
+          // upsertNote is create-or-replace by id either way — whether this
+          // is a brand-new note (first Save) or an edit to an existing one
+          // makes no difference to the op itself.
+          const res = engine.upsertNote({
+            id: selectedNoteId,
+            title: noteTitleDraft,
+            body: noteBodyDraft,
+            attachedTask,
+          });
+          if (res?.ok === false) {
+            console.error("Note save failed:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "deleteNote": {
+          if (!selectedNoteId) break;
+          // Harmless (a no-op, per task-core's own contract) if the note was
+          // never actually saved — Delete works uniformly either way.
+          const res = engine.deleteNote({ id: selectedNoteId });
+          if (res?.ok === false) {
+            console.error("Note delete failed:", res.error ?? res);
+            break;
+          }
+          selectedNoteId = "";
+          noteTitleDraft = "";
+          noteBodyDraft = "";
+          noteTaskDraft = "";
+          persist();
+          break;
+        }
+        case "cancelNote":
+          selectedNoteId = "";
+          noteTitleDraft = "";
+          noteBodyDraft = "";
+          noteTaskDraft = "";
+          break;
+        case "sheetNavigate": {
+          sheetSelectedRow = event.row;
+          sheetSelectedCol = event.col;
+          const col = visibleSheetFields(activeProjectComplexity())[event.col];
+          // Only an editable column enters edit mode at all — a computed column
+          // (Overdue, Start, Finish) just gets selected/highlighted, matching the
+          // Cell.mil doc's note that Grid/Cell don't enforce this policy themselves.
+          if (col?.editable) {
+            const { cells } = sheetRows();
+            sheetEditRow = event.row;
+            sheetEditCol = event.col;
+            sheetEditContent = cells[event.row]?.[event.col] ?? "";
+          } else {
+            sheetEditRow = -1;
+            sheetEditCol = -1;
+          }
+          break;
+        }
+        case "sheetFormulaChange":
+          sheetEditContent = event.value;
+          break;
+        case "sheetEditCancel":
+          sheetEditRow = -1;
+          sheetEditCol = -1;
+          sheetEditContent = "";
+          break;
+        case "sheetEditCommit": {
+          const { ids } = sheetRows();
+          const id = ids[sheetEditRow];
+          const col = visibleSheetFields(activeProjectComplexity())[sheetEditCol];
+          sheetEditRow = -1;
+          sheetEditCol = -1;
+          sheetEditContent = "";
+          if (!id || !col?.write) break;
+          const change = col.write(id, event.value, { labelsByName: labelsByName() });
+          if (!change) break; // the column rejected the value (e.g. an unknown priority)
+          const res = (engine as any)[change.op](change.args);
+          if (res?.ok === false) {
+            console.error(`Sheet edit failed (${col.label}):`, res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "sheetFilterChange":
+          sheetFilterText = event.value;
+          break;
+        case "sheetSortFieldChange":
+          sheetSortField = event.value;
+          sheetSortOpen = false;
+          break;
+        case "sheetToggleSortOpen":
+          sheetSortOpen = !sheetSortOpen;
+          break;
+        case "sheetToggleSortDirection":
+          sheetSortAscending = !sheetSortAscending;
+          break;
+        case "newLabelNameChange":
+          newLabel = event.value;
+          break;
+        case "addLabel": {
+          const name = newLabel.trim();
+          if (!name) break;
+          // Label ids share the same monotonic counter tasks/notes already mint from
+          // (`t${n}`/`n${n}`) — the "l" prefix keeps the namespace distinct, so no
+          // collision is possible across entity kinds.
+          const n = bumpCounter();
+          if (n === null) {
+            console.error("Could not add the label: the id counter is exhausted.");
+            break;
+          }
+          const id = `l${n}`;
+          // No colour picker in v1 (see BACKLOG.md) — a fixed empty string. The
+          // engine only ever round-trips this field verbatim; nothing reads it yet.
+          const res = engine.upsertLabel({ id, name, color: "" });
+          if (res?.ok === false) {
+            console.error("Could not create the label:", res.error ?? res);
+            break;
+          }
+          newLabel = "";
+          persist();
+          break;
+        }
+        case "newProjectNameChange":
+          newProject = event.value;
+          break;
+        case "addProject":
+        case "addSubproject": {
+          const name = newProject.trim();
+          if (!name) break;
+          // "+ Sub" nests under whatever is currently shown; "+ Project" stays top-level.
+          const parent =
+            event.type === "addSubproject" ? engine.activeProject()?.data ?? null : null;
+          // Project ids must be unique across the WHOLE workspace, so probe every
+          // project — not just the top-level ones. A nested project is in `projects`
+          // but not in `roots`; probing `roots` alone would keep proposing an id the
+          // engine rejects, and "+ Project" would become a permanent silent no-op.
+          const taken = new Set<string>(Object.keys(engine.workspace().data.projects ?? {}));
+          let n = taken.size + 1;
+          while (taken.has(`p${n}`)) n += 1;
+          const id = `p${n}`;
+          const res = engine.createProject({ id, name, parent });
+          if (res?.ok === false) {
+            // Don't fail silently — the user pressed a button and nothing happened.
+            console.error("Could not create the project:", res.error ?? res);
+            break;
+          }
+          // Creating a project should land you in it — otherwise you'd have to hunt
+          // for it, and an empty new project would look like nothing happened.
+          engine.setActiveProject({ id });
+          selectedChecklist = "";
+          selectedOutlineItem = "";
+          newProject = "";
+          persist();
+          break;
+        }
+        case "selectProject": {
+          const id = projects().ids[event.index];
+          // Persist so the choice survives a reload — otherwise you'd come back to the
+          // first project and your tasks would look like they'd vanished.
+          if (id && engine.setActiveProject({ id })?.ok !== false) {
+            editingTask = null;
+            selectedChecklist = "";
+            selectedOutlineItem = "";
+            // A Board-tier project never shows Timeline (see the .mll's
+            // allow-timeline gate) — switching INTO one while it's the
+            // active view would otherwise leave the switcher unable to
+            // show an "on" state for a button it just hid. See
+            // task-app-complexity-config-v1.md, Decision 5.
+            if (view === "timeline" && activeProjectComplexity() === "board") view = "list";
+            persist();
+          }
+          break;
+        }
+        case "toggleProjectComplexity": {
+          const next = activeProjectComplexity() === "full" ? "board" : "full";
+          const res = engine.setProjectComplexity({ complexity: next });
+          if (res?.ok === false) {
+            console.error("Could not change the project's complexity tier:", res.error ?? res);
+            break;
+          }
+          // Same forced-back-to-List reasoning as selectProject above — this
+          // time the active project didn't change, its tier did, but the
+          // effect on Timeline's reachability is identical.
+          if (view === "timeline" && next === "board") view = "list";
+          persist();
+          break;
+        }
+        case "addTask": {
+          const name = newName.trim();
+          if (!name) {
+            newNameError = "Enter a task name.";
+            break;
+          }
+          newNameError = "";
+          const dueText = newDue.trim();
+          const due = dueText ? isoToDays(dueText) : null;
+          if (dueText && due == null) {
+            newDueError = "Use a real date in YYYY-MM-DD format.";
+            break;
+          }
+          newDueError = "";
+          const n = bumpCounter();
+          if (n === null) {
+            console.error("Could not add the task: the id counter is exhausted.");
+            break;
+          }
+          const id = `t${n}`;
+          engine.createTask({ id, name });
+          // A default one working-day duration makes the task schedulable.
+          engine.setDuration({ id, duration: { workingMinutes: 8 * 60, elapsed: false } });
+          // Chain after the last task so the engine builds a work queue (each task
+          // starts when the previous finishes) — that's the "auto-schedule".
+          const vis = visible();
+          const prev = vis[vis.length - 1];
+          if (prev) {
+            engine.linkDependency({
+              id: `l${counter}`,
+              predecessor: prev,
+              successor: id,
+              kind: "finishToStart",
+              lag: { workingMinutes: 0, elapsed: false },
+            });
+          }
+          if (due != null) engine.setDeadline({ id, deadline: due });
+          order.push(id);
+          newName = "";
+          newDue = "";
+          newNameFocus = "focus";
+          newDueFocus = "";
+          persist();
+          break;
+        }
+        case "toggleTask": {
+          // Resolve the row AND its current state from the same selection the UI drew,
+          // so the index and the completed flag can never disagree.
+          const { byTask } = rows();
+          const id = displayIds()[event.index];
+          if (id) {
+            const done = byTask.get(id)?.value[DONE]?.value === true;
+            engine.setCompleted({ id, completed: !done });
+            persist();
+          }
+          break;
+        }
+        case "deleteTask": {
+          const id = displayIds()[event.index];
+          if (id) {
+            engine.deleteTask({ id });
+            if (expanded === id) expanded = null;
+            if (editingTask === id) editingTask = null;
+            const at = order.indexOf(id);
+            if (at >= 0) order.splice(at, 1);
+            persist();
+          }
+          break;
+        }
+      }
+    },
+  };
+}

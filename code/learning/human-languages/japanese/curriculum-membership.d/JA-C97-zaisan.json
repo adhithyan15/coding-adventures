@@ -1,0 +1,11 @@
+{
+  "id": "JA-C97-zaisan",
+  "pathSegment": "JA-PATH-97-CAN97",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-97-CAN97",
+      "order": 0
+    }
+  ]
+}

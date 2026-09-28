@@ -42,14 +42,29 @@ module Itf =
     let private invalidInput message =
         raise (InvalidItfInputException message)
 
+    let errorId (error: exn) =
+        match error with
+        | InvalidItfInputException "ITF input must contain at most 4096 characters" -> Some "input-too-long"
+        | InvalidItfInputException "ITF input must contain an even number of digits" -> Some "invalid-length"
+        | InvalidItfInputException "ITF input must contain digits only" -> Some "invalid-character"
+        | _ -> None
+
     let normalizeItf (data: string) =
         if isNull data then
             nullArg (nameof data)
 
-        if data.Length = 0 || data.Length % 2 <> 0 then
+        let mutable scalarCount = 0
+        let mutable runes = data.EnumerateRunes()
+        while runes.MoveNext() do
+            scalarCount <- scalarCount + 1
+
+        if scalarCount > 4096 then
+            invalidInput "ITF input must contain at most 4096 characters"
+
+        if scalarCount = 0 || scalarCount % 2 <> 0 then
             invalidInput "ITF input must contain an even number of digits"
 
-        if data |> Seq.exists (fun ch -> not (Char.IsDigit ch)) then
+        if data |> Seq.exists (fun ch -> ch < '0' || ch > '9') then
             invalidInput "ITF input must contain digits only"
 
         data

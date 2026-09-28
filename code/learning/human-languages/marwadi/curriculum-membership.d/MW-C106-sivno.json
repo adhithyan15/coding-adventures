@@ -1,0 +1,11 @@
+{
+  "id": "MW-C106-sivno",
+  "pathSegment": "MW-PATH-106-ACT106",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-106-ACT106",
+      "order": 4
+    }
+  ]
+}

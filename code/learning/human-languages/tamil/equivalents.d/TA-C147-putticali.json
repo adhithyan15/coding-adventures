@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C147-putticali",
+  "english": "clever",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಜಾಣ",
+      "romanization": "jāṇa"
+    },
+    {
+      "language": "telugu",
+      "form": "తెలివైన",
+      "romanization": "telivaina"
+    },
+    {
+      "language": "malayalam",
+      "form": "ബുദ്ധിയുള്ള",
+      "romanization": "buddhiyuḷḷa"
+    },
+    {
+      "language": "hindi",
+      "form": "होशियार",
+      "romanization": "hośiyār"
+    }
+  ],
+  "source": "cross-track match: KA-C145-jana, TE-C142-telivaina, ML-C169-buddhiyulla, HI-C83-hoshiyaar"
+}

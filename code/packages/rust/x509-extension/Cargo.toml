@@ -6,3 +6,7 @@ description = "Allocation-free generic RFC 5280 Extension decoding"
 
 [dependencies]
 der-asn1 = { path = "../der-asn1" }
+
+[dev-dependencies]
+der-tlv = { path = "../der-tlv" }
+serde_json = "1"

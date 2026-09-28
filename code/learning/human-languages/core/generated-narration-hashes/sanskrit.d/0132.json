@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:12615962632f7f92",
+  "lessonIds": [
+    "SA-C132-krsah",
+    "SA-C132-vakrah",
+    "SA-C132-rjuh",
+    "SA-C132-purnah",
+    "SA-C132-riktah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch132.txt",
+  "json": "sanskrit/narration/ch132.json",
+  "textHash": "fnv1a64:16ce94802c3e7ee1",
+  "jsonHash": "fnv1a64:98e737ec3cb25a93",
+  "findings": []
+}

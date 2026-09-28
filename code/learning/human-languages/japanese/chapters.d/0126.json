@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Happy, Drowsy, Relieved, Ordinary, Tasty",
+  "label": "ch:ja-happy-drowsy-relieved-ordinary-tasty",
+  "canDo": "I can say happy, drowsy, relieved, ordinary and tasty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "JA-C126-umai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say happy, drowsy, relieved, ordinary and tasty.",
+    "assesses": [
+      "JA-LEX-C126-QUAL126-03",
+      "JA-LEX-C126-QUAL126-04",
+      "JA-LEX-C126-QUAL126-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Street corner, Within the city, Suburbs, Opposite side, Upstream",
+  "label": "ch:ja-street-corner-within-the-city-suburbs-opposite-side-upstream",
+  "canDo": "I can say a street corner, within the city, the suburbs, the opposite side and upstream.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "JA-C82-kawakami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say a street corner, within the city, the suburbs, the opposite side and upstream.",
+    "assesses": [
+      "JA-LEX-C82-LOC82-03",
+      "JA-LEX-C82-LOC82-04",
+      "JA-LEX-C82-LOC82-05"
+    ]
+  }
+}

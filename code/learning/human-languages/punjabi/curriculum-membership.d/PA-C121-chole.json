@@ -1,0 +1,11 @@
+{
+  "id": "PA-C121-chole",
+  "pathSegment": "PA-PATH-121-THINGS121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-121-THINGS121",
+      "order": 3
+    }
+  ]
+}

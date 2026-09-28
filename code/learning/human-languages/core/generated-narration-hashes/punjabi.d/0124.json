@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:2aafd2241b318a76",
+  "lessonIds": [
+    "PA-C124-amrud",
+    "PA-C124-mugphali",
+    "PA-C124-sag",
+    "PA-C124-lassi",
+    "PA-C124-khir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch124.txt",
+  "json": "punjabi/narration/ch124.json",
+  "textHash": "fnv1a64:9b1d17a6db8a9e06",
+  "jsonHash": "fnv1a64:e959e582c6b91f17",
+  "findings": []
+}

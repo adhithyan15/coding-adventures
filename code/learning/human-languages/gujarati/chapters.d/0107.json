@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Mattress, Bedsheet, Blanket, Step, Stove",
+  "label": "ch:gu-mattress-bedsheet-blanket-step-stove",
+  "canDo": "I can say a mattress, a bedsheet, a blanket, a step and a stove.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C107-culo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say a mattress, a bedsheet, a blanket, a step and a stove.",
+    "assesses": [
+      "GU-LEX-C107-THINGS107-03",
+      "GU-LEX-C107-THINGS107-04",
+      "GU-LEX-C107-THINGS107-05"
+    ]
+  }
+}

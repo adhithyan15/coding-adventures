@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:657e307d715ffe4e",
+  "lessonIds": [
+    "SA-C112-padmam",
+    "SA-C112-naksatram",
+    "SA-C112-suryah",
+    "SA-C112-bhallukah",
+    "SA-C112-srgalah"
+  ],
+  "tex": "sanskrit/book/chapters/ch112-lotus-star-sun-bear-jackal.tex"
+}

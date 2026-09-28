@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:c18a53cdfc6d988a",
+  "lessonIds": [
+    "JA-C86-saku",
+    "JA-C86-toku",
+    "JA-C86-daku",
+    "JA-C86-fumu",
+    "JA-C86-kamu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch86.txt",
+  "json": "japanese/narration/ch86.json",
+  "textHash": "fnv1a64:0f3777ded025e3f4",
+  "jsonHash": "fnv1a64:38f8af8c68904234",
+  "findings": []
+}

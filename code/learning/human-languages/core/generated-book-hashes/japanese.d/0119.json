@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:8291b5592dbe700e",
+  "lessonIds": [
+    "JA-C119-hanaya",
+    "JA-C119-sakanaya",
+    "JA-C119-yaoya",
+    "JA-C119-tokoya",
+    "JA-C119-nikuya"
+  ],
+  "tex": "japanese/book/chapters/ch119-florist-fishmonger-greengrocer-barber-butcher.tex"
+}

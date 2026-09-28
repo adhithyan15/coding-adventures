@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:73c6bbf44b647814",
+  "lessonIds": [
+    "AR-C117-tilfaz",
+    "AR-C117-jarida",
+    "AR-C117-majalla",
+    "AR-C117-risala",
+    "AR-C117-zarf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch117.txt",
+  "json": "arabic/narration/ch117.json",
+  "textHash": "fnv1a64:af37b245f9819355",
+  "jsonHash": "fnv1a64:c5efc74c6c72555c",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:c46237efffc2c7a4",
+  "lessonIds": [
+    "GU-C103-adhikar",
+    "GU-C103-tak",
+    "GU-C103-milkat",
+    "GU-C103-sampatti",
+    "GU-C103-malik"
+  ],
+  "tex": "gujarati/book/chapters/ch103-authority-chance-property-wealth-owner.tex"
+}

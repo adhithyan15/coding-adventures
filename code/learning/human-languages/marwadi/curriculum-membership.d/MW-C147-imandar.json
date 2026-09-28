@@ -1,0 +1,11 @@
+{
+  "id": "MW-C147-imandar",
+  "pathSegment": "MW-PATH-147-QUAL147",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-147-QUAL147",
+      "order": 1
+    }
+  ]
+}

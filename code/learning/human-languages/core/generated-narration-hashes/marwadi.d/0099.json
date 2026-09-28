@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:8a6590e1e9a6b9c1",
+  "lessonIds": [
+    "MW-C99-rasto",
+    "MW-C99-agano",
+    "MW-C99-baro",
+    "MW-C99-bavri",
+    "MW-C99-talav",
+    "MW-R99-first-pass-times-of-day-seasons-and-months",
+    "MW-R99-second-pass-where-things-are"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch99.txt",
+  "json": "marwadi/narration/ch99.json",
+  "textHash": "fnv1a64:99743fed45f77455",
+  "jsonHash": "fnv1a64:7bac314e577c2610",
+  "findings": []
+}

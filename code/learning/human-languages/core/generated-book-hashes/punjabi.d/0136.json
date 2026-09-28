@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:6f8b2bc50399d868",
+  "lessonIds": [
+    "PA-C136-tali",
+    "PA-C136-nahu",
+    "PA-C136-dimag",
+    "PA-C136-addi",
+    "PA-C136-gitta"
+  ],
+  "tex": "punjabi/book/chapters/ch136-palm-fingernail-brain-heel-ankle.tex"
+}

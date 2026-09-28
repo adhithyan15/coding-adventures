@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C107-hokori",
+    "language": "japanese",
+    "chapter": 107,
+    "sequence": 6360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d89ff31f7ca236c3"
+  },
+  "findings": []
+}

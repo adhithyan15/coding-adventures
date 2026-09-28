@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Poor, Rich, Young, Famous, Safe",
+  "label": "ch:sa-poor-rich-young-famous-safe",
+  "canDo": "I can say poor, rich, young, famous and safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C127-suraksitah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say poor, rich, young, famous and safe.",
+    "assesses": [
+      "SA-LEX-C127-QUAL127-03",
+      "SA-LEX-C127-QUAL127-04",
+      "SA-LEX-C127-QUAL127-05"
+    ]
+  }
+}

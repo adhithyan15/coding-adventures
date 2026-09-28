@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:382d006c8d3a0f99",
+  "lessonIds": [
+    "SA-C125-nakulah",
+    "SA-C125-hrasvah",
+    "SA-C125-mrduh",
+    "SA-C125-suddhah",
+    "SA-C125-malinah"
+  ],
+  "tex": "sanskrit/book/chapters/ch125-mongoose-short-soft-clean-dirty.tex"
+}

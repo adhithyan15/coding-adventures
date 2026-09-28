@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 131,
+  "output": "sanskrit/book/chapters/ch131-black-grey-pink-clear-thick.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

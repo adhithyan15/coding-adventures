@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C88-health",
+  "english": "health",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆರೋಗ್ಯ",
+      "romanization": "ārōgya"
+    },
+    {
+      "language": "telugu",
+      "form": "ఆరోగ్యం",
+      "romanization": "ārōgyaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "सेहत",
+      "romanization": "sehat"
+    }
+  ],
+  "source": "cross-track match: KA-C63-health, TE-C63-health, HI-C107-sehat"
+}

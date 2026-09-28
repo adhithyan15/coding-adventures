@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "To be able to, Skill, Strength, Courage, Owner",
+  "label": "ch:mw-to-be-able-to-skill-strength-courage-owner",
+  "canDo": "I can say to be able to, a skill, strength, courage and an owner.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C114-malak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say to be able to, a skill, strength, courage and an owner.",
+    "assesses": [
+      "MW-LEX-C114-CAN114-03",
+      "MW-LEX-C114-CAN114-04",
+      "MW-LEX-C114-CAN114-05"
+    ]
+  }
+}

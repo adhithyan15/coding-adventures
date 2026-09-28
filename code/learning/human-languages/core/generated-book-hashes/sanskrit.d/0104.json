@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:954a639b66228be6",
+  "lessonIds": [
+    "SA-C104-satika",
+    "SA-C104-padatranam",
+    "SA-C104-usnisam",
+    "SA-C104-kancukah",
+    "SA-C104-durabhasah"
+  ],
+  "tex": "sanskrit/book/chapters/ch104-sari-shoe-turban-shirt-telephone.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:8b890d0925f021a7",
+  "lessonIds": [
+    "AR-C124-miqass",
+    "AR-C124-ibra",
+    "AR-C124-khayt",
+    "AR-C124-zirr",
+    "AR-C124-mismar"
+  ],
+  "tex": "arabic/book/chapters/ch124-scissors-needle-thread-button-nail.tex"
+}

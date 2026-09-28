@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Wealth, Experience, Habit, Skill, Art",
+  "label": "ch:ar-wealth-experience-habit-skill-art",
+  "canDo": "I can say wealth, experience, a habit, a skill and an art.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "AR-R109-second-pass-rooms-having-and-being-able",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say wealth, experience, a habit, a skill and an art.",
+    "assesses": [
+      "AR-LEX-C109-CAN109-03",
+      "AR-LEX-C109-CAN109-04",
+      "AR-LEX-C109-CAN109-05"
+    ]
+  }
+}

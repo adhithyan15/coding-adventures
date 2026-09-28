@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:cc4027504496bd67",
+  "lessonIds": [
+    "PA-C110-shakti",
+    "PA-C110-hakk",
+    "PA-C110-adhikar",
+    "PA-C110-mauka",
+    "PA-C110-jaidad"
+  ],
+  "tex": "punjabi/book/chapters/ch110-power-right-authority-chance-property.tex"
+}

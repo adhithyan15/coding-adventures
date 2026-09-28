@@ -9,7 +9,7 @@ headword: વિચારવું
 romanization: vichārvũ
 gloss: to think — a verb Gujarati built for itself, on a root that meant to wander
 concept_tag: VERB-THINK
-prerequisites: [GU-C07-jaanvun, GU-C06-number-histories]
+prerequisites: [GU-C07-jaanvun, GU-C06-number-histories, GU-C06-number-histories-more]
 sounds: [short-i-sign, cha, long-aa, u-nasal]
 roots: [sanskrit-vichara, sanskrit-car-move, pie-kwel-turn]
 etymology_hook: vichārvũ is the noun vichār "a thought" with a verb ending put on it — vi- "apart, thoroughly" on Sanskrit car- "to move, to range about", PIE *kwel- "to turn", behind English wheel, cycle, cultivate and colony

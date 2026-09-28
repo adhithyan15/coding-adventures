@@ -124,6 +124,18 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn('rm -f "$journal_ui_state"', block)
 
+    def test_engram_layout_variant_is_compiled_beside_the_default(self) -> None:
+        """UI48 §7.5: the Compose lane checks Engram's touch variant and its
+        selector are in the source set before compiling it."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# UI48 §7.5 (ENV2/ENV3): Engram is the one package with a layout")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn("^fun EngramAppTouch($", block)
+        self.assertIn("then exit 1; fi", block)
+        self.assertIn("when (mosaicLayoutVariant(environmentReport))", block)
+        self.assertIn("rust/mosaic-package-manifest", MODULE.ACCEPTANCE_PACKAGES)
+
     def test_platform_effects_library_is_driven_in_the_journal_lane(self) -> None:
         """UI87 §7: the Compose platform library every app gets is exercised
         with fake dialogs in the Journal project, not only compiled."""

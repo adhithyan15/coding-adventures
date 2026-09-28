@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C142-ottakam",
+  "english": "a camel",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒಂಟೆ",
+      "romanization": "oṇṭe",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఒంటె",
+      "romanization": "oṇṭe",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ഒട്ടകം",
+      "romanization": "oṭṭakaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "ऊँट",
+      "romanization": "ū̃ṭ"
+    }
+  ],
+  "source": "cross-track match: KA-C133-onte, TE-C126-onte, ML-C162-ottakam, HI-C146-ut; sameRoot judged by the author, awaiting native review"
+}

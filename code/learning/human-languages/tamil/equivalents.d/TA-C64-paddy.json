@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C64-paddy",
+  "english": "paddy",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಭತ್ತ",
+      "romanization": "bhatta"
+    },
+    {
+      "language": "telugu",
+      "form": "వరి",
+      "romanization": "vari"
+    }
+  ],
+  "source": "cross-track match: KA-C66-paddy, TE-C66-paddy"
+}

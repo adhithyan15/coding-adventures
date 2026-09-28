@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Love, Sell, Send, Throw, Climb",
+  "label": "ch:ml-love-sell-send-throw-climb",
+  "canDo": "I can say to love, to sell, to send, to throw and to climb.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C175-kayaruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: i can say to love, to sell, to send, to throw and to climb.",
+    "assesses": [
+      "ML-LEX-C175-ACT175-03",
+      "ML-LEX-C175-ACT175-04",
+      "ML-LEX-C175-ACT175-05"
+    ]
+  }
+}

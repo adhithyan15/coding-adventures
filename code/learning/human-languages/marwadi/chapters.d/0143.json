@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Hot, Salty, Sour, Bitter, Spicy",
+  "label": "ch:mw-hot-salty-sour-bitter-spicy",
+  "canDo": "I can say hot, salty, sour, bitter and spicy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C143-tikho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say hot, salty, sour, bitter and spicy.",
+    "assesses": [
+      "MW-LEX-C143-QUAL143-03",
+      "MW-LEX-C143-QUAL143-04",
+      "MW-LEX-C143-QUAL143-05"
+    ]
+  }
+}

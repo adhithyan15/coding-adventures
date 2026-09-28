@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C118-atuppu",
+  "english": "a stove",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒಲೆ",
+      "romanization": "ole"
+    },
+    {
+      "language": "telugu",
+      "form": "పొయ్యి",
+      "romanization": "poyyi"
+    },
+    {
+      "language": "malayalam",
+      "form": "അടുപ്പ്",
+      "romanization": "aṭuppŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C119-ole, TE-C113-poyyi, ML-C157-atuppu; sameRoot judged by the author, awaiting native review"
+}

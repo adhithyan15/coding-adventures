@@ -6,8 +6,8 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "packaged CLI specification, project Forme config/content, and local package manifests",
-      "justification": "Loads the declarative CLI Builder specification, the selected project config/content, and local file dependencies for builds, watch mode, and the repository bootstrap helper."
+      "target": "packaged CLI specification, project Forme config/content, deploy manifests/content stores/target configs, and local package manifests",
+      "justification": "Loads the declarative CLI Builder specification, selected project and deploy inputs, and local file dependencies for builds, deploy, watch mode, and the repository bootstrap helper."
     },
     {
       "category": "fs",
@@ -30,14 +30,26 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "configured project cache and user-selected deterministic JSON build report",
-      "justification": "Persists deterministic pure-stage entries beneath the configured project cache and writes the optional --report manifest after a successful build."
+      "target": "configured project cache, build-to-deploy input, selected filesystem deploy root, and user-selected deterministic report",
+      "justification": "Persists cache entries, materializes explicit deploy inputs, atomically publishes the selected filesystem target, and writes an optional real-deploy report."
     },
     {
       "category": "fs",
       "action": "create",
-      "target": "configured project cache and parent directories for the user-selected build report",
-      "justification": "Creates cache shards beneath the configured project directory and missing report parent directories."
+      "target": "configured project cache, deploy-input staging, filesystem publication transaction paths, and report parents",
+      "justification": "Creates cache shards and the explicitly selected staging/publication/report paths."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "https://api.github.com",
+      "justification": "Inspects and publishes the explicitly configured GitHub Pages source ref through the reviewed Git Data API boundary."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "GITHUB_TOKEN",
+      "justification": "Reads the sole supported hosted-deploy credential only for a real GitHub Pages publication."
     },
     {
       "category": "proc",
@@ -48,8 +60,8 @@
     {
       "category": "proc",
       "action": "signal",
-      "target": "SIGINT",
-      "justification": "Observes Ctrl-C and propagates cooperative cancellation through the running pipeline."
+      "target": "SIGINT and SIGTERM",
+      "justification": "Observes interactive and CI termination and propagates cooperative cancellation through builds and deploys."
     },
     {
       "category": "stdout",
@@ -58,5 +70,5 @@
       "justification": "Prints command summaries and stable machine-coded diagnostics for terminal and CI consumers."
     }
   ],
-  "justification": "The headless CLI loads project configuration, removes explicitly configured build state, handles SIGINT, and provides a repository bootstrap helper. It does not access the network except indirectly when the user invokes the bootstrap helper and npm resolves declared dependencies."
+  "justification": "The headless CLI loads project and deploy inputs, creates explicit build/deploy state, publishes only through the selected filesystem or GitHub Pages adapter, handles cooperative process cancellation, and provides the repository bootstrap helper."
 }

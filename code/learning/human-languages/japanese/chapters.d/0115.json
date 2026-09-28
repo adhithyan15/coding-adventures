@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Lid, Target, Sunny spot, Sea cucumber, Sweetfish",
+  "label": "ch:ja-lid-target-sunny-spot-sea-cucumber-sweetfish",
+  "canDo": "I can say a lid, a target, a sunny spot, a sea cucumber and a sweetfish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C115-ayu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a lid, a target, a sunny spot, a sea cucumber and a sweetfish.",
+    "assesses": [
+      "JA-LEX-C115-THINGS115-03",
+      "JA-LEX-C115-THINGS115-04",
+      "JA-LEX-C115-THINGS115-05"
+    ]
+  }
+}

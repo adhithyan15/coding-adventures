@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:3f7f2c578f095ada",
+  "lessonIds": [
+    "GU-C117-kadhi",
+    "GU-C117-bhajiya",
+    "GU-C117-catni",
+    "GU-C117-halvo",
+    "GU-C117-khir"
+  ],
+  "tex": "gujarati/book/chapters/ch117-kadhi-fritters-chutney-halwa-rice-pudding.tex"
+}

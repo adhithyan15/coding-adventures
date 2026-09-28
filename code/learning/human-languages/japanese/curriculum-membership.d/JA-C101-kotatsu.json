@@ -1,0 +1,11 @@
+{
+  "id": "JA-C101-kotatsu",
+  "pathSegment": "JA-PATH-101-THINGS101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-101-THINGS101",
+      "order": 3
+    }
+  ]
+}

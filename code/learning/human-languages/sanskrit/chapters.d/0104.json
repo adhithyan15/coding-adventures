@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Sari, Shoe, Turban, Shirt, Telephone",
+  "label": "ch:sa-sari-shoe-turban-shirt-telephone",
+  "canDo": "I can say a sari, a shoe, a turban, a shirt and a telephone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C104-durabhasah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say a sari, a shoe, a turban, a shirt and a telephone.",
+    "assesses": [
+      "SA-LEX-C104-THINGS104-03",
+      "SA-LEX-C104-THINGS104-04",
+      "SA-LEX-C104-THINGS104-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:316082d1ceda21a2",
+  "lessonIds": [
+    "PA-C122-bajra",
+    "PA-C122-kanak",
+    "PA-C122-makki",
+    "PA-C122-baigan",
+    "PA-C122-gobhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch122.txt",
+  "json": "punjabi/narration/ch122.json",
+  "textHash": "fnv1a64:ec1c303f1dd12203",
+  "jsonHash": "fnv1a64:ba566e607a1ec2ec",
+  "findings": []
+}

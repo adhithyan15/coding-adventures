@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Foolish, Lazy, Strong, Weak, Clear",
+  "label": "ch:sa-foolish-lazy-strong-weak-clear",
+  "canDo": "I can say foolish, lazy, strong, weak and clear.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C130-svacchah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say foolish, lazy, strong, weak and clear.",
+    "assesses": [
+      "SA-LEX-C130-QUAL130-03",
+      "SA-LEX-C130-QUAL130-04",
+      "SA-LEX-C130-QUAL130-05"
+    ]
+  }
+}

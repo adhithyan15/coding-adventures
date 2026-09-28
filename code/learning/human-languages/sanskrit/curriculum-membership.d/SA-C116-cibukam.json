@@ -1,0 +1,11 @@
+{
+  "id": "SA-C116-cibukam",
+  "pathSegment": "SA-PATH-116-THINGS116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-116-THINGS116",
+      "order": 2
+    }
+  ]
+}

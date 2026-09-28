@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:3d1e4342cbce3b73",
+  "lessonIds": [
+    "MW-C135-matiro",
+    "MW-C135-kakri",
+    "MW-C135-bhidi",
+    "MW-C135-baingan",
+    "MW-C135-palak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch135.txt",
+  "json": "marwadi/narration/ch135.json",
+  "textHash": "fnv1a64:1e2e386b7a349b67",
+  "jsonHash": "fnv1a64:a39524080c82a8f1",
+  "findings": []
+}

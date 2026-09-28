@@ -1,0 +1,11 @@
+{
+  "id": "MW-C125-machis",
+  "pathSegment": "MW-PATH-125-THINGS125",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-125-THINGS125",
+      "order": 3
+    }
+  ]
+}

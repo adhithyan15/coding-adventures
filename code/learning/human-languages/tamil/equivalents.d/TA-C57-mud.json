@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C57-mud",
+  "english": "mud",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೆಸರು",
+      "romanization": "kesaru",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "బురద",
+      "romanization": "burada"
+    },
+    {
+      "language": "malayalam",
+      "form": "ചെളി",
+      "romanization": "ceḷi"
+    }
+  ],
+  "source": "cross-track match: KA-C59-mud, TE-C59-mud, ML-C59-mud; sameRoot judged by the author, awaiting native review"
+}

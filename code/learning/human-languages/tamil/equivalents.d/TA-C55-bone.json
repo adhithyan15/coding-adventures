@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C55-bone",
+  "english": "a bone",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮೂಳೆ",
+      "romanization": "mūḷe"
+    },
+    {
+      "language": "telugu",
+      "form": "ఎముక",
+      "romanization": "emuka"
+    },
+    {
+      "language": "malayalam",
+      "form": "എല്ല്",
+      "romanization": "ellŭ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C57-bone, TE-C57-bone, ML-C57-bone; sameRoot judged by the author, awaiting native review"
+}

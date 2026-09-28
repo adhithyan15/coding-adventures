@@ -166,6 +166,91 @@ class TestGlobMatch < Minitest::Test
     refute BuildTool::GlobMatch.match_path?("*.[ch]", "foo.py")
   end
 
+  def test_question_and_classes_consume_unicode_scalars
+    assert BuildTool::GlobMatch.match_path?("?.txt", "🐍.txt")
+    assert BuildTool::GlobMatch.match_path?("[🐀-🙏].txt", "🐍.txt")
+    refute BuildTool::GlobMatch.match_path?("[🐀-🙏].txt", "a.txt")
+
+    decomposed = "e\u0301"
+    refute BuildTool::GlobMatch.match_path?("?", decomposed)
+    assert BuildTool::GlobMatch.match_path?("??", decomposed)
+  end
+
+  def test_star_matches_leading_dot
+    assert BuildTool::GlobMatch.match_path?("*.rb", ".hidden.rb")
+  end
+
+  def test_portable_character_class_edges_match_python_fnmatchcase
+    cases = [
+      ["[^a].txt", "^.txt", "b.txt"],
+      ["[]a].txt", "].txt", "b.txt"],
+      ["[-a].txt", "-.txt", "b.txt"],
+      ["[a-].txt", "-.txt", "b.txt"],
+      ["[a-c].txt", "b.txt", "z.txt"],
+      ["[!a-c].txt", "z.txt", "b.txt"]
+    ]
+
+    cases.each do |pattern, matching, nonmatching|
+      assert BuildTool::GlobMatch.match_path?(pattern, matching), pattern
+      refute BuildTool::GlobMatch.match_path?(pattern, nonmatching), pattern
+    end
+
+    assert BuildTool::GlobMatch.match_path?("[^a].txt", "a.txt")
+    assert BuildTool::GlobMatch.match_path?("[!]].txt", "a.txt")
+    refute BuildTool::GlobMatch.match_path?("[!]].txt", "].txt")
+  end
+
+  def test_unmatched_opening_bracket_is_literal
+    [["[", "["], ["prefix[", "prefix["], ["[]", "[]"], ["[!]", "[!]"]].each do |pattern, path|
+      assert BuildTool::GlobMatch.match_path?(pattern, path), pattern
+    end
+    refute BuildTool::GlobMatch.match_path?("prefix[", "prefixx")
+  end
+
+  def test_rejected_classes_raise_one_stable_typed_error
+    ["[z-a].txt", "[a--b].txt", "[a&&b].txt", "[a~~b].txt", "[a||b].txt"].each do |pattern|
+      error = assert_raises(BuildTool::GlobMatch::InvalidPatternError) do
+        BuildTool::GlobMatch.match_path?(pattern, "a.txt")
+      end
+      assert_equal "ambiguous or descending character class in glob pattern", error.message
+    end
+  end
+
+  def test_unmatched_bracket_parser_work_is_linear
+    pattern = "[" * 16_384
+    tokens, visited = BuildTool::GlobMatch.parse_segment_with_state_count(pattern)
+
+    assert_equal pattern.length, tokens.length
+    assert_equal 2 * pattern.length, visited
+  end
+
+  def test_adversarial_globstar_near_miss_visits_each_path_state_once
+    pattern = ((["**", "a"] * 12) + ["z"]).join("/")
+    path = ((["a"] * 24) + ["y"]).join("/")
+
+    matched, visited = BuildTool::GlobMatch.match_path_with_state_count(pattern, path)
+
+    refute matched
+    assert_equal (pattern.split("/").length + 1) * (path.split("/").length + 1), visited
+  end
+
+  def test_adversarial_segment_near_miss_visits_each_state_once
+    tokens = BuildTool::GlobMatch.parse_segment("*a*a*a*a*a*b")
+    value = "aaaaaaaaaaaaaaaaac".chars
+
+    matched, visited = BuildTool::GlobMatch.match_segment_with_state_count(tokens, value)
+
+    refute matched
+    assert_equal (tokens.length + 1) * (value.length + 1), visited
+  end
+
+  def test_embedded_double_star_and_braces_are_literal_or_segment_local
+    assert BuildTool::GlobMatch.match_path?("{a,b}.txt", "{a,b}.txt")
+    refute BuildTool::GlobMatch.match_path?("{a,b}.txt", "a.txt")
+    assert BuildTool::GlobMatch.match_path?("foo**bar", "fooxbar")
+    refute BuildTool::GlobMatch.match_path?("foo**bar", "foo/x/bar")
+  end
+
   # -- Edge cases --------------------------------------------------------------
 
   def test_empty_matches_empty

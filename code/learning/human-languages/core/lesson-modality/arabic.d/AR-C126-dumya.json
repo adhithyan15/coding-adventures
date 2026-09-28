@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C126-dumya",
+    "language": "arabic",
+    "chapter": 126,
+    "sequence": 5520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f750a645c09f73cb"
+  },
+  "findings": []
+}

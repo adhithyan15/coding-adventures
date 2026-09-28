@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:2bb6231167e23d74",
+  "lessonIds": [
+    "PA-C126-ghah",
+    "PA-C126-bij",
+    "PA-C126-jarh",
+    "PA-C126-kali",
+    "PA-C126-tapu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch126.txt",
+  "json": "punjabi/narration/ch126.json",
+  "textHash": "fnv1a64:8d2f4a2a1dbed1d5",
+  "jsonHash": "fnv1a64:26a07e1d08cd5d1c",
+  "findings": []
+}

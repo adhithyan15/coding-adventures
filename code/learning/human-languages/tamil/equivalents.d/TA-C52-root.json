@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C52-root",
+  "english": "a root",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೇರು",
+      "romanization": "bēru",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "వేరు",
+      "romanization": "vēru",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "വേര്",
+      "romanization": "vērŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "जड़",
+      "romanization": "jaṛ"
+    }
+  ],
+  "source": "cross-track match: KA-C54-root, TE-C54-root, ML-C54-root, HI-C143-jar; sameRoot judged by the author, awaiting native review"
+}

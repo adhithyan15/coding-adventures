@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Other side, This side of, Corner, Stairs, Corridor",
+  "label": "ch:ja-other-side-this-side-of-corner-stairs-corridor",
+  "canDo": "I can say the other side, this side of, a corner, stairs and a corridor.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "JA-C79-rouka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say the other side, this side of, a corner, stairs and a corridor.",
+    "assesses": [
+      "JA-LEX-C79-LOC79-03",
+      "JA-LEX-C79-LOC79-04",
+      "JA-LEX-C79-LOC79-05"
+    ]
+  }
+}

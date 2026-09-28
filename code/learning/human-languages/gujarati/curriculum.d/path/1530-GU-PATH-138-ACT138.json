@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-138-ACT138",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "GU-EXT-138-ACT138"
+  ],
+  "after": []
+}

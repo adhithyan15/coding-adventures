@@ -6,8 +6,11 @@ auto-schedules them into a working-day timeline via the Critical Path Method.
 
 ## Architecture
 
-The UI is authored **once in Mosaic**. The web host wires emitted React to
-`task-core` through `task-wasm`, retaining idiomatic React state. Generated native
+The UI is authored **once in Mosaic**. Browser hosts share one framework-neutral
+presentation controller: the shipped web host renders emitted React, while the
+Web Components parity host renders the generated `<mos-task-app>` Custom Element.
+Both wire the same controller to `task-core` through `task-wasm` and the same
+IndexedDB-with-memory-fallback persistence contract. Generated native
 hosts load `task-mosaic-app`, a standard-ABI adapter that owns portable presentation
 state and calls the same typed `task-core` operations and projections. The adapter is
 not a second task engine: domain validation, scheduling, and task/project invariants
@@ -21,23 +24,37 @@ canonical engine state and user-visible core slots after every step. See
 host-only exclusions (theme storage and locale-formatted calendar copy).
 The first-run product acceptance and its focused follow-up queue are recorded in
 `code/specs/task-app-first-run-usability-audit-v1.md`. Which of Mosaic's nine
-backends TaskApp is actually finished on — six gated and shipped, three
-(`html`, `webcomponent`, `paint`) carrying no TaskApp coverage at all — is
-measured in `code/specs/task-app-platform-completion-v1.md`, which owns the
-ordered completion queue.
+backends TaskApp is actually finished on is measured in
+`code/specs/task-app-platform-completion-v1.md`: six interactive/native targets
+are gated and shipped, static HTML has a product-scoped structural snapshot
+gate, Web Components has a real-engine interactive parity gate, and Paint has
+reviewed light/dark PNG goldens from the package-expanded typed pipeline. All
+nine Mosaic backends therefore have honest TaskApp-level coverage. The HTML,
+Web Components, and Paint gates are CI-only: they add no release artifact, and
+the Paint snapshot does not imply a Paint host or interaction support.
 
 ```text
 TaskApp.mil / .mll / .msl        (Mosaic: interface / layout / style)
-        │  mosaic-compile --backend react   (emits ONE component into host/web/src)
-        ▼
-   host/web/src/TaskApp.tsx       (generated React component: { ...slotProps, dispatch })
-        │  host/web/src/main.tsx wires it to…
-        ▼
-   createTaskEngine (task-wasm)  →  task-core (the pure Rust engine) via WASM
-        │  host/web/src/persistence.ts saves/restores via…
-        ▼
-   @coding-adventures/storage    →  IndexedDB (in-memory fallback)
+        ├─ mosaic-compile --backend react         → generated React component
+        └─ mosaic-compile --backend webcomponent  → generated Custom Element
+                         │
+                         ▼
+   host/web/src/controller.ts     (shared slots/events presentation lifecycle)
+                         │
+                         ▼
+   React main.tsx or window.mosaicHost adapter wires it to…
+                         │
+                         ▼
+   createTaskEngine (task-wasm)   → task-core (the pure Rust engine) via WASM
+                         │
+                         ▼
+   @coding-adventures/storage     → IndexedDB (in-memory fallback)
 ```
+
+`host/web/webcomponent/` builds and tests both authored themes independently.
+Its emitted controls drive the simple-todo lifecycle against the real WASM
+engine, including restart restoration. The resulting bundle is a CI parity
+artifact only; the React bundle remains the published web application.
 
 The native path is:
 
@@ -149,6 +166,15 @@ the patch version, new usable capabilities bump the minor version, and breaking
 compatibility changes bump the major version. Tags and releases are immutable;
 an existing version is never reused or overwritten.
 
+The `task-app-v0.5.0` checkpoint records honest TaskApp-level coverage for all
+nine Mosaic backends after the reviewed Paint visual-regression gate landed.
+It does not add Paint, static HTML, or Web Components to the downloadable
+artifact matrix; those outputs remain CI-only.
+
+The corrective `task-app-v0.5.1` patch carries that same boundary into the
+generated GitHub release notes themselves. Its web/native artifact matrix is
+identical to v0.5.0; no CI-only backend is promoted into a downloadable asset.
+
 From the repository's **Actions** tab, run **Release TaskApp** from `main` and
 provide both the bare version and its matching product tag. The equivalent CLI
 command for the first release is:
@@ -173,8 +199,10 @@ launches the archived bundle from `/` without a runtime override. On macOS it
 assembles the release-runner architecture into an unsigned `Trestle.app`, validates
 its stable metadata and bundled dylib, and checks state restoration across a
 replacement-style second extraction. One publisher job then creates checksums, a
-source-commit manifest, product-scoped notes from merged `task-app` pull requests,
-and one GitHub Release. On Windows it publishes a self-contained x64 folder,
+source-commit manifest, release notes led by the reviewed dated changelog section
+and supported by matching merged `task-app` history, and one GitHub Release. The
+changelog is authoritative; label-filtered GitHub history supplies context only.
+On Windows it publishes a self-contained x64 folder,
 drives the original and replacement `Trestle.exe` copies through UI Automation,
 and verifies the stable LocalApplicationData state plus console binding contract.
 The same exact matrix materializes the committed v0.1.0 upgrade fixture at each
@@ -193,6 +221,11 @@ Release payloads distinguish directly runnable archives from generated projects:
 | SwiftUI ZIP | macOS | Native-complete generated project with the Rust runtime |
 | Trestle.exe ZIP | Windows 10 2004+ / x64 | Verified self-contained portable app; unsigned and unpackaged |
 | XAML ZIP | Windows | Native-complete generated WinUI project with the Rust runtime |
+
+The TaskApp-scoped static HTML snapshot, Web Component parity bundle, and Paint
+goldens are CI-only verification outputs. They are not published artifacts and
+do not add runtime or platform coverage to this matrix. In particular, the
+Paint snapshots do not claim a Paint host or interaction support.
 
 The Linux archives are unpack-and-run bundles for compatible x86_64 systems, not
 signed distribution packages. Each includes exact prerequisites and a launcher

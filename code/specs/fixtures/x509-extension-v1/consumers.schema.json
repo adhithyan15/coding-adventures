@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/x509-extension-v1-consumers.json",
+  "title": "Target registry for established-lane consumers of generic X.509 Extension v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "fixture", "case_count", "error_id_count", "established_lane_count", "consumers"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "rfc5280-x509-extension-v1-portable-consumers" },
+    "fixture": { "const": "code/specs/fixtures/x509-extension-v1/cases.json" },
+    "case_count": { "const": 48 },
+    "error_id_count": { "const": 8 },
+    "established_lane_count": { "const": 15 },
+    "consumers": { "type": "array", "minItems": 15, "maxItems": 15, "items": { "$ref": "#/$defs/consumer" } }
+  },
+  "$defs": {
+    "repo_path": { "type": "string", "pattern": "^code/packages/[a-z]+/x509[-_]extension/[A-Za-z0-9_.@+\\/-]+$" },
+    "surface_name": { "type": "string", "minLength": 3, "maxLength": 100, "pattern": "^[A-Za-z_][A-Za-z0-9_.:]*$" },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "package_root", "api_source", "fixture_test", "build_files", "capability_manifest", "dependency_metadata", "readme", "changelog", "surface"],
+      "properties": {
+        "language": { "enum": ["csharp", "dart", "elixir", "fsharp", "go", "haskell", "java", "kotlin", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"] },
+        "package_root": { "type": "string", "pattern": "^code/packages/[a-z]+/x509[-_]extension$" },
+        "api_source": { "$ref": "#/$defs/repo_path" },
+        "fixture_test": { "$ref": "#/$defs/repo_path" },
+        "build_files": { "type": "array", "minItems": 1, "maxItems": 2, "uniqueItems": true, "items": { "$ref": "#/$defs/repo_path" } },
+        "capability_manifest": { "$ref": "#/$defs/repo_path" },
+        "dependency_metadata": { "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true, "items": { "$ref": "#/$defs/repo_path" } },
+        "readme": { "$ref": "#/$defs/repo_path" },
+        "changelog": { "$ref": "#/$defs/repo_path" },
+        "surface": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decoder", "value", "error_kind", "decode"],
+          "properties": {
+            "decoder": { "$ref": "#/$defs/surface_name" },
+            "value": { "$ref": "#/$defs/surface_name" },
+            "error_kind": { "$ref": "#/$defs/surface_name" },
+            "decode": { "$ref": "#/$defs/surface_name" }
+          }
+        }
+      }
+    }
+  }
+}

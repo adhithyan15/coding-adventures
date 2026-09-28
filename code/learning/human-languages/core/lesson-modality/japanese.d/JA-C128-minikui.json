@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C128-minikui",
+    "language": "japanese",
+    "chapter": 128,
+    "sequence": 7590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d440fcce7bf59d2"
+  },
+  "findings": []
+}

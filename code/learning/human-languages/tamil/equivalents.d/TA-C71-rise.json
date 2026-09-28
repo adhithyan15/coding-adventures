@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C71-rise",
+  "english": "to get up, to rise",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "లేచు",
+      "romanization": "lēcu"
+    },
+    {
+      "language": "malayalam",
+      "form": "എഴുന്നേൽക്കുക",
+      "romanization": "eḻunnēlkkuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "उठना",
+      "romanization": "uṭhnā"
+    }
+  ],
+  "source": "cross-track match: TE-C143-lecu, ML-C171-elunnelkkuka, HI-C90-uthna; sameRoot judged by the author, awaiting native review"
+}

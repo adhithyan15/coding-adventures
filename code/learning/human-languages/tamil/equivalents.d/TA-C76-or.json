@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C76-or",
+  "english": "or",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಥವಾ",
+      "romanization": "athavā"
+    },
+    {
+      "language": "telugu",
+      "form": "లేదా",
+      "romanization": "lēdā",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "… या …",
+      "romanization": "… yā …"
+    }
+  ],
+  "source": "cross-track match: KA-C67-or, TE-C74-or, HI-C68-ya; sameRoot judged by the author, awaiting native review"
+}

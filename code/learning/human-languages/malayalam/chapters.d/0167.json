@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Wet, Dry, Dark, Clear, Deep",
+  "label": "ch:ml-wet-dry-dark-clear-deep",
+  "canDo": "I can say wet, dry, dark, clear and deep.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ML-C167-alamulla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: i can say wet, dry, dark, clear and deep.",
+    "assesses": [
+      "ML-LEX-C167-QUAL167-03",
+      "ML-LEX-C167-QUAL167-04",
+      "ML-LEX-C167-QUAL167-05"
+    ]
+  }
+}

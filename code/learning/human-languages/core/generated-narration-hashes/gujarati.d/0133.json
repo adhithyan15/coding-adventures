@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:1a99a0c0c31d9514",
+  "lessonIds": [
+    "GU-C133-kathan",
+    "GU-C133-sahelu",
+    "GU-C133-agharu",
+    "GU-C133-hosiyar",
+    "GU-C133-alsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch133.txt",
+  "json": "gujarati/narration/ch133.json",
+  "textHash": "fnv1a64:81e4fb03aba9334e",
+  "jsonHash": "fnv1a64:3273d072fc1040ef",
+  "findings": []
+}

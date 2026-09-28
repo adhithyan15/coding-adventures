@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C132-kocu",
+  "english": "a mosquito",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸೊಳ್ಳೆ",
+      "romanization": "soḷḷe"
+    },
+    {
+      "language": "telugu",
+      "form": "దోమ",
+      "romanization": "dōma"
+    },
+    {
+      "language": "malayalam",
+      "form": "കൊതുക്",
+      "romanization": "kotukŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मच्छर",
+      "romanization": "macchar"
+    }
+  ],
+  "source": "cross-track match: KA-C132-solle, TE-C70-mosquito, ML-C153-kotuku, HI-C149-macchar; sameRoot judged by the author, awaiting native review"
+}

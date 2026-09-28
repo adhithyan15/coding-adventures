@@ -1,0 +1,11 @@
+{
+  "id": "MW-C95-ajkal",
+  "pathSegment": "MW-PATH-95-TIME95",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-95-TIME95",
+      "order": 4
+    }
+  ]
+}

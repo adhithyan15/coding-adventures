@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C145-alukkana",
+  "english": "dirty",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೊಳಕು",
+      "romanization": "koḷaku"
+    },
+    {
+      "language": "telugu",
+      "form": "మురికి",
+      "romanization": "murikī"
+    },
+    {
+      "language": "hindi",
+      "form": "गंदा",
+      "romanization": "gandā"
+    }
+  ],
+  "source": "cross-track match: KA-C141-kolaku, TE-C137-muriki, HI-C155-ganda"
+}

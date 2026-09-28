@@ -12,17 +12,17 @@ headword: "एकादश"
 gloss: "eleven"
 romanization: "ekādaśa"
 concept_tag: SA-NUMBER-ELEVEN
-prerequisites: [SA-C86-time, SA-C86-moment]
+prerequisites: [SA-C86-time, SA-C86-moment, SA-C19-number-family]
 sounds: []
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [SA-LEX-C86-WEEKEND-04, SA-LEX-C86-WEEKEND-05]
+  knowledge: [SA-LEX-C86-WEEKEND-04, SA-LEX-C86-WEEKEND-05, SA-GRAMMAR-C19-NUMBER-FAMILY]
 introduces:
   knowledge: [SA-LEX-C87-NUMBERS-01]
 practises:
-  knowledge: [SA-LEX-C87-NUMBERS-01, SA-LEX-C86-WEEKEND-04, SA-LEX-C86-WEEKEND-05]
+  knowledge: [SA-LEX-C87-NUMBERS-01, SA-LEX-C86-WEEKEND-04, SA-LEX-C86-WEEKEND-05, SA-GRAMMAR-C19-NUMBER-FAMILY]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C86-moment]
 # एकादश (ekādaśa) — eleven
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C86-WEEKEND-04, SA-LEX-C86-WEEKEND-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C86-WEEKEND-04, SA-LEX-C86-WEEKEND-05, SA-GRAMMAR-C19-NUMBER-FAMILY] -->
 
 [PAUSE 2s] Before the new one: say the Sanskrit for time, then the Sanskrit for a moment.
+
+[PAUSE 1s] Say six to ten again — *ṣaṭ, sapta, aṣṭa, nava, daśa* — and hear their English partners: six, seven, eight, nine, ten.
 
 ## You'll want to know: एकादश
 <!-- hl-knowledge: introduces=[SA-LEX-C87-NUMBERS-01]; assesses=[] -->

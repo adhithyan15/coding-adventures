@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:59e568e3b9c050b0",
+  "lessonIds": [
+    "MW-C140-undro",
+    "MW-C140-makhi",
+    "MW-C140-machchhar",
+    "MW-C140-kiri",
+    "MW-C140-bichhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch140.txt",
+  "json": "marwadi/narration/ch140.json",
+  "textHash": "fnv1a64:6534a6bc846cfa5f",
+  "jsonHash": "fnv1a64:2b56cd8b27767204",
+  "findings": []
+}

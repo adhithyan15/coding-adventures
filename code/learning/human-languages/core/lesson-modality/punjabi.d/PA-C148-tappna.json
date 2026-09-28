@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C148-tappna",
+    "language": "punjabi",
+    "chapter": 148,
+    "sequence": 8040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:080c8d8306b496b8"
+  },
+  "findings": []
+}

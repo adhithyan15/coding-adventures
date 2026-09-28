@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C125-osanai",
+    "language": "japanese",
+    "chapter": 125,
+    "sequence": 7430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6a2d9918bc160d2"
+  },
+  "findings": []
+}

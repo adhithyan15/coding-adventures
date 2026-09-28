@@ -1,0 +1,11 @@
+{
+  "id": "GU-C98-jeth",
+  "pathSegment": "GU-PATH-98-TIME98",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-98-TIME98",
+      "order": 1
+    }
+  ]
+}

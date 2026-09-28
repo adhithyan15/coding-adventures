@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C113-galas",
+    "language": "punjabi",
+    "chapter": 113,
+    "sequence": 6070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7daffe732606648"
+  },
+  "findings": []
+}

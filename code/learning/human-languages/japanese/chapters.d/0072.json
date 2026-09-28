@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Afternoon, Middle of the night, Early morning, Evening meal, Morning sun",
+  "label": "ch:ja-afternoon-middle-of-the-night-early-morning-evening-meal-morning-sun",
+  "canDo": "I can say the afternoon, the middle of the night, early morning, the evening meal and the morning sun.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "JA-C72-asahi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say the afternoon, the middle of the night, early morning, the evening meal and the morning sun.",
+    "assesses": [
+      "JA-LEX-C72-TIME72-03",
+      "JA-LEX-C72-TIME72-04",
+      "JA-LEX-C72-TIME72-05"
+    ]
+  }
+}

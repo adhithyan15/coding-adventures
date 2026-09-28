@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01]
 introduces:
-  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS]
+  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [PA-CULTURE-PUNJAB-FIVE-RIVERS-NAME-01]
 practises:
-  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01]
+  knowledge: [PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -41,7 +41,7 @@ reviews_of: [PA-C01-sat-sri-akal, PA-C05-main-punjabi-bolda-han, PA-S04-phappha-
 you just didn't know it was a number.
 
 ## You'll want to know: the five
-<!-- hl-knowledge: introduces=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL]; assesses=[] -->
+<!-- hl-knowledge: introduces=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE]; assesses=[] -->
 
 | | Punjabi | said |
 |---|---|---|
@@ -54,40 +54,15 @@ you just didn't know it was a number.
 This is **Gurmukhi**, not Devanagari — a related but distinct script. It does
 have a top line like Devanagari's, so words hang from a bar in the same way.
 
-Two marks worth telling apart, because they look similar and do different jobs:
-
-- **ੱ** — the **addak**, on *ikk*. It **doubles the following consonant**.
-- **ੰ** — the **tippi**, on *tinn* and *panj*. It marks a **nasal**.
-
-(So *tinn*'s double *n* is not the addak's doing — that word is spelled with a
-nasal mark, and the doubling is in the pronunciation.)
-
-## What you've built: ਪੰਜ as a number
-<!-- hl-knowledge: introduces=[PA-HISTORY-PANJABI-FIVE-RIVERS]; assesses=[] -->
-
-Chapter 5 took the name **ਪੰਜਾਬੀ** (*panjābī*) apart for you: Persian **ਪੰਜ**
-*panj*, "five," plus **ਆਬ** *āb*, "water" — the language **of the five rivers**.
-
-You learned *panj* there as a piece of a place-name. Here it arrives as what it
-actually is: **the number five**, an ordinary word you will count with.
-
-The next prerequisite-ordered lesson explains an important twist: Punjabi's
-numeral and the Persian word reached the same *panj* shape independently.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ikk, do, tinn, chār, panj"]
-- [YOU SAY: the two marks — "**addak** doubles, **tippi** nasalises"]
-- [YOU SAY: the Ch. 5 callback — "**panj** + **āb** = five rivers"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-ADDAK-DOUBLING, PA-SCRIPT-TIPPI-NASAL, PA-HISTORY-PANJABI-FIVE-RIVERS, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-NUMBERS-ONE-TO-FIVE, PA-SCRIPT-GURMUKHI-TOP-LINE, PA-SCRIPT-RECOG-AARA-01, PA-SCRIPT-RECOG-BA-01, PA-SCRIPT-RECOG-HORA-01, PA-SCRIPT-RECOG-SIHARI-01] -->
 
 [PAUSE 3s] Count to five in Punjabi. (*Ikk, do, tinn, chār, panj*.) What script is
-this? (**Gurmukhi** — related to Devanagari, and it has a top line too.) What does
-**ੱ** and **ੰ** each do? (**Addak** doubles the following consonant; **tippi**
-marks a nasal.) Chapter 5 told you *panjābī* means "of the five rivers." What has
-changed now? (***Panj* is a number you can count with**, not just a piece of a
-name.) Next: learn why Punjabi and Persian both say *panj*.
+this? (**Gurmukhi** — related to Devanagari, and it has a top line too.) Next:
+the two small marks riding on *ikk*, *tinn* and *panj*.

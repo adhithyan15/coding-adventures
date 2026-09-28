@@ -248,6 +248,10 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         # The handler reaches the generated entry point, which is the half no
         # assertion over the manifest can see.
         self.assertIn("installEngramEffects(mosaicHost);", engram_step)
+        # UI87 §7.4a: the platform library wraps the package handler and is
+        # in the sources the build compiles.
+        self.assertIn("installMosaicPlatformEffects(mosaicHost, std::nullopt);", engram_step)
+        self.assertIn("MosaicPlatformEffects.cpp MosaicPlatformEffects.h)", engram_step)
         # The gate is that it builds.
         self.assertIn('cmake --build "$engram_output/qt/build"', workflow)
         # No launch: with its own host binding, running it proves nothing about

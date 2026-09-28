@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:d9bdbae9eb61745a",
+  "lessonIds": [
+    "PA-C140-cupp",
+    "PA-C140-kimti",
+    "PA-C140-dugha",
+    "PA-C140-haula",
+    "PA-C140-bhara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch140.txt",
+  "json": "punjabi/narration/ch140.json",
+  "textHash": "fnv1a64:3b456ebd4d24432e",
+  "jsonHash": "fnv1a64:1097d67ee0883dfb",
+  "findings": []
+}

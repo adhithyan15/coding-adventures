@@ -1,0 +1,11 @@
+{
+  "id": "AR-C151-muballal",
+  "pathSegment": "AR-PATH-151-QUAL151",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-151-QUAL151",
+      "order": 2
+    }
+  ]
+}

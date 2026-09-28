@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Pocket, Jaggery, Honey, Chickpeas, Mung beans",
+  "label": "ch:gu-pocket-jaggery-honey-chickpeas-mung-beans",
+  "canDo": "I can say a pocket, jaggery, honey, chickpeas and mung beans.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C113-mag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a pocket, jaggery, honey, chickpeas and mung beans.",
+    "assesses": [
+      "GU-LEX-C113-THINGS113-03",
+      "GU-LEX-C113-THINGS113-04",
+      "GU-LEX-C113-THINGS113-05"
+    ]
+  }
+}

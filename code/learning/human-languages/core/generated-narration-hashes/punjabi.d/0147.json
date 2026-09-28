@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:086bf32d1ddd4e70",
+  "lessonIds": [
+    "PA-C147-amir",
+    "PA-C147-garib",
+    "PA-C147-javan",
+    "PA-C147-takra",
+    "PA-C147-kamzor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch147.txt",
+  "json": "punjabi/narration/ch147.json",
+  "textHash": "fnv1a64:f07fcc10ca75b24a",
+  "jsonHash": "fnv1a64:212f62403212ab63",
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C151-karpi",
+  "english": "to teach",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಲಿಸು",
+      "romanization": "kalisu"
+    },
+    {
+      "language": "telugu",
+      "form": "నేర్పు",
+      "romanization": "nērpu",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "പഠിപ്പിക്കുക",
+      "romanization": "paṭhippikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "सिखाना",
+      "romanization": "sikhānā"
+    }
+  ],
+  "source": "cross-track match: KA-C148-kalisu2, TE-C145-nerpu, ML-C173-pathippikkuka, HI-C164-sikhana; sameRoot judged by the author, awaiting native review"
+}

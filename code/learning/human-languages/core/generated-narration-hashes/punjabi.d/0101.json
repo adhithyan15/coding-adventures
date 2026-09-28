@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:23e6a87a103f71ac",
+  "lessonIds": [
+    "PA-C101-hune",
+    "PA-C101-janvari",
+    "PA-C101-farvari",
+    "PA-C101-marc",
+    "PA-C101-aprail"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch101.txt",
+  "json": "punjabi/narration/ch101.json",
+  "textHash": "fnv1a64:7dc9024b35ba99ff",
+  "jsonHash": "fnv1a64:9643d93ed160168a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C118-pattiram",
+  "english": "a vessel, a pot",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಪಾತ್ರೆ",
+      "romanization": "pātre",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പാത്രം",
+      "romanization": "pātraṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C56-vessel, ML-C56-vessel; sameRoot judged by the author, awaiting native review"
+}

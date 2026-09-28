@@ -1,0 +1,11 @@
+{
+  "id": "MW-C130-bajro",
+  "pathSegment": "MW-PATH-130-THINGS130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-130-THINGS130",
+      "order": 3
+    }
+  ]
+}

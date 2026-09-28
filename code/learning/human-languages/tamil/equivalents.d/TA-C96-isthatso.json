@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C96-isthatso",
+  "english": "is that so?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೌದಾ",
+      "romanization": "haudā"
+    },
+    {
+      "language": "hindi",
+      "form": "अच्छा जी",
+      "romanization": "acchā jī"
+    }
+  ],
+  "source": "cross-track match: KA-C87-isthatso, HI-C127-achhaji"
+}

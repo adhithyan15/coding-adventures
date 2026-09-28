@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C93-didnthear",
+  "english": "I did not hear it",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "వినిపించలేదు",
+      "romanization": "vinipiñcalēdu"
+    },
+    {
+      "language": "hindi",
+      "form": "सुनाई नहीं दिया",
+      "romanization": "sunāī nahīṁ diyā"
+    }
+  ],
+  "source": "cross-track match: TE-C95-didnthear, HI-C111-sunai"
+}

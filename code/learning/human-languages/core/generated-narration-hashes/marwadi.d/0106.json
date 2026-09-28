@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:ed19710215a16611",
+  "lessonIds": [
+    "MW-C106-thelno",
+    "MW-C106-uthavno",
+    "MW-C106-gerno",
+    "MW-C106-balno",
+    "MW-C106-sivno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch106.txt",
+  "json": "marwadi/narration/ch106.json",
+  "textHash": "fnv1a64:84067c875983f0e0",
+  "jsonHash": "fnv1a64:a04f112edd8ec160",
+  "findings": []
+}

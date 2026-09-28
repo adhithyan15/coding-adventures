@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 119,
+  "title": "Ladle, Frying pan, Vessel, Bottle, Small umbrella",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:54cc80cc1ee30f79",
+  "lessons": [
+    {
+      "id": "SA-C119-darvi",
+      "sequence": 5810,
+      "title": "दर्वी (darvī) — a ladle",
+      "headword": "दर्वी",
+      "romanization": "darvī",
+      "gloss": "a ladle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0fefecbe502d2a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a chair, then the Sanskrit for a board."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दर्वी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दर्वी — darvī — \"a ladle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darvī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darvī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say darvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *darvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a chair, then the Sanskrit for a board, then say darvī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a chair, then the Sanskrit for a board, then say *darvī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दर्वी (darvī) mean? (\"A ladle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C119-katahah",
+      "sequence": 5820,
+      "title": "कटाहः (kaṭāhaḥ) — a frying pan",
+      "headword": "कटाहः",
+      "romanization": "kaṭāhaḥ",
+      "gloss": "a frying pan",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3f5d6bf464a7be0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a board, then the Sanskrit for a ladle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कटाहः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कटाहः — kaṭāhaḥ — \"a frying pan\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭāhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭāhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭāhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭāhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṭāhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṭāhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a board, then the Sanskrit for a ladle, then say kaṭāhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a board, then the Sanskrit for a ladle, then say *kaṭāhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कटाहः (kaṭāhaḥ) mean? (\"A frying pan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C119-patram",
+      "sequence": 5830,
+      "title": "पात्रम् (pātram) — a vessel",
+      "headword": "पात्रम्",
+      "romanization": "pātram",
+      "gloss": "a vessel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5611bbbca41d8c21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a ladle, then the Sanskrit for a frying pan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पात्रम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पात्रम् — pātram — \"a vessel\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pātram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pātram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a ladle, then the Sanskrit for a frying pan, then say pātram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a ladle, then the Sanskrit for a frying pan, then say *pātram* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पात्रम् (pātram) mean? (\"A vessel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C119-kupi",
+      "sequence": 5840,
+      "title": "कूपी (kūpī) — a bottle, a flask",
+      "headword": "कूपी",
+      "romanization": "kūpī",
+      "gloss": "a bottle, a flask",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f186d5b83132084",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a frying pan, then the Sanskrit for a vessel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कूपी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूपी — kūpī — \"a bottle, a flask\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūpī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūpī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūpī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūpī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kūpī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kūpī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a frying pan, then the Sanskrit for a vessel, then say kūpī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a frying pan, then the Sanskrit for a vessel, then say *kūpī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कूपी (kūpī) mean? (\"A bottle, a flask\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C119-chatrika",
+      "sequence": 5850,
+      "title": "छत्रिका (chatrikā) — a small umbrella",
+      "headword": "छत्रिका",
+      "romanization": "chatrikā",
+      "gloss": "a small umbrella",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0069945bd4a7e00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a vessel, then the Sanskrit for a bottle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छत्रिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छत्रिका — chatrikā — \"a small umbrella\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chatrikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chatrikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chatrikā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chatrikā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chatrikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chatrikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a vessel, then the Sanskrit for a bottle, then say chatrikā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a vessel, then the Sanskrit for a bottle, then say *chatrikā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does छत्रिका (chatrikā) mean? (\"A small umbrella\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R119-first-pass-nature-and-animals",
+      "sequence": 5860,
+      "title": "Nature and animals — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 110-114",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:689eeddca4bf7e5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a bottle and a small umbrella."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mountain, a waterfall, a wave, lightning, thunder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mountain, a waterfall, a wave, lightning, thunder]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a storm, mist, a branch, a leaf, a flower",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a storm, mist, a branch, a leaf, a flower]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lotus, a star, the sun, a bear, a jackal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lotus, a star, the sun, a bear, a jackal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rabbit, a donkey, a boar, a bull, a buffalo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rabbit, a donkey, a boar, a bull, a buffalo]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sheep, a pigeon, an owl, a heron, a bee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sheep, a pigeon, an owl, a heron, a bee]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A mountain? (गिरिः, giriḥ.) A waterfall? (प्रपातः, prapātaḥ.) A wave? (तरंगः, taraṅgaḥ.) Lightning? (विद्युत्, vidyut.) Thunder? (गर्जनम्, garjanam.) A storm? (वात्या, vātyā.) Mist? (नीहारः, nīhāraḥ.) A branch? (शाखा, śākhā.) A leaf? (पर्णम्, parṇam.) A flower? (कुसुमम्, kusumam.) A lotus? (पद्मम्, padmam.) A star? (नक्षत्रम्, nakṣatram.) The sun? (सूर्यः, sūryaḥ.) A bear? (भल्लूकः, bhallūkaḥ.) A jackal? (शृगालः, śṛgālaḥ.) A rabbit? (शशकः, śaśakaḥ.) A donkey? (गर्दभः, gardabhaḥ.) A boar? (वराहः, varāhaḥ.) A bull? (वृषभः, vṛṣabhaḥ.) A buffalo? (महिषः, mahiṣaḥ.) A sheep? (मेषः, meṣaḥ.) A pigeon? (कपोतः, kapotaḥ.) An owl? (उलूकः, ulūkaḥ.) A heron? (बकः, bakaḥ.) A bee? (भ्रमरः, bhramaraḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R119-second-pass-animals-the-body-and-the-kitchen",
+      "sequence": 5870,
+      "title": "Animals, the body and the kitchen — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 115-119",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17d067c55d2e2b77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a fly and a mosquito."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fly, a mosquito, an ant, a butterfly, a rooster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fly, a mosquito, an ant, a butterfly, a rooster]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crane, a cheek, the chin, an elbow, a wrist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crane, a cheek, the chin, an elbow, a wrist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thumb, the chest, the waist, an eyebrow, the skin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thumb, the chest, the waist, an eyebrow, the skin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ankle, a finger, a room, a chair, a board",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ankle, a finger, a room, a chair, a board]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ladle, a frying pan, a vessel, a bottle, a small umbrella",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ladle, a frying pan, a vessel, a bottle, a small umbrella]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A fly? (मक्षिका, makṣikā.) A mosquito? (मशकः, maśakaḥ.) An ant? (पिपीलिका, pipīlikā.) A butterfly? (चित्रपतंगः, citrapataṅgaḥ.) A rooster? (कुक्कुटः, kukkuṭaḥ.) A crane? (सारसः, sārasaḥ.) A cheek? (कपोलः, kapolaḥ.) The chin? (चिबुकम्, cibukam.) An elbow? (कूर्परः, kūrparaḥ.) A wrist? (मणिबन्धः, maṇibandhaḥ.) A thumb? (अंगुष्ठः, aṅguṣṭhaḥ.) The chest? (वक्षः, vakṣaḥ.) The waist? (कटिः, kaṭiḥ.) An eyebrow? (भ्रूः, bhrūḥ.) The skin? (त्वक्, tvak.) An ankle? (गुल्फः, gulphaḥ.) A finger? (अंगुलिः, aṅguliḥ.) A room? (कक्षः, kakṣaḥ.) A chair? (आसन्दी, āsandī.) A board? (फलकम्, phalakam.) A ladle? (दर्वी, darvī.) A frying pan? (कटाहः, kaṭāhaḥ.) A vessel? (पात्रम्, pātram.) A bottle? (कूपी, kūpī.) A small umbrella? (छत्रिका, chatrikā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

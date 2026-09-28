@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C148-hadd",
+    "language": "arabic",
+    "chapter": 148,
+    "sequence": 6940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cc13978f57823a9"
+  },
+  "findings": []
+}

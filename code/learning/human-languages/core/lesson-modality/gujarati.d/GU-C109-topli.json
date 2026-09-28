@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C109-topli",
+    "language": "gujarati",
+    "chapter": 109,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7796cec528127ff1"
+  },
+  "findings": []
+}

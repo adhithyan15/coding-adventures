@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C105-hawla",
+    "language": "arabic",
+    "chapter": 105,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2563e39287b0e9de"
+  },
+  "findings": []
+}

@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C83-ninth",
+  "english": "ninth",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒಂಬತ್ತನೆಯ",
+      "romanization": "ombattaneya"
+    },
+    {
+      "language": "telugu",
+      "form": "తొమ్మిదవ",
+      "romanization": "tommidava"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഒമ്പതാം",
+      "romanization": "ompathāṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "नौवाँ",
+      "romanization": "nauvā̃"
+    }
+  ],
+  "source": "cross-track match: KA-C75-ninth, TE-C82-ninth, ML-C68-ninth, HI-C76-ninth"
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C124-takkali",
+  "english": "a tomato",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "టమాటా",
+      "romanization": "ṭamāṭā",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "തക്കാളി",
+      "romanization": "takkāḷi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "टमाटर",
+      "romanization": "ṭamāṭar"
+    }
+  ],
+  "source": "cross-track match: TE-C118-tamata, ML-C150-takkali, HI-C138-tamatar; sameRoot judged by the author, awaiting native review"
+}

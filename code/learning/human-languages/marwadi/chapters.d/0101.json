@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "This, Like this, Like that, Which, Who",
+  "label": "ch:mw-this-like-this-like-that-which-who",
+  "canDo": "I can say this, like this, like that, which and who.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "MW-C101-kun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say this, like this, like that, which and who.",
+    "assesses": [
+      "MW-LEX-C101-DEF101-03",
+      "MW-LEX-C101-DEF101-04",
+      "MW-LEX-C101-DEF101-05"
+    ]
+  }
+}

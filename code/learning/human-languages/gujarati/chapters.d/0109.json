@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Button, Bucket, Broom, Rubbish, Basket",
+  "label": "ch:gu-button-bucket-broom-rubbish-basket",
+  "canDo": "I can say a button, a bucket, a broom, rubbish and a basket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-R109-second-pass-things-in-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a button, a bucket, a broom, rubbish and a basket.",
+    "assesses": [
+      "GU-LEX-C109-THINGS109-03",
+      "GU-LEX-C109-THINGS109-04",
+      "GU-LEX-C109-THINGS109-05"
+    ]
+  }
+}

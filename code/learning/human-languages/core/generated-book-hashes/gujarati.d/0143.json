@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:0a6a45beee0b3bbd",
+  "lessonIds": [
+    "GU-C143-bhagvu",
+    "GU-C143-pharvu",
+    "GU-C143-atakvu",
+    "GU-C143-manvu",
+    "GU-C143-badalvu",
+    "GU-R143-first-pass-describing-words",
+    "GU-R143-second-pass-verbs"
+  ],
+  "tex": "gujarati/book/chapters/ch143-to-run-away-to-go-around-to-stop-to-believe-to-change.tex"
+}

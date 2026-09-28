@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C94-pankhar",
+    "language": "gujarati",
+    "chapter": 94,
+    "sequence": 4800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c4a3385f8f59963"
+  },
+  "findings": []
+}

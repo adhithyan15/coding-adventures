@@ -1,0 +1,11 @@
+{
+  "id": "GU-C116-jamphal",
+  "pathSegment": "GU-PATH-116-THINGS116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-116-THINGS116",
+      "order": 2
+    }
+  ]
+}

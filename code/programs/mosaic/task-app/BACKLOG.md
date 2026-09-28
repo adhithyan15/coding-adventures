@@ -13,15 +13,37 @@
 >
 > The native release P0 (#14249) and native startup-state epic (#13984) are now
 > closed. The product-scoped SemVer lane (#13543) has published
-> `task-app-v0.1.0` and `task-app-v0.2.0`; #16108 prepares `task-app-v0.3.0`
-> from the now-complete native lifecycle gates. The UI49 model/compiler bridge
+> `task-app-v0.1.0`, `task-app-v0.2.0`, `task-app-v0.3.0`, and the immutable
+> `task-app-v0.4.0` and corrective `task-app-v0.4.1` releases. The v0.4.0
+> checkpoint records the static HTML and Web Component parity gates without
+> adding either CI-only output to the downloadable artifact set. Its final
+> verification found that the generated limitations linked closed #13522
+> instead of live signing tracker #13977; #16142 corrected the template and
+> published `task-app-v0.4.1` from the same honest artifact matrix. All assets,
+> checksums, manifest entries, tag provenance, and the corrected notes were
+> independently verified. Release
+> verification found that label-filtered GitHub history can omit valid
+> cross-package product changes; #16116 was repaired in #16117 by making the
+> dated changelog authoritative. The static HTML shell gate shipped in #16121
+> and the Web Components lifecycle parity host in #16130. Both are coverage
+> work, not resumed feature composition or new release artifacts. The
+> package-expanded Paint visual gate in #16151 closes the final TaskApp-scoped
+> backend gap with reviewed light/dark CI goldens, without claiming a host,
+> interaction support, or new release artifact. The resulting product-scoped
+> `task-app-v0.5.0` coverage checkpoint published from
+> [#16165](https://github.com/adhithyan15/coding-adventures/issues/16165) with
+> the verified downloadable artifact matrix unchanged. Its independent audit
+> found that generated notes retained the Paint heading but dropped the
+> paragraph stating the CI-only host and artifact boundary. Corrective
+> `task-app-v0.5.1` work is tracked by
+> [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168).
+> The UI49 model/compiler bridge
 > is complete through #14300, and the React reference lowering landed in
 > #14306, the WebComponent lowering in #14314, the Compose lowering in #14322,
 > SwiftUI in #14331, Qt in #14344, Flutter in #14353, and XAML in #14362. The
 > static HTML snapshot lowering landed in #14369, Paint fixture-driven
 > resolution landed in #14378, Button's first focused toolkit retrofit landed
-> in #14385, and Alert followed in #14399. The current dependency is #14402:
-> make Badge's variant contract real through the same UI49 path. Toolkit
+> in #14385, Alert followed in #14399, and Badge in #14402. Toolkit
 > retrofits still precede stories or trustworthy TaskApp composition coverage.
 >
 > The queue below is still accurate and is not abandoned. TaskApp is rebuilt at
@@ -61,9 +83,24 @@ links existing Mosaic work instead of duplicating it.
    `task-app-v0.1.0` with only the artifacts that are actually verified. The
    release lane builds a tested web bundle and strict generated native projects;
    installer packaging remains #13522. **Done in #13587, with follow-up clean-
-   runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0` and
-   `task-app-v0.2.0` published. The next incremental release is
-   [`task-app-v0.3.0` (#16108)](https://github.com/adhithyan15/coding-adventures/issues/16108).**
+   runner fixes in #13590, #13593, and #13596; `task-app-v0.1.0`,
+   `task-app-v0.2.0`, `task-app-v0.3.0`, `task-app-v0.4.0`, and corrective
+   `task-app-v0.4.1` published. The
+   `task-app-v0.4.0` checkpoint in
+   [#16134](https://github.com/adhithyan15/coding-adventures/issues/16134)
+   intentionally kept the verified artifact matrix unchanged. The generated-
+   note tracker correction and `task-app-v0.4.1` patch are tracked by
+   [#16142](https://github.com/adhithyan15/coding-adventures/issues/16142). The
+   earlier focused release-lane repair,
+   [#16116](https://github.com/adhithyan15/coding-adventures/issues/16116),
+   was completed in #16117; generated notes now make the dated changelog
+   authoritative before supporting GitHub history. The next incremental
+   checkpoint, `task-app-v0.5.0`, published from
+   [#16165](https://github.com/adhithyan15/coding-adventures/issues/16165) and
+   records the completed Paint coverage without adding a Paint artifact. Its
+   generated notes omitted the explicit CI-only backend boundary; the
+   immutable corrective `task-app-v0.5.1` patch is tracked by
+   [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168).**
 8. **P1 — [#13565](https://github.com/adhithyan15/coding-adventures/issues/13565):**
    keep native completion progress visible in the generated Compose viewport.
    **Done in #13602.**
@@ -116,15 +153,18 @@ links existing Mosaic work instead of duplicating it.
    expose durable-storage fallback, recovery, and backup information in the UI.
    **Done in #13837.**
 24. **P1 — [#13695](https://github.com/adhithyan15/coding-adventures/issues/13695):**
-   replace blank startup with loading and failure states.
+   replace blank startup with loading and failure states. **Done for web and all
+   five strict native backends; completed by #16100.**
 25. **P1 — [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
-   make the List-first shell usable in compact windows.
+   make the List-first shell usable in compact windows. **Done in #15700 by
+   adopting the adaptive `HostNavigationSplit`.**
 26. **P2 — [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract. **Done in
    [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
 27. **P2 — [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the TaskApp changelog forward after each published product release and
    gate against already-published versions remaining marked Unreleased.
+   **Done in #15090.**
 
 Newly discovered work is filed as an issue and the queue is reprioritized before
 the next item is selected. Only one TaskApp completion-loop PR is active at a time.
@@ -138,16 +178,18 @@ now closed except for one low-priority polish item — see the Backlog section b
 The fresh pass this section used to defer to is now written down:
 [`code/specs/task-app-platform-completion-v1.md`](../../../specs/task-app-platform-completion-v1.md).
 It measures TaskApp against all nine Mosaic backends rather than against the
-super-app feature roadmap, and it found that three backends — `html`,
-`webcomponent`, and `paint` — contain **zero** TaskApp references: no test, no CI
-step, no artifact. The ordered queue below comes from that spec.
+super-app feature roadmap. Six interactive/native targets are gated and shipped;
+static HTML is structurally gated by #16120/#16121, Web Components is
+real-engine parity-gated by #16125/#16130, and Paint is visually gated by
+#16151. All nine backends now have explicitly scoped product coverage. The
+ordered queue below comes from that spec.
 
 **Tier A — finish the platforms TaskApp already claims.**
 
-The immediate release checkpoint is
-[#16108](https://github.com/adhithyan15/coding-adventures/issues/16108): roll
-the completed native startup-recovery slices and other post-0.2 capabilities
-into `task-app-v0.3.0` before taking the next product feature.
+The release-lane repair
+[#16116](https://github.com/adhithyan15/coding-adventures/issues/16116) is done in
+#16117: generated notes summarize the authoritative dated changelog section
+before supporting, label-filtered GitHub history.
 
 1. **P0 [#14249](https://github.com/adhithyan15/coding-adventures/issues/14249):**
    restore Flutter's bundled Rust runtime after the current Linux runner image
@@ -169,27 +211,15 @@ into `task-app-v0.3.0` before taking the next product feature.
    Flutter in #16086, SwiftUI in #16093, and WinUI in #16100. The host-neutral
    contract both share is `code/specs/task-app-startup-states-v1.md`.
 3. **P1 [#13692](https://github.com/adhithyan15/coding-adventures/issues/13692):**
-   make the List-first shell usable in compact windows. **Blocked on
-   [#14003](https://github.com/adhithyan15/coding-adventures/issues/14003)
-   (UI48).** Picking this up revealed it was mis-scoped as a TaskApp change.
-   Mosaic has no way for *any* app to respond to its runtime environment:
-   mosstyle has no media queries, `--variant` selects a layout file at compile
-   time, none of the nine emitters observes viewport or pointer, and
-   `mosaic-app-runtime` has no environment concept. UI30 §6 deferred runtime
-   selection to an ML4 that was never built. Doing it TaskApp-side would mean a
-   bespoke `compact` slot plus per-backend host code — exactly the userland
-   conditional UI30 explicitly rejected, and it still could not vary a *style*,
-   so touch-sized tap targets would stay unexpressible. Specified generically as
-   `code/specs/UI48-host-environment.md`; TaskApp then becomes
-   `TaskApp.compact.mll` and nothing else.
-   UI48's ENV slices continue as separate kernel work.
+   make the List-first shell usable in compact windows. **Done in #15700** by
+   adopting the kernel's adaptive `HostNavigationSplit`. UI48's remaining ENV
+   slices continue as broader Mosaic work, not as a TaskApp blocker.
 4. **P2 [#13526](https://github.com/adhithyan15/coding-adventures/issues/13526):**
    move the Vitest config to Vite's native ESM loading contract. **Done in
    [#14242](https://github.com/adhithyan15/coding-adventures/pull/14242).**
 5. **P2 [#13625](https://github.com/adhithyan15/coding-adventures/issues/13625):**
    roll the changelog forward after each published release and gate against a
-   published version still marked Unreleased. `0.1.0` is in exactly that state
-   today.
+   published version still marked Unreleased. **Done in #15090.**
 
 **Discovered while working Tier A, awaiting prioritization.**
 
@@ -206,6 +236,9 @@ into `task-app-v0.3.0` before taking the next product feature.
 - **P2 [#13977](https://github.com/adhithyan15/coding-adventures/issues/13977):**
   signing/notarization/installers, filed when #13522 closed while the README
   still pointed at it.
+- **P1 [#16142](https://github.com/adhithyan15/coding-adventures/issues/16142):**
+  generated v0.4.0 notes still linked closed #13522 instead of #13977.
+  **Done in #16143; immutable `task-app-v0.4.1` is published and verified.**
 - **P2 [#14360](https://github.com/adhithyan15/coding-adventures/issues/14360):**
   a generated permissive XAML project for a component with zero events reads
   `MosaicName` from an empty event union that does not declare it. Discovered by
@@ -215,10 +248,32 @@ into `task-app-v0.3.0` before taking the next product feature.
 **Tier B — close the three unexercised backends.** Filed as work is picked up;
 see the spec for the completion bar each one has to clear.
 
-6. Static HTML snapshot gate (cheapest — no runtime, no interaction claim).
-7. Web Components host — the last *interactive* backend with no TaskApp presence.
-8. Paint visual-regression gate — the only mechanism that would catch a purely
-   visual regression.
+6. **P1 [#16120](https://github.com/adhithyan15/coding-adventures/issues/16120):**
+   static HTML snapshot gate. **Done in #16121**; no runtime, host,
+   interaction, or artifact claim.
+7. **P1 [#16125](https://github.com/adhithyan15/coding-adventures/issues/16125):**
+   Web Components host — the last interactive backend without TaskApp-level
+   coverage. **Done in #16130** as a real-engine, emitted-control parity gate;
+   no release artifact claim.
+8. **P1 [#16151](https://github.com/adhithyan15/coding-adventures/issues/16151):**
+   Paint visual-regression gate — the only mechanism that would catch a purely
+   visual regression. **Done with reviewed light/dark 1280 x 900 CPU Skia
+   goldens; CI-only, with no host or release-artifact claim.**
+
+**Selected release checkpoint.**
+
+9. **P1 [#16165](https://github.com/adhithyan15/coding-adventures/issues/16165):**
+   publish `task-app-v0.5.0` as the product-scoped all-nine-backend coverage
+   checkpoint. The release records the completed Paint visual gate while
+   retaining the existing verified web/native downloadable artifact matrix;
+   static HTML, Web Components, and Paint remain CI-only outputs. **Published
+   from #16166; post-publication validation found the generated notes omitted
+   that explicit CI-only sentence, so #16168 is the blocking correction.**
+10. **P1 [#16168](https://github.com/adhithyan15/coding-adventures/issues/16168):**
+    make generated notes state that static HTML, Web Components, and Paint are
+    CI-only outputs, that Paint supplies no host or interaction support, and
+    publish the immutable `task-app-v0.5.1` patch without changing the verified
+    11-payload artifact matrix.
 
 **Tier C — reach, stated rather than silently missing.** iOS compiles but does
 not run; Android has no Mosaic backend and belongs to #12017; signing,

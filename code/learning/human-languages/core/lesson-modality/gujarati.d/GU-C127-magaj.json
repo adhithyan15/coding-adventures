@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C127-magaj",
+    "language": "gujarati",
+    "chapter": 127,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:820f784209b879f2"
+  },
+  "findings": []
+}

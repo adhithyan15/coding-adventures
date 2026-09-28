@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C116-tiramai",
+  "english": "a skill, talent",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೌಶಲ್ಯ",
+      "romanization": "kauśalya"
+    },
+    {
+      "language": "telugu",
+      "form": "నైపుణ్యం",
+      "romanization": "naipuṇyaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C112-kausalya, TE-C105-naipunyam"
+}

@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C53-path",
+  "english": "a path",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "బాట",
+      "romanization": "bāṭa",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: TE-C55-path; sameRoot judged by the author, awaiting native review"
+}

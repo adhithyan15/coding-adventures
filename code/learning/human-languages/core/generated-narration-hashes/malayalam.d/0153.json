@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:7c997c6a0ff27fbb",
+  "lessonIds": [
+    "ML-C153-pravu",
+    "ML-C153-pumparra",
+    "ML-C153-urumpu",
+    "ML-C153-kotuku",
+    "ML-C153-tol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch153.txt",
+  "json": "malayalam/narration/ch153.json",
+  "textHash": "fnv1a64:176e85a6c66cf21f",
+  "jsonHash": "fnv1a64:40b009064c6c07ae",
+  "findings": []
+}

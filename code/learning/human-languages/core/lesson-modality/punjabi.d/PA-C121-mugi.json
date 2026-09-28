@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C121-mugi",
+    "language": "punjabi",
+    "chapter": 121,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1522b3212f13d6cd"
+  },
+  "findings": []
+}

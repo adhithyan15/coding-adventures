@@ -48,10 +48,12 @@ limits (too many locals, call nesting too deep, port number out of range), the c
 rejects it with a precise, actionable error message rather than silently truncating or
 wrapping.
 
-**Principle 3 — Subset of 8080.**  Every valid Oct program that runs on the 8008
-simulator also runs on the Intel 8080 (which is a strict superset of the 8008 ISA).
-This means Oct is a foundation for the planned Oct v2 targeting the 8080, which will
-add `u16` types backed by 16-bit register-pair arithmetic.
+**Principle 3 — A path to 8080.**  Oct's source-level 8-bit operations provide
+a starting point for an Intel 8080 target.  An 8008 machine-code image is **not**
+an 8080 image: the processors assign different opcode bytes to some operations,
+including unconditional jump (`0x7C` on 8008, `0xC3` on 8080).  Porting Oct
+requires target-specific code generation and execution tests.  Planned Oct v2
+will add `u16` types backed by 8080 register-pair arithmetic.
 
 ---
 
@@ -678,9 +680,14 @@ language (Phases 5–9) using handwritten IR test programs.
 
 ## Relationship to Intel 8080
 
-Every Oct program runs on the Intel 8080 unchanged.  The 8080 executes 8008 programs
-without modification (its instruction set is a strict superset of the 8008's, with
-the same binary encoding for all 8008 instructions).
+The 8080 succeeds the 8008 and supports many comparable source-level operations,
+but its instruction encoding is different.  For example, an 8008 `JMP 0x1234`
+begins with `0x7C`, whereas an 8080 `JMP 0x1234` begins with `0xC3`; the 8080
+decodes `0x7C` as `MOV A,H`.  The shared `HLT` byte (`0x76`) is one coincidence,
+not a binary-compatibility guarantee.  An 8080 Oct target must compile or
+assemble the source for the 8080, then check its behavior in the 8080 simulator.
+Source constructs tied to 8008 hardware, especially I/O and flags, need explicit
+8080 contracts before claiming source compatibility.
 
 Oct v2 (a future extension) will add:
 - `u16` type backed by 16-bit register pairs (BC, DE, HL)

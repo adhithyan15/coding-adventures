@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Cheek, Chin, Street, Library, Shirt",
+  "label": "ch:ml-cheek-chin-street-library-shirt",
+  "canDo": "I can say a cheek, a chin, a street, a library and a shirt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C155-sarttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: i can say a cheek, a chin, a street, a library and a shirt.",
+    "assesses": [
+      "ML-LEX-C155-THINGS155-03",
+      "ML-LEX-C155-THINGS155-04",
+      "ML-LEX-C155-THINGS155-05"
+    ]
+  }
+}

@@ -137,6 +137,26 @@ the complete Test2 suite. The Windows front uses the executor's existing
 sequential fallback and verifies the real UTF-8 CLI boundary plus this
 process-free declaration engine instead of skipping the package.
 
+## Pure Graph and Diff Selection
+
+`CodingAdventures::BuildTool::GraphDiff` implements the language-neutral graph
+and diff-selection contract over caller-owned hashes and arrays. It emits
+canonical prerequisite-first levels, computes dependent and prerequisite-only
+closures, applies repository-boundary consumers, and enforces the shared
+package, edge, path, glob, and 50-million-unit match-work ceilings.
+
+Strict source globs are compiled before selection into Unicode-scalar tokens.
+Character classes and globstar segments use bounded rolling-row dynamic
+programming rather than caller-generated regular expressions. Exact recursive
+BUILD fronts are selected without match-work cost. Structural failures use the
+stable contract codes; cycles, work exhaustion, and unknown-path policy errors
+return empty results rather than partial selections.
+
+The module is deliberately process-free: it does not read the checkout,
+invoke Git, inspect the environment, launch a child, or use the network. The
+existing `GitDiff.pm` remains the host adapter; fixture loading and JSON
+decoding remain test responsibilities.
+
 Generated source-embedded Unicode 17.0.0 NFC, NFKC, full default-fold, and
 full-uppercase tables keep policy independent of the installed Perl runtime's
 Unicode data. Regenerate the module and its Unicode License v3 notice with an
@@ -165,6 +185,7 @@ python code/scripts/generate_tracked_artifact_unicode17.py \
 | `StarlarkEval.pm` | Starlark BUILD detection and rule mapping |
 | `Validator.pm` | Build contracts plus pure tracked-artifact and orphan-crate snapshot policy |
 | `ToolchainDetection.pm` | Pure bounded package and extra-CI toolchain decisions |
+| `GraphDiff.pm` | Pure bounded graph evaluation and diff selection |
 | `TrackedArtifactUnicode17.pm` | Generated, source-embedded Unicode 17 policy tables |
 
 ## Perl Idioms
@@ -230,6 +251,7 @@ t/11-validator.t       BUILD/CI contracts and shared snapshot validation fixture
 t/12-ci-workflow.t     canonical CI workflow validation
 t/13-resolution-utf8.t shared fixtures — strict Lua rockspec UTF-8 and CLI diagnostics
 t/14-toolchain-detection.t all 11 neutral extra-CI toolchain snapshots and limits
+t/15-graph-diff.t  exact eight graph and eleven diff-selection fixtures plus bounds
 ```
 
 Run all tests:

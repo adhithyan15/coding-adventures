@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Duck, Lizard, Turtle, Crocodile, Mosquito",
+  "label": "ch:pa-duck-lizard-turtle-crocodile-mosquito",
+  "canDo": "I can say a duck, a lizard, a turtle, a crocodile and a mosquito.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C131-macchar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say a duck, a lizard, a turtle, a crocodile and a mosquito.",
+    "assesses": [
+      "PA-LEX-C131-THINGS131-03",
+      "PA-LEX-C131-THINGS131-04",
+      "PA-LEX-C131-THINGS131-05"
+    ]
+  }
+}

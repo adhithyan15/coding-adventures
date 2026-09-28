@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C72-fear",
+  "english": "fear",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಭಯ",
+      "romanization": "bhaya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "భయం",
+      "romanization": "bhayaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പേടി",
+      "romanization": "pēṭi"
+    },
+    {
+      "language": "hindi",
+      "form": "डर",
+      "romanization": "ḍar"
+    }
+  ],
+  "source": "cross-track match: KA-C83-fear, TE-C85-fear, ML-C116-fear, HI-C108-dar; sameRoot judged by the author, awaiting native review"
+}

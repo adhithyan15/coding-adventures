@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:a79f6fc1a43bf79f",
+  "lessonIds": [
+    "SA-C105-duradarsanam",
+    "SA-C105-sanganakam",
+    "SA-C105-yantram",
+    "SA-C105-vyajanam",
+    "SA-C105-petika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch105.txt",
+  "json": "sanskrit/narration/ch105.json",
+  "textHash": "fnv1a64:0f3c00f17c136a7a",
+  "jsonHash": "fnv1a64:67d76c3761c2aff6",
+  "findings": []
+}

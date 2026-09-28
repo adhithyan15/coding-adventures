@@ -9,7 +9,7 @@ headword: ਦੁੱਧ
 romanization: dudh
 gloss: milk — "that which has been milked," said flat, with no tone at all
 concept_tag: PA-FOOD-MILK
-prerequisites: [PA-C10-chaa, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S10-chachcha]
+prerequisites: [PA-C10-chaa, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S10-chachcha, PA-C06-numbers-1-5-more]
 sounds: [addak-doubling, aspirate-dh]
 roots: [sanskrit-dugdha, sanskrit-duh-milk]
 etymology_hook: ਦੁੱਧ is inherited from Prakrit duddha, from Sanskrit dugdha, "that which has been milked" — the passive participle of duh-, "to milk" — from a Proto-Indo-European root meaning roughly "to produce, to be of use"; no English word descends from it securely enough for this lesson to claim one.

@@ -9,7 +9,7 @@ headword: ਚੰਗਾ
 romanization: changā
 gloss: good — the ordinary Punjabi word for good, and a word whose own origin is unsettled
 concept_tag: WORD-GOOD
-prerequisites: [PA-C31-na, PA-C03-tusi-kivein-ho, PA-C03-thik]
+prerequisites: [PA-C31-na, PA-C03-tusi-kivein-ho, PA-C03-thik, PA-C06-numbers-1-5-more]
 sounds: [tippi-nasal, kanna-aa]
 roots: [middle-indo-aryan-canga]
 etymology_hook: ਚੰਗਾ continues a Middle Indo-Aryan caṅga, "fine, handsome," but where that word itself came from is genuinely disputed — some read it as inherited Indo-Aryan, others as an early loan from a Dravidian source, and no account has closed the case. It is worth teaching precisely because it is the first everyday word in this book whose line of descent runs out before it reaches a root.

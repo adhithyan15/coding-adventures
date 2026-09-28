@@ -1,0 +1,2 @@
+packages: . ../gf256 ../barcode-2d ../paint-instructions
+tests: True

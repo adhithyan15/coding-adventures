@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C148-buro",
+    "language": "marwadi",
+    "chapter": 148,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b391f2eb2a1bb40a"
+  },
+  "findings": []
+}

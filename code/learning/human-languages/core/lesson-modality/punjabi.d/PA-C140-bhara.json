@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C140-bhara",
+    "language": "punjabi",
+    "chapter": 140,
+    "sequence": 7590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:717178da9d9a806e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:1ac58fd385092a50",
+  "lessonIds": [
+    "GU-C136-khali",
+    "GU-C136-bharelu",
+    "GU-C136-sacu",
+    "GU-C136-khotu",
+    "GU-C136-amir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch136.txt",
+  "json": "gujarati/narration/ch136.json",
+  "textHash": "fnv1a64:f835c6161172ef18",
+  "jsonHash": "fnv1a64:96c12e6c21522af5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:03b5c3745dd3db5d",
+  "lessonIds": [
+    "MW-C136-mulo",
+    "MW-C136-lasan",
+    "MW-C136-adrak",
+    "MW-C136-haldi",
+    "MW-C136-jiro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch136.txt",
+  "json": "marwadi/narration/ch136.json",
+  "textHash": "fnv1a64:7f5bb742d6d9029f",
+  "jsonHash": "fnv1a64:5531eb066e3f319a",
+  "findings": []
+}

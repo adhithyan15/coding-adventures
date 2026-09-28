@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:4bd9a9497037990f",
+  "lessonIds": [
+    "GU-C125-bhamar",
+    "GU-C125-dadhi",
+    "GU-C125-much",
+    "GU-C125-gardan",
+    "GU-C125-chati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch125.txt",
+  "json": "gujarati/narration/ch125.json",
+  "textHash": "fnv1a64:919ce52abd966f04",
+  "jsonHash": "fnv1a64:a4831d05e289b233",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:444fa570499a03a6",
+  "lessonIds": [
+    "SA-C135-siksate",
+    "SA-C135-pathayati",
+    "SA-C135-vismarati",
+    "SA-C135-arohati",
+    "SA-C135-avarohati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch135.txt",
+  "json": "sanskrit/narration/ch135.json",
+  "textHash": "fnv1a64:3ee79b2fb069d3e7",
+  "jsonHash": "fnv1a64:dc888e7531efabaf",
+  "findings": []
+}

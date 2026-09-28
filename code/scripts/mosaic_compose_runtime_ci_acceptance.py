@@ -28,6 +28,9 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosaic-compile",
         "rust/mosaic-emit-compose",
         "rust/mosaic-package-artifact-builder",
+        # Layout rules (UI48 §7.5) come from the manifest crate, and this lane
+        # compiles Engram's generated selector.
+        "rust/mosaic-package-manifest",
         "rust/moslayout-compiler",
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",

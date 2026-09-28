@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:db58a9b47bcb76fc",
+  "lessonIds": [
+    "JA-C112-nouka",
+    "JA-C112-daiku",
+    "JA-C112-kashu",
+    "JA-C112-shigoto",
+    "JA-C112-yasumi"
+  ],
+  "tex": "japanese/book/chapters/ch112-farmhouse-carpenter-singer-work-holiday.tex"
+}

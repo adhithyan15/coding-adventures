@@ -1,0 +1,11 @@
+{
+  "id": "PA-C111-malak",
+  "pathSegment": "PA-PATH-111-CAN111",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-111-CAN111",
+      "order": 1
+    }
+  ]
+}

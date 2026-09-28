@@ -12,17 +12,17 @@ headword: "नगरम्"
 gloss: "city"
 romanization: "nagaram"
 concept_tag: SA-NOUN-CITY
-prerequisites: [SA-C16-forest]
+prerequisites: [SA-C16-forest, SA-C05-vasami]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C16-PLACE-04]
+  knowledge: [SA-LEX-C16-PLACE-04, SA-GRAMMAR-LOCATIVE-CASE]
 introduces:
   knowledge: [SA-LEX-C16-PLACE-05]
 practises:
-  knowledge: [SA-LEX-C16-PLACE-04, SA-LEX-C16-PLACE-05]
+  knowledge: [SA-LEX-C16-PLACE-04, SA-LEX-C16-PLACE-05, SA-GRAMMAR-LOCATIVE-CASE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C16-forest]
 # नगरम् (nagaram) — city
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-GRAMMAR-LOCATIVE-CASE] -->
 
 [PAUSE 2s] The last of the five places, and the biggest.
+
+[PAUSE 1s] Say "in the city." (*Nagare* — the locative ending *-e*, "in, at.")
 
 ## You'll want to know: नगरम्
 <!-- hl-knowledge: introduces=[SA-LEX-C16-PLACE-05]; assesses=[] -->

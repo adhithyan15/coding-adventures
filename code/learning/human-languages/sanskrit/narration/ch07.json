@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:44bf7ec0c2b393fc",
+  "sourceHash": "fnv1a64:5224321b28f03301",
   "lessons": [
     {
       "id": "SA-C07-asti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85f53ebc9d737f16",
+      "sourceHash": "fnv1a64:2f63ff1accaa6c13",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Six chapters of words. Now the machinery. A Sanskrit verb is never quoted the way an English one is, and this pair shows why."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three roots you already use: vad \"speak,\" vas \"dwell,\" kṛ \"do.\" Which one is behind English was? (Vas.)"
             }
           ]
         },
@@ -383,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cb0263562d55166",
+      "sourceHash": "fnv1a64:4847cbe433b4a6d3",
       "notice": null,
       "blocks": [
         {
@@ -400,6 +410,16 @@
             {
               "kind": "speech",
               "text": "Root, then class, then ending. Say the two roots from last time. (As, bhū.) Here the middle step stops being tidy."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three roots you already use: vad \"speak,\" vas \"dwell,\" kṛ \"do.\" Today's verb is built on another root, gam."
             }
           ]
         },

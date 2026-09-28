@@ -9,7 +9,7 @@ headword: ਅੱਛਾ
 romanization: achchhā
 gloss: okay, all right, I see — a word that started out meaning "clear"
 concept_tag: RESPONSE-OKAY
-prerequisites: [PA-C31-ji]
+prerequisites: [PA-C31-ji, PA-C06-numbers-1-5-more]
 sounds: [addak-doubling, kanna-aa]
 roots: [sanskrit-accha-clear]
 etymology_hook: ਅੱਛਾ is generally derived from Sanskrit accha, "clear, transparent, pellucid" — a word about water you can see through, which drifted through Middle Indo-Aryan into a general "good," and from "good" into the conversational "okay, I see." Some dictionaries mark the ultimate source unknown, so the Sanskrit step is reported here as the usual account and not as settled fact.

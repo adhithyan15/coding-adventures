@@ -1,0 +1,11 @@
+{
+  "id": "GU-C102-takat",
+  "pathSegment": "GU-PATH-102-CAN102",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-102-CAN102",
+      "order": 2
+    }
+  ]
+}

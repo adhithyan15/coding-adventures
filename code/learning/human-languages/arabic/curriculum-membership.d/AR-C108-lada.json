@@ -1,0 +1,11 @@
+{
+  "id": "AR-C108-lada",
+  "pathSegment": "AR-PATH-108-CAN108",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-108-CAN108",
+      "order": 1
+    }
+  ]
+}

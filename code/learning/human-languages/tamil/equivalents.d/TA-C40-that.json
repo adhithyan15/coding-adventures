@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C40-that",
+  "english": "that one",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅದು",
+      "romanization": "adu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "అది",
+      "romanization": "adi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "അത്",
+      "romanization": "atŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "वह",
+      "romanization": "vah"
+    }
+  ],
+  "source": "cross-track match: KA-C41-that, TE-C41-that, ML-C41-that, HI-C40-that; sameRoot judged by the author, awaiting native review"
+}

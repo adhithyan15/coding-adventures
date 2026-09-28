@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-77-TIME77",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "JA-EXT-77-TIME77"
+  ],
+  "after": []
+}

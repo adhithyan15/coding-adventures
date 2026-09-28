@@ -1,0 +1,11 @@
+{
+  "id": "JA-C91-shimau",
+  "pathSegment": "JA-PATH-91-ACT91",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-91-ACT91",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-R130-first-pass-describing-words",
+  "pathSegment": "JA-PATH-130-QUAL130",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-130-QUAL130",
+      "order": 5
+    }
+  ]
+}

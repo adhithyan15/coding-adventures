@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R99-first-pass-times-of-day-seasons-and-months",
+    "language": "marwadi",
+    "chapter": 99,
+    "sequence": 6400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:701bb90d9feab668"
+  },
+  "findings": []
+}

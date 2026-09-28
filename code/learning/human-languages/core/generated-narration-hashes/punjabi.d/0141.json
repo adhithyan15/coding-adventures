@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:52b5a9ce8c35d941",
+  "lessonIds": [
+    "PA-C141-calak",
+    "PA-C141-siana",
+    "PA-C141-bhola",
+    "PA-C141-gol",
+    "PA-C141-siddha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch141.txt",
+  "json": "punjabi/narration/ch141.json",
+  "textHash": "fnv1a64:42426b2b7b688f72",
+  "jsonHash": "fnv1a64:8f985a15300cc0f8",
+  "findings": []
+}

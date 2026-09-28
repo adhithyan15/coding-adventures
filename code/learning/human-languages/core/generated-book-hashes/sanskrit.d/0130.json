@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:3e3f28b4ad4ede5c",
+  "lessonIds": [
+    "SA-C130-murkhah",
+    "SA-C130-alasah",
+    "SA-C130-sabalah",
+    "SA-C130-durbalah",
+    "SA-C130-svacchah"
+  ],
+  "tex": "sanskrit/book/chapters/ch130-foolish-lazy-strong-weak-clear.tex"
+}

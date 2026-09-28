@@ -1,0 +1,11 @@
+{
+  "id": "PA-C145-bhukkha",
+  "pathSegment": "PA-PATH-145-QUAL145",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-145-QUAL145",
+      "order": 2
+    }
+  ]
+}

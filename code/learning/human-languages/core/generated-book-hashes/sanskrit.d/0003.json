@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 3,
-  "sourceHash": "fnv1a64:03188cec7c67d2b4",
+  "sourceHash": "fnv1a64:a56ea0da1d94d7e3",
   "lessonIds": [
     "SA-C03-katham",
     "SA-C03-bhavan-katham-asti",
@@ -9,7 +9,16 @@
     "SA-C03-aham",
     "SA-C03-kushalam",
     "SA-S01-letter-ma",
+    "SA-W03-mama-guided-copy",
+    "SA-W03-mama-delayed-copy",
+    "SA-W03-mama-dictation",
     "SA-C03-kushali-asmi",
+    "SA-W03-mama-nama-guided-copy",
+    "SA-W03-mama-nama-delayed-copy",
+    "SA-W03-mama-nama-dictation",
+    "SA-W03-namah-guided-copy",
+    "SA-W03-namah-delayed-copy",
+    "SA-W03-namah-dictation",
     "SA-C03-na-cinta",
     "SA-C03-practice",
     "SA-S203-vowel-sign-u"

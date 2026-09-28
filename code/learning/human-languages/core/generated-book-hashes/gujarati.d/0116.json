@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:a80c685c746b0bce",
+  "lessonIds": [
+    "GU-C116-tarbuc",
+    "GU-C116-papaiyu",
+    "GU-C116-jamphal",
+    "GU-C116-magphali",
+    "GU-C116-dhokla"
+  ],
+  "tex": "gujarati/book/chapters/ch116-watermelon-papaya-guava-peanuts-dhokla.tex"
+}

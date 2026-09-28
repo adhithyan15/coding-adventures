@@ -14,3 +14,7 @@ serde          = { version = "1", features = ["derive"] }
 serde_json     = "1"
 # In-house zero-dependency JSON parser, for list story fixtures (#15428).
 coding_adventures_bounded_json = { path = "../bounded-json" }
+
+[dev-dependencies]
+# Pins RESERVED_EMIT_NAMES to the events the runtime intercepts (UI48 §7.1).
+mosaic-app-runtime = { path = "../mosaic-app-runtime" }

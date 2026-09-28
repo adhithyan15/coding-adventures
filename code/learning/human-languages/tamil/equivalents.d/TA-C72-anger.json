@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C72-anger",
+  "english": "anger",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕೋಪ",
+      "romanization": "kōpa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కోపం",
+      "romanization": "kōpaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ദേഷ്യം",
+      "romanization": "dēṣyaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "गुस्सा",
+      "romanization": "gussā"
+    }
+  ],
+  "source": "cross-track match: KA-C83-anger, TE-C85-anger, ML-C116-anger, HI-C108-gussa; sameRoot judged by the author, awaiting native review"
+}

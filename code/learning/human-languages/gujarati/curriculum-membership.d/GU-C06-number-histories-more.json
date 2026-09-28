@@ -1,0 +1,11 @@
+{
+  "id": "GU-C06-number-histories-more",
+  "pathSegment": "GU-PATH-009",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-009-ETYMOLOGY",
+      "order": 1
+    }
+  ]
+}

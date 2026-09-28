@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C108-katar",
+    "language": "gujarati",
+    "chapter": 108,
+    "sequence": 5570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66f0d29b8dad0ad7"
+  },
+  "findings": []
+}

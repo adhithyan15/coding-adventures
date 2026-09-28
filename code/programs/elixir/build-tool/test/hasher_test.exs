@@ -145,6 +145,18 @@ defmodule BuildTool.HasherTest do
       hash = Hasher.hash_package(package)
       assert String.length(hash) == 64
     end
+
+    test "validates every declared source before walking candidates" do
+      package = %{
+        path: "/path/that/must/not/be-enumerated",
+        language: "python",
+        declared_srcs: ["*.py", "[z-a].py"]
+      }
+
+      assert_raise BuildTool.GlobMatch.PatternError,
+                   "ambiguous or descending character class in glob pattern",
+                   fn -> Hasher.hash_package(package) end
+    end
   end
 
   # ---------------------------------------------------------------------------

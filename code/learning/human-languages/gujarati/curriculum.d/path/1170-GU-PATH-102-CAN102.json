@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-102-CAN102",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-102-CAN102"
+  ],
+  "after": []
+}

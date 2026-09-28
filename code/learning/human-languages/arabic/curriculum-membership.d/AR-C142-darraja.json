@@ -1,0 +1,11 @@
+{
+  "id": "AR-C142-darraja",
+  "pathSegment": "AR-PATH-142-THINGS142",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-142-THINGS142",
+      "order": 0
+    }
+  ]
+}

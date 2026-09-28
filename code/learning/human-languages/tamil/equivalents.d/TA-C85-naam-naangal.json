@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C85-naam-naangal",
+  "english": "the two words for we",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "ഞങ്ങൾ",
+      "romanization": "ñaṅṅaḷ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: ML-C71-njangal-naam; sameRoot judged by the author, awaiting native review"
+}

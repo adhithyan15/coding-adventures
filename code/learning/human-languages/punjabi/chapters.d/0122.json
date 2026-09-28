@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Millet, Wheat, Maize, Aubergine, Cauliflower",
+  "label": "ch:pa-millet-wheat-maize-aubergine-cauliflower",
+  "canDo": "I can say millet, wheat, maize, an aubergine and a cauliflower.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C122-gobhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say millet, wheat, maize, an aubergine and a cauliflower.",
+    "assesses": [
+      "PA-LEX-C122-THINGS122-03",
+      "PA-LEX-C122-THINGS122-04",
+      "PA-LEX-C122-THINGS122-05"
+    ]
+  }
+}

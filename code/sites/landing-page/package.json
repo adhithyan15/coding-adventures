@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "bootstrap": "node ../../packages/typescript/forme-cli/bin/bootstrap.mjs .",
-    "build": "forme build --report dist/.forme-build-report.json && tsx verify.ts",
+    "build": "forme build --report dist/.forme-build-report.json --deploy-input .forme/deploy-input && tsx verify.ts",
+    "deploy:dry-run": "forme deploy --manifest .forme/deploy-input/deploy-manifest.json --content-dir .forme/deploy-input/content --target github-pages --target-config deploy.github-pages.json --bootstrap-ownership deploy.bootstrap.json --dry-run",
+    "deploy": "forme deploy --manifest .forme/deploy-input/deploy-manifest.json --content-dir .forme/deploy-input/content --target github-pages --target-config deploy.github-pages.json --bootstrap-ownership deploy.bootstrap.json",
     "check": "forme check",
     "build:clean": "npm run bootstrap && npm run clean && npm run build",
     "clean": "forme clean",

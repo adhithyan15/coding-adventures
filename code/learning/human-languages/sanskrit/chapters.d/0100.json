@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Nail, Hammer, Scissors, Needle, Thread",
+  "label": "ch:sa-nail-hammer-scissors-needle-thread",
+  "canDo": "I can say a nail, a hammer, scissors, a needle and thread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C100-sutram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say a nail, a hammer, scissors, a needle and thread.",
+    "assesses": [
+      "SA-LEX-C100-THINGS100-03",
+      "SA-LEX-C100-THINGS100-04",
+      "SA-LEX-C100-THINGS100-05"
+    ]
+  }
+}

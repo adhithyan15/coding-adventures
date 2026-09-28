@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:7b6d302f36d349b0",
+  "lessonIds": [
+    "MW-C104-kharidno",
+    "MW-C104-ugharno",
+    "MW-C104-bulavno",
+    "MW-C104-mangno",
+    "MW-C104-jovno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch104.txt",
+  "json": "marwadi/narration/ch104.json",
+  "textHash": "fnv1a64:35c8882491557541",
+  "jsonHash": "fnv1a64:55a2053c51682f45",
+  "findings": []
+}

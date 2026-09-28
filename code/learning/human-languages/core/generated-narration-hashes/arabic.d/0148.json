@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:d12fe2a2de56261b",
+  "lessonIds": [
+    "AR-C148-masrur",
+    "AR-C148-wasi",
+    "AR-C148-amiq",
+    "AR-C148-mustadir",
+    "AR-C148-hadd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch148.txt",
+  "json": "arabic/narration/ch148.json",
+  "textHash": "fnv1a64:03d7bc0879196551",
+  "jsonHash": "fnv1a64:9ed30ee3e92667ce",
+  "findings": []
+}

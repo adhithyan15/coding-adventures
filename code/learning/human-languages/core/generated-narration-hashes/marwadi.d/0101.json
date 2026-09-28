@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:c91ae7b4af54536c",
+  "lessonIds": [
+    "MW-C101-yo",
+    "MW-C101-iso",
+    "MW-C101-uso",
+    "MW-C101-kiso",
+    "MW-C101-kun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch101.txt",
+  "json": "marwadi/narration/ch101.json",
+  "textHash": "fnv1a64:52e33072a0d21ccd",
+  "jsonHash": "fnv1a64:5637394f51b01914",
+  "findings": []
+}

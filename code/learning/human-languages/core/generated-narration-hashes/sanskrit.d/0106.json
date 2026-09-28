@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:b1a879fac98472a8",
+  "lessonIds": [
+    "SA-C106-rajjuh",
+    "SA-C106-godhumah",
+    "SA-C106-tandulah",
+    "SA-C106-mudgah",
+    "SA-C106-supah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch106.txt",
+  "json": "sanskrit/narration/ch106.json",
+  "textHash": "fnv1a64:c2d7906259703792",
+  "jsonHash": "fnv1a64:8db36bbf2d04f742",
+  "findings": []
+}

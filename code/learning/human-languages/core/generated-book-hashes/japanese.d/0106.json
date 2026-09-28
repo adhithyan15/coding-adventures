@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:e6dafc71d39bd45d",
+  "lessonIds": [
+    "JA-C106-mon",
+    "JA-C106-hayashi",
+    "JA-C106-tsubomi",
+    "JA-C106-iwa",
+    "JA-C106-koishi"
+  ],
+  "tex": "japanese/book/chapters/ch106-gate-wood-bud-rock-pebble.tex"
+}

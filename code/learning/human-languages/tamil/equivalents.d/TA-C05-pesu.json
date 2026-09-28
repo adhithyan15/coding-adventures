@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C05-pesu",
+  "english": "to speak",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಾತನಾಡು",
+      "romanization": "mātanāḍu"
+    },
+    {
+      "language": "telugu",
+      "form": "మాట్లాడు",
+      "romanization": "māṭlāḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "സംസാരിക്കുക",
+      "romanization": "saṁsārikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "बोलना",
+      "romanization": "bolnā"
+    }
+  ],
+  "source": "cross-track match: KA-C05-maatanaadu, TE-C05-maatlaadu, ML-C05-samsaarikkuka, HI-C43-speak"
+}

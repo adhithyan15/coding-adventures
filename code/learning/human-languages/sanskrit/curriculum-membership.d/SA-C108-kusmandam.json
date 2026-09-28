@@ -1,0 +1,11 @@
+{
+  "id": "SA-C108-kusmandam",
+  "pathSegment": "SA-PATH-108-THINGS108",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-108-THINGS108",
+      "order": 3
+    }
+  ]
+}

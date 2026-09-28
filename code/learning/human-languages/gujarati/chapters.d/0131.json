@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Low, Wide, Thin, Wet, Dry",
+  "label": "ch:gu-low-wide-thin-wet-dry",
+  "canDo": "I can say low, wide, thin, wet and dry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GU-C131-suku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say low, wide, thin, wet and dry.",
+    "assesses": [
+      "GU-LEX-C131-QUAL131-03",
+      "GU-LEX-C131-QUAL131-04",
+      "GU-LEX-C131-QUAL131-05"
+    ]
+  }
+}

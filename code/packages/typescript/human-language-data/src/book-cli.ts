@@ -1,3 +1,4 @@
+import { loadComparisonSets, loadEquivalents, withEquivalentsPanels } from "./equivalents.js";
 import { FIGURE_CONFIG_PATH, resolvedFigureTargets } from "./figure-cli.js";
 import { withFilmstripImages } from "./figure-targets.js";
 import {
@@ -546,7 +547,22 @@ export function generatedBookOutputs(
   const figureTargets = statIfPresent(join(root, FIGURE_CONFIG_PATH)) === undefined
     ? []
     : resolvedFigureTargets(root, authored);
-  const lessons = withFilmstripImages(authored, figureTargets);
+  // HL41: the family-and-neighbours panel, appended to each lesson's first
+  // teaching block. Book-only, like the filmstrips above. A curriculum with no
+  // comparison sets (the fixture roots in the tests) prints none and needs no
+  // language registry.
+  const withFigures = withFilmstripImages(authored, figureTargets);
+  const comparisonSets = loadComparisonSets(root);
+  let lessons = withFigures;
+  if (comparisonSets !== undefined) {
+    const registry = loadLanguageRegistry(root);
+    lessons = withEquivalentsPanels(
+      withFigures,
+      loadEquivalents(root, registry.languages.map((language) => language.id)),
+      comparisonSets,
+      registry,
+    );
+  }
   const policy = loadChapterPolicy(root);
   const modality = summarizeModality(authored, {
     maxLinearisableTableColumns: policy.maxLinearisableTableColumns,

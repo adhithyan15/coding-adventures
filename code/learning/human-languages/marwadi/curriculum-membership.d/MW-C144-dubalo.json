@@ -1,0 +1,11 @@
+{
+  "id": "MW-C144-dubalo",
+  "pathSegment": "MW-PATH-144-QUAL144",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-144-QUAL144",
+      "order": 3
+    }
+  ]
+}

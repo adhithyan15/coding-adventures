@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C128-komakai",
+    "language": "japanese",
+    "chapter": 128,
+    "sequence": 7580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17ff4f96894ea210"
+  },
+  "findings": []
+}

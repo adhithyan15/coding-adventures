@@ -1,0 +1,11 @@
+{
+  "id": "PA-C148-diggna",
+  "pathSegment": "PA-PATH-148-ACT148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-148-ACT148",
+      "order": 1
+    }
+  ]
+}

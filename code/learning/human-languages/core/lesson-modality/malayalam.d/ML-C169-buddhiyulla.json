@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C169-buddhiyulla",
+    "language": "malayalam",
+    "chapter": 169,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:864ee2c59fd80854"
+  },
+  "findings": []
+}

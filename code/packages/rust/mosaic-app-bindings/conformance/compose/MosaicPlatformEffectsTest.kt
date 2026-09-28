@@ -80,12 +80,45 @@ class MosaicPlatformEffectsTest {
         for (name in listOf(
             "../escape.json", "dir/a.json", "a\\b.json", "", ".", "..", "a\u0000b",
             "D:report.json", "notes.json:stream", "invoice\u202Efdp.exe", "trailing.", "trailing ",
+            // Tightened after the SwiftUI library's security review (UI87 §7):
+            ".zshrc", " leading.json", "nbsp\u00A0", "\u3000ideographic.json",
+            "line\u2028break.json", "para\u2029break.json",
+            "tag\uDB40\uDC01.json", // U+E0001 LANGUAGE TAG, a format character outside the BMP
+            "x".repeat(256), "Invoice.pdf      .command",
+            ".\u0301zshrc", "Invoice.pdf\u2800\u2800.txt",
+            "a\uD800.json", "a\uE000.json",
+            "Invoice.pdf" + " \uFE00".repeat(30) + " x.html", "\uFE00.zshrc", "notes.txt\uFE00.",
         )) {
             assertFalse(mosaicIsPlainFileName(name), name)
             val outcome = mosaicRunFilesSave(mapOf("suggestedName" to name, "bytes" to encoded("x")), FakeDialogs(null))
             assertTrue(outcome.containsKey("failed"), name)
         }
         assertTrue(mosaicIsPlainFileName("journal.json"))
+        assertTrue(mosaicIsPlainFileName("caf\u00E9 menu.json"))
+        assertTrue(mosaicIsPlainFileName("\u2764\uFE0F list.txt"))
+    }
+
+    @Test
+    fun withNoAcceptedTypeAnExecutableExtensionIsRefused() {
+        for (name in listOf(
+            "run.command", "open.terminal", "site.webloc", "setup.EXE", "go.desktop", "a.ps1",
+            "a.j\u017F", "img.iso", "clip.scf", "app.AppImage", "run\u0D4E.terminal",
+        )) {
+            assertTrue(mosaicHasExecutableExtension(name), name)
+            val outcome = mosaicRunFilesSave(
+                mapOf("suggestedName" to name, "bytes" to encoded("x")),
+                FakeDialogs(File(directory, name)),
+            )
+            assertEquals(
+                mapOf("failed" to mapOf("message" to "suggestedName must not end in an executable extension")),
+                outcome,
+                name,
+            )
+            assertFalse(File(directory, name).exists(), name)
+        }
+        // An ordinary document with no accepted type still saves.
+        assertFalse(mosaicHasExecutableExtension("notes.txt"))
+        assertFalse(mosaicHasExecutableExtension("README"))
     }
 
     @Test

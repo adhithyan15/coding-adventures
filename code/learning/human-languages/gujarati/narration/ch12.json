@@ -3,8 +3,8 @@
   "language": "gujarati",
   "chapter": 12,
   "title": "Numbers One to Five",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:647e17ed1e45526c",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:c74b88debba17973",
   "lessons": [
     {
       "id": "GU-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:310b09fba1ed2f23",
+      "sourceHash": "fnv1a64:a3fd441165e81257",
       "notice": null,
       "blocks": [
         {
@@ -42,7 +42,7 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know: the five",
+          "title": "You'll want to know: the five, in a headless script",
           "segments": [
             {
               "kind": "table",
@@ -69,21 +69,6 @@
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built: two surprises and a headless script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Most neighbouring languages have a d in “two,” but Gujarati says બે be. Hindi says tīn for “three,” but Gujarati says ત્રણ traṇ, with an r."
-            },
-            {
-              "kind": "speech",
-              "text": "Do not carry both histories while the count is still new. Make the five forms automatic first; the next prerequisite-ordered lesson explains why be and traṇ took those shapes."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -105,15 +90,6 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the odd two — Gujarati be and traṇ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the odd two — Gujarati **be** and **traṇ**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
               "instruction": "the script clue — Devanagari shapes without a top line",
               "spoken": true,
               "scored": false,
@@ -123,7 +99,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -135,7 +111,105 @@
             },
             {
               "kind": "speech",
-              "text": "Count to five in Gujarati. (Ek, be, traṇ, chār, pā̃ch.) Why does બે look unlike its neighbours? (It begins with b, not d.) What does ત્રણ contain that Hindi tīn does not? (r.) What is visibly missing from the Gujarati script? (The top line: the shirorekhā is not drawn.) Next: trace the two surprising number histories."
+              "text": "Count to five in Gujarati. (Ek, be, traṇ, chār, pā̃ch.) What is visibly missing from the Gujarati script? (The top line: the shirorekhā is not drawn.) Next: the two of the five that look unlike their neighbours."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C06-numbers-1-5-more",
+      "sequence": 378,
+      "title": "બે and ત્રણ — two surprises",
+      "headword": "(એક બે ત્રણ ચાર પાંચ, continued)",
+      "romanization": "(ek be traṇ chār pā̃ch, continued)",
+      "gloss": "be and traṇ, the two surprises",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:591a6e10c0886c44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count to five once more: ek, be, traṇ, chār, pā̃ch. Three of the five will look familiar from other Indian languages. Which two won't?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built: two surprises",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most neighbouring languages have a d in “two,” but Gujarati says બે be. Hindi says tīn for “three,” but Gujarati says ત્રણ traṇ, with an r."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not carry both histories while the count is still new. Make the two forms automatic first; the next lesson explains why be and traṇ took those shapes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"two\" — Gujarati be, with b, not d",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"two\" — Gujarati **be**, with *b*, not *d*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"three\" — Gujarati traṇ, with an r",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"three\" — Gujarati **traṇ**, with an *r*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does બે look unlike its neighbours? (It begins with b, not d.) What does ત્રણ contain that Hindi tīn does not? (r.) Next: trace the two surprising number histories."
             }
           ]
         }
@@ -144,17 +218,17 @@
     {
       "id": "GU-C06-number-histories",
       "sequence": 383,
-      "title": "Two number histories: be and traṇ",
+      "title": "A number history: be",
       "headword": "બે · ત્રણ",
       "romanization": "be · traṇ",
-      "gloss": "why Gujarati two begins with b and why three regained an r",
+      "gloss": "why Gujarati two begins with b",
       "script": "gujarati",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45798a77085155be",
+      "sourceHash": "fnv1a64:1ea409c773fd7039",
       "notice": null,
       "blocks": [
         {
@@ -212,6 +286,108 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gujarati's selected form — feminine/neuter dvé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Gujarati's selected form — feminine/neuter *dvé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sound path — dv becomes bb becomes b",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sound path — *dv → bb → b*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why be, not Hindi do? (Different Sanskrit forms.) What changed in dv becomes b? (D became labial beside v; the double simplified.) Next: traṇ and the r that came back."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C06-number-histories-be-source",
+              "prompt": "Does Gujarati be descend from the same Sanskrit form as Hindi do?",
+              "assesses": [
+                "GU-ETYMON-BE-DVE-SELECTION"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no",
+                "no it does not",
+                "different sanskrit forms"
+              ],
+              "feedback": {
+                "correct": "Right: Gujarati and Hindi selected different Sanskrit forms for two.",
+                "incorrect": "No. Gujarati be and Hindi do descend from different Sanskrit forms."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C06-number-histories-more",
+      "sequence": 388,
+      "title": "A number history: traṇ",
+      "headword": "(બે · ત્રણ, continued)",
+      "romanization": "(be · traṇ, continued)",
+      "gloss": "traṇ and the r that came back",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7d410c1697bf9e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Gujarati say be where Hindi says do? (It kept a different Sanskrit form.) Now the other surprise, traṇ."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "etymology",
           "title": "The word, taken apart — ત્રણ and the r that came back",
           "segments": [
@@ -241,7 +417,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -250,24 +426,6 @@
               "seconds": 1,
               "perItem": false,
               "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "Gujarati's selected form — feminine/neuter dvé",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: Gujarati's selected form — feminine/neuter *dvé*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the sound path — dv becomes bb becomes b",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the sound path — *dv → bb → b*]"
             },
             {
               "kind": "prompt",
@@ -290,7 +448,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -302,26 +460,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why be, not Hindi do? (Different Sanskrit forms.) What changed in dv becomes b? (D became labial beside v; the double simplified.) Did traṇ keep r? (No: Sanskrit restored Prakrit's lost r.) How can a newer form look older? (Learned restoration.)"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "GU-C06-number-histories-be-source",
-              "prompt": "Does Gujarati be descend from the same Sanskrit form as Hindi do?",
-              "assesses": [
-                "GU-ETYMON-BE-DVE-SELECTION"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "no",
-                "no it does not",
-                "different sanskrit forms"
-              ],
-              "feedback": {
-                "correct": "Right: Gujarati and Hindi selected different Sanskrit forms for two.",
-                "incorrect": "No. Gujarati be and Hindi do descend from different Sanskrit forms."
-              }
+              "text": "Did traṇ keep its r all the way from Sanskrit? (No: it was restored from Sanskrit after Prakrit lost it.) How can a newer form look older? (Learned restoration.)"
             }
           ]
         }

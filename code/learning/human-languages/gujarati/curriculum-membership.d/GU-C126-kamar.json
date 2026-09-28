@@ -1,0 +1,11 @@
+{
+  "id": "GU-C126-kamar",
+  "pathSegment": "GU-PATH-126-THINGS126",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-126-THINGS126",
+      "order": 1
+    }
+  ]
+}

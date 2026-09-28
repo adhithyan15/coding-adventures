@@ -9,7 +9,7 @@ headword: એક બે ત્રણ ચાર પાંચ
 romanization: ek be traṇ chār pā̃ch
 gloss: retrieve one to five, and the two histories under them, at the fourth spacing window
 concept_tag: REVIEW
-prerequisites: [GU-R25-time-written-r1]
+prerequisites: [GU-R25-time-written-r1, GU-C06-numbers-1-5-more, GU-C06-number-histories-more]
 sounds: []
 roots: []
 etymology_hook: The first five numbers were introduced at positions 83-84 and have not been asked for since; this is 104 lessons later.

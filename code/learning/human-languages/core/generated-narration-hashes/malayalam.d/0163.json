@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:fbcd3ca3fe9b14f7",
+  "lessonIds": [
+    "ML-C163-purikam",
+    "ML-C163-kaivella",
+    "ML-C163-kanji",
+    "ML-C163-payaru",
+    "ML-C163-parippu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch163.txt",
+  "json": "malayalam/narration/ch163.json",
+  "textHash": "fnv1a64:51141f3d5b88768c",
+  "jsonHash": "fnv1a64:2d5ae2ea9df0417b",
+  "findings": []
+}

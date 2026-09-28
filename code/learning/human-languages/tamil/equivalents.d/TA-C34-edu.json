@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C34-edu",
+  "english": "to take, to pick up",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತೆಗೆದುಕೊ",
+      "romanization": "tegeduko"
+    },
+    {
+      "language": "telugu",
+      "form": "తీసుకో",
+      "romanization": "tīsukō"
+    },
+    {
+      "language": "malayalam",
+      "form": "എടുക്കുക",
+      "romanization": "eṭukkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "लेना",
+      "romanization": "lenā"
+    }
+  ],
+  "source": "cross-track match: KA-C34-tegeduko, TE-C34-tiisuko, ML-C34-edukkuka, HI-C35-lena"
+}

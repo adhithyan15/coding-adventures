@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:a63d08fdc1259d15",
+  "lessonIds": [
+    "AR-C147-mashghul",
+    "AR-C147-mutab",
+    "AR-C147-nashit",
+    "AR-C147-latif",
+    "AR-C147-ghadib",
+    "AR-R147-first-pass-the-body",
+    "AR-R147-second-pass-town-school-and-work"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch147.txt",
+  "json": "arabic/narration/ch147.json",
+  "textHash": "fnv1a64:4e65d1c21d4f37f6",
+  "jsonHash": "fnv1a64:33ebfd520a360ac0",
+  "findings": []
+}

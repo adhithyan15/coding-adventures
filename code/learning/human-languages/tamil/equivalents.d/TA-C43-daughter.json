@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C43-daughter",
+  "english": "daughter",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಗಳು",
+      "romanization": "magaḷu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కూతురు",
+      "romanization": "kūturu"
+    },
+    {
+      "language": "malayalam",
+      "form": "മകൾ",
+      "romanization": "makaḷ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "बेटी",
+      "romanization": "beṭī"
+    }
+  ],
+  "source": "cross-track match: KA-C36-magalu, TE-C36-kuuturu, ML-C36-makal, HI-C44-daughter; sameRoot judged by the author, awaiting native review"
+}

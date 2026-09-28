@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:253b2b258313487d",
+  "lessonIds": [
+    "MW-C95-basant",
+    "MW-C95-tarkai",
+    "MW-C95-bagat",
+    "MW-C95-roj",
+    "MW-C95-ajkal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch95.txt",
+  "json": "marwadi/narration/ch95.json",
+  "textHash": "fnv1a64:420e10346d828358",
+  "jsonHash": "fnv1a64:0f5396eef6216268",
+  "findings": []
+}

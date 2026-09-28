@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:5e3dae039c38f068",
+  "lessonIds": [
+    "PA-C130-hiran",
+    "PA-C130-ricch",
+    "PA-C130-giddar",
+    "PA-C130-baghiar",
+    "PA-C130-kabutar"
+  ],
+  "tex": "punjabi/book/chapters/ch130-deer-bear-jackal-wolf-pigeon.tex"
+}

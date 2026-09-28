@@ -1,0 +1,11 @@
+{
+  "id": "GU-C105-rakhvu",
+  "pathSegment": "GU-PATH-105-CAN105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-105-CAN105",
+      "order": 1
+    }
+  ]
+}

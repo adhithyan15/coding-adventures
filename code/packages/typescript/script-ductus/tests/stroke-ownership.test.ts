@@ -182,12 +182,46 @@ describe("stroke ownership migration baseline", () => {
       // Measured for the Malayalam chillu NN repair: the newly source-verified
       // ൺ adds its font-checked ductus. Keys move 377 -> 378 and Malayalam
       // 13 -> 14; Tamil and both shared-identity values remain unchanged.
+      //
+      // Telugu క starts the consonant pass with its five-movement, two-run
+      // source-backed path. Keys move 378 -> 379 and Telugu 9 -> 10; Tamil and
+      // both shared-identity values remain unchanged.
+      //
+      // Telugu ఖ continues that pass with its six-movement, two-run path.
+      // Keys move 379 -> 380 and Telugu 10 -> 11; Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // Telugu గ follows with its two-movement, two-run path. Keys move
+      // 380 -> 381 and Telugu 11 -> 12; Tamil and both shared-identity
+      // values remain unchanged.
+      //
+      // Telugu ఘ continues with its six-movement, four-run path. Keys move
+      // 381 -> 382 and Telugu 12 -> 13; Tamil and both shared-identity
+      // values remain unchanged.
+      //
+      // Telugu చ starts the next consonant row with a four-movement, two-run
+      // path. Keys move 382 -> 383 and Telugu 13 -> 14; Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // Telugu ఙ fills the word-first gap before చ with a five-movement,
+      // three-run path. Keys move 383 -> 384 and Telugu 14 -> 15; Tamil and
+      // both shared-identity values remain unchanged.
+      //
+      // Telugu జ is the next consonant with an existing vocabulary-first
+      // lesson owner. Its four sourced movements remain four pen-down runs.
+      // Keys move 384 -> 385 and Telugu 15 -> 16; Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // Telugu ఞ already has a vocabulary-first lesson owner. Its eight
+      // sourced movements remain eight pen-down runs. Keys move 385 -> 386
+      // and Telugu 16 -> 17; Tamil and both shared-identity values remain
+      // unchanged.
     }).toEqual({
-      keys: 378,
+      keys: 386,
       keyHash:
-        "5ac95f460ce222b4783441588af2a1c77012585dbd74f827c1ad012e5b2a7faf",
+        "6db2e424532f060c41a9d1ce3a5a50fae3ac03e53cc1e215674f0616a82ee7ba",
       nonTamilDataHash:
-        "029f32ba62935742791fa1d45fe0df7096b39c861131503778bf3b79f5e2e2a8",
+        "938478bf086393e9644634b719153bbe178a61b7969e4797a4f86044bc010359",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -203,7 +237,7 @@ describe("stroke ownership migration baseline", () => {
         malayalam: 14,
         "perso-arabic": 24,
         tamil: 29,
-        telugu: 9,
+        telugu: 17,
         "urdu-nastaliq": 31,
       },
     });

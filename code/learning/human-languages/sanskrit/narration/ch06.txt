@@ -1,8 +1,8 @@
 Sanskrit, chapter 6: Numbers One to Five.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 8.
 एक, द्व, त्रि, चतुर्, पञ्च (pañca) — one to five.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know: the five until you have stopped, and I will say so again when we reach it.
@@ -10,13 +10,14 @@ Before we start: this one needs your eyes, so it is not fully a driving lesson. 
 Warm-up.
 [pause 2 seconds]
 This chapter does something the other Indic chapters can't do alone. Sanskrit preserves the Old Indo-Aryan forms behind the Hindi, Marathi, Bengali, Gujarati and Punjabi ones — and, at the same time, these forms are cousins of the English ones. Learn five and you get a foothold in both directions.
+[pause 1 second]
+How many numbers does a Sanskrit verb count in? (Three: singular, dual for exactly two, and plural.)
 
 You'll want to know: the five.
 There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: one with no heading, stem, masculine, neuter. Come back and look at it when you have stopped.
-Three notes, and the third one matters more than it looks.
+Two notes first. A third, about the last column, follows in the next lesson.
 Sanskrit has a dual — a separate number for exactly two things — which is why "two" is dváu rather than a plural.
 Pañca barely inflects in the nominative and accusative. It is also the one you already half-know.
-And Sanskrit numbers have gender. Look at the last column. These same words, in Hindi, Marathi, Bengali, Gujarati, and Punjabi, mostly descend from the neuter forms — trī́ṇi and catvā́ri, not tráyaḥ and catvā́raḥ. Keep that column in view; the daughter languages inherit from it.
 
 What you've built: two directions.
 These five forms point in two directions. The next lesson lines them up with Latin and English and explains the sound laws. A final short lesson follows pañca into Punjab, pentagon, and the qualified history of punch.
@@ -27,15 +28,39 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the exactly-two category — dual]
 [pause 8 seconds for the answer]
-[your turn — say: the daughter-language column — neuter]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give one to five in Sanskrit. (Eka, dva, tri, catur, pañca.) Why does "two" look unusual? (Sanskrit has a dual — a form for exactly two.) Which number barely inflects in this table? (Pañca.) Next: connect the Sanskrit forms west to Latin and English.
+
+
+Lesson 2 of 8.
+(एक द्व त्रि चतुर् पञ्च, continued) ((eka dva tri catur pañca, continued)) — numbers have gender.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: count one to five again — एक द्व त्रि चतुर् पञ्च (eka dva tri catur pañca).
+[pause 1 second]
+And the letter from the last lesson: say the sound of अ.
+[pause 1 second]
+From the goodbyes: which English word is a cousin of gam "to go"? (Come.)
+
+You'll want to know: numbers have gender.
+Sanskrit numbers have gender. Look back at the last column of the table in the last lesson. These same words, in Hindi, Marathi, Bengali, Gujarati, and Punjabi, mostly descend from the neuter forms — trī́ṇi and catvā́ri, not tráyaḥ and catvā́raḥ. Keep that column in view; the daughter languages inherit from it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: what this lesson added to एक द्व त्रि चतुर् पञ्च (eka dva tri catur pañca), in one sentence]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give one to five in Sanskrit. (Eka, dva, tri, catur, pañca.) Why does "two" look unusual? (Sanskrit has a dual — a form for exactly two.) Which column will the modern languages mostly descend from? (The neuter — trī́ṇi, catvā́ri.) Which number barely changes across gender in this table? (Pañca.) Next: connect the Sanskrit forms west to Latin and English.
+What did this lesson add to एक द्व त्रि चतुर् पञ्च (eka dva tri catur pañca)? Say it once more, without looking.
 
 
-Lesson 2 of 5.
+Lesson 3 of 8.
 The Sanskrit numbers are English cousins — the Sanskrit, Latin, and English number family and the sound laws between them.
 
 Warm-up.
@@ -52,37 +77,21 @@ Sanskrit: páñca. Latin: quīnque. English: five.
 Sanskrit, Latin, and English inherited these from one family. Numbers resist replacement, so their relationship remains audible after millennia.
 The first row needs one caveat: éka- and ūnus/one use the same root with different suffixes, PIE oy-ko- versus óynos. They are relatives rather than the same complete word. The other four rows continue the same word.
 
-The word, taken apart — rounded k goes three ways.
-PIE kʷ was a k with rounded lips. In kʷetwóres “four,” three branches treated it differently:
-[a table of 3 rows, read aloud]
-branch: Latin. outcome: kept qu-. example: quattuor.
-branch: Indo-Iranian. outcome: merged it with k, then palatalised before front vowels. example: catvāri.
-branch: Germanic. outcome: shifted it to hw-. example: what, who.
-Sanskrit c- is therefore a regular result, not a random replacement. The same sequence helps explain pañca's ñc.
-
-The word, taken apart — two different English f stories.
-The f- of five does not come from kʷ. It comes from initial p, changed to f by Grimm's law, as in pater becomes father and pēs becomes foot.
-English four is irregular. By the sound rule it should begin hw- like what. Its f- is usually explained as analogy with neighbouring five. Counting words can reshape one another.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: tri, trēs, three]
-[pause 8 seconds for the answer]
-[your turn — say: rounded k — quattuor, catvāri, what]
-[pause 8 seconds for the answer]
-[your turn — say: initial p becomes f — pañca/five]
 [pause 8 seconds for the answer]
 [your turn — say: regular inheritance or borrowing — inheritance]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Are the Latin and Sanskrit forms borrowed from one another? (No: they are inherited cousins.) What are the three outcomes of kʷ? (Latin qu-, Indo-Iranian c- after merger and palatalisation, Germanic hw-.) Where does five's initial f come from? (PIE p by Grimm's law.) What is the usual explanation for four also beginning with f? (Analogy with neighbouring five.)
+Are the Latin and Sanskrit forms borrowed from one another? (No: they are inherited cousins.) Next: the sound laws that pulled the cousins apart.
 [question — say your answer, then pause 8 seconds]
 Were the Latin and Sanskrit number forms borrowed from one another?
 
 
-Lesson 3 of 5.
+Lesson 4 of 8.
 ञ (ña) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ञ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -128,8 +137,39 @@ Wrap-up Recall.
 Which character is this — ञ? What sound does it carry? (ña.) Name one word you already say that contains it.
 
 
-Lesson 4 of 5.
-Pañca hiding in familiar words — five inside Punjab, pentagon, and the debated history of punch.
+Lesson 5 of 8.
+(एक, द्व, त्रि, चतुर्, पञ्च (pañca), continued) — The word, taken apart — rounded k goes three ways.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: say एक, द्व, त्रि, चतुर्, पञ्च (pañca) again, and what it means.
+
+The word, taken apart — rounded k goes three ways.
+PIE kʷ was a k with rounded lips. In kʷetwóres “four,” three branches treated it differently:
+[a table of 3 rows, read aloud]
+branch: Latin. outcome: kept qu-. example: quattuor.
+branch: Indo-Iranian. outcome: merged it with k, then palatalised before front vowels. example: catvāri.
+branch: Germanic. outcome: shifted it to hw-. example: what, who.
+Sanskrit c- is therefore a regular result, not a random replacement. The same sequence helps explain pañca's ñc.
+
+The word, taken apart — two different English f stories.
+The f- of five does not come from kʷ. It comes from initial p, changed to f by Grimm's law, as in pater becomes father and pēs becomes foot.
+English four is irregular. By the sound rule it should begin hw- like what. Its f- is usually explained as analogy with neighbouring five. Counting words can reshape one another.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: rounded k — quattuor, catvāri, what]
+[pause 8 seconds for the answer]
+[your turn — say: initial p becomes f — pañca/five]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three outcomes of kʷ? (Latin qu-, Indo-Iranian c- after merger and palatalisation, Germanic hw-.) Where does five's initial f come from? (PIE p by Grimm's law.) What is the usual explanation for four also beginning with f? (Analogy with neighbouring five.)
+
+
+Lesson 6 of 8.
+Pañca hiding in familiar words — five inside Punjab and pentagon, with the debated punch story next.
 
 Warm-up.
 [pause 2 seconds]
@@ -142,25 +182,42 @@ The place-name is Persian, not Sanskrit, but the family resemblance is real.
 The word, taken apart — Greek buildings and contests.
 Greek pente is another descendant of the same root. It appears in pentagon, a five-sided figure, and pentathlon, a five-event contest.
 
-The word, taken apart — the qualified punch story.
-The usual account derives punch, the drink, from Hindi pāṁch from Sanskrit pañca, because the drink was said to contain five ingredients.
-That origin is not unanimous. A rival derives the word from puncheon, a type of cask. Keep the useful connection with a label: “the common five-ingredients account,” not an unquestioned fact.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: panj + āb — five waters]
 [pause 8 seconds for the answer]
 [your turn — say: Greek pente — pentagon, pentathlon]
 [pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does Punjab mean? (“Five waters.”) Is Persian panj borrowed from Sanskrit? (No: it is an Iranian cousin.) Which Greek form hides in pentagon? (Pente.) Next: the drink punch, and why its story comes with a caution.
+
+
+Lesson 7 of 8.
+(पञ्च, continued) ((pañca, continued)) — The word, taken apart — the qualified punch story.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: say पञ्च (pañca) again, and what it means.
+
+The word, taken apart — the qualified punch story.
+The usual account derives punch, the drink, from Hindi pāṁch from Sanskrit pañca, because the drink was said to contain five ingredients.
+That origin is not unanimous. A rival derives the word from puncheon, a type of cask. Keep the useful connection with a label: “the common five-ingredients account,” not an unquestioned fact.
+
+Guided Practice.
+[pause 1 second]
 [your turn — say: punch — common account, not certain]
+[pause 8 seconds for the answer]
+[your turn — say: the rival: puncheon, a cask]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does Punjab mean? (“Five waters.”) Is Persian panj borrowed from Sanskrit? (No: it is an Iranian cousin.) Which Greek form hides in pentagon? (Pente.) What caution belongs with the drink punch? (The five-ingredients derivation is common, but puncheon is a rival account.)
+What caution belongs with the drink punch? (The five-ingredients derivation is common, but puncheon is a rival account.)
 
 
-Lesson 5 of 5.
+Lesson 8 of 8.
 नमस्कारः (namaskāraḥ) — the ending you can hear, and four claims you were told once.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -168,6 +225,8 @@ Before we start: this one needs your eyes, so it is not fully a driving lesson. 
 Warm-up.
 [pause 3 seconds]
 Say the longer of the two greetings. Then say what its last breath — the soft -ḥ — is telling you about the word.
+[pause 1 second]
+Sanskrit numbers have gender. Which forms of "three" and "four" do the modern languages mostly inherit? (The neuter ones, trīṇi and catvāri.)
 
 Why it's said this way.
 Namaskāraḥ ends on a visarga, and a visarga on a noun like this one is not decoration: it marks the masculine singular. You have been hearing it since your first pair of greetings without being asked to notice it twice.

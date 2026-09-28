@@ -71,6 +71,58 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_component(component, layout, style, None)
+}
+
+/// The `@Composable` a layout **variant**'s root is named (UI48 §7.5, ENV2):
+/// `EngramApp` + `touch` → `EngramAppTouch`, `task-list` → `TaskList`. The
+/// same rule as SwiftUI's `<Component><Variant>View`; `None` for a variant
+/// name that could not become part of a Kotlin identifier.
+pub fn variant_composable_name(component: &str, variant: &str) -> Option<String> {
+    // `-` and `_` both separate words (`discover_variants` admits both).
+    let separator = |character: char| character == '-' || character == '_';
+    let valid = !variant.is_empty()
+        && variant
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric() || separator(character))
+        && variant.split(separator).all(|part| !part.is_empty());
+    if !valid {
+        return None;
+    }
+    let pascal: String = variant
+        .split(separator)
+        .map(|part| {
+            let mut characters = part.chars();
+            let first = characters.next().expect("parts are non-empty");
+            first.to_ascii_uppercase().to_string() + characters.as_str()
+        })
+        .collect();
+    Some(format!("{component}{pascal}"))
+}
+
+/// Emit one layout **variant** so it can share an app with the default
+/// (UI48 §7.5, ENV2): the same composable under [`variant_composable_name`],
+/// and none of the component's interface -- no `<C>Event` sealed class and
+/// no `<C>Props` data classes. The interface is the same for every variant
+/// (UI30 §2.2), the default layout's file declares it once, and this file's
+/// composable takes and dispatches those same types. Everything else a
+/// generated file declares at top level is `private`, which Kotlin scopes to
+/// the file, so it may repeat.
+pub fn from_pipeline_variant(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: &str,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
+    emit_component(interface, layout, style, Some(variant))
+}
+
+fn emit_component(
+    component: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+    variant: Option<&str>,
+) -> Result<PipelineEmitResult, PipelineEmitError> {
     // #15464 -- `$` inside an Expr string literal is Kotlin interpolation.
     let layout = &layout_with_escaped_expr_strings(layout);
     validate_typography(&layout.root)?;
@@ -371,7 +423,7 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.runtime.Composable").unwrap();
     // Only when the props object is emitted -- an unused import is a warning,
     // and Kotlin builds that treat warnings as errors would fail on it.
-    if needs_props_object(&component.slots) {
+    if needs_props_object(&component.slots) && variant.is_none() {
         writeln!(out, "import androidx.compose.runtime.Immutable").unwrap();
     }
     if uses_drag {
@@ -608,15 +660,41 @@ pub fn from_pipeline(
         writeln!(out).unwrap();
     }
 
-    out.push_str(&emit_event_sealed_class(&name, &component.emits)?);
-    writeln!(out).unwrap();
-    out.push_str(&emit_composable_function(
+    // The interface -- event type and props classes -- only in the default
+    // layout's file; a variant reuses it (see `from_pipeline_variant`).
+    let declares_interface = variant.is_none();
+    if declares_interface {
+        out.push_str(&emit_event_sealed_class(&name, &component.emits)?);
+        writeln!(out).unwrap();
+    }
+    let composable = emit_composable_function(
         &name,
         &component.slots,
         &layout.root,
         &component.emits,
         &part_styles,
-    )?);
+        declares_interface,
+    )?;
+    match variant {
+        None => out.push_str(&composable),
+        Some(variant) => {
+            let root = variant_composable_name(&name, variant).ok_or_else(|| {
+                PipelineEmitError::UnsafeSlotName(format!(
+                    "layout variant `{variant}` cannot name a Kotlin composable"
+                ))
+            })?;
+            // The root is the one public `fun`, written at a line start as
+            // `fun <C>(`; sections are `private fun <C>Section<n>(`, and so
+            // file-scoped already. Exactly one must be renamed.
+            let default_root = format!("\nfun {name}(\n");
+            if composable.matches(&default_root).count() != 1 {
+                return Err(PipelineEmitError::UnsafeSlotName(format!(
+                    "layout variant `{variant}`: expected one `fun {name}(` to rename"
+                )));
+            }
+            out.push_str(&composable.replacen(&default_root, &format!("\nfun {root}(\n"), 1));
+        }
+    }
 
     Ok(PipelineEmitResult {
         output: out,
@@ -1300,6 +1378,7 @@ fn emit_composable_function(
     layout_root: &LayoutNode,
     emits: &[EmitDecl],
     part_styles: &PartStyleMap,
+    declares_interface: bool,
 ) -> Result<String, PipelineEmitError> {
     if should_split_root_sections(layout_root) {
         return emit_split_composable_function(
@@ -1308,12 +1387,13 @@ fn emit_composable_function(
             layout_root,
             emits,
             part_styles,
+            declares_interface,
         );
     }
 
     let mut out = String::new();
     let grouped = needs_props_object(slots);
-    if grouped {
+    if grouped && declares_interface {
         emit_props_data_class(&mut out, component_name, slots)?;
     }
     writeln!(out, "@OptIn(ExperimentalFoundationApi::class)").unwrap();
@@ -2662,13 +2742,14 @@ fn emit_split_composable_function(
     layout_root: &LayoutNode,
     emits: &[EmitDecl],
     part_styles: &PartStyleMap,
+    declares_interface: bool,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let (root_composable, table_context, root_text) =
         root_container_context(layout_root, part_styles);
 
     let grouped = needs_props_object(slots);
-    if grouped {
+    if grouped && declares_interface {
         emit_props_data_class(&mut out, component_name, slots)?;
     }
     writeln!(out, "@Composable").unwrap();
@@ -16274,5 +16355,73 @@ mod colour_keyword_tests {
         assert_eq!(compose_color_value("#fff").as_deref(), Some("Color(0xFFFFFFFF)"));
         assert_eq!(compose_color_value("white").as_deref(), Some("Color.White"));
         assert_eq!(compose_color_value("grey").as_deref(), Some("Color.Gray"));
+    }
+}
+
+/// UI48 §7.5 (ENV2): a layout variant compiles beside the default.
+#[cfg(test)]
+mod layout_variant_tests {
+    use super::*;
+
+    #[test]
+    fn variant_composable_names_are_pascal_case_and_refuse_unusable_names() {
+        assert_eq!(variant_composable_name("EngramApp", "touch").as_deref(), Some("EngramAppTouch"));
+        assert_eq!(variant_composable_name("Card", "task-list").as_deref(), Some("CardTaskList"));
+        assert_eq!(variant_composable_name("Card", "big_screen").as_deref(), Some("CardBigScreen"));
+        for bad in ["", "-", "a--b", "a b", "a.b", "é"] {
+            assert_eq!(variant_composable_name("Card", bad), None, "{bad:?}");
+        }
+    }
+
+    fn compile(mil: &str, mll: &str) -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let model = mosmodel_compiler::compile(mil).expect("mil");
+        let layout = moslayout_compiler::compile(mll, Some(&model.descriptor_json)).expect("mll");
+        let style = mosstyle_compiler::compile("style Card { }", Some(&layout.part_map_json))
+            .expect("msl")
+            .def;
+        (model.component, layout.def, style)
+    }
+
+    #[test]
+    fn a_variant_names_its_own_composable_and_reuses_the_default_interface() {
+        let (model, layout, style) = compile(
+            "component Card { slot label : text ; emit onTap ; }",
+            "layout Card { Text [ root ] ( content : slot: label ) }",
+        );
+        let default = from_pipeline(&model, &layout, &style).unwrap().output;
+        let variant = from_pipeline_variant(&model, &layout, &style, "touch").unwrap().output;
+        assert!(default.contains("sealed class CardEvent"), "{default}");
+        assert!(default.contains("\nfun Card(\n"), "{default}");
+        assert!(!variant.contains("sealed class CardEvent"), "{variant}");
+        assert!(variant.contains("\nfun CardTouch(\n"), "{variant}");
+        assert!(!variant.contains("\nfun Card(\n"), "{variant}");
+        assert!(variant.contains("dispatch: (CardEvent) -> Unit"), "{variant}");
+    }
+
+    #[test]
+    fn a_variant_with_grouped_props_declares_no_props_classes() {
+        // Enough slots that the signature takes one props object.
+        let slots: String = (0..300).map(|i| format!("slot s{i} : text ; ")).collect();
+        let (model, layout, style) = compile(
+            &format!("component Card {{ {slots} }}"),
+            "layout Card { Text [ root ] ( content : slot: s0 ) }",
+        );
+        assert!(needs_props_object(&model.slots));
+        let default = from_pipeline(&model, &layout, &style).unwrap().output;
+        let variant = from_pipeline_variant(&model, &layout, &style, "touch").unwrap().output;
+        assert!(default.contains("data class CardProps("), "default declares the props");
+        assert!(default.contains("import androidx.compose.runtime.Immutable"));
+        assert!(!variant.contains("data class CardProps"), "variant reuses them");
+        assert!(!variant.contains("import androidx.compose.runtime.Immutable"));
+        assert!(variant.contains("props: CardProps,"));
+    }
+
+    #[test]
+    fn an_unusable_variant_name_is_an_error() {
+        let (model, layout, style) = compile(
+            "component Card { slot label : text ; }",
+            "layout Card { Text [ root ] ( content : slot: label ) }",
+        );
+        assert!(from_pipeline_variant(&model, &layout, &style, "a b").is_err());
     }
 }

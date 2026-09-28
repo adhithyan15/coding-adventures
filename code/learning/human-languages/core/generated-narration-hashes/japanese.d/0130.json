@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:4197a3b7505cec57",
+  "lessonIds": [
+    "JA-C130-masshiro",
+    "JA-C130-makkuro",
+    "JA-C130-makka",
+    "JA-C130-aimai",
+    "JA-C130-tashika",
+    "JA-R130-first-pass-describing-words",
+    "JA-R130-second-pass-describing-people-and-colours"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch130.txt",
+  "json": "japanese/narration/ch130.json",
+  "textHash": "fnv1a64:0db26887d3e492fd",
+  "jsonHash": "fnv1a64:b2a8835d38b7594a",
+  "findings": []
+}

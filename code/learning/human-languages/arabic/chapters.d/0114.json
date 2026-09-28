@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Goal, Plan, Need, To need, To wish",
+  "label": "ch:ar-goal-plan-need-to-need-to-wish",
+  "canDo": "I can say a goal, a plan, a need, to need and to wish.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "AR-C114-tamanna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a goal, a plan, a need, to need and to wish.",
+    "assesses": [
+      "AR-LEX-C114-WANT114-03",
+      "AR-LEX-C114-WANT114-04",
+      "AR-LEX-C114-WANT114-05"
+    ]
+  }
+}

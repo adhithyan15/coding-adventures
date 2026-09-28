@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:29ddb225060f7a3f",
+  "lessonIds": [
+    "SA-C98-atah",
+    "SA-C98-tasmat",
+    "SA-C98-hetuh",
+    "SA-C98-tadartham",
+    "SA-C98-yasmat"
+  ],
+  "tex": "sanskrit/book/chapters/ch98-therefore-so-cause-for-that-reason-because.tex"
+}

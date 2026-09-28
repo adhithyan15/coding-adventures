@@ -12,17 +12,17 @@ headword: "अतिथिः"
 gloss: "a guest"
 romanization: "atithiḥ"
 concept_tag: SA-PERSON-GUEST
-prerequisites: [SA-C26-king, SA-C24-cloth, SA-C25-tooth]
+prerequisites: [SA-C26-king, SA-C24-cloth, SA-C25-tooth, SA-C18-k-words]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C26-ROLE-03]
+  knowledge: [SA-LEX-C26-ROLE-03, SA-GRAMMAR-C18-K-QUESTIONS]
 introduces:
   knowledge: [SA-LEX-C26-ROLE-04]
 practises:
-  knowledge: [SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C24-ASK-04, SA-LEX-C25-BODY-04]
+  knowledge: [SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-LEX-C26-ROLE-04, SA-LEX-C24-ASK-04, SA-LEX-C25-BODY-04, SA-GRAMMAR-C18-K-QUESTIONS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,9 +34,11 @@ reviews_of: [SA-C26-king]
 # अतिथिः (atithiḥ) — a guest
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C26-ROLE-02, SA-LEX-C26-ROLE-03, SA-GRAMMAR-C18-K-QUESTIONS] -->
 
 [PAUSE 2s] Before the new word: what did *rājā* mean, and what did *guruḥ* mean?
+
+[PAUSE 1s] Ask a guest "from where?" and "how?" (*Kutaḥ? Katham?*) — two more of the *k-* questions.
 
 ## You'll want to know: अतिथिः
 <!-- hl-knowledge: introduces=[SA-LEX-C26-ROLE-04]; assesses=[] -->

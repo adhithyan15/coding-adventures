@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:eb84030a278e437c",
+  "lessonIds": [
+    "AR-C142-darraja",
+    "AR-C142-safina",
+    "AR-C142-musafir",
+    "AR-C142-masna",
+    "AR-C142-saha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch142.txt",
+  "json": "arabic/narration/ch142.json",
+  "textHash": "fnv1a64:9e036362d08602f2",
+  "jsonHash": "fnv1a64:3b76581b5d49aea3",
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C144-uyaramana",
+  "english": "tall",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "పొడవు",
+      "romanization": "poḍavu"
+    },
+    {
+      "language": "hindi",
+      "form": "लंबा",
+      "romanization": "lambā"
+    }
+  ],
+  "source": "cross-track match: TE-C136-podavu, HI-C82-lambaa"
+}

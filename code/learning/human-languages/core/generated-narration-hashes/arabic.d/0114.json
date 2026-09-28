@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:66c95357e37084b9",
+  "lessonIds": [
+    "AR-C114-hadaf",
+    "AR-C114-khutta",
+    "AR-C114-haja",
+    "AR-C114-ihtaja",
+    "AR-C114-tamanna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch114.txt",
+  "json": "arabic/narration/ch114.json",
+  "textHash": "fnv1a64:626262db7aaab610",
+  "jsonHash": "fnv1a64:b316c01969ec0691",
+  "findings": []
+}

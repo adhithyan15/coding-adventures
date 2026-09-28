@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Rabbit, Donkey, Boar, Bull, Buffalo",
+  "label": "ch:sa-rabbit-donkey-boar-bull-buffalo",
+  "canDo": "I can say a rabbit, a donkey, a boar, a bull and a buffalo.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C113-mahisah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a rabbit, a donkey, a boar, a bull and a buffalo.",
+    "assesses": [
+      "SA-LEX-C113-THINGS113-03",
+      "SA-LEX-C113-THINGS113-04",
+      "SA-LEX-C113-THINGS113-05"
+    ]
+  }
+}

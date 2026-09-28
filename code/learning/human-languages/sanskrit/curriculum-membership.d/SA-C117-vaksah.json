@@ -1,0 +1,11 @@
+{
+  "id": "SA-C117-vaksah",
+  "pathSegment": "SA-PATH-117-THINGS117",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-117-THINGS117",
+      "order": 1
+    }
+  ]
+}

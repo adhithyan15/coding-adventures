@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:01602ba89b7d65f2",
+  "lessonIds": [
+    "PA-C122-bajra",
+    "PA-C122-kanak",
+    "PA-C122-makki",
+    "PA-C122-baigan",
+    "PA-C122-gobhi"
+  ],
+  "tex": "punjabi/book/chapters/ch122-millet-wheat-maize-aubergine-cauliflower.tex"
+}

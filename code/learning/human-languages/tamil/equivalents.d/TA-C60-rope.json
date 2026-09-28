@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C60-rope",
+  "english": "a rope",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಗ್ಗ",
+      "romanization": "hagga"
+    },
+    {
+      "language": "telugu",
+      "form": "తాడు",
+      "romanization": "tāḍu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കയർ",
+      "romanization": "kayaṟ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "रस्सी",
+      "romanization": "rassī"
+    }
+  ],
+  "source": "cross-track match: KA-C62-rope, TE-C110-tadu, ML-C62-rope, HI-C62-rope; sameRoot judged by the author, awaiting native review"
+}

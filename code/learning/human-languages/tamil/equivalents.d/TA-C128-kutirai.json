@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C128-kutirai",
+  "english": "a horse",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕುದುರೆ",
+      "romanization": "kudure",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గుర్రం",
+      "romanization": "gurraṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "കുതിര",
+      "romanization": "kutira",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "घोड़ा",
+      "romanization": "ghoṛā"
+    }
+  ],
+  "source": "cross-track match: KA-C129-kudure, TE-C122-gurram, ML-C151-kutira, HI-C54-horse; sameRoot judged by the author, awaiting native review"
+}

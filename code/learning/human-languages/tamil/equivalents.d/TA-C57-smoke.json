@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C57-smoke",
+  "english": "smoke",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "പുക",
+      "romanization": "puka",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: ML-C59-smoke; sameRoot judged by the author, awaiting native review"
+}

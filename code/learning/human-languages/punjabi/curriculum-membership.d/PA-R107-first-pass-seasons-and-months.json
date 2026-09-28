@@ -1,0 +1,11 @@
+{
+  "id": "PA-R107-first-pass-seasons-and-months",
+  "pathSegment": "PA-PATH-107-DEF107",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-107-DEF107",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:66e88e4f1cedac9f",
+  "lessonIds": [
+    "MW-C135-matiro",
+    "MW-C135-kakri",
+    "MW-C135-bhidi",
+    "MW-C135-baingan",
+    "MW-C135-palak"
+  ],
+  "tex": "marwadi/book/chapters/ch135-watermelon-cucumber-okra-aubergine-spinach.tex"
+}

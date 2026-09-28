@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Bed, Pillow, Blanket, Curtain, Lock",
+  "label": "ch:sa-bed-pillow-blanket-curtain-lock",
+  "canDo": "I can say a bed, a pillow, a blanket, a curtain and a lock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R99-second-pass-places-why-and-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say a bed, a pillow, a blanket, a curtain and a lock.",
+    "assesses": [
+      "SA-LEX-C99-THINGS99-03",
+      "SA-LEX-C99-THINGS99-04",
+      "SA-LEX-C99-THINGS99-05"
+    ]
+  }
+}

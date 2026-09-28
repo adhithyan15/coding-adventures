@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-114-CAN114",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "MW-EXT-114-CAN114"
+  ],
+  "after": []
+}

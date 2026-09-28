@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R150-first-pass-can-want-and-why",
+    "language": "malayalam",
+    "chapter": 150,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c83755c1a9928f8b"
+  },
+  "findings": []
+}

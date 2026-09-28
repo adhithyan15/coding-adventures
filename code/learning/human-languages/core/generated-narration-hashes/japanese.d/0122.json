@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:40baace5d5187668",
+  "lessonIds": [
+    "JA-C122-fukai",
+    "JA-C122-taisetsu",
+    "JA-C122-hitsuyou",
+    "JA-C122-kantan",
+    "JA-C122-fukuzatsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch122.txt",
+  "json": "japanese/narration/ch122.json",
+  "textHash": "fnv1a64:0468affe993c2e86",
+  "jsonHash": "fnv1a64:d9de531357169ed4",
+  "findings": []
+}

@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C68-buy",
+  "english": "to buy, to get",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "വാങ്ങുക",
+      "romanization": "vāṅṅuka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "ख़रीदना",
+      "romanization": "kharīdnā"
+    }
+  ],
+  "source": "cross-track match: ML-C91-vaanguka, HI-C72-buy; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:585b14521303097f",
+  "lessonIds": [
+    "SA-C90-ahah",
+    "SA-C90-pradosah",
+    "SA-C90-aparahnah",
+    "SA-C90-madhyaratrih",
+    "SA-C90-usah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch90.txt",
+  "json": "sanskrit/narration/ch90.json",
+  "textHash": "fnv1a64:f3ee7acc48229a1f",
+  "jsonHash": "fnv1a64:8352cccc32213cca",
+  "findings": []
+}

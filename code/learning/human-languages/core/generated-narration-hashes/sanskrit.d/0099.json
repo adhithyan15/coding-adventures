@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:eac96922bd06a884",
+  "lessonIds": [
+    "SA-C99-mancah",
+    "SA-C99-upadhanam",
+    "SA-C99-kambalah",
+    "SA-C99-yavanika",
+    "SA-C99-talakam",
+    "SA-R99-first-pass-time-and-places",
+    "SA-R99-second-pass-places-why-and-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch99.txt",
+  "json": "sanskrit/narration/ch99.json",
+  "textHash": "fnv1a64:cf15b12c7e43d3b7",
+  "jsonHash": "fnv1a64:01168155aefa37fa",
+  "findings": []
+}

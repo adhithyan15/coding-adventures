@@ -1,0 +1,11 @@
+{
+  "id": "MW-R99-first-pass-times-of-day-seasons-and-months",
+  "pathSegment": "MW-PATH-99-LOC99",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-99-LOC99",
+      "order": 5
+    }
+  ]
+}

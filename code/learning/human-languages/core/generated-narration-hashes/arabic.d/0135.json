@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:71d821d91d714577",
+  "lessonIds": [
+    "AR-C135-ghazal",
+    "AR-C135-thalab",
+    "AR-C135-hamama",
+    "AR-C135-batta",
+    "AR-C135-sulahfah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch135.txt",
+  "json": "arabic/narration/ch135.json",
+  "textHash": "fnv1a64:469af937b0cf858e",
+  "jsonHash": "fnv1a64:40449194974ae62b",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:5f393dcb30b30c3e",
+  "lessonIds": [
+    "MW-C144-sundar",
+    "MW-C144-rupalo",
+    "MW-C144-javan",
+    "MW-C144-dubalo",
+    "MW-C144-thigno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch144.txt",
+  "json": "marwadi/narration/ch144.json",
+  "textHash": "fnv1a64:bf4df88c675b82f5",
+  "jsonHash": "fnv1a64:c4fd22613d6d79bc",
+  "findings": []
+}

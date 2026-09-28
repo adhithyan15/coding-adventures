@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C02-enna",
+  "english": "what",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಏನು",
+      "romanization": "ēnu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఏమిటి",
+      "romanization": "ēmiṭi"
+    },
+    {
+      "language": "malayalam",
+      "form": "എന്ത്",
+      "romanization": "entŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "क्या",
+      "romanization": "kyā"
+    }
+  ],
+  "source": "cross-track match: KA-C02-enu, TE-C02-emiti, ML-C02-entu, HI-C02-kya; sameRoot judged by the author, awaiting native review"
+}

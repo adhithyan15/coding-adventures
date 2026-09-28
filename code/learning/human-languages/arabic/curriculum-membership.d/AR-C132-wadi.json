@@ -1,0 +1,11 @@
+{
+  "id": "AR-C132-wadi",
+  "pathSegment": "AR-PATH-132-THINGS132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-132-THINGS132",
+      "order": 3
+    }
+  ]
+}

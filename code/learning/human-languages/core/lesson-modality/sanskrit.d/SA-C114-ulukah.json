@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C114-ulukah",
+    "language": "sanskrit",
+    "chapter": 114,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c95441290a25f561"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:6f8ccd7e16d93545",
+  "lessonIds": [
+    "MW-C107-bunno",
+    "MW-C107-rangno",
+    "MW-C107-lagavno",
+    "MW-C107-hatavno",
+    "MW-C107-bichhavno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch107.txt",
+  "json": "marwadi/narration/ch107.json",
+  "textHash": "fnv1a64:845b4bb05d9d3752",
+  "jsonHash": "fnv1a64:63f410b58f005527",
+  "findings": []
+}

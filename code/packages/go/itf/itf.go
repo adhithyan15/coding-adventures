@@ -2,7 +2,8 @@
 package itf
 
 import (
-	"fmt"
+	"errors"
+	"unicode/utf8"
 
 	barcodelayout1d "github.com/adhithyan15/coding-adventures/code/packages/go/barcode-layout-1d"
 	paintinstructions "github.com/adhithyan15/coding-adventures/code/packages/go/paint-instructions"
@@ -19,6 +20,19 @@ type EncodedPair struct {
 	SpacePattern  string
 	BinaryPattern string
 	SourceIndex   int
+}
+
+// InputError preserves the historical error text while exposing the portable
+// payload-blind identifier required by barcode-symbologies-v1.
+type InputError struct {
+	Code    string
+	message string
+}
+
+func (err *InputError) Error() string { return err.message }
+
+func newInputError(code string, message string) error {
+	return &InputError{Code: code, message: message}
 }
 
 type BarcodeRun = barcodelayout1d.Barcode1DRun
@@ -55,16 +69,20 @@ func retagRuns(runs []BarcodeRun, role string) []BarcodeRun {
 
 // NormalizeITF validates even-length digit strings.
 func NormalizeITF(data string) (string, error) {
-	if data == "" {
-		return "", fmt.Errorf("ITF input must contain an even number of digits")
+	if !utf8.ValidString(data) {
+		return "", errors.New("ITF input must contain valid Unicode scalar values")
+	}
+	scalarCount := utf8.RuneCountInString(data)
+	if scalarCount > 4096 {
+		return "", newInputError("input-too-long", "ITF input must contain at most 4096 characters")
+	}
+	if scalarCount == 0 || scalarCount%2 != 0 {
+		return "", newInputError("invalid-length", "ITF input must contain an even number of digits")
 	}
 	for _, ch := range data {
 		if ch < '0' || ch > '9' {
-			return "", fmt.Errorf("ITF input must contain digits only")
+			return "", newInputError("invalid-character", "ITF input must contain digits only")
 		}
-	}
-	if len(data)%2 != 0 {
-		return "", fmt.Errorf("ITF input must contain an even number of digits")
 	}
 	return data, nil
 }

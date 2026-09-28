@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C128-kashikoi",
+    "language": "japanese",
+    "chapter": 128,
+    "sequence": 7550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed2f0fa142c5d8a4"
+  },
+  "findings": []
+}

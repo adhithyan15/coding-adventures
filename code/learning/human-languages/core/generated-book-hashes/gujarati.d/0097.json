@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:88a8863fe52da92b",
+  "lessonIds": [
+    "GU-C97-navembar",
+    "GU-C97-kartak",
+    "GU-C97-magsar",
+    "GU-C97-phagan",
+    "GU-C97-caitra"
+  ],
+  "tex": "gujarati/book/chapters/ch97-november-kartak-magshar-phagan-chaitra.tex"
+}

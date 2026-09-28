@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:a2e8baa25e8b80fe",
+  "lessonIds": [
+    "JA-C78-doko",
+    "JA-C78-chikaku",
+    "JA-C78-ushiro",
+    "JA-C78-yoko",
+    "JA-C78-mannaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch78.txt",
+  "json": "japanese/narration/ch78.json",
+  "textHash": "fnv1a64:87d834817136cefa",
+  "jsonHash": "fnv1a64:689f8d239889b083",
+  "findings": []
+}

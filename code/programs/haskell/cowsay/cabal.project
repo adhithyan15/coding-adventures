@@ -4,3 +4,4 @@ packages: .
           ../../../packages/haskell/json-value
           ../../../packages/haskell/paint-instructions
           ../../../packages/haskell/paint-vm-ascii
+tests: True

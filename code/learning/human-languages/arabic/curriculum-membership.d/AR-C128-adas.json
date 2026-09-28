@@ -1,0 +1,11 @@
+{
+  "id": "AR-C128-adas",
+  "pathSegment": "AR-PATH-128-THINGS128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-128-THINGS128",
+      "order": 3
+    }
+  ]
+}

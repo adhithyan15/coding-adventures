@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Still, Immediately, January, February, March",
+  "label": "ch:gu-still-immediately-january-february-march",
+  "canDo": "I can say still, immediately, January, February and March.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GU-C95-marc",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say still, immediately, January, February and March.",
+    "assesses": [
+      "GU-LEX-C95-TIME95-03",
+      "GU-LEX-C95-TIME95-04",
+      "GU-LEX-C95-TIME95-05"
+    ]
+  }
+}

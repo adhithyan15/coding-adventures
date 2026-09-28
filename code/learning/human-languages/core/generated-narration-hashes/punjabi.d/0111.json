@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:187b4486da1e33d1",
+  "lessonIds": [
+    "PA-C111-daulat",
+    "PA-C111-malak",
+    "PA-C111-tajarba",
+    "PA-C111-adat",
+    "PA-C111-hunar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch111.txt",
+  "json": "punjabi/narration/ch111.json",
+  "textHash": "fnv1a64:04c4530b7bac2ba1",
+  "jsonHash": "fnv1a64:a8754198d36ef52d",
+  "findings": []
+}

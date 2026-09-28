@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:8093afc7b23aa570",
+  "lessonIds": [
+    "PA-C105-kattak",
+    "PA-C105-magghar",
+    "PA-C105-poh",
+    "PA-C105-magh",
+    "PA-C105-phaggan"
+  ],
+  "tex": "punjabi/book/chapters/ch105-kattak-magghar-poh-magh-phaggan.tex"
+}

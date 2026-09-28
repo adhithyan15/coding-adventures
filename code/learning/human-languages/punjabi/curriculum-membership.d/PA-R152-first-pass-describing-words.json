@@ -1,0 +1,11 @@
+{
+  "id": "PA-R152-first-pass-describing-words",
+  "pathSegment": "PA-PATH-152-ACT152",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-152-ACT152",
+      "order": 5
+    }
+  ]
+}

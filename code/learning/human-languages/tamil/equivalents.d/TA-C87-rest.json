@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C87-rest",
+  "english": "rest",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ವಿಶ್ರಾಂತಿ",
+      "romanization": "viśrānti"
+    },
+    {
+      "language": "telugu",
+      "form": "విశ్రాంతి",
+      "romanization": "viśrānti"
+    },
+    {
+      "language": "malayalam",
+      "form": "വിശ്രമം",
+      "romanization": "viśramaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "आराम",
+      "romanization": "ārām"
+    }
+  ],
+  "source": "cross-track match: KA-C82-rest, TE-C84-rest, ML-C115-rest, HI-C70-rest"
+}

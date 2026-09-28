@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 44,
-  "sourceHash": "fnv1a64:21f914e051fe549c",
+  "sourceHash": "fnv1a64:8cfc1f962a9ff1cb",
   "lessonIds": [
     "PA-C44-duja",
     "PA-C44-tija",
@@ -15,6 +15,6 @@
   "text": "punjabi/narration/ch44.txt",
   "json": "punjabi/narration/ch44.json",
   "textHash": "fnv1a64:e28b5132a8a1a542",
-  "jsonHash": "fnv1a64:dc9e449f944287dd",
+  "jsonHash": "fnv1a64:17e85ffb09373b4c",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C130-nokri",
+    "language": "gujarati",
+    "chapter": 130,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bf2ed5ebb0f6ced"
+  },
+  "findings": []
+}

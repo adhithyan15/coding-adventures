@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:8ea76e93594a465c",
+  "lessonIds": [
+    "GU-C119-kinaro",
+    "GU-C119-dhodh",
+    "GU-C119-gupha",
+    "GU-C119-khin",
+    "GU-C119-tekri"
+  ],
+  "tex": "gujarati/book/chapters/ch119-shore-waterfall-cave-valley-hill.tex"
+}

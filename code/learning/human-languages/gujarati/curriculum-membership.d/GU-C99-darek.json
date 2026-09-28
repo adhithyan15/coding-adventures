@@ -1,0 +1,11 @@
+{
+  "id": "GU-C99-darek",
+  "pathSegment": "GU-PATH-99-DEF99",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-99-DEF99",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C101-phenakam",
+  "pathSegment": "SA-PATH-101-THINGS101",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-101-THINGS101",
+      "order": 1
+    }
+  ]
+}

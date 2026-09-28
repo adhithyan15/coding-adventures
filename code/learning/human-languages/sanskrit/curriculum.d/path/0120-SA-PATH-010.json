@@ -2,6 +2,8 @@
   "id": "SA-PATH-010",
   "spine_node": "SPINE-SAY-WHAT-I-DO",
   "before": [],
-  "inline": [],
+  "inline": [
+    "SA-EXT-142-WRITING-CONJUNCT-BRIDGE"
+  ],
   "after": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R127-first-pass-food-and-nature",
+    "language": "gujarati",
+    "chapter": 127,
+    "sequence": 6650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ab07598d4bed1a6"
+  },
+  "findings": []
+}

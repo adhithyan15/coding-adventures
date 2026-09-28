@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C115-nulakam",
+  "english": "a library",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗ್ರಂಥಾಲಯ",
+      "romanization": "granthālaya"
+    },
+    {
+      "language": "telugu",
+      "form": "గ్రంథాలయం",
+      "romanization": "grandhālayaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഗ്രന്ഥശാല",
+      "romanization": "granthaśāla"
+    },
+    {
+      "language": "hindi",
+      "form": "पुस्तकालय",
+      "romanization": "pustakālay"
+    }
+  ],
+  "source": "cross-track match: KA-C109-granthalaya, TE-C103-grandhalayam, ML-C155-granthasala, HI-C152-pustakalay"
+}

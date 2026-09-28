@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:587b02c53fb07fc9",
+  "lessonIds": [
+    "SA-C121-vadyam",
+    "SA-C121-vina",
+    "SA-C121-pattah",
+    "SA-C121-ratnam",
+    "SA-C121-suvarnam"
+  ],
+  "tex": "sanskrit/book/chapters/ch121-musical-instrument-veena-cloth-jewel-gold.tex"
+}

@@ -2,12 +2,23 @@ import { describe, it, expect, vi } from "vitest";
 import { runValidate } from "../src/cli.js";
 import { runCurriculumGapReport } from "../src/report-cli.js";
 
+// `runValidate` validates the WHOLE real corpus, about 15s under a full suite
+// run and growing with every content PR. It runs once at import, where no
+// per-test budget applies, and the test below checks what it returned and
+// printed.
+const VALIDATE_RUN = (() => {
+  const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+  try {
+    const code = runValidate();
+    return { code, printed: out.mock.calls.map((c) => String(c[0])).join("") };
+  } finally {
+    out.mockRestore();
+  }
+})();
+
 describe("runValidate", () => {
   it("returns 0 (no errors) on the real curriculum and prints a report", () => {
-    const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    const code = runValidate();
-    const printed = out.mock.calls.map((c) => String(c[0])).join("");
-    out.mockRestore();
+    const { code, printed } = VALIDATE_RUN;
 
     expect(code).toBe(0);
     expect(printed).toMatch(/concepts, \d+ languages/);

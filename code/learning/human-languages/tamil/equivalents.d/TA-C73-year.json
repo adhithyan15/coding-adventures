@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C73-year",
+  "english": "a year",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "సంవత్సరం",
+      "romanization": "saṁvatsaraṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "വർഷം",
+      "romanization": "varṣaṁ"
+    }
+  ],
+  "source": "cross-track match: TE-C75-year, ML-C139-year"
+}

@@ -1,1 +1,1 @@
-function c(a){return a+1}report(c(7));sink(c);
+function b(a){return a+1}report(b(7));sink(b);

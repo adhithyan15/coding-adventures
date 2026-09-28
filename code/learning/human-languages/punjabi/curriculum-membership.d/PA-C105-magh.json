@@ -1,0 +1,11 @@
+{
+  "id": "PA-C105-magh",
+  "pathSegment": "PA-PATH-105-TIME105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-105-TIME105",
+      "order": 3
+    }
+  ]
+}

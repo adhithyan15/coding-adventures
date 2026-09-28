@@ -1,5 +1,9 @@
 # BEAM04 — float-array representation for the BEAM backend
 
+**Later update:** BEAM11 supplies zero-valued reads for unwritten in-range
+cells and explicit bounds checks. Historical `ets:lookup_element/3` and
+unset-read trap descriptions below describe BEAM04 before that follow-up.
+
 **Status:** Delivered — this slice.
 **Depends on:** `BEAM03-float-lowering.md` (f64 scalar lowering — this spec
 only adds f64-typed *arrays*, reusing BEAM03's `const`(f64)/arithmetic

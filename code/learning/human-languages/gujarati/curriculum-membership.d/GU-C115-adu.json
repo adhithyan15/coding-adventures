@@ -1,0 +1,11 @@
+{
+  "id": "GU-C115-adu",
+  "pathSegment": "GU-PATH-115-THINGS115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-115-THINGS115",
+      "order": 2
+    }
+  ]
+}

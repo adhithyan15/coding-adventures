@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C109-kaiko",
+    "language": "japanese",
+    "chapter": 109,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:580f19fd6aa48359"
+  },
+  "findings": []
+}

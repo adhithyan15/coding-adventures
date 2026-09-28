@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:4c9fef86abb475d6",
+  "lessonIds": [
+    "MW-C91-pachhai",
+    "MW-C91-somvar",
+    "MW-C91-mangalvar",
+    "MW-C91-guruvar",
+    "MW-C91-sukarvar"
+  ],
+  "tex": "marwadi/book/chapters/ch91-afterwards-monday-tuesday-thursday-friday.tex"
+}

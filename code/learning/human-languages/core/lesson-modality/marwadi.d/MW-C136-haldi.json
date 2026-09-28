@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C136-haldi",
+    "language": "marwadi",
+    "chapter": 136,
+    "sequence": 8630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d363cf30e8f61b85"
+  },
+  "findings": []
+}

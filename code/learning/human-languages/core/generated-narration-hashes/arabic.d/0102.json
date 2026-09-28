@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:1d7ef1cbea230083",
+  "lessonIds": [
+    "AR-C102-sath",
+    "AR-C102-daraj",
+    "AR-C102-saqf",
+    "AR-C102-khalfa",
+    "AR-C102-bayna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch102.txt",
+  "json": "arabic/narration/ch102.json",
+  "textHash": "fnv1a64:de462f1635af913f",
+  "jsonHash": "fnv1a64:814ba12cb159fb60",
+  "findings": []
+}

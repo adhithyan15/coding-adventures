@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:70d78b7462d8a801",
+  "lessonIds": [
+    "AR-C133-sahra",
+    "AR-C133-buhayra",
+    "AR-C133-barq",
+    "AR-C133-rad",
+    "AR-C133-asifa"
+  ],
+  "tex": "arabic/book/chapters/ch133-desert-lake-lightning-thunder-storm.tex"
+}

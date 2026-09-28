@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "To want, Wish, Mind, Hope, Demand",
+  "label": "ch:mw-to-want-wish-mind-hope-demand",
+  "canDo": "I can say to want, a wish, the mind, hope and a demand.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "MW-C111-mag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say to want, a wish, the mind, hope and a demand.",
+    "assesses": [
+      "MW-LEX-C111-WANT111-03",
+      "MW-LEX-C111-WANT111-04",
+      "MW-LEX-C111-WANT111-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C160-varanta",
+  "pathSegment": "ML-PATH-160-THINGS160",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-160-THINGS160",
+      "order": 1
+    }
+  ]
+}

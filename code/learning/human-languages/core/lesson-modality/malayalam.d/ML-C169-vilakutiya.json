@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C169-vilakutiya",
+    "language": "malayalam",
+    "chapter": 169,
+    "sequence": 7240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35a9f71e7655bc5c"
+  },
+  "findings": []
+}

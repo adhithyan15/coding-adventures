@@ -1,0 +1,11 @@
+{
+  "id": "JA-C92-tanomi",
+  "pathSegment": "JA-PATH-92-WANT92",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-92-WANT92",
+      "order": 3
+    }
+  ]
+}

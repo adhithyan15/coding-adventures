@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C124-mushiatsui",
+    "language": "japanese",
+    "chapter": 124,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf265b71d2e0c0c8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Brave, Calm, Happy, Sad, Hungry",
+  "label": "ch:gu-brave-calm-happy-sad-hungry",
+  "canDo": "I can say brave, calm, happy, sad and hungry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GU-C134-bhukhyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say brave, calm, happy, sad and hungry.",
+    "assesses": [
+      "GU-LEX-C134-QUAL134-03",
+      "GU-LEX-C134-QUAL134-04",
+      "GU-LEX-C134-QUAL134-05"
+    ]
+  }
+}

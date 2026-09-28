@@ -1,0 +1,11 @@
+{
+  "id": "SA-C127-dhanikah",
+  "pathSegment": "SA-PATH-127-QUAL127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-127-QUAL127",
+      "order": 1
+    }
+  ]
+}

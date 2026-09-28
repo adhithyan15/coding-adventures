@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C108-eaten",
+  "english": "have you eaten?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಊಟ ಆಯ್ತಾ",
+      "romanization": "ūṭa āytā"
+    },
+    {
+      "language": "telugu",
+      "form": "భోంచేశారా?",
+      "romanization": "bhōñcēśārā?"
+    },
+    {
+      "language": "hindi",
+      "form": "खाना खाया?",
+      "romanization": "khānā khāyā?"
+    }
+  ],
+  "source": "cross-track match: KA-C96-eaten, TE-C91-eaten, HI-C123-khanakhaya"
+}

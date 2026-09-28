@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C175-vilkkuka",
+    "language": "malayalam",
+    "chapter": 175,
+    "sequence": 7510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dce97197df0b89a"
+  },
+  "findings": []
+}

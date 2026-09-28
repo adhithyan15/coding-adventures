@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:98bfb7dc27782c61",
+  "lessonIds": [
+    "SA-C136-prapnoti",
+    "SA-C136-dharayati",
+    "SA-C136-ganayati",
+    "SA-C136-marjayati",
+    "SA-C136-badhnati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch136.txt",
+  "json": "sanskrit/narration/ch136.json",
+  "textHash": "fnv1a64:cb5c4981f6b22016",
+  "jsonHash": "fnv1a64:191af1bcb3bbb9c1",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "owner": "adhithyan15",
+  "repository": "coding-adventures",
+  "ref": "heads/gh-pages",
+  "deploymentOwner": "landing",
+  "destination": "",
+  "tokenEnv": "GITHUB_TOKEN"
+}

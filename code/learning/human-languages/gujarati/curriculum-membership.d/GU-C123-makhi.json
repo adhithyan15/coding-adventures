@@ -1,0 +1,11 @@
+{
+  "id": "GU-C123-makhi",
+  "pathSegment": "GU-PATH-123-THINGS123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-123-THINGS123",
+      "order": 3
+    }
+  ]
+}

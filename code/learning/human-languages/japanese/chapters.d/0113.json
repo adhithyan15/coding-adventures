@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Personal seal, Dumpling, Soup stock, Bonito, Wakame seaweed",
+  "label": "ch:ja-personal-seal-dumpling-soup-stock-bonito-wakame-seaweed",
+  "canDo": "I can say a personal seal, a dumpling, soup stock, a bonito and wakame seaweed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "JA-C113-wakame",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a personal seal, a dumpling, soup stock, a bonito and wakame seaweed.",
+    "assesses": [
+      "JA-LEX-C113-THINGS113-03",
+      "JA-LEX-C113-THINGS113-04",
+      "JA-LEX-C113-THINGS113-05"
+    ]
+  }
+}

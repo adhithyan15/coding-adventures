@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C88-headache",
+  "english": "a headache",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ತಲೆನೋವು",
+      "romanization": "talenōvu"
+    },
+    {
+      "language": "malayalam",
+      "form": "തലവേദന",
+      "romanization": "talavēdana"
+    },
+    {
+      "language": "hindi",
+      "form": "सिरदर्द",
+      "romanization": "sirdard"
+    }
+  ],
+  "source": "cross-track match: KA-C82-headache, ML-C115-headache, HI-C124-sirdard"
+}

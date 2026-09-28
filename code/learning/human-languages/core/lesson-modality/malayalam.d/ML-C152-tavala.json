@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C152-tavala",
+    "language": "malayalam",
+    "chapter": 152,
+    "sequence": 6260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8b828da4f392d53"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C125-haldi",
+    "language": "punjabi",
+    "chapter": 125,
+    "sequence": 6720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2ec7350bb76fa7a"
+  },
+  "findings": []
+}

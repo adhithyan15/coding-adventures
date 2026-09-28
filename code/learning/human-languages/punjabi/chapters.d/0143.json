@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Dry, Dirty, Sour, Bitter, Sharp",
+  "label": "ch:pa-dry-dirty-sour-bitter-sharp",
+  "canDo": "I can say dry, dirty, sour, bitter and sharp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-R143-second-pass-town-school-and-work",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say dry, dirty, sour, bitter and sharp.",
+    "assesses": [
+      "PA-LEX-C143-QUAL143-03",
+      "PA-LEX-C143-QUAL143-04",
+      "PA-LEX-C143-QUAL143-05"
+    ]
+  }
+}

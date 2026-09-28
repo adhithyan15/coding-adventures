@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C88-sweat",
+  "english": "sweat",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆವರು",
+      "romanization": "bevaru",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "വിയർപ്പ്",
+      "romanization": "viyarppŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "पसीना",
+      "romanization": "pasīnā"
+    }
+  ],
+  "source": "cross-track match: KA-C84-sweat, ML-C117-sweat, HI-C124-pasina; sameRoot judged by the author, awaiting native review"
+}

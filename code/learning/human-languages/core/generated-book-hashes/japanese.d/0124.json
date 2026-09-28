@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:dd38199b6123e79b",
+  "lessonIds": [
+    "JA-C124-kayui",
+    "JA-C124-kusai",
+    "JA-C124-mushiatsui",
+    "JA-C124-okashii",
+    "JA-C124-omoshiroi"
+  ],
+  "tex": "japanese/book/chapters/ch124-itchy-smelly-humid-funny-interesting.tex"
+}

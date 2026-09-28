@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C127-iti",
+  "english": "thunder",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗುಡುಗು",
+      "romanization": "guḍugu"
+    },
+    {
+      "language": "telugu",
+      "form": "ఉరుము",
+      "romanization": "urumu"
+    }
+  ],
+  "source": "cross-track match: KA-C127-gudugu, TE-C121-urumu"
+}

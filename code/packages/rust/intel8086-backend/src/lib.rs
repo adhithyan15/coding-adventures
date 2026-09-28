@@ -12,7 +12,7 @@
 //! following the pattern documented in
 //! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 //!
-//! ## Scope (v0.1.0 — minimal viable)
+//! ## Scope (WORD02)
 //!
 //! Minimal viable backend — covers the trivial-ROM case (`const_*`
 //! immediate + `ret_*`) needed by the `lang-aot` Intel 8086 e2e smoke
@@ -20,20 +20,16 @@
 //!
 //! | CIR op | Lowering |
 //! |--------|----------|
-//! | `const_*` (16-bit unsigned literal, `[0, 65535]`) | `MOV AX, #imm16` |
-//! | `ret_*`, `ret_void` | `HLT` (a genuine hardware halt — see below) |
+//! | `const_u8`, `const_bool` | `MOV AX, #imm16` with `AH = 0` |
+//! | `const_u16` | `MOV AX, #imm16` |
+//! | matching typed returns, `ret_void` | `HLT` (a genuine hardware halt — see below) |
+//! | two-live `add/sub/and/or/xor` on `u8`/`u16` | register ALU |
 //! | Anything else | returns `None` |
 //!
-//! There is no real register allocator: a trivial "last const var"
-//! scheme tracks which single variable the most recent `const_*` wrote
-//! (into the accumulator `AX` — the 8086's primary 16-bit accumulator/
-//! return-value register), and `ret_*` only succeeds if it returns
-//! exactly that variable — the same scheme `mips-r2000-backend`/
-//! `arm1-backend`/`armv7-backend`/`mos6502-backend` use. Full op
-//! coverage (arithmetic, register-to-register moves, control flow — all
-//! of which `intel8086-simulator` implements for its curated subset) is
-//! intentionally **not** wired into this backend yet; future increments
-//! can extend `compile_to_bytes` to emit them.
+//! Reverse liveness allocates at most two same-width values in `AX`/`BX`
+//! (or `AL`/`BL`) and uses `CX`/`CL` as a transient scratch. A third
+//! value, simultaneous byte and word values, and control flow are
+//! explicit future increments. Returns copy the selected value to `AX`.
 //!
 //! Per the migration spec, this is acceptable: the architectural
 //! correctness win (IIR → CIR via `Backend` trait) is delivered as soon
@@ -96,9 +92,14 @@
 //! Emit-only target per the migration spec. Bytes go to
 //! `intel8086-simulator`.
 
+use intel8086_encoder::{
+    encode_alu_reg_reg, encode_hlt, encode_mov_reg_imm16, encode_mov_reg_imm8,
+    encode_mov_reg_reg16, encode_mov_reg_reg8, REG_AH, REG_AL, REG_AX, REG_BH, REG_BL, REG_BX,
+    REG_CL, REG_CX,
+};
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use intel8086_encoder::{encode_hlt, encode_mov_reg_imm16, REG_AX};
+use std::collections::HashSet;
 use std::fmt;
 use vm_core::value::Value;
 
@@ -129,9 +130,7 @@ impl fmt::Display for BackendError {
             }
             Self::ImmediateOutOfRange(n) => write!(
                 f,
-                "intel8086-backend: const {n} exceeds the 16-bit MOV-immediate range \
-                 [0, 65535]; AX is 16 bits wide, so wider or negative CIR constants \
-                 have no direct `MOV AX,#imm16` lowering"
+                "intel8086-backend: const {n} is outside the selected unsigned result width"
             ),
         }
     }
@@ -151,10 +150,10 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     }
 
     let mut bytes = Vec::new();
-    // v0.1.0 uses a trivial single-register allocator: the most recent
-    // `const_*` puts its value into AX, and `ret_*` returns AX. Programs
-    // that need more than one live var fall through to `UnsupportedOp`.
-    let mut last_const_var: Option<String> = None;
+    // WORD02 uses AX/BX for at most two live values. CX is a transient
+    // expression scratch and never stores a source-visible value.
+    let mut slots: [Option<CurrentValue>; 2] = [None, None];
+    let (live_before, live_after) = liveness(cir)?;
 
     // Tracks "has a genuine halt-convention instruction (HLT) already
     // been pushed?" -- an explicit boolean, NOT a trailing-byte-value
@@ -163,25 +162,57 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     // Intel 8051, Intel 8080, MOS 6502, Zilog Z80).
     let mut terminated = false;
 
-    for instr in cir {
+    for (index, instr) in cir.iter().enumerate() {
+        for slot in &mut slots {
+            if slot
+                .as_ref()
+                .is_some_and(|value| !live_before[index].contains(&value.name))
+            {
+                *slot = None;
+            }
+        }
         let op = instr.op.as_str();
 
         if op == "ret_void" {
+            if instr.dest.is_some() || !instr.srcs.is_empty() || instr.ty != "void" {
+                return Err(BackendError::InvalidOperand(
+                    "ret_void requires no dest or sources and void type".into(),
+                ));
+            }
             bytes.extend_from_slice(&encode_hlt());
             terminated = true;
             continue;
         }
 
         if op.strip_prefix("ret_").is_some() {
-            let src_name = parse_var_src(instr, 0, op)?;
-            // We only support the case where src is the most recent
-            // const'd var (i.e. it's already in AX). Multi-var requires
-            // a real register allocator.
-            if last_const_var.as_deref() != Some(src_name.as_str()) {
-                return Err(BackendError::UnsupportedOp(format!(
-                    "ret of {src_name:?} which is not the current AX var; \
-                     multi-register allocation lands in a future increment"
+            let expected_width = result_width_for_ret(op)
+                .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
+            let expected_ty = op.strip_prefix("ret_").expect("typed return");
+            if instr.dest.is_some() || instr.srcs.len() != 1 || instr.ty != expected_ty {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires one source, no dest, and {expected_ty} type"
                 )));
+            }
+            let src_name = parse_var_src(instr, 0, op)?;
+            // The second live value may be in BX; copy it to the ABI
+            // register before the outermost halt.
+            let Some(slot) = find_slot(&slots, &src_name) else {
+                return Err(BackendError::UndefinedVariable(src_name));
+            };
+            let value = slots[slot].as_ref().expect("located slot");
+            if value.width != expected_width {
+                return Err(BackendError::UnsupportedOp(format!(
+                    "{op} cannot return the current {}-bit value",
+                    value.width.bits()
+                )));
+            }
+            if value.ty != expected_ty {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source type mismatch"
+                )));
+            }
+            if slot == 1 {
+                bytes.extend_from_slice(&encode_mov_reg_reg16(REG_AX, REG_BX));
             }
             bytes.extend_from_slice(&encode_hlt());
             terminated = true;
@@ -190,10 +221,32 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
 
         if op.strip_prefix("const_").is_some() {
             let dest = require_dest(instr, op)?;
-            let imm = encode_immediate_16(instr.srcs.first())?;
-            // const_* always targets AX in this minimal backend.
-            bytes.extend_from_slice(&encode_mov_reg_imm16(REG_AX, imm));
-            last_const_var = Some(dest.to_string());
+            let width = result_width_for_const(op)
+                .ok_or_else(|| BackendError::UnsupportedOp(op.to_string()))?;
+            let expected_ty = op.strip_prefix("const_").expect("constant");
+            if instr.ty != expected_ty || instr.srcs.len() != 1 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires {expected_ty} type and one source"
+                )));
+            }
+            let imm = encode_typed_immediate(op, instr.srcs.first())?;
+            if slots.iter().flatten().any(|value| value.width != width) {
+                return Err(BackendError::UnsupportedOp(
+                    "mixed-width live values wait for a later Word rung".into(),
+                ));
+            }
+            let slot = slots.iter().position(Option::is_none).ok_or_else(|| {
+                BackendError::UnsupportedOp("WORD02 has only two live-value slots".into())
+            })?;
+            bytes.extend_from_slice(&encode_mov_reg_imm16(
+                if slot == 0 { REG_AX } else { REG_BX },
+                imm,
+            ));
+            slots[slot] = Some(CurrentValue {
+                name: dest.to_string(),
+                width,
+                ty: expected_ty.to_string(),
+            });
             // A non-terminating instruction was just emitted -- even if
             // the buffer's trailing byte now happens to numerically
             // equal HALT_BYTE (imm's high byte can be 0xF4), the program
@@ -201,6 +254,169 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             // terminated:bool pattern: a byte-value check has no
             // equivalent "reset" step, which is exactly how the bug
             // class this avoids slips in.
+            terminated = false;
+            continue;
+        }
+
+        if let Some((operation, width)) = binary_operation(op) {
+            let dest = require_dest(instr, op)?;
+            if instr.ty != width.name() || instr.srcs.len() != 2 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires two variables and {} type",
+                    width.name()
+                )));
+            }
+            let left = parse_var_src(instr, 0, op)?;
+            let right = parse_var_src(instr, 1, op)?;
+            let left_slot = find_slot(&slots, &left)
+                .ok_or_else(|| BackendError::UndefinedVariable(left.clone()))?;
+            let right_slot = find_slot(&slots, &right)
+                .ok_or_else(|| BackendError::UndefinedVariable(right.clone()))?;
+            if slots[left_slot].as_ref().expect("located slot").width != width
+                || slots[right_slot].as_ref().expect("located slot").width != width
+                || slots[left_slot].as_ref().expect("located slot").ty != width.name()
+                || slots[right_slot].as_ref().expect("located slot").ty != width.name()
+            {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source width mismatch or source type mismatch"
+                )));
+            }
+            let target = slots
+                .iter()
+                .position(|slot| {
+                    slot.as_ref().is_none_or(|value| {
+                        value.name == dest || !live_after[index].contains(&value.name)
+                    })
+                })
+                .ok_or_else(|| {
+                    BackendError::UnsupportedOp(
+                        "WORD02 requires a third live value; spilling is deferred".into(),
+                    )
+                })?;
+            let (left_reg, right_reg, scratch_reg, target_reg) = if width == ResultWidth::Word {
+                (
+                    [REG_AX, REG_BX][left_slot],
+                    [REG_AX, REG_BX][right_slot],
+                    REG_CX,
+                    [REG_AX, REG_BX][target],
+                )
+            } else {
+                (
+                    [REG_AL, REG_BL][left_slot],
+                    [REG_AL, REG_BL][right_slot],
+                    REG_CL,
+                    [REG_AL, REG_BL][target],
+                )
+            };
+            if width == ResultWidth::Word {
+                bytes.extend_from_slice(&encode_mov_reg_reg16(scratch_reg, left_reg));
+            } else {
+                bytes.extend_from_slice(&encode_mov_reg_reg8(scratch_reg, left_reg));
+            }
+            bytes.extend_from_slice(&encode_alu_reg_reg(
+                operation,
+                width == ResultWidth::Word,
+                scratch_reg,
+                right_reg,
+            ));
+            if width == ResultWidth::Word {
+                bytes.extend_from_slice(&encode_mov_reg_reg16(target_reg, scratch_reg));
+            } else {
+                bytes.extend_from_slice(&encode_mov_reg_reg8(target_reg, scratch_reg));
+                bytes.extend_from_slice(&encode_mov_reg_imm8(
+                    if target == 0 { REG_AH } else { REG_BH },
+                    0,
+                ));
+            }
+            slots[target] = Some(CurrentValue {
+                name: dest.into(),
+                width,
+                ty: width.name().to_string(),
+            });
+            for (slot_index, slot) in slots.iter_mut().enumerate() {
+                if slot_index != target
+                    && slot
+                        .as_ref()
+                        .is_some_and(|value| !live_after[index].contains(&value.name))
+                {
+                    *slot = None;
+                }
+            }
+            terminated = false;
+            continue;
+        }
+
+        if let Some(width) = unary_not_width(op) {
+            let dest = require_dest(instr, op)?;
+            if instr.ty != width.name() || instr.srcs.len() != 1 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires one variable and {} type",
+                    width.name()
+                )));
+            }
+            let src = parse_var_src(instr, 0, op)?;
+            let source = find_slot(&slots, &src)
+                .ok_or_else(|| BackendError::UndefinedVariable(src.clone()))?;
+            let value = slots[source].as_ref().expect("located slot");
+            if value.width != width || value.ty != width.name() {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source type mismatch"
+                )));
+            }
+            let target = slots
+                .iter()
+                .position(|slot| {
+                    slot.as_ref().is_none_or(|value| {
+                        value.name == dest || !live_after[index].contains(&value.name)
+                    })
+                })
+                .ok_or_else(|| {
+                    BackendError::UnsupportedOp(
+                        "WORD02 requires a third live value; spilling is deferred".into(),
+                    )
+                })?;
+            let word = width == ResultWidth::Word;
+            let mask = if word { 0xffff } else { 0x00ff };
+            let source_reg = if word {
+                [REG_AX, REG_BX][source]
+            } else {
+                [REG_AL, REG_BL][source]
+            };
+            let target_reg = if word {
+                [REG_AX, REG_BX][target]
+            } else {
+                [REG_AL, REG_BL][target]
+            };
+            bytes.extend_from_slice(&encode_mov_reg_imm16(REG_CX, mask));
+            bytes.extend_from_slice(&encode_alu_reg_reg(
+                6,
+                word,
+                if word { REG_CX } else { REG_CL },
+                source_reg,
+            ));
+            if word {
+                bytes.extend_from_slice(&encode_mov_reg_reg16(target_reg, REG_CX));
+            } else {
+                bytes.extend_from_slice(&encode_mov_reg_reg8(target_reg, REG_CL));
+                bytes.extend_from_slice(&encode_mov_reg_imm8(
+                    if target == 0 { REG_AH } else { REG_BH },
+                    0,
+                ));
+            }
+            slots[target] = Some(CurrentValue {
+                name: dest.into(),
+                width,
+                ty: width.name().into(),
+            });
+            for (slot_index, slot) in slots.iter_mut().enumerate() {
+                if slot_index != target
+                    && slot
+                        .as_ref()
+                        .is_some_and(|value| !live_after[index].contains(&value.name))
+                {
+                    *slot = None;
+                }
+            }
             terminated = false;
             continue;
         }
@@ -236,21 +452,132 @@ fn parse_var_src(instr: &CIRInstr, idx: usize, op: &str) -> Result<String, Backe
     }
 }
 
-/// The Intel 8086's `MOV reg16,#imm16` carries a plain, unsigned 16-bit
-/// immediate. Accept the full unsigned range `[0, 65535]`; `AX` is 16
-/// bits wide, so wider or negative CIR constants have no direct
-/// lowering in this minimal-viable backend.
-fn encode_immediate_16(op: Option<&CIROperand>) -> Result<u16, BackendError> {
-    let n: i64 = match op {
-        Some(CIROperand::Int(n)) => *n,
-        Some(CIROperand::Bool(b)) => i64::from(*b),
-        _ => {
-            return Err(BackendError::InvalidOperand(
-                "const_* srcs[0] must be Int or Bool".into(),
+type LiveSets = (Vec<HashSet<String>>, Vec<HashSet<String>>);
+
+fn liveness(cir: &[CIRInstr]) -> Result<LiveSets, BackendError> {
+    let mut before = vec![HashSet::new(); cir.len()];
+    let mut after = before.clone();
+    let mut live = HashSet::new();
+    for (index, instr) in cir.iter().enumerate().rev() {
+        after[index] = live.clone();
+        if let Some(dest) = &instr.dest {
+            live.remove(dest);
+        }
+        for source in &instr.srcs {
+            if let CIROperand::Var(name) = source {
+                live.insert(name.clone());
+            }
+        }
+        if live.len() > 2 {
+            return Err(BackendError::UnsupportedOp(
+                "WORD02 requires a third live value; spilling is deferred".into(),
             ));
         }
+        before[index] = live.clone();
+    }
+    Ok((before, after))
+}
+
+fn find_slot(slots: &[Option<CurrentValue>; 2], name: &str) -> Option<usize> {
+    slots
+        .iter()
+        .position(|slot| slot.as_ref().is_some_and(|value| value.name == name))
+}
+
+fn binary_operation(op: &str) -> Option<(u8, ResultWidth)> {
+    let (name, width) = op.rsplit_once('_')?;
+    let width = match width {
+        "u8" => ResultWidth::Byte,
+        "u16" => ResultWidth::Word,
+        _ => return None,
     };
-    if (0..=0xFFFF).contains(&n) {
+    let operation = match name {
+        "add" => 0,
+        "or" => 1,
+        "and" => 4,
+        "sub" => 5,
+        "xor" => 6,
+        _ => return None,
+    };
+    Some((operation, width))
+}
+
+fn unary_not_width(op: &str) -> Option<ResultWidth> {
+    match op {
+        "not_u8" => Some(ResultWidth::Byte),
+        "not_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+/// Width-preserving materialization through `MOV AX,#imm16`. Byte values are
+/// range-checked before being zero-extended into AX; word values accept the
+/// full unsigned 16-bit range.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ResultWidth {
+    Byte,
+    Word,
+}
+
+impl ResultWidth {
+    fn bits(self) -> u8 {
+        match self {
+            Self::Byte => 8,
+            Self::Word => 16,
+        }
+    }
+    fn name(self) -> &'static str {
+        match self {
+            Self::Byte => "u8",
+            Self::Word => "u16",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct CurrentValue {
+    name: String,
+    width: ResultWidth,
+    ty: String,
+}
+
+fn result_width_for_const(op: &str) -> Option<ResultWidth> {
+    match op {
+        "const_u8" | "const_bool" => Some(ResultWidth::Byte),
+        "const_i64" | "const_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+fn result_width_for_ret(op: &str) -> Option<ResultWidth> {
+    match op {
+        "ret_u8" | "ret_bool" => Some(ResultWidth::Byte),
+        "ret_i64" | "ret_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
+}
+
+fn encode_typed_immediate(op: &str, operand: Option<&CIROperand>) -> Result<u16, BackendError> {
+    if op == "const_bool" {
+        return match operand {
+            Some(CIROperand::Bool(value)) => Ok(u16::from(*value)),
+            _ => Err(BackendError::InvalidOperand(
+                "const_bool srcs[0] must be Bool".into(),
+            )),
+        };
+    }
+
+    let n = match operand {
+        Some(CIROperand::Int(n)) => *n,
+        Some(CIROperand::Bool(b)) if op == "const_i64" => i64::from(*b),
+        _ => {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[0] must be Int"
+            )));
+        }
+    };
+    let max = if op == "const_u8" { 0xFF } else { 0xFFFF };
+    if (0..=max).contains(&n) {
         Ok(n as u16)
     } else {
         Err(BackendError::ImmediateOutOfRange(n))

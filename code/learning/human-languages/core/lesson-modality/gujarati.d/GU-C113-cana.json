@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C113-cana",
+    "language": "gujarati",
+    "chapter": 113,
+    "sequence": 5880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:038bdb5edf309f9b"
+  },
+  "findings": []
+}

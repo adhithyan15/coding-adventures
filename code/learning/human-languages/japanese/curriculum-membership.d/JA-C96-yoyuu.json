@@ -1,0 +1,11 @@
+{
+  "id": "JA-C96-yoyuu",
+  "pathSegment": "JA-PATH-96-CAN96",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-96-CAN96",
+      "order": 3
+    }
+  ]
+}

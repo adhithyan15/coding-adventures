@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C58-crow",
+  "english": "a crow",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಾಗೆ",
+      "romanization": "kāge",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కాకి",
+      "romanization": "kāki",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "കാക്ക",
+      "romanization": "kākka",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कौआ",
+      "romanization": "kauā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C60-crow, TE-C125-kaki, ML-C60-crow, HI-C147-kaua; sameRoot judged by the author, awaiting native review"
+}

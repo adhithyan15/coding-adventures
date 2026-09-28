@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Onion, Potato, Aubergine, Pumpkin, Coconut",
+  "label": "ch:sa-onion-potato-aubergine-pumpkin-coconut",
+  "canDo": "I can say an onion, a potato, an aubergine, a pumpkin and a coconut.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C108-narikelam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say an onion, a potato, an aubergine, a pumpkin and a coconut.",
+    "assesses": [
+      "SA-LEX-C108-THINGS108-03",
+      "SA-LEX-C108-THINGS108-04",
+      "SA-LEX-C108-THINGS108-05"
+    ]
+  }
+}

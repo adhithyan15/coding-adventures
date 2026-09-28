@@ -81,6 +81,22 @@ impl EnvironmentAxis {
         }
     }
 
+    /// The name the host environment uses on the wire (UI48 §7.1): the
+    /// camelCase keys of `mosaic-app-runtime`'s `Environment`, and so of the
+    /// report a generated shell builds for ENV4. A shell that selects a
+    /// layout from that report tests each rule axis under this name (§7.5);
+    /// a test pins the six to the runtime's.
+    pub fn wire_name(self) -> &'static str {
+        match self {
+            EnvironmentAxis::SizeClass => "sizeClass",
+            EnvironmentAxis::Pointer => "pointer",
+            EnvironmentAxis::Hover => "hover",
+            EnvironmentAxis::Orientation => "orientation",
+            EnvironmentAxis::ColorScheme => "colorScheme",
+            EnvironmentAxis::ReducedMotion => "reducedMotion",
+        }
+    }
+
     fn from_key(key: &str) -> Option<Self> {
         Self::ALL.into_iter().find(|axis| axis.key() == key)
     }
@@ -206,6 +222,23 @@ fn is_variant_name(name: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The wire names are the runtime's own: serialise its `Environment` and
+    /// the keys are exactly the six `wire_name`s, so a generated selector can
+    /// never test a key the host's report does not carry.
+    #[test]
+    fn wire_names_are_the_runtime_environment_keys() {
+        let environment = mosaic_app_runtime::Environment {
+            color_scheme: mosaic_app_runtime::ColorScheme::Light,
+            axes: mosaic_app_runtime::EnvironmentAxes::default(),
+        };
+        let wire = serde_json::to_value(environment).unwrap();
+        let mut keys: Vec<&str> = wire.as_object().unwrap().keys().map(String::as_str).collect();
+        keys.sort_unstable();
+        let mut names: Vec<&str> = EnvironmentAxis::ALL.iter().map(|axis| axis.wire_name()).collect();
+        names.sort_unstable();
+        assert_eq!(keys, names);
+    }
 
     fn rule(variant: &str, conditions: &[(EnvironmentAxis, &str)]) -> LayoutRule {
         LayoutRule {

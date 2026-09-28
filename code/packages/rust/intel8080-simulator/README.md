@@ -10,6 +10,10 @@ all of x86). Rust port of `code/packages/python/intel8080-simulator`
 [`code/specs/07i-intel8080-simulator.md`](../../../specs/07i-intel8080-simulator.md)
 for the full ISA writeup.
 
+The 8080 needs its own machine code when porting an 8008 program. For example,
+the 8008 encodes `JMP` as `0x7C`, which this simulator decodes as the one-byte
+8080 instruction `MOV A,H`; the 8080 encodes `JMP` as `0xC3`.
+
 ## Supported Instructions
 
 - **Data transfer**: mov, mvi, lxi, sta, lda, shld, lhld, stax, ldax, xchg

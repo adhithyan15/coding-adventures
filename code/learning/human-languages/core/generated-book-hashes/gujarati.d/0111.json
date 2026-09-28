@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:8139cca5951b9bc4",
+  "lessonIds": [
+    "GU-C111-kurto",
+    "GU-C111-payjamo",
+    "GU-C111-viti",
+    "GU-C111-butti",
+    "GU-C111-moja"
+  ],
+  "tex": "gujarati/book/chapters/ch111-kurta-pyjamas-ring-earring-socks.tex"
+}

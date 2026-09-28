@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:413d3df14799b5a2",
+  "lessonIds": [
+    "PA-C128-maruthal",
+    "PA-C128-bijli",
+    "PA-C128-tufan",
+    "PA-C128-dharti",
+    "PA-C128-canni"
+  ],
+  "tex": "punjabi/book/chapters/ch128-desert-lightning-storm-earth-moonlight.tex"
+}

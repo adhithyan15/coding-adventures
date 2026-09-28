@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-92-TIME92",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a moment, before, after, now and always.",
+  "prerequisites": []
+}

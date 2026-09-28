@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C98-atah",
+    "language": "sanskrit",
+    "chapter": 98,
+    "sequence": 4700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6d2f407a80a2ebe"
+  },
+  "findings": []
+}

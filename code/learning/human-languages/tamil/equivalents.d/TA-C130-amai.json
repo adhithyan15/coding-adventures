@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C130-amai",
+  "english": "a tortoise",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಆಮೆ",
+      "romanization": "āme",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "తాబేలు",
+      "romanization": "tābēlu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ആമ",
+      "romanization": "āma",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कछुआ",
+      "romanization": "kachuā"
+    }
+  ],
+  "source": "cross-track match: KA-C131-ame, TE-C124-tabelu, ML-C152-ama, HI-C149-kachua; sameRoot judged by the author, awaiting native review"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-140-THINGS140",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mouse, a fly, a mosquito, an ant and a scorpion.",
+  "prerequisites": []
+}

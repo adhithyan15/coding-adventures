@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:7599f53965238f73",
+  "lessonIds": [
+    "AR-C113-ihtimam",
+    "AR-C113-kariha",
+    "AR-C113-raghba",
+    "AR-C113-hulm",
+    "AR-C113-amal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch113.txt",
+  "json": "arabic/narration/ch113.json",
+  "textHash": "fnv1a64:2b6d7ca950a21c9f",
+  "jsonHash": "fnv1a64:89cb6da7f19cea34",
+  "findings": []
+}

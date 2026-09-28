@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C140-kab",
+    "language": "arabic",
+    "chapter": 140,
+    "sequence": 6430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf2df686c3dbe9b3"
+  },
+  "findings": []
+}

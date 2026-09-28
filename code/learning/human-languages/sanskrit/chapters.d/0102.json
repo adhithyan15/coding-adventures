@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Plate, Cup, Spoon, Stove, Candle",
+  "label": "ch:sa-plate-cup-spoon-stove-candle",
+  "canDo": "I can say a plate, a cup, a spoon, a stove and a candle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C102-vartika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say a plate, a cup, a spoon, a stove and a candle.",
+    "assesses": [
+      "SA-LEX-C102-THINGS102-03",
+      "SA-LEX-C102-THINGS102-04",
+      "SA-LEX-C102-THINGS102-05"
+    ]
+  }
+}

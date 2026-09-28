@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:86d17e1e078021e7",
+  "lessonIds": [
+    "SA-C126-vistrtah",
+    "SA-C126-sankirnah",
+    "SA-C126-gabhirah",
+    "SA-C126-ardrah",
+    "SA-C126-suskah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch126.txt",
+  "json": "sanskrit/narration/ch126.json",
+  "textHash": "fnv1a64:b2913fd72c3853fe",
+  "jsonHash": "fnv1a64:25be9f95232e08cb",
+  "findings": []
+}

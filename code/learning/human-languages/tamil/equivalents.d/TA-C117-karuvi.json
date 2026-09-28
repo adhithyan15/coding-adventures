@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C117-karuvi",
+  "english": "a tool",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಾಧನ",
+      "romanization": "sādhana"
+    },
+    {
+      "language": "telugu",
+      "form": "పరికరం",
+      "romanization": "parikaraṁ",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "ഉപകരണം",
+      "romanization": "upakaraṇaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C112-sadhana, TE-C106-parikaram, ML-C142-upakaranam; sameRoot judged by the author, awaiting native review"
+}

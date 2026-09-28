@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:c124444e64758621",
+  "lessonIds": [
+    "MW-C143-tato",
+    "MW-C143-kharo",
+    "MW-C143-khato",
+    "MW-C143-karvo",
+    "MW-C143-tikho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch143.txt",
+  "json": "marwadi/narration/ch143.json",
+  "textHash": "fnv1a64:5e2e6bde9a96ef67",
+  "jsonHash": "fnv1a64:7bf3dae268d9aebf",
+  "findings": []
+}

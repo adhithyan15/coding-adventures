@@ -1,0 +1,11 @@
+{
+  "id": "AR-R109-second-pass-rooms-having-and-being-able",
+  "pathSegment": "AR-PATH-109-CAN109",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "AR-EXT-109-CAN109",
+      "order": 6
+    }
+  ]
+}

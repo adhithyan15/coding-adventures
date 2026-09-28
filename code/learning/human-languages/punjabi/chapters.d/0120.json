@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Handkerchief, Sweater, Coat, Ring, Bangle",
+  "label": "ch:pa-handkerchief-sweater-coat-ring-bangle",
+  "canDo": "I can say a handkerchief, a sweater, a coat, a ring and a bangle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C120-kangan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a handkerchief, a sweater, a coat, a ring and a bangle.",
+    "assesses": [
+      "PA-LEX-C120-THINGS120-03",
+      "PA-LEX-C120-THINGS120-04",
+      "PA-LEX-C120-THINGS120-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-W03-namah-dictation",
+  "pathSegment": "SA-PATH-005",
+  "pathOrder": 19,
+  "extensions": [
+    {
+      "id": "SA-EXT-140-WRITING-VISARGA-BRIDGE",
+      "order": 2
+    }
+  ]
+}

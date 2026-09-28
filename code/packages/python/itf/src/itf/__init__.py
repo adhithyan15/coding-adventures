@@ -7,9 +7,9 @@ from typing import Final
 
 from barcode_layout_1d import (
     DEFAULT_BARCODE_1D_LAYOUT_CONFIG,
+    Barcode1DError,
     Barcode1DLayoutConfig,
     Barcode1DRun,
-    Barcode1DError,
     PaintBarcode1DOptions,
     draw_one_dimensional_barcode,
     runs_from_binary_pattern,
@@ -39,6 +39,10 @@ class ItfError(Barcode1DError):
 class InvalidItfInputError(ItfError):
     """Raised when ITF input is malformed."""
 
+    def __init__(self, message: str, error_id: str | None = None) -> None:
+        super().__init__(message)
+        self.error_id = error_id
+
 
 START_PATTERN: Final = "1010"
 STOP_PATTERN: Final = "11101"
@@ -59,16 +63,33 @@ DIGIT_PATTERNS: Final = (
 
 def _retag_runs(runs: list[Barcode1DRun], role: str) -> list[Barcode1DRun]:
     return [
-        Barcode1DRun(run.color, run.modules, run.source_char, run.source_index, role, dict(run.metadata))
+        Barcode1DRun(
+            run.color,
+            run.modules,
+            run.source_char,
+            run.source_index,
+            role,
+            dict(run.metadata),
+        )
         for run in runs
     ]
 
 
 def normalize_itf(data: str) -> str:
-    if not data.isdigit():
-        raise InvalidItfInputError("ITF input must contain digits only")
+    if any(0xD800 <= ord(character) <= 0xDFFF for character in data):
+        raise ValueError("ITF input must contain valid Unicode scalar values")
+    if len(data) > 4096:
+        raise InvalidItfInputError(
+            "ITF input must contain at most 4096 characters", "input-too-long"
+        )
     if len(data) == 0 or len(data) % 2 != 0:
-        raise InvalidItfInputError("ITF input must contain an even number of digits")
+        raise InvalidItfInputError(
+            "ITF input must contain an even number of digits", "invalid-length"
+        )
+    if not all("0" <= character <= "9" for character in data):
+        raise InvalidItfInputError(
+            "ITF input must contain digits only", "invalid-character"
+        )
     return data
 
 
@@ -96,7 +117,9 @@ def expand_itf_runs(data: str) -> list[Barcode1DRun]:
 
     runs.extend(
         _retag_runs(
-            runs_from_binary_pattern(START_PATTERN, source_char="start", source_index=-1),
+            runs_from_binary_pattern(
+                START_PATTERN, source_char="start", source_index=-1
+            ),
             "start",
         )
     )

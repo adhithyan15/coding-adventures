@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:3fac464c9cbf1453",
+  "lessonIds": [
+    "AR-C112-shawq",
+    "AR-C112-tumuh",
+    "AR-C112-ghaya",
+    "AR-C112-mashru",
+    "AR-C112-iqtirah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch112.txt",
+  "json": "arabic/narration/ch112.json",
+  "textHash": "fnv1a64:1e024620995b86f1",
+  "jsonHash": "fnv1a64:3643d010b39c1bf4",
+  "findings": []
+}

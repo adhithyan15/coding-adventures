@@ -1,0 +1,11 @@
+{
+  "id": "GU-C129-bag",
+  "pathSegment": "GU-PATH-129-THINGS129",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-129-THINGS129",
+      "order": 1
+    }
+  ]
+}

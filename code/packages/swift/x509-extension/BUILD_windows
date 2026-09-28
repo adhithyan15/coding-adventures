@@ -1,0 +1,1 @@
+swift format lint Sources\X509Extension\X509Extension.swift Tests\X509ExtensionTests\X509ExtensionTests.swift && swift test --enable-code-coverage --verbose && swift build -c release -Xswiftc -warnings-as-errors

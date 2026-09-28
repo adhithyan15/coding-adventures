@@ -15,6 +15,14 @@ import {
 import { registerStrokeHonestyTests } from "../support/stroke-honesty";
 
 const TELUGU_A = DUCTUS[ductusKey("telugu", "అ")];
+const TELUGU_KA = DUCTUS[ductusKey("telugu", "క")];
+const TELUGU_KHA = DUCTUS[ductusKey("telugu", "ఖ")];
+const TELUGU_GA = DUCTUS[ductusKey("telugu", "గ")];
+const TELUGU_GHA = DUCTUS[ductusKey("telugu", "ఘ")];
+const TELUGU_NGA = DUCTUS[ductusKey("telugu", "ఙ")];
+const TELUGU_CA = DUCTUS[ductusKey("telugu", "చ")];
+const TELUGU_JA = DUCTUS[ductusKey("telugu", "జ")];
+const TELUGU_NYA = DUCTUS[ductusKey("telugu", "ఞ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -30,11 +38,45 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The five-run pedagogical ఐ route crosses the printed form's narrow
-  // counter transitions while still covering the complete outline.
-  registerStrokeHonestyTests(letters, { అ: 0.96, ఐ: 0.59, ఒ: 0.84, ఋ: 0.84 });
+  // The sourced క, ఙ and ఞ routes and five-run pedagogical ఐ route cross
+  // narrow printed counter transitions while still covering their complete
+  // outlines.
+  registerStrokeHonestyTests(letters, {
+    అ: 0.96,
+    క: 0.93,
+    ఖ: 0.93,
+    ఙ: 0.9,
+    ఞ: 0.86,
+    ఐ: 0.59,
+    ఒ: 0.84,
+    ఋ: 0.84,
+  });
 
   beforeAll(() => {
+    expect(verifiedLetterFont("క", TELUGU_KA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఖ", TELUGU_KHA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("గ", TELUGU_GA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఘ", TELUGU_GHA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఙ", TELUGU_NGA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("చ", TELUGU_CA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("జ", TELUGU_JA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఞ", TELUGU_NYA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
@@ -62,6 +104,138 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ఋ", TELUGU_VOCALIC_R.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
+  });
+
+  it("Telugu క groups five source-verified movements into two pen-down runs", () => {
+    expect(penLifts(TELUGU_KA)).toBe(1);
+    expect(TELUGU_KA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_KA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "turn down and left around the upper bowl",
+        "continue right through the middle shoulder",
+        "curve down and left around the lower bowl",
+        "finish upward along the left tail",
+      ],
+      ["sweep up through the separate headstroke"],
+    ]);
+  });
+
+  it("Telugu ఖ groups six source-verified movements into two pen-down runs", () => {
+    expect(penLifts(TELUGU_KHA)).toBe(1);
+    expect(TELUGU_KHA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_KHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "circle up around the upper-left bowl",
+        "descend through the central curve",
+        "turn up around the left shoulder",
+        "sweep right and up around the broad outer bowl",
+        "return left along the crown",
+      ],
+      ["draw the separate downward stem"],
+    ]);
+  });
+
+  it("Telugu గ keeps its two source-verified movements in separate pen-down runs", () => {
+    expect(penLifts(TELUGU_GA)).toBe(1);
+    expect(TELUGU_GA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_GA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      ["sweep up and over the broad lower arch"],
+      ["cup through the separate upper flourish"],
+    ]);
+  });
+
+  it("Telugu ఘ groups six source-verified movements into four pen-down runs", () => {
+    expect(penLifts(TELUGU_GHA)).toBe(3);
+    expect(TELUGU_GHA.strokes).toHaveLength(4);
+    expect(
+      TELUGU_GHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "sweep left around the upper-left shoulder",
+        "continue down and right around the lower-left bowl",
+        "turn upward around the broad middle arch",
+      ],
+      ["sweep right and up around the outer arch"],
+      ["restart and cup through the upper flourish"],
+      ["restart and draw the separate downward stem"],
+    ]);
+  });
+
+  it("Telugu చ groups four source-verified movements into two pen-down runs", () => {
+    expect(penLifts(TELUGU_CA)).toBe(1);
+    expect(TELUGU_CA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_CA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "draw the upper bar from left to right",
+        "continue down and around the left bowl",
+        "sweep right and up around the outer bowl",
+      ],
+      ["restart and cup through the upper flourish"],
+    ]);
+  });
+
+  it("Telugu ఙ groups five source-verified movements into three pen-down runs", () => {
+    expect(penLifts(TELUGU_NGA)).toBe(2);
+    expect(TELUGU_NGA.strokes).toHaveLength(3);
+    expect(
+      TELUGU_NGA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "turn around the compact upper-left lobe",
+        "continue down and around the broad lower bowl",
+        "curl upward around the rounded right lobe",
+      ],
+      ["lift and draw the inner horizontal bar from left to right"],
+      ["lift again and draw the short upper headstroke downward"],
+    ]);
+  });
+
+  it("Telugu జ preserves all four source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_JA)).toBe(3);
+    expect(TELUGU_JA.strokes).toHaveLength(4);
+    expect(TELUGU_JA.strokes.map((stroke) => stroke.segments[0]!.label)).toEqual([
+      "sweep right across the rounded upper-left arch",
+      "curve down and right around the lower-left bowl",
+      "sweep right and up around the lower-right bowl",
+      "restart and curl through the upper-right flourish",
+    ]);
+  });
+
+  it("Telugu ఞ preserves all eight source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_NYA)).toBe(7);
+    expect(TELUGU_NYA.strokes).toHaveLength(8);
+    expect(
+      TELUGU_NYA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep up around the upper-left loop",
+      "sweep right around the upper-right loop",
+      "curve down and left around the broad lower bowl",
+      "curl upward around the inner-left loop",
+      "curl down and right around the inner bowl",
+      "draw the short downward tail",
+      "draw the right horizontal bar",
+      "draw the separate upper vertical stem downward",
+    ]);
   });
 
   it("Telugu అ groups four source-verified movements into two pen-down runs", () => {

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:79bd34af4e7873cb",
+  "lessonIds": [
+    "JA-C97-zaisan",
+    "JA-C97-tsukaimichi",
+    "JA-C97-shudan",
+    "JA-C97-houhou",
+    "JA-C97-yarikata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch97.txt",
+  "json": "japanese/narration/ch97.json",
+  "textHash": "fnv1a64:86fd0747e7a261f8",
+  "jsonHash": "fnv1a64:b8a27a273225dee9",
+  "findings": []
+}

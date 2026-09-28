@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:9649fba3d16e3480",
+  "lessonIds": [
+    "ML-C151-kutira",
+    "ML-C151-kaluta",
+    "ML-C151-pottu",
+    "ML-C151-panni",
+    "ML-C151-simham"
+  ],
+  "tex": "malayalam/book/chapters/ch151-horse-donkey-buffalo-pig-lion.tex"
+}

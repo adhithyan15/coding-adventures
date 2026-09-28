@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:e8d1116a62dc6736",
+  "lessonIds": [
+    "PA-C152-bhajjna",
+    "PA-C152-ghummna",
+    "PA-C152-rukna",
+    "PA-C152-mannna",
+    "PA-C152-badalna",
+    "PA-R152-first-pass-describing-words",
+    "PA-R152-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch152.txt",
+  "json": "punjabi/narration/ch152.json",
+  "textHash": "fnv1a64:3370165533afb34f",
+  "jsonHash": "fnv1a64:ea997597a6107802",
+  "findings": []
+}

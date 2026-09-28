@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:1e28315475991192",
+  "lessonIds": [
+    "SA-C108-palanduh",
+    "SA-C108-alukam",
+    "SA-C108-vrntakam",
+    "SA-C108-kusmandam",
+    "SA-C108-narikelam"
+  ],
+  "tex": "sanskrit/book/chapters/ch108-onion-potato-aubergine-pumpkin-coconut.tex"
+}

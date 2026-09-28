@@ -1,0 +1,726 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 83,
+  "title": "This, That, Which, This kind of, That kind of",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d34c1cb28871dec7",
+  "lessons": [
+    {
+      "id": "JA-C83-kono",
+      "sequence": 4950,
+      "title": "この (kono) — this (next to me)",
+      "headword": "この",
+      "romanization": "kono",
+      "gloss": "this (next to me)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b227551b6b77ac3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the opposite side, then the Japanese for upstream."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: この",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "この — kono — \"this (next to me)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the opposite side, then the Japanese for upstream, then say kono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the opposite side, then the Japanese for upstream, then say *kono* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does この (kono) mean? (\"This (next to me)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C83-kono-type",
+              "prompt": "Type the Japanese for 'this (next to me)'.",
+              "assesses": [
+                "JA-LEX-C83-DEF83-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "この",
+                "kono"
+              ],
+              "feedback": {
+                "correct": "Right: この (kono) is 'this (next to me)'.",
+                "incorrect": "'this (next to me)' is この (kono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C83-ano",
+      "sequence": 4960,
+      "title": "あの (ano) — that (over there)",
+      "headword": "あの",
+      "romanization": "ano",
+      "gloss": "that (over there)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8564dc963a303fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for upstream, then the Japanese for this."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あの — ano — \"that (over there)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ano",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ano*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for upstream, then the Japanese for this, then say ano again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for upstream, then the Japanese for this, then say *ano* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あの (ano) mean? (\"That (over there)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C83-ano-type",
+              "prompt": "Type the Japanese for 'that (over there)'.",
+              "assesses": [
+                "JA-LEX-C83-DEF83-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あの",
+                "ano"
+              ],
+              "feedback": {
+                "correct": "Right: あの (ano) is 'that (over there)'.",
+                "incorrect": "'that (over there)' is あの (ano)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C83-dono",
+      "sequence": 4970,
+      "title": "どの (dono) — which",
+      "headword": "どの",
+      "romanization": "dono",
+      "gloss": "which",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02487ccffc90f5e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for this, then the Japanese for that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どの — dono — \"which\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for this, then the Japanese for that, then say dono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for this, then the Japanese for that, then say *dono* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どの (dono) mean? (\"Which\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C83-dono-type",
+              "prompt": "Type the Japanese for 'which'.",
+              "assesses": [
+                "JA-LEX-C83-DEF83-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どの",
+                "dono"
+              ],
+              "feedback": {
+                "correct": "Right: どの (dono) is 'which'.",
+                "incorrect": "'which' is どの (dono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C83-konna",
+      "sequence": 4980,
+      "title": "こんな (konna) — this kind of",
+      "headword": "こんな",
+      "romanization": "konna",
+      "gloss": "this kind of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e94144bd77238d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for that, then the Japanese for which."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こんな",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんな — konna — \"this kind of\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say konna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *konna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for that, then the Japanese for which, then say konna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for that, then the Japanese for which, then say *konna* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こんな (konna) mean? (\"This kind of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C83-konna-type",
+              "prompt": "Type the Japanese for 'this kind of'.",
+              "assesses": [
+                "JA-LEX-C83-DEF83-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こんな",
+                "konna"
+              ],
+              "feedback": {
+                "correct": "Right: こんな (konna) is 'this kind of'.",
+                "incorrect": "'this kind of' is こんな (konna)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C83-anna",
+      "sequence": 4990,
+      "title": "あんな (anna) — that kind of",
+      "headword": "あんな",
+      "romanization": "anna",
+      "gloss": "that kind of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f0995adf7085ef5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for which, then the Japanese for this kind of."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count long thin things: one, three, six. (いっぽん, さんぼん, ろっぽん — the counter bends after a held beat and after ん.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あんな",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あんな — anna — \"that kind of\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *anna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for which, then the Japanese for this kind of, then say anna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for which, then the Japanese for this kind of, then say *anna* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あんな (anna) mean? (\"That kind of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C83-anna-type",
+              "prompt": "Type the Japanese for 'that kind of'.",
+              "assesses": [
+                "JA-LEX-C83-DEF83-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あんな",
+                "anna"
+              ],
+              "feedback": {
+                "correct": "Right: あんな (anna) is 'that kind of'.",
+                "incorrect": "'that kind of' is あんな (anna)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

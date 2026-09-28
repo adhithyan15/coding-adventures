@@ -1,0 +1,11 @@
+{
+  "id": "ML-C152-ama",
+  "pathSegment": "ML-PATH-152-THINGS152",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-152-THINGS152",
+      "order": 2
+    }
+  ]
+}

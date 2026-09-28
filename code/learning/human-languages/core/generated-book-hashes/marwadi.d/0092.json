@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:d9d4417c133ac41d",
+  "lessonIds": [
+    "MW-C92-sanivar",
+    "MW-C92-ravivar",
+    "MW-C92-chait",
+    "MW-C92-baisakh",
+    "MW-C92-jeth"
+  ],
+  "tex": "marwadi/book/chapters/ch92-saturday-sunday-chait-baisakh-jeth.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:9d97e22760b0ca23",
+  "lessonIds": [
+    "MW-C93-savan",
+    "MW-C93-bhadvo",
+    "MW-C93-asoj",
+    "MW-C93-kati",
+    "MW-C93-migsar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch93.txt",
+  "json": "marwadi/narration/ch93.json",
+  "textHash": "fnv1a64:3af498a1ab03d72f",
+  "jsonHash": "fnv1a64:48f9c343a83d2d4b",
+  "findings": []
+}

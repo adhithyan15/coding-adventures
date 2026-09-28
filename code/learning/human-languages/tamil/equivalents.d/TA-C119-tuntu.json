@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C119-tuntu",
+  "english": "a towel",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಟವೆಲ್",
+      "romanization": "ṭavel"
+    },
+    {
+      "language": "telugu",
+      "form": "తువ్వాలు",
+      "romanization": "tuvvālu"
+    },
+    {
+      "language": "malayalam",
+      "form": "തോർത്ത്",
+      "romanization": "tōrttŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "तौलिया",
+      "romanization": "tauliyā"
+    }
+  ],
+  "source": "cross-track match: KA-C117-tavel, TE-C111-tuvvalu, ML-C147-torttu, HI-C131-tauliya"
+}

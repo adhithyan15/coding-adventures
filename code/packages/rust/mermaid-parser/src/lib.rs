@@ -568,7 +568,8 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram, ChartKind,
+    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram,
+    ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
     EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
@@ -936,6 +937,7 @@ pub fn parse_info(source: &str) -> Result<InfoDiagram, ParseError> {
 
 /// Parse the core Mermaid Architecture service/group/edge subset.
 pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError> {
+    let architecture_config = parse_architecture_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_architecture(&prepared).map_err(|message| ParseError {
         message, line: 1, col: 1,
@@ -951,6 +953,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
 
     let mut diagram = StructuralDiagram {
         kind: StructuralKind::Architecture,
+        architecture_config: Some(architecture_config),
         title: None,
         accessibility_title: None,
         accessibility_description: None,
@@ -1090,6 +1093,36 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
         return Err(ParseError { message: "architecture diagram requires a service".into(), line: 1, col: 1 });
     }
     Ok(diagram)
+}
+
+fn parse_architecture_config(source: &str) -> ArchitectureConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "architecture"]);
+    let architecture_source = mermaid_directive_object(source, "architecture")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(architecture_source, key).or_else(|| {
+            architecture_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let positive_number = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+    };
+    let defaults = ArchitectureConfig::default();
+    ArchitectureConfig {
+        icon_size: positive_number("iconSize").unwrap_or(defaults.icon_size),
+        font_size: positive_number("fontSize").unwrap_or(defaults.font_size),
+        node_separation: positive_number("nodeSeparation")
+            .unwrap_or(defaults.node_separation),
+        padding: positive_number("padding").unwrap_or(defaults.padding),
+        ideal_edge_length_multiplier: positive_number("idealEdgeLengthMultiplier")
+            .unwrap_or(defaults.ideal_edge_length_multiplier),
+    }
 }
 
 fn parse_architecture_alignment(
@@ -3064,6 +3097,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     resolve_requirement_styles(&mut nodes, style_events, cursor.current())?;
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
+        architecture_config: None,
         title,
         accessibility_title,
         accessibility_description,
@@ -3877,6 +3911,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
 
     Ok(StructuralDiagram {
         kind: StructuralKind::Class,
+        architecture_config: None,
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -9061,6 +9096,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
+        architecture_config: None,
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -9276,6 +9312,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
+        architecture_config: None,
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -10635,6 +10672,35 @@ mod tests_dg04 {
             Some(StructuralNodeMetadata::ArchitectureService(metadata))
                 if metadata.icon_name.as_deref() == Some("aws:lambda")
         ));
+    }
+
+    #[test]
+    fn architecture_preserves_size_and_separation_configuration() {
+        let diagram = parse_architecture(
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\nservice api(server)[API]",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.architecture_config,
+            Some(ArchitectureConfig {
+                icon_size: 104.0,
+                font_size: 19.0,
+                node_separation: 112.0,
+                padding: 48.0,
+                ideal_edge_length_multiplier: 1.25,
+            })
+        );
+
+        let diagram = parse_architecture(
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n---\narchitecture-beta\nservice api(server)[API]",
+        )
+        .unwrap();
+        let config = diagram.architecture_config.unwrap();
+        assert_eq!(config.icon_size, 96.0);
+        assert_eq!(config.font_size, 18.0);
+        assert_eq!(config.node_separation, 104.0);
+        assert_eq!(config.padding, 52.0);
+        assert_eq!(config.ideal_edge_length_multiplier, 1.75);
     }
 
     #[test]

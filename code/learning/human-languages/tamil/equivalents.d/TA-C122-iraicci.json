@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C122-iraicci",
+  "english": "meat",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಾಂಸ",
+      "romanization": "māṁsa"
+    },
+    {
+      "language": "telugu",
+      "form": "మాంసం",
+      "romanization": "māṁsaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഇറച്ചി",
+      "romanization": "iṟacci",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गोश्त",
+      "romanization": "gośt"
+    }
+  ],
+  "source": "cross-track match: KA-C122-mamsa, TE-C116-mamsam, ML-C131-meat, HI-C137-gost; sameRoot judged by the author, awaiting native review"
+}

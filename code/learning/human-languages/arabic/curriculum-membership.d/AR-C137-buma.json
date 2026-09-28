@@ -1,0 +1,11 @@
+{
+  "id": "AR-C137-buma",
+  "pathSegment": "AR-PATH-137-THINGS137",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-137-THINGS137",
+      "order": 3
+    }
+  ]
+}

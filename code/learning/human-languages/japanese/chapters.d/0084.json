@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "What kind of, Other, Everybody, This sort of, That sort of",
+  "label": "ch:ja-what-kind-of-other-everybody-this-sort-of-that-sort-of",
+  "canDo": "I can say what kind of, other, everybody, this sort of and that sort of.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C84-aaiu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say what kind of, other, everybody, this sort of and that sort of.",
+    "assesses": [
+      "JA-LEX-C84-DEF84-03",
+      "JA-LEX-C84-DEF84-04",
+      "JA-LEX-C84-DEF84-05"
+    ]
+  }
+}

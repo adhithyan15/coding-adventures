@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Hardened OBJECT IDENTIFIER values with decoder-only construction and detached
+  immutable encodings.
+
 ## 0.1.0 - 2026-09-20
 
 - Added bounded typed DER values, implicit and constructed helpers, shared

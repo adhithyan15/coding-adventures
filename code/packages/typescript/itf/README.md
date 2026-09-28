@@ -1,7 +1,6 @@
 # @coding-adventures/itf
 
-Dependency-free Interleaved 2 of 5 encoder that emits backend-neutral draw
-instructions.
+Interleaved 2 of 5 encoder that emits backend-neutral paint instructions.
 
 ## What ITF Teaches
 
@@ -20,10 +19,7 @@ That is why ITF requires an even number of digits.
 
 ```typescript
 import { drawItf } from "@coding-adventures/itf";
-import { renderSvg } from "@coding-adventures/draw-instructions-svg";
-
 const scene = drawItf("123456");
-const svg = renderSvg(scene);
 ```
 
 Intermediate helpers include:
@@ -37,6 +33,9 @@ Intermediate helpers include:
 This package owns the ITF digit-pair rules and start/stop patterns. The shared
 1D geometry and SVG serialization live in sibling packages so the symbology
 stays easy to read.
+
+Validation follows `barcode-symbologies-v1`; stable IDs are exposed through
+`InvalidItfInputError.errorId`.
 
 ## Development
 

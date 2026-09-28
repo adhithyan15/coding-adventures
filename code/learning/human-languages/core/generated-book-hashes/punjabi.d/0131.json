@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:f4a527469db64db8",
+  "lessonIds": [
+    "PA-C131-battakh",
+    "PA-C131-kirli",
+    "PA-C131-kacchu",
+    "PA-C131-magarmacch",
+    "PA-C131-macchar"
+  ],
+  "tex": "punjabi/book/chapters/ch131-duck-lizard-turtle-crocodile-mosquito.tex"
+}

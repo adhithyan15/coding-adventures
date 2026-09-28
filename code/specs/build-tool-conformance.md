@@ -723,6 +723,18 @@ match ceiling precedes unknown-path handling. A successful oracle expectation
 MUST reject an adapter error rather than accepting it as an alternative
 outcome.
 
+The Go operational reference MUST expose this graph and diff-selection domain
+through one typed, process-free module boundary. Its package-local suite MUST
+discover the exact eight `graph-*.json` and eleven `diff-selection-*.json`
+cases in the checked v1 corpus and evaluate every case through that production
+boundary. The boundary accepts only caller-owned immutable values: fixture
+decoding, checkout discovery, Git invocation, filesystem reads, environment
+inspection, network access, and process launch remain outside it. Go MUST
+return the same canonical graph levels, closure sets, stable error codes,
+repository-boundary digest behavior, Unicode-scalar match-work accounting, and
+structural validation precedence specified above. This native core does not by
+itself claim a neutral adapter or additional host authority.
+
 ### 5. Hashing and cache
 
 Required behavior:
@@ -839,6 +851,13 @@ leading `!`, ascending `x-y` ranges, literal leading or trailing `-`, literal
 leading `]`, and unmatched `[` as a literal. They reject descending ranges and
 the ambiguous class operators `--`, `&&`, `~~`, and `||`; implementations MUST
 reject such a glob before matching rather than inherit host-regex behavior.
+Callers that receive a list of declared globs MUST compile and validate the
+complete list before enumerating or matching any candidate. An invalid later
+pattern therefore cannot be hidden by an earlier match. Implementations SHOULD
+retain the compiled form for the complete operation so parser work is linear in
+the declared patterns rather than repeated for every candidate. The host API
+MUST expose invalid-pattern failure as a stable typed error or exception rather
+than silently treating the rejected syntax as a non-match.
 
 Registry selectors are exact, case-sensitive, NFC strings sorted by raw UTF-8
 bytes. The closed schema rejects unknown fields, unsupported versions,

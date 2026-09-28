@@ -1,0 +1,11 @@
+{
+  "id": "SA-C98-hetuh",
+  "pathSegment": "SA-PATH-98-WHY98",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-98-WHY98",
+      "order": 2
+    }
+  ]
+}

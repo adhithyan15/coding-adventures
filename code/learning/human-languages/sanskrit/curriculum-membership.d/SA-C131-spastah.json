@@ -1,0 +1,11 @@
+{
+  "id": "SA-C131-spastah",
+  "pathSegment": "SA-PATH-131-QUAL131",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-131-QUAL131",
+      "order": 3
+    }
+  ]
+}

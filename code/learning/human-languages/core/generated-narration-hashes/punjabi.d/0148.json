@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:6f273d9d9c740413",
+  "lessonIds": [
+    "PA-C148-lukna",
+    "PA-C148-diggna",
+    "PA-C148-sikhauna",
+    "PA-C148-cukkna",
+    "PA-C148-tappna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch148.txt",
+  "json": "punjabi/narration/ch148.json",
+  "textHash": "fnv1a64:6d82eb560d543a7b",
+  "jsonHash": "fnv1a64:6eb70f3979673e8f",
+  "findings": []
+}

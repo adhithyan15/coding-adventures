@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C122-sabun",
+    "language": "arabic",
+    "chapter": 122,
+    "sequence": 5320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a43598c3ed596f3"
+  },
+  "findings": []
+}

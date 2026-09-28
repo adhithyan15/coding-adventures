@@ -1,0 +1,11 @@
+{
+  "id": "JA-C130-aimai",
+  "pathSegment": "JA-PATH-130-QUAL130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-130-QUAL130",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R155-first-pass-describing-words",
+  "pathSegment": "AR-PATH-155-QUAL155",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-155-QUAL155",
+      "order": 5
+    }
+  ]
+}

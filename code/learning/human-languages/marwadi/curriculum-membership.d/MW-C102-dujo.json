@@ -1,0 +1,11 @@
+{
+  "id": "MW-C102-dujo",
+  "pathSegment": "MW-PATH-102-DEF102",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-102-DEF102",
+      "order": 1
+    }
+  ]
+}

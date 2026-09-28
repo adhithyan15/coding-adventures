@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W03-namah-dictation",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 191,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3aa3b5663cd25845",
+    "detachableSegments": [
+      "Writing — visarga dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-R127-first-pass-food-and-nature",
+  "pathSegment": "GU-PATH-127-THINGS127",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-127-THINGS127",
+      "order": 5
+    }
+  ]
+}

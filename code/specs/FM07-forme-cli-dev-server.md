@@ -13,7 +13,7 @@
 | `forme check` | Implemented | Loads and validates configuration without running the pipeline. |
 | `forme clean` | Implemented | Removes only containment-checked output and cache targets. |
 | `forme watch` preview server | Implemented | Coalesced rebuilds, SSE reload, last-good output, and clean cancellation are tested. |
-| `forme deploy` | Pending | FM-B012 composes the FM08 deploy runner. |
+| `forme deploy` | Implemented in FM-B047/FM-B012 | Uses CLI Builder for one manifest, exactly one content-store shape, one explicit target config, target-aware dry-run, and publication through the FM08 adapters. |
 | `forme install` and trust UX | Blocked | Requires the FM02 plugin host and FM-B014/FM-B015. |
 | Authoring shell integration | Blocked | FM-B016 owns the non-developer product shell. |
 
@@ -33,9 +33,15 @@ cache policy, or stage semantics.
 
 ### 2.1 Build and compatibility run
 
-`forme build [--config PATH] [--reproducible]` loads one project config,
+`forme build [--config PATH] [--reproducible] [--deploy-input DIR]` loads one project config,
 executes it, emits a stable report, and exits non-zero on fatal diagnostics.
 `forme run` accepts the same arguments and behavior.
+
+When `--deploy-input DIR` is present, a successful build merges the exact named
+`dist-tree` outputs into one collision-checked complete set, writes one
+digest-keyed content store, and writes its strict deploy manifest last. The
+directory must remain beneath the selected project root. No implicit scan of a
+stage output directory may substitute for these in-memory artifacts.
 
 ### 2.2 Check
 
@@ -56,9 +62,17 @@ and serves only the last successful in-memory artifact set. Successful rebuilds
 notify browsers over server-sent events; failed rebuilds retain the last good
 site. SIGINT cancels the build, watcher, and server without orphaned handles.
 
-### 2.5 Future commands
+### 2.5 Deploy
 
-`forme deploy` belongs to [FM08](FM08-forme-deploy-runner.md) and FM-B012.
+`forme deploy` accepts the FM08 manifest, exactly one of directory, canonical
+bundle, or explicit-descriptor inline content, a target and strict target
+configuration, and optional previous-manifest, dry-run, bootstrap, retry, and
+report inputs. CLI Builder owns parsing, required flags, and the exclusive
+content-store group. The command never loads a project config or changes the
+invocation working directory.
+
+### 2.6 Future commands
+
 Plugin installation and persisted trust decisions belong to
 [FM02](FM02-forme-plugin-host.md). Their absence must be reported explicitly;
 the CLI must not imply that an unavailable security boundary exists.
@@ -76,4 +90,4 @@ and build IDs remain stable inputs to automation.
 - [FM02](FM02-forme-plugin-host.md) — future installation and trust commands
 - [FM03](FM03-forme-orchestrator.md) — pipeline execution contract
 - [FM06](FM06-forme-aot-compiler.md) — static artifact production
-- [FM08](FM08-forme-deploy-runner.md) — future deploy command implementation
+- [FM08](FM08-forme-deploy-runner.md) — deploy content, adapter, bootstrap, and publication contract

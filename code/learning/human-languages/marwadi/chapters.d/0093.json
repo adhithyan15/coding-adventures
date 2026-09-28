@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Savan, Bhadvo, Asoj, Kati, Migsar",
+  "label": "ch:mw-savan-bhadvo-asoj-kati-migsar",
+  "canDo": "I can say Savan, Bhadvo, Asoj, Kati and Migsar.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MW-C93-migsar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say Savan, Bhadvo, Asoj, Kati and Migsar.",
+    "assesses": [
+      "MW-LEX-C93-TIME93-03",
+      "MW-LEX-C93-TIME93-04",
+      "MW-LEX-C93-TIME93-05"
+    ]
+  }
+}

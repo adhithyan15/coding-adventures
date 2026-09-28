@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C136-pattam",
+  "english": "a kite",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಾಳಿಪಟ",
+      "romanization": "gāḷipaṭa",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "గాలిపటం",
+      "romanization": "gālipaṭaṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C120-galipata, TE-C114-galipatam; sameRoot judged by the author, awaiting native review"
+}

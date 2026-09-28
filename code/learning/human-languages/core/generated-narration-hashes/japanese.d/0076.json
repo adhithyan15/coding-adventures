@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:7907ebfab9f575c9",
+  "lessonIds": [
+    "JA-C76-mayonaka",
+    "JA-C76-isshuukan",
+    "JA-C76-ichinichi",
+    "JA-C76-hannichi",
+    "JA-C76-tsuitachi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch76.txt",
+  "json": "japanese/narration/ch76.json",
+  "textHash": "fnv1a64:894bfdf8414230f7",
+  "jsonHash": "fnv1a64:0a97f2afa056ed72",
+  "findings": []
+}

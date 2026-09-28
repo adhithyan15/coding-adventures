@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C91-prabhatam",
+    "language": "sanskrit",
+    "chapter": 91,
+    "sequence": 4350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9860a41e088e3fcf"
+  },
+  "findings": []
+}

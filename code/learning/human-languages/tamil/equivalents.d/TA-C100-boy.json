@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C100-boy",
+  "english": "a boy",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "అబ్బాయి",
+      "romanization": "abbāyi"
+    },
+    {
+      "language": "hindi",
+      "form": "लड़का",
+      "romanization": "laṛkā"
+    }
+  ],
+  "source": "cross-track match: TE-C88-boy, HI-C118-larka"
+}

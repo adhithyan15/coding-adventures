@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C130-bajro",
+    "language": "marwadi",
+    "chapter": 130,
+    "sequence": 8330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1485dcff540a0e6d"
+  },
+  "findings": []
+}

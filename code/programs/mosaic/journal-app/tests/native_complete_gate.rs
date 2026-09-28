@@ -50,13 +50,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // components it composes, which pin the same drops themselves:
     //
     // - `border-radius` on DraftEditor's two text fields;
-    // - `color` on DraftEditor's labels, and on EmptyState's and RecordList's
-    //   secondary `Text`s;
-    // - `font-size` on DraftEditor's action buttons and RecordList's row
-    //   titles.
+    // - `color` on those composed Text parts is implemented by #15285;
+    // Button and RecordList title font sizes are implemented by #16201.
     (Backend::Flutter, "border-radius"),
-    (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-size"),
 ];
 
 fn package_root() -> PathBuf {

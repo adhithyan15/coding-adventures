@@ -4,8 +4,68 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.3.0` accumulate here until the next version is
+Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
+
+## [0.5.1] - 2026-09-27
+
+### Fixed — release notes state the CI-only backend boundary (#16168)
+
+Generated notes now say directly that static HTML, Web Components, and Paint
+remain CI-only verification outputs rather than downloadable artifacts, and
+that Paint coverage does not imply a Paint host or interaction support. The
+immutable v0.5.0 release shipped the correct 11-payload web/native matrix, but
+its heading-only changelog summary omitted this explanatory boundary.
+
+## [0.5.0] - 2026-09-27
+
+### Verified — Paint output is guarded by reviewed product goldens (#16151)
+
+TaskApp now package-expands its real interface, layout, dependency styles, and
+both authored themes through the typed Paint pipeline. The test pins explicit
+CPU Skia PNGs at the declared 1280 x 900 desktop size, proves repeated renders
+are byte-identical and the themes remain distinct, and compares both outputs
+with reviewed repository goldens. This is a CI-only visual-regression gate, not
+a Paint host, interaction claim, or release artifact.
+
+## [0.4.1] - 2026-09-27
+
+### Fixed — release notes link the live signing tracker (#16142)
+
+Generated release notes now direct signing, notarization, and platform-native
+installer limitations to #13977. The previous template and its test pinned
+closed packaging issue #13522, so the otherwise verified immutable v0.4.0
+release sent readers to a retired tracker. The artifact and platform matrix is
+unchanged.
+
+## [0.4.0] - 2026-09-27
+
+### Verified — the Web Components host drives the real TaskApp lifecycle (#16125)
+
+TaskApp now compiles both authored themes through the package-expanded
+`webcomponent` backend and wires the emitted `<mos-task-app>` controls to the
+real `task-wasm` engine. React and Custom Element hosts share one extracted,
+framework-neutral presentation controller and the same truthful IndexedDB or
+volatile-memory persistence contract. Browser acceptance creates, completes,
+restores, and deletes a task through the generated shadow-DOM controls. The
+relocatable output is a CI parity gate only, not a new release artifact.
+
+### Verified — the authored List shell survives static HTML lowering (#16120)
+
+The normal `mosaic-emit-html` test lane now compiles TaskApp's own interface,
+package-expanded layout, and light theme. It pins the primary composer, the
+repeated task-row template, and the toolkit SegmentedControl-backed view
+switcher, while also requiring explicit dropped-event markers. This is a
+structural static snapshot only; it does not claim an interactive host or add a
+release artifact.
+
+### Fixed — release notes include every dated product change (#16116)
+
+The release publisher now summarizes the exact dated TaskApp changelog section
+before listing label-filtered GitHub history. Native and cross-package product
+changes can no longer disappear from the release delta merely because their
+pull requests lack the `task-app` label. Note generation fails when the selected
+release section has no reviewed change headings.
 
 ## [0.3.0] - 2026-09-27
 

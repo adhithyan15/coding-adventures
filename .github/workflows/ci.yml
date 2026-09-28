@@ -601,6 +601,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
           python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json
           python3 -m unittest discover -s code/scripts/tests -p 'test_classical_cipher_fixtures.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_barcode_symbologies_fixtures.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_scytale_fixture_consumers.py'
           python3 code/scripts/generate_scytale_fixture_consumers.py --check
           python3 -m unittest discover -s code/scripts/tests -p 'test_generate_vigenere_fixture_consumers.py'
@@ -2231,6 +2232,12 @@ jobs:
             MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
             swift run --package-path "$harness" Conformance --library "$installed_runtime"
 
+          # The SwiftUI platform library's own behaviour (UI87 §7): every SwiftUI app
+          # gets MosaicPlatformEffects.swift, and this drives its open/save
+          # logic, limits and routing with a fake host and fake panels.
+          cp "$bundled_output/swiftui/Sources/App/MosaicPlatformEffects.swift" "$harness/Sources/Conformance/MosaicPlatformEffects.swift"
+          swift run --package-path "$harness" -Xswiftc -DMOSAIC_PLATFORM_EFFECTS Conformance --platform-effects
+
           cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
           task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.dylib"
           taskapp_output="$RUNNER_TEMP/mosaic-swift-taskapp"
@@ -2461,7 +2468,50 @@ jobs:
           # did not crash rendering the first frame. Drain all launchctl output:
           # grep -q can close the pipe early and make simctl fail with SIGPIPE.
           xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+
+          # State lives in the app's sandbox and is read back (UI89 §2.3,
+          # step 3). The host writes state only after the first event, so it
+          # is seeded: state the runtime rejects must be quarantined INSIDE
+          # the container (the host found and read that path), and the
+          # snapshot the macOS TaskApp run above persisted -- the same engine
+          # -- must be restored with nothing quarantined. Each time the app
+          # must still be running ten seconds later.
+          ios_container="$(xcrun simctl get_app_container "$simulator" dev.codingadventures.trestle data)"
+          test -n "$ios_container" && test -d "$ios_container"
+          ios_state_dir="$ios_container/Library/Application Support/task-app"
+          ios_state="$ios_state_dir/mosaic-state.v1.json"
+          test -s "$task_state_path"
+          xcrun simctl terminate "$simulator" dev.codingadventures.trestle || true
+          mkdir -p "$ios_state_dir"
+          rm -f "$ios_state" "$ios_state.corrupt"
+          printf '{}' > "$ios_state"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          test -f "$ios_state.corrupt"
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl terminate "$simulator" dev.codingadventures.trestle
+          rm -f "$ios_state" "$ios_state.corrupt"
+          cp "$task_state_path" "$ios_state"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          test ! -e "$ios_state.corrupt"
+          # Still there (the environment report is an event, so the host may
+          # have rewritten it; its bytes are not the point).
+          test -s "$ios_state"
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
           xcrun simctl shutdown "$simulator"
+
+          # The same app on iPadOS (UI89 §2.2: one target, TARGETED_DEVICE_FAMILY
+          # 1,2): it installs and keeps running on an iPad simulator.
+          ipad="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPad"))][0].udid')"
+          test -n "$ipad" && test "$ipad" != null
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.trestle
+          sleep 10
+          xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl shutdown "$ipad"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project
@@ -2685,6 +2735,10 @@ jobs:
           # The handler is wired into the generated entry point, which is the
           # half a text assertion over the manifest cannot see.
           grep -q 'installEngramEffects(mosaicHost);' "$engram_output/qt/main.cpp"
+          # Mosaic's Qt platform library (UI87 §7.4a) wraps it, and is in the
+          # build the cmake step below compiles.
+          grep -q 'installMosaicPlatformEffects(mosaicHost, std::nullopt);' "$engram_output/qt/main.cpp"
+          grep -q 'MosaicHost.h MosaicPlatformEffects.cpp MosaicPlatformEffects.h)' "$engram_output/qt/CMakeLists.txt"
 
           # The gate: it builds.
           cmake -S "$engram_output/qt" -B "$engram_output/qt/build" -DCMAKE_BUILD_TYPE=Release
@@ -3134,6 +3188,14 @@ jobs:
           returned = text.index("return mosaicHost", creation)
           assert install < returned, "install must precede returning the host"
           PY
+
+          # UI48 §7.5 (ENV2/ENV3): Engram is the one package with a layout
+          # variant (EngramApp.touch.mll). Both roots and the selector must be
+          # in the source set, so the compile below proves they coexist.
+          grep -q '^fun EngramAppTouch($' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"
+          if grep -q '^sealed class EngramAppEvent' "$engram_output/compose/src/main/kotlin/EngramApp.touch.kt"; then exit 1; fi
+          grep -q 'when (mosaicLayoutVariant(environmentReport))' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
+          grep -q '"touch" -> EngramAppTouch(' "$engram_output/compose/src/main/kotlin/MosaicAppShell.kt"
 
           # The gate: it builds. `compileKotlin` is enough -- this lane already
           # exercises `createDistributable` on task-app, and what is new here is
@@ -3596,9 +3658,17 @@ jobs:
       # every measured baseline (the historical ~91-minute whole-step run,
       # plus this PR's modest additions) while still turning a real hang into
       # a fast, loud CI failure instead of an hours-long silent stall.
+      #
+      # Why 300, not 150: pull-request builds are not sharded, so a change to a
+      # crate nearly everything depends on (`parser`, #16054) makes one runner
+      # rebuild ~750 packages. On Windows that took ~140 minutes, then ~150 on
+      # the next run, which the old ceiling killed mid-`lang-aot` (a single
+      # package that legitimately takes ~19 minutes there). 300 still ends
+      # well inside the 360-minute job limit, with room for the ~25 minutes
+      # of Windows setup before this step, so a real hang still fails.
       - name: Build and test affected packages
         if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true')
-        timeout-minutes: 150
+        timeout-minutes: 300
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi

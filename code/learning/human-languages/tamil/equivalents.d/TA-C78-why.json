@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C78-why",
+  "english": "why",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "ఎందుకు",
+      "romanization": "enduku",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "എന്തുകൊണ്ട്",
+      "romanization": "entukoṇṭŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "क्यों",
+      "romanization": "kyoṁ"
+    }
+  ],
+  "source": "cross-track match: TE-C74-why, ML-C73-enthukondu, HI-C71-kyon; sameRoot judged by the author, awaiting native review"
+}

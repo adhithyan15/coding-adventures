@@ -7,6 +7,10 @@ small, IR-agnostic surface without pulling in the full simulator crate's
 decode/execute internals. Seventh lane of the 9-architecture expansion
 (mirror of `intel8080-encoder` / `mips-r2000-encoder`).
 
+The WORD01 surface also re-exports `encode_ld_rp_nn` and `PAIR_HL`, allowing
+the backend to materialize a 16-bit result with `LD HL,nn` while keeping all
+opcode construction in `z80-simulator`.
+
 ## Byte-identity with `intel8080-encoder`
 
 `encode_ld_a_n(n)` and `HALT` are byte-identical to

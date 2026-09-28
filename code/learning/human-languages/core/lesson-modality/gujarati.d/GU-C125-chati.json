@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C125-chati",
+    "language": "gujarati",
+    "chapter": 125,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85cab26c343aa685"
+  },
+  "findings": []
+}

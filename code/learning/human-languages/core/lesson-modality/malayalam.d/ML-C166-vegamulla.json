@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C166-vegamulla",
+    "language": "malayalam",
+    "chapter": 166,
+    "sequence": 7010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edd2010da364d0da"
+  },
+  "findings": []
+}

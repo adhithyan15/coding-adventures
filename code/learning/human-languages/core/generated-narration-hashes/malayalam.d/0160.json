@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:698fa9c3e1f8ec9c",
+  "lessonIds": [
+    "ML-C160-koni",
+    "ML-C160-varanta",
+    "ML-C160-malavillu",
+    "ML-C160-vellaccattam",
+    "ML-C160-kallu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch160.txt",
+  "json": "malayalam/narration/ch160.json",
+  "textHash": "fnv1a64:11b7ffc471372b73",
+  "jsonHash": "fnv1a64:97ccb01508b2a914",
+  "findings": []
+}

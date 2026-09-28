@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:0807a5486538ac5c",
+  "lessonIds": [
+    "AR-C123-battaniyya",
+    "AR-C123-wisada",
+    "AR-C123-sullam",
+    "AR-C123-mawqid",
+    "AR-C123-ina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch123.txt",
+  "json": "arabic/narration/ch123.json",
+  "textHash": "fnv1a64:f3827aa1e5604936",
+  "jsonHash": "fnv1a64:803356f7c507cc79",
+  "findings": []
+}

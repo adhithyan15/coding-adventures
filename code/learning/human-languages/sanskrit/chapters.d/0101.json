@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Comb, Soap, Towel, Glasses, Bag",
+  "label": "ch:sa-comb-soap-towel-glasses-bag",
+  "canDo": "I can say a comb, soap, a towel, glasses and a bag.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C101-syutah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say a comb, soap, a towel, glasses and a bag.",
+    "assesses": [
+      "SA-LEX-C101-THINGS101-03",
+      "SA-LEX-C101-THINGS101-04",
+      "SA-LEX-C101-THINGS101-05"
+    ]
+  }
+}

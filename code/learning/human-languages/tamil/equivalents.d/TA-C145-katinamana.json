@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C145-katinamana",
+  "english": "hard, difficult",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಗಟ್ಟಿ",
+      "romanization": "gaṭṭi"
+    },
+    {
+      "language": "telugu",
+      "form": "గట్టి",
+      "romanization": "gaṭṭi"
+    },
+    {
+      "language": "malayalam",
+      "form": "കഠിനമായ",
+      "romanization": "kaṭhinamāya",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "सख़्त",
+      "romanization": "sakht"
+    }
+  ],
+  "source": "cross-track match: KA-C141-gatti, TE-C137-gatti, ML-C166-kathinamaya, HI-C155-sakht; sameRoot judged by the author, awaiting native review"
+}

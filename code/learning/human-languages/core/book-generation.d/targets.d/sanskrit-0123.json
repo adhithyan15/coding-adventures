@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 123,
+  "output": "sanskrit/book/chapters/ch123-seat-bicycle-vehicle-ship-train.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C02-en",
+  "english": "my",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ನನ್ನ",
+      "romanization": "nanna"
+    },
+    {
+      "language": "telugu",
+      "form": "నా",
+      "romanization": "nā"
+    },
+    {
+      "language": "malayalam",
+      "form": "എന്റെ",
+      "romanization": "enṟe",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मेरा",
+      "romanization": "merā"
+    }
+  ],
+  "source": "cross-track match: KA-C02-nanna, TE-C02-naa, ML-C02-enre, HI-C02-meraa; sameRoot judged by the author, awaiting native review"
+}

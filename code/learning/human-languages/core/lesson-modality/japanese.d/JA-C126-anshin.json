@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C126-anshin",
+    "language": "japanese",
+    "chapter": 126,
+    "sequence": 7470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e51e4652a816840"
+  },
+  "findings": []
+}

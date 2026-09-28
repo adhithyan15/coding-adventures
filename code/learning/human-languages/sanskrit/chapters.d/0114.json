@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Sheep, Pigeon, Owl, Heron, Bee",
+  "label": "ch:sa-sheep-pigeon-owl-heron-bee",
+  "canDo": "I can say a sheep, a pigeon, an owl, a heron and a bee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C114-bhramarah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a sheep, a pigeon, an owl, a heron and a bee.",
+    "assesses": [
+      "SA-LEX-C114-THINGS114-03",
+      "SA-LEX-C114-THINGS114-04",
+      "SA-LEX-C114-THINGS114-05"
+    ]
+  }
+}

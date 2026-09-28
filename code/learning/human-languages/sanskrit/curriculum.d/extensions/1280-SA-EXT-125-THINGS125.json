@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-125-THINGS125",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mongoose, short, soft, clean and dirty.",
+  "prerequisites": []
+}

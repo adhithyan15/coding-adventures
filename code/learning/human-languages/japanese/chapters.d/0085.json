@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "To hit, To breathe in, To sow, To cook, To put on",
+  "label": "ch:ja-to-hit-to-breathe-in-to-sow-to-cook-to-put-on",
+  "canDo": "I can say to hit, to breathe in, to sow, to cook and to put on.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C85-haku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say to hit, to breathe in, to sow, to cook and to put on.",
+    "assesses": [
+      "JA-LEX-C85-ACT85-03",
+      "JA-LEX-C85-ACT85-04",
+      "JA-LEX-C85-ACT85-05"
+    ]
+  }
+}

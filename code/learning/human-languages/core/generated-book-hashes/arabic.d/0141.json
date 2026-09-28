@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:ccc2680d9c74156d",
+  "lessonIds": [
+    "AR-C141-lisan",
+    "AR-C141-batn",
+    "AR-C141-saq",
+    "AR-C141-jild",
+    "AR-C141-azm"
+  ],
+  "tex": "arabic/book/chapters/ch141-tongue-belly-leg-skin-bone.tex"
+}

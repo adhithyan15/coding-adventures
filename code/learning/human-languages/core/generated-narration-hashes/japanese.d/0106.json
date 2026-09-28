@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:371d2a2757de45d2",
+  "lessonIds": [
+    "JA-C106-mon",
+    "JA-C106-hayashi",
+    "JA-C106-tsubomi",
+    "JA-C106-iwa",
+    "JA-C106-koishi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch106.txt",
+  "json": "japanese/narration/ch106.json",
+  "textHash": "fnv1a64:06dffcd578e46447",
+  "jsonHash": "fnv1a64:264ca1982678d3a4",
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": "TA-C70-roof",
+  "english": "a roof",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "కప్పు",
+      "romanization": "kappu",
+      "sameRoot": false
+    },
+    {
+      "language": "malayalam",
+      "form": "മേൽക്കൂര",
+      "romanization": "mēlkkūra",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "छत",
+      "romanization": "chat"
+    }
+  ],
+  "source": "cross-track match: TE-C67-roof, ML-C147-melkkura, HI-C58-roof; sameRoot judged by the author, awaiting native review"
+}

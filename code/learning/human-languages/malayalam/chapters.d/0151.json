@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Horse, Donkey, Buffalo, Pig, Lion",
+  "label": "ch:ml-horse-donkey-buffalo-pig-lion",
+  "canDo": "I can say a horse, a donkey, a buffalo, a pig and a lion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ML-C151-simham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: i can say a horse, a donkey, a buffalo, a pig and a lion.",
+    "assesses": [
+      "ML-LEX-C151-THINGS151-03",
+      "ML-LEX-C151-THINGS151-04",
+      "ML-LEX-C151-THINGS151-05"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C150-patu",
+  "english": "to sing",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಾಡು",
+      "romanization": "hāḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పాడు",
+      "romanization": "pāḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പാടുക",
+      "romanization": "pāṭuka",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C152-hadu, TE-C148-padu, ML-C99-paaduka; sameRoot judged by the author, awaiting native review"
+}

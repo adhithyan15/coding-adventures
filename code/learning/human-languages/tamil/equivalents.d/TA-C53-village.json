@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C53-village",
+  "english": "a village",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಳ್ಳಿ",
+      "romanization": "haḷḷi"
+    },
+    {
+      "language": "telugu",
+      "form": "గ్రామం",
+      "romanization": "grāmaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ഗ്രാമം",
+      "romanization": "grāmaṁ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गाँव",
+      "romanization": "gā̃v"
+    }
+  ],
+  "source": "cross-track match: KA-C55-village, TE-C55-village, ML-C135-village, HI-C56-village; sameRoot judged by the author, awaiting native review"
+}

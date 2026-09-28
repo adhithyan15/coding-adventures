@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C118-jiru",
+    "language": "gujarati",
+    "chapter": 118,
+    "sequence": 6120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52b4f2bcc11201f8"
+  },
+  "findings": []
+}

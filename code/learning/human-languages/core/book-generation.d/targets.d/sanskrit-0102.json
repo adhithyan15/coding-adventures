@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 102,
+  "output": "sanskrit/book/chapters/ch102-plate-cup-spoon-stove-candle.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

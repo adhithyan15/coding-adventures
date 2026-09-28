@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C85-taku",
+    "language": "japanese",
+    "chapter": 85,
+    "sequence": 5080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97df65740f1b13fc"
+  },
+  "findings": []
+}

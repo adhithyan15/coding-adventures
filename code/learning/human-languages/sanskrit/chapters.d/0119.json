@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Ladle, Frying pan, Vessel, Bottle, Small umbrella",
+  "label": "ch:sa-ladle-frying-pan-vessel-bottle-small-umbrella",
+  "canDo": "I can say a ladle, a frying pan, a vessel, a bottle and a small umbrella.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R119-second-pass-animals-the-body-and-the-kitchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a ladle, a frying pan, a vessel, a bottle and a small umbrella.",
+    "assesses": [
+      "SA-LEX-C119-THINGS119-03",
+      "SA-LEX-C119-THINGS119-04",
+      "SA-LEX-C119-THINGS119-05"
+    ]
+  }
+}

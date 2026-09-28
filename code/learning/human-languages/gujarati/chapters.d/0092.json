@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Midnight, Dawn, Day after tomorrow, Year, Moment",
+  "label": "ch:gu-midnight-dawn-day-after-tomorrow-year-moment",
+  "canDo": "I can say midnight, dawn, the day after tomorrow, a year and a moment.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GU-C92-pal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say midnight, dawn, the day after tomorrow, a year and a moment.",
+    "assesses": [
+      "GU-LEX-C92-TIME92-03",
+      "GU-LEX-C92-TIME92-04",
+      "GU-LEX-C92-TIME92-05"
+    ]
+  }
+}

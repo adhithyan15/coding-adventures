@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:240fec846ff09657",
+  "lessonIds": [
+    "SA-C116-sarasah",
+    "SA-C116-kapolah",
+    "SA-C116-cibukam",
+    "SA-C116-kurparah",
+    "SA-C116-manibandhah"
+  ],
+  "tex": "sanskrit/book/chapters/ch116-crane-cheek-chin-elbow-wrist.tex"
+}

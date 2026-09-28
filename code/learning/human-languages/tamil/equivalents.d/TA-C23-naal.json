@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C23-naal",
+  "english": "day",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದಿನ",
+      "romanization": "dina"
+    },
+    {
+      "language": "telugu",
+      "form": "రోజు",
+      "romanization": "rōju"
+    },
+    {
+      "language": "malayalam",
+      "form": "ദിവസം",
+      "romanization": "divasaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "दिन",
+      "romanization": "din"
+    }
+  ],
+  "source": "cross-track match: KA-C23-dina, TE-C23-roju, ML-C23-divasam, HI-C25-din"
+}

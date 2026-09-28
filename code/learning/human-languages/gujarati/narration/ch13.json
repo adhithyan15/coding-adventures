@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Six Verbs at the Core",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:6718e33cd680b7a1",
+  "sourceHash": "fnv1a64:699fedcd93b84e08",
   "lessons": [
     {
       "id": "GU-C07-hovun",
@@ -844,7 +844,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f0487c65d6d4cfa",
+      "sourceHash": "fnv1a64:d23086ca4709bc17",
       "notice": null,
       "blocks": [
         {
@@ -861,6 +861,16 @@
             {
               "kind": "speech",
               "text": "Run the five you have — hovũ, javũ, āvvũ, khāvũ, jovũ — and pull the ending off each one. The sixth is the closest of them all to English."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One thing you already know about Gujarati writing: what does a Gujarati letter leave out that Devanagari draws? (The top line, the shirorekhā.)"
             }
           ]
         },

@@ -1,0 +1,11 @@
+{
+  "id": "MW-R139-second-pass-vegetables-spices-and-animals",
+  "pathSegment": "MW-PATH-139-THINGS139",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MW-EXT-139-THINGS139",
+      "order": 6
+    }
+  ]
+}

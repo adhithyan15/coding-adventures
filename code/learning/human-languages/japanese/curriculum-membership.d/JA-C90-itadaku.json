@@ -1,0 +1,11 @@
+{
+  "id": "JA-C90-itadaku",
+  "pathSegment": "JA-PATH-90-ACT90",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-90-ACT90",
+      "order": 2
+    }
+  ]
+}

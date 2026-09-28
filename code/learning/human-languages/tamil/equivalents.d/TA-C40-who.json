@@ -1,0 +1,30 @@
+{
+  "lesson": "TA-C40-who",
+  "english": "who?",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಯಾರು",
+      "romanization": "yāru",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "ఎవరు",
+      "romanization": "evaru",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "ആര്",
+      "romanization": "ārŭ",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "कौन",
+      "romanization": "kaun"
+    }
+  ],
+  "source": "cross-track match: KA-C41-who, TE-C41-who, ML-C41-who, HI-C40-who; sameRoot judged by the author, awaiting native review"
+}

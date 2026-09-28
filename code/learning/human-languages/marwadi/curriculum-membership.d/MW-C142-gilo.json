@@ -1,0 +1,11 @@
+{
+  "id": "MW-C142-gilo",
+  "pathSegment": "MW-PATH-142-QUAL142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-142-QUAL142",
+      "order": 3
+    }
+  ]
+}

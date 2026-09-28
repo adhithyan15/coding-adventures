@@ -12,6 +12,7 @@ import pytest
 
 import build_tool.hasher as hasher_module
 from build_tool.discovery import Package, discover_packages
+from build_tool.glob_match import GlobPatternError
 from build_tool.hasher import (
     GENERATED_DIRECTORY_COMPONENTS,
     _collect_source_files,
@@ -234,6 +235,21 @@ class TestCollectSourceFiles:
             path.relative_to(pkg_dir).as_posix()
             for path in _collect_source_files(pkg)
         ) == ("BUILD", "main.ml", "test-pkg.opam")
+
+    def test_invalid_declared_glob_fails_closed(self, tmp_path):
+        pkg_dir = tmp_path / "packages" / "python" / "test-pkg"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text("py_library(name='test-pkg')")
+        pkg = Package(
+            name="python/test-pkg",
+            path=pkg_dir,
+            language="python",
+            is_starlark=True,
+            declared_srcs=["*.py", "[z-a].py"],
+        )
+
+        with pytest.raises(GlobPatternError):
+            _collect_source_files(pkg)
 
     def test_sorted_lexicographically(self, tmp_path):
         pkg_dir = tmp_path / "packages" / "python" / "test"

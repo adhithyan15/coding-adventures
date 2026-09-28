@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C99-bavri",
+    "language": "marwadi",
+    "chapter": 99,
+    "sequence": 6380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed6769ffa5972be6"
+  },
+  "findings": []
+}

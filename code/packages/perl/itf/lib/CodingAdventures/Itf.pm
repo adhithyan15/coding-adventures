@@ -38,10 +38,23 @@ sub _retag_runs {
 
 sub normalize_itf {
   my ($class, $data) = @_;
-  croak 'ITF input must contain digits only' unless $data =~ /\A\d+\z/;
+  croak 'ITF input must contain at most 4096 characters'
+    if length($data) > 4096;
   croak 'ITF input must contain an even number of digits'
     if $data eq q{} || length($data) % 2 != 0;
+  croak 'ITF input must contain digits only' unless $data =~ /\A[0-9]+\z/;
   return $data;
+}
+
+sub error_id {
+  my ($class, $error) = @_;
+  return 'input-too-long'
+    if $error =~ /ITF input must contain at most 4096 characters/;
+  return 'invalid-length'
+    if $error =~ /ITF input must contain an even number of digits/;
+  return 'invalid-character'
+    if $error =~ /ITF input must contain digits only/;
+  return;
 }
 
 sub encode_itf {

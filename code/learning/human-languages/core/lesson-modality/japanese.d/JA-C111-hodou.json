@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C111-hodou",
+    "language": "japanese",
+    "chapter": 111,
+    "sequence": 6590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:332d75302ca194fa"
+  },
+  "findings": []
+}

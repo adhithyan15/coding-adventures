@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "To stay, To read, To know, To fill, To pull",
+  "label": "ch:mw-to-stay-to-read-to-know-to-fill-to-pull",
+  "canDo": "I can say to stay, to read, to know, to fill and to pull.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C105-khichno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say to stay, to read, to know, to fill and to pull.",
+    "assesses": [
+      "MW-LEX-C105-ACT105-03",
+      "MW-LEX-C105-ACT105-04",
+      "MW-LEX-C105-ACT105-05"
+    ]
+  }
+}

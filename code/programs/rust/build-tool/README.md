@@ -6,6 +6,20 @@ A **Rust port** of the Go build tool for the coding-adventures monorepo. It disc
 
 This tool discovers packages in the monorepo via recursive `BUILD` file walking, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel. Discovery uses the repository's canonical language registry, skips exact case-sensitive generated artifact components such as Cabal `dist-newstyle` and Dune `_build`, preserves similarly named source directories such as `_Build` and `_build-example`, and retains a `programs` identity segment so a library and program with the same basename stay distinct. Source hashing independently applies the complete language-neutral 26-component generated-directory registry before extension or declared-source matching, retains case variants and near names, and does not cross POSIX directory links or Windows junction/reparse points. Text metadata is decoded deterministically: Lua `.rockspec` files must be strict UTF-8, and invalid bytes fail closed instead of silently deleting dependency edges.
 
+When callers supply declared source globs, their matching is host-independent.
+The matcher compiles the complete pattern list before walking candidates,
+counts `?`, classes, and
+ranges in Unicode scalars, recognizes `**` only as a whole path segment, and
+uses bounded rolling-row dynamic programs instead of recursive suffix trials.
+Portable classes retain leading-`!` negation, ascending ranges, literal leading
+`]`, and literal edge-position `-`. Descending ranges and the ambiguous `--`,
+`&&`, `~~`, and `||` operators return one typed stable error before matching.
+Unmatched `[` remains literal, and no host glob, regular-expression, process,
+environment, or network authority enters the decision.
+The compatibility `match_path` helper converts invalid syntax to a non-match
+without panicking; BUILD-file hosts use the typed API and complete-list
+preflight above so invalid input remains distinguishable from a non-match.
+
 ## Building
 
 ```bash
@@ -104,6 +118,12 @@ This is equivalent to the Go implementation's goroutine + semaphore pattern, but
 ```bash
 cargo test -- --nocapture
 ```
+
+The glob suite additionally pins astral and decomposed Unicode behavior,
+strict character classes, literal unmatched brackets, whole-segment globstars,
+adversarial path and segment state grids, and complete declared-list preflight.
+Parser and matcher regression counters prove linear bracket parsing and one
+visit per dynamic-programming state rather than relying on timing thresholds.
 
 The native suite discovers and consumes every language-neutral
 `toolchain-detection-*.json` fixture. Direct boundary tests also cover the

@@ -83,7 +83,26 @@ it("pins Sanskrit lesson-content budgets", () =>
     // three content totals stay at 11 / 12 / 13. Re-measured against the tree.
     // 486 -> 487: HL-C443 anchor word मौन, placed before the ौ letter lesson so
     // the sign is taken from a word the reader already says.
-    lessons: 487,
+    // 487 -> 745: chapters 90-138, the A1 tranche. 245 word lessons and ten
+    // reviews, plus three chapter-6 continuation lessons (numbers-1-5-more,
+    // number-cognates-more, pancha-travels-more) split out to fit the atom
+    // budget. None introduces an idiom, sense or culture claim; the culture
+    // claim stays on pancha-travels. Re-measured against the tree.
+    // 745 -> 751: #13413's first word bridge adds six writing-only lessons.
+    // They reuse मम and मम नाम plus the already-taught म, न, and long-ā sign;
+    // no idiom, sense, culture claim, or vocabulary atom is added.
+    // 751 -> 754: #13413's visarga bridge adds three more writing-only
+    // lessons. They reuse the already-taught न, म, ः, and the *namas* "a bow"
+    // inside *namaste*. The existing visarga trace gains the observe/trace
+    // marker, and no vocabulary or content atom is added.
+    // 754 -> 757: #13413's vocalic-r bridge adds guided copy, delayed copy,
+    // and sound/function dictation for the already-taught ◌ृ. The lessons
+    // reuse SA-SCRIPT-RECOG-205 and introduce no vocabulary or content atom.
+    // 757 -> 761: #13413's first conjunct bridge waits for every component of
+    // अस्ति to be taught, then moves स्त from observe/trace through a guided
+    // whole-word copy, delayed copy, and sound/meaning dictation. The four
+    // writing lessons reuse known script and lexical atoms only.
+    lessons: 761,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

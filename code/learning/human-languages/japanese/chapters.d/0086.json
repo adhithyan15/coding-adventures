@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "To bloom, To solve, To hold in one's arms, To step on, To bite",
+  "label": "ch:ja-to-bloom-to-solve-to-hold-in-one-s-arms-to-step-on-to-bite",
+  "canDo": "I can say to bloom, to solve, to hold in one's arms, to step on and to bite.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C86-kamu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say to bloom, to solve, to hold in one's arms, to step on and to bite.",
+    "assesses": [
+      "JA-LEX-C86-ACT86-03",
+      "JA-LEX-C86-ACT86-04",
+      "JA-LEX-C86-ACT86-05"
+    ]
+  }
+}

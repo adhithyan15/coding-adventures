@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:3a9f3326e5c58124",
+  "lessonIds": [
+    "GU-C121-andharu",
+    "GU-C121-prakas",
+    "GU-C121-chayo",
+    "GU-C121-saslu",
+    "GU-C121-haran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch121.txt",
+  "json": "gujarati/narration/ch121.json",
+  "textHash": "fnv1a64:10d463f49717e73d",
+  "jsonHash": "fnv1a64:64920d26b9469810",
+  "findings": []
+}

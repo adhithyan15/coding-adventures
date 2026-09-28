@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C134-ghayma",
+    "language": "arabic",
+    "chapter": 134,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8c8ce348328c7fd"
+  },
+  "findings": []
+}

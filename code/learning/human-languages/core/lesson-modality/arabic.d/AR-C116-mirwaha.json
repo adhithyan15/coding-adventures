@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C116-mirwaha",
+    "language": "arabic",
+    "chapter": 116,
+    "sequence": 4930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb9ac632f6453c9f"
+  },
+  "findings": []
+}

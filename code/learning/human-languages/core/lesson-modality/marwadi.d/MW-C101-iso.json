@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C101-iso",
+    "language": "marwadi",
+    "chapter": 101,
+    "sequence": 6560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3255895eed12faff"
+  },
+  "findings": []
+}

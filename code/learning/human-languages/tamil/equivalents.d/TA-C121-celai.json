@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C121-celai",
+  "english": "a sari",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸೀರೆ",
+      "romanization": "sīre"
+    },
+    {
+      "language": "telugu",
+      "form": "చీర",
+      "romanization": "cīra"
+    },
+    {
+      "language": "malayalam",
+      "form": "സാരി",
+      "romanization": "sāri"
+    },
+    {
+      "language": "hindi",
+      "form": "साड़ी",
+      "romanization": "sāṛī"
+    }
+  ],
+  "source": "cross-track match: KA-C120-sire, TE-C114-cira, ML-C100-saari, HI-C136-sari"
+}

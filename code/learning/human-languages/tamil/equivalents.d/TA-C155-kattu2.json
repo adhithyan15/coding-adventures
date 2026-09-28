@@ -1,0 +1,19 @@
+{
+  "lesson": "TA-C155-kattu2",
+  "english": "to tie, to build",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಟ್ಟು",
+      "romanization": "kaṭṭu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "కట్టు",
+      "romanization": "kaṭṭu",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C150-kattu, TE-C147-kattu; sameRoot judged by the author, awaiting native review"
+}

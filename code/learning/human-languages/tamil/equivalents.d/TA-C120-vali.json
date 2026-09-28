@@ -1,0 +1,18 @@
+{
+  "lesson": "TA-C120-vali",
+  "english": "a bucket",
+  "equivalents": [
+    {
+      "language": "malayalam",
+      "form": "ബക്കറ്റ്",
+      "romanization": "bakkaṟṟŭ"
+    },
+    {
+      "language": "hindi",
+      "form": "बाल्टी",
+      "romanization": "bālṭī",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: ML-C158-bakkarru, HI-C129-balti; sameRoot judged by the author, awaiting native review"
+}

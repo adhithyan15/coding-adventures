@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C130-tashika",
+    "language": "japanese",
+    "chapter": 130,
+    "sequence": 7690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b77736b2db84789"
+  },
+  "findings": []
+}

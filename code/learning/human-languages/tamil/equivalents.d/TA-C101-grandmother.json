@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C101-grandmother",
+  "english": "a grandmother",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅಜ್ಜಿ",
+      "romanization": "ajji"
+    },
+    {
+      "language": "telugu",
+      "form": "అమ్మమ్మ",
+      "romanization": "ammamma"
+    },
+    {
+      "language": "malayalam",
+      "form": "മുത്തശ്ശി",
+      "romanization": "muttaśśi"
+    }
+  ],
+  "source": "cross-track match: KA-C45-grandmother, TE-C45-grandmother, ML-C45-grandmother"
+}

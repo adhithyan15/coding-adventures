@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C152-para",
+  "english": "to fly",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "ఎగురు",
+      "romanization": "egiru"
+    },
+    {
+      "language": "hindi",
+      "form": "उड़ना",
+      "romanization": "uṛnā"
+    }
+  ],
+  "source": "cross-track match: TE-C143-egiru, HI-C161-urna"
+}

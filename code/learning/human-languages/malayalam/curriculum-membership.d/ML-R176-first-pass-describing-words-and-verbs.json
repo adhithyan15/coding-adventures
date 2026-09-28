@@ -1,0 +1,11 @@
+{
+  "id": "ML-R176-first-pass-describing-words-and-verbs",
+  "pathSegment": "ML-PATH-176-ACT176",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ML-EXT-176-ACT176",
+      "order": 5
+    }
+  ]
+}

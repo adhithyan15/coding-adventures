@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R149-second-pass-describing-people",
+    "language": "marwadi",
+    "chapter": 149,
+    "sequence": 9410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b92fe185c35f2e2c"
+  },
+  "findings": []
+}

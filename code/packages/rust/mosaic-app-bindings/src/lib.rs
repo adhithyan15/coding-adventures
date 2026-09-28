@@ -37,6 +37,34 @@ pub fn compose_platform_effects() -> String {
     include_str!("../templates/compose/MosaicPlatformEffects.kt").to_string()
 }
 
+/// The SwiftUI platform library (UI87 §7): `files.open` and `files.save`
+/// through `NSOpenPanel` / `NSSavePanel` on macOS, a clear failure on iOS and
+/// iPadOS until UI89 step 6, and the router that sends each effect to the
+/// app's own handler or to this library by kind -- the same contract the
+/// Compose library answers. Written beside `MosaicRuntimeHost.swift` in every
+/// SwiftUI project; installed by the generated `App.swift`.
+pub fn swift_platform_effects() -> String {
+    include_str!("../templates/swiftui/MosaicPlatformEffects.swift").to_string()
+}
+
+/// The Qt platform library (UI87 §7, §7.4a).
+pub struct QtPlatformEffects {
+    pub header: String,
+    pub source: String,
+}
+
+/// The Qt platform library: `files.open` and `files.save` through
+/// `QFileDialog`, answered inline, and the router `installMosaicPlatformEffects`
+/// sets as the host's one effect handler -- the same contract as the Compose
+/// and SwiftUI libraries. Written beside `MosaicHost.{h,cpp}` in every Qt
+/// project; installed by the generated `main.cpp`.
+pub fn qt_platform_effects() -> QtPlatformEffects {
+    QtPlatformEffects {
+        header: include_str!("../templates/qt/MosaicPlatformEffects.h").to_string(),
+        source: include_str!("../templates/qt/MosaicPlatformEffects.cpp").to_string(),
+    }
+}
+
 /// Files that make the fixed Mosaic application C ABI available to SwiftUI.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SwiftRuntimeBinding {
@@ -340,6 +368,168 @@ fn bind_application(template: &str, application_id: Option<&str>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// UI48 ENV4 on Compose (§7.4): the host reports the environment, keeps
+    /// the showing props for a no-reaction update at the same revision only,
+    /// and seeds the start context with what the platform knows.
+    #[test]
+    fn compose_host_reports_the_environment() {
+        let host = compose_jna_binding_for_application("probe");
+        assert!(host.contains("fun reportEnvironment(environment: Map<String, String>): Map<String, Any?>?"));
+        assert!(host.contains("if (environment == lastReportedEnvironment) return null"));
+        assert!(host.contains("mapOf(\"name\" to \"environmentChanged\", \"payload\" to environment)"));
+        // Remembered only after the runtime took it: the catch returns first.
+        let refused = host.find("} catch (error: MosaicRuntimeException) {").expect("refusal");
+        let remembered = host.find("lastReportedEnvironment = environment.toMap()").expect("remember");
+        assert!(refused < remembered);
+        // Props kept only at the revision already showing.
+        assert!(host.contains("if (revision != shownRevision) return update"));
+        assert!(host.contains("val settled = keepShowingProps(settleEffects(update))"));
+        // The start context carries pointer, hover and reduced motion.
+        assert!(host.contains("for ((axis, value) in initialEnvironment()) put(axis, value)"));
+        assert!(host.contains("mapOf(\"pointer\" to \"fine\", \"hover\" to \"hover\", \"reducedMotion\" to \"no-preference\")"));
+        assert!(host.contains("mapOf(\"pointer\" to \"coarse\", \"hover\" to \"none\", \"reducedMotion\" to \"no-preference\")"));
+    }
+
+    /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
+    /// same kinds, limits and MIME table, so an app sees the same outcome on
+    /// either host. A drift in one template fails here, not on a Mac.
+    #[test]
+    fn swift_platform_effects_match_the_compose_contract() {
+        let swift = swift_platform_effects();
+        let kotlin = compose_platform_effects();
+        for kind in ["\"files.open\"", "\"files.save\""] {
+            assert!(swift.contains(kind) && kotlin.contains(kind), "{kind}");
+        }
+        assert!(swift.contains("let mosaicMaxOpenBytes = 50 * 1024 * 1024"));
+        assert!(kotlin.contains("MOSAIC_MAX_OPEN_BYTES: Long = 50L * 1024 * 1024"));
+        assert!(swift.contains("let mosaicMaxSaveBytes = 16 * 1024 * 1024"));
+        assert!(kotlin.contains("MOSAIC_MAX_SAVE_BYTES: Int = 16 * 1024 * 1024"));
+        // Every MIME -> extensions row, in the same order, in both tables.
+        let kotlin_rows: Vec<(String, String)> = kotlin
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix('"')?.split_once("\" to listOf(")?;
+                Some((mime.to_string(), rest.trim_end_matches("),").to_string()))
+            })
+            .collect();
+        let swift_rows: Vec<(String, String)> = swift
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix("(\"")?.split_once("\", [")?;
+                Some((mime.to_string(), rest.trim_end_matches("]),").to_string()))
+            })
+            .collect();
+        assert_eq!(kotlin_rows.len(), 13, "{kotlin_rows:?}");
+        assert_eq!(swift_rows, kotlin_rows);
+    }
+
+    /// The executable-extension denylist is one set on both hosts, so an
+    /// app's `files.save` without a type is refused or allowed the same way.
+    #[test]
+    fn swift_and_compose_refuse_the_same_executable_extensions() {
+        fn listed(source: &str, start: &str, end: &str) -> Vec<String> {
+            let from = source.find(start).expect("list start") + start.len();
+            let to = from + source[from..].find(end).expect("list end");
+            let mut names: Vec<String> = source[from..to]
+                .lines()
+                .filter(|line| !line.trim_start().starts_with("//"))
+                .flat_map(|line| line.split(','))
+                .map(|item| item.trim().trim_matches('"').to_string())
+                .filter(|item| !item.is_empty())
+                .collect();
+            names.sort();
+            names
+        }
+        let swift = listed(
+            &swift_platform_effects(),
+            "let mosaicExecutableExtensions: Set<String> = [",
+            "]",
+        );
+        let kotlin = listed(
+            &compose_platform_effects(),
+            "val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(",
+            ")\n",
+        );
+        assert!(swift.len() >= 30, "{swift:?}");
+        assert_eq!(swift, kotlin);
+        for must in ["command", "terminal", "webloc", "exe", "desktop"] {
+            assert!(swift.iter().any(|name| name == must), "{must}");
+        }
+    }
+
+    /// The Qt library answers the same contract (UI87 §7.4a): the same
+    /// executable list, MIME rows in the same order, and the same limits as
+    /// the Compose library. Pinned here because the Qt C++ is only compiled
+    /// where Qt is installed.
+    #[test]
+    fn qt_platform_effects_match_the_compose_contract() {
+        let qt = qt_platform_effects().source;
+        let header = qt_platform_effects().header;
+        let kotlin = compose_platform_effects();
+        let qt_list: std::collections::BTreeSet<String> = {
+            let from = qt.find("static const QSet<QString> extensions{").expect("qt list");
+            let to = from + qt[from..].find("};").expect("end");
+            qt[from..to]
+                .split("QStringLiteral(\"")
+                .skip(1)
+                .map(|item| item.split('"').next().unwrap().to_string())
+                .collect()
+        };
+        let kotlin_list: std::collections::BTreeSet<String> = {
+            let from = kotlin.find("val MOSAIC_EXECUTABLE_EXTENSIONS").expect("kotlin list");
+            let to = from + kotlin[from..].find(")\n").expect("end");
+            kotlin[from..to]
+                .lines()
+                .filter(|line| !line.trim_start().starts_with("//"))
+                .flat_map(|line| line.split(','))
+                .filter_map(|item| item.trim().strip_prefix('"').map(|rest| rest.trim_end_matches('"').to_string()))
+                .collect()
+        };
+        assert!(qt_list.len() >= 60, "{qt_list:?}");
+        assert_eq!(qt_list, kotlin_list);
+        let qt_mimes: Vec<&str> = qt
+            .lines()
+            .filter_map(|line| line.trim().strip_prefix("{QStringLiteral(\""))
+            .filter(|rest| rest.contains('/'))
+            .map(|rest| rest.split('"').next().unwrap())
+            .collect();
+        let kotlin_mimes: Vec<&str> = kotlin
+            .lines()
+            .filter_map(|line| line.trim().strip_prefix('"'))
+            .filter(|rest| rest.contains("\" to listOf("))
+            .map(|rest| rest.split('"').next().unwrap())
+            .collect();
+        assert_eq!(qt_mimes, kotlin_mimes);
+        assert!(header.contains("MosaicMaxOpenBytes = 50LL * 1024 * 1024"));
+        assert!(header.contains("MosaicMaxSaveBytes = 16LL * 1024 * 1024"));
+    }
+
+    /// AppKit exists only on macOS; the iOS app target compiles this file too
+    /// (UI89 §2.2 lists every `Sources/App/*.swift`), so every AppKit use must
+    /// sit behind `#if os(macOS)`.
+    #[test]
+    fn swift_platform_effects_fence_appkit_to_macos() {
+        let swift = swift_platform_effects();
+        let mut depth_macos = false;
+        for line in swift.lines() {
+            let trimmed = line.trim();
+            if trimmed == "#if os(macOS)" {
+                depth_macos = true;
+            } else if trimmed == "#else" || trimmed == "#endif" {
+                depth_macos = false;
+            } else if !trimmed.starts_with("//") && !trimmed.starts_with("///") {
+                for appkit in ["NSOpenPanel", "NSSavePanel", "import AppKit", "UTType("] {
+                    assert!(
+                        !trimmed.contains(appkit) || depth_macos,
+                        "`{appkit}` outside #if os(macOS): {line}"
+                    );
+                }
+            }
+        }
+    }
 
     #[test]
     fn compose_binding_owns_the_full_c_abi_lifecycle() {

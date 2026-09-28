@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C70-bed",
+  "english": "a bed",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಮಂಚ",
+      "romanization": "maṁca"
+    },
+    {
+      "language": "telugu",
+      "form": "మంచం",
+      "romanization": "mañcaṁ"
+    }
+  ],
+  "source": "cross-track match: KA-C115-mamca, TE-C109-mancam"
+}

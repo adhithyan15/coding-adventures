@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-120-THINGS120",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a coin, a post office, a letter, a book and a picture.",
+  "prerequisites": []
+}

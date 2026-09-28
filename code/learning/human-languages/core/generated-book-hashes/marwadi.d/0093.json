@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:1f8dcf4d8e475162",
+  "lessonIds": [
+    "MW-C93-savan",
+    "MW-C93-bhadvo",
+    "MW-C93-asoj",
+    "MW-C93-kati",
+    "MW-C93-migsar"
+  ],
+  "tex": "marwadi/book/chapters/ch93-savan-bhadvo-asoj-kati-migsar.tex"
+}

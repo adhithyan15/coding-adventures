@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C67-cap",
+  "english": "a cap, a hat",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಟೋಪಿ",
+      "romanization": "ṭōpi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "టోపీ",
+      "romanization": "ṭōpī",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "തൊപ്പി",
+      "romanization": "toppi",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "टोपी",
+      "romanization": "ṭopī",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C121-topi, TE-C115-topi, ML-C100-thoppi, HI-C136-topi; sameRoot judged by the author, awaiting native review"
+}

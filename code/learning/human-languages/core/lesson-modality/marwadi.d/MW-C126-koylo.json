@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C126-koylo",
+    "language": "marwadi",
+    "chapter": 126,
+    "sequence": 8000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf72c8e67a0eb74c"
+  },
+  "findings": []
+}

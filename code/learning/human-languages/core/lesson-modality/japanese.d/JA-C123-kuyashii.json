@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C123-kuyashii",
+    "language": "japanese",
+    "chapter": 123,
+    "sequence": 7320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9da932bfc7687b4"
+  },
+  "findings": []
+}

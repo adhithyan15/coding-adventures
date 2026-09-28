@@ -1,0 +1,11 @@
+{
+  "id": "MW-C144-rupalo",
+  "pathSegment": "MW-PATH-144-QUAL144",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-144-QUAL144",
+      "order": 1
+    }
+  ]
+}

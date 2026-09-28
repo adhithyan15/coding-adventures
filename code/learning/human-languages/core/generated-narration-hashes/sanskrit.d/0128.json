@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:ae2a418741dd2b44",
+  "lessonIds": [
+    "SA-C128-bhayankarah",
+    "SA-C128-mithya",
+    "SA-C128-katuh",
+    "SA-C128-amlah",
+    "SA-C128-tiktah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch128.txt",
+  "json": "sanskrit/narration/ch128.json",
+  "textHash": "fnv1a64:214ba5eade057d8c",
+  "jsonHash": "fnv1a64:1cd0dc3556de9dd9",
+  "findings": []
+}

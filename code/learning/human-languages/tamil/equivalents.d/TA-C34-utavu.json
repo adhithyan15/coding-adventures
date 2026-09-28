@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C34-utavu",
+  "english": "to help, to be of use",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸಹಾಯ ಮಾಡು",
+      "romanization": "sahāya māḍu"
+    },
+    {
+      "language": "telugu",
+      "form": "సహాయం చేయు",
+      "romanization": "sahāyaṁ cēyu"
+    },
+    {
+      "language": "malayalam",
+      "form": "സഹായിക്കുക",
+      "romanization": "sahāyikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "मदद करना",
+      "romanization": "madad karnā"
+    }
+  ],
+  "source": "cross-track match: KA-C34-sahaya-maadu, TE-C34-sahayam-ceyu, ML-C34-sahaayikkuka, HI-C35-madad"
+}

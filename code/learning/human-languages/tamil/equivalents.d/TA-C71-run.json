@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C71-run",
+  "english": "to run",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಓಡು",
+      "romanization": "ōḍu",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పరిగెత్తు",
+      "romanization": "parigettu"
+    },
+    {
+      "language": "malayalam",
+      "form": "ഓടുക",
+      "romanization": "ōṭuka"
+    },
+    {
+      "language": "hindi",
+      "form": "दौड़ना",
+      "romanization": "dauṛnā"
+    }
+  ],
+  "source": "cross-track match: KA-C147-odu, TE-C143-parigettu, ML-C170-otuka, HI-C159-daurna; sameRoot judged by the author, awaiting native review"
+}

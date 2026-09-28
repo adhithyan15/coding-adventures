@@ -1,0 +1,13 @@
+{
+  "lesson": "TA-C64-threshing-floor",
+  "english": "a threshing floor",
+  "equivalents": [
+    {
+      "language": "telugu",
+      "form": "కల్లం",
+      "romanization": "kallaṁ",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: TE-C66-threshing-floor; sameRoot judged by the author, awaiting native review"
+}

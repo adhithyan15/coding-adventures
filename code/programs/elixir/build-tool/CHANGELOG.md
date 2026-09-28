@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2026-09-27
+
+### Changed
+
+- Replaced recursive grapheme glob matching with a linear Unicode-scalar parser
+  and rolling-row path and segment dynamic programs.
+- Added strict portable character classes and stable typed rejection for
+  descending or host-ambiguous class syntax.
+- Git-diff selection and strict hashing now validate complete declared-source
+  pattern lists before BUILD, earlier-match, empty-change, or filesystem
+  short-circuits.
+
 ## [0.5.0] - 2026-08-30
 
 ### Added

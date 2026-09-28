@@ -1,0 +1,31 @@
+{
+  "lesson": "TA-C63-permission",
+  "english": "permission",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಅನುಮತಿ",
+      "romanization": "anumati",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "అనుమతి",
+      "romanization": "anumati",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "അനുവാദം",
+      "romanization": "anuvādaṁ",
+      "sameRoot": false
+    },
+    {
+      "language": "hindi",
+      "form": "अनुमति",
+      "romanization": "anumati",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C65-permission, TE-C65-permission, ML-C65-permission, HI-C65-permission; sameRoot judged by the author, awaiting native review"
+}

@@ -12,7 +12,7 @@ headword: पठति
 romanization: paṭhati
 gloss: he, she, or it reads — reading as reciting aloud, and the two ways a Sanskrit word survives into a modern language
 concept_tag: VERB-READ
-prerequisites: [SA-C08-avagacchati]
+prerequisites: [SA-C08-avagacchati, SA-C06-pancha-travels-more]
 sounds: [inherent-a, retroflex-tha]
 roots: [path-recite, pie-pleth]
 etymology_hook: "पठति is the word four modern languages read with — Hindi paṛhnā, Bengali poṛa, Marathi paḍhṇe — worn down by regular sound change, while चिन्ता went into the very same languages unchanged; and पठति's own ancestry is the shakiest in the chapter, usually traced to प्रथ् 'to spread abroad'"

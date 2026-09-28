@@ -1,0 +1,23 @@
+{
+  "lesson": "TA-C69-road",
+  "english": "a road",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ರಸ್ತೆ",
+      "romanization": "rastē"
+    },
+    {
+      "language": "telugu",
+      "form": "రోడ్డు",
+      "romanization": "rōḍḍu"
+    },
+    {
+      "language": "hindi",
+      "form": "सड़क",
+      "romanization": "saṛak",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C108-raste, TE-C102-roddu, HI-C56-road; sameRoot judged by the author, awaiting native review"
+}

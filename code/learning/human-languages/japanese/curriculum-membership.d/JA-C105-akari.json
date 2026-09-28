@@ -1,0 +1,11 @@
+{
+  "id": "JA-C105-akari",
+  "pathSegment": "JA-PATH-105-THINGS105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-105-THINGS105",
+      "order": 3
+    }
+  ]
+}

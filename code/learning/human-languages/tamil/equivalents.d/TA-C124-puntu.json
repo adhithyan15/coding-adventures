@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C124-puntu",
+  "english": "garlic",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬೆಳ್ಳುಳ್ಳಿ",
+      "romanization": "beḷḷuḷḷi"
+    },
+    {
+      "language": "telugu",
+      "form": "వెల్లుల్లి",
+      "romanization": "vellulli"
+    },
+    {
+      "language": "malayalam",
+      "form": "വെളുത്തുള്ളി",
+      "romanization": "veḷuttuḷḷi"
+    },
+    {
+      "language": "hindi",
+      "form": "लहसुन",
+      "romanization": "lahsun"
+    }
+  ],
+  "source": "cross-track match: KA-C124-bellulli, TE-C118-vellulli, ML-C150-veluttulli, HI-C138-lahsun"
+}

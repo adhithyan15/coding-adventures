@@ -12,6 +12,7 @@ module CodingAdventures.Itf
   , defaultBarcode1DRenderConfig
   , defaultPaintBarcode1DOptions
   , normalizeItf
+  , itfErrorId
   , encodeItf
   , expandItfRuns
   , layoutItf
@@ -81,11 +82,25 @@ digitPatterns =
 -- | Require a non-empty, even-length string of ASCII digits.
 normalizeItf :: String -> Either ItfError String
 normalizeItf input
-  | null input || any (not . isAsciiDigit) input =
-      Left (InvalidItfInput "ITF input must contain digits only")
-  | odd (length input) =
+  | scalarCount > 4096 =
+      Left (InvalidItfInput "ITF input must contain at most 4096 characters")
+  | scalarCount == 0 || odd scalarCount =
       Left (InvalidItfInput "ITF input must contain an even number of digits")
+  | any (not . isAsciiDigit) input =
+      Left (InvalidItfInput "ITF input must contain digits only")
   | otherwise = Right input
+  where
+    scalarCount = length (take 4097 input)
+
+-- | Map checked validation failures to the language-neutral stable identifier.
+itfErrorId :: Either ItfError value -> Maybe String
+itfErrorId (Left (InvalidItfInput "ITF input must contain at most 4096 characters")) =
+  Just "input-too-long"
+itfErrorId (Left (InvalidItfInput "ITF input must contain an even number of digits")) =
+  Just "invalid-length"
+itfErrorId (Left (InvalidItfInput "ITF input must contain digits only")) =
+  Just "invalid-character"
+itfErrorId _ = Nothing
 
 -- | Encode adjacent digits as interleaved bar and space widths.
 encodeItf :: String -> Either ItfError [EncodedPair]

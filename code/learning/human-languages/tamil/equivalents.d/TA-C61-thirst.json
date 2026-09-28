@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C61-thirst",
+  "english": "thirst",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಬಾಯಾರಿಕೆ",
+      "romanization": "bāyārike"
+    },
+    {
+      "language": "telugu",
+      "form": "దాహం",
+      "romanization": "dāhaṁ"
+    },
+    {
+      "language": "malayalam",
+      "form": "ദാഹം",
+      "romanization": "dāhaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "प्यास",
+      "romanization": "pyās"
+    }
+  ],
+  "source": "cross-track match: KA-C84-thirst, TE-C84-thirst, ML-C117-thirst, HI-C63-thirst"
+}

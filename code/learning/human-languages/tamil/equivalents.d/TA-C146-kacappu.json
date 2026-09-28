@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C146-kacappu",
+  "english": "bitter",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಹಿ",
+      "romanization": "kahi"
+    },
+    {
+      "language": "telugu",
+      "form": "చేదు",
+      "romanization": "cēdu"
+    },
+    {
+      "language": "malayalam",
+      "form": "കയ്പുള്ള",
+      "romanization": "kaypuḷḷa"
+    },
+    {
+      "language": "hindi",
+      "form": "कड़वा",
+      "romanization": "kaṛvā"
+    }
+  ],
+  "source": "cross-track match: KA-C145-kahi, TE-C73-bitter, ML-C165-kaypulla, HI-C156-karva"
+}

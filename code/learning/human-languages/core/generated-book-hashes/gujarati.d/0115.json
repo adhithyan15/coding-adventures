@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:f4f3ff8ce1a63285",
+  "lessonIds": [
+    "GU-C115-gajar",
+    "GU-C115-lasan",
+    "GU-C115-adu",
+    "GU-C115-libu",
+    "GU-C115-naliyer"
+  ],
+  "tex": "gujarati/book/chapters/ch115-carrot-garlic-ginger-lemon-coconut.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C113-kariha",
+  "pathSegment": "AR-PATH-113-WANT113",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-113-WANT113",
+      "order": 1
+    }
+  ]
+}

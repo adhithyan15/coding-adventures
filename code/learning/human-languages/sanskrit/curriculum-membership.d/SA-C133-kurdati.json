@@ -1,0 +1,11 @@
+{
+  "id": "SA-C133-kurdati",
+  "pathSegment": "SA-PATH-133-QUAL133",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-133-QUAL133",
+      "order": 4
+    }
+  ]
+}

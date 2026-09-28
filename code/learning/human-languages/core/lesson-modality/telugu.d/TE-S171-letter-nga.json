@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S171-letter-nga",
+    "language": "telugu",
+    "chapter": 150,
+    "sequence": 6550,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:93c438a1ea3a2b12",
+    "detachableSegments": [
+      "Script you'll notice: ఙ",
+      "Writing: ఙ — five small movements"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

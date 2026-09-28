@@ -1,0 +1,11 @@
+{
+  "id": "PA-C107-kai",
+  "pathSegment": "PA-PATH-107-DEF107",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-107-DEF107",
+      "order": 4
+    }
+  ]
+}

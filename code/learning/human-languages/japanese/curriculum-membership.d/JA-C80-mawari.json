@@ -1,0 +1,11 @@
+{
+  "id": "JA-C80-mawari",
+  "pathSegment": "JA-PATH-80-LOC80",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-80-LOC80",
+      "order": 4
+    }
+  ]
+}

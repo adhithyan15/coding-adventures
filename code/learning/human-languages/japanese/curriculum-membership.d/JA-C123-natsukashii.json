@@ -1,0 +1,11 @@
+{
+  "id": "JA-C123-natsukashii",
+  "pathSegment": "JA-PATH-123-QUAL123",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-123-QUAL123",
+      "order": 1
+    }
+  ]
+}

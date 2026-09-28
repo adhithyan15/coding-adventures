@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To swim, To climb, To call, To use, To make",
+  "label": "ch:pa-to-swim-to-climb-to-call-to-use-to-make",
+  "canDo": "I can say to swim, to climb, to call, to use and to make.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C149-banauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say to swim, to climb, to call, to use and to make.",
+    "assesses": [
+      "PA-LEX-C149-ACT149-03",
+      "PA-LEX-C149-ACT149-04",
+      "PA-LEX-C149-ACT149-05"
+    ]
+  }
+}

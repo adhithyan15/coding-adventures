@@ -1,0 +1,11 @@
+{
+  "id": "GU-R100-first-pass-seasons-months-and-days",
+  "pathSegment": "GU-PATH-100-DEF100",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-100-DEF100",
+      "order": 5
+    }
+  ]
+}

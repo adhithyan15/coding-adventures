@@ -1,0 +1,11 @@
+{
+  "id": "AR-C121-nana",
+  "pathSegment": "AR-PATH-121-THINGS121",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-121-THINGS121",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+## 2026-09-25 (button elevation)
+
+- **A `HostButton` with an authored background casts no Material shadow.** Material's `Button` has a default elevation, so every styled button drew a drop shadow that no other backend draws: a web button casts none unless its style asks. The shadow was also the only visible edge of buttons authored as borderless. Trestle's task name, Edit, Delete and "+ Sub-project" (`background: transparent; border-width: 0`) read as boxed buttons on Compose, and on the web as plain clickable text. A button whose part authors a background now passes `elevation = null`. A part that authors `elevation` still gets its shadow, through `Modifier.shadow` in its own chain (UI41), and an unstyled button keeps Material's defaults.
+  - Rendered: Trestle (light and dark) and Engram (light). Borderless buttons now read as on the web, and bordered ones (Engram's nav options, `#dee2e6` 1px) show just their border. `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass.
+

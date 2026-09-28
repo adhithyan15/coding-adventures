@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C172-kontuvaruka",
+    "language": "malayalam",
+    "chapter": 172,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cba2c97e3cacab9"
+  },
+  "findings": []
+}

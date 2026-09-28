@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C110-sune",
+    "language": "japanese",
+    "chapter": 110,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63495b45b1a32473"
+  },
+  "findings": []
+}

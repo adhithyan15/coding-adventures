@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C31-matiya-vanakkam",
+  "english": "good afternoon, confirmed by two sources for roughly noon to 4 PM, while a third source does not teach a separate afternoon greeting",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶುಭ ಮಧ್ಯಾಹ್ನ",
+      "romanization": "śubha madhyāhna"
+    },
+    {
+      "language": "telugu",
+      "form": "శుభ మధ్యాహ్నం",
+      "romanization": "śubha madhyāhnam"
+    },
+    {
+      "language": "malayalam",
+      "form": "ശുഭ മധ്യാഹ്നം",
+      "romanization": "śubha madhyāhnaṁ"
+    },
+    {
+      "language": "hindi",
+      "form": "शुभ दोपहर",
+      "romanization": "shubh dopahar"
+    }
+  ],
+  "source": "cross-track match: KA-C31-shubha-madhyahna, TE-C31-subha-madhyahnam, ML-C31-shubha-madhyaahnam, HI-C33-shubh-dopahar"
+}

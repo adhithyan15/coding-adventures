@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C154-alai2",
+  "english": "to call, to invite",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕರೆ",
+      "romanization": "kare"
+    },
+    {
+      "language": "telugu",
+      "form": "పిలుచు",
+      "romanization": "pilucu"
+    },
+    {
+      "language": "malayalam",
+      "form": "വിളിക്കുക",
+      "romanization": "viḷikkuka"
+    },
+    {
+      "language": "hindi",
+      "form": "बुलाना",
+      "romanization": "bulānā",
+      "sameRoot": false
+    }
+  ],
+  "source": "cross-track match: KA-C149-kare, TE-C146-pilucu, ML-C172-vilikkuka, HI-C164-bulana; sameRoot judged by the author, awaiting native review"
+}

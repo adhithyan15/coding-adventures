@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C152-mannna",
+    "language": "punjabi",
+    "chapter": 152,
+    "sequence": 8230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:327809613f9d3d68"
+  },
+  "findings": []
+}

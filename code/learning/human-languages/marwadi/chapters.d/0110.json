@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "To share out, To mislay, To reach, To fly, To weigh",
+  "label": "ch:mw-to-share-out-to-mislay-to-reach-to-fly-to-weigh",
+  "canDo": "I can say to share out, to mislay, to reach, to fly and to weigh.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C110-tolno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say to share out, to mislay, to reach, to fly and to weigh.",
+    "assesses": [
+      "MW-LEX-C110-ACT110-03",
+      "MW-LEX-C110-ACT110-04",
+      "MW-LEX-C110-ACT110-05"
+    ]
+  }
+}

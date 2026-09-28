@@ -1,0 +1,11 @@
+{
+  "id": "GU-C137-juvan",
+  "pathSegment": "GU-PATH-137-QUAL137",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-137-QUAL137",
+      "order": 1
+    }
+  ]
+}

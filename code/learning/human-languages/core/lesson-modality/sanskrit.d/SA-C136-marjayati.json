@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C136-marjayati",
+    "language": "sanskrit",
+    "chapter": 136,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ee482ba89f78d1a"
+  },
+  "findings": []
+}

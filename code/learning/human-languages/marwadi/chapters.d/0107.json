@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "To weave, To dye, To apply, To remove, To spread out",
+  "label": "ch:mw-to-weave-to-dye-to-apply-to-remove-to-spread-out",
+  "canDo": "I can say to weave, to dye, to apply, to remove and to spread out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C107-bichhavno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say to weave, to dye, to apply, to remove and to spread out.",
+    "assesses": [
+      "MW-LEX-C107-ACT107-03",
+      "MW-LEX-C107-ACT107-04",
+      "MW-LEX-C107-ACT107-05"
+    ]
+  }
+}

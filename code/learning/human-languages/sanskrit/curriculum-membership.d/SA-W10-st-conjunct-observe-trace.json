@@ -1,0 +1,11 @@
+{
+  "id": "SA-W10-st-conjunct-observe-trace",
+  "pathSegment": "SA-PATH-010",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-142-WRITING-CONJUNCT-BRIDGE",
+      "order": 0
+    }
+  ]
+}

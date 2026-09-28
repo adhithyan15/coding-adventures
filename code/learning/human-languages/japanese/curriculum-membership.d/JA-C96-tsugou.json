@@ -1,0 +1,11 @@
+{
+  "id": "JA-C96-tsugou",
+  "pathSegment": "JA-PATH-96-CAN96",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-96-CAN96",
+      "order": 4
+    }
+  ]
+}

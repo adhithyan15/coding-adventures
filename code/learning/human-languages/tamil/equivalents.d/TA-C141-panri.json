@@ -1,0 +1,25 @@
+{
+  "lesson": "TA-C141-panri",
+  "english": "a pig",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಂದಿ",
+      "romanization": "handi",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పంది",
+      "romanization": "pandi",
+      "sameRoot": true
+    },
+    {
+      "language": "malayalam",
+      "form": "പന്നി",
+      "romanization": "panni",
+      "sameRoot": true
+    }
+  ],
+  "source": "cross-track match: KA-C133-handi, TE-C126-pandi, ML-C151-panni; sameRoot judged by the author, awaiting native review"
+}

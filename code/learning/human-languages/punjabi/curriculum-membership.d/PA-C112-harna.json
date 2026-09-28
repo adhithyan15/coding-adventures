@@ -1,0 +1,11 @@
+{
+  "id": "PA-C112-harna",
+  "pathSegment": "PA-PATH-112-CAN112",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-112-CAN112",
+      "order": 4
+    }
+  ]
+}

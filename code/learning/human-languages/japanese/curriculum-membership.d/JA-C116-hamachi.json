@@ -1,0 +1,11 @@
+{
+  "id": "JA-C116-hamachi",
+  "pathSegment": "JA-PATH-116-THINGS116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-116-THINGS116",
+      "order": 2
+    }
+  ]
+}

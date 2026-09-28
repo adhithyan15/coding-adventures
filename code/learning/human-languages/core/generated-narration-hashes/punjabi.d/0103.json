@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:752b236fbf151443",
+  "lessonIds": [
+    "PA-C103-aktubar",
+    "PA-C103-navambar",
+    "PA-C103-dasambar",
+    "PA-C103-cet",
+    "PA-C103-visakh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch103.txt",
+  "json": "punjabi/narration/ch103.json",
+  "textHash": "fnv1a64:7fcf9367d9863a1b",
+  "jsonHash": "fnv1a64:1a043f8b008635af",
+  "findings": []
+}

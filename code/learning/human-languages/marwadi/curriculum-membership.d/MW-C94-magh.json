@@ -1,0 +1,11 @@
+{
+  "id": "MW-C94-magh",
+  "pathSegment": "MW-PATH-94-TIME94",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-94-TIME94",
+      "order": 1
+    }
+  ]
+}

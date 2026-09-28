@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C118-asandi",
+    "language": "sanskrit",
+    "chapter": 118,
+    "sequence": 5790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b66abaa3a4f1a1c3"
+  },
+  "findings": []
+}

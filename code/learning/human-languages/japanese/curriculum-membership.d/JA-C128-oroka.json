@@ -1,0 +1,11 @@
+{
+  "id": "JA-C128-oroka",
+  "pathSegment": "JA-PATH-128-QUAL128",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-128-QUAL128",
+      "order": 1
+    }
+  ]
+}

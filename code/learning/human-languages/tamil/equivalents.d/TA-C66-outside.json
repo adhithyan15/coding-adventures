@@ -1,0 +1,17 @@
+{
+  "lesson": "TA-C66-outside",
+  "english": "outside, out",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹೊರಗೆ",
+      "romanization": "horage"
+    },
+    {
+      "language": "telugu",
+      "form": "బయట",
+      "romanization": "bayaṭa"
+    }
+  ],
+  "source": "cross-track match: KA-C108-horage, TE-C101-bayata"
+}

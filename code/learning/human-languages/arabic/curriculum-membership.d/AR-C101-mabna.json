@@ -1,0 +1,11 @@
+{
+  "id": "AR-C101-mabna",
+  "pathSegment": "AR-PATH-101-LOC101",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-101-LOC101",
+      "order": 2
+    }
+  ]
+}

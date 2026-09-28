@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:d9b554e644738967",
+  "lessonIds": [
+    "GU-C106-kabat",
+    "GU-C106-ariso",
+    "GU-C106-kasko",
+    "GU-C106-sabu",
+    "GU-C106-tuval"
+  ],
+  "tex": "gujarati/book/chapters/ch106-cupboard-mirror-comb-soap-towel.tex"
+}

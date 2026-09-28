@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C123-tarbuz",
+    "language": "punjabi",
+    "chapter": 123,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdc1072e6582d0ab"
+  },
+  "findings": []
+}

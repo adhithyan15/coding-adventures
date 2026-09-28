@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:a368927865b57f07",
+  "lessonIds": [
+    "AR-C116-ibriq",
+    "AR-C116-miqlah",
+    "AR-C116-furn",
+    "AR-C116-mirwaha",
+    "AR-C116-hasub"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch116.txt",
+  "json": "arabic/narration/ch116.json",
+  "textHash": "fnv1a64:cb27e8e2cee115e8",
+  "jsonHash": "fnv1a64:86f1564853cc06b7",
+  "findings": []
+}

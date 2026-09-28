@@ -7,8 +7,8 @@ chapter: 12
 type: etymology
 headword: બે · ત્રણ
 romanization: be · traṇ
-gloss: why Gujarati two begins with b and why three regained an r
-prerequisites: [GU-C06-numbers-1-5]
+gloss: why Gujarati two begins with b
+prerequisites: [GU-C06-numbers-1-5, GU-C06-numbers-1-5-more]
 sounds: [e-sign, inherent-a]
 roots: [sanskrit-dvi, sanskrit-tri]
 etymology_hook: "Gujarati be continues Sanskrit feminine/neuter dve through dv to bb to b; tran's r was restored after Prakrit tiṇṇi had already lost it"
@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R]
 introduces:
-  knowledge: [GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B, GU-ETYMON-TRAN-R-RESTORATION, GU-HISTORY-LEARNED-RESTORATION]
+  knowledge: [GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [GU-CULTURE-TRAN-SANSKRIT-LEARNED-RESTORATION-01]
 practises:
-  knowledge: [GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B, GU-ETYMON-TRAN-R-RESTORATION, GU-HISTORY-LEARNED-RESTORATION]
+  knowledge: [GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ variety: general
 reviews_of: [GU-C06-numbers-1-5]
 ---
 
-# Two number histories: *be* and *traṇ*
+# A number history: *be*
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R] -->
@@ -60,40 +60,17 @@ The initial cluster changed too. In *dv-*, the dental *d* adopted the **labial
 place** of the following *v*: *dv* → *bb* → *b*. The first consonant was remade
 in the shape of its neighbour, then the double simplified.
 
-## The word, taken apart — ત્રણ and the *r* that came back
-<!-- hl-knowledge: introduces=[GU-ETYMON-TRAN-R-RESTORATION, GU-HISTORY-LEARNED-RESTORATION]; assesses=[] -->
-
-| stage | “three” |
-|---|---|
-| Sanskrit neuter | *trī́ṇi* |
-| Prakrit | *tiṇṇi*: *r* already gone |
-| Hindi | *tīn* |
-| **Gujarati** | ***traṇ***: *r* present again |
-
-The shared **ṇ** shows that Hindi and Gujarati both descend from neuter
-*trī́ṇi* through Prakrit *tiṇṇi*. By that stage, the *r* was gone and its weight
-had moved into doubled *ṇṇ*. Hindi later simplified the double and lengthened
-the vowel.
-
-Gujarati's *tr-* is generally treated as **restored from Sanskrit**, not carried
-through unbroken. Sanskrit remained a literary language and continued to reshape
-its descendants. *Traṇ* looks older than *tīn*, but it is closer because speakers
-put the *r* back.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B, GU-ETYMON-TRAN-R-RESTORATION, GU-HISTORY-LEARNED-RESTORATION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B] -->
 
 [PAUSE 1s]
 - [YOU SAY: Gujarati's selected form — feminine/neuter *dvé*]
 - [YOU SAY: the sound path — *dv → bb → b*]
-- [YOU SAY: the *r* path — *trī́ṇi → tiṇṇi → traṇ*]
-- [YOU SAY: inherited continuously or restored — restored]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B, GU-ETYMON-TRAN-R-RESTORATION, GU-HISTORY-LEARNED-RESTORATION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-NUMBERS-ONE-TO-FIVE, GU-FORM-BE-INITIAL-B, GU-FORM-TRAN-R, GU-ETYMON-BE-DVE-SELECTION, GU-SOUND-DV-BB-B] -->
 <!-- hl-activity: {"id":"GU-C06-number-histories-be-source","kind":"text","assesses":["GU-ETYMON-BE-DVE-SELECTION"],"prompt":"Does Gujarati be descend from the same Sanskrit form as Hindi do?","answer":"no","accepted":["no it does not","different Sanskrit forms"],"feedback":{"correct":"Right: Gujarati and Hindi selected different Sanskrit forms for two.","incorrect":"No. Gujarati be and Hindi do descend from different Sanskrit forms."},"response_seconds":8} -->
 
 [PAUSE 3s] Why *be*, not Hindi *do*? (Different Sanskrit forms.) What changed in
-*dv → b*? (*D* became labial beside *v*; the double simplified.) Did *traṇ* keep
-*r*? (No: Sanskrit restored Prakrit's lost *r*.) How can a newer form look older?
-(Learned restoration.)
+*dv → b*? (*D* became labial beside *v*; the double simplified.) Next: *traṇ*
+and the *r* that came back.

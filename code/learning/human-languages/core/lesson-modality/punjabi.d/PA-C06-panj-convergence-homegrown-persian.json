@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C06-panj-convergence-homegrown-persian",
+    "language": "punjabi",
+    "chapter": 6,
+    "sequence": 358,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0619e5e0961fef38"
+  },
+  "findings": []
+}

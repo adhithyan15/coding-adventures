@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:23185622da45f8f0",
+  "lessonIds": [
+    "SA-C99-mancah",
+    "SA-C99-upadhanam",
+    "SA-C99-kambalah",
+    "SA-C99-yavanika",
+    "SA-C99-talakam",
+    "SA-R99-first-pass-time-and-places",
+    "SA-R99-second-pass-places-why-and-the-house"
+  ],
+  "tex": "sanskrit/book/chapters/ch99-bed-pillow-blanket-curtain-lock.tex"
+}

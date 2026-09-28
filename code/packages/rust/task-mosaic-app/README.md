@@ -19,15 +19,19 @@ cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
 
 Pass the resulting platform library to `mosaic-compile --runtime-library` when
 emitting `code/programs/mosaic/task-app`. Use the `native-complete` profile on
-all five supported native backends; TaskApp currently emits with zero reported
-degradations on Qt, Flutter, Compose Desktop, SwiftUI, and XAML.
+all five supported native backends; TaskApp currently emits with zero capability
+degradations on Qt, Flutter, Compose Desktop, SwiftUI, and XAML. Existing style
+drops are reported separately and ratcheted per property by the shared TaskApp
+contract: fixes may reduce them, while a new drop or an increased occurrence
+count fails CI (#16182) on the route to #12022's zero-drop hard fail.
 
 The `conformance/{qt,flutter,compose,swiftui,xaml}` fixtures are task-specific
 functional gates. CI combines each one with the complete generated TaskApp and its
 standard binding, then drives create, scheduling, complete/reopen, delete,
 invalid-input atomicity, and persisted restart restoration against the real Rust
 adapter. `code/scripts/taskapp_native_control_contract.py` separately rejects
-generated sources with inert controls, sample fallbacks, or missing runtime wiring.
+generated sources with inert controls, sample fallbacks, missing runtime wiring,
+or native style-degradation growth.
 
 The crate also consumes TaskApp's shared
 `fixtures/presentation-contract-v1.json`. Its checkpoint test and the web host's

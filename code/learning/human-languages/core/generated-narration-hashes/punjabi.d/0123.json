@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:e52d4eaa57bb3eb9",
+  "lessonIds": [
+    "PA-C123-lasan",
+    "PA-C123-adrak",
+    "PA-C123-narial",
+    "PA-C123-tarbuz",
+    "PA-C123-papita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch123.txt",
+  "json": "punjabi/narration/ch123.json",
+  "textHash": "fnv1a64:fc3ed866bc267205",
+  "jsonHash": "fnv1a64:0adbf9f2fe51f0a6",
+  "findings": []
+}

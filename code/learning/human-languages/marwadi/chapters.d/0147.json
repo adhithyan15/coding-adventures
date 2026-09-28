@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Hard-working, Honest, Kind, Miserly, Good-natured",
+  "label": "ch:mw-hard-working-honest-kind-miserly-good-natured",
+  "canDo": "I can say hard-working, honest, kind, miserly and good-natured.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C147-bhalo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say hard-working, honest, kind, miserly and good-natured.",
+    "assesses": [
+      "MW-LEX-C147-QUAL147-03",
+      "MW-LEX-C147-QUAL147-04",
+      "MW-LEX-C147-QUAL147-05"
+    ]
+  }
+}

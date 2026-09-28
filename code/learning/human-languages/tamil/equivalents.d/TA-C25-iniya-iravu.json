@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C25-iniya-iravu",
+  "english": "good night",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಶುಭ ರಾತ್ರಿ",
+      "romanization": "śubha rātri"
+    },
+    {
+      "language": "telugu",
+      "form": "శుభ రాత్రి",
+      "romanization": "śubha rātri"
+    },
+    {
+      "language": "malayalam",
+      "form": "ശുഭ രാത്രി",
+      "romanization": "śubha rātri"
+    },
+    {
+      "language": "hindi",
+      "form": "शुभ रात्रि",
+      "romanization": "śubh rātri"
+    }
+  ],
+  "source": "cross-track match: KA-C25-shubha-ratri, TE-C25-shubha-ratri, ML-C25-shubha-rathri, HI-C27-shubh-raatri"
+}

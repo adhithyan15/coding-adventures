@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:0e543c014cc9dda1",
+  "lessonIds": [
+    "SA-C110-girih",
+    "SA-C110-prapatah",
+    "SA-C110-tarangah",
+    "SA-C110-vidyut",
+    "SA-C110-garjanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch110-mountain-waterfall-wave-lightning-thunder.tex"
+}

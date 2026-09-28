@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W03-namah-guided-copy",
+    "language": "sanskrit",
+    "chapter": 3,
+    "sequence": 189,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e983c6e8aa68fe11",
+    "detachableSegments": [
+      "Writing — guided visarga copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

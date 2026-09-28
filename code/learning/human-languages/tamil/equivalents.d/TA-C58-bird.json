@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C58-bird",
+  "english": "a bird",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಕ್ಕಿ",
+      "romanization": "hakki"
+    },
+    {
+      "language": "telugu",
+      "form": "పక్షి",
+      "romanization": "pakṣi"
+    },
+    {
+      "language": "malayalam",
+      "form": "പക്ഷി",
+      "romanization": "pakṣi"
+    },
+    {
+      "language": "hindi",
+      "form": "चिड़िया",
+      "romanization": "chiṛiyā"
+    }
+  ],
+  "source": "cross-track match: KA-C60-bird, TE-C60-bird, ML-C138-bird, HI-C54-bird"
+}

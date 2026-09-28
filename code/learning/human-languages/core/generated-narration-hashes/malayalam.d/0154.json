@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:62441b2578679950",
+  "lessonIds": [
+    "ML-C154-kaimuttu",
+    "ML-C154-kalmuttu",
+    "ML-C154-navu",
+    "ML-C154-toli",
+    "ML-C154-nerri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch154.txt",
+  "json": "malayalam/narration/ch154.json",
+  "textHash": "fnv1a64:2eaeaab9456ea7dc",
+  "jsonHash": "fnv1a64:7bab71513f46d863",
+  "findings": []
+}

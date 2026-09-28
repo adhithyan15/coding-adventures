@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:d0c86ebc8419016d",
+  "lessonIds": [
+    "ML-C176-irannuka",
+    "ML-C176-nintuka",
+    "ML-C176-catuka",
+    "ML-C176-viluka",
+    "ML-C176-jivikkuka",
+    "ML-R176-first-pass-describing-words-and-verbs",
+    "ML-R176-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch176.txt",
+  "json": "malayalam/narration/ch176.json",
+  "textHash": "fnv1a64:21abac8516e6624e",
+  "jsonHash": "fnv1a64:6a7375addbeb729b",
+  "findings": []
+}

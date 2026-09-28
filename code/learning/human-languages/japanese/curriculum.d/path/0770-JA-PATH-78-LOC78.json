@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-78-LOC78",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "JA-EXT-78-LOC78"
+  ],
+  "after": []
+}

@@ -1,0 +1,22 @@
+{
+  "lesson": "TA-C56-a-little",
+  "english": "a little",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಸ್ವಲ್ಪ",
+      "romanization": "svalpa"
+    },
+    {
+      "language": "telugu",
+      "form": "కొంచెం",
+      "romanization": "koñcem"
+    },
+    {
+      "language": "malayalam",
+      "form": "കുറച്ച്",
+      "romanization": "kuṟaccŭ"
+    }
+  ],
+  "source": "cross-track match: KA-C58-a-little, TE-C58-a-little, ML-C58-a-little"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C137-jayati",
+    "language": "sanskrit",
+    "chapter": 137,
+    "sequence": 6780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23426d992a721614"
+  },
+  "findings": []
+}

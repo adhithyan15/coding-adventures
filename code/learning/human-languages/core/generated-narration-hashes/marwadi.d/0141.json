@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:4cc23fb0890ef863",
+  "lessonIds": [
+    "MW-C141-chokho",
+    "MW-C141-kharab",
+    "MW-C141-sakro",
+    "MW-C141-chauro",
+    "MW-C141-gairo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch141.txt",
+  "json": "marwadi/narration/ch141.json",
+  "textHash": "fnv1a64:57ea8b7cfa8173ce",
+  "jsonHash": "fnv1a64:de633d96d733bd2b",
+  "findings": []
+}

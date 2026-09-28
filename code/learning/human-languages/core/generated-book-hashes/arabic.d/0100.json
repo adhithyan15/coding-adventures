@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:43d628af29755c77",
+  "lessonIds": [
+    "AR-C100-misad",
+    "AR-C100-mamarr",
+    "AR-C100-maydan",
+    "AR-C100-matar",
+    "AR-C100-mina"
+  ],
+  "tex": "arabic/book/chapters/ch100-lift-corridor-public-square-airport-port.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "This much, That much, Like this, Like that, Other",
+  "label": "ch:pa-this-much-that-much-like-this-like-that-other",
+  "canDo": "I can say this much, that much, like this, like that and other.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "PA-C108-hor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say this much, that much, like this, like that and other.",
+    "assesses": [
+      "PA-LEX-C108-DEF108-03",
+      "PA-LEX-C108-DEF108-04",
+      "PA-LEX-C108-DEF108-05"
+    ]
+  }
+}

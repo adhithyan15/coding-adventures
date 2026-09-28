@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Eyebrow, Beard, Moustache, Neck, Chest",
+  "label": "ch:gu-eyebrow-beard-moustache-neck-chest",
+  "canDo": "I can say an eyebrow, a beard, a moustache, a neck and a chest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GU-C125-chati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say an eyebrow, a beard, a moustache, a neck and a chest.",
+    "assesses": [
+      "GU-LEX-C125-THINGS125-03",
+      "GU-LEX-C125-THINGS125-04",
+      "GU-LEX-C125-THINGS125-05"
+    ]
+  }
+}

@@ -2,8 +2,8 @@
   "cli_builder_spec_version": "1.0",
   "name": "forme",
   "display_name": "Forme",
-  "description": "Build, validate, preview, and clean a headless Forme project.",
-  "version": "0.3.0",
+  "description": "Build, validate, preview, deploy, and clean a headless Forme project.",
+  "version": "0.5.0",
   "parsing_mode": "gnu",
   "builtin_flags": {
     "help": true,
@@ -37,7 +37,35 @@
           "description": "Write a deterministic JSON build report.",
           "type": "path",
           "value_name": "PATH"
+        },
+        {
+          "id": "deploy-input",
+          "long": "deploy-input",
+          "description": "Materialize successful dist-tree outputs as a deploy manifest and content store.",
+          "type": "path",
+          "value_name": "DIR"
         }
+      ]
+    },
+    {
+      "id": "deploy",
+      "name": "deploy",
+      "description": "Validate and publish a complete Forme deploy manifest.",
+      "flags": [
+        { "id": "manifest", "long": "manifest", "description": "Validated deploy manifest JSON.", "type": "path", "value_name": "PATH", "required": true },
+        { "id": "content-dir", "long": "content-dir", "description": "Directory of canonical digest-named content files.", "type": "path", "value_name": "DIR" },
+        { "id": "content-bundle", "long": "content-bundle", "description": "Canonical Forme content bundle.", "type": "path", "value_name": "PATH" },
+        { "id": "content-inline-fd", "long": "content-inline-fd", "description": "File descriptor containing the bounded inline content map.", "type": "integer", "value_name": "FD" },
+        { "id": "target", "long": "target", "description": "Publication adapter: fs or github-pages.", "type": "enum", "enum_values": ["fs", "github-pages"], "value_name": "TARGET", "required": true },
+        { "id": "target-config", "long": "target-config", "description": "Strict adapter configuration JSON.", "type": "path", "value_name": "PATH", "required": true },
+        { "id": "bootstrap-ownership", "long": "bootstrap-ownership", "description": "Explicit legacy GitHub Pages ownership expectation JSON.", "type": "path", "value_name": "PATH" },
+        { "id": "previous", "long": "previous", "description": "Previous deploy manifest used for deterministic planning.", "type": "path", "value_name": "PATH" },
+        { "id": "dry-run", "long": "dry-run", "description": "Preflight content and inspect the target without writes.", "type": "boolean" },
+        { "id": "retry", "long": "retry", "description": "Bounded GitHub retry budget.", "type": "integer", "default": 3, "value_name": "COUNT" },
+        { "id": "report", "long": "report", "description": "Write the deploy report after a real publication.", "type": "path", "value_name": "PATH" }
+      ],
+      "mutually_exclusive_groups": [
+        { "id": "content-store", "flag_ids": ["content-dir", "content-bundle", "content-inline-fd"], "required": true }
       ]
     },
     {

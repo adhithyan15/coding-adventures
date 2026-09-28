@@ -1,0 +1,27 @@
+{
+  "lesson": "TA-C41-big",
+  "english": "big",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ದೊಡ್ಡ",
+      "romanization": "doḍḍa"
+    },
+    {
+      "language": "telugu",
+      "form": "పెద్ద",
+      "romanization": "pedda"
+    },
+    {
+      "language": "malayalam",
+      "form": "വലിയ",
+      "romanization": "valiya"
+    },
+    {
+      "language": "hindi",
+      "form": "बड़ा",
+      "romanization": "baṛā"
+    }
+  ],
+  "source": "cross-track match: KA-C42-big, TE-C42-big, ML-C42-big, HI-C41-big"
+}

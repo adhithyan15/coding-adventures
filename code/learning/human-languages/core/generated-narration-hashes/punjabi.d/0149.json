@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:79c216afd3a9c669",
+  "lessonIds": [
+    "PA-C149-tarna",
+    "PA-C149-carhna",
+    "PA-C149-bulauna",
+    "PA-C149-vartna",
+    "PA-C149-banauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch149.txt",
+  "json": "punjabi/narration/ch149.json",
+  "textHash": "fnv1a64:af71564b4413b5b6",
+  "jsonHash": "fnv1a64:8078c67d0a4d3538",
+  "findings": []
+}

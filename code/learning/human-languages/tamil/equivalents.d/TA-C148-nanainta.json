@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C148-nanainta",
+  "english": "wet",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಒದ್ದೆ",
+      "romanization": "odde"
+    },
+    {
+      "language": "telugu",
+      "form": "తడి",
+      "romanization": "taḍi"
+    },
+    {
+      "language": "malayalam",
+      "form": "നനവുള്ള",
+      "romanization": "nanavuḷḷa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "गीला",
+      "romanization": "gīlā"
+    }
+  ],
+  "source": "cross-track match: KA-C142-odde, TE-C139-tadi, ML-C167-nanavulla, HI-C154-gila; sameRoot judged by the author, awaiting native review"
+}

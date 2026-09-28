@@ -1,0 +1,11 @@
+{
+  "id": "AR-C149-mumti",
+  "pathSegment": "AR-PATH-149-QUAL149",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-149-QUAL149",
+      "order": 4
+    }
+  ]
+}

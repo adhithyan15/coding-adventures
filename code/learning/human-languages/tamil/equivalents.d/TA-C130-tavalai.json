@@ -1,0 +1,28 @@
+{
+  "lesson": "TA-C130-tavalai",
+  "english": "a frog",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಕಪ್ಪೆ",
+      "romanization": "kappe"
+    },
+    {
+      "language": "telugu",
+      "form": "కప్ప",
+      "romanization": "kappa"
+    },
+    {
+      "language": "malayalam",
+      "form": "തവള",
+      "romanization": "tavaḷa",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "मेंढक",
+      "romanization": "meṇḍhak"
+    }
+  ],
+  "source": "cross-track match: KA-C133-kappe, TE-C70-frog, ML-C152-tavala, HI-C149-mendhak; sameRoot judged by the author, awaiting native review"
+}

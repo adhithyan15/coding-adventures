@@ -1,0 +1,29 @@
+{
+  "lesson": "TA-C41-old",
+  "english": "old",
+  "equivalents": [
+    {
+      "language": "kannada",
+      "form": "ಹಳೆಯ",
+      "romanization": "haḷeya",
+      "sameRoot": true
+    },
+    {
+      "language": "telugu",
+      "form": "పాత",
+      "romanization": "pāta"
+    },
+    {
+      "language": "malayalam",
+      "form": "പഴയ",
+      "romanization": "paḻaya",
+      "sameRoot": true
+    },
+    {
+      "language": "hindi",
+      "form": "पुराना",
+      "romanization": "purānā"
+    }
+  ],
+  "source": "cross-track match: KA-C42-old, TE-C42-old, ML-C42-old, HI-C41-old; sameRoot judged by the author, awaiting native review"
+}

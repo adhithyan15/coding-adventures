@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C124-omoshiroi",
+    "language": "japanese",
+    "chapter": 124,
+    "sequence": 7390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5a05962f37907fd"
+  },
+  "findings": []
+}

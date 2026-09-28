@@ -47,6 +47,21 @@ pub fn encode_mov_reg_reg16(dest: u8, src: u8) -> Vec<u8> {
     vec![opcodes::MOV_REG_RM16, 0b1100_0000 | (dest << 3) | src]
 }
 
+/// `MOV reg8, r/m8` with a register source (`mod=11`).
+pub fn encode_mov_reg_reg8(dest: u8, src: u8) -> Vec<u8> {
+    vec![0x8A, 0b1100_0000 | (dest << 3) | src]
+}
+
+/// One of the eight 8086 ALU families, register destination and register
+/// source (`mod=11`, direction=register). `operation` uses the architectural
+/// family number: ADD=0, OR=1, AND=4, SUB=5, XOR=6.
+pub fn encode_alu_reg_reg(operation: u8, word: bool, dest: u8, src: u8) -> Vec<u8> {
+    vec![
+        (operation << 3) | if word { 3 } else { 2 },
+        0b1100_0000 | (dest << 3) | src,
+    ]
+}
+
 /// `INC reg16` — `[0x40+reg]`.
 pub fn encode_inc_reg16(reg: u8) -> Vec<u8> {
     vec![opcodes::INC_REG16_BASE + reg]

@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Tongue, Belly, Leg, Skin, Bone",
+  "label": "ch:ar-tongue-belly-leg-skin-bone",
+  "canDo": "I can say a tongue, a belly, a leg, skin and a bone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "AR-C141-azm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can say a tongue, a belly, a leg, skin and a bone.",
+    "assesses": [
+      "AR-LEX-C141-THINGS141-03",
+      "AR-LEX-C141-THINGS141-04",
+      "AR-LEX-C141-THINGS141-05"
+    ]
+  }
+}

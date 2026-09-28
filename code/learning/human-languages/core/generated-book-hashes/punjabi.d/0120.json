@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:b462f1c4d51c778e",
+  "lessonIds": [
+    "PA-C120-rumal",
+    "PA-C120-savaitar",
+    "PA-C120-kot",
+    "PA-C120-anguthi",
+    "PA-C120-kangan"
+  ],
+  "tex": "punjabi/book/chapters/ch120-handkerchief-sweater-coat-ring-bangle.tex"
+}

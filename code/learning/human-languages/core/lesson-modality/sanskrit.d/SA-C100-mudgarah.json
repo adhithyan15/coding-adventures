@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C100-mudgarah",
+    "language": "sanskrit",
+    "chapter": 100,
+    "sequence": 4840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feb3e88dfe48ce39"
+  },
+  "findings": []
+}
