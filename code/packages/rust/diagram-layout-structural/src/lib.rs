@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.23.0";
+pub const VERSION: &str = "0.24.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -851,6 +851,63 @@ fn path_midpoint(points: &[Point]) -> Point {
     points.last().cloned().unwrap_or(Point { x: 0.0, y: 0.0 })
 }
 
+fn group_contains_node(diagram: &StructuralDiagram, group_id: &str, node_id: &str) -> bool {
+    let mut parent = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == node_id)
+        .and_then(|node| node.parent_group.as_deref());
+    let mut visited = HashSet::new();
+    while let Some(parent_id) = parent {
+        if parent_id == group_id {
+            return true;
+        }
+        if !visited.insert(parent_id) {
+            break;
+        }
+        parent = diagram
+            .groups
+            .iter()
+            .find(|group| group.id == parent_id)
+            .and_then(|group| group.parent_group.as_deref());
+    }
+    false
+}
+
+fn relationship_obstacles(
+    diagram: &StructuralDiagram,
+    from_id: &str,
+    to_id: &str,
+    nodes: &[LayoutedStructuralNode],
+    groups: &[LayoutedStructuralGroup],
+) -> Vec<StructuralBounds> {
+    let node_obstacles = nodes
+        .iter()
+        .filter(|node| node.id != from_id && node.id != to_id)
+        .map(|node| StructuralBounds {
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+        });
+    let group_obstacles = groups
+        .iter()
+        .filter(|group| {
+            !group_contains_node(diagram, &group.id, from_id)
+                && !group_contains_node(diagram, &group.id, to_id)
+        })
+        .map(|group| StructuralBounds {
+            x: group.x,
+            y: group.y,
+            width: group.width,
+            height: group.height,
+        });
+    node_obstacles
+        .chain(group_obstacles)
+        .map(|bounds| bounds.expanded(ROUTE_CLEARANCE))
+        .collect()
+}
+
 fn layout_relationships(
     diagram: &StructuralDiagram,
     nodes: &[LayoutedStructuralNode],
@@ -867,16 +924,8 @@ fn layout_relationships(
             let (default_p0, default_p1) = closest_sides(a_bounds, b_bounds);
             let p0 = rel.from_port.map_or(default_p0, |port| point_on_port(a_bounds, port));
             let p1 = rel.to_port.map_or(default_p1, |port| point_on_port(b_bounds, port));
-            let obstacles = nodes
-                .iter()
-                .filter(|node| node.id != rel.from && node.id != rel.to)
-                .map(|node| StructuralBounds {
-                    x: node.x,
-                    y: node.y,
-                    width: node.width,
-                    height: node.height,
-                }.expanded(ROUTE_CLEARANCE))
-                .collect::<Vec<_>>();
+            let obstacles =
+                relationship_obstacles(diagram, &rel.from, &rel.to, nodes, groups);
             let points = relationship_path(
                 p0,
                 p1,
@@ -997,7 +1046,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.23.0");
+        assert_eq!(crate::VERSION, "0.24.0");
     }
 
     #[test]
@@ -1202,6 +1251,44 @@ mod tests {
                 y: 60.0,
             }
         );
+    }
+
+    #[test]
+    fn relationship_obstacles_include_unrelated_group_bounds() {
+        let mut diagram = two_class_diagram();
+        diagram.groups.push(StructuralGroup {
+            id: "cache-group".into(),
+            label: "Cache".into(),
+            stereotype: None,
+            metadata: None,
+            parent_group: None,
+        });
+        diagram.nodes.push(StructuralNode {
+            id: "Cache".into(),
+            label: "Cache".into(),
+            stereotype: None,
+            node_kind: StructuralNodeKind::Class,
+            metadata: None,
+            style: None,
+            compartments: vec![],
+            parent_group: Some("cache-group".into()),
+        });
+
+        let layout = layout_structural_diagram(&diagram);
+        let obstacles = relationship_obstacles(
+            &diagram,
+            "Dog",
+            "Animal",
+            &layout.nodes,
+            &layout.groups,
+        );
+
+        assert_eq!(obstacles.len(), 2);
+        let group = &layout.groups[0];
+        assert!(obstacles.iter().any(|obstacle| {
+            obstacle.x == group.x - ROUTE_CLEARANCE
+                && obstacle.width == group.width + ROUTE_CLEARANCE * 2.0
+        }));
     }
 
     #[test]
