@@ -1,5 +1,11 @@
 # Changelog
 
+- Fix the Flutter live-shell acceptance test, which could not pass: it looked
+  up the generated `ElevatedButton`s as `ButtonStyleButton`, which
+  `find.byType` never matches because it compares exact runtime types, and
+  its 1400 px test surface overflowed the grown toolbar row by 173 px. It now
+  finds `ElevatedButton` and uses an 1800 px surface.
+
 - The WinUI host now copies all of the core's chrome props onto the generated
   component. `ApplyResponse` had never mapped `zoom-label`, the three
   `zoom-*-disabled` flags, `print-page-disabled`, `share-page-disabled` or the

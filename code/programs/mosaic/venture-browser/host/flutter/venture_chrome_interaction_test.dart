@@ -82,7 +82,10 @@ void main() {
         isNotNull,
         reason: 'the direct Flutter gate requires the shared Rust bridge',
       );
-      await tester.binding.setSurfaceSize(const Size(1400, 960));
+      // Wide enough for the whole generated toolbar row (bookmark, history,
+      // page, source and zoom controls); at 1400 it overflowed by 173 px,
+      // and a RenderFlex overflow fails the test on its own.
+      await tester.binding.setSurfaceSize(const Size(1800, 960));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       DynamicLibrary.open(libraryPath!);
       final setup = await tester.runAsync(() async {
@@ -104,8 +107,10 @@ void main() {
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
       expect(find.text('Stop'), findsOneWidget);
-      final stopButton = tester.widget<ButtonStyleButton>(
-        find.widgetWithText(ButtonStyleButton, 'Stop'),
+      // `find.byType` matches the exact runtime type, so the generated
+      // `ElevatedButton` is never found as a `ButtonStyleButton`.
+      final stopButton = tester.widget<ElevatedButton>(
+        find.widgetWithText(ElevatedButton, 'Stop'),
       );
       expect(stopButton.onPressed, isNull);
 
@@ -204,7 +209,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('History (2)'));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(ButtonStyleButton, 'Next'));
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
