@@ -22,6 +22,7 @@ const TELUGU_GHA = DUCTUS[ductusKey("telugu", "ఘ")];
 const TELUGU_NGA = DUCTUS[ductusKey("telugu", "ఙ")];
 const TELUGU_CA = DUCTUS[ductusKey("telugu", "చ")];
 const TELUGU_JA = DUCTUS[ductusKey("telugu", "జ")];
+const TELUGU_NYA = DUCTUS[ductusKey("telugu", "ఞ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -37,13 +38,15 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క and ఙ routes and five-run pedagogical ఐ route cross narrow
-  // printed counter transitions while still covering their complete outlines.
+  // The sourced క, ఙ and ఞ routes and five-run pedagogical ఐ route cross
+  // narrow printed counter transitions while still covering their complete
+  // outlines.
   registerStrokeHonestyTests(letters, {
     అ: 0.96,
     క: 0.93,
     ఖ: 0.93,
     ఙ: 0.9,
+    ఞ: 0.86,
     ఐ: 0.59,
     ఒ: 0.84,
     ఋ: 0.84,
@@ -69,6 +72,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("జ", TELUGU_JA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఞ", TELUGU_NYA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -212,6 +218,23 @@ describe("handwriting ductus", () => {
       "curve down and right around the lower-left bowl",
       "sweep right and up around the lower-right bowl",
       "restart and curl through the upper-right flourish",
+    ]);
+  });
+
+  it("Telugu ఞ preserves all eight source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_NYA)).toBe(7);
+    expect(TELUGU_NYA.strokes).toHaveLength(8);
+    expect(
+      TELUGU_NYA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep up around the upper-left loop",
+      "sweep right around the upper-right loop",
+      "curve down and left around the broad lower bowl",
+      "curl upward around the inner-left loop",
+      "curl down and right around the inner bowl",
+      "draw the short downward tail",
+      "draw the right horizontal bar",
+      "draw the separate upper vertical stem downward",
     ]);
   });
 
