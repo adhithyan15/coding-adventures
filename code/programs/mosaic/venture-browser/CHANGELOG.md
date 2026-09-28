@@ -1,12 +1,13 @@
 # Changelog
 
-- Give the WinUI acceptance's page-zoom check a 10-second budget instead of
-  2.5 seconds. Zoom re-lays out the retained page (a debug build) before the
-  new label is published; on a CI runner compiling ~750 packages in parallel
-  that took longer than 2.5 seconds, and the check failed although zoom worked.
-  Every other check keeps the default budget. A failed zoom check now also
-  reports the label it saw, whether Zoom In was enabled, the status text and
-  the last chrome event's bridge outcome, so the next failure names its cause.
+- The WinUI host now copies all of the core's chrome props onto the generated
+  component. `ApplyResponse` had never mapped `zoom-label`, the three
+  `zoom-*-disabled` flags, `print-page-disabled`, `share-page-disabled` or the
+  six `page-info-*` props, so the Zoom Reset button's label stayed empty and
+  the acceptance's page-zoom check always failed although the core had zoomed
+  ("Zoom: 125%"). A failed zoom check also now reports the label it saw,
+  whether Zoom In was enabled and invoked, the status text and the last chrome
+  event's bridge outcome.
 
 - Add a shared browsable bookmark catalog with durable count, selected title
   and canonical address, wraparound traversal, and ordinary navigation across

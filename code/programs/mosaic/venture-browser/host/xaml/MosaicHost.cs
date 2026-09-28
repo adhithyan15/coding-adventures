@@ -556,8 +556,7 @@ public static class MosaicHost
                 zoomInProvider?.Invoke();
                 if (zoomInProvider is null
                     || !await WaitForControlStateAsync(
-                        () => zoomResetButton.Content?.ToString() == "125%",
-                        attempts: 200))
+                        () => zoomResetButton.Content?.ToString() == "125%"))
                 {
                     // Report what the host actually saw, so a failure says
                     // whether the click never reached the core (Zoom In
@@ -1096,16 +1095,10 @@ public static class MosaicHost
         return false;
     }
 
-    // Polls every 50 ms. The default budget (~2.5 s) suits state the host
-    // publishes straight away. A step that makes the Rust side re-lay out the
-    // whole page first, such as page zoom, passes a larger budget: that reflow
-    // is a debug build, and on a CI runner that is compiling hundreds of
-    // packages in parallel it has overrun 2.5 s while still working correctly.
     private static async System.Threading.Tasks.Task<bool> WaitForControlStateAsync(
-        Func<bool> matches,
-        int attempts = 50)
+        Func<bool> matches)
     {
-        for (var remaining = attempts; remaining >= 0; remaining--)
+        for (var remaining = 50; remaining >= 0; remaining--)
         {
             await System.Threading.Tasks.Task.Delay(50);
             if (matches())
@@ -1236,6 +1229,28 @@ public static class MosaicHost
             component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
             component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
             component.SavePageDisabled = props.GetProperty("save-page-disabled").GetBoolean();
+            component.PrintPageDisabled = props.GetProperty("print-page-disabled").GetBoolean();
+            component.SharePageDisabled = props.GetProperty("share-page-disabled").GetBoolean();
+            component.PageInfoDisabled = props.GetProperty("page-info-disabled").GetBoolean();
+            component.PageInfoOpen = props.GetProperty("page-info-open").GetBoolean();
+            SetIfChanged(component.PageInfoTitle, props.GetProperty("page-info-title").GetString(),
+                value => component.PageInfoTitle = value);
+            SetIfChanged(component.PageInfoAddress,
+                props.GetProperty("page-info-address").GetString(),
+                value => component.PageInfoAddress = value);
+            SetIfChanged(component.PageInfoRequestedAddress,
+                props.GetProperty("page-info-requested-address").GetString(),
+                value => component.PageInfoRequestedAddress = value);
+            SetIfChanged(component.PageInfoStatus, props.GetProperty("page-info-status").GetString(),
+                value => component.PageInfoStatus = value);
+            SetIfChanged(component.PageInfoResources,
+                props.GetProperty("page-info-resources").GetString(),
+                value => component.PageInfoResources = value);
+            SetIfChanged(component.ZoomLabel, props.GetProperty("zoom-label").GetString(),
+                value => component.ZoomLabel = value);
+            component.ZoomOutDisabled = props.GetProperty("zoom-out-disabled").GetBoolean();
+            component.ZoomResetDisabled = props.GetProperty("zoom-reset-disabled").GetBoolean();
+            component.ZoomInDisabled = props.GetProperty("zoom-in-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
             component.ViewSourceOpen = props.GetProperty("view-source-open").GetBoolean();
             SetIfChanged(component.ViewSourceTitle, props.GetProperty("view-source-title").GetString(),
