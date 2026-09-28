@@ -47,8 +47,8 @@ unrelated service, junction, and group bounds before backend-neutral lowering. M
 `init` directives and YAML front matter preserve Architecture `iconSize`,
 `fontSize`, `nodeSeparation`, `padding`, and `idealEdgeLengthMultiplier` as typed
 semantic configuration; layout resolves them into backend-neutral node geometry,
-service typography, deterministic spacing, alignment-hint distances, and outer
-canvas margins. Full vendor icon artwork,
+service typography, deterministic spacing, alignment-hint distances, group insets,
+and outer canvas margins. Full vendor icon artwork,
 randomized layout and the remaining fcose-specific tuning controls remain outside
 the partial compatibility claim.
 

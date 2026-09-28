@@ -15,7 +15,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.24.0";
+pub const VERSION: &str = "0.25.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -40,6 +40,13 @@ fn vertical_gap(config: Option<&ArchitectureConfig>) -> f64 {
 
 fn outer_padding(config: Option<&ArchitectureConfig>) -> f64 {
     config.map_or(COMP_PAD, |config| config.padding)
+}
+
+fn group_padding(diagram: &StructuralDiagram) -> f64 {
+    diagram
+        .architecture_config
+        .as_ref()
+        .map_or(GROUP_PAD, |config| config.padding)
 }
 
 fn alignment_gap(config: Option<&ArchitectureConfig>, fallback: f64) -> f64 {
@@ -520,11 +527,12 @@ fn group_bounds(
         .iter()
         .map(|bounds| bounds.3)
         .fold(f64::NEG_INFINITY, f64::max);
+    let padding = group_padding(diagram);
     let bounds = (
-        (min_x - GROUP_PAD).max(0.0),
-        (min_y - GROUP_HEADER_H).max(0.0),
-        max_x + GROUP_PAD,
-        max_y + GROUP_PAD,
+        (min_x - padding).max(0.0),
+        (min_y - padding.max(GROUP_HEADER_H)).max(0.0),
+        max_x + padding,
+        max_y + padding,
     );
     cache.insert(group_id.to_string(), bounds);
     Some(bounds)
@@ -1046,7 +1054,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.24.0");
+        assert_eq!(crate::VERSION, "0.25.0");
     }
 
     #[test]
@@ -1372,6 +1380,14 @@ mod tests {
                 icon_text: None,
             },
         ));
+        diagram.nodes[0].parent_group = Some("platform".into());
+        diagram.groups.push(StructuralGroup {
+            id: "platform".into(),
+            label: "Platform".into(),
+            stereotype: None,
+            metadata: None,
+            parent_group: None,
+        });
         diagram.alignments.push(StructuralAlignment {
             axis: StructuralAlignmentAxis::Row,
             members: vec!["Animal".into(), "Dog".into()],
@@ -1382,6 +1398,12 @@ mod tests {
         assert!(layout.nodes[0].width >= 240.0);
         assert!(layout.nodes[0].height >= 108.0);
         assert_eq!(layout.nodes[0].x, 48.0);
+        assert_eq!(layout.groups[0].x, layout.nodes[0].x - 48.0);
+        assert_eq!(
+            layout.groups[0].x + layout.groups[0].width
+                - (layout.nodes[0].x + layout.nodes[0].width),
+            48.0
+        );
         assert_eq!(
             layout.nodes[1].x - (layout.nodes[0].x + layout.nodes[0].width),
             150.0

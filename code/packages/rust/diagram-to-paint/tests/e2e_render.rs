@@ -1770,6 +1770,10 @@ line "Target" [35, 50, 68, 82]"##,
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.groups.len(), 2);
         assert!(layout.groups.iter().any(|group| group.icon_name.as_deref() == Some("cloud")));
+        let cache_group = layout.groups.iter().find(|group| group.id == "cachegroup").unwrap();
+        let cache = layout.nodes.iter().find(|node| node.id == "cache").unwrap();
+        assert_eq!(cache.x - cache_group.x, 48.0);
+        assert_eq!(cache_group.x + cache_group.width - (cache.x + cache.width), 48.0);
         assert_eq!(
             layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
             Some("reads and writes")

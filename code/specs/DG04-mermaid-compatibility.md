@@ -456,8 +456,8 @@ artwork remains unsupported at the partial level. Architecture `iconSize`, `font
 `nodeSeparation`, `padding`, and
 `idealEdgeLengthMultiplier` values from Mermaid init directives or YAML front matter
 survive as typed semantic configuration and resolve into backend-neutral node geometry,
-service typography, deterministic spacing, alignment-hint distances, and outer canvas
-margins. Randomized layout and the remaining fcose-specific tuning controls remain
+service typography, deterministic spacing, alignment-hint distances, group insets,
+and outer canvas margins. Randomized layout and the remaining fcose-specific tuning controls remain
 unsupported at the partial level.
 
 ### Radar Native Slice
