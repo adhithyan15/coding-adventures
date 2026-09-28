@@ -3,7 +3,8 @@
   "spine_node": "SPINE-MEET-GREET",
   "before": [],
   "inline": [
-    "SA-EXT-065-LETTERS-LAST"
+    "SA-EXT-065-LETTERS-LAST",
+    "SA-EXT-143-WRITING-CONNECTED-TEXT-BRIDGE"
   ],
   "after": []
 }

@@ -102,7 +102,11 @@ it("pins Sanskrit lesson-content budgets", () =>
     // अस्ति to be taught, then moves स्त from observe/trace through a guided
     // whole-word copy, delayed copy, and sound/meaning dictation. The four
     // writing lessons reuse known script and lexical atoms only.
-    lessons: 761,
+    // 761 -> 764: #13413's closing connected-text bridge copies, delays, and
+    // independently recalls two already-known sentences after every script
+    // component and the danda have landed. No vocabulary or content atom is
+    // introduced, and the final prompt supplies meaning but no copyable form.
+    lessons: 764,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

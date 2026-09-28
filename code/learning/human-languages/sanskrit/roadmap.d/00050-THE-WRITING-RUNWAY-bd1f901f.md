@@ -22,8 +22,14 @@ shapes to widen that evidence without a jump:
   been taught. It then makes the first conjunct explicit: observe and trace the
   join, copy the already-known word “is,” cover it, and finally write it from
   sound and meaning alone. Separated consonants and romanization earn no credit.
+- **नमस्ते। अहं संस्कृतं वदामि।** waits until the last letter-writing lesson,
+  connected reading, and the danda have all landed. The learner copies the
+  already-known two-sentence text, reproduces it after a delay, and finally
+  writes it from meaning alone. No Devanagari model or romanized cue remains on
+  the final attempt, and only the complete Devanagari text earns credit.
 
-The next writing tranche must earn a full introduction only after every shape
-in it has been taught. Later tranches still owe connected text and broader
-independent recall; this first conjunct bridge does not pretend that one joined
-word completed those jobs.
+That last meaning-only attempt closes the deliberately cumulative pre-A1
+runway: one traced sign became words, a phrase, Sanskrit-specific marks and a
+conjunct before it became connected text. Controlled composition, connected
+composition, and timed assessment production remain later-level work; this
+pre-A1 bridge does not claim them early.

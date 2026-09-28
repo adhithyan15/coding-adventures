@@ -1,0 +1,11 @@
+{
+  "id": "SA-W65-connected-text-delayed-copy",
+  "pathSegment": "SA-PATH-065-LETTERS-LAST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-143-WRITING-CONNECTED-TEXT-BRIDGE",
+      "order": 1
+    }
+  ]
+}
