@@ -82,10 +82,11 @@ void main() {
         isNotNull,
         reason: 'the direct Flutter gate requires the shared Rust bridge',
       );
-      // Wide enough for the whole generated toolbar row (bookmark, history,
-      // page, source and zoom controls); at 1400 it overflowed by 173 px,
-      // and a RenderFlex overflow fails the test on its own.
-      await tester.binding.setSurfaceSize(const Size(1800, 960));
+      // Big enough for the whole generated chrome: at 1400 px wide the toolbar
+      // row overflowed by 173 px, and at 960 px tall the chrome column
+      // overflowed by 107 px once the catalog, page-info and source panels
+      // had opened. A RenderFlex overflow fails the test on its own.
+      await tester.binding.setSurfaceSize(const Size(1800, 1200));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       DynamicLibrary.open(libraryPath!);
       final setup = await tester.runAsync(() async {
