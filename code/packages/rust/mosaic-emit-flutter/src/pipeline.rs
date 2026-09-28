@@ -2112,10 +2112,11 @@ fn emit_widget_class(
         emits,
         TableCtx {
             radio_group_members: Some(&radio_groups),
-            // The component root is given the window's width (#14857).
+            // The component root is given the window's finite viewport.
             // `bool::default()` is false, which would make every root
             // unbounded and suppress flex everywhere.
             width_bounded: true,
+            height_bounded: true,
             ..TableCtx::default()
         },
     )?;
@@ -2243,6 +2244,10 @@ struct TableCtx<'a> {
     /// children. A `Row` that is itself a non-flex child of another `Row` is
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
+    /// True only while emitting a direct child of a height-bounded `Column`.
+    /// Such children may safely honor `flex-grow` through `Expanded`.
+    direct_column_child: bool,
+    direct_column_accepts_flex: bool,
     /// How many enclosing `HostNavigationSplit`s with `collapse: auto` this
     /// widget sits inside (#15851). Each one emits its children TWICE — once
     /// for the regular-width `Row`, once for the compact `Drawer` — so nesting
@@ -2257,6 +2262,10 @@ struct TableCtx<'a> {
     /// re-bounds the width. A flexible child under an unbounded constraint is
     /// a runtime assertion, not a layout quirk.
     width_bounded: bool,
+    /// Whether this occurrence receives a finite vertical constraint. A
+    /// non-flex child of a Column is measured with unbounded height, while a
+    /// root, fixed-height node, Row child, or Expanded child remains bounded.
+    height_bounded: bool,
     /// Whole-component radio-group membership (`#13007`), computed once
     /// in `emit_widget_class` via [`collect_radio_group_members`] and
     /// threaded unchanged through every recursive call — `emit_host_radio`
@@ -2666,6 +2675,20 @@ fn emit_widget_tree(
     let mut out = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
     let pad = " ".repeat(indent);
 
+    // A scroll view only scrolls when its viewport is bounded. Container
+    // primitives consume `height` in their own lowering, but HostScroll has
+    // no native height argument; wrap it in a SizedBox so authored fixed
+    // heights survive and the child cannot grow to its full content height.
+    if node.tag == "HostScroll" {
+        if let Some(height) = part_fixed_height(node, part_styles) {
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}SizedBox(\n{pad}  height: {height},\n{pad}  child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        }
+    }
+
     // `max-width` (#14851). Flutter has no max-width argument -- the lowering
     // is `ConstrainedBox`, a widget that WRAPS. Applied innermost of the two
     // wrappers so an opacity fades the capped box rather than the other way
@@ -2734,6 +2757,13 @@ fn part_max_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> O
         .ok()
         .filter(|v| v.is_finite() && *v > 0.0 && v.abs() <= MAX_EXACT_INT)?;
     Some(format!("{value}"))
+}
+
+fn part_fixed_height(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
+    let parsed = parse_style_props(props);
+    style_prop(&parsed, "height").and_then(|value| fixed_pixel_length(value))
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3082,11 +3112,20 @@ fn emit_container(
         || part_flex_grow(node, part_styles).is_some()
         || (!ctx.direct_row_child && ctx.width_bounded);
     let row_accepts_flex = widget == "Row" && width_bounded;
+    let height_bounded = height.is_some()
+        || (ctx.direct_column_child
+            && ctx.direct_column_accepts_flex
+            && part_flex_grow(node, part_styles).is_some())
+        || (!ctx.direct_column_child && ctx.height_bounded);
+    let column_accepts_flex = widget == "Column" && height_bounded;
     let child_ctx = TableCtx {
         direct_row_child: widget == "Row",
         direct_row_accepts_flex: row_accepts_flex,
+        direct_column_child: widget == "Column",
+        direct_column_accepts_flex: column_accepts_flex,
         direct_stack_child: widget == "Stack",
         width_bounded,
+        height_bounded,
         ..ctx
     };
 
@@ -3417,13 +3456,15 @@ fn emit_paired_children(
         // `SizedBox` that used to be such a subtree's only bound, so
         // without this the fix would convert a silently-blank subtree into
         // a thrown layout error -- a different failure, not a fixed one.
-        let flex = (ctx.direct_row_child && ctx.direct_row_accepts_flex)
+        let flex = ((ctx.direct_row_child && ctx.direct_row_accepts_flex)
+            || (ctx.direct_column_child && ctx.direct_column_accepts_flex))
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
         // This children list owns the explicit flex wrapper. Do not also let
         // HostInput synthesize its default Expanded around the same TextField.
         let child_ctx = TableCtx {
             direct_row_child: ctx.direct_row_child && flex.is_none(),
+            direct_column_child: ctx.direct_column_child && flex.is_none(),
             ..ctx
         };
         let sub = emit_widget_tree(child, indent, part_styles, component, emits, child_ctx)?;
@@ -3891,6 +3932,7 @@ fn render_branch(
     // which Flutter rejects at layout time.
     let child_ctx = TableCtx {
         direct_row_child: false,
+        direct_column_child: false,
         direct_stack_child: false,
         ..ctx
     };
@@ -4444,11 +4486,10 @@ fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
 /// `elevation` is — so a non-numeric value is treated defensively as "no
 /// flex" rather than erroring.
 ///
-/// Only meaningful for a node that is a DIRECT child of a `Row`'s
-/// `children: [...]` list — Flutter's `Expanded` is a compile error
-/// anywhere else. Callers are responsible for checking
-/// `ctx.direct_row_child` before using this (mirrors how `emit_host_input`
-/// already threads that same flag for its own row-specific behaviour).
+/// Only meaningful for a node that is a direct child of a bounded `Row` or
+/// `Column` children list. Flutter's `Expanded` is a compile error outside
+/// those flex parents, so callers are responsible for checking the matching
+/// direct-child and accepts-flex context flags.
 fn part_flex_grow(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<u32> {
     // This helper is also called by the PARENT while deciding whether to wrap
     // a child in `Expanded`. Attribute that read to the child occurrence, not
@@ -5260,7 +5301,11 @@ fn emit_host_input(
     // `maxLines: null` removes the one-line cap.
     if find_keyword_prop(node, "multiline") == Some("true") {
         writeln!(out, "{input_pad}  keyboardType: TextInputType.multiline,").unwrap();
-        writeln!(out, "{input_pad}  textInputAction: TextInputAction.newline,").unwrap();
+        writeln!(
+            out,
+            "{input_pad}  textInputAction: TextInputAction.newline,"
+        )
+        .unwrap();
         writeln!(out, "{input_pad}  minLines: 8,").unwrap();
         writeln!(out, "{input_pad}  maxLines: null,").unwrap();
     }
@@ -6693,6 +6738,13 @@ fn emit_host_scroll(
     // default -- so every layout that never names an axis produces
     // byte-identical Dart to what it did before UI61.
     let axis = ScrollAxis::of(node);
+    let child_ctx = TableCtx {
+        direct_row_child: false,
+        direct_column_child: false,
+        width_bounded: ctx.width_bounded && !axis.scrolls_horizontally(),
+        height_bounded: ctx.height_bounded && !axis.scrolls_vertically(),
+        ..ctx
+    };
     let nest = axis == ScrollAxis::Both;
     let base = indent + if nest { 2 } else { 0 };
     let bpad = " ".repeat(base);
@@ -6715,7 +6767,7 @@ fn emit_host_scroll(
             part_styles,
             component,
             emits,
-            ctx,
+            child_ctx,
         )?;
         let child = child.trim_end_matches('\n');
         format!("{bpad}SingleChildScrollView(\n{dir}{bpad}  child: {child},\n{bpad})\n")
@@ -6723,8 +6775,14 @@ fn emit_host_scroll(
         // Multi-child path. Use the paired walker so an `If`/`Else`
         // sibling pair (Cell-style conditionals inside a scroll viewport)
         // is consumed correctly.
-        let children =
-            emit_paired_children(&node.children, base + 6, part_styles, component, emits, ctx)?;
+        let children = emit_paired_children(
+            &node.children,
+            base + 6,
+            part_styles,
+            component,
+            emits,
+            child_ctx,
+        )?;
         format!(
             "{bpad}SingleChildScrollView(\n{dir}{bpad}  child: Column(\n{bpad}    children: [\n{children}{bpad}    ],\n{bpad}  ),\n{bpad})\n"
         )
@@ -7419,8 +7477,11 @@ fn emit_host_table(
         table_font_size: table_font_size.as_deref().or(parent_ctx.table_font_size),
         direct_row_child: false,
         direct_row_accepts_flex: false,
+        direct_column_child: false,
+        direct_column_accepts_flex: false,
         // The root gets the window's width.
         width_bounded: true,
+        height_bounded: parent_ctx.height_bounded,
         direct_stack_child: false,
         radio_group_members: parent_ctx.radio_group_members,
         // A table inside a split is still inside it (#15851).
@@ -10062,12 +10123,10 @@ mod tests {
         );
     }
 
-    /// A `flex-grow` declared on a part that ISN'T a direct `Row` child
-    /// (e.g. nested one level deeper inside a `Column`) must NOT be
-    /// wrapped in `Expanded` — that's a compile error outside a
-    /// `Row`/`Column` context and this repo's real usage never needs it.
+    /// A `flex-grow` declared on a direct child of the bounded root Column
+    /// lowers to `Expanded`, just as it does for a bounded Row.
     #[test]
-    fn flex_grow_on_non_row_child_is_not_wrapped_in_expanded() {
+    fn flex_grow_on_bounded_column_child_is_wrapped_in_expanded() {
         let style = StyleDef {
             component_name: "Shell".into(),
             parts: vec![PartStyle {
@@ -10098,7 +10157,7 @@ mod tests {
             .unwrap()
             .output;
 
-        assert!(!out.contains("Expanded("), "got:\n{out}");
+        assert!(out.contains("Expanded(flex: 1, child:"), "got:\n{out}");
     }
 
     /// `HostButton` should use Flutter's native, first-class Material
@@ -11395,7 +11454,10 @@ mod tests {
         let Err(err) = emit(nested(MAX_DUPLICATING_SPLIT_DEPTH + 1, "auto")) else {
             panic!("past the limit must be refused");
         };
-        assert!(format!("{err:?}").contains("nested `collapse: auto`"), "{err:?}");
+        assert!(
+            format!("{err:?}").contains("nested `collapse: auto`"),
+            "{err:?}"
+        );
 
         // `never` emits each child once, so depth costs nothing extra.
         emit(nested(30, "never")).expect("never-splits do not duplicate");
@@ -11671,6 +11733,92 @@ mod tests {
         );
     }
 
+    #[test]
+    fn host_scroll_fixed_height_bounds_its_native_viewport() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part(
+                "HostScroll",
+                "source-preview",
+                vec![node_with(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("Long source".into()),
+                    }],
+                    vec![],
+                )],
+            ),
+        );
+        let style = style_with_part(
+            "X",
+            "source-preview",
+            vec![StyleProp {
+                name: "height".into(),
+                value: "180".into(),
+            }],
+        );
+
+        let result = from_pipeline(&m, &l, &style).expect("emit bounded scroll viewport");
+        assert!(
+            result.output.contains("SizedBox(")
+                && result.output.contains("height: 180")
+                && result.output.contains("SingleChildScrollView("),
+            "got:\n{}",
+            result.output
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &style)
+                .iter()
+                .all(|property| property.name != "height"),
+            "HostScroll height must not be reported as dropped"
+        );
+    }
+
+    #[test]
+    fn bounded_column_honors_flex_grow_on_host_surface() {
+        let m = component("X", vec![slot("surface", SlotType::Node, true)], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Column",
+                vec![],
+                vec![LayoutNode {
+                    tag: "HostSurface".into(),
+                    part_name: Some("surface".into()),
+                    props: vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::SlotRef("surface".into()),
+                    }],
+                    children: vec![],
+                }],
+            ),
+        );
+        let style = style_with_part(
+            "X",
+            "surface",
+            vec![StyleProp {
+                name: "flex-grow".into(),
+                value: "1".into(),
+            }],
+        );
+
+        let result = from_pipeline(&m, &l, &style).expect("emit flexible surface");
+        assert!(
+            result.output.contains("Expanded(flex: 1, child:")
+                && result.output.contains("surface)"),
+            "got:\n{}",
+            result.output
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &style)
+                .iter()
+                .all(|property| property.name != "flex-grow"),
+            "bounded Column flex-grow must not be reported as dropped"
+        );
+    }
+
     // ----- Component-name mismatch error path ---------------------------
 
     #[test]
@@ -11790,9 +11938,13 @@ mod tests {
                     value: LayoutPropValue::Keyword(k.into()),
                 });
             }
-            from_pipeline(&m, &layout("Host", node_with("Input", props, vec![])), &empty_style("Host"))
-                .expect("ok")
-                .output
+            from_pipeline(
+                &m,
+                &layout("Host", node_with("Input", props, vec![])),
+                &empty_style("Host"),
+            )
+            .expect("ok")
+            .output
         };
         let multi = make(Some("true"));
         for arg in [
@@ -11804,7 +11956,10 @@ mod tests {
             assert!(multi.contains(arg), "missing `{arg}` in:\n{multi}");
         }
         for single in [make(None), make(Some("false"))] {
-            assert!(!single.contains("maxLines"), "single-line stays single-line:\n{single}");
+            assert!(
+                !single.contains("maxLines"),
+                "single-line stays single-line:\n{single}"
+            );
         }
     }
 

@@ -741,6 +741,7 @@ QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
     {QStringLiteral("history-disabled"), QStringLiteral("historyDisabled")},
     {QStringLiteral("history-open"), QStringLiteral("historyOpen")},
     {QStringLiteral("history-position"), QStringLiteral("historyPosition")},
+    {QStringLiteral("history-title"), QStringLiteral("historyTitle")},
     {QStringLiteral("history-address"), QStringLiteral("historyAddress")},
     {QStringLiteral("history-previous-disabled"), QStringLiteral("historyPreviousDisabled")},
     {QStringLiteral("history-next-disabled"), QStringLiteral("historyNextDisabled")},
