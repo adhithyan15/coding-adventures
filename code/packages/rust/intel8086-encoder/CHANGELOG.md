@@ -1,5 +1,10 @@
 # Changelog — intel8086-encoder
 
+## Unreleased — WORD02
+
+- Re-export byte register moves and typed register ALU encoding plus the
+  AX/BX/CX byte and word register codes used by the Word backend.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

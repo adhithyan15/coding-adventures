@@ -64,8 +64,14 @@
 // the instruction-byte-sequence packing logic lives.  We re-export the
 // subset `z80-backend` actually uses.
 
-pub use z80_simulator::encoding::{assemble, encode_ld_a_n, encode_ld_rp_nn};
-pub use z80_simulator::opcodes::{HALT, PAIR_HL, RET};
+pub use z80_simulator::encoding::{
+    assemble, encode_add_hl_rp, encode_alu_reg, encode_ld_a_n, encode_ld_r_n, encode_ld_r_r,
+    encode_ld_rp_nn,
+};
+pub use z80_simulator::opcodes::{
+    ALU_ADC, ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, HALT, PAIR_DE, PAIR_HL, REG_B,
+    REG_C, REG_D, REG_E, REG_H, REG_L, RET,
+};
 
 // ===========================================================================
 // Register-role constant
@@ -113,6 +119,13 @@ mod tests {
     #[test]
     fn canonical_word_result_bytes() {
         assert_eq!(encode_ld_rp_nn(PAIR_HL, 0x1234), vec![0x21, 0x34, 0x12]);
+    }
+
+    #[test]
+    fn word02_pair_and_bytewise_alu_encodings() {
+        assert_eq!(encode_add_hl_rp(PAIR_DE), 0x19);
+        assert_eq!(encode_alu_reg(ALU_SBC, REG_D), 0x9A);
+        assert_eq!(encode_ld_r_r(REG_H, REG_B), 0x60);
     }
 
     #[test]

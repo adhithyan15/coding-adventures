@@ -1,5 +1,14 @@
 # Changelog — intel8086-backend
 
+## Unreleased — WORD02 two-live arithmetic
+
+- Allocate two same-width live values in `AX`/`BX` or `AL`/`BL`, with
+  `CX`/`CL` scratch and explicit capacity/mixed-width errors.
+- Execute wrapping add, subtract, and bitwise results at both widths in the
+  full 8086 simulator; preserve the zero-extended byte result ABI.
+- Validate CIR result types and instruction shapes, including Boolean return
+  provenance, before emitting code.
+
 ## Unreleased — WORD01 fixed-width result ABI
 
 - Enforce the `u8` range for `const_u8` and zero-extend byte/bool results in

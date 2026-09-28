@@ -167,6 +167,18 @@ The Z80 proof must exercise a real 16-bit pair path rather than comparing only
 the low byte. The 8086 proof must use 16-bit registers rather than a host-side
 calculation.
 
+The initial WORD02 backend accepts named `const_u8`/`const_u16` values and
+two-`Var` `add`, `sub`, `and`, `or`, and `xor` CIR operations with a matching
+`_u8` or `_u16` suffix and type hint. It tracks the last use of each value,
+reuses a dead operand's slot for the result, and rejects an instruction that
+would require more than two simultaneously live values. There is no silent
+spill or constant folding in this proof. Z80 uses `A`/`D` for two byte values
+and `HL`/`DE` for two word values; 8086 uses `AL`/`BL` or `AX`/`BX`.
+Scratch registers do not hold source-visible live values. A byte and word
+value simultaneously live are deferred until allocation can preserve both
+through the Z80 bytewise word operations. The rejection is explicit, leaving
+the full portable source contract unchanged.
+
 ### WORD03 — comparisons and structured control
 
 Lower normalized comparisons, labels, conditional/unconditional branches,
