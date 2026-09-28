@@ -14877,6 +14877,40 @@ Neutral corpus/schema checks, parity inventory, focused Go oracle tests and
 vet, exact-diff planning, package/audit checks, and independent correctness
 and security reviews are clean.
 
+### PR #16188 merge and Perl graph/diff selection
+
+PR #16188 completed every final-head check acceptably at
+`a45bf2c1046b01ec8ca16d17caa0dbd67b64d599`. GitHub reported the branch clean
+and mergeable, guarded squash auto-merge was enabled only after the checks were
+terminal, and GitHub merged it automatically at `2026-09-27T23:01:53Z` as
+`6d4472c93675ad025d1c5d0260267afd474744ad`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+unchanged at 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, 1,512 all-reported identities, 178 high-consensus
+packages, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown language buckets. The refreshed state also makes
+the neutral-corpus dependency explicit for ten adapter closures and records
+the OCaml adapter and promotion sequencing edges; the 919-item graph remains
+acyclic.
+
+The dependency/leverage refresh selected
+`build-tool-perl-diff-selection-match-work-ceiling-adoption`. Its prerequisites
+are merged, no open PR overlaps the Perl build-tool scope, and it unlocks four
+direct and nine transitive unfinished descendants. The fresh branch
+`codex/parity-perl-diff-selection-20260927` starts from the exact TypeScript
+merge revision above.
+
+The Perl implementation now adds a pure graph/diff boundary that consumes the
+exact eight graph and eleven diff-selection fixtures. It validates the complete
+input before matching, compiles portable character classes and globstars into
+bounded Unicode-scalar dynamic programs, enforces checked 4,096-package,
+16,384-edge, and 50-million-unit ceilings, and returns no partial cycle or
+selection results. Boundary hashing uses the governed canonical document and
+pinned Unicode 17 identities; the module gains no filesystem, Git, process,
+environment, or network authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

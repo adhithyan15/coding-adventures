@@ -10,6 +10,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- A pure graph and diff-selection core now consumes the exact eight graph and
+  eleven diff-selection conformance fixtures. It provides canonical levels and
+  closures, repository-boundary reverse indexing, exact BUILD-front handling,
+  strict compiled Unicode-scalar globs, stable empty error results, and checked
+  package, edge, path, glob, and 50-million-unit match-work ceilings without
+  filesystem, Git, process, environment, or network authority.
 - A pure bounded toolchain-detection adapter now independently consumes all 11
   language-neutral snapshots, including exact extra-CI declarations,
   platform BUILD precedence, affected and forced scheduling, complete fresh
