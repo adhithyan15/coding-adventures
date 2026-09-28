@@ -30,5 +30,5 @@ Nodes are placed in a 3-column grid with:
 - Node width from longest label/entry text (approx 8 px/char)
 - Node height from compartment entry count (20 px/row)
 - Relationships routed to closest-side midpoints
-- Explicit orthogonal routes avoid unrelated node bounds with deterministic clearance
+- Explicit orthogonal routes avoid unrelated node and group bounds with deterministic clearance
 - Architecture `iconSize`, `fontSize`, `nodeSeparation`, `padding`, and `idealEdgeLengthMultiplier` configuration scales resolved node geometry, service typography, deterministic spacing, alignment-hint distances, and outer canvas margins
