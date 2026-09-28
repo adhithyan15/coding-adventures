@@ -232252,6 +232252,15 @@
           },
           {
             "language": "telugu",
+            "lessonId": "TE-S132-letter-nya",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ఞ — eight deliberate movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1381
+          },
+          {
+            "language": "telugu",
             "lessonId": "TE-S170-script-dictation-courtesy-letters",
             "blockIndex": 1,
             "blockTitle": "Writing — dictation",
@@ -232305,6 +232314,15 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 258
+          },
+          {
+            "language": "telugu",
+            "lessonId": "TE-S132-letter-nya",
+            "blockIndex": 2,
+            "blockTitle": "Writing: ఞ — eight deliberate movements",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 1381
           },
           {
             "language": "telugu",
@@ -232842,7 +232860,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 793,
+      "evidenceBlocks": 794,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 243
     }
@@ -287266,7 +287284,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 16484,
-    "usesBeforeIntroduction": 33954,
+    "usesBeforeIntroduction": 33955,
     "technicalUsesBeforeIntroduction": 6317,
     "technicalLessons": 3551,
     "worstTerms": [

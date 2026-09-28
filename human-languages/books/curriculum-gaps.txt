@@ -15,7 +15,7 @@ exposure: 46 native-script headwords carry no romanization, so they are load-bea
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
 reinforcement: 175 of 18497 atoms never revisited (1%); missed windows R1 1762, R2 11912, R3 10658, R4 12991
 forward references: 921 uses of material a later lesson teaches
-writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 793 evidence blocks, 0 invalid; 243 missing (track, level, stage) pairs
+writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 794 evidence blocks, 0 invalid; 243 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 115 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
 gentleness measurement: 103 lesson(s) remain atom-measurement blind
@@ -128,7 +128,7 @@ info dump (report-only): 120 of 17395 lessons -- 32 rule statements, 91 paradigm
 lesson content budgets (report-only): 13222 of 17395 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 13222, senses 13223, culture claims 13222
 
-metalanguage: 54 of 54 grammar terms appear in 16484 lessons; 33954 uses come before introduction, of which 6317 are technical terms across 3551 lessons
+metalanguage: 54 of 54 grammar terms appear in 16484 lessons; 33955 uses come before introduction, of which 6317 are technical terms across 3551 lessons
   most-used-before-introduction: verb (2040 lessons), noun (1202 lessons), adjective (374 lessons), pronoun (261 lessons), article (255 lessons), tense (250 lessons)
 literal markup: none in 17395 lessons or any generated book
 glyph coverage: every character renders -- 134 main-font and 802 script characters across 3607 generated files
