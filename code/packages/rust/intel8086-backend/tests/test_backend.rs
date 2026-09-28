@@ -51,9 +51,24 @@ fn word02_binary(op: &str, width: &str, left: i64, right: i64) -> Vec<CIRInstr> 
 fn word02b_complement_executes_and_preserves_other_live_value() {
     for (width, value, expected) in [("u8", 0, 0xff), ("u16", 0x1234, 0xedcb)] {
         let cir = vec![
-            ci(&format!("const_{width}"), Some("x"), vec![CIROperand::Int(value)], width),
-            ci(&format!("not_{width}"), Some("y"), vec![CIROperand::Var("x".into())], width),
-            ci(&format!("ret_{width}"), None, vec![CIROperand::Var("y".into())], width),
+            ci(
+                &format!("const_{width}"),
+                Some("x"),
+                vec![CIROperand::Int(value)],
+                width,
+            ),
+            ci(
+                &format!("not_{width}"),
+                Some("y"),
+                vec![CIROperand::Var("x".into())],
+                width,
+            ),
+            ci(
+                &format!("ret_{width}"),
+                None,
+                vec![CIROperand::Var("y".into())],
+                width,
+            ),
         ];
         let bytes = compile(&ctx("not", &[], width), &cir).unwrap();
         let mut sim = Intel8086Simulator::new(65536);
@@ -62,17 +77,81 @@ fn word02b_complement_executes_and_preserves_other_live_value() {
         assert_eq!(sim.ax, expected);
     }
     let cir = vec![
-        ci("const_u16", Some("left"), vec![CIROperand::Int(0x1234)], "u16"),
+        ci(
+            "const_u16",
+            Some("left"),
+            vec![CIROperand::Int(0x1234)],
+            "u16",
+        ),
         ci("const_u16", Some("right"), vec![CIROperand::Int(2)], "u16"),
-        ci("not_u16", Some("inverted"), vec![CIROperand::Var("right".into())], "u16"),
-        ci("add_u16", Some("result"), vec![CIROperand::Var("left".into()), CIROperand::Var("inverted".into())], "u16"),
-        ci("ret_u16", None, vec![CIROperand::Var("result".into())], "u16"),
+        ci(
+            "not_u16",
+            Some("inverted"),
+            vec![CIROperand::Var("right".into())],
+            "u16",
+        ),
+        ci(
+            "add_u16",
+            Some("result"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("inverted".into()),
+            ],
+            "u16",
+        ),
+        ci(
+            "ret_u16",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "u16",
+        ),
     ];
     let bytes = compile(&ctx("preserve", &[], "u16"), &cir).unwrap();
     let mut sim = Intel8086Simulator::new(65536);
     sim.load_program(&bytes);
     assert!(sim.run_loaded_with_limit(100).halted);
     assert_eq!(sim.ax, 0x1231);
+}
+
+#[test]
+fn word02b_complement_can_write_secondary_while_source_stays_live() {
+    let cir = vec![
+        ci("const_u16", Some("source"), vec![CIROperand::Int(5)], "u16"),
+        ci(
+            "not_u16",
+            Some("inverse"),
+            vec![CIROperand::Var("source".into())],
+            "u16",
+        ),
+        ci(
+            "add_u16",
+            Some("sum"),
+            vec![
+                CIROperand::Var("source".into()),
+                CIROperand::Var("inverse".into()),
+            ],
+            "u16",
+        ),
+        ci("ret_u16", None, vec![CIROperand::Var("sum".into())], "u16"),
+    ];
+    let bytes = compile(&ctx("secondary_not", &[], "u16"), &cir).unwrap();
+    let mut sim = Intel8086Simulator::new(65536);
+    sim.load_program(&bytes);
+    assert!(sim.run_loaded_with_limit(100).halted);
+    assert_eq!(sim.ax, 0xffff);
+    let bad = vec![
+        ci(
+            "const_bool",
+            Some("b"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci("not_u8", Some("x"), vec![CIROperand::Var("b".into())], "u8"),
+    ];
+    assert!(compile(&ctx("bad_not", &[], "u8"), &bad)
+        .unwrap_err()
+        .to_string()
+        .contains("source type mismatch"));
 }
 
 #[test]
