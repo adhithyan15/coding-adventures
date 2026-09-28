@@ -29,7 +29,8 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
   // whose rungs are in the wrong order and therefore prove nothing.
   //
-  // The fifth rung is a SECOND dictation, roughly 1,150 sequence steps after the
+  // TE-S132 revisits observe-and-trace for newly introduced nya. The next rung
+  // is a SECOND dictation, roughly 1,150 sequence steps after the
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
   // *gnya* into shapes with nothing on the page to copy, which is the same
@@ -41,6 +42,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S01-copy-in-a-word", "guided-copy"],
     ["TE-S01-delayed-copy", "delayed-copy"],
     ["TE-S01-dictation", "dictation-transcription"],
+    ["TE-S132-letter-nya", "observe-trace"],
     ["TE-S170-script-dictation-courtesy-letters", "dictation-transcription"],
     ["TE-S171-letter-nga", "observe-trace"],
   ]);
