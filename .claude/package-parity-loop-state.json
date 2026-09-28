@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16198,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16198",
-    "branch": "codex/parity-perl-diff-selection-20260927",
-    "implementation_revision": "09f927e0e92a2739feb07f1cd0975b92f8416e48",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-27T23:34:56Z",
+    "observed_at": "2026-09-28T00:06:50Z",
     "pr_number": 16198,
-    "status": "checks-pending",
-    "notes": "PR #16198 remains open and mergeable. A parallel read-only correctness review found that Perl appended source locations to thrown structural codes; the smallest in-scope repair now uses a typed string-overloaded error so raw exceptions contain only the stable code. Focused and full Perl suites pass on the repaired head; checks must rerun, so guarded auto-merge remains disabled."
+    "status": "merged",
+    "notes": "PR #16198 completed all final-head checks acceptably with GitHub reporting MERGEABLE/CLEAN and no pending or failed checks. Guarded squash auto-merge was then enabled and merged the reviewed head as fc06b4ca20f911fcb3334bb7b73d9f20408d7a88 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "6d4472c93675ad025d1c5d0260267afd474744ad",
+    "revision": "fc06b4ca20f911fcb3334bb7b73d9f20408d7a88",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1470,
@@ -1241,7 +1235,7 @@
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 19-case process-free graph and diff-selection contract in the Perl build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": "codex/parity-perl-diff-selection-20260927",
       "pr_number": 16198,
@@ -1256,6 +1250,8 @@
       "validation_revision": "09f927e0e92a2739feb07f1cd0975b92f8416e48",
       "validation_notes": "Passed the focused and full Perl suites (16 files, 148 tests), including raw structural and invalid-glob exception assertions with no source path or line; GraphDiff syntax passes under Perl 5.38.2 and 5.42.2. The prior validated head also passed focused Devel::Cover with GraphDiff at 100% statements and subroutines plus 91.6% branches, changed-file Perl::Critic severity 5, MakeMaker generation and gmake test, the canonical BUILD front, the 162-case/285-file neutral corpus validator, 25 conformance schema tests, 10 package-parity tests, collision and unknown-bucket checks, focused Go graphdiff/globmatch tests and vet, a Go trimpath build, and a real 261-package Perl dry plan with orphan check clean. Exact direct-module CPAN audit reported zero advisories; the implementation avoids caller-generated regexes. A live 14-PR file-list audit found no overlap, and git diff checks are clean.",
       "publication_notes": "Opened ready-for-review PR #16198 from the validated clean branch after rebasing onto latest origin/main. A live 14-PR file-list audit found zero overlap. GitHub reports the PR open, non-draft, and MERGEABLE; initial CI, CodeQL, and human-language checks are queued, so guarded auto-merge remains disabled.",
+      "merged_at": "2026-09-28T00:06:50Z",
+      "merge_commit": "fc06b4ca20f911fcb3334bb7b73d9f20408d7a88",
       "notes": "Repair the embedded production graph and diff modules and dynamically consume all eight graph and eleven diff-selection cases with canonical topology, no partial cycle output, strict bounded matching, stable failures, and no new authority."
     },
     {
@@ -1436,10 +1432,13 @@
     {
       "id": "build-tool-perl-blib-generated-directory-registry-repair",
       "title": "Resolve Perl blib generated-directory registry authority",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
-      "branch": null,
+      "branch": "codex/parity-perl-blib-registry-20260927",
       "pr_number": null,
+      "selected_at": "2026-09-28T00:07:00Z",
+      "selection_revision": "fc06b4ca20f911fcb3334bb7b73d9f20408d7a88",
+      "selection_notes": "Selected only after PR #16198 completed every final-head check acceptably and merged through guarded squash auto-merge. The collision-checked exact-main schema-3 inventory remains unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 178 high-consensus packages with 265 missing slots, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. All three formal dependencies are merged, the owner is not selection-blocked, and the refreshed dependency/leverage audit ranks this bounded Perl registry repair first with two direct and eight transitive unfinished descendants.",
       "notes": "Add exact lowercase blib to the canonical generated-component registry; update generated-directory and source-collection fixtures, registry digest, repository-boundary digest/pin, every checked projection, and equality tests while preserving case and near-name behavior. Do not retain an engine-only selector or broad exception."
     },
     {

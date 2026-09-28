@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Changed
+
+- Pinned the existing exact lowercase `blib` pruning behavior with direct
+  case-variant and near-name evidence now that the neutral generated-directory
+  authority includes that Perl artifact.
+
 ### Added
 
 - A pure graph and diff-selection core now consumes the exact eight graph and

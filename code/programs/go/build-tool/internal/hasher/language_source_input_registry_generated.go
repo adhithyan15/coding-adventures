@@ -10,7 +10,7 @@ const languageSourceInputRegistryJSON = `
   "schema_version": 1,
   "universal_inputs": {
     "build_filenames": ["BUILD", "BUILD_linux", "BUILD_mac", "BUILD_mac_and_linux", "BUILD_windows"],
-    "generated_directory_components": [".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox", ".venv", "Pods", "__pycache__", "_build", "build", "cover", "deps", "dist", "dist-newstyle", "gradle-build", "node_modules", "target", "vendor"],
+    "generated_directory_components": [".build", ".cargo", ".claude", ".dart_tool", ".git", ".gradle", ".hg", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".stack-work", ".svn", ".tox", ".venv", "Pods", "__pycache__", "_build", "blib", "build", "cover", "deps", "dist", "dist-newstyle", "gradle-build", "node_modules", "target", "vendor"],
     "root_exact_basenames": ["required_capabilities.json"]
   },
   "languages": [
@@ -1020,4 +1020,4 @@ const languageSourceInputRegistryJSON = `
 }
 `
 
-const languageSourceInputRegistryDigest = "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530"
+const languageSourceInputRegistryDigest = "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823"

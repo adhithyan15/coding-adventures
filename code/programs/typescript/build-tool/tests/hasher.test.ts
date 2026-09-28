@@ -69,6 +69,7 @@ const EXPECTED_EXCLUDED_COMPONENTS = [
   "Pods",
   "__pycache__",
   "_build",
+  "blib",
   "build",
   "cover",
   "deps",
@@ -348,7 +349,7 @@ describe("collectSourceFiles", () => {
     },
   );
 
-  it("keeps the neutral fixture's exact 26-component exclusion registry", () => {
+  it("keeps the neutral fixture's exact 27-component exclusion registry", () => {
     for (const fixtureFilename of SOURCE_COLLECTION_FIXTURES) {
       const fixture = readSourceCollectionFixture(fixtureFilename);
       const excluded = fixture.input.options.candidates

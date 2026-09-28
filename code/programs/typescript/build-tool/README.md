@@ -18,13 +18,13 @@ output without excluding similarly named source directories such as `_Build`
 and `_build-example`. The shared language-registry fixture and direct
 Windows-safe discovery regressions enforce these boundaries.
 
-Source hashing independently prunes the language-neutral 26-component
+Source hashing independently prunes the language-neutral 27-component
 generated-artifact registry before both extension and declared-source
 selection. The hasher tests project both neutral source-collection fixtures,
 retain exact case variants and near names, and verify that directory symlinks
 or Windows junctions are not traversed. This hashing policy is intentionally
 separate from discovery: a source directory such as `specs` remains eligible,
-while exact `_build`, `node_modules`, `.cargo`, and `cover` components do not
+while exact `_build`, `blib`, `node_modules`, `.cargo`, and `cover` components do not
 affect a package cache key.
 
 The portable source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs

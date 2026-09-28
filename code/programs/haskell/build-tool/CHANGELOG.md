@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Regenerated the embedded source-input registry for the exact lowercase
+  `blib` exclusion and advanced the canonical registry digest.
+
 ### Added
 
 - Extended the embedded source-input registry and neutral fixture coverage with

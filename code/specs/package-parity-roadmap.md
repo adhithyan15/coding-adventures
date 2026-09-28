@@ -14911,6 +14911,37 @@ selection results. Boundary hashing uses the governed canonical document and
 pinned Unicode 17 identities; the module gains no filesystem, Git, process,
 environment, or network authority.
 
+### PR #16198 merge and Perl `blib` registry repair
+
+PR #16198 completed every final-head check acceptably at
+`0e5f85d0d47870aad9857251f6e2d14ae244b1ac`. GitHub reported the branch clean
+and mergeable, guarded squash auto-merge was enabled only after every check was
+terminal, and GitHub merged it automatically at `2026-09-28T00:06:50Z` as
+`fc06b4ca20f911fcb3334bb7b73d9f20408d7a88`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+unchanged at 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, 1,512 all-reported identities, 178 high-consensus
+packages, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown language buckets. The refreshed 919-item graph has
+no duplicate or missing dependency IDs.
+
+The dependency/leverage refresh selected
+`build-tool-perl-blib-generated-directory-registry-repair`. All prerequisites
+are merged, no live open PR overlaps the tranche, and the item unlocks two
+direct and eight total unfinished descendants. The fresh branch
+`codex/parity-perl-blib-registry-20260927` started from the exact merge revision
+above.
+
+The language-neutral generated-directory registry now prunes exact lowercase
+`blib` before extension or declared-source matching while preserving `Blib`
+and `blib-example`. Both neutral source-collection fixtures cover that rule,
+and every checked Python, Ruby, Rust, TypeScript, Go, Haskell, Swift, C#, and F#
+projection now carries the governed registry digest. Perl already implemented
+the correct production selector, so this tranche adds direct regression
+evidence without widening its authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

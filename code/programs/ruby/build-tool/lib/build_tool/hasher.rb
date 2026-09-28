@@ -107,6 +107,7 @@ module BuildTool
       Pods
       __pycache__
       _build
+      blib
       build
       cover
       deps

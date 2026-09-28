@@ -130,6 +130,7 @@ const SOURCE_HASH_EXCLUDED_DIRECTORIES = new Set([
   "dist",
   "dist-newstyle",
   "_build",
+  "blib",
   "build",
   "target",
   ".claude",

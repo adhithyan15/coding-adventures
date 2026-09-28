@@ -120,7 +120,7 @@ eligible package source.
 Source collection has its own exact generated-output boundary: `.git`, `.hg`,
 `.svn`, `.venv`, `.tox`, `.mypy_cache`, `.pytest_cache`, `.ruff_cache`,
 `.stack-work`, `__pycache__`, `node_modules`, `vendor`, `dist`,
-`dist-newstyle`, `_build`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
+`dist-newstyle`, `_build`, `blib`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
 `.dart_tool`, `gradle-build`, `deps`, `.build`, `.cargo`, and `cover`. These
 names are case-sensitive whole path components. Near names and the
 discovery-only `specs` directory remain hashable source.

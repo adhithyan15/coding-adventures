@@ -757,10 +757,10 @@ Before extension or declared-source filtering, every source collector prunes a
 directory when any exact case-sensitive path component is one of `.git`,
 `.hg`, `.svn`, `.venv`, `.tox`, `.mypy_cache`, `.pytest_cache`, `.ruff_cache`,
 `.stack-work`, `__pycache__`, `node_modules`, `vendor`, `dist`,
-`dist-newstyle`, `_build`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
+`dist-newstyle`, `_build`, `blib`, `build`, `target`, `.claude`, `Pods`, `.gradle`,
 `.dart_tool`, `gradle-build`, `deps`, `.build`, `.cargo`, or `cover`.
-Similarly named source components, including `_Build`, `_build-example`,
-`Dist-newstyle`, and `dist-newstyle-example`, remain eligible. Collectors do
+Similarly named source components, including `_Build`, `Blib`, `blib-example`,
+`_build-example`, `Dist-newstyle`, and `dist-newstyle-example`, remain eligible. Collectors do
 not traverse symlink or reparse-point components. The rule is lexical over
 bounded normalized candidate records and does not grant filesystem authority.
 

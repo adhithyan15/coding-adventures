@@ -6,6 +6,9 @@ All notable changes to the Ruby build tool are documented in this file.
 
 ### Changed
 
+- Source hashing now follows the 27-component neutral generated-directory
+  registry, pruning exact lowercase `blib` while retaining `Blib` and
+  `blib-example` in both extension and declared-source modes.
 - Declared source globs now use a bounded Unicode-scalar matcher with the
   portable build-tool v1 character-class grammar instead of `File.fnmatch`
   and recursive suffix slicing. Hasher and Git-diff callers compile and
