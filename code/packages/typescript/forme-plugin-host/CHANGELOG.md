@@ -34,3 +34,5 @@
   an abandoned-stream cancellation write stalls on plugin stdin.
 - Wire the host's manifest/signature prerequisite chain into downstream
   standalone BUILD recipes so clean CI plans remain reproducible.
+- Parse `Content-Length` headers with a bounded linear scanner, avoiding
+  attacker-controlled regular-expression backtracking in the trusted host.

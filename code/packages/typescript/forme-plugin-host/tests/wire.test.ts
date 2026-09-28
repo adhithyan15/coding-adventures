@@ -69,6 +69,7 @@ describe("Content-Length framing", () => {
     ["missing length", Buffer.from("X-Test: 1\r\n\r\n{}")],
     ["duplicate length", Buffer.from("Content-Length: 2\r\nContent-Length: 2\r\n\r\n{}")],
     ["invalid length", Buffer.from("Content-Length: -1\r\n\r\n")],
+    ["empty zero-length JSON", Buffer.from("Content-Length: 0\r\n\r\n")],
     ["invalid json", Buffer.from("Content-Length: 1\r\n\r\n{")],
   ])("rejects %s", (_name, bytes) => {
     const decoder = new FrameDecoder({ maxFrameBytes: 1024, maxHeaderBytes: 128 });
@@ -98,6 +99,12 @@ describe("Content-Length framing", () => {
       .push(Buffer.concat([Buffer.from(`Content-Length: ${bytes.length}\r\n\r\n`), bytes])))
       .toThrow(/PROTOCOL_VIOLATION/);
     expect(() => asRecord([], "value")).toThrow(/value must be an object/);
+  });
+
+  it("parses long linear whitespace prefixes without regular expressions", () => {
+    const decoder = new FrameDecoder({ maxFrameBytes: 32, maxHeaderBytes: 2_048 });
+    const header = Buffer.from(`Content-Length:${"\t".repeat(1_024)}2\r\n\r\n{}`, "ascii");
+    expect(decoder.push(header)).toEqual([{}]);
   });
 
   it("decodes a large frame delivered one byte at a time", () => {

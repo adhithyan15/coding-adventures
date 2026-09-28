@@ -52,12 +52,12 @@ export class FrameDecoder {
         incoming = headerBytes.subarray(headerEnd + 4);
         this.headerBuffer = Buffer.alloc(0);
         const lengths = header.split("\r\n")
-          .map(line => /^Content-Length:\s*(.*)$/i.exec(line))
-          .filter((match): match is RegExpExecArray => match !== null);
-        if (lengths.length !== 1 || !/^(0|[1-9][0-9]*)$/.test(lengths[0]![1]!)) {
+          .map(parseContentLength)
+          .filter((length): length is string => length !== null);
+        if (lengths.length !== 1 || !isCanonicalDecimal(lengths[0]!)) {
           throw new PluginHostError("PROTOCOL_VIOLATION", "frame requires exactly one decimal Content-Length");
         }
-        const length = Number(lengths[0]![1]);
+        const length = Number(lengths[0]);
         if (!Number.isSafeInteger(length) || length > this.limits.maxFrameBytes) {
           throw new PluginHostError("FRAME_TOO_LARGE", "wire payload exceeds configured bound", { length });
         }
@@ -95,6 +95,24 @@ export class FrameDecoder {
       throw new PluginHostError("TRUNCATED_FRAME", "wire ended in the middle of a frame");
     }
   }
+}
+
+function parseContentLength(line: string): string | null {
+  const prefix = "content-length:";
+  if (line.length < prefix.length || line.slice(0, prefix.length).toLowerCase() !== prefix) return null;
+  let offset = prefix.length;
+  while (line[offset] === " " || line[offset] === "\t") offset += 1;
+  return line.slice(offset);
+}
+
+function isCanonicalDecimal(value: string): boolean {
+  if (value === "0") return true;
+  if (value.length === 0 || value.charCodeAt(0) < 0x31 || value.charCodeAt(0) > 0x39) return false;
+  for (let index = 1; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code < 0x30 || code > 0x39) return false;
+  }
+  return true;
 }
 
 interface PendingRequest {
