@@ -24,7 +24,9 @@
 import type { JsonValue, RevisionId } from "@coding-adventures/forme-types";
 import type { CancellationToken, Logger } from "@coding-adventures/forme-stage";
 import type { CacheBackend } from "@coding-adventures/forme-cache";
-import type { PipelineConfig } from "@coding-adventures/forme-pipeline-config";
+import type { PipelineConfig, StageRef } from "@coding-adventures/forme-pipeline-config";
+import type { Stage } from "@coding-adventures/forme-stage";
+import type { KindDescriptor } from "@coding-adventures/forme-types";
 import type { PipelineDag } from "./dag.js";
 
 /** Outcome of a single end-to-end run. */
@@ -113,6 +115,18 @@ export interface OrchestratorOptions {
   readonly cache?: CacheBackend;
   /** Logger to use; default: silent (caller wires console logging through the CLI). */
   readonly logger?: Logger;
+  /** Resolve third-party StageRefs before validation. Omit for direct imports only. */
+  readonly pluginHost?: PluginStageLoader;
+}
+
+/** Narrow FM02 surface consumed by the orchestrator without a package cycle. */
+export interface PluginStageLoader {
+  loadStage(
+    ref: StageRef,
+    instanceId?: string,
+    instanceCapabilities?: readonly import("@coding-adventures/forme-capability").Capability[],
+  ): Promise<Stage<KindDescriptor, KindDescriptor>>;
+  dispose?(): Promise<void>;
 }
 
 /** The orchestrator runtime handle. */

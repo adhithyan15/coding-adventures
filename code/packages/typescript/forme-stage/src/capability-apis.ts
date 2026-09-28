@@ -37,6 +37,11 @@ import { CapabilityError } from "@coding-adventures/forme-errors";
 
 export interface StorageApi {
   read(path: string): Promise<Uint8Array>;
+  /**
+   * Return the complete value only when it is at most `maxBytes`; reject
+   * larger content after reading no more than `maxBytes + 1` bytes.
+   */
+  readBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   write(path: string, bytes: Uint8Array): Promise<void>;
   exists(path: string): Promise<boolean>;
   list(path: string): AsyncIterable<StorageEntry>;
@@ -71,6 +76,7 @@ export interface StorageStat {
 export function deniedStorageApi(): StorageApi {
   return {
     read:    (path) => deny("storage:read",  `read(${JSON.stringify(path)})`),
+    readBounded: (path) => deny("storage:read", `readBounded(${JSON.stringify(path)})`),
     write:   (path) => deny("storage:write", `write(${JSON.stringify(path)})`),
     exists:  (path) => deny("storage:read",  `exists(${JSON.stringify(path)})`),
     list:    (path) => denyIterable("storage:read",  `list(${JSON.stringify(path)})`),
@@ -124,6 +130,11 @@ export function deniedEnvApi(): EnvApi {
 
 export interface FilesystemApi {
   readAbsolute(path: string): Promise<Uint8Array>;
+  /**
+   * Return the complete value only when it is at most `maxBytes`; reject
+   * larger content after reading no more than `maxBytes + 1` bytes.
+   */
+  readAbsoluteBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   writeAbsolute(path: string, bytes: Uint8Array): Promise<void>;
   homeDir(): string;
   tempDir(): string;
@@ -132,6 +143,10 @@ export interface FilesystemApi {
 export function deniedFilesystemApi(): FilesystemApi {
   return {
     readAbsolute:  (path) => deny("filesystem:user", `readAbsolute(${JSON.stringify(path)})`),
+    readAbsoluteBounded: (path) => deny(
+      "filesystem:user",
+      `readAbsoluteBounded(${JSON.stringify(path)})`,
+    ),
     writeAbsolute: (path) => deny("filesystem:user", `writeAbsolute(${JSON.stringify(path)})`),
     homeDir: () => {
       throw capabilityError("filesystem:user", "homeDir()");

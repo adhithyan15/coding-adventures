@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-plugin-host",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "explicit plugin discovery roots",
+      "justification": "Enumerates direct child plugin directories in deterministic precedence order."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "plugin.toml, selected runtime entry, and declared config schema beneath an explicit plugin root",
+      "justification": "Parses and authenticates manifests, computes entry-bound identities, and loads declared metadata after realpath containment checks."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "a fresh private plugin working directory under the system temporary directory",
+      "justification": "Creates one empty cwd per isolated plugin process so the process cannot infer the project layout from its working directory."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "the host-created private plugin working directory",
+      "justification": "Removes only the exact temporary directory created for the plugin session after exit or failure."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "plugin processes returned by the caller-supplied isolation launcher",
+      "justification": "Escalates cancellation and disposal through TERM/KILL so crashed or uncooperative plugins cannot outlive the host."
+    }
+  ],
+  "justification": "Discovery is filesystem-bound and execution is delegated to an injected launcher that must attest sandbox isolation. The host never falls back to ambient process spawning, shell, environment, or network access."
+}

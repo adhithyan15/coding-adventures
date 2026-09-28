@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- Resolve `StageRef` values through an optional FM02 `PluginStageLoader`
+  before configuration validation, while retaining the fail-closed direct-
+  import default when no plugin host is configured.
+- Dispose the injected plugin host with the orchestrator lifecycle.
+- Include the plugin implementation identity in invocation caches, whole-
+  instance checkpoints, and revision-ledger topology fingerprints.
+- Exercise a real subprocess `StageRef` twice through host capability
+  mediation and per-run session disposal.
+
 ### Documentation
 
 - Reconciled the public entry-point, watch-loop, scheduler-state, and README

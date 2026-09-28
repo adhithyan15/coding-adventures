@@ -71,6 +71,22 @@ subtypeOf = "ContentNode"
 `);
     expect(() => validateManifest(m)).not.toThrow();
   });
+
+  it("accepts typed stream kind references", () => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      contributes: {
+        stages: [{
+          id: "stream-stage",
+          consumes: "Stream<ContentSource>",
+          produces: "Stream<ContentNode>",
+        }],
+        kinds: [],
+      },
+    };
+    expect(() => validateManifest(m)).not.toThrow();
+  });
 });
 
 describe("validateManifest — rejections (one per FM02 §3.3 rule)", () => {
@@ -208,6 +224,23 @@ describe("validateManifest — rejections (one per FM02 §3.3 rule)", () => {
       },
     };
     expect(() => validateManifest(m)).toThrowError(/unknown kind/);
+  });
+
+  it.each([
+    "Stream<UnknownKind>",
+    "Stream<Stream<ContentSource>>",
+    "Stream<>",
+    "Stream<ContentSource",
+  ])("rejects malformed stream kind reference %s", (kind) => {
+    const v = valid();
+    const m: Manifest = {
+      ...v,
+      contributes: {
+        stages: [{ id: "s", consumes: kind, produces: "ContentNode" }],
+        kinds: [],
+      },
+    };
+    expect(() => validateManifest(m)).toThrowError(/kind|Stream/);
   });
 
   it("rejects ext: kind not matching the format", () => {

@@ -14435,9 +14435,9 @@ onto exact fetched `origin/main`
 merges are package-topology-neutral. Reconciliation covered the runner assertions,
 the aggregate repository-source boundary, and ten boundary-derived corpus cases.
 The combined Lua boundary keeps both the new `der_asn1` root from #16100 and
-this branch's `x509_extension` root: 18 boundaries, 21 inputs, 489 scopes, 492
+this branch's `x509_extension` root: 18 boundaries, 21 inputs, 480 scopes, 483
 authorizations, and digest
-`252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3`. The
+`7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59`. The
 disjoint official OCaml content-addressed archive mirror repair is preserved.
 The regenerated exact-main inventory is topology-neutral at 1,470 identities,
 4,723 slots, and zero collisions; the branch remains 1,470 identities, 4,737

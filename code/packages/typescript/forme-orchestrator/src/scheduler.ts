@@ -1901,7 +1901,7 @@ async function runCached(
   }
   const key = cacheKey({
     stageName: inst.stage.name,
-    stageVersion: inst.stage.version,
+    stageVersion: inst.stage.implementationIdentity ?? inst.stage.version,
     stageConfig: (inst.config ?? null) as JsonValue,
     inputRevision: computeBinaryRevisionId(inputBytes),
     capabilities: inst.capabilities.map(String),

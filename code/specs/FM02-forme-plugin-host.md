@@ -1,6 +1,7 @@
 # FM02 — Forme Plugin Host: Manifest, Sandboxing, Wire Protocol, Capability Mediation
 
-> **Status:** Code-ready specification; host implementation active in FM-B014.
+> **Status:** Host/wire boundary implemented in FM-B014; runtime adapters,
+> installation, grants persistence, and OS sandboxes active in FM-B015.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -17,10 +18,10 @@
 | Surface | Status | Evidence / next step |
 |---|---|---|
 | Manifest parser | Implemented | `forme-manifest` validates the current first-party manifest shape. |
-| Plugin discovery and handshake | Active | FM-B014 owns discovery, negotiation, and typed streaming. |
-| Capability mediation and crash isolation | Active | FM-B014 must prove denial, cancellation, and failure boundaries. |
-| TypeScript/Python/Rust runners | Blocked | FM-B015 follows the host wire protocol. |
-| OS sandbox profiles | Blocked | FM-B015 owns macOS, Linux, and Windows enforcement. |
+| Plugin discovery and handshake | Implemented | FM-B014 ships deterministic discovery, manifest-authored proxies, negotiation, and typed streaming. |
+| Capability mediation and crash isolation | Implemented | FM-B014 proves denial, cancellation escalation, malformed-wire isolation, process failure, and cleanup boundaries. |
+| TypeScript/Python/Rust runners | Active | FM-B015 follows the implemented host wire protocol. |
+| OS sandbox profiles | Active | FM-B015 owns macOS, Linux, and Windows enforcement. |
 | Install/trust CLI | Blocked | FM07 exposes it only after FM-B014/FM-B015 land. |
 
 ---
@@ -181,7 +182,7 @@ defend against:
    intermediate output.
 9. **Privilege escalation.** The plugin tries to use a granted
    capability to escalate to a denied one (e.g. given
-   `filesystem:read` to one directory, try to read another via
+   `storage:read` under the configured root, try to escape it via
    path traversal or symlink follow).
 10. **Supply-chain attacks via transitive plugins.** A plugin tries
     to load other plugins or `require()` packages outside its own
@@ -304,9 +305,8 @@ entry       = "./entry.js"                 # path relative to plugin root
 # Missing capabilities here cause the host to deny installation
 # (the plugin can't even start without these).
 [[capabilities.required]]
-realm   = "filesystem"
+realm   = "storage"
 scope   = "read"
-detail  = "$storageRoot"                   # template — resolved at runtime
 reason  = "Read source files to parse"     # shown to user at install
 
 # Capabilities the plugin can use but doesn't require. Missing optional
@@ -321,7 +321,7 @@ reason = "Use file mtime for cache invalidation; falls back to content hash with
 # Required: what this plugin contributes.
 [[contributes.stages]]
 id         = "parse-markdown"              # local id, qualified by plugin.name
-consumes   = "ContentSource"               # KindName
+consumes   = "ContentSource"               # KindRef: KindName or Stream<KindName>
 produces   = "ContentNode"
 configSchema = "./schemas/config.json"     # JSON Schema for stage config; optional
 
@@ -372,7 +372,10 @@ A `plugin.toml` is valid when:
    refuses to install the plugin even with a user override flag.
 9. Every `contributes.stages` entry has unique `id`, references
    recognised kinds (or kinds the same plugin contributes), and
-   the optional `configSchema` parses as JSON Schema draft-07.
+   the optional `configSchema` parses as JSON Schema draft-07. A kind
+   reference is either a bare kind name or `Stream<KindName>`; nested
+   stream wrappers are rejected. This keeps streaming visible to DAG
+   typechecking before any untrusted process launches.
 10. Every `contributes.kinds` entry has a name beginning with
     `ext:`; kernel kind names are reserved.
 11. `resources.*` values are positive integers within the host's
@@ -441,6 +444,26 @@ A `pluginPath` field in `PipelineSettings` lets the user add
 additional roots ahead of the defaults — useful for CI and
 hermetic-build scenarios.
 
+Discovery roots are host-managed snapshot inputs. They MUST remain quiescent
+for the complete discovery operation. The host rejects symlink escapes,
+rechecks containment and opened-file identity, and thereafter launches only
+from its private verified byte snapshot. Concurrent same-user mutation of a
+discovery root is outside the FM-B014 boundary. FM-B015 installation MUST
+stage atomically and enforce immutable, host-owned install roots before making
+them discoverable.
+
+Third-party plugin config schemas use the host's bounded draft-07 subset.
+`pattern` is rejected until a guaranteed-linear regex engine is available;
+running attacker-authored JavaScript regular expressions in the trusted host
+would violate the sandbox boundary.
+Discovery reads every referenced schema into the same private, aggregate-bounded
+snapshot as the runtime entry. Later stage loads, launcher requests, schema
+validation, and announcement checks use only that snapshot, even if the source
+file is subsequently changed or deleted. Until FM-B015 defines a package
+signature that binds auxiliary files, a plugin with `[signature]` MUST NOT use
+an external `configSchema`; hosts reject that combination rather than imply the
+existing manifest-and-entry signature authenticates schema bytes.
+
 ### 4.2 The `forme install` flow (informative)
 
 The CLI (FM07) provides `forme install <package>` which:
@@ -492,7 +515,7 @@ Per-plugin grants: `<project>/forme-plugins/<name>/grants.toml`.
 manifestHash = "blake2b:abcdef..."         # hash at time of grant; mismatch → re-prompt
 
 [[granted]]
-capability = "filesystem:read:/abs/path/to/storageRoot"
+capability = "storage:read"
 grantedAt  = "2026-05-16T12:00:00Z"
 note       = "$storageRoot resolved to this path at install time"
 
@@ -783,14 +806,11 @@ runtime, for parity with the static manifest:
   "id": 2,
   "result": {
     "stage": {
-      "name":          "@forme/parse-markdown",
-      "version":       "1.4.2",
-      "apiVersion":    1,
-      "description":   "Parses CommonMark + GFM into a ContentNode.",
-      "consumes":      { "name": "ContentSource", "version": "1.0" },
-      "produces":      { "name": "ContentNode",   "version": "1.0" },
-      "capabilities":  ["filesystem:read:$storageRoot"],
-      "configSchemaHash": "blake2b:..."
+      "id":            "parse",
+      "consumes":      "ContentSource",
+      "produces":      "ContentNode",
+      "capabilities":  ["storage:read"],
+      "configSchemaHash": "sha256:<64 lowercase hexadecimal digits>"
     }
   }
 }
@@ -799,6 +819,20 @@ runtime, for parity with the static manifest:
 The host verifies announced shapes match the manifest. Mismatch =
 kill + fail. This guards against a plugin shipping a manifest that
 says one thing and code that does another.
+
+When `configSchema` is present, `configSchemaHash` is exactly
+`"sha256:" + lowercase_hex(SHA-256(schema_file_bytes))`. The input is the
+complete bounded byte sequence read from the referenced schema file, with no
+JSON reserialization, key sorting, whitespace normalization, or newline
+normalization. Runners in every language MUST hash those same file bytes and
+announce the resulting 64-digit lowercase hexadecimal digest. When
+`configSchema` is absent, the runner MUST announce `null`.
+The stage implementation identity also binds this digest: it is
+`sha256(UTF-8 bytes of "forme-stage-identity-v1\\0" + manifestHash +
+"\\0" + configSchemaHash)`. A stage without a config schema retains
+`manifestHash` as its implementation identity. The sandbox launcher receives
+the private schema snapshot and MUST attest the same schema hash alongside the
+manifest hash.
 
 ### 6.6 Phase 3 — init
 
@@ -813,7 +847,6 @@ Once announced, the host invokes `stage.init` exactly once:
   "params": {
     "config": { ... },                       // validated against configSchema
     "instanceId":  "parse-markdown",
-    "storageRoot": "/abs/path/to/storage",
     "logLevel":    "info"
   }
 }
@@ -910,7 +943,18 @@ yields as the wire delivers `stream.value` notifications.
 Hybrid stages (Stream-in, single-out) and pure stream-stream
 stages compose these two patterns.
 
-#### 6.7.4 Backpressure
+#### 6.7.4 Binary values
+
+The JSON wire recursively encodes every `Uint8Array` as the reserved
+envelope `{"$forme":"bytes","base64":"..."}` and revives it on the
+receiving side. An ordinary object that already owns a `$forme` key is
+encoded as `{"$forme":"escaped-object","entries":[...]}` so user data
+cannot collide with the binary marker. Runners MUST implement both
+envelopes and reject malformed base64 or malformed escaped-object pairs.
+The frame-size preflight accounts for base64 expansion before allocating
+the encoded copy.
+
+#### 6.7.5 Backpressure
 
 stdio's underlying pipes provide coarse-grained backpressure:
 when one side stops reading, the OS pipe buffer (~64KB on Linux,
@@ -924,8 +968,9 @@ the OS pipe is sufficient.
 
 ### 6.8 Phase 5 — dispose
 
-After every `run` invocation, or on cancellation, the host calls
-`stage.dispose`:
+When the stage proxy or host is disposed, or when cancellation/failure makes a
+session unsafe to reuse, the host calls `stage.dispose`. Successful runs return
+the initialized session to the ready state for reuse:
 
 ```jsonc
 // Host → Plugin
@@ -991,8 +1036,8 @@ plugin's grants and either performs the operation or returns a
 {
   "jsonrpc": "2.0",
   "id": -42,
-  "method": "ctx.storage.readFile",
-  "params": { "path": "posts/hello.md" }
+  "method": "ctx.storage.read",
+  "params": { "path": "posts/hello.md", "streamId": 500 }
 }
 
 // Host → Plugin (granted)
@@ -1000,8 +1045,7 @@ plugin's grants and either performs the operation or returns a
   "jsonrpc": "2.0",
   "id": -42,
   "result": {
-    "bytes":    "SGVsbG8gd29ybGQ=",      // base64
-    "mimeType": "text/markdown"
+    "bytes": "SGVsbG8gd29ybGQ="          // base64
   }
 }
 
@@ -1013,7 +1057,7 @@ plugin's grants and either performs the operation or returns a
     "code":    -32001,
     "message": "CAPABILITY_DENIED",
     "data": {
-      "capability": "filesystem:read:/abs/path/to/posts/hello.md",
+      "capability": "storage:read",
       "reason":     "capability is not in plugin's granted set"
     }
   }
@@ -1023,17 +1067,19 @@ plugin's grants and either performs the operation or returns a
 ### 7.2 Storage API
 
 `ctx.storage` exposes content under the pipeline's `storageRoot`.
-Plugins requesting `filesystem:read:$storageRoot` get:
+Plugins requesting `storage:read` get:
 
-- `ctx.storage.readFile(path: string) → Promise<{ bytes, mimeType }>`
-  → wire `ctx.storage.readFile`
-- `ctx.storage.statFile(path: string) → Promise<StorageStat>`
-  → wire `ctx.storage.statFile`
-- `ctx.storage.listDir(path: string) → Promise<readonly string[]>`
-  → wire `ctx.storage.listDir`
-- `ctx.storage.watch(path: string) → AsyncIterable<StorageChange>`
-  → wire `ctx.storage.watch` (returns a streamId, plugin reads
-  via `stream.value` notifications)
+- `ctx.storage.read(path: string) → Promise<Uint8Array>`
+  → wire `ctx.storage.read`
+- `ctx.storage.stat(path: string) → Promise<StorageStat>`
+  → wire `ctx.storage.stat`
+- `ctx.storage.list(path: string) → AsyncIterable<StorageEntry>`
+  → wire `ctx.storage.list` (bounded snapshot)
+
+Live `ctx.storage.watch` mediation is deferred to FM-B015, where it
+must use a cancellable stream bridge rather than materializing a
+potentially unbounded iterator. FM-B014 hosts reject
+`ctx.storage.watch` with `METHOD_NOT_FOUND` (-32601).
 
 All paths are resolved relative to `storageRoot` on the host
 side. Path arguments containing `..` or absolute paths are
@@ -1041,8 +1087,8 @@ rejected with `INVALID_PATH` (-32002). Symlinks resolved on the
 host side; if a resolved path falls outside `storageRoot`, the
 operation is rejected with `CAPABILITY_DENIED`.
 
-`ctx.storage.writeFile` and `ctx.storage.removeFile` exist for
-emit-shaped stages with `filesystem:write` capability. They go
+`ctx.storage.write` and `ctx.storage.remove` exist for
+emit-shaped stages with `storage:write` capability. They go
 through identical mediation.
 
 ### 7.3 Network API
@@ -1055,10 +1101,9 @@ through identical mediation.
 
 The host parses the URL, checks the request's hostname against
 the plugin's grants (using the FM01 §4.8.2 dotted-suffix rule),
-performs the fetch, and returns the response. Response body is
-streamed back via `stream.value` notifications for large
-responses, or inline as base64 for small ones (threshold:
-1 MiB).
+re-checks every redirect target, performs the fetch, and returns the response.
+The v1 wire returns response bodies inline as base64 and rejects bodies larger
+than 1 MiB. A future protocol version may negotiate response streaming.
 
 DNS resolution happens on the host side; the plugin never
 contacts a name server.
@@ -1084,23 +1129,18 @@ requires `system:time:wallclock`; monotonic is always available
 (needed for `setTimeout`, performance measurement — denying it
 would prevent the runtime from functioning).
 
-- `ctx.time.nowMs() → number` (monotonic, in-process, no RPC)
-- `ctx.time.wallclockMs() → Promise<number>` → wire `ctx.time.wallclockMs`
+- `ctx.time.nowMs() → Promise<number>` → wire `ctx.time.nowMs`
 - `ctx.time.nowIso() → Promise<string>` → wire `ctx.time.nowIso`
+- `ctx.time.monotonicMs() → Promise<number>` → wire `ctx.time.monotonicMs`
 
 In FM03 §8 reproducible-build mode, the host returns a frozen
 wall-clock value to all plugins for the duration of the run.
 
 ### 7.6 Random API
 
-`ctx.random` provides cryptographic randomness, gated by
-`system:random`. (`Math.random()`-style PRNG is available
-in-process; only crypto-grade entropy needs mediation.)
-
-- `ctx.random.bytes(n) → Promise<Uint8Array>` → wire `ctx.random.bytes`
-- `ctx.random.deterministic(name) → number` → in-process,
-  seeded from the stage's cache key. Always available; ensures
-  reproducible builds remain reproducible.
+Cryptographic randomness mediation is not part of protocol v1. Plugins that
+need it remain blocked pending an explicit `system:random` wire addition;
+runners must not expose ambient runtime randomness as a host capability.
 
 ### 7.7 Logger API
 
@@ -1228,11 +1268,12 @@ and yields output values as the user's `run` function emits them.
 
 ### 9.2 Buffering bounds
 
-The host buffers at most `streamBufferSize` (default 64) values
-per stream direction. When the buffer fills, the host stops
-reading from the plugin's stdout, which (via OS pipe buffer
-saturation) eventually blocks the plugin's writes. This is the
-backpressure mechanism.
+The host buffers at most `streamBufferSize` (default 64) values and 8 MiB of
+estimated decoded memory per output stream. Exceeding either limit immediately
+discards the buffered attacker output, fails the stream, and retires the
+session. Protocol v1 does not pause the shared stdout reader because doing so
+would also block responses and cancellation; a future credit protocol may add
+fine-grained backpressure.
 
 ### 9.3 Cancellation during streaming
 
@@ -1240,6 +1281,9 @@ If the host cancels mid-stream, it sends `$/cancelRequest` for
 the active `stage.run`. The runner cancels the user's iterator;
 the user's code (which should be checking the cancellation token)
 unwinds; the runner sends back the cancellation error response.
+The cancellation notification is best-effort: abandoning an output iterator
+must proceed immediately to bounded disposal and TERM/KILL escalation even if
+the plugin has stopped reading stdin and the notification write never drains.
 Buffered stream values are discarded on both sides.
 
 ---
@@ -1315,7 +1359,10 @@ Downstream code can't tell the difference.
 | Wall-clock per run | 30 s | orchestrator-side timer |
 | File descriptors | 256 | rlimit on POSIX, Process Mitigations on Windows |
 | Concurrent in-flight RPCs | 64 | host-side wire layer |
-| stdout/stderr bytes/sec | 10 MiB/s | host-side wire layer |
+| stdout frame | 8 MiB | host-side wire layer |
+| buffered decoded output | 8 MiB and 64 values per stream | host-side queue |
+| plugin logs | 256 KiB and 1,024 entries per process lifetime | host-side wire layer |
+| stderr | 64 KiB per process lifetime | host-side reader |
 
 The plugin's manifest can request higher caps via `[resources]`
 (§3.2). The host enforces a hard ceiling regardless (configurable
@@ -1447,12 +1494,12 @@ const stage = defineStage({
   description: "...",
   consumes:    Kinds.ContentSource,
   produces:    Kinds.ContentNode,
-  capabilities: ["filesystem:read:$storageRoot"],
+  capabilities: ["storage:read"],
   configSchema: null,
   async run(source, _config, ctx) {
     // ctx.storage, ctx.network, ctx.logger, etc. all work —
     // the runner wires them to the host via RPC transparently.
-    const bytes = await ctx.storage.readFile(source.path);
+    const bytes = await ctx.storage.read(source.path);
     // ... do work ...
     return result;
   },
@@ -1484,7 +1531,7 @@ from forme_plugin_runner import run_plugin, define_stage
     api_version=1,
     consumes="ContentSource",
     produces="ContentNode",
-    capabilities=["filesystem:read:$storageRoot"],
+    capabilities=["storage:read"],
 )
 async def my_stage(source, config, ctx):
     bytes = await ctx.storage.read_file(source["path"])
@@ -1575,6 +1622,13 @@ the `PluginHost` interface FM03 §12 declared.
 - `src/resources.ts` — rlimit/Job-Object setup
 - `src/lifecycle.ts` — state machine, kill timers
 - `src/types.ts` — public API
+
+FM-B014 ships this package with an injected process-launch boundary. It
+refuses to load a third-party plugin unless a launcher explicitly reports
+that it established the required isolation boundary and echoes the manifest
+hash for the exact entry bytes it staged for execution. FM-B015 supplies the
+production per-runtime and per-OS launchers; host contract tests use a
+dedicated fixture launcher and never weaken the production default.
 
 ### 14.3 `@coding-adventures/forme-plugin-runner-ts`
 
@@ -1729,7 +1783,7 @@ The targets are deliberately modest:
   spawn to first handshake response. Hot caches help; cold
   start may be 200–400 ms.
 - **RPC round-trip** — < 1 ms for a simple capability call
-  (e.g. `ctx.time.wallclockMs`) on localhost.
+  (e.g. `ctx.time.nowMs`) on localhost.
 - **Throughput** — > 10,000 single-output `stage.run` calls per
   second on a modern laptop, sustained.
 - **Memory overhead** — < 50 MiB per plugin process baseline
@@ -1795,7 +1849,20 @@ accommodate this transparently; no plugin-side changes needed.
 
 ## 18. Success Criteria
 
-FM02 is complete when:
+FM-B014 (host and wire protocol) is complete when:
+
+1. `forme-plugin-host` discovers manifests in deterministic precedence order,
+   resolves `StageRef`s without launching code, and returns typed proxies whose
+   single and streaming descriptors are sourced only from the manifest.
+2. Strict bounded Content-Length framing, handshake/announce parity, lifecycle,
+   diagnostics, typed input/output streaming, capability mediation,
+   cancellation escalation, crash isolation, and cleanup invariants pass
+   cross-process contract tests.
+3. Production loading fails closed when no isolation-establishing launcher is
+   installed. The TypeScript/Python/Rust runners, install UX, grants
+   persistence, and OS sandbox launchers remain FM-B015.
+
+FM02 as a whole is complete when:
 
 1. **All six packages exist** under `code/packages/typescript/forme-*`,
    each with `package.json`, `BUILD`, `BUILD_windows`,
@@ -1962,17 +2029,17 @@ FM02 is complete when:
 
 | Method | Params | Result | Capability |
 |---|---|---|---|
-| `ctx.storage.readFile` | `{ path }` | `{ bytes, mimeType }` | `filesystem:read` |
-| `ctx.storage.statFile` | `{ path }` | `StorageStat` | `filesystem:read` |
-| `ctx.storage.listDir` | `{ path }` | `readonly string[]` | `filesystem:read` |
-| `ctx.storage.writeFile` | `{ path, bytes }` | `null` | `filesystem:write` |
-| `ctx.storage.removeFile` | `{ path }` | `null` | `filesystem:write` |
-| `ctx.storage.watch` | `{ path }` | `{ streamId }` | `filesystem:read` |
-| `ctx.network.fetch` | `{ url, init? }` | `FetchResult` | `network:<host>` |
-| `ctx.env.get` | `{ name }` | `string \| null` | `env:<name>` |
-| `ctx.time.wallclockMs` | `{}` | `number` | `system:time` |
-| `ctx.time.nowIso` | `{}` | `string` | `system:time` |
-| `ctx.random.bytes` | `{ n }` | `string` (base64) | `system:random` |
+| `ctx.storage.read` | `{ path, streamId }` | `{ bytes }` | `storage:read` |
+| `ctx.storage.stat` | `{ path, streamId }` | `StorageStat` | `storage:read` |
+| `ctx.storage.list` | `{ path, streamId }` | `readonly StorageEntry[]` | `storage:read` |
+| `ctx.storage.write` | `{ path, bytes, streamId }` | `null` | `storage:write` |
+| `ctx.storage.remove` | `{ path, streamId }` | `null` | `storage:write` |
+| `ctx.storage.watch` | `{ path, streamId }` | `METHOD_NOT_FOUND` until FM-B015 | `storage:read` |
+| `ctx.network.fetch` | `{ url, init?, streamId }` | `FetchResult` | `network:<host>` |
+| `ctx.env.get` | `{ name, streamId }` | `string \| null` | `env:<name>` |
+| `ctx.time.nowMs` | `{ streamId }` | `number` | `system:time:wallclock` |
+| `ctx.time.nowIso` | `{ streamId }` | `string` | `system:time:wallclock` |
+| `ctx.time.monotonicMs` | `{ streamId }` | `number` | none |
 
 ### B.3 Notifications (either direction)
 

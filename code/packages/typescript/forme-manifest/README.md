@@ -51,6 +51,13 @@ const resolved = resolveCapabilityTemplate("filesystem:read:$storageRoot", {
 
 ## Design notes
 
+### Typed stream references
+
+Stage contributions use a closed `KindRef` string: a bare kernel/extension
+kind such as `ContentNode`, or a single `Stream<ContentNode>` wrapper. Nested
+streams and malformed angle-bracket forms fail validation, so the plugin host
+can construct the complete runtime descriptor before launching untrusted code.
+
 ### Why a hand-rolled TOML parser
 
 The monorepo's other parsers (gfm-parser, csv-parser, etc.) are all

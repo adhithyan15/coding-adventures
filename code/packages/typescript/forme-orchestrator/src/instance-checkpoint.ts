@@ -105,7 +105,7 @@ export function instanceCheckpointKey(
 ): string {
   return cacheKey({
     stageName: `${CHECKPOINT_STAGE_PREFIX}${instance.stage.name}`,
-    stageVersion: instance.stage.version,
+    stageVersion: instance.stage.implementationIdentity ?? instance.stage.version,
     stageConfig: { namespace, instanceId: instance.id },
     inputRevision,
     capabilities: [],
