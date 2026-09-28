@@ -1,5 +1,10 @@
 # Changelog — intel8086-backend
 
+## Unreleased — WORD02b unary complement
+
+- Execute typed `not_u8`/`not_u16` through a width mask in `CX` while
+  preserving any other live source value and zero-extending byte results.
+
 ## Unreleased — WORD02 two-live arithmetic
 
 - Allocate two same-width live values in `AX`/`BX` or `AL`/`BL`, with

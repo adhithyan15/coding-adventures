@@ -1,12 +1,40 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-27
+Status date: 2026-09-28
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## Prioritization run — 2026-09-28
+
+PR #16196 delivered the bounded two-live WORD02 add/sub/and/or/xor proof and
+merged as `ae8a418726475025343e430816429311302713b5` after Linux, macOS,
+and Windows CI passed. A parallel WORD02 PR #16197 conflicted with the merge
+and was closed as superseded; its branch is preserved. That branch exposed a
+remaining portable `~` operation which the merged backend does not yet lower.
+Its allocator also discarded other live values after an operation, so the
+parallel branch must not be merged wholesale.
+
+The next shared-platform queue is:
+
+1. **WORD02b / VM-072 (selected):** lower typed unary `not_u8` and `not_u16`
+   on both targets, preserving any other live value and proving the masked
+   result in both simulators. This closes the bitwise surface before control
+   flow and reuses the merged two-slot allocator.
+2. **VM-067:** scope a useful generated-grammar CI guard against issue
+   #14202's documented drift, starting with a reconciled grammar lane.
+3. **VM-073:** audit ets-backed `array_set` extent checks and execute a
+   real-Erlang regression if an out-of-range insertion is reachable.
+4. **WORD03 / VM-072:** add normalized comparisons and structured control on
+   both target backends.
+5. **VM-069 / PREP01:** continue expansion-definition provenance and
+   `defined()` operand expansion.
+
+Preserve the unpublished Hex H0 branch while Word remains the selected path.
+Reprioritize after every merge or newly discovered executable failure.
 
 ## Prioritization run — 2026-09-27
 

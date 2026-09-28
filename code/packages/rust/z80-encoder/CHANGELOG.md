@@ -1,5 +1,9 @@
 # Changelog — z80-encoder
 
+## Unreleased — WORD02b
+
+- Re-export the canonical Z80 `CPL` opcode for typed unary complement.
+
 ## Unreleased — WORD02
 
 - Re-export register copies, byte ALU operations, `ADD HL,DE`, and the

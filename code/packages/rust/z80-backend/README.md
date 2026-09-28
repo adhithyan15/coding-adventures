@@ -14,6 +14,7 @@ source/binary-compatible superset of the 8080, sharing the same
 | `const_u16` | `LD HL, nn` |
 | matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HALT` (entry-function exit) |
 | `add`, `sub`, `and`, `or`, `xor` on `u8` and `u16` | two live values, wrapping result |
+| `not_u8`, `not_u16` | width-masked complement, preserving another live value |
 | Other operations | `None` / `BackendError::UnsupportedOp` |
 
 The historical `const_i64`/`ret_i64` byte-sized smoke path remains for
