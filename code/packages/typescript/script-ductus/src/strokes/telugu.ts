@@ -112,6 +112,98 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:జ",
+    {
+      script: "telugu",
+      glyph: "జ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep right across the rounded upper-left arch",
+              path: [
+                { x: 80, y: 360 },
+                { x: 95, y: 410 },
+                { x: 130, y: 455 },
+                { x: 175, y: 475 },
+                { x: 220, y: 470 },
+                { x: 265, y: 445 },
+                { x: 300, y: 405 },
+                { x: 320, y: 365 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve down and right around the lower-left bowl",
+              path: [
+                { x: 215, y: 285 },
+                { x: 250, y: 260 },
+                { x: 255, y: 238 },
+                { x: 225, y: 235 },
+                { x: 195, y: 222 },
+                { x: 165, y: 205 },
+                { x: 138, y: 183 },
+                { x: 110, y: 145 },
+                { x: 82, y: 110 },
+                { x: 95, y: 70 },
+                { x: 140, y: 35 },
+                { x: 195, y: 18 },
+                { x: 245, y: 25 },
+                { x: 290, y: 55 },
+                { x: 325, y: 105 },
+                { x: 336, y: 155 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and up around the lower-right bowl",
+              path: [
+                { x: 366, y: 105 },
+                { x: 405, y: 62 },
+                { x: 455, y: 32 },
+                { x: 515, y: 18 },
+                { x: 570, y: 28 },
+                { x: 620, y: 60 },
+                { x: 650, y: 105 },
+                { x: 660, y: 155 },
+                { x: 650, y: 200 },
+                { x: 638, y: 218 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and curl through the upper-right flourish",
+              path: [
+                { x: 325, y: 350 },
+                { x: 350, y: 325 },
+                { x: 400, y: 305 },
+                { x: 455, y: 298 },
+                { x: 515, y: 302 },
+                { x: 565, y: 315 },
+                { x: 605, y: 340 },
+                { x: 625, y: 375 },
+                { x: 615, y: 410 },
+                { x: 580, y: 435 },
+                { x: 530, y: 450 },
+                { x: 485, y: 448 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("జ"),
+    },
+  ],
+  [
     "telugu:చ",
     {
       script: "telugu",
