@@ -549,7 +549,8 @@ public static class MosaicHost
                 zoomInProvider?.Invoke();
                 if (zoomInProvider is null
                     || !await WaitForControlStateAsync(
-                        () => zoomResetButton.Content?.ToString() == "125%"))
+                        () => zoomResetButton.Content?.ToString() == "125%",
+                        attempts: 200))
                 {
                     WriteInteractionResult(markerPath, new
                     {
@@ -1079,10 +1080,16 @@ public static class MosaicHost
         return false;
     }
 
+    // Polls every 50 ms. The default budget (~2.5 s) suits state the host
+    // publishes straight away. A step that makes the Rust side re-lay out the
+    // whole page first, such as page zoom, passes a larger budget: that reflow
+    // is a debug build, and on a CI runner that is compiling hundreds of
+    // packages in parallel it has overrun 2.5 s while still working correctly.
     private static async System.Threading.Tasks.Task<bool> WaitForControlStateAsync(
-        Func<bool> matches)
+        Func<bool> matches,
+        int attempts = 50)
     {
-        for (var remaining = 50; remaining >= 0; remaining--)
+        for (var remaining = attempts; remaining >= 0; remaining--)
         {
             await System.Threading.Tasks.Task.Delay(50);
             if (matches())

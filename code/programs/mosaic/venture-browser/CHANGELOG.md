@@ -1,5 +1,11 @@
 # Changelog
 
+- Give the WinUI acceptance's page-zoom check a 10-second budget instead of
+  2.5 seconds. Zoom re-lays out the retained page (a debug build) before the
+  new label is published; on a CI runner compiling ~750 packages in parallel
+  that took longer than 2.5 seconds, and the check failed although zoom worked.
+  Every other check keeps the default budget.
+
 - Add a shared browsable bookmark catalog with durable count, selected title
   and canonical address, wraparound traversal, and ordinary navigation across
   every generated host.
