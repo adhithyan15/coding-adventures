@@ -118,9 +118,16 @@ public static class MosaicHost
         var response = Native.Decode(Native.HandleEvent(browser, ev.MosaicName, value));
         ConsumeEffect(response);
         var status = ApplyResponse(component, response);
+        lastEventStatus = response is null
+            ? $"{ev.MosaicName}: no bridge response"
+            : $"{ev.MosaicName}: {status}";
         contentSurface?.Refresh();
         return status;
     }
+
+    // The outcome of the most recent chrome event, kept for acceptance
+    // diagnostics: it carries the bridge's `error` when the core rejected one.
+    private static string? lastEventStatus;
 
     private static void ConsumeEffect(JsonDocument? response)
     {
@@ -552,10 +559,19 @@ public static class MosaicHost
                         () => zoomResetButton.Content?.ToString() == "125%",
                         attempts: 200))
                 {
+                    // Report what the host actually saw, so a failure says
+                    // whether the click never reached the core (Zoom In
+                    // disabled, status unchanged), the core rejected it
+                    // (status carries the error), or the label never bound.
                     WriteInteractionResult(markerPath, new
                     {
                         backend = "xaml",
                         status = "error",
+                        statusText = component.StatusText,
+                        zoomLabel = zoomResetButton.Content?.ToString(),
+                        zoomInEnabled = zoomInButton.IsEnabled,
+                        zoomInvoked = zoomInProvider is not null,
+                        lastEvent = lastEventStatus,
                         error = "native page zoom did not reflow through shared state",
                     });
                     return;
