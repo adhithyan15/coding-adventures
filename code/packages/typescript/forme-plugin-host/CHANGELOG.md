@@ -32,3 +32,5 @@
   values on failure, and enforce lifetime plugin-log byte and entry budgets.
 - Keep iterator and process cleanup bounded when upstream `return()` throws or
   an abandoned-stream cancellation write stalls on plugin stdin.
+- Wire the host's manifest/signature prerequisite chain into downstream
+  standalone BUILD recipes so clean CI plans remain reproducible.
