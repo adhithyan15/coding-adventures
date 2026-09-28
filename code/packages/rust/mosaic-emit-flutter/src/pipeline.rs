@@ -3235,11 +3235,16 @@ fn emit_container(
         .or_else(|| style_prop(&props, "background-color"))
         .and_then(|value| css_color_to_dart(value));
     let base_foreground = style_prop(&props, "color").and_then(|value| css_color_to_dart(value));
+    let base_font_size = props
+        .get("font-size")
+        .and_then(|value| strict_pixel_length(value))
+        .inspect(|_| record_style_read("font-size"));
     let base_padding = style_prop(&props, "padding").map(|value| parse_pixel_value(value));
     let has_background =
         base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
     let has_foreground =
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
+    let has_typography = has_foreground || base_font_size.is_some();
     let has_border = flutter_has_border(&props, &state_layers);
     // Asks about the SHORTHAND, the longhands and the state layers. It used
     // to ask only about the shorthand, so a part authoring nothing but
@@ -3253,7 +3258,7 @@ fn emit_container(
         || height.is_some()
         || elevation.is_some()
         || has_background
-        || has_foreground
+        || has_typography
         || has_border
         || has_padding
     {
@@ -3263,7 +3268,7 @@ fn emit_container(
         // its child, and it's the more idiomatic Flutter shape anyway.
         let wrapper = if elevation.is_none()
             && !has_background
-            && !has_foreground
+            && !has_typography
             && !has_border
             && !has_padding
         {
@@ -3317,14 +3322,22 @@ fn emit_container(
             .map(|a| format!("{inner_pad}{a},\n"))
             .collect();
         let body_trimmed = body.trim_start().trim_end_matches('\n');
-        let child = if has_foreground {
-            let foreground = state_color_expr(
-                &state_layers,
-                |layer| layer.text_color.as_ref(),
-                base_foreground.as_deref().unwrap_or("null"),
-            );
+        let child = if has_typography {
+            let mut text_style_parts = Vec::new();
+            if has_foreground {
+                let foreground = state_color_expr(
+                    &state_layers,
+                    |layer| layer.text_color.as_ref(),
+                    base_foreground.as_deref().unwrap_or("null"),
+                );
+                text_style_parts.push(format!("color: {foreground}"));
+            }
+            if let Some(size) = base_font_size {
+                text_style_parts.push(format!("fontSize: {size}"));
+            }
             format!(
-                "DefaultTextStyle.merge(style: TextStyle(color: {foreground}), child: {body_trimmed})"
+                "DefaultTextStyle.merge(style: TextStyle({}), child: {body_trimmed})",
+                text_style_parts.join(", ")
             )
         } else {
             body_trimmed.to_string()
@@ -4867,8 +4880,10 @@ fn emit_styled_box(
 
 fn authored_font_size(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
     let props = parse_style_props(part_styles.get(node.part_name.as_deref()?)?);
-    style_prop(&props, "font-size")
+    props
+        .get("font-size")
         .and_then(|s| strict_pixel_length(s))
+        .inspect(|_| record_style_read("font-size"))
         .map(|s| s.to_string())
 }
 
@@ -5710,15 +5725,21 @@ fn emit_host_button(
         Some(disabled) => format!("{disabled} ? null : {callback}"),
     };
 
-    let label_expr = if let Some(size) = font_size_expression(node)? {
-        let base = host_input_text_style_arg(node, part_styles)
-            .unwrap_or_else(|| "const TextStyle()".into());
-        format!(
-            "{}, style: ({base}).copyWith(fontSize: {size}))",
+    let part_font_size = authored_font_size(node, part_styles);
+    let label_expr = match (font_size_expression(node)?, part_font_size) {
+        (Some(size), _) => {
+            let base = host_input_text_style_arg(node, part_styles)
+                .unwrap_or_else(|| "const TextStyle()".into());
+            format!(
+                "{}, style: ({base}).copyWith(fontSize: {size}))",
+                label_expr.strip_suffix(')').unwrap()
+            )
+        }
+        (None, Some(size)) => format!(
+            "{}, style: TextStyle(fontSize: {size}))",
             label_expr.strip_suffix(')').unwrap()
-        )
-    } else {
-        label_expr
+        ),
+        (None, None) => label_expr,
     };
 
     let style_arg = host_button_style_arg(node, part_styles);
@@ -14917,6 +14938,86 @@ mod tests {
             drops.is_empty(),
             "implemented typography was reported dropped: {drops:?}"
         );
+    }
+
+    // ====================================================================
+    // #16201 -- button and container parts keep authored font sizes
+    // ====================================================================
+
+    #[test]
+    fn host_button_part_font_size_reaches_its_text_label() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("HostButton", "action", vec![]));
+        let s = style_with_part(
+            "X",
+            "action",
+            vec![StyleProp {
+                name: "font-size".into(),
+                value: "13px".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("child: Text(\"\", style: TextStyle(fontSize: 13))"),
+            "authored HostButton font size must reach its Text label, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented HostButton font size was reported dropped"
+        );
+    }
+
+    #[test]
+    fn container_part_font_size_reaches_descendant_text() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "pill", vec![text_node("Status")]),
+        );
+        let s = style_with_part(
+            "X",
+            "pill",
+            vec![StyleProp {
+                name: "font-size".into(),
+                value: "12".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("DefaultTextStyle.merge(style: TextStyle(fontSize: 12), child: Row("),
+            "container font size must be inherited by descendant Text widgets, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented container font size was reported dropped"
+        );
+    }
+
+    #[test]
+    fn invalid_part_font_sizes_remain_dropped_without_zero_size_text() {
+        for tag in ["HostButton", "Row"] {
+            let m = component("X", vec![], vec![]);
+            let l = layout("X", flex_node_with_part(tag, "invalid", vec![]));
+            let s = style_with_part(
+                "X",
+                "invalid",
+                vec![StyleProp {
+                    name: "font-size".into(),
+                    value: "90%".into(),
+                }],
+            );
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+            assert!(
+                !out.contains("fontSize:"),
+                "got zero-size text for {tag}:\n{out}"
+            );
+            let drops = dropped_style_properties(&m, &l, &s);
+            assert_eq!(drops.len(), 1, "got: {drops:?}");
+            assert_eq!(drops[0].name, "font-size");
+        }
     }
 
     // ====================================================================

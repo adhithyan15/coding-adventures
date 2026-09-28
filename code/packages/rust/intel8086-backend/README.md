@@ -18,6 +18,7 @@ to be loaded into `intel8086-simulator` (or any compatible external
 | `const_u16` | `MOV AX, #imm16` |
 | matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HLT` |
 | `add`, `sub`, `and`, `or`, `xor` on `u8` and `u16` | register ALU with wrapping result |
+| `not_u8`, `not_u16` | XOR with the declared-width mask, preserving another live value |
 | Other operations | `None` (compile failure) |
 
 The historical `const_i64`/`ret_i64` 16-bit smoke path remains for

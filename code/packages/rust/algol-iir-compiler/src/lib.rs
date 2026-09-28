@@ -6801,6 +6801,15 @@ impl Compiler {
         actions: &[StaticBodyAction<'_>],
         snapshots: &mut Vec<(String, StaticScalarSnapshot)>,
     ) -> Option<()> {
+        self.evaluate_static_body_actions_inner(actions, actions, snapshots)
+    }
+
+    fn evaluate_static_body_actions_inner(
+        &mut self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        snapshots: &mut Vec<(String, StaticScalarSnapshot)>,
+    ) -> Option<()> {
         for action in actions {
             match action {
                 StaticBodyAction::Assignment(assignment) => {
@@ -6812,9 +6821,20 @@ impl Compiler {
                             .static_assigned_real_value(assignment.expression)
                             .filter(|value| value.is_finite())
                             .map(|value| StaticScalarSnapshot::Real(value.to_string())),
-                        ScalarType::Boolean => self
-                            .static_boolean_value(assignment.expression)
-                            .map(StaticScalarSnapshot::Boolean),
+                        ScalarType::Boolean => {
+                            let contains_conditional =
+                                self.contains_conditional_expression(assignment.expression);
+                            if contains_conditional
+                                && !Self::static_body_actions_name_is_in_dependency_cycle(
+                                    all_actions,
+                                    &assignment.name,
+                                )
+                            {
+                                return None;
+                            }
+                            self.static_recurrence_boolean_value(assignment.expression)
+                                .map(StaticScalarSnapshot::Boolean)
+                        }
                         ScalarType::String => None,
                     }?;
                     match &value {
@@ -6849,11 +6869,74 @@ impl Compiler {
                         true => then_actions,
                         false => else_actions,
                     };
-                    self.evaluate_static_body_actions(selected, snapshots)?;
+                    self.evaluate_static_body_actions_inner(selected, all_actions, snapshots)?;
                 }
             }
         }
         Some(())
+    }
+
+    fn static_body_actions_name_is_in_dependency_cycle(
+        actions: &[StaticBodyAction<'_>],
+        name: &str,
+    ) -> bool {
+        Self::static_body_actions_dependency_path(
+            actions,
+            name,
+            name,
+            &mut HashSet::new(),
+        )
+    }
+
+    fn static_body_actions_dependency_path(
+        actions: &[StaticBodyAction<'_>],
+        current: &str,
+        goal: &str,
+        visiting: &mut HashSet<String>,
+    ) -> bool {
+        if !visiting.insert(current.to_string()) {
+            return false;
+        }
+        let found = actions.iter().any(|action| match action {
+            StaticBodyAction::Assignment(assignment) if assignment.name == current => {
+                let mut dependencies = HashSet::new();
+                collect_expression_dependency_names(
+                    assignment.expression,
+                    current,
+                    &mut dependencies,
+                );
+                dependencies.into_iter().any(|dependency| {
+                    dependency == goal
+                        || (Self::static_body_actions_write_name(actions, &dependency)
+                            && Self::static_body_actions_dependency_path(
+                                actions,
+                                &dependency,
+                                goal,
+                                visiting,
+                            ))
+                })
+            }
+            StaticBodyAction::Conditional {
+                then_actions,
+                else_actions,
+                ..
+            } => {
+                Self::static_body_actions_dependency_path(
+                    then_actions,
+                    current,
+                    goal,
+                    visiting,
+                ) || Self::static_body_actions_dependency_path(
+                    else_actions,
+                    current,
+                    goal,
+                    visiting,
+                )
+            }
+            _ => false,
+        });
+        visiting.remove(current);
+        found
     }
 
     fn static_body_actions_write_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
@@ -7954,6 +8037,17 @@ impl Compiler {
             self.collect_static_predicate_dependencies(child, dependencies)?;
         }
         Some(())
+    }
+
+    fn static_recurrence_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            let selected = match self.static_boolean_value(condition)? {
+                true => then_node,
+                false => else_node,
+            };
+            return self.static_recurrence_boolean_value(selected);
+        }
+        self.static_boolean_value(node)
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
@@ -14889,6 +14983,38 @@ mod tests {
             "test",
         )
         .expect("an exact mutually recursive selector may select expressions in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_recursive_statement_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := if guard then not choose else guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional recursive selector may select statements in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_recursive_expression_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := if guard then not choose else guard; guard := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional recursive selector may select expressions in a recurrence cycle");
         let main = module.get_function("main").expect("has main");
         for expected in ["3.25", "1.5", "1.25"] {
             assert!(main.instructions.iter().any(|instr| {

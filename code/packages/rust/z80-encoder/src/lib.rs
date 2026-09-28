@@ -69,8 +69,8 @@ pub use z80_simulator::encoding::{
     encode_ld_rp_nn,
 };
 pub use z80_simulator::opcodes::{
-    ALU_ADC, ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, HALT, PAIR_DE, PAIR_HL, REG_B,
-    REG_C, REG_D, REG_E, REG_H, REG_L, RET,
+    ALU_ADC, ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, PAIR_DE, PAIR_HL,
+    REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, RET,
 };
 
 // ===========================================================================

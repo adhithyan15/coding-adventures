@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.0
+
+- Route orthogonal structural relationships around unrelated group bounds as well as node bounds.
+
 ## 0.23.0
 
 - Resolve Mermaid Architecture ideal-edge-length configuration into deterministic alignment-hint spacing.

@@ -1764,12 +1764,12 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\nservice api \"API\"[Gateway]\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
+            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\ngroup cachegroup(disk)[Cache Layer]\nservice api \"API\"[Gateway]\nservice cache(disk)[Cache] in cachegroup\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api cache split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
-        assert_eq!(layout.groups.len(), 1);
-        assert_eq!(layout.groups[0].icon_name.as_deref(), Some("cloud"));
+        assert_eq!(layout.groups.len(), 2);
+        assert!(layout.groups.iter().any(|group| group.icon_name.as_deref() == Some("cloud")));
         assert_eq!(
             layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
             Some("reads and writes")
@@ -1780,8 +1780,9 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(layout.nodes[0].width >= 192.0);
         assert_eq!(layout.nodes[0].x, 48.0);
         assert_eq!(layout.nodes[1].x - (layout.nodes[0].x + layout.nodes[0].width), 120.0);
-        assert_eq!(layout.nodes[2].icon_name.as_deref(), Some("database"));
-        assert_eq!(layout.nodes[3].icon_name.as_deref(), Some("aws:lambda"));
+        assert_eq!(layout.nodes[3].icon_name.as_deref(), Some("database"));
+        assert_eq!(layout.nodes[4].icon_name.as_deref(), Some("aws:lambda"));
+        assert!(layout.relationships[2].points.len() >= 4);
         assert_eq!(layout.relationships[0].from_port, Some(diagram_ir::StructuralPort::Right));
         assert_eq!(layout.relationships[0].to_port, Some(diagram_ir::StructuralPort::Top));
         assert_eq!(
@@ -1836,8 +1837,8 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Ellipse(ellipse)
-                if ellipse.rx == layout.nodes[1].width / 2.0
-                    && ellipse.ry == layout.nodes[1].height / 2.0
+                if ellipse.rx == layout.nodes[2].width / 2.0
+                    && ellipse.ry == layout.nodes[2].height / 2.0
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

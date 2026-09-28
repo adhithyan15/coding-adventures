@@ -1,8 +1,8 @@
 # WORD00 — Word cross-target language contract
 
-> **Status:** design selected for VM-072; WORD01 implements the fixed-width
-> result boundary. This document does not claim a frontend or arithmetic,
-> control-flow, memory, I/O, or call lowering.
+> **Status:** design selected for VM-072; WORD01, bounded binary WORD02, and
+> WORD02b unary complement are implemented. Control-flow, memory, I/O, calls,
+> and frontend work remain open.
 
 ## Purpose
 
@@ -178,6 +178,18 @@ Scratch registers do not hold source-visible live values. A byte and word
 value simultaneously live are deferred until allocation can preserve both
 through the Z80 bytewise word operations. The rejection is explicit, leaving
 the full portable source contract unchanged.
+
+**Delivered in PR #16196:** add/sub/and/or/xor execute at both widths on both
+simulators. The two-slot allocator preserves the other live value across an
+operation and rejects malformed type/shape combinations, including Boolean
+values passed as integers. The remaining unary `~` operation is WORD02b.
+
+**WORD02b contract:** accept `not_u8` and `not_u16` with exactly one matching
+typed `Var` source and result. Complement every bit of the declared width,
+without changing another live source value or the existing result ABI. Run
+both emitted byte streams in their simulators, including `~0x00 == 0xff` and
+`~0x1234 == 0xedcb`; reject a third live value and mixed live widths as in
+WORD02. No frontend or control flow is admitted by this extension.
 
 ### WORD03 — comparisons and structured control
 

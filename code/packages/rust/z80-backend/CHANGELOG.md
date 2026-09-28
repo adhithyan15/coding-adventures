@@ -1,5 +1,10 @@
 # Changelog — z80-backend
 
+## Unreleased — WORD02b unary complement
+
+- Execute typed `not_u8`/`not_u16` with `CPL` on each required byte while
+  preserving any other live source value and the result ABI.
+
 ## Unreleased — WORD02 two-live arithmetic
 
 - Allocate two same-width live values in `A`/`D` or `HL`/`DE` and reuse dead

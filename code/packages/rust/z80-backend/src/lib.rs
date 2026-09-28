@@ -40,7 +40,7 @@ use std::fmt;
 use vm_core::value::Value;
 use z80_encoder::{
     encode_add_hl_rp, encode_alu_reg, encode_ld_a_n, encode_ld_r_n, encode_ld_r_r, encode_ld_rp_nn,
-    ALU_ADC, ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, HALT, LD_A_N_MAX, PAIR_DE,
+    ALU_ADC, ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, LD_A_N_MAX, PAIR_DE,
     PAIR_HL, REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L,
 };
 
@@ -263,6 +263,83 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             continue;
         }
 
+        if let Some(width) = unary_not_width(op) {
+            let dest = require_dest(instr, op)?;
+            if instr.ty != width.name() || instr.srcs.len() != 1 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires one variable and {} type",
+                    width.name()
+                )));
+            }
+            let src = parse_var_src(instr, 0, op)?;
+            let source = find_slot(&slots, &src)
+                .ok_or_else(|| BackendError::UndefinedVariable(src.clone()))?;
+            let value = slots[source].as_ref().expect("located slot");
+            if value.width != width || value.ty != width.name() {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source type mismatch"
+                )));
+            }
+            let target = slots
+                .iter()
+                .position(|slot| {
+                    slot.as_ref().is_none_or(|value| {
+                        value.name == dest || !live_after[index].contains(&value.name)
+                    })
+                })
+                .ok_or_else(|| {
+                    BackendError::UnsupportedOp(
+                        "WORD02 requires a third live value; spilling is deferred".into(),
+                    )
+                })?;
+            if width == ResultWidth::Byte {
+                bytes.push(encode_ld_r_r(REG_C, REG_A));
+                if source == 1 {
+                    bytes.push(encode_ld_r_r(REG_A, REG_D));
+                }
+                bytes.push(CPL);
+                if target == 1 {
+                    bytes.push(encode_ld_r_r(REG_D, REG_A));
+                    bytes.push(encode_ld_r_r(REG_A, REG_C));
+                }
+            } else {
+                let (low, high) = if source == 0 {
+                    (REG_L, REG_H)
+                } else {
+                    (REG_E, REG_D)
+                };
+                bytes.push(encode_ld_r_r(REG_A, low));
+                bytes.push(CPL);
+                bytes.push(encode_ld_r_r(REG_C, REG_A));
+                bytes.push(encode_ld_r_r(REG_A, high));
+                bytes.push(CPL);
+                bytes.push(encode_ld_r_r(REG_B, REG_A));
+                let (low, high) = if target == 0 {
+                    (REG_L, REG_H)
+                } else {
+                    (REG_E, REG_D)
+                };
+                bytes.push(encode_ld_r_r(low, REG_C));
+                bytes.push(encode_ld_r_r(high, REG_B));
+            }
+            slots[target] = Some(CurrentValue {
+                name: dest.into(),
+                width,
+                ty: width.name().into(),
+            });
+            for (slot_index, slot) in slots.iter_mut().enumerate() {
+                if slot_index != target
+                    && slot
+                        .as_ref()
+                        .is_some_and(|value| !live_after[index].contains(&value.name))
+                {
+                    *slot = None;
+                }
+            }
+            terminated = false;
+            continue;
+        }
+
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
@@ -336,6 +413,14 @@ fn binary_operation(op: &str) -> Option<(u8, ResultWidth)> {
         _ => return None,
     };
     Some((operation, width))
+}
+
+fn unary_not_width(op: &str) -> Option<ResultWidth> {
+    match op {
+        "not_u8" => Some(ResultWidth::Byte),
+        "not_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
 }
 
 /// A holds the operation result. C preserves the old A while D is the

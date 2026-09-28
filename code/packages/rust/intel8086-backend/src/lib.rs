@@ -346,6 +346,81 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             continue;
         }
 
+        if let Some(width) = unary_not_width(op) {
+            let dest = require_dest(instr, op)?;
+            if instr.ty != width.name() || instr.srcs.len() != 1 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires one variable and {} type",
+                    width.name()
+                )));
+            }
+            let src = parse_var_src(instr, 0, op)?;
+            let source = find_slot(&slots, &src)
+                .ok_or_else(|| BackendError::UndefinedVariable(src.clone()))?;
+            let value = slots[source].as_ref().expect("located slot");
+            if value.width != width || value.ty != width.name() {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source type mismatch"
+                )));
+            }
+            let target = slots
+                .iter()
+                .position(|slot| {
+                    slot.as_ref().is_none_or(|value| {
+                        value.name == dest || !live_after[index].contains(&value.name)
+                    })
+                })
+                .ok_or_else(|| {
+                    BackendError::UnsupportedOp(
+                        "WORD02 requires a third live value; spilling is deferred".into(),
+                    )
+                })?;
+            let word = width == ResultWidth::Word;
+            let mask = if word { 0xffff } else { 0x00ff };
+            let source_reg = if word {
+                [REG_AX, REG_BX][source]
+            } else {
+                [REG_AL, REG_BL][source]
+            };
+            let target_reg = if word {
+                [REG_AX, REG_BX][target]
+            } else {
+                [REG_AL, REG_BL][target]
+            };
+            bytes.extend_from_slice(&encode_mov_reg_imm16(REG_CX, mask));
+            bytes.extend_from_slice(&encode_alu_reg_reg(
+                6,
+                word,
+                if word { REG_CX } else { REG_CL },
+                source_reg,
+            ));
+            if word {
+                bytes.extend_from_slice(&encode_mov_reg_reg16(target_reg, REG_CX));
+            } else {
+                bytes.extend_from_slice(&encode_mov_reg_reg8(target_reg, REG_CL));
+                bytes.extend_from_slice(&encode_mov_reg_imm8(
+                    if target == 0 { REG_AH } else { REG_BH },
+                    0,
+                ));
+            }
+            slots[target] = Some(CurrentValue {
+                name: dest.into(),
+                width,
+                ty: width.name().into(),
+            });
+            for (slot_index, slot) in slots.iter_mut().enumerate() {
+                if slot_index != target
+                    && slot
+                        .as_ref()
+                        .is_some_and(|value| !live_after[index].contains(&value.name))
+                {
+                    *slot = None;
+                }
+            }
+            terminated = false;
+            continue;
+        }
+
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
@@ -425,6 +500,14 @@ fn binary_operation(op: &str) -> Option<(u8, ResultWidth)> {
         _ => return None,
     };
     Some((operation, width))
+}
+
+fn unary_not_width(op: &str) -> Option<ResultWidth> {
+    match op {
+        "not_u8" => Some(ResultWidth::Byte),
+        "not_u16" => Some(ResultWidth::Word),
+        _ => None,
+    }
 }
 
 /// Width-preserving materialization through `MOV AX,#imm16`. Byte values are

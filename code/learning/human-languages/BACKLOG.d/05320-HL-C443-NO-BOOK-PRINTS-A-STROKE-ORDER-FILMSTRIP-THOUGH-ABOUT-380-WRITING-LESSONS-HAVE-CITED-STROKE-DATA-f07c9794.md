@@ -131,6 +131,11 @@ That is about 380 filmstrips that could print today.
   The order comes from the packaged `dot_stroke_c_1_5_nya.png` tracing guide
   and is fitted to Noto Sans Telugu. This closes the earlier vocabulary-first
   dependency instead of teaching the inventory shape cold.
+- **Telugu జ is the next ready consonant.** The intervening `ఛ` also remains
+  in the measured inventory-without-a-word debt, while `TE-S127` already owns
+  `జ` after `రోజు`. Its four separately numbered movements draw the upper-left
+  arch, the two lower bowls, and the upper-right flourish, using the same
+  packaged tracing guide and Noto Sans Telugu fit.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

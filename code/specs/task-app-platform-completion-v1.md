@@ -153,7 +153,9 @@ rather than letting them read as silent gaps.
     are now wired, but a fresh `native-complete` generation recorded 77 XAML,
     142 SwiftUI, 89 Compose, 307 Qt, and 463 Flutter style drops. **Ratcheted in
     #16183.** The first follow-up, #15285, lowers Flutter `Text` part typography
-    and reduces its measured inventory to 371 (986 across all five backends).
+    and reduces its measured inventory to 371. The next follow-up, #16201,
+    lowers stylesheet font sizes for Flutter buttons and text-bearing
+    containers, reducing Flutter to 329 drops and the five-backend total to 944.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing
