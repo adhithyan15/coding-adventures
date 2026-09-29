@@ -69,14 +69,14 @@ not support yet).
 A level never makes a result it cannot judge look like a pass: a test the
 current level cannot judge is `skip`, with the reason, never `pass`.
 
-A **parse budget** bounds the input handed to the parser (1 MiB). One
-test262 file exceeds it: `staging/sm/String/string-upper-lower-mapping.js`
-(3.2 MB), which made javascript-parser allocate about 35 GB and got the CI
-runner killed. The shared packrat parser memoises a deep clone of each
-subtree at every (rule, position), and the expression grammar has some
-twenty precedence levels. An over-budget source is a `skip` with that reason
-and stays on the pass list, so it is judged again once the parser shares
-memoised subtrees.
+A **parse budget** bounds the input handed to the parser (4 MiB). It was
+1 MiB while `staging/sm/String/string-upper-lower-mapping.js` (3.2 MB) made
+javascript-parser allocate about 35 GB and got the CI runner killed: the
+shared packrat parser memoised a deep clone of each subtree at every (rule,
+position), and the expression grammar has some twenty precedence levels. The
+memo now shares subtrees (`parser`'s `BuiltNode`), that file parses in about
+3 GB, and the budget was raised above it so it is judged again. An
+over-budget source is a `skip` with that reason and stays on the pass list.
 
 ## 4. The expected-pass list
 

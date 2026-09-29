@@ -2,6 +2,11 @@
 
 ## 0.1.0 — unreleased
 
+- **The budget rises to 4 MiB.** `parser` now shares memoised subtrees, so
+  `string-upper-lower-mapping.js` parses in about 3 GB and five seconds and is
+  judged again (it is on the pass list in both modes). `PARSE_BUDGET_BYTES`
+  stays as a bound on what one test may cost.
+
 - **A parse budget keeps CI alive.** The first CI runs on `main` were killed
   by the runner after about 27 minutes: one 3.2 MB test,
   `staging/sm/String/string-upper-lower-mapping.js`, made javascript-parser

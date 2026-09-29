@@ -118,9 +118,16 @@ public static class MosaicHost
         var response = Native.Decode(Native.HandleEvent(browser, ev.MosaicName, value));
         ConsumeEffect(response);
         var status = ApplyResponse(component, response);
+        lastEventStatus = response is null
+            ? $"{ev.MosaicName}: no bridge response"
+            : $"{ev.MosaicName}: {status}";
         contentSurface?.Refresh();
         return status;
     }
+
+    // The outcome of the most recent chrome event, kept for acceptance
+    // diagnostics: it carries the bridge's `error` when the core rejected one.
+    private static string? lastEventStatus;
 
     private static void ConsumeEffect(JsonDocument? response)
     {
@@ -551,10 +558,19 @@ public static class MosaicHost
                     || !await WaitForControlStateAsync(
                         () => zoomResetButton.Content?.ToString() == "125%"))
                 {
+                    // Report what the host actually saw, so a failure says
+                    // whether the click never reached the core (Zoom In
+                    // disabled, status unchanged), the core rejected it
+                    // (status carries the error), or the label never bound.
                     WriteInteractionResult(markerPath, new
                     {
                         backend = "xaml",
                         status = "error",
+                        statusText = component.StatusText,
+                        zoomLabel = zoomResetButton.Content?.ToString(),
+                        zoomInEnabled = zoomInButton.IsEnabled,
+                        zoomInvoked = zoomInProvider is not null,
+                        lastEvent = lastEventStatus,
                         error = "native page zoom did not reflow through shared state",
                     });
                     return;
@@ -1213,6 +1229,28 @@ public static class MosaicHost
             component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
             component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
             component.SavePageDisabled = props.GetProperty("save-page-disabled").GetBoolean();
+            component.PrintPageDisabled = props.GetProperty("print-page-disabled").GetBoolean();
+            component.SharePageDisabled = props.GetProperty("share-page-disabled").GetBoolean();
+            component.PageInfoDisabled = props.GetProperty("page-info-disabled").GetBoolean();
+            component.PageInfoOpen = props.GetProperty("page-info-open").GetBoolean();
+            SetIfChanged(component.PageInfoTitle, props.GetProperty("page-info-title").GetString(),
+                value => component.PageInfoTitle = value);
+            SetIfChanged(component.PageInfoAddress,
+                props.GetProperty("page-info-address").GetString(),
+                value => component.PageInfoAddress = value);
+            SetIfChanged(component.PageInfoRequestedAddress,
+                props.GetProperty("page-info-requested-address").GetString(),
+                value => component.PageInfoRequestedAddress = value);
+            SetIfChanged(component.PageInfoStatus, props.GetProperty("page-info-status").GetString(),
+                value => component.PageInfoStatus = value);
+            SetIfChanged(component.PageInfoResources,
+                props.GetProperty("page-info-resources").GetString(),
+                value => component.PageInfoResources = value);
+            SetIfChanged(component.ZoomLabel, props.GetProperty("zoom-label").GetString(),
+                value => component.ZoomLabel = value);
+            component.ZoomOutDisabled = props.GetProperty("zoom-out-disabled").GetBoolean();
+            component.ZoomResetDisabled = props.GetProperty("zoom-reset-disabled").GetBoolean();
+            component.ZoomInDisabled = props.GetProperty("zoom-in-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
             component.ViewSourceOpen = props.GetProperty("view-source-open").GetBoolean();
             SetIfChanged(component.ViewSourceTitle, props.GetProperty("view-source-title").GetString(),

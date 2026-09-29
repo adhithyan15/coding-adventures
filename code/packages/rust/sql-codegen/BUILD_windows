@@ -1,2 +1,4 @@
-$env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER = "rust-lld"
+# The build tool runs each line as its own `cmd /C` from this package's
+# directory, so PowerShell (`$env:X = ...`) and batch-file constructs do not
+# work here: cmd rejects `$env:...` as a filename.
 cargo test --package coding-adventures-sql-codegen
