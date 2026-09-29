@@ -371,6 +371,49 @@ impl OwnedInstance {
         if matches!(self.phase, InstancePhase::Exited { .. }) {
             return Ok(());
         }
+        self.drain_records(dispatcher)?;
+
+        if let Some(child) = self.child.as_mut() {
+            if let Some(status) = child
+                .try_wait()
+                .map_err(|_| ProcessSupervisorError::ProcessIo)?
+            {
+                // The child can exit between the drain above and this
+                // `try_wait`, while the reader thread is still on its way to
+                // delivering the child's last records or the end-of-stream
+                // failure.  Once the phase is `Exited`, `refresh` never looks
+                // at the channel again, so settling now would silently turn
+                // "exited before ready" into a clean exit:
+                //
+                //   supervisor                 reader thread
+                //   ----------                 -------------
+                //   drain: channel empty
+                //                              read_record -> EOF
+                //   try_wait: exited
+                //   finish_exit -> Exited      send(Failure)   <- never read
+                //
+                // Joining the reader first means every event it will ever
+                // send is already queued, and the second drain surfaces it.
+                // This is the same join `finish_exit` always performed, just
+                // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
+                // `hard_kill_and_reap`, which sees the exit status and
+                // finishes the exit itself.
+                if let Some(reader) = self.reader.take() {
+                    let _ = reader.join();
+                }
+                self.drain_records(dispatcher)?;
+                self.finish_exit(status);
+            }
+        }
+        Ok(())
+    }
+
+    /// Apply every event the reader thread has queued so far, failing closed
+    /// (hard kill + reap) on the first framing, control, or dispatch error.
+    fn drain_records(
+        &mut self,
+        dispatcher: Option<&dyn HostDataPlaneDispatcher>,
+    ) -> Result<(), ProcessSupervisorError> {
         loop {
             match self.records.try_recv() {
                 Ok(ReaderEvent::Record {
@@ -413,14 +456,6 @@ impl OwnedInstance {
             }
         }
 
-        if let Some(child) = self.child.as_mut() {
-            if let Some(status) = child
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
-                self.finish_exit(status);
-            }
-        }
         Ok(())
     }
 
