@@ -1,0 +1,11 @@
+{
+  "id": "MW-C117-kyukai",
+  "pathSegment": "MW-PATH-117-WHY117",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-117-WHY117",
+      "order": 4
+    }
+  ]
+}

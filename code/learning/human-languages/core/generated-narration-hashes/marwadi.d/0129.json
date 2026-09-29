@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:15e1c3719f9f7c86",
+  "lessonIds": [
+    "MW-C129-kamij",
+    "MW-C129-chappal",
+    "MW-C129-mochri",
+    "MW-C129-karo",
+    "MW-C129-churi",
+    "MW-R129-first-pass-things-in-the-house",
+    "MW-R129-second-pass-tools-and-clothes"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch129.txt",
+  "json": "marwadi/narration/ch129.json",
+  "textHash": "fnv1a64:df7a85725fa68264",
+  "jsonHash": "fnv1a64:cda54d349d4d38d4",
+  "findings": []
+}

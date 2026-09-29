@@ -1,5 +1,28 @@
 # Changelog — z80-backend
 
+## Unreleased — WORD02b unary complement
+
+- Execute typed `not_u8`/`not_u16` with `CPL` on each required byte while
+  preserving any other live source value and the result ABI.
+
+## Unreleased — WORD02 two-live arithmetic
+
+- Allocate two same-width live values in `A`/`D` or `HL`/`DE` and reuse dead
+  operand slots; reject a third live value and mixed live widths.
+- Execute wrapping byte/word add, subtract, and bitwise operations in the Z80
+  simulator, including `ADD HL,DE`, carry/borrow, and both result bytes.
+- Validate CIR result types and instruction shapes, including Boolean return
+  provenance, before emitting code.
+
+## Unreleased — WORD01 fixed-width result ABI
+
+- Lower `const_u8`/`ret_u8` and `const_bool`/`ret_bool` through `A`.
+- Lower `const_u16`/`ret_u16` through `HL` using `LD HL,nn`.
+- Track the current value's width and reject mismatched typed returns while
+  retaining the single-live-value restriction.
+- Execute the discriminating `0x1234` result proof in `z80-simulator` and
+  inspect both `H` and `L`; also pin the `u8` boundary and overflow.
+
 ## v0.1.0 — 2026-08-17 — seventh lane of the 9-architecture expansion
 
 Initial release. Minimal viable `Backend` trait impl over CIR.

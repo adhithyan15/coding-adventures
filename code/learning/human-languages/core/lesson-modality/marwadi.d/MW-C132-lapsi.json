@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C132-lapsi",
+    "language": "marwadi",
+    "chapter": 132,
+    "sequence": 8410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2aa3952cc393e7dd"
+  },
+  "findings": []
+}

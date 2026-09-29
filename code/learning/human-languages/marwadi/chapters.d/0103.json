@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "To bathe, To cook, To make, To break, To join",
+  "label": "ch:mw-to-bathe-to-cook-to-make-to-break-to-join",
+  "canDo": "I can say to bathe, to cook, to make, to break and to join.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C103-jorno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say to bathe, to cook, to make, to break and to join.",
+    "assesses": [
+      "MW-LEX-C103-ACT103-03",
+      "MW-LEX-C103-ACT103-04",
+      "MW-LEX-C103-ACT103-05"
+    ]
+  }
+}

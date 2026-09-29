@@ -1061,6 +1061,9 @@ the manifest.
 - The macOS app is unsigned/not notarized; the Windows app is unsigned and unpackaged.
 - Signing, notarization, and platform-native installers remain tracked in [#13977]({issue_root}/13977).
 - Mobile binaries are not release artifacts in this version.
+- Static HTML, Web Components, and Paint are CI-only verification outputs, not
+  downloadable release artifacts; Paint coverage does not provide a Paint host
+  or interaction support.
 
 ## TaskApp GitHub history
 

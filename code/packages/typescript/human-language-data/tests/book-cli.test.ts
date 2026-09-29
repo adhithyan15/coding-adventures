@@ -11,7 +11,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   assertHandwrittenLessonCoverage as assertHandwrittenLessonCoverageImpl,
   generatedBookOutputs as generatedBookOutputsImpl,
@@ -25,10 +25,13 @@ import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
 // These assertions inspect the same immutable checkout. Render its complete
 // book projection once, rather than repeating the corpus-wide work nine times.
 // Fixture tests below still regenerate after each mutation and never use this map.
-let realBookOutputs: ReadonlyMap<string, string>;
-beforeAll(() => {
-  realBookOutputs = generatedBookOutputsImpl(defaultCurriculumRoot());
-}, 60_000);
+//
+// It renders at import, as chapter-modality-book and book-tex already do, not
+// in a `beforeAll`: a hook has a budget and import time does not. Under
+// full-suite parallel load on CI this render ran past the hook's 60s, which
+// skipped all 47 tests in the file (see
+// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md).
+const realBookOutputs: ReadonlyMap<string, string> = generatedBookOutputsImpl(defaultCurriculumRoot());
 
 const roots: string[] = [];
 const legacyFixture = { allowLegacyMonolith: true } as const;

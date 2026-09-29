@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C112-sapno",
+    "language": "marwadi",
+    "chapter": 112,
+    "sequence": 7220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d31b11c24ef095bb"
+  },
+  "findings": []
+}

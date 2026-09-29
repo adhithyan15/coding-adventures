@@ -1,0 +1,11 @@
+{
+  "id": "MW-C111-as",
+  "pathSegment": "MW-PATH-111-WANT111",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-111-WANT111",
+      "order": 3
+    }
+  ]
+}

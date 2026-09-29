@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C122-dabbo",
+    "language": "marwadi",
+    "chapter": 122,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4694b640f57a4ca8"
+  },
+  "findings": []
+}

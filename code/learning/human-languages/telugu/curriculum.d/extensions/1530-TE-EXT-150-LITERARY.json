@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-150-LITERARY",
+  "stage": "A2",
+  "kind": "required",
+  "category": "literacy",
+  "canDo": "I can name literature as a body of expression, recognise the rare velar-nasal letter in the word, and write that letter in a source-backed order.",
+  "prerequisites": []
+}

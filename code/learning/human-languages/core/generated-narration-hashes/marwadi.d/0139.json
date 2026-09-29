@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:517c65b9eaec573e",
+  "lessonIds": [
+    "MW-C139-kaglo",
+    "MW-C139-kabutar",
+    "MW-C139-toto",
+    "MW-C139-koyal",
+    "MW-C139-chil",
+    "MW-R139-first-pass-jewellery-and-food",
+    "MW-R139-second-pass-vegetables-spices-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch139.txt",
+  "json": "marwadi/narration/ch139.json",
+  "textHash": "fnv1a64:fe57dcbfe997e24c",
+  "jsonHash": "fnv1a64:e76b37610589ca67",
+  "findings": []
+}

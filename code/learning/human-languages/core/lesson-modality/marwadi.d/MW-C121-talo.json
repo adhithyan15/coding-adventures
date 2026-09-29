@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C121-talo",
+    "language": "marwadi",
+    "chapter": 121,
+    "sequence": 7790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e2b290f6046e6f7"
+  },
+  "findings": []
+}

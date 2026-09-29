@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 106,
+  "title": "To push, To lift, To drop, To burn, To sew",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ed19710215a16611",
+  "lessons": [
+    {
+      "id": "MW-C106-thelno",
+      "sequence": 6800,
+      "title": "ठेलणो (ṭhelṇo) — to push",
+      "headword": "ठेलणो",
+      "romanization": "ṭhelṇo",
+      "gloss": "to push",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f244d608f9745435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to fill, then the Marwadi for to pull."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठेलणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठेलणो — ṭhelṇo — \"to push\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhelṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhelṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhelṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhelṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ṭhelṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ṭhelṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to fill, then the Marwadi for to pull, then say ṭhelṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to fill, then the Marwadi for to pull, then say *ṭhelṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठेलणो (ṭhelṇo) mean? (\"To push\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C106-thelno-type",
+              "prompt": "Type the Marwadi for 'to push'.",
+              "assesses": [
+                "MW-LEX-C106-ACT106-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ठेलणो",
+                "ṭhelṇo"
+              ],
+              "feedback": {
+                "correct": "Right: ठेलणो (ṭhelṇo) is 'to push'.",
+                "incorrect": "'to push' is ठेलणो (ṭhelṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C106-uthavno",
+      "sequence": 6810,
+      "title": "उठावणो (uṭhāvṇo) — to lift",
+      "headword": "उठावणो",
+      "romanization": "uṭhāvṇo",
+      "gloss": "to lift",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c11d50c938f8bcf0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to pull, then the Marwadi for to push."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उठावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उठावणो — uṭhāvṇo — \"to lift\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭhāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭhāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭhāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭhāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say uṭhāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *uṭhāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to pull, then the Marwadi for to push, then say uṭhāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to pull, then the Marwadi for to push, then say *uṭhāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उठावणो (uṭhāvṇo) mean? (\"To lift\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C106-uthavno-type",
+              "prompt": "Type the Marwadi for 'to lift'.",
+              "assesses": [
+                "MW-LEX-C106-ACT106-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उठावणो",
+                "uṭhāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: उठावणो (uṭhāvṇo) is 'to lift'.",
+                "incorrect": "'to lift' is उठावणो (uṭhāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C106-gerno",
+      "sequence": 6820,
+      "title": "गेरणो (gerṇo) — to drop",
+      "headword": "गेरणो",
+      "romanization": "gerṇo",
+      "gloss": "to drop",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a0e11ba929600e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to push, then the Marwadi for to lift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गेरणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गेरणो — gerṇo — \"to drop\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gerṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gerṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gerṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gerṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gerṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gerṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to push, then the Marwadi for to lift, then say gerṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to push, then the Marwadi for to lift, then say *gerṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गेरणो (gerṇo) mean? (\"To drop\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C106-gerno-type",
+              "prompt": "Type the Marwadi for 'to drop'.",
+              "assesses": [
+                "MW-LEX-C106-ACT106-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गेरणो",
+                "gerṇo"
+              ],
+              "feedback": {
+                "correct": "Right: गेरणो (gerṇo) is 'to drop'.",
+                "incorrect": "'to drop' is गेरणो (gerṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C106-balno",
+      "sequence": 6830,
+      "title": "बाळणो (bāḷṇo) — to burn",
+      "headword": "बाळणो",
+      "romanization": "bāḷṇo",
+      "gloss": "to burn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a48cd5b2e05bc29b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to lift, then the Marwadi for to drop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाळणो — bāḷṇo — \"to burn\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bāḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bāḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to lift, then the Marwadi for to drop, then say bāḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to lift, then the Marwadi for to drop, then say *bāḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाळणो (bāḷṇo) mean? (\"To burn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C106-balno-type",
+              "prompt": "Type the Marwadi for 'to burn'.",
+              "assesses": [
+                "MW-LEX-C106-ACT106-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बाळणो",
+                "bāḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बाळणो (bāḷṇo) is 'to burn'.",
+                "incorrect": "'to burn' is बाळणो (bāḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C106-sivno",
+      "sequence": 6840,
+      "title": "सीवणो (sīvṇo) — to sew",
+      "headword": "सीवणो",
+      "romanization": "sīvṇo",
+      "gloss": "to sew",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9dea6eebec63ebe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to drop, then the Marwadi for to burn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सीवणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सीवणो — sīvṇo — \"to sew\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sīvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sīvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to drop, then the Marwadi for to burn, then say sīvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to drop, then the Marwadi for to burn, then say *sīvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सीवणो (sīvṇo) mean? (\"To sew\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C106-sivno-type",
+              "prompt": "Type the Marwadi for 'to sew'.",
+              "assesses": [
+                "MW-LEX-C106-ACT106-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सीवणो",
+                "sīvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: सीवणो (sīvṇo) is 'to sew'.",
+                "incorrect": "'to sew' is सीवणो (sīvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

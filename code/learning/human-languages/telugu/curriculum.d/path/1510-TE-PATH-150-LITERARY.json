@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-150-LITERARY",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "TE-EXT-150-LITERARY"
+  ],
+  "after": []
+}

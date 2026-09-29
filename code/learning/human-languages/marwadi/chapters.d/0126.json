@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Coal, Dung cake, Sack, Rope, Peg",
+  "label": "ch:mw-coal-dung-cake-sack-rope-peg",
+  "canDo": "I can say coal, a dung cake, a sack, a rope and a peg.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C126-khuti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say coal, a dung cake, a sack, a rope and a peg.",
+    "assesses": [
+      "MW-LEX-C126-THINGS126-03",
+      "MW-LEX-C126-THINGS126-04",
+      "MW-LEX-C126-THINGS126-05"
+    ]
+  }
+}

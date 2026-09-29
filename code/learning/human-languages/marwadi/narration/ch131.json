@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 131,
+  "title": "Millet-and-lentil dish, Desert berry, Desert beans, Gram-flour dumplings, Papad",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5a0d6474e926a56e",
+  "lessons": [
+    {
+      "id": "MW-C131-khichro",
+      "sequence": 8350,
+      "title": "खीचड़ो (khīchṛo) — a millet-and-lentil dish",
+      "headword": "खीचड़ो",
+      "romanization": "khīchṛo",
+      "gloss": "a millet-and-lentil dish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b36c3fba2741ff8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for millet, then the Marwadi for a millet porridge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खीचड़ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खीचड़ो — khīchṛo — \"a millet-and-lentil dish\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khīchṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khīchṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khīchṛo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khīchṛo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khīchṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khīchṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for millet, then the Marwadi for a millet porridge, then say khīchṛo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for millet, then the Marwadi for a millet porridge, then say *khīchṛo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खीचड़ो (khīchṛo) mean? (\"A millet-and-lentil dish\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C131-khichro-type",
+              "prompt": "Type the Marwadi for 'a millet-and-lentil dish'.",
+              "assesses": [
+                "MW-LEX-C131-THINGS131-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खीचड़ो",
+                "khīchṛo"
+              ],
+              "feedback": {
+                "correct": "Right: खीचड़ो (khīchṛo) is 'a millet-and-lentil dish'.",
+                "incorrect": "'a millet-and-lentil dish' is खीचड़ो (khīchṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C131-ker",
+      "sequence": 8360,
+      "title": "केर (ker) — a desert berry",
+      "headword": "केर",
+      "romanization": "ker",
+      "gloss": "a desert berry",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf1483156cbd39ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a millet porridge, then the Marwadi for a millet-and-lentil dish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: केर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "केर — ker — \"a desert berry\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ker*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ker, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ker*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ker*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a millet porridge, then the Marwadi for a millet-and-lentil dish, then say ker again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a millet porridge, then the Marwadi for a millet-and-lentil dish, then say *ker* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does केर (ker) mean? (\"A desert berry\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C131-ker-type",
+              "prompt": "Type the Marwadi for 'a desert berry'.",
+              "assesses": [
+                "MW-LEX-C131-THINGS131-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "केर",
+                "ker"
+              ],
+              "feedback": {
+                "correct": "Right: केर (ker) is 'a desert berry'.",
+                "incorrect": "'a desert berry' is केर (ker)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C131-sagri",
+      "sequence": 8370,
+      "title": "सांगरी (sā̃grī) — desert beans",
+      "headword": "सांगरी",
+      "romanization": "sā̃grī",
+      "gloss": "desert beans",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1eb3f845ca776ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a millet-and-lentil dish, then the Marwadi for a desert berry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सांगरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांगरी — sā̃grī — \"desert beans\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃grī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃grī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sā̃grī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sā̃grī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sā̃grī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sā̃grī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a millet-and-lentil dish, then the Marwadi for a desert berry, then say sā̃grī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a millet-and-lentil dish, then the Marwadi for a desert berry, then say *sā̃grī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सांगरी (sā̃grī) mean? (\"Desert beans\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C131-sagri-type",
+              "prompt": "Type the Marwadi for 'desert beans'.",
+              "assesses": [
+                "MW-LEX-C131-THINGS131-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सांगरी",
+                "sā̃grī"
+              ],
+              "feedback": {
+                "correct": "Right: सांगरी (sā̃grī) is 'desert beans'.",
+                "incorrect": "'desert beans' is सांगरी (sā̃grī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C131-gatta",
+      "sequence": 8380,
+      "title": "गट्टा (gaṭṭā) — gram-flour dumplings",
+      "headword": "गट्टा",
+      "romanization": "gaṭṭā",
+      "gloss": "gram-flour dumplings",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44eabefb638e8739",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a desert berry, then the Marwadi for desert beans."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गट्टा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गट्टा — gaṭṭā — \"gram-flour dumplings\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gaṭṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gaṭṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a desert berry, then the Marwadi for desert beans, then say gaṭṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a desert berry, then the Marwadi for desert beans, then say *gaṭṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गट्टा (gaṭṭā) mean? (\"Gram-flour dumplings\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C131-gatta-type",
+              "prompt": "Type the Marwadi for 'gram-flour dumplings'.",
+              "assesses": [
+                "MW-LEX-C131-THINGS131-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गट्टा",
+                "gaṭṭā"
+              ],
+              "feedback": {
+                "correct": "Right: गट्टा (gaṭṭā) is 'gram-flour dumplings'.",
+                "incorrect": "'gram-flour dumplings' is गट्टा (gaṭṭā)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C131-papar",
+      "sequence": 8390,
+      "title": "पापड़ (pāpaṛ) — a papad",
+      "headword": "पापड़",
+      "romanization": "pāpaṛ",
+      "gloss": "a papad",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1ed3f541d89cf4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for desert beans, then the Marwadi for gram-flour dumplings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पापड़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पापड़ — pāpaṛ — \"a papad\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāpaṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāpaṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāpaṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāpaṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pāpaṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pāpaṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for desert beans, then the Marwadi for gram-flour dumplings, then say pāpaṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for desert beans, then the Marwadi for gram-flour dumplings, then say *pāpaṛ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पापड़ (pāpaṛ) mean? (\"A papad\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C131-papar-type",
+              "prompt": "Type the Marwadi for 'a papad'.",
+              "assesses": [
+                "MW-LEX-C131-THINGS131-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पापड़",
+                "pāpaṛ"
+              ],
+              "feedback": {
+                "correct": "Right: पापड़ (pāpaṛ) is 'a papad'.",
+                "incorrect": "'a papad' is पापड़ (pāpaṛ)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

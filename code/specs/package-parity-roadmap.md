@@ -14729,9 +14729,187 @@ contains 91 closed cases, pins every required encoding-table entry and compact
 boundary digest, rejects lexical and JSON parser ambiguities, and writes
 byte-deterministic LF-only UTF-8. Its fixture, schema, state, inventory,
 Python, TypeScript coverage, Rust, Clippy, build-plan, audit, diff, and secret
-checks pass. The pre-existing missing TypeScript paint-instructions build
-dependency is assigned to the existing-lane repair owner rather than widened
-into this contract PR.
+checks pass. The six pre-existing missing TypeScript paint-instructions build
+dependencies are assigned one-for-one to the corresponding existing-lane
+symbology children rather than widened into the neutral contract PR.
+
+PR #16145 completed 41 successful checks and seven expected path-gated skips
+on head `14100818f79afaff8addf022d770906f9239698a`. GitHub reported the branch
+clean and mergeable, guarded squash auto-merge was enabled, and the PR merged
+automatically as `0117283ca42564c87b1f9cbc8abab2664d06c159`. The exact merged-main
+schema-3 inventory remains unchanged and collision-free.
+
+The existing-lane repair is now six bounded symbology children, each depending
+only on the merged neutral contract: `itf-existing-lanes-v1-conformance` owns
+10 cases, `code39-existing-lanes-v1-conformance` owns 11,
+`codabar-existing-lanes-v1-conformance` owns 19,
+`code128-existing-lanes-v1-conformance` owns 19,
+`upc-a-existing-lanes-v1-conformance` owns 12, and
+`ean-13-existing-lanes-v1-conformance` owns 20. The retained
+`barcode-symbologies-existing-lanes-v1-conformance` aggregate is
+selection-blocked until all six children merge, then owns only the final
+72-root registry, metadata, capability, and facade-readiness integration pass.
+Each Java/Kotlin/Dart symbology owner waits only for its matching existing-lane
+child plus the already-recorded neutral and shared-layout prerequisites.
+
+The dependency/leverage refresh selected the ITF child first. Its twelve roots
+and twelve direct barcode-1d consumers have no live open-PR path overlap; the
+ten-case corpus is the smallest complete pilot for the shared registry and
+handwritten adapter pattern. The fresh branch
+`codex/parity-itf-existing-lanes-v1-20260927` starts from exact merged main
+`0117283ca42564c87b1f9cbc8abab2664d06c159` and owns only ITF normalization,
+encoding, fixture consumption, source-compatible stable errors, package docs
+and metadata, and direct downstream validation.
+
+The ITF implementation now registers and executes all ten neutral cases in
+the twelve established roots. Each lane applies the shared scalar-limit,
+length-before-character, and ASCII-only precedence while retaining its public
+exception or result shape. Exact normalized text, modules, run lengths, and
+compact boundary digests agree across the registry. All twelve package suites
+pass locally, including native coverage and lint/type/build checks. Direct
+`barcode-1d` consumers pass in C#, Elixir, F#, Go, Haskell, Lua, Python, Ruby,
+Rust, and TypeScript. Perl exercises and passes the ITF facade before its
+pre-existing Windows native-loader assertion fails on an absent XS binary;
+Swift's ITF suite passes, while the broader Windows facade remains stopped by
+its pre-existing Rust-static-library system-link imports. Those host-native
+front defects remain outside this pure symbology child.
+
+### PR #16153 merge and exact-main parity refresh
+
+All final-head checks for PR #16153 reached terminal acceptable conclusions at
+`b77ff0c4e03fa4d3bbcc6a2bcdd321879c32b649`, including CodeQL, repository
+metadata, the human-language gate, and CI on Ubuntu, macOS, and Windows.
+GitHub reported the reviewed head clean and mergeable, guarded squash
+auto-merge was enabled only then, and GitHub merged the PR automatically at
+`2026-09-27T19:46:23Z` as
+`cb6fe40a0819113a820cd9886e494a2f4d9f4f66`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+unchanged at 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, 1,512 all-reported identities, 178 high-consensus
+packages, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown language buckets.
+
+The merge also completed the already-owned five-package Haskell 2D-barcode
+Windows-front repair. A read-only follow-up audit registered three bounded
+successors rather than one lane-wide sweep: the Haskell ITF foundation stack,
+the five sibling 1D symbologies, and finally the paint-vm-ascii plus
+barcode-1d facade closure. These owners preserve the real Cabal dependency
+shape and leave the wider Haskell Windows-front backlog separately classified.
+
+The dependency/leverage refresh ranks
+`build-tool-rust-glob-matcher-complexity-hardening` first among eligible,
+unowned leaves. Both prerequisites are merged, no open PR overlaps its Rust
+glob or hasher paths, and the work directly advances the cross-engine portable
+glob contract. Its fresh branch starts at the exact merge revision above and
+is bounded to strict compiled pattern validation, Unicode-scalar semantics,
+globstar segments, linear bracket indexing, bounded dynamic programming, and
+complete declared-list preflight without new host authority or dependencies.
+
+### PR #16171 merge and Ruby glob selection
+
+PR #16171 completed 13 successful checks and 35 expected path-gated skips on
+final head `dda735f8d6ab33d1f91292881e149d40b437aee8`. GitHub reported the
+branch clean and mergeable, guarded squash auto-merge was enabled only after
+every check became terminal and acceptable, and the PR merged automatically
+at `2026-09-27T20:34:14Z` as
+`96c35742c97202b04e81cc8da8391f932356fcb3`; no plain manual merge command was
+used.
+
+The exact merged-main schema-3 inventory remains collision-free and unchanged
+at 15 established lanes, 1,470 implementation identities, 4,737 implementation
+slots, 1,512 all-reported identities, 178 high-consensus packages, 805 Rust
+singletons, five emerging OCaml packages, zero canonical collisions, and zero
+unknown language buckets.
+
+The parallel all-lane audit found one ownership ambiguity rather than an
+implementation exception: Java/Kotlin, Dart, and OCaml current-contract owners
+did not explicitly own real neutral adapters and independent complete-corpus
+invocation. Three terminal, selection-blocked adapter closures now make those
+obligations explicit. Java and Kotlin remain separate mandatory engines and
+front doors; OCaml's emerging status is a sequencing rule, not a waiver.
+
+The dependency/leverage refresh selects
+`build-tool-ruby-glob-matcher-complexity-hardening` next. Its two prerequisites
+are merged, no live open PR overlaps the Ruby build-tool paths, and it unlocks
+five direct and ten transitive unfinished children while removing both
+recursive-suffix complexity and host `File.fnmatch` semantic drift. The fresh
+branch `codex/parity-ruby-glob-hardening-20260927` starts from the exact merge
+revision above. TypeScript glob hardening and Perl diff-selection adoption rank
+second and third respectively and remain pending.
+
+### PR #16181 merge and TypeScript glob selection
+
+PR #16181 completed every final-head check acceptably on
+`b71b83cc586073733b5f5086d1efcd89ffad9320`, including the protected CI gate
+and Ruby CodeQL analysis. GitHub reported the branch clean and mergeable,
+guarded squash auto-merge was enabled only then, and the PR merged
+automatically at `2026-09-27T21:51:43Z` as
+`ae30de3723c82bd73447665145a205d7237a77bb`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+unchanged at 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, 1,512 all-reported identities, 178 high-consensus
+packages, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown language buckets.
+
+The dependency/leverage refresh now selects
+`build-tool-typescript-glob-matcher-complexity-hardening`. Both prerequisites
+are merged, no live open PR overlaps the TypeScript build-tool paths, and this
+bounded leaf unlocks five direct and ten transitive unfinished children while
+closing recursive globstar revisitation and UTF-16 code-unit drift. Read-only
+preparation already established a green baseline of 350 tests, typecheck,
+coverage, and production plus full dependency audits. The fresh branch
+`codex/parity-typescript-glob-hardening-20260927` starts from the exact merge
+revision above. Perl diff-selection adoption ranks next and remains pending.
+
+The TypeScript implementation now compiles complete declared-source lists into
+immutable Unicode-scalar tokens, rejects ambiguous or descending character
+classes with one stable typed error, and reuses compiled patterns in both
+source hashing and Git-diff selection. Rolling-row path and segment dynamic
+programs plus a reverse bracket index replace recursive suffix exploration and
+UTF-16 code-unit semantics. The canonical BUILD front passes typecheck and 361
+tests with 91.45% statement, 85.27% branch, 95.61% function, and 91.37% line
+coverage; the matcher itself reaches 100% line and 98.41% branch coverage.
+Neutral corpus/schema checks, parity inventory, focused Go oracle tests and
+vet, exact-diff planning, package/audit checks, and independent correctness
+and security reviews are clean.
+
+### PR #16188 merge and Perl graph/diff selection
+
+PR #16188 completed every final-head check acceptably at
+`a45bf2c1046b01ec8ca16d17caa0dbd67b64d599`. GitHub reported the branch clean
+and mergeable, guarded squash auto-merge was enabled only after the checks were
+terminal, and GitHub merged it automatically at `2026-09-27T23:01:53Z` as
+`6d4472c93675ad025d1c5d0260267afd474744ad`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+unchanged at 15 established lanes, 1,470 implementation identities, 4,737
+implementation slots, 1,512 all-reported identities, 178 high-consensus
+packages, 805 Rust singletons, five emerging OCaml packages, zero canonical
+collisions, and zero unknown language buckets. The refreshed state also makes
+the neutral-corpus dependency explicit for ten adapter closures and records
+the OCaml adapter and promotion sequencing edges; the 919-item graph remains
+acyclic.
+
+The dependency/leverage refresh selected
+`build-tool-perl-diff-selection-match-work-ceiling-adoption`. Its prerequisites
+are merged, no open PR overlaps the Perl build-tool scope, and it unlocks four
+direct and nine transitive unfinished descendants. The fresh branch
+`codex/parity-perl-diff-selection-20260927` starts from the exact TypeScript
+merge revision above.
+
+The Perl implementation now adds a pure graph/diff boundary that consumes the
+exact eight graph and eleven diff-selection fixtures. It validates the complete
+input before matching, compiles portable character classes and globstars into
+bounded Unicode-scalar dynamic programs, enforces checked 4,096-package,
+16,384-edge, and 50-million-unit ceilings, and returns no partial cycle or
+selection results. Boundary hashing uses the governed canonical document and
+pinned Unicode 17 identities; the module gains no filesystem, Git, process,
+environment, or network authority.
 
 ## Autonomous Loop Protocol
 

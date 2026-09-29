@@ -1,0 +1,11 @@
+{
+  "id": "MW-C123-chadar",
+  "pathSegment": "MW-PATH-123-THINGS123",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-123-THINGS123",
+      "order": 1
+    }
+  ]
+}

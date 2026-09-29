@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:4aadf1685d8d7590",
+  "lessonIds": [
+    "MW-C127-khilo",
+    "MW-C127-hathoro",
+    "MW-C127-kulhari",
+    "MW-C127-hal",
+    "MW-C127-bailgari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch127.txt",
+  "json": "marwadi/narration/ch127.json",
+  "textHash": "fnv1a64:67f51d961ff49956",
+  "jsonHash": "fnv1a64:404a1d3a44c23b28",
+  "findings": []
+}

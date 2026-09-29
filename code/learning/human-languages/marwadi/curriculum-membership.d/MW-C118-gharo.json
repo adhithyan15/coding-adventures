@@ -1,0 +1,11 @@
+{
+  "id": "MW-C118-gharo",
+  "pathSegment": "MW-PATH-118-THINGS118",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-118-THINGS118",
+      "order": 4
+    }
+  ]
+}

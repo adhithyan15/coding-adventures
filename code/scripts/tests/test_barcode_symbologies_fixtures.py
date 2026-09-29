@@ -168,6 +168,8 @@ class BarcodeSymbologyFixtureTests(unittest.TestCase):
                 "CHANGELOG.md",
                 "README.md",
                 "cases.json",
+                "consumers.json",
+                "consumers.schema.json",
                 "generate_cases.py",
                 "schema.json",
             },

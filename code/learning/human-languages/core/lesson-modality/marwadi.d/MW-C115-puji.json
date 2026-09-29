@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C115-puji",
+    "language": "marwadi",
+    "chapter": 115,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:becf565ebdb0d792"
+  },
+  "findings": []
+}

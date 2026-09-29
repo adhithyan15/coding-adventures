@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:ca3394fc65829a75",
+  "lessonIds": [
+    "MW-C118-chulho",
+    "MW-C118-tavo",
+    "MW-C118-karahi",
+    "MW-C118-hadi",
+    "MW-C118-gharo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch118.txt",
+  "json": "marwadi/narration/ch118.json",
+  "textHash": "fnv1a64:1a74075bfe340ecf",
+  "jsonHash": "fnv1a64:a338eb897ed55d4c",
+  "findings": []
+}

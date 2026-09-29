@@ -1,0 +1,11 @@
+{
+  "id": "MW-C98-gelo",
+  "pathSegment": "MW-PATH-98-LOC98",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-98-LOC98",
+      "order": 4
+    }
+  ]
+}

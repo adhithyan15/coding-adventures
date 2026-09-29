@@ -78,7 +78,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **Hardware constraints excluded**: Max 4 locals per function, max 7 call
   depth, and port range 0–7/0–23 are Intel 8008-specific backend constraints.
   They live in the IR validator, not here. The same `OctTypeChecker` could in
-  principle target the Intel 8080 (a strict superset) without modification.
+  principle validate a source-level Intel 8080 target; its backend must emit
+  8080 machine code and specify any changed hardware behavior separately.
 
 - **Two-pass necessity**: Pass 1 is required for forward references. Without
   it, `fn main() { helper(); }` followed by `fn helper() { }` would fail with

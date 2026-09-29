@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C124-saban",
+    "language": "marwadi",
+    "chapter": 124,
+    "sequence": 7910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33c6f7b81aed5f8e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C139-kabutar",
+  "pathSegment": "MW-PATH-139-THINGS139",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-139-THINGS139",
+      "order": 1
+    }
+  ]
+}

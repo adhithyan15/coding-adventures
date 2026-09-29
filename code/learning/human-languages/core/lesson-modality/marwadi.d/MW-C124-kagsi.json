@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C124-kagsi",
+    "language": "marwadi",
+    "chapter": 124,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe85587adfe2879b"
+  },
+  "findings": []
+}

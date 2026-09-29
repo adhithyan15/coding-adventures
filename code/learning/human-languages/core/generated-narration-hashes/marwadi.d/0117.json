@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:14d55a06a46e3d2c",
+  "lessonIds": [
+    "MW-C117-kyu",
+    "MW-C117-karan",
+    "MW-C117-vastai",
+    "MW-C117-khatar",
+    "MW-C117-kyukai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch117.txt",
+  "json": "marwadi/narration/ch117.json",
+  "textHash": "fnv1a64:88beee8066b104a7",
+  "jsonHash": "fnv1a64:66726b4807387599",
+  "findings": []
+}

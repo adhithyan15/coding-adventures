@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:0d8bec921e4a374c",
+  "lessonIds": [
+    "MW-C103-nhavno",
+    "MW-C103-pakavno",
+    "MW-C103-banavno",
+    "MW-C103-torno",
+    "MW-C103-jorno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch103.txt",
+  "json": "marwadi/narration/ch103.json",
+  "textHash": "fnv1a64:528c6f8c930f56e7",
+  "jsonHash": "fnv1a64:fb4be563750a1c86",
+  "findings": []
+}

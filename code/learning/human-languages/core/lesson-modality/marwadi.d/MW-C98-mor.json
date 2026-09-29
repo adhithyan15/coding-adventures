@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C98-mor",
+    "language": "marwadi",
+    "chapter": 98,
+    "sequence": 6330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bec23b99a7b87710"
+  },
+  "findings": []
+}

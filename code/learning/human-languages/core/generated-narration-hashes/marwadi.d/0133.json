@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:7ed1d0434df87106",
+  "lessonIds": [
+    "MW-C133-chana",
+    "MW-C133-mug",
+    "MW-C133-moth",
+    "MW-C133-til",
+    "MW-C133-gur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch133.txt",
+  "json": "marwadi/narration/ch133.json",
+  "textHash": "fnv1a64:43b6feaaf7250272",
+  "jsonHash": "fnv1a64:00858574fdb1f1b7",
+  "findings": []
+}

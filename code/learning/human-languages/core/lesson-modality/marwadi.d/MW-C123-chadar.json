@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C123-chadar",
+    "language": "marwadi",
+    "chapter": 123,
+    "sequence": 7860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be37b1f62e1bdd57"
+  },
+  "findings": []
+}

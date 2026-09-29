@@ -31,10 +31,15 @@ export class ItfError extends Error {
   }
 }
 
+export type ItfErrorId = "input-too-long" | "invalid-length" | "invalid-character";
+
 export class InvalidItfInputError extends ItfError {
-  constructor(message: string) {
+  readonly errorId?: ItfErrorId;
+
+  constructor(message: string, errorId?: ItfErrorId) {
     super(message);
     this.name = "InvalidItfInputError";
+    this.errorId = errorId;
   }
 }
 
@@ -55,12 +60,27 @@ const DIGIT_PATTERNS = [
 ];
 
 export function normalizeItf(data: string): string {
-  if (!/^\d+$/.test(data)) {
-    throw new InvalidItfInputError("ITF input must contain digits only");
+  const scalars = Array.from(data);
+  if (scalars.some((scalar) => {
+    const codePoint = scalar.codePointAt(0)!;
+    return codePoint >= 0xd800 && codePoint <= 0xdfff;
+  })) {
+    throw new TypeError("ITF input must contain valid Unicode scalar values");
   }
-
-  if (data.length === 0 || data.length % 2 !== 0) {
-    throw new InvalidItfInputError("ITF input must contain an even number of digits");
+  if (scalars.length > 4096) {
+    throw new InvalidItfInputError(
+      "ITF input must contain at most 4096 characters",
+      "input-too-long",
+    );
+  }
+  if (scalars.length === 0 || scalars.length % 2 !== 0) {
+    throw new InvalidItfInputError(
+      "ITF input must contain an even number of digits",
+      "invalid-length",
+    );
+  }
+  if (scalars.some((scalar) => scalar < "0" || scalar > "9")) {
+    throw new InvalidItfInputError("ITF input must contain digits only", "invalid-character");
   }
 
   return data;

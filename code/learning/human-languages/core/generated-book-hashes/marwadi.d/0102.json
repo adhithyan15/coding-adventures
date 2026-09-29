@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:3cfda7df06f6a0bf",
+  "lessonIds": [
+    "MW-C102-sagla",
+    "MW-C102-dujo",
+    "MW-C102-apno",
+    "MW-C102-koi",
+    "MW-C102-harek"
+  ],
+  "tex": "marwadi/book/chapters/ch102-all-another-our-own-someone-each.tex"
+}

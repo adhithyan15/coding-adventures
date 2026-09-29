@@ -1,0 +1,11 @@
+{
+  "id": "MW-C142-naram",
+  "pathSegment": "MW-PATH-142-QUAL142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-142-QUAL142",
+      "order": 2
+    }
+  ]
+}

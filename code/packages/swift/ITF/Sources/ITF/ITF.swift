@@ -13,8 +13,21 @@ public let defaultITFLayoutConfig = defaultBarcode1DLayoutConfig
 public let defaultITFRenderConfig = defaultITFLayoutConfig
 
 public enum ITFError: Error, Equatable {
+    case inputTooLong
     case invalidDigits
     case invalidLength
+
+    public var code: String {
+        switch self {
+        case .inputTooLong: return "input-too-long"
+        case .invalidLength: return "invalid-length"
+        case .invalidDigits: return "invalid-character"
+        }
+    }
+}
+
+public func itfErrorID(_ error: Error) -> String? {
+    (error as? ITFError)?.code
 }
 
 private let itfStartPattern = "1010"
@@ -35,11 +48,16 @@ private func retagRuns(_ runs: [Barcode1DRun], role: String) -> [Barcode1DRun] {
 }
 
 public func normalizeITF(_ data: String) throws -> String {
-    guard data.allSatisfy({ $0.isASCII && $0.isNumber }) else {
-        throw ITFError.invalidDigits
+    let scalars = data.unicodeScalars
+    let scalarCount = scalars.prefix(4097).count
+    guard scalarCount <= 4096 else {
+        throw ITFError.inputTooLong
     }
-    guard !data.isEmpty, data.count.isMultiple(of: 2) else {
+    guard scalarCount > 0, scalarCount.isMultiple(of: 2) else {
         throw ITFError.invalidLength
+    }
+    guard scalars.allSatisfy({ (48...57).contains(Int($0.value)) }) else {
+        throw ITFError.invalidDigits
     }
     return data
 }

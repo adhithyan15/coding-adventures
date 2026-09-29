@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:320dd8545dd79587",
+  "lessonIds": [
+    "MW-C123-takiyo",
+    "MW-C123-chadar",
+    "MW-C123-dari",
+    "MW-C123-pardo",
+    "MW-C123-arsi"
+  ],
+  "tex": "marwadi/book/chapters/ch123-pillow-sheet-cotton-rug-curtain-mirror.tex"
+}

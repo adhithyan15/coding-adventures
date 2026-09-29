@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:3611cde21d9224f1",
+  "lessonIds": [
+    "MW-C92-sanivar",
+    "MW-C92-ravivar",
+    "MW-C92-chait",
+    "MW-C92-baisakh",
+    "MW-C92-jeth"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch92.txt",
+  "json": "marwadi/narration/ch92.json",
+  "textHash": "fnv1a64:d7dc4a0f20ab0e2c",
+  "jsonHash": "fnv1a64:4b44b260e11aae39",
+  "findings": []
+}

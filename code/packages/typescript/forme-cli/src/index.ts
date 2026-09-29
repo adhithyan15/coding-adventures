@@ -6,3 +6,5 @@ export {
   run,
 } from "./cli.js";
 export type { CliIO, CliServices, RunCliOptions } from "./cli.js";
+export { executeDeploy, materializeDeployInput } from "./deploy.js";
+export type { DeployInvocation } from "./deploy.js";

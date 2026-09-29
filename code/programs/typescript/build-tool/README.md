@@ -46,6 +46,7 @@ This is one of several build tool implementations in the monorepo (Python, Ruby,
 | `discovery.ts`                  | Walks directory tree, finds BUILD files, infers language                              |
 | `resolver.ts`                   | Parses dependency metadata, builds directed graph (Kahn's algorithm)                  |
 | `gitdiff.ts`                    | Git-based change detection (`git diff --name-only`)                                   |
+| `glob-match.ts`                 | Compiled Unicode-scalar portable globs with bounded dynamic programming               |
 | `hasher.ts`                     | SHA256 hashing of source files for cache-based change detection                       |
 | `cache.ts`                      | JSON cache file for fallback change detection                                         |
 | `executor.ts`                   | Parallel build execution respecting dependency order                                  |
@@ -83,6 +84,24 @@ Git-diff package matching uses the same repository-relative forward-slash
 paths on every platform. Its integration tests create native temporary Git
 repositories and invoke Git with direct argument vectors, so the package suite
 runs without a POSIX shell on Windows.
+
+## Portable bounded glob matching
+
+Declared source patterns compile into immutable Unicode-scalar tokens before
+the hasher walks a package or Git-diff selection examines a changed file. A
+whole double-star segment crosses path components; `*` and `?` stay within one
+component; and character classes retain Python `fnmatchcase` literals,
+leading-`!` negation, ascending ranges, literal edge hyphens, and literal
+leading closing brackets. Unmatched opening brackets and braces remain
+literal. Descending ranges and the ambiguous operators `--`, `&&`, `~~`, and
+`||` raise the stable typed `GlobPatternError`.
+
+Both the path and segment matchers use rolling-row dynamic programs. Their
+test-only state evidence pins the exact rectangular state bound, while a
+reverse closing-bracket index keeps parser work linear even for long unmatched
+bracket runs. Complete declared lists are compiled before candidate
+enumeration, so an invalid later pattern cannot hide behind an earlier match,
+an empty filesystem, an empty Git diff, or the always-relevant BUILD shortcut.
 
 ## Process-free orphan-crate validation
 

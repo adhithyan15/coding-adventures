@@ -16,6 +16,9 @@ forme build
 forme run # FM03-compatible alias for build
 forme build --reproducible
 forme build --report dist/.forme-build-report.json
+forme build --deploy-input .forme/deploy-input
+forme deploy --manifest .forme/deploy-input/deploy-manifest.json \
+  --content-dir .forme/deploy-input/content --target fs --target-config deploy.fs.json --dry-run
 forme clean
 forme watch
 forme watch --port 4321 --debounce 100
@@ -42,6 +45,18 @@ project.
   `settings.cacheDir` is configured, unchanged capability-free downstream
   invocations are restored across separate CLI processes from a
   containment-checked filesystem cache beneath the project root.
+  `--deploy-input DIR` collision-checks and merges named in-memory `dist-tree`
+  outputs into one strict deploy manifest plus canonical digest store beneath
+  the project. The manifest is written last.
+- `deploy` loads no project config. CLI Builder requires one manifest, exactly
+  one directory/canonical-bundle/regular-file-descriptor inline content store, one `fs` or
+  `github-pages` target, and one strict target-config JSON file. Dry-run
+  preflights all content and uses write-free target inspection; it rejects
+  `--report`. GitHub publication accepts only `GITHUB_TOKEN`, uses a GET-only
+  anonymous boundary for dry-run, and supports an explicit identity-bound
+  one-time ownership bootstrap for legacy Pages content. Once that deployment
+  owner exists, retaining the bootstrap flag is a validated no-op even after
+  later publications legitimately change its owned path or digest set.
 - `check` performs config-schema, capability, wiring, kind, and output
   validation without invoking a stage or writing output.
 - `clean` validates the pipeline, then removes its configured cache directory

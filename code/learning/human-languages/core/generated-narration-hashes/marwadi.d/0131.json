@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:5a0d6474e926a56e",
+  "lessonIds": [
+    "MW-C131-khichro",
+    "MW-C131-ker",
+    "MW-C131-sagri",
+    "MW-C131-gatta",
+    "MW-C131-papar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch131.txt",
+  "json": "marwadi/narration/ch131.json",
+  "textHash": "fnv1a64:bc8df2af36999c17",
+  "jsonHash": "fnv1a64:78c5b280a343bcdc",
+  "findings": []
+}

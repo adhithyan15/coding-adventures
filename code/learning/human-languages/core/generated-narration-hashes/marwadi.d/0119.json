@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:d6c59ce28578ce41",
+  "lessonIds": [
+    "MW-C119-matko",
+    "MW-C119-loto",
+    "MW-C119-gilas",
+    "MW-C119-balti",
+    "MW-C119-buhari",
+    "MW-R119-first-pass-wanting-liking-and-having",
+    "MW-R119-second-pass-why-and-the-kitchen"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch119.txt",
+  "json": "marwadi/narration/ch119.json",
+  "textHash": "fnv1a64:7d67b9c3fc0af95a",
+  "jsonHash": "fnv1a64:c51d871203b05952",
+  "findings": []
+}

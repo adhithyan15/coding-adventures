@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "consumers.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "consumers"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "barcode-symbologies-v1-consumers" },
+    "consumers": {
+      "type": "array",
+      "maxItems": 72,
+      "items": { "$ref": "#/$defs/consumer" }
+    }
+  },
+  "$defs": {
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "symbology",
+        "language",
+        "package_root",
+        "test_path",
+        "normalize",
+        "encode",
+        "pair_binary_pattern",
+        "error_identifier"
+      ],
+      "properties": {
+        "symbology": {
+          "enum": ["itf", "code39", "codabar", "code128-b", "upc-a", "ean-13"]
+        },
+        "language": {
+          "enum": [
+            "csharp",
+            "elixir",
+            "fsharp",
+            "go",
+            "haskell",
+            "lua",
+            "perl",
+            "python",
+            "ruby",
+            "rust",
+            "swift",
+            "typescript"
+          ]
+        },
+        "package_root": { "type": "string", "pattern": "^code/packages/[^/]+/[^/]+$" },
+        "test_path": { "type": "string", "pattern": "^code/packages/" },
+        "normalize": { "type": "string", "minLength": 1 },
+        "encode": { "type": "string", "minLength": 1 },
+        "pair_binary_pattern": { "type": "string", "minLength": 1 },
+        "error_identifier": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

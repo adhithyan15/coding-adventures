@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 146,
+  "title": "Shiny, Calm, Clever, Silly, Lazy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:527abb1c25848a9a",
+  "lessons": [
+    {
+      "id": "MW-C146-chamkilo",
+      "sequence": 9200,
+      "title": "चमकीलो (chamkīlo) — shiny",
+      "headword": "चमकीलो",
+      "romanization": "chamkīlo",
+      "gloss": "shiny",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50eb5c87a5a27978",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for purple, then the Marwadi for orange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चमकीलो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चमकीलो — chamkīlo — \"shiny\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chamkīlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chamkīlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chamkīlo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chamkīlo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chamkīlo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chamkīlo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for purple, then the Marwadi for orange, then say chamkīlo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for purple, then the Marwadi for orange, then say *chamkīlo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चमकीलो (chamkīlo) mean? (\"Shiny\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C146-chamkilo-type",
+              "prompt": "Type the Marwadi for 'shiny'.",
+              "assesses": [
+                "MW-LEX-C146-QUAL146-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चमकीलो",
+                "chamkīlo"
+              ],
+              "feedback": {
+                "correct": "Right: चमकीलो (chamkīlo) is 'shiny'.",
+                "incorrect": "'shiny' is चमकीलो (chamkīlo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C146-sant",
+      "sequence": 9210,
+      "title": "सांत (sānt) — calm",
+      "headword": "सांत",
+      "romanization": "sānt",
+      "gloss": "calm",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b82535cda1ff6c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for orange, then the Marwadi for shiny."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सांत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सांत — sānt — \"calm\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sānt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sānt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sānt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sānt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sānt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sānt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for orange, then the Marwadi for shiny, then say sānt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for orange, then the Marwadi for shiny, then say *sānt* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सांत (sānt) mean? (\"Calm\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C146-sant-type",
+              "prompt": "Type the Marwadi for 'calm'.",
+              "assesses": [
+                "MW-LEX-C146-QUAL146-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सांत",
+                "sānt"
+              ],
+              "feedback": {
+                "correct": "Right: सांत (sānt) is 'calm'.",
+                "incorrect": "'calm' is सांत (sānt)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C146-husiyar",
+      "sequence": 9220,
+      "title": "हुसियार (husiyār) — clever",
+      "headword": "हुसियार",
+      "romanization": "husiyār",
+      "gloss": "clever",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab8590fd69695c19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for shiny, then the Marwadi for calm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हुसियार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हुसियार — husiyār — \"clever\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "husiyār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *husiyār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "husiyār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *husiyār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say husiyār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *husiyār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for shiny, then the Marwadi for calm, then say husiyār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for shiny, then the Marwadi for calm, then say *husiyār* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हुसियार (husiyār) mean? (\"Clever\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C146-husiyar-type",
+              "prompt": "Type the Marwadi for 'clever'.",
+              "assesses": [
+                "MW-LEX-C146-QUAL146-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हुसियार",
+                "husiyār"
+              ],
+              "feedback": {
+                "correct": "Right: हुसियार (husiyār) is 'clever'.",
+                "incorrect": "'clever' is हुसियार (husiyār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C146-bavalo",
+      "sequence": 9230,
+      "title": "बावळो (bāvaḷo) — silly, foolish",
+      "headword": "बावळो",
+      "romanization": "bāvaḷo",
+      "gloss": "silly, foolish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ddf3bcac508df05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for calm, then the Marwadi for clever."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बावळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बावळो — bāvaḷo — \"silly, foolish\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvaḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvaḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvaḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvaḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bāvaḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bāvaḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for calm, then the Marwadi for clever, then say bāvaḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for calm, then the Marwadi for clever, then say *bāvaḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बावळो (bāvaḷo) mean? (\"Silly, foolish\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C146-bavalo-type",
+              "prompt": "Type the Marwadi for 'silly, foolish'.",
+              "assesses": [
+                "MW-LEX-C146-QUAL146-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बावळो",
+                "bāvaḷo"
+              ],
+              "feedback": {
+                "correct": "Right: बावळो (bāvaḷo) is 'silly, foolish'.",
+                "incorrect": "'silly, foolish' is बावळो (bāvaḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C146-alsi",
+      "sequence": 9240,
+      "title": "आळसी (āḷsī) — lazy",
+      "headword": "आळसी",
+      "romanization": "āḷsī",
+      "gloss": "lazy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d79a1a796a2cc8b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for clever, then the Marwadi for silly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आळसी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आळसी — āḷsī — \"lazy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḷsī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḷsī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḷsī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḷsī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āḷsī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āḷsī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for clever, then the Marwadi for silly, then say āḷsī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for clever, then the Marwadi for silly, then say *āḷsī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आळसी (āḷsī) mean? (\"Lazy\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C146-alsi-type",
+              "prompt": "Type the Marwadi for 'lazy'.",
+              "assesses": [
+                "MW-LEX-C146-QUAL146-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आळसी",
+                "āḷsī"
+              ],
+              "feedback": {
+                "correct": "Right: आळसी (āḷsī) is 'lazy'.",
+                "incorrect": "'lazy' is आळसी (āḷsī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

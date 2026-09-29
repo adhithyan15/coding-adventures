@@ -1,0 +1,11 @@
+{
+  "id": "MW-C122-peti",
+  "pathSegment": "MW-PATH-122-THINGS122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-122-THINGS122",
+      "order": 1
+    }
+  ]
+}

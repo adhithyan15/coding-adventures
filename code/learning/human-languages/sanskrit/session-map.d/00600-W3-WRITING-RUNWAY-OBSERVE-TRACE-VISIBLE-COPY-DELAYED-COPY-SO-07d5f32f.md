@@ -1,0 +1,1 @@
+| W3 | writing-runway | ◌ृ | observe/trace → visible copy → delayed copy → sound-and-function dictation; the already-taught dependent vowel sign is the whole answer, so no hidden word or romanization earns credit |

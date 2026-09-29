@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 104,
+  "title": "To buy, To uncover, To call, To ask for, To look",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b6d302f36d349b0",
+  "lessons": [
+    {
+      "id": "MW-C104-kharidno",
+      "sequence": 6700,
+      "title": "खरीदणो (kharīdṇo) — to buy",
+      "headword": "खरीदणो",
+      "romanization": "kharīdṇo",
+      "gloss": "to buy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d95b570eabe7cec4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to break, then the Marwadi for to join."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खरीदणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खरीदणो — kharīdṇo — \"to buy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharīdṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharīdṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharīdṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharīdṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kharīdṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kharīdṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to break, then the Marwadi for to join, then say kharīdṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to break, then the Marwadi for to join, then say *kharīdṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खरीदणो (kharīdṇo) mean? (\"To buy\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C104-kharidno-type",
+              "prompt": "Type the Marwadi for 'to buy'.",
+              "assesses": [
+                "MW-LEX-C104-ACT104-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खरीदणो",
+                "kharīdṇo"
+              ],
+              "feedback": {
+                "correct": "Right: खरीदणो (kharīdṇo) is 'to buy'.",
+                "incorrect": "'to buy' is खरीदणो (kharīdṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C104-ugharno",
+      "sequence": 6710,
+      "title": "उघाड़णो (ughāṛṇo) — to uncover, to open up",
+      "headword": "उघाड़णो",
+      "romanization": "ughāṛṇo",
+      "gloss": "to uncover, to open up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d50336a405029221",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to join, then the Marwadi for to buy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उघाड़णो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उघाड़णो — ughāṛṇo — \"to uncover, to open up\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ughāṛṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ughāṛṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ughāṛṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ughāṛṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ughāṛṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ughāṛṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to join, then the Marwadi for to buy, then say ughāṛṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to join, then the Marwadi for to buy, then say *ughāṛṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उघाड़णो (ughāṛṇo) mean? (\"To uncover, to open up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C104-ugharno-type",
+              "prompt": "Type the Marwadi for 'to uncover, to open up'.",
+              "assesses": [
+                "MW-LEX-C104-ACT104-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उघाड़णो",
+                "ughāṛṇo"
+              ],
+              "feedback": {
+                "correct": "Right: उघाड़णो (ughāṛṇo) is 'to uncover, to open up'.",
+                "incorrect": "'to uncover, to open up' is उघाड़णो (ughāṛṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C104-bulavno",
+      "sequence": 6720,
+      "title": "बुलावणो (bulāvṇo) — to call",
+      "headword": "बुलावणो",
+      "romanization": "bulāvṇo",
+      "gloss": "to call",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d618f1e1589d6f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to buy, then the Marwadi for to uncover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुलावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुलावणो — bulāvṇo — \"to call\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bulāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bulāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bulāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bulāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bulāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bulāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to buy, then the Marwadi for to uncover, then say bulāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to buy, then the Marwadi for to uncover, then say *bulāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुलावणो (bulāvṇo) mean? (\"To call\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C104-bulavno-type",
+              "prompt": "Type the Marwadi for 'to call'.",
+              "assesses": [
+                "MW-LEX-C104-ACT104-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बुलावणो",
+                "bulāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बुलावणो (bulāvṇo) is 'to call'.",
+                "incorrect": "'to call' is बुलावणो (bulāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C104-mangno",
+      "sequence": 6730,
+      "title": "मांगणो (māṅgṇo) — to ask for",
+      "headword": "मांगणो",
+      "romanization": "māṅgṇo",
+      "gloss": "to ask for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b140b6a236534941",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to uncover, then the Marwadi for to call."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मांगणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मांगणो — māṅgṇo — \"to ask for\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṅgṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṅgṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṅgṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṅgṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say māṅgṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *māṅgṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to uncover, then the Marwadi for to call, then say māṅgṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to uncover, then the Marwadi for to call, then say *māṅgṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मांगणो (māṅgṇo) mean? (\"To ask for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C104-mangno-type",
+              "prompt": "Type the Marwadi for 'to ask for'.",
+              "assesses": [
+                "MW-LEX-C104-ACT104-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मांगणो",
+                "māṅgṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मांगणो (māṅgṇo) is 'to ask for'.",
+                "incorrect": "'to ask for' is मांगणो (māṅgṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C104-jovno",
+      "sequence": 6740,
+      "title": "जोवणो (jovṇo) — to look, to look for",
+      "headword": "जोवणो",
+      "romanization": "jovṇo",
+      "gloss": "to look, to look for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa8ff71816f7b892",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to call, then the Marwadi for to ask for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जोवणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जोवणो — jovṇo — \"to look, to look for\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jovṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jovṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jovṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jovṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jovṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jovṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to call, then the Marwadi for to ask for, then say jovṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to call, then the Marwadi for to ask for, then say *jovṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जोवणो (jovṇo) mean? (\"To look, to look for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C104-jovno-type",
+              "prompt": "Type the Marwadi for 'to look, to look for'.",
+              "assesses": [
+                "MW-LEX-C104-ACT104-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जोवणो",
+                "jovṇo"
+              ],
+              "feedback": {
+                "correct": "Right: जोवणो (jovṇo) is 'to look, to look for'.",
+                "incorrect": "'to look, to look for' is जोवणो (jovṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

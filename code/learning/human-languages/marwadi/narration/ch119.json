@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 119,
+  "title": "Large clay pot, Small water vessel, Glass, Bucket, Broom",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d6c59ce28578ce41",
+  "lessons": [
+    {
+      "id": "MW-C119-matko",
+      "sequence": 7550,
+      "title": "मटको (maṭko) — a large clay pot",
+      "headword": "मटको",
+      "romanization": "maṭko",
+      "gloss": "a large clay pot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28f4f11f1df4ab64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a cooking pot, then the Marwadi for a water pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मटको",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मटको — maṭko — \"a large clay pot\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṭko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṭko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say maṭko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *maṭko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a cooking pot, then the Marwadi for a water pot, then say maṭko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a cooking pot, then the Marwadi for a water pot, then say *maṭko* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मटको (maṭko) mean? (\"A large clay pot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C119-matko-type",
+              "prompt": "Type the Marwadi for 'a large clay pot'.",
+              "assesses": [
+                "MW-LEX-C119-THINGS119-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मटको",
+                "maṭko"
+              ],
+              "feedback": {
+                "correct": "Right: मटको (maṭko) is 'a large clay pot'.",
+                "incorrect": "'a large clay pot' is मटको (maṭko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C119-loto",
+      "sequence": 7560,
+      "title": "लोटो (loṭo) — a small water vessel",
+      "headword": "लोटो",
+      "romanization": "loṭo",
+      "gloss": "a small water vessel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:880c0be79e56affa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a water pot, then the Marwadi for a large clay pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लोटो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोटो — loṭo — \"a small water vessel\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loṭo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loṭo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loṭo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loṭo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say loṭo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *loṭo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a water pot, then the Marwadi for a large clay pot, then say loṭo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a water pot, then the Marwadi for a large clay pot, then say *loṭo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लोटो (loṭo) mean? (\"A small water vessel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C119-loto-type",
+              "prompt": "Type the Marwadi for 'a small water vessel'.",
+              "assesses": [
+                "MW-LEX-C119-THINGS119-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लोटो",
+                "loṭo"
+              ],
+              "feedback": {
+                "correct": "Right: लोटो (loṭo) is 'a small water vessel'.",
+                "incorrect": "'a small water vessel' is लोटो (loṭo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C119-gilas",
+      "sequence": 7570,
+      "title": "गिलास (gilās) — a glass",
+      "headword": "गिलास",
+      "romanization": "gilās",
+      "gloss": "a glass",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efb468a3e16681e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a large clay pot, then the Marwadi for a small water vessel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गिलास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गिलास — gilās — \"a glass\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gilās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gilās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gilās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gilās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gilās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gilās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a large clay pot, then the Marwadi for a small water vessel, then say gilās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a large clay pot, then the Marwadi for a small water vessel, then say *gilās* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गिलास (gilās) mean? (\"A glass\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C119-gilas-type",
+              "prompt": "Type the Marwadi for 'a glass'.",
+              "assesses": [
+                "MW-LEX-C119-THINGS119-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "गिलास",
+                "gilās"
+              ],
+              "feedback": {
+                "correct": "Right: गिलास (gilās) is 'a glass'.",
+                "incorrect": "'a glass' is गिलास (gilās)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C119-balti",
+      "sequence": 7580,
+      "title": "बाल्टी (bālṭī) — a bucket",
+      "headword": "बाल्टी",
+      "romanization": "bālṭī",
+      "gloss": "a bucket",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5063c5a17142ec8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a small water vessel, then the Marwadi for a glass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाल्टी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाल्टी — bālṭī — \"a bucket\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bālṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bālṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a small water vessel, then the Marwadi for a glass, then say bālṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a small water vessel, then the Marwadi for a glass, then say *bālṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाल्टी (bālṭī) mean? (\"A bucket\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C119-balti-type",
+              "prompt": "Type the Marwadi for 'a bucket'.",
+              "assesses": [
+                "MW-LEX-C119-THINGS119-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बाल्टी",
+                "bālṭī"
+              ],
+              "feedback": {
+                "correct": "Right: बाल्टी (bālṭī) is 'a bucket'.",
+                "incorrect": "'a bucket' is बाल्टी (bālṭī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C119-buhari",
+      "sequence": 7590,
+      "title": "बुहारी (buhārī) — a broom",
+      "headword": "बुहारी",
+      "romanization": "buhārī",
+      "gloss": "a broom",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2686d428fed3e1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a glass, then the Marwadi for a bucket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुहारी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुहारी — buhārī — \"a broom\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buhārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buhārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buhārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buhārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say buhārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *buhārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a glass, then the Marwadi for a bucket, then say buhārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a glass, then the Marwadi for a bucket, then say *buhārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुहारी (buhārī) mean? (\"A broom\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C119-buhari-type",
+              "prompt": "Type the Marwadi for 'a broom'.",
+              "assesses": [
+                "MW-LEX-C119-THINGS119-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बुहारी",
+                "buhārī"
+              ],
+              "feedback": {
+                "correct": "Right: बुहारी (buhārī) is 'a broom'.",
+                "incorrect": "'a broom' is बुहारी (buhārī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R119-first-pass-wanting-liking-and-having",
+      "sequence": 7600,
+      "title": "Wanting, liking and having — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 110-114",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26f2421975ecdca0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a bucket and a broom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to share out, to mislay, to reach, to fly, to weigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to share out, to mislay, to reach, to fly, to weigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to want, a wish, the mind, hope, a demand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to want, a wish, the mind, hope, a demand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a need, greed, a dream, an expectation, one's will",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a need, greed, a dream, an expectation, one's will]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to seem, a liking, a hobby, affection, attachment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to seem, a liking, a hobby, affection, attachment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be able to, a skill, strength, courage, an owner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be able to, a skill, strength, courage, an owner]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To share out? (बांटणो, bā̃ṭṇo.) To mislay? (गमावणो, gamāvṇo.) To reach? (पूगणो, pūgṇo.) To fly? (उडणो, uṛṇo.) To weigh? (तोलणो, tolṇo.) To want? (चावणो, chāvṇo.) A wish? (इच्छा, ichchhā.) The mind? (मन, man.) Hope? (आस, ās.) A demand? (मांग, mā̃g.) A need? (जरूरत, jarūrat.) Greed? (लालच, lālach.) A dream? (सपनो, sapno.) An expectation? (उम्मीद, ummīd.) One's will? (मरजी, marjī.) To seem? (लागणो, lāgṇo.) A liking? (पसंद, pasand.) A hobby? (सौक, sauk.) Affection? (हेत, het.) Attachment? (मोह, moh.) To be able to? (सकणो, sakṇo.) A skill? (हुनर, hunar.) Strength? (ताकत, tākat.) Courage? (हिम्मत, himmat.) An owner? (मालक, mālak.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R119-first-pass-wanting-liking-and-having-type",
+              "prompt": "Type the Marwadi for 'a bucket'.",
+              "assesses": [
+                "MW-LEX-C119-THINGS119-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बाल्टी",
+                "bālṭī"
+              ],
+              "feedback": {
+                "correct": "Right: बाल्टी (bālṭī) is 'a bucket'.",
+                "incorrect": "'a bucket' is बाल्टी (bālṭī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R119-second-pass-why-and-the-kitchen",
+      "sequence": 7610,
+      "title": "Why, and the kitchen — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 115-119",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48bf1847bf32465f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for land and property."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "land, property, capital, earnings, a job",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: land, property, capital, earnings, a job]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a virtue, good sense, knowledge, a right, a chance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a virtue, good sense, knowledge, a right, a chance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why, a reason, for, because of, because",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why, a reason, for, because of, because]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hearth, a griddle, a wok, a cooking pot, a water pot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hearth, a griddle, a wok, a cooking pot, a water pot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a large clay pot, a small water vessel, a glass, a bucket, a broom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a large clay pot, a small water vessel, a glass, a bucket, a broom]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Land? (जमीन, jamīn.) Property? (जायदाद, jāydād.) Capital? (पूंजी, pū̃jī.) Earnings? (कमाई, kamāī.) A job? (नौकरी, naukrī.) A virtue? (गुण, guṇ.) Good sense? (अकल, akal.) Knowledge? (ग्यान, gyān.) A right? (हक, hak.) A chance? (मौको, mauko.) Why? (क्यूं, kyū̃.) A reason? (कारण, kāraṇ.) For? (वास्तै, vāstai.) Because of? (खातर, khātar.) Because? (क्यूंकै, kyū̃kai.) A hearth? (चूल्हो, chūlho.) A griddle? (तवो, tavo.) A wok? (कड़ाही, kaṛāhī.) A cooking pot? (हांडी, hā̃ḍī.) A water pot? (घड़ो, ghaṛo.) A large clay pot? (मटको, maṭko.) A small water vessel? (लोटो, loṭo.) A glass? (गिलास, gilās.) A bucket? (बाल्टी, bālṭī.) A broom? (बुहारी, buhārī.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R119-second-pass-why-and-the-kitchen-type",
+              "prompt": "Type the Marwadi for 'land'.",
+              "assesses": [
+                "MW-LEX-C115-CAN115-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जमीन",
+                "jamīn"
+              ],
+              "feedback": {
+                "correct": "Right: जमीन (jamīn) is 'land'.",
+                "incorrect": "'land' is जमीन (jamīn)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

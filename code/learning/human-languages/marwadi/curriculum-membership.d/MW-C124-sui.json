@@ -1,0 +1,11 @@
+{
+  "id": "MW-C124-sui",
+  "pathSegment": "MW-PATH-124-THINGS124",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-124-THINGS124",
+      "order": 3
+    }
+  ]
+}

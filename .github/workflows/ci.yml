@@ -3721,9 +3721,17 @@ jobs:
       # every measured baseline (the historical ~91-minute whole-step run,
       # plus this PR's modest additions) while still turning a real hang into
       # a fast, loud CI failure instead of an hours-long silent stall.
+      #
+      # Why 300, not 150: pull-request builds are not sharded, so a change to a
+      # crate nearly everything depends on (`parser`, #16054) makes one runner
+      # rebuild ~750 packages. On Windows that took ~140 minutes, then ~150 on
+      # the next run, which the old ceiling killed mid-`lang-aot` (a single
+      # package that legitimately takes ~19 minutes there). 300 still ends
+      # well inside the 360-minute job limit, with room for the ~25 minutes
+      # of Windows setup before this step, so a real hang still fails.
       - name: Build and test affected packages
         if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true' || needs.detect.outputs.needs_elixir == 'true' || needs.detect.outputs.needs_dotnet == 'true' || needs.detect.outputs.needs_ocaml == 'true')
-        timeout-minutes: 150
+        timeout-minutes: 300
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:b62a423eb320ca12",
+  "lessonIds": [
+    "MW-C90-dopar",
+    "MW-C90-athan",
+    "MW-C90-dinugai",
+    "MW-C90-parbhat",
+    "MW-C90-parsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch90.txt",
+  "json": "marwadi/narration/ch90.json",
+  "textHash": "fnv1a64:e2b1c4a85fc17804",
+  "jsonHash": "fnv1a64:b22e7bc60ae37aff",
+  "findings": []
+}

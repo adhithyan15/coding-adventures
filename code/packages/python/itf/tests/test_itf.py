@@ -1,6 +1,6 @@
 from itf import (
-    __version__,
     InvalidItfInputError,
+    __version__,
     draw_itf,
     encode_itf,
     expand_itf_runs,

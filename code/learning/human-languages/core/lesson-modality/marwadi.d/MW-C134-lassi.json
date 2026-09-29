@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C134-lassi",
+    "language": "marwadi",
+    "chapter": 134,
+    "sequence": 8520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdcfd2afccb7b3d8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C101-kiso",
+  "pathSegment": "MW-PATH-101-DEF101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-101-DEF101",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,338 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 150,
+  "title": "A Word for Literature — Then the Letter Inside It",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8947e513da1cd4f6",
+  "lessons": [
+    {
+      "id": "TE-C150-vangmayam",
+      "sequence": 6540,
+      "title": "వాఙ్మయం (vāṅmayaṁ) — literature, the whole body of expression in words",
+      "headword": "వాఙ్మయం",
+      "romanization": "vāṅmayaṁ",
+      "gloss": "literature; the whole body of expression in words",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e24b6b35452fe052",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already know పుస్తకం, a book, and you have held a short passage without translating every word. This lesson names the larger body that books and spoken works belong to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వాఙ్మయం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వాఙ్మయం — vāṅmayaṁ — \"literature\", or more broadly, expression made of words."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it in three gentle pieces: vāṅ, ma, yaṁ. The first piece ends with the velar nasal heard in English sing. The spelling keeps that sound as ఙ్ before మ: వా-ఙ్-మ-యం."
+            },
+            {
+              "kind": "speech",
+              "text": "The word came through Sanskrit: vāc is speech, and maya means made of or filled with. A single పుస్తకం is one book; వాఙ్మయం (vāṅmayaṁ) is the world of words that books, speeches, and other verbal works make together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One book, then the wider field it can belong to. The unusual spelling has had a meaning before it becomes a handwriting exercise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṅ, ma, yaṁ, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṅ · ma · yaṁ*, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṅmayaṁ, as one word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṅmayaṁ*, as one word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పుస్తకం, వాఙ్మయం (vāṅmayaṁ) — one book, then literature",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పుస్తకం · వాఙ్మయం** — one book, then literature]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "the small ఙ్ immediately before మ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: the small **ఙ్** immediately before **మ**]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "TE-C150-vangmayam-meaning",
+              "prompt": "What Telugu word names literature or the wider body of expression in words?",
+              "assesses": [
+                "TE-LEX-C150-LITERATURE-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "వాఙ్మయం",
+                "vangmayam",
+                "vāṅmayaṁ"
+              ],
+              "feedback": {
+                "correct": "వాఙ్మయం — the wider body of expression in words.",
+                "incorrect": "వాఙ్మయం — say it as vāṅ, ma, yaṁ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వాఙ్మయం (vāṅmayaṁ) mean? (\"Literature; the wider body of expression in words.\") Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S171-letter-nga",
+      "sequence": 6550,
+      "title": "ఙ (ṅa) — the quiet letter inside వాఙ్మయం (vāṅmayaṁ)",
+      "headword": "ఙ",
+      "romanization": "ṅa",
+      "gloss": "the letter ఙ — taken from వాఙ్మయం",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:93c438a1ea3a2b12",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ఙ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఙ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say వాఙ్మయం (vāṅmayaṁ) once. What does it mean? (\"Literature; the wider body of expression in words.\")"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now slow the first two pieces: vāṅ, ma. The letter between them is today's whole task."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఙ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఙ — ṅa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the velar nasal: the sound at the end of English sing. In వాఙ్మయం (vāṅmayaṁ), the vowel is suppressed, so ఙ్ leans into the following మ. The base letter you will write is ఙ (ṅa)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is an uncommon letter in modern Telugu words. That is why the book waited until it had given you a real word that needs it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఙ — five small movements",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Follow the filmstrip slowly. Movements 1–3 stay joined: turn around the compact upper-left lobe, continue around the broad lower bowl, then curl up through the right lobe. Lift for the inner horizontal bar. Lift once more for the short downward headstroke."
+            },
+            {
+              "kind": "speech",
+              "text": "The numbered route is one attested school-style order; Telugu handwriting can vary. Keep the three pen-down runs clear rather than racing the shape."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఙ (ṅa) once, following the five numbered movements",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: **ఙ** once, following the five numbered movements]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "ఙ (ṅa) twice without tracing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **ఙ** twice without tracing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ఙ్ inside వాఙ్మయం (vāṅmayaṁ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: **ఙ్** inside **వాఙ్మయం**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāṅmayaṁ as you finish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāṅmayaṁ* as you finish]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "TE-S171-letter-nga-find",
+              "prompt": "Which base letter is hidden in the cluster ఙ్మ?",
+              "assesses": [
+                "TE-SCRIPT-RECOG-171"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ఙ",
+                "nga",
+                "ṅa"
+              ],
+              "feedback": {
+                "correct": "ఙ — the velar nasal letter.",
+                "incorrect": "ఙ — take it from the left side of ఙ్మ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ఙ? What sound does it carry? (ṅa.) Which word gave it to you? (వాఙ్మయం (vāṅmayaṁ).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

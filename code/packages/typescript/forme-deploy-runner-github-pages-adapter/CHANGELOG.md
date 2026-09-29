@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Add a GET-only target inspection boundary for zero-side-effect deploy plans.
+- Add explicit legacy ownership bootstrap bound to the repository, ref,
+  destination, portable path set, content digests, and exact regular Git blob
+  identities, committed through a non-forced compare-and-swap.
+- Verify every unique legacy blob through the bounded read-only Git Data API,
+  including Git object identity, SHA-256 content proof, and aggregate bytes;
+  composite dry-run projects that proven ownership before validating the real
+  deployment manifest against the target tree.
+
 ## 0.1.0 — 2026-09-20
 
 Initial FM-B046 release.

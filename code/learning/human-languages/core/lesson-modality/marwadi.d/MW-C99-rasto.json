@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C99-rasto",
+    "language": "marwadi",
+    "chapter": 99,
+    "sequence": 6350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54777c8518355920"
+  },
+  "findings": []
+}

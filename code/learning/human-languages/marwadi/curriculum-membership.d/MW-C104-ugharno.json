@@ -1,0 +1,11 @@
+{
+  "id": "MW-C104-ugharno",
+  "pathSegment": "MW-PATH-104-ACT104",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-104-ACT104",
+      "order": 1
+    }
+  ]
+}

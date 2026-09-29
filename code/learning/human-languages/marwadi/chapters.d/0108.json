@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "To wake someone, To save, To get down, To swim, To jump",
+  "label": "ch:mw-to-wake-someone-to-save-to-get-down-to-swim-to-jump",
+  "canDo": "I can say to wake someone, to save, to get down, to swim and to jump.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-C108-kudno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say to wake someone, to save, to get down, to swim and to jump.",
+    "assesses": [
+      "MW-LEX-C108-ACT108-03",
+      "MW-LEX-C108-ACT108-04",
+      "MW-LEX-C108-ACT108-05"
+    ]
+  }
+}

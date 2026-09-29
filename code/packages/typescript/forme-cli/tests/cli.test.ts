@@ -133,6 +133,13 @@ describe("argument and diagnostic contracts", () => {
     expect(buildHelp.stdoutText).toContain("forme build [OPTIONS]");
     expect(buildHelp.stdoutText).toContain("--reproducible");
     expect(buildHelp.stdoutText).toContain("--report <PATH>");
+    expect(buildHelp.stdoutText).toContain("--deploy-input <DIR>");
+
+    const deployHelp = makeIO();
+    expect(await run(["deploy", "--help"], deployHelp)).toBe(EXIT_OK);
+    expect(deployHelp.stdoutText).toContain("forme deploy [OPTIONS]");
+    expect(deployHelp.stdoutText).toContain("--content-dir <DIR>");
+    expect(deployHelp.stdoutText).toContain("--target-config <PATH>");
 
     const watchHelp = makeIO();
     expect(await run(["watch", "--help"], watchHelp)).toBe(EXIT_OK);
@@ -142,15 +149,30 @@ describe("argument and diagnostic contracts", () => {
 
     const version = makeIO();
     expect(await run(["--version"], version)).toBe(EXIT_OK);
-    expect(version.stdoutText).toBe("0.3.0\n");
+    expect(version.stdoutText).toBe("0.5.0\n");
   });
 
   it("rejects unknown commands, missing flag values, and invalid clean options", async () => {
-    for (const argv of [["deploy"], ["build", "--config"], ["clean", "--reproducible"]]) {
+    for (const argv of [["unknown"], ["deploy"], ["build", "--config"], ["clean", "--reproducible"]]) {
       const io = makeIO();
       expect(await run(argv, io)).toBe(EXIT_USAGE_OR_CONFIG);
       expect(io.stderrText).toMatch(/^forme: E_USAGE:/);
     }
+  });
+
+  it("uses CLI Builder to require exactly one deploy content store", async () => {
+    const missing = makeIO();
+    expect(await run([
+      "deploy", "--manifest", "manifest.json", "--target", "fs", "--target-config", "fs.json",
+    ], missing)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(missing.stderrText).toMatch(/one of/i);
+
+    const duplicate = makeIO();
+    expect(await run([
+      "deploy", "--manifest", "manifest.json", "--content-dir", "content",
+      "--content-bundle", "content.forme-bundle", "--target", "fs", "--target-config", "fs.json",
+    ], duplicate)).toBe(EXIT_USAGE_OR_CONFIG);
+    expect(duplicate.stderrText).toContain("Only one of");
   });
 
   it("uses CLI Builder duplicate checks and fuzzy flag suggestions", async () => {

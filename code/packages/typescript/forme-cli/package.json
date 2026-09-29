@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-cli",
-  "version": "0.4.0",
-  "description": "Headless Forme build, persistent incremental cache, check, clean, watch/preview, and local-workspace bootstrap CLI.",
+  "version": "0.5.0",
+  "description": "Headless Forme build, deploy, persistent incremental cache, check, clean, watch/preview, and local-workspace bootstrap CLI.",
   "type": "module",
   "main": "src/index.ts",
   "files": [
@@ -27,6 +27,9 @@
     "@coding-adventures/cli-builder": "file:../cli-builder",
     "@coding-adventures/forme-cache": "file:../forme-cache",
     "@coding-adventures/forme-dev-server": "file:../forme-dev-server",
+    "@coding-adventures/forme-deploy-runner-core": "file:../forme-deploy-runner-core",
+    "@coding-adventures/forme-deploy-runner-fs-adapter": "file:../forme-deploy-runner-fs-adapter",
+    "@coding-adventures/forme-deploy-runner-github-pages-adapter": "file:../forme-deploy-runner-github-pages-adapter",
     "@coding-adventures/forme-orchestrator": "file:../forme-orchestrator",
     "@coding-adventures/forme-pipeline-config": "file:../forme-pipeline-config",
     "@coding-adventures/forme-stage": "file:../forme-stage",

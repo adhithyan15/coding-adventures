@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:940fc5e14971d57a",
+  "lessonIds": [
+    "MW-C148-buro",
+    "MW-C148-jaruri",
+    "MW-C148-khas",
+    "MW-C148-sado",
+    "MW-C148-anokho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch148.txt",
+  "json": "marwadi/narration/ch148.json",
+  "textHash": "fnv1a64:0512185f19ddc4cf",
+  "jsonHash": "fnv1a64:cefd2f9c1c9dec48",
+  "findings": []
+}

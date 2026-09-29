@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C99-talav",
+    "language": "marwadi",
+    "chapter": 99,
+    "sequence": 6390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c14a1f2523dc06d6"
+  },
+  "findings": []
+}

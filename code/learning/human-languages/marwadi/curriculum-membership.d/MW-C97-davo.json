@@ -1,0 +1,11 @@
+{
+  "id": "MW-C97-davo",
+  "pathSegment": "MW-PATH-97-LOC97",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-97-LOC97",
+      "order": 4
+    }
+  ]
+}

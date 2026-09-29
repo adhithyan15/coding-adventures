@@ -1,5 +1,9 @@
 # Changelog — itf (Perl)
 
+## Unreleased
+
+- Add shared fixture conformance, Unicode-scalar preflight, and stable error IDs.
+
 ## 0.01 — 2026-04-13
 
 Initial release.

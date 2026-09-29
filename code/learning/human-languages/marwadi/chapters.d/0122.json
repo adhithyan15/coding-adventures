@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Box, Trunk, Chest, Quilt, Mattress",
+  "label": "ch:mw-box-trunk-chest-quilt-mattress",
+  "canDo": "I can say a box, a trunk, a chest, a quilt and a mattress.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C122-gadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a box, a trunk, a chest, a quilt and a mattress.",
+    "assesses": [
+      "MW-LEX-C122-THINGS122-03",
+      "MW-LEX-C122-THINGS122-04",
+      "MW-LEX-C122-THINGS122-05"
+    ]
+  }
+}

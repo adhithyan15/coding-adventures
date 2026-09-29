@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Virtue, Good sense, Knowledge, Right, Chance",
+  "label": "ch:mw-virtue-good-sense-knowledge-right-chance",
+  "canDo": "I can say a virtue, good sense, knowledge, a right and a chance.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-C116-mauko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a virtue, good sense, knowledge, a right and a chance.",
+    "assesses": [
+      "MW-LEX-C116-CAN116-03",
+      "MW-LEX-C116-CAN116-04",
+      "MW-LEX-C116-CAN116-05"
+    ]
+  }
+}

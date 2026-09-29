@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C140-undro",
+    "language": "marwadi",
+    "chapter": 140,
+    "sequence": 8900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d72374632446e15"
+  },
+  "findings": []
+}

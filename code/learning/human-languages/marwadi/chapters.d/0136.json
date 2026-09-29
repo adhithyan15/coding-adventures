@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Radish, Garlic, Ginger, Turmeric, Cumin",
+  "label": "ch:mw-radish-garlic-ginger-turmeric-cumin",
+  "canDo": "I can say a radish, garlic, ginger, turmeric and cumin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C136-jiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say a radish, garlic, ginger, turmeric and cumin.",
+    "assesses": [
+      "MW-LEX-C136-THINGS136-03",
+      "MW-LEX-C136-THINGS136-04",
+      "MW-LEX-C136-THINGS136-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:9c0f8ee90ee57c88",
+  "lessonIds": [
+    "MW-C91-pachhai",
+    "MW-C91-somvar",
+    "MW-C91-mangalvar",
+    "MW-C91-guruvar",
+    "MW-C91-sukarvar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch91.txt",
+  "json": "marwadi/narration/ch91.json",
+  "textHash": "fnv1a64:e0a9408f8cf2dcf4",
+  "jsonHash": "fnv1a64:e4c50f871cac3bb1",
+  "findings": []
+}

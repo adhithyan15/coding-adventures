@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C126-rassi",
+    "language": "marwadi",
+    "chapter": 126,
+    "sequence": 8030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43dd8a1056b7b381"
+  },
+  "findings": []
+}

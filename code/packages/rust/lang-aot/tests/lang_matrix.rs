@@ -3214,6 +3214,42 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a supported exact recurrence may evolve a statement selector
+    // while capped source-order execution tracks its selected dependency cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := i < 2; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.250.5-0.75"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an exact recursive boolean recurrence may evolve a statement
+    // selector while capped execution tracks the selected dependency cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — exact cross-assigned boolean recurrences may evolve a
+    // statement selector while source-order execution tracks both cycles.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — a conditional expression may evolve one exact selector in
+    // a mutually recursive graph while source-order execution tracks both cycles.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; choose := if guard then not choose else guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.51.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact scalar self-assignment is an idempotent body write,
     // so the stable local while dependency remains available to the proof.
     Prog {
@@ -14652,6 +14688,107 @@ fn algol_stable_statement_recurrence_cycles_run_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the stable statement recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_evolving_recurrence_cycle_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := i < 2; if choose then delta := n")
+        })
+        .expect("the evolving-selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the evolving-selector recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_recursive_recurrence_cycle_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := not choose; if choose then delta := n")
+        })
+        .expect("the recursive-selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the recursive-selector recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_mutually_recursive_recurrence_cycle_selectors_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("choose := guard; guard := not choose; if choose then delta := n")
+        })
+        .expect("the mutually recursive selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the mutually recursive selector recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_recursive_recurrence_cycle_selectors_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "choose := if guard then not choose else guard; guard := not choose",
+                )
+        })
+        .expect("the conditional recursive selector recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional recursive selector recurrence cycle did not run"
             );
             continue;
         };

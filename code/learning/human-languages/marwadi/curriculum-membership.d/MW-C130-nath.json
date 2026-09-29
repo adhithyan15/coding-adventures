@@ -1,0 +1,11 @@
+{
+  "id": "MW-C130-nath",
+  "pathSegment": "MW-PATH-130-THINGS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-130-THINGS130",
+      "order": 1
+    }
+  ]
+}

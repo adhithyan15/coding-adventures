@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 94,
+  "title": "Pos, Magh, Hot season, Cold season, Rainy season",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:46ce03ac4bf01974",
+  "lessons": [
+    {
+      "id": "MW-C94-pos",
+      "sequence": 6100,
+      "title": "पोस (pos) — Pos (December-January)",
+      "headword": "पोस",
+      "romanization": "pos",
+      "gloss": "Pos (December-January)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cc792c0ddc7b04e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Kati, then the Marwadi for Migsar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पोस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोस — pos — \"Pos (December-January)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pos, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pos*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Kati, then the Marwadi for Migsar, then say pos again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Kati, then the Marwadi for Migsar, then say *pos* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पोस (pos) mean? (\"Pos (December-January)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C94-pos-type",
+              "prompt": "Type the Marwadi for 'Pos (December-January)'.",
+              "assesses": [
+                "MW-LEX-C94-TIME94-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पोस",
+                "pos"
+              ],
+              "feedback": {
+                "correct": "Right: पोस (pos) is 'Pos (December-January)'.",
+                "incorrect": "'Pos (December-January)' is पोस (pos)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C94-magh",
+      "sequence": 6110,
+      "title": "माघ (māgh) — Magh (January-February)",
+      "headword": "माघ",
+      "romanization": "māgh",
+      "gloss": "Magh (January-February)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44ee3bec9aa90d00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Migsar, then the Marwadi for Pos."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: माघ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माघ — māgh — \"Magh (January-February)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māgh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māgh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māgh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māgh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say māgh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *māgh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Migsar, then the Marwadi for Pos, then say māgh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Migsar, then the Marwadi for Pos, then say *māgh* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does माघ (māgh) mean? (\"Magh (January-February)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C94-magh-type",
+              "prompt": "Type the Marwadi for 'Magh (January-February)'.",
+              "assesses": [
+                "MW-LEX-C94-TIME94-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "माघ",
+                "māgh"
+              ],
+              "feedback": {
+                "correct": "Right: माघ (māgh) is 'Magh (January-February)'.",
+                "incorrect": "'Magh (January-February)' is माघ (māgh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C94-unalo",
+      "sequence": 6120,
+      "title": "उनाळो (unāḷo) — the hot season, summer",
+      "headword": "उनाळो",
+      "romanization": "unāḷo",
+      "gloss": "the hot season, summer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f3f8a8608c362f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Pos, then the Marwadi for Magh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उनाळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उनाळो — unāḷo — \"the hot season, summer\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unāḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unāḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unāḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unāḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say unāḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *unāḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Pos, then the Marwadi for Magh, then say unāḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Pos, then the Marwadi for Magh, then say *unāḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उनाळो (unāḷo) mean? (\"The hot season, summer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C94-unalo-type",
+              "prompt": "Type the Marwadi for 'the hot season, summer'.",
+              "assesses": [
+                "MW-LEX-C94-TIME94-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उनाळो",
+                "unāḷo"
+              ],
+              "feedback": {
+                "correct": "Right: उनाळो (unāḷo) is 'the hot season, summer'.",
+                "incorrect": "'the hot season, summer' is उनाळो (unāḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C94-siyalo",
+      "sequence": 6130,
+      "title": "सियाळो (siyāḷo) — the cold season, winter",
+      "headword": "सियाळो",
+      "romanization": "siyāḷo",
+      "gloss": "the cold season, winter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7185fa1331712798",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for Magh, then the Marwadi for the hot season."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सियाळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सियाळो — siyāḷo — \"the cold season, winter\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyāḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyāḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyāḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyāḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say siyāḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *siyāḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for Magh, then the Marwadi for the hot season, then say siyāḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for Magh, then the Marwadi for the hot season, then say *siyāḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सियाळो (siyāḷo) mean? (\"The cold season, winter\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C94-siyalo-type",
+              "prompt": "Type the Marwadi for 'the cold season, winter'.",
+              "assesses": [
+                "MW-LEX-C94-TIME94-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सियाळो",
+                "siyāḷo"
+              ],
+              "feedback": {
+                "correct": "Right: सियाळो (siyāḷo) is 'the cold season, winter'.",
+                "incorrect": "'the cold season, winter' is सियाळो (siyāḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C94-chaumaso",
+      "sequence": 6140,
+      "title": "चौमासो (chaumāso) — the rainy season",
+      "headword": "चौमासो",
+      "romanization": "chaumāso",
+      "gloss": "the rainy season",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea333aaa5284fc35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for the hot season, then the Marwadi for the cold season."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चौमासो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चौमासो — chaumāso — \"the rainy season\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaumāso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaumāso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaumāso, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaumāso*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chaumāso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chaumāso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for the hot season, then the Marwadi for the cold season, then say chaumāso again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for the hot season, then the Marwadi for the cold season, then say *chaumāso* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चौमासो (chaumāso) mean? (\"The rainy season\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C94-chaumaso-type",
+              "prompt": "Type the Marwadi for 'the rainy season'.",
+              "assesses": [
+                "MW-LEX-C94-TIME94-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चौमासो",
+                "chaumāso"
+              ],
+              "feedback": {
+                "correct": "Right: चौमासो (chaumāso) is 'the rainy season'.",
+                "incorrect": "'the rainy season' is चौमासो (chaumāso)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

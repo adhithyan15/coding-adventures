@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-100-LOC100",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "MW-EXT-100-LOC100"
+  ],
+  "after": []
+}

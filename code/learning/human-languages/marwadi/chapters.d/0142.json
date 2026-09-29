@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Light, Hard, Soft, Wet, Dry",
+  "label": "ch:mw-light-hard-soft-wet-dry",
+  "canDo": "I can say light, hard, soft, wet and dry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-C142-suko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say light, hard, soft, wet and dry.",
+    "assesses": [
+      "MW-LEX-C142-QUAL142-03",
+      "MW-LEX-C142-QUAL142-04",
+      "MW-LEX-C142-QUAL142-05"
+    ]
+  }
+}

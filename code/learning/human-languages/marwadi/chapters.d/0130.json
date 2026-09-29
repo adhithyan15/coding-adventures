@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Forehead ornament, Nose ring, Anklet, Millet, Millet porridge",
+  "label": "ch:mw-forehead-ornament-nose-ring-anklet-millet-millet-porridge",
+  "canDo": "I can say a forehead ornament, a nose ring, an anklet, millet and a millet porridge.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C130-rabri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a forehead ornament, a nose ring, an anklet, millet and a millet porridge.",
+    "assesses": [
+      "MW-LEX-C130-THINGS130-03",
+      "MW-LEX-C130-THINGS130-04",
+      "MW-LEX-C130-THINGS130-05"
+    ]
+  }
+}

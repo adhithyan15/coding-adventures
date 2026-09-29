@@ -1,0 +1,11 @@
+{
+  "id": "MW-C148-khas",
+  "pathSegment": "MW-PATH-148-QUAL148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-148-QUAL148",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:70e05f63c1cb8a9b",
+  "lessonIds": [
+    "MW-C105-raivno",
+    "MW-C105-bachno",
+    "MW-C105-janno",
+    "MW-C105-bharno",
+    "MW-C105-khichno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch105.txt",
+  "json": "marwadi/narration/ch105.json",
+  "textHash": "fnv1a64:d4594d961a5ab8df",
+  "jsonHash": "fnv1a64:716d92df0e6ff8a1",
+  "findings": []
+}

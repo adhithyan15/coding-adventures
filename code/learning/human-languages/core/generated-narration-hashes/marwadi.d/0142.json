@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:9e534d3c28a36eeb",
+  "lessonIds": [
+    "MW-C142-halko",
+    "MW-C142-karak",
+    "MW-C142-naram",
+    "MW-C142-gilo",
+    "MW-C142-suko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch142.txt",
+  "json": "marwadi/narration/ch142.json",
+  "textHash": "fnv1a64:1550fbe37ff22e88",
+  "jsonHash": "fnv1a64:dc018c5b047fe6a5",
+  "findings": []
+}

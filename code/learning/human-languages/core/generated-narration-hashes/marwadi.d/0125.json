@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:dbbbacdae633aeab",
+  "lessonIds": [
+    "MW-C125-kainchi",
+    "MW-C125-lalten",
+    "MW-C125-mombatti",
+    "MW-C125-machis",
+    "MW-C125-lakri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch125.txt",
+  "json": "marwadi/narration/ch125.json",
+  "textHash": "fnv1a64:0f251f907a90cc5b",
+  "jsonHash": "fnv1a64:2062663297995f0a",
+  "findings": []
+}

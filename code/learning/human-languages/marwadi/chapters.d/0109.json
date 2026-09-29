@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "To fall, To get tired, To win, To lose, To hit",
+  "label": "ch:mw-to-fall-to-get-tired-to-win-to-lose-to-hit",
+  "canDo": "I can say to fall, to get tired, to win, to lose and to hit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MW-R109-second-pass-more-everyday-actions",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say to fall, to get tired, to win, to lose and to hit.",
+    "assesses": [
+      "MW-LEX-C109-ACT109-03",
+      "MW-LEX-C109-ACT109-04",
+      "MW-LEX-C109-ACT109-05"
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+- Project positive literals and numeric component slots to text, buttons, inputs and textareas. Typed runtime values override static font size; invalid values restore authored fallback.

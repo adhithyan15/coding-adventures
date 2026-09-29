@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 144,
+  "title": "Beautiful, Good-looking, Young, Thin, Short",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5f393dcb30b30c3e",
+  "lessons": [
+    {
+      "id": "MW-C144-sundar",
+      "sequence": 9100,
+      "title": "सुंदर (sundar) — beautiful",
+      "headword": "सुंदर",
+      "romanization": "sundar",
+      "gloss": "beautiful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1bbcdf111de1c51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for bitter, then the Marwadi for spicy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुंदर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुंदर — sundar — \"beautiful\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sundar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sundar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for bitter, then the Marwadi for spicy, then say sundar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for bitter, then the Marwadi for spicy, then say *sundar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुंदर (sundar) mean? (\"Beautiful\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C144-sundar-type",
+              "prompt": "Type the Marwadi for 'beautiful'.",
+              "assesses": [
+                "MW-LEX-C144-QUAL144-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सुंदर",
+                "sundar"
+              ],
+              "feedback": {
+                "correct": "Right: सुंदर (sundar) is 'beautiful'.",
+                "incorrect": "'beautiful' is सुंदर (sundar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C144-rupalo",
+      "sequence": 9110,
+      "title": "रूपाळो (rūpāḷo) — good-looking",
+      "headword": "रूपाळो",
+      "romanization": "rūpāḷo",
+      "gloss": "good-looking",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d94cc8eb6b14a9c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for spicy, then the Marwadi for beautiful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रूपाळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूपाळो — rūpāḷo — \"good-looking\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpāḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpāḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūpāḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūpāḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rūpāḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rūpāḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for spicy, then the Marwadi for beautiful, then say rūpāḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for spicy, then the Marwadi for beautiful, then say *rūpāḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रूपाळो (rūpāḷo) mean? (\"Good-looking\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C144-rupalo-type",
+              "prompt": "Type the Marwadi for 'good-looking'.",
+              "assesses": [
+                "MW-LEX-C144-QUAL144-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रूपाळो",
+                "rūpāḷo"
+              ],
+              "feedback": {
+                "correct": "Right: रूपाळो (rūpāḷo) is 'good-looking'.",
+                "incorrect": "'good-looking' is रूपाळो (rūpāḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C144-javan",
+      "sequence": 9120,
+      "title": "जवान (javān) — young",
+      "headword": "जवान",
+      "romanization": "javān",
+      "gloss": "young",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5e138b427a41b25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for beautiful, then the Marwadi for good-looking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जवान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जवान — javān — \"young\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say javān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *javān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for beautiful, then the Marwadi for good-looking, then say javān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for beautiful, then the Marwadi for good-looking, then say *javān* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जवान (javān) mean? (\"Young\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C144-javan-type",
+              "prompt": "Type the Marwadi for 'young'.",
+              "assesses": [
+                "MW-LEX-C144-QUAL144-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जवान",
+                "javān"
+              ],
+              "feedback": {
+                "correct": "Right: जवान (javān) is 'young'.",
+                "incorrect": "'young' is जवान (javān)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C144-dubalo",
+      "sequence": 9130,
+      "title": "दुबळो (dubaḷo) — thin, weak",
+      "headword": "दुबळो",
+      "romanization": "dubaḷo",
+      "gloss": "thin, weak",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d40c4e9f2a3f500",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for good-looking, then the Marwadi for young."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुबळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुबळो — dubaḷo — \"thin, weak\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dubaḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dubaḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dubaḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dubaḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dubaḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dubaḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for good-looking, then the Marwadi for young, then say dubaḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for good-looking, then the Marwadi for young, then say *dubaḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुबळो (dubaḷo) mean? (\"Thin, weak\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C144-dubalo-type",
+              "prompt": "Type the Marwadi for 'thin, weak'.",
+              "assesses": [
+                "MW-LEX-C144-QUAL144-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "दुबळो",
+                "dubaḷo"
+              ],
+              "feedback": {
+                "correct": "Right: दुबळो (dubaḷo) is 'thin, weak'.",
+                "incorrect": "'thin, weak' is दुबळो (dubaḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C144-thigno",
+      "sequence": 9140,
+      "title": "ठिगणो (ṭhigṇo) — short (of a person)",
+      "headword": "ठिगणो",
+      "romanization": "ṭhigṇo",
+      "gloss": "short (of a person)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75cab9b703f32e3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for young, then the Marwadi for thin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठिगणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठिगणो — ṭhigṇo — \"short (of a person)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhigṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhigṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhigṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhigṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ṭhigṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ṭhigṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for young, then the Marwadi for thin, then say ṭhigṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for young, then the Marwadi for thin, then say *ṭhigṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठिगणो (ṭhigṇo) mean? (\"Short (of a person)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C144-thigno-type",
+              "prompt": "Type the Marwadi for 'short (of a person)'.",
+              "assesses": [
+                "MW-LEX-C144-QUAL144-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ठिगणो",
+                "ṭhigṇo"
+              ],
+              "feedback": {
+                "correct": "Right: ठिगणो (ṭhigṇo) is 'short (of a person)'.",
+                "incorrect": "'short (of a person)' is ठिगणो (ṭhigṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

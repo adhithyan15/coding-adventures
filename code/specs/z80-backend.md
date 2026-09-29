@@ -35,21 +35,22 @@ every other arch backend (including `aarch64-backend` /
 migrate away from — like `mips-r2000-backend`/`arm1-backend`, this crate
 starts at the correct layer from day one.
 
-## Current scope — minimal viable
+## Current scope — WORD01 result ABI
 
 | CIR op family | Lowering |
 |----------------|----------|
-| `const_*` (8-bit unsigned literal) | `LD A, imm` |
-| `ret_*` | `HALT` (only if returning the most recently `const_*`'d variable) |
+| `const_u8`, `const_bool` | `LD A, imm` |
+| `const_u16` | `LD HL, imm16` |
+| matching `ret_u8`, `ret_bool`, `ret_u16` | `HALT` (only if returning the current value at the matching width) |
 | `ret_void` | `HALT` |
 | Empty CIR body | `HALT` |
 | Anything else | `UnsupportedOp` from `compile()`; `None` from the `Backend::compile` trait method |
 
 There is **no real register allocator** — a trivial "last const var"
-scheme tracks which single variable the most recent `const_*` wrote
-into the accumulator (A); `ret_*` only succeeds if it returns exactly
-that variable. Programs needing more than one live value fall through
-to `UnsupportedOp`.
+scheme tracks the name and width of the single current value. Byte and bool
+values occupy `A`; word values occupy `HL`. A typed return succeeds only for
+that variable at the matching width. Programs needing more than one live value
+fall through to `UnsupportedOp`.
 
 Full op coverage (arithmetic, comparisons, branches, calls, the
 alternate register bank, `CB`-prefixed bit ops, IX/IY-relative
@@ -74,6 +75,7 @@ to disk as a flat `.bin`.
 | Program | CIR | Emitted bytes |
 |---------|-----|----------------|
 | Twig `42` | `const_i64 v=42; ret_i64 v` | `[0x3E, 0x2A, 0x76]` |
+| Word `0x1234` | `const_u16 v=0x1234; ret_u16 v` | `[0x21, 0x34, 0x12, 0x76]` |
 | `ret_void` only | `ret_void` | `[0x76]` |
 | Empty CIR | (none) | `[0x76]` |
 
@@ -103,8 +105,8 @@ one was branched).
 |--------------------------|---------|
 | `UnsupportedOp(String)` | CIR operation outside `const_*`/`ret_*` |
 | `InvalidOperand(String)` | Malformed CIR operands or missing `dest` |
-| `UndefinedVariable(String)` | Reserved for a future register allocator (unused in v0.1.0's single-var scheme, where the "not the current accumulator var" case surfaces as `UnsupportedOp` instead) |
-| `ImmediateOutOfRange(i64)` | A `const_*` literal falls outside `[0, 255]` — `LD A,n`'s 8-bit immediate field |
+| `UndefinedVariable(String)` | A typed return has no current value |
+| `ImmediateOutOfRange(i64)` | A literal falls outside its selected unsigned width (`u8` or `u16`) |
 
 ## Termination-check convention (Intel 8051 bug class, avoided)
 
@@ -115,14 +117,11 @@ whether a real halt was actually emitted — which broke when a
 `const_*` immediate's byte value happened to numerically equal the
 sentinel.
 
-`z80-backend`'s minimal-viable `ret_*`/`ret_void` lowering always
-emits a REAL `HALT` opcode (never a pseudo-halt sentinel), and its
-"have I already produced valid output" logic is driven entirely by the
-CIR walk's own control flow (`last_const_var: Option<String>` tracking
-which *variable* — not byte value — last wrote the accumulator; a
-final `if bytes.is_empty() { bytes.push(HALT) }` guard that only fires
-when literally nothing was emitted) rather than any comparison against
-trailing byte *values*. Concretely: `LD A, 0x76` followed by the real
+`z80-backend`'s `ret_*`/`ret_void` lowering always emits a REAL `HALT`
+opcode (never a pseudo-halt sentinel), and its termination logic uses an
+explicit boolean set only when a real halt is emitted and reset by every
+subsequent constant. It never infers instruction identity from trailing byte
+values. Concretely: `LD A, 0x76` followed by the real
 `HALT` (`[0x3E, 0x76, 0x76]`) is compiled and executed correctly — see
 `tests/test_backend.rs::const_value_equal_to_halt_opcode_byte_is_not_misread`,
 which loads that exact byte sequence into `z80-simulator` and asserts
@@ -131,19 +130,25 @@ apply here (there is no separate pseudo-halt sentinel to confuse with a
 real opcode byte), but the regression test exists so it stays that way
 if the lowering logic changes.
 
+## WORD01 execution proof
+
+`tests/test_backend.rs::word_u16_result_executes_in_hl` runs
+`LD HL,0x1234; HALT` in `z80-simulator` and inspects both `H == 0x12` and
+`L == 0x34`. Companion tests execute the `u8` boundary in `A`, reject 256 as a
+`u8`, and reject a `ret_u8` for a current `u16` value.
+
 ## Tests
 
-14 unit/integration tests in `tests/test_backend.rs` (mirroring
+20 unit/integration tests in `tests/test_backend.rs` (mirroring
 `intel8080-backend`'s test shape, plus the cross-architecture and
 halt-byte-value regression tests above) pin the canonical byte sequence
 and edge cases (zero, 8-bit max, immediate overflow, bool, multi-var
 fallthrough, unsupported op, empty CIR, `ret_void`, `Backend::run`
 panics, `Backend::compile` vs the free `compile` function agree).
 
-One test additionally loads the compiled bytes into `z80-simulator`,
-runs it, and asserts the accumulator equals 42 after execution — byte-
-for-byte parity is necessary but not sufficient; the emitted bytes must
-actually execute correctly in the new simulator.
+Multiple tests additionally load the compiled bytes into `z80-simulator` and
+inspect `A` or both halves of `HL` after execution — byte-for-byte parity is
+necessary but not sufficient; the emitted bytes must actually execute.
 
 ## Backlog
 

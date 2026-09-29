@@ -1,1 +1,2 @@
-packages: . ../barcode-layout-1d ../paint-instructions ../paint-vm-ascii ../code39 ../codabar ../code128 ../ean-13 ../itf ../upc-a
+packages: . ../barcode-layout-1d ../paint-instructions ../paint-vm-ascii ../code39 ../codabar ../code128 ../ean-13 ../itf ../upc-a ../sha256
+tests: True

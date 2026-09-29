@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C97-davo",
+    "language": "marwadi",
+    "chapter": 97,
+    "sequence": 6290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc7495cdf482a41c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Complete, Happy, Timid, Brave, Crazy",
+  "label": "ch:mw-complete-happy-timid-brave-crazy",
+  "canDo": "I can say complete, happy, timid, brave and crazy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MW-R149-second-pass-describing-people",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say complete, happy, timid, brave and crazy.",
+    "assesses": [
+      "MW-LEX-C149-QUAL149-03",
+      "MW-LEX-C149-QUAL149-04",
+      "MW-LEX-C149-QUAL149-05"
+    ]
+  }
+}

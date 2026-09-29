@@ -111,6 +111,36 @@ That is about 380 filmstrips that could print today.
   owns a six-movement filmstrip: movements 1–5 draw the joined main body and
   movement 6 restarts for the separate stem, again source-gated against the
   packaged tracing guide and fitted to Noto Sans Telugu.
+- **Telugu గ continues the consonant pass.** Its existing `TE-S118` lesson owns
+  a two-movement filmstrip: the broad lower arch and separate upper flourish
+  follow the packaged tracing guide and are fitted to Noto Sans Telugu.
+- **Telugu ఘ now follows one letter later.** Its existing `TE-S138` lesson owns
+  a six-movement filmstrip: movements 1–3 form the connected left and middle
+  body, then movements 4–6 restart for the outer arch, upper flourish and
+  downward stem. The order comes from the same packaged tracing guide and is
+  fitted to Noto Sans Telugu.
+- **Telugu చ starts the next ready consonant row.** The intervening `ఙ` still
+  needs the vocabulary-first lesson sequence recorded below, so the existing
+  `TE-S112` lesson is the next available owner. Its four-movement filmstrip
+  joins movements 1–3 for the main body and restarts for the upper flourish,
+  using the same packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఙ now gets the word first.** Chapter 150 introduces **వాఙ్మయం**
+  (*vāṅmayaṁ*, literature) before `TE-S171` extracts the uncommon letter from
+  the word and gives it a five-movement filmstrip. Movements 1–3 form the
+  connected body; movements 4 and 5 restart for the inner bar and headstroke.
+  The order comes from the packaged `dot_stroke_c_1_5_nya.png` tracing guide
+  and is fitted to Noto Sans Telugu. This closes the earlier vocabulary-first
+  dependency instead of teaching the inventory shape cold.
+- **Telugu జ is the next ready consonant.** The intervening `ఛ` also remains
+  in the measured inventory-without-a-word debt, while `TE-S127` already owns
+  `జ` after `రోజు`. Its four separately numbered movements draw the upper-left
+  arch, the two lower bowls, and the upper-right flourish, using the same
+  packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఞ is the next consonant with a word-first owner.** Both `ఛ` and `ఝ`
+  still need vocabulary before they can enter the writing ramp, while
+  `TE-S132` already extracts `ఞ` from `కృతజ్ఞత`. Its eight separately numbered
+  movements trace the two upper loops, lower body, right bar and upper stem,
+  again following the packaged tracing guide and Noto Sans Telugu fit.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

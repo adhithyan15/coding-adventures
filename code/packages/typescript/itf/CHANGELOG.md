@@ -2,6 +2,10 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+- Add shared fixture conformance, Unicode-scalar preflight, stable error IDs, and the missing paint-instructions dependency.
+
 ## [0.1.0] - 2026-03-25
 
 ### Added

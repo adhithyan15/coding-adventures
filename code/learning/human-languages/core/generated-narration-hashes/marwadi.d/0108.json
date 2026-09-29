@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:371bc92a6f03a6e8",
+  "lessonIds": [
+    "MW-C108-jagavno",
+    "MW-C108-bachavno",
+    "MW-C108-utarno",
+    "MW-C108-tairno",
+    "MW-C108-kudno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch108.txt",
+  "json": "marwadi/narration/ch108.json",
+  "textHash": "fnv1a64:b4b4345f80fd3d5a",
+  "jsonHash": "fnv1a64:de106debd53484f2",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-128-THINGS128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a turban, a long skirt, a woman's wrap, a bodice and a long coat.",
+  "prerequisites": []
+}

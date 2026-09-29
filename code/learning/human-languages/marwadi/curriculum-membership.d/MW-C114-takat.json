@@ -1,0 +1,11 @@
+{
+  "id": "MW-C114-takat",
+  "pathSegment": "MW-PATH-114-CAN114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-114-CAN114",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:3ac6d69a5d033a3a",
+  "lessonIds": [
+    "MW-C146-chamkilo",
+    "MW-C146-sant",
+    "MW-C146-husiyar",
+    "MW-C146-bavalo",
+    "MW-C146-alsi"
+  ],
+  "tex": "marwadi/book/chapters/ch146-shiny-calm-clever-silly-lazy.tex"
+}

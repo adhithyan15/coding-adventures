@@ -1,0 +1,11 @@
+{
+  "id": "MW-C112-lalach",
+  "pathSegment": "MW-PATH-112-WANT112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-112-WANT112",
+      "order": 1
+    }
+  ]
+}

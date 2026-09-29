@@ -24,8 +24,7 @@
 // Chapter 2: Supported Wildcards
 // ==========================================================================
 //
-// We support three wildcards, matching the behavior expected by Bazel-style
-// BUILD files:
+// We support four portable pattern forms used by BUILD source declarations:
 //
 // | Wildcard | Meaning                                               |
 // |----------|-------------------------------------------------------|
@@ -38,41 +37,97 @@
 // |          | `dir/foo.py`.                                         |
 // | `?`      | Matches exactly one character (not `/`).              |
 // |          | For example, `?.py` matches `a.py` but not `ab.py`.  |
+// | `[…]`    | Matches one Unicode scalar from a literal set or an   |
+// |          | ascending range, optionally negated by leading `!`.  |
 //
 // ==========================================================================
 // Chapter 3: The Matching Algorithm
 // ==========================================================================
 //
-// The algorithm is recursive with memoization-friendly structure (though we
-// use simple recursion here since patterns and paths are short).
-//
-// The key insight is that `**` is the only wildcard that can cross path
-// segment boundaries (`/`). So we split the pattern on `**` first, then
-// match each segment using `*` and `?` within a single path segment.
+// The algorithm first compiles Unicode scalar tokens without consulting the
+// filesystem. A whole-segment `**` is the only wildcard that can cross path
+// boundaries; embedded repeated stars collapse to one segment-local `*`.
 //
 // The top-level flow:
 //
 //  1. Normalize both pattern and path: replace `\` with `/`.
-//  2. Split the pattern on `**` to get "segments".
-//  3. For each segment, try to match it against the remaining path.
-//  4. `**` between segments can consume zero or more path components.
+//  2. Split on `/`, discard empty compatibility components, and compile each
+//     segment. Consecutive whole-segment globstars collapse.
+//  3. Match the segment list and candidate path with a rolling-row dynamic
+//     program. Each state is visited once.
+//  4. Match tokens inside one segment with a second rolling-row program.
 //
-// For single-segment matching (no `**`), we use character-by-character
-// comparison with `*` and `?` handling.
+// Bracket parsing pre-indexes the next `]`, so even long unmatched `[` runs
+// take linear parser work. No recursive suffix enumeration remains.
 
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
-/// Match a file path against a glob pattern.
+use std::fmt;
+
+/// Stable failure returned for portable-glob syntax that has no unambiguous
+/// cross-runtime meaning.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum GlobPatternError {
+    /// The class contains a descending range or `--`, `&&`, `~~`, or `||`.
+    AmbiguousOrDescendingCharacterClass,
+}
+
+impl fmt::Display for GlobPatternError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::AmbiguousOrDescendingCharacterClass => {
+                formatter.write_str("ambiguous or descending character class in glob pattern")
+            }
+        }
+    }
+}
+
+impl std::error::Error for GlobPatternError {}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+enum ClassMember {
+    Literal(char),
+    Range(char, char),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+enum Token {
+    Literal(char),
+    Star,
+    Question,
+    CharacterClass {
+        negated: bool,
+        members: Vec<ClassMember>,
+    },
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+enum CompiledSegment {
+    GlobStar,
+    Tokens(Vec<Token>),
+}
+
+/// One validated portable glob, compiled once for repeated candidate matching.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub(crate) struct CompiledPattern {
+    segments: Vec<CompiledSegment>,
+}
+
+/// Match a file path against a glob pattern for compatibility callers.
 ///
-/// Supports three wildcards:
+/// Supports the portable BUILD glob forms:
 ///   - `**` — matches zero or more path segments (crosses `/` boundaries)
 ///   - `*`  — matches zero or more characters within one segment (no `/`)
 ///   - `?`  — matches exactly one character (not `/`)
+///   - `[…]` — matches one Unicode scalar from a class or ascending range
 ///
 /// Both the pattern and path are normalized to use `/` as the separator
 /// before matching, so this works correctly on all platforms.
+/// Invalid portable syntax does not panic: it returns `false`. BUILD-file
+/// hosts that must distinguish invalid syntax from a non-match use
+/// [`try_match_path`] or compile the complete declared list first.
 ///
 /// # Examples
 ///
@@ -92,129 +147,251 @@
 /// assert!(!match_path("?.py", "ab.py"));
 /// ```
 pub fn match_path(pattern: &str, path: &str) -> bool {
-    // Step 1: Normalize separators.
-    //
-    // Windows uses backslashes, Unix uses forward slashes. We normalize
-    // everything to forward slashes so patterns work cross-platform.
-    let pattern = pattern.replace('\\', "/");
-    let path = path.replace('\\', "/");
+    try_match_path(pattern, path).unwrap_or(false)
+}
 
-    // Delegate to the recursive matcher.
-    do_match(pattern.as_bytes(), path.as_bytes())
+/// Match a path while preserving invalid portable syntax as a typed error.
+pub fn try_match_path(pattern: &str, path: &str) -> Result<bool, GlobPatternError> {
+    let compiled = compile_pattern(pattern)?;
+    Ok(match_compiled_path(&compiled, path))
+}
+
+/// Validate one pattern without matching a candidate path.
+pub fn validate_pattern(pattern: &str) -> Result<(), GlobPatternError> {
+    compile_pattern(pattern).map(|_| ())
+}
+
+/// Compile a complete declared list before callers enumerate candidates.
+pub(crate) fn compile_patterns(
+    patterns: &[String],
+) -> Result<Vec<CompiledPattern>, GlobPatternError> {
+    patterns
+        .iter()
+        .map(|pattern| compile_pattern(pattern))
+        .collect()
 }
 
 // ---------------------------------------------------------------------------
 // Internal matching engine
 // ---------------------------------------------------------------------------
 
-/// Recursive matching engine operating on byte slices for efficiency.
-///
-/// This function handles all three wildcards:
-///
-/// - When we encounter `**`, we try matching the rest of the pattern
-///   against every possible suffix of the path (consuming zero or more
-///   complete path segments).
-///
-/// - When we encounter `*`, we try consuming zero or more non-`/`
-///   characters from the path.
-///
-/// - When we encounter `?`, we consume exactly one non-`/` character.
-///
-/// - Literal characters must match exactly.
-///
-/// The recursion terminates when either the pattern or path is exhausted.
-/// A match succeeds only if BOTH are exhausted simultaneously (or the
-/// remaining pattern consists entirely of `**` and `/` separators).
-fn do_match(pattern: &[u8], path: &[u8]) -> bool {
-    // Base case: both pattern and path are fully consumed — success.
-    if pattern.is_empty() {
-        return path.is_empty();
-    }
+fn compile_pattern(pattern: &str) -> Result<CompiledPattern, GlobPatternError> {
+    let normalized = pattern.replace('\\', "/");
+    let mut segments = Vec::new();
 
-    // Check for `**` (double-star) at the current position.
-    //
-    // `**` is special because it crosses `/` boundaries. It matches
-    // zero or more complete path segments. We handle it by trying
-    // every possible "skip" of the path:
-    //
-    //   - Skip 0 characters (** matches nothing)
-    //   - Skip to after the next `/` (** matches one segment)
-    //   - Skip to after the second `/` (** matches two segments)
-    //   - ... and so on until the path is exhausted.
-    if pattern.len() >= 2 && pattern[0] == b'*' && pattern[1] == b'*' {
-        // Consume the `**` from the pattern.
-        let rest_pattern = &pattern[2..];
-
-        // Also consume a trailing `/` after `**` if present, since `**/`
-        // means "any number of directories followed by a separator".
-        let rest_pattern = if !rest_pattern.is_empty() && rest_pattern[0] == b'/' {
-            &rest_pattern[1..]
+    for segment in normalized.split('/').filter(|segment| !segment.is_empty()) {
+        if segment == "**" {
+            if !matches!(segments.last(), Some(CompiledSegment::GlobStar)) {
+                segments.push(CompiledSegment::GlobStar);
+            }
         } else {
-            rest_pattern
-        };
-
-        // Also handle leading `/` before `**` — try without it.
-        // Try matching rest_pattern against every suffix of path.
-        //
-        // Attempt 1: ** matches zero segments (path unchanged).
-        if do_match(rest_pattern, path) {
-            return true;
+            segments.push(CompiledSegment::Tokens(parse_segment(segment)?));
         }
+    }
 
-        // Attempt 2+: ** matches one or more segments.
-        // Walk through the path, and at each `/` boundary, try matching
-        // the rest.
-        for i in 0..path.len() {
-            if path[i] == b'/' && do_match(rest_pattern, &path[i + 1..]) {
-                return true;
+    Ok(CompiledPattern { segments })
+}
+
+fn parse_segment(segment: &str) -> Result<Vec<Token>, GlobPatternError> {
+    parse_segment_with_state_count(segment).map(|(tokens, _)| tokens)
+}
+
+fn parse_segment_with_state_count(segment: &str) -> Result<(Vec<Token>, usize), GlobPatternError> {
+    let scalars: Vec<char> = segment.chars().collect();
+    let mut next_closing_bracket = vec![None; scalars.len() + 1];
+    let mut next_closing = None;
+
+    for index in (0..scalars.len()).rev() {
+        if scalars[index] == ']' {
+            next_closing = Some(index);
+        }
+        next_closing_bracket[index] = next_closing;
+    }
+
+    let mut tokens = Vec::new();
+    let mut index = 0;
+    let mut visited = scalars.len();
+    while index < scalars.len() {
+        visited += 1;
+        match scalars[index] {
+            '*' => {
+                if !matches!(tokens.last(), Some(Token::Star)) {
+                    tokens.push(Token::Star);
+                }
+                index += 1;
+            }
+            '?' => {
+                tokens.push(Token::Question);
+                index += 1;
+            }
+            '[' => match parse_character_class(&scalars, index, &next_closing_bracket)? {
+                Some((token, next_index)) => {
+                    tokens.push(token);
+                    index = next_index;
+                }
+                None => {
+                    tokens.push(Token::Literal('['));
+                    index += 1;
+                }
+            },
+            literal => {
+                tokens.push(Token::Literal(literal));
+                index += 1;
             }
         }
-
-        // Attempt: ** matches the entire remaining path.
-        // This handles the case where ** is at the end of the pattern.
-        if rest_pattern.is_empty() {
-            return true;
-        }
-
-        return false;
     }
 
-    // Check for single `*` — matches zero or more non-`/` characters.
-    //
-    // The key difference from `**` is that `*` does NOT cross `/`
-    // boundaries. So `*.py` matches `foo.py` but not `dir/foo.py`.
-    if pattern[0] == b'*' {
-        let rest_pattern = &pattern[1..];
+    Ok((tokens, visited))
+}
 
-        // Try consuming 0, 1, 2, ... characters from path (but not `/`).
-        for i in 0..=path.len() {
-            // Stop if we would cross a `/` boundary.
-            if i > 0 && path[i - 1] == b'/' {
-                break;
+fn parse_character_class(
+    scalars: &[char],
+    opening: usize,
+    next_closing_bracket: &[Option<usize>],
+) -> Result<Option<(Token, usize)>, GlobPatternError> {
+    let mut cursor = opening + 1;
+    let negated = cursor < scalars.len() && scalars[cursor] == '!';
+    if negated {
+        cursor += 1;
+    }
+
+    let closing = match next_closing_bracket[cursor] {
+        Some(candidate) if candidate == cursor => next_closing_bracket[cursor + 1],
+        candidate => candidate,
+    };
+    let Some(closing) = closing else {
+        return Ok(None);
+    };
+    let body = &scalars[cursor..closing];
+
+    if body
+        .windows(2)
+        .any(|pair| pair[0] == pair[1] && matches!(pair[0], '-' | '&' | '~' | '|'))
+    {
+        return Err(GlobPatternError::AmbiguousOrDescendingCharacterClass);
+    }
+
+    let mut members = Vec::new();
+    let mut member_index = 0;
+    while member_index < body.len() {
+        if member_index + 2 < body.len() && body[member_index + 1] == '-' {
+            let start = body[member_index];
+            let end = body[member_index + 2];
+            if start > end {
+                return Err(GlobPatternError::AmbiguousOrDescendingCharacterClass);
             }
-            if do_match(rest_pattern, &path[i..]) {
-                return true;
+            members.push(ClassMember::Range(start, end));
+            member_index += 3;
+        } else {
+            members.push(ClassMember::Literal(body[member_index]));
+            member_index += 1;
+        }
+    }
+
+    Ok(Some((
+        Token::CharacterClass { negated, members },
+        closing + 1,
+    )))
+}
+
+pub(crate) fn match_compiled_path(pattern: &CompiledPattern, path: &str) -> bool {
+    match_compiled_path_with_state_count(pattern, path).0
+}
+
+#[cfg(test)]
+fn match_path_with_state_count(
+    pattern: &str,
+    path: &str,
+) -> Result<(bool, usize), GlobPatternError> {
+    let compiled = compile_pattern(pattern)?;
+    Ok(match_compiled_path_with_state_count(&compiled, path))
+}
+
+fn match_compiled_path_with_state_count(pattern: &CompiledPattern, path: &str) -> (bool, usize) {
+    let normalized = path.replace('\\', "/");
+    let path_segments: Vec<Vec<char>> = normalized
+        .split('/')
+        .filter(|segment| !segment.is_empty())
+        .map(|segment| segment.chars().collect())
+        .collect();
+    let path_count = path_segments.len();
+    let mut next_row = vec![false; path_count + 1];
+    next_row[path_count] = true;
+    let mut visited = path_count + 1;
+
+    for segment in pattern.segments.iter().rev() {
+        let mut row = vec![false; path_count + 1];
+        visited += path_count + 1;
+        match segment {
+            CompiledSegment::GlobStar => {
+                row[path_count] = next_row[path_count];
+                for path_index in (0..path_count).rev() {
+                    row[path_index] = next_row[path_index] || row[path_index + 1];
+                }
+            }
+            CompiledSegment::Tokens(tokens) => {
+                for path_index in (0..path_count).rev() {
+                    row[path_index] = next_row[path_index + 1]
+                        && match_segment(tokens, &path_segments[path_index]);
+                }
             }
         }
-
-        return false;
+        next_row = row;
     }
 
-    // Check for `?` — matches exactly one non-`/` character.
-    if pattern[0] == b'?' {
-        if !path.is_empty() && path[0] != b'/' {
-            return do_match(&pattern[1..], &path[1..]);
+    (next_row[0], visited)
+}
+
+fn match_segment(tokens: &[Token], value: &[char]) -> bool {
+    match_segment_with_state_count(tokens, value).0
+}
+
+fn match_segment_with_state_count(tokens: &[Token], value: &[char]) -> (bool, usize) {
+    let value_count = value.len();
+    let mut next_row = vec![false; value_count + 1];
+    next_row[value_count] = true;
+
+    for token in tokens.iter().rev() {
+        let mut row = vec![false; value_count + 1];
+        match token {
+            Token::Star => {
+                row[value_count] = next_row[value_count];
+                for value_index in (0..value_count).rev() {
+                    row[value_index] = next_row[value_index] || row[value_index + 1];
+                }
+            }
+            Token::Question => {
+                row[..value_count].copy_from_slice(&next_row[1..=value_count]);
+            }
+            Token::Literal(_) | Token::CharacterClass { .. } => {
+                for value_index in 0..value_count {
+                    row[value_index] =
+                        next_row[value_index + 1] && token_matches(token, value[value_index]);
+                }
+            }
         }
-        return false;
+        next_row = row;
     }
 
-    // Literal character — must match exactly.
-    if !path.is_empty() && pattern[0] == path[0] {
-        return do_match(&pattern[1..], &path[1..]);
-    }
+    (next_row[0], (tokens.len() + 1) * (value_count + 1))
+}
 
-    // No match.
-    false
+fn token_matches(token: &Token, value: char) -> bool {
+    match token {
+        Token::Literal(expected) => *expected == value,
+        Token::CharacterClass { negated, members } => {
+            let included = members.iter().any(|member| match member {
+                ClassMember::Literal(expected) => *expected == value,
+                ClassMember::Range(start, end) => *start <= value && value <= *end,
+            });
+            if *negated {
+                !included
+            } else {
+                included
+            }
+        }
+        Token::Star | Token::Question => false,
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -357,7 +534,10 @@ mod tests {
 
     #[test]
     fn test_doublestar_with_exact_suffix() {
-        assert!(match_path("**/BUILD", "code/packages/python/logic-gates/BUILD"));
+        assert!(match_path(
+            "**/BUILD",
+            "code/packages/python/logic-gates/BUILD"
+        ));
         assert!(match_path("**/BUILD", "BUILD"));
     }
 
@@ -381,8 +561,8 @@ mod tests {
     }
 
     #[test]
-    fn test_question_does_not_match_slash() {
-        assert!(!match_path("?.py", "/a.py"));
+    fn test_leading_slash_is_ignored_for_compatibility() {
+        assert!(match_path("?.py", "/a.py"));
     }
 
     #[test]
@@ -471,5 +651,133 @@ mod tests {
         assert!(match_path(pat, "src/main.rs"));
         assert!(match_path(pat, "src/lib/parser.rs"));
         assert!(!match_path(pat, "benches/bench.rs"));
+    }
+
+    #[test]
+    fn question_and_classes_consume_unicode_scalars() {
+        assert!(try_match_path("?.txt", "🐍.txt").unwrap());
+        assert!(try_match_path("[🐀-🙏].txt", "🐍.txt").unwrap());
+        assert!(!try_match_path("[🐀-🙏].txt", "a.txt").unwrap());
+
+        let decomposed = "e\u{301}";
+        assert!(!try_match_path("?", decomposed).unwrap());
+        assert!(try_match_path("??", decomposed).unwrap());
+    }
+
+    #[test]
+    fn portable_character_class_edges_match_python_fnmatchcase() {
+        for (pattern, matching, nonmatching) in [
+            ("[^a].txt", "^.txt", "b.txt"),
+            ("[]a].txt", "].txt", "b.txt"),
+            ("[-a].txt", "-.txt", "b.txt"),
+            ("[a-].txt", "-.txt", "b.txt"),
+            ("[a-c].txt", "b.txt", "z.txt"),
+            ("[!a-c].txt", "z.txt", "b.txt"),
+        ] {
+            assert!(try_match_path(pattern, matching).unwrap(), "{pattern}");
+            assert!(!try_match_path(pattern, nonmatching).unwrap(), "{pattern}");
+        }
+
+        assert!(try_match_path("[^a].txt", "a.txt").unwrap());
+        assert!(try_match_path("[!]].txt", "a.txt").unwrap());
+        assert!(!try_match_path("[!]].txt", "].txt").unwrap());
+    }
+
+    #[test]
+    fn unmatched_opening_bracket_is_a_literal() {
+        for (pattern, path) in [
+            ("[", "["),
+            ("prefix[", "prefix["),
+            ("[]", "[]"),
+            ("[!]", "[!]"),
+        ] {
+            assert!(try_match_path(pattern, path).unwrap(), "{pattern}");
+        }
+        assert!(!try_match_path("prefix[", "prefixx").unwrap());
+    }
+
+    #[test]
+    fn rejected_classes_return_one_stable_typed_error() {
+        for pattern in [
+            "[z-a].txt",
+            "[a--b].txt",
+            "[a&&b].txt",
+            "[a~~b].txt",
+            "[a||b].txt",
+        ] {
+            assert_eq!(
+                validate_pattern(pattern),
+                Err(GlobPatternError::AmbiguousOrDescendingCharacterClass),
+                "{pattern}"
+            );
+            assert_eq!(
+                try_match_path(pattern, "a.txt"),
+                Err(GlobPatternError::AmbiguousOrDescendingCharacterClass),
+                "{pattern}"
+            );
+        }
+    }
+
+    #[test]
+    fn compatibility_matcher_does_not_panic_on_invalid_syntax() {
+        assert!(!match_path("[z-a].txt", "z.txt"));
+    }
+
+    #[test]
+    fn unmatched_bracket_parser_work_is_linear() {
+        let pattern = "[".repeat(16_384);
+        let (tokens, visited) = parse_segment_with_state_count(&pattern).unwrap();
+
+        assert_eq!(tokens.len(), pattern.chars().count());
+        assert_eq!(visited, 2 * pattern.chars().count());
+    }
+
+    #[test]
+    fn adversarial_globstar_near_miss_visits_each_path_state_once() {
+        let pattern = std::iter::repeat_n(["**", "a"], 12)
+            .flatten()
+            .chain(["z"])
+            .collect::<Vec<_>>()
+            .join("/");
+        let path = std::iter::repeat_n("a", 24)
+            .chain(["y"])
+            .collect::<Vec<_>>()
+            .join("/");
+
+        let (matched, visited) = match_path_with_state_count(&pattern, &path).unwrap();
+
+        assert!(!matched);
+        let pattern_states = pattern.split('/').count() + 1;
+        let path_states = path.split('/').count() + 1;
+        assert_eq!(visited, pattern_states * path_states);
+    }
+
+    #[test]
+    fn adversarial_segment_near_miss_visits_each_state_once() {
+        let tokens = parse_segment("*a*a*a*a*a*b").unwrap();
+        let value: Vec<char> = "aaaaaaaaaaaaaaaaac".chars().collect();
+
+        let (matched, visited) = match_segment_with_state_count(&tokens, &value);
+
+        assert!(!matched);
+        assert_eq!(visited, (tokens.len() + 1) * (value.len() + 1));
+    }
+
+    #[test]
+    fn repeated_stars_and_globstars_collapse_without_semantic_drift() {
+        assert!(try_match_path("**/**/*.py", "a/b/main.py").unwrap());
+        assert!(try_match_path("**/**/**", "x/y/z").unwrap());
+        assert!(try_match_path("src/**", "src").unwrap());
+        assert!(try_match_path("src//main.py", "src/main.py").unwrap());
+        assert!(try_match_path("src/", "src").unwrap());
+        assert!(!try_match_path("*", "").unwrap());
+    }
+
+    #[test]
+    fn braces_are_literal_and_embedded_double_star_stays_in_one_segment() {
+        assert!(try_match_path("{a,b}.txt", "{a,b}.txt").unwrap());
+        assert!(!try_match_path("{a,b}.txt", "a.txt").unwrap());
+        assert!(try_match_path("foo**bar", "fooxbar").unwrap());
+        assert!(!try_match_path("foo**bar", "foo/x/bar").unwrap());
     }
 }

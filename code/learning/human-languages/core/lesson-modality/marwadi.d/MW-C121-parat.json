@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C121-parat",
+    "language": "marwadi",
+    "chapter": 121,
+    "sequence": 7760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1a97f6b96ffff5c"
+  },
+  "findings": []
+}

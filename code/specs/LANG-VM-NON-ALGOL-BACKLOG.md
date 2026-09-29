@@ -1,12 +1,149 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-16
+Status date: 2026-09-28
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## Prioritization run — 2026-09-28
+
+PR #16196 delivered the bounded two-live WORD02 add/sub/and/or/xor proof and
+merged as `ae8a418726475025343e430816429311302713b5` after Linux, macOS,
+and Windows CI passed. A parallel WORD02 PR #16197 conflicted with the merge
+and was closed as superseded; its branch is preserved. That branch exposed a
+remaining portable `~` operation which the merged backend does not yet lower.
+Its allocator also discarded other live values after an operation, so the
+parallel branch must not be merged wholesale.
+
+The next shared-platform queue is:
+
+1. **WORD02b / VM-072 (selected):** lower typed unary `not_u8` and `not_u16`
+   on both targets, preserving any other live value and proving the masked
+   result in both simulators. This closes the bitwise surface before control
+   flow and reuses the merged two-slot allocator.
+2. **VM-067:** scope a useful generated-grammar CI guard against issue
+   #14202's documented drift, starting with a reconciled grammar lane.
+3. **VM-073:** audit ets-backed `array_set` extent checks and execute a
+   real-Erlang regression if an out-of-range insertion is reachable.
+4. **WORD03 / VM-072:** add normalized comparisons and structured control on
+   both target backends.
+5. **VM-069 / PREP01:** continue expansion-definition provenance and
+   `defined()` operand expansion.
+
+Preserve the unpublished Hex H0 branch while Word remains the selected path.
+Reprioritize after every merge or newly discovered executable failure.
+
+## Prioritization run — 2026-09-27
+
+PR #16169 delivered VM-074 and merged as `3afc8bf0c805fbfce535bef0bde4e2b3cf9a08c0`
+after all required checks passed. The Oct/8080 compatibility premise is now
+corrected before selecting the next language design.
+
+VM-072 selects one cross-target language, **Word**, rather than separate Z80
+and 8086 frontends. Fixed `u8`/`u16` source types make the same program compare
+pair-based Z80 work with native 8086 word work without implying compatible
+machine code. Portable memory is a 16-bit logical offset (flat on Z80, near
+`DS:offset` on 8086), portable I/O is byte-wide, and architecture-only features
+remain namespaced. The detailed contract and proof ladder are in
+`WORD00-word-language.md`.
+
+`HEX00-portable-16-bit-language.md` landed from a near-simultaneous design
+branch with a conflicting frontend-first H0-H4 ladder. The current
+prioritization selects Word's backend-first ladder; HEX00 is retained as
+superseded design history and must not create a parallel implementation.
+
+The next shared-platform queue is:
+
+PR #16187 delivered WORD01 and merged as
+`9d1b5e446ad50ac70a432fcd35b8eafd6a82f999` after required checks
+passed. Its executed proof confirms the `u16` result ABI on both targets.
+The unpublished Hex H0 implementation branch is parked because the merged
+Word contract selects a backend-first ladder; it is not a second active PR.
+
+1. **WORD02 / VM-072 (selected):** add bounded two-live-value allocation plus
+   wrapping `u8`/`u16` arithmetic and bitwise execution on both targets.
+   Run emitted bytes in both simulators and inspect full-width results.
+2. **VM-067:** add a useful Rust generated-grammar regeneration guard scoped
+   against issue #14202's existing drift.
+3. **VM-073:** audit ets-backed `array_set` extent checks and add a real-Erlang
+   regression if an out-of-range insertion is reachable.
+4. **VM-069 / PREP01:** continue the bounded preprocessor ladder with
+   expansion-definition provenance and `defined()` operand expansion.
+5. **Remaining semantic/runtime work:** VM-013 Oct intrinsics, VM-028 4004
+   fidelity, VM-029/031 platform acceptance/native GC proofs, and AOT00.
+
+WORD03 through WORD05 then add control flow, static memory/I/O/direct calls,
+and finally the frontend plus same-source acceptance. Do not scaffold the
+frontend before the backend proof ladder works; simulator ISA coverage is not
+backend coverage.
+
+## Prioritization run before VM-072 selection
+
+PR #16126 delivered VM-071/BEAM11 and merged as `624b6ffe2807abaec0c9e12e3d9a6a23df227108`
+after push and PR CI passed. Its `ets:lookup_element/4` default reads preserve
+typed zero for unwritten cells while explicit guards enforce the declared
+extent. The macOS-discovered allocation bug was repaired by retaining the
+length in an initialized Y slot across `ets:new/2`. Issue #15882's wider
+scratch-register GC-root risk remains open.
+
+PR #16169 delivered #16164/VM-074 and merged as
+`3afc8bf0c805fbfce535bef0bde4e2b3cf9a08c0` after all latest checks
+passed. OCT00 now requires target-specific code generation; a decoder test
+pins the 8008 `JMP`/8080 `MOV A,H` opcode collision.
+
+The next shared-platform queue, reranked against that merge and the user's
+request for a gradual 8086/Z80 language, is:
+
+1. **VM-072 (selected, user-directed design):** design the next gradual language rung
+   after Nib and Oct for Intel 8086 and Z80. Both have Rust/Python behavioral
+   simulators, Rust encoders, and gate-level models. Their Rust CIR backends
+   currently lower only constants and return/halt, so arithmetic, memory,
+   branches, calls, and I/O need implementation and executed proof. Compare a
+   portable source subset with separate target code generation. `HEX00` chooses
+   one Hex source language with `u8`/`u16` semantics and distinct Z80/8086
+   emitters; its staged source-to-ROM acceptance plan must precede any claim
+   that the language already runs on either target.
+2. **VM-077 / Hex H0 (after the design PR merges):** implement the canonical
+   grammar, typed AST, type checker, IIR emission, reference execution, and
+   exact diagnostics from `HEX00`. Reject target emission until H1 can run
+   the generated ROM on both simulators; retain Nib/Oct regression coverage.
+3. **VM-067:** Rust generated grammars lack a CI regeneration guard; issue
+   #14202 also reports existing drift. Scope the guard against that baseline
+   before enabling it, so CI executes a useful assertion.
+4. **VM-073:** audit ets-backed `array_set` extent checks for direct IIR
+   consumers and reachable frontends; add a real-Erlang regression if an
+   out-of-range insertion is reachable.
+5. **VM-075 / VM-076 (discovered during VM-072):** reconcile the older
+   `intel8086-backend.md` account of a curated Rust simulator with the now
+   complete implementation and full-state differential suite; narrow the
+   Z80 simulator README's claim of identical 8080 semantics to byte
+   compatibility where applicable, explicitly accounting for flag differences.
+   Both are documentation audits, behind the user-directed design and the
+   missing grammar CI protection.
+6. **VM-069 / PREP01:** retain expansion-definition provenance and resolve
+   `defined()` operand expansion before the C dialect; continue one bounded
+   preprocessor slice at a time.
+7. **Remaining semantic and runtime tracks:** VM-013 Oct intrinsics, VM-028
+   4004 fidelity, VM-029/031 platform acceptance and native GC proofs, and
+   AOT00 exceptions/optimization/concurrency. Re-rank after each merge.
+
+**#12032 / VM-066 remains with the separate ALGOL owner:** the executed JVM
+nested-array capture failure keeps the full matrix and silent-skip guard out
+of normal CI. Do not claim the guard is fixed before the failing cell is fixed
+and the guard runs in CI.
+
+**VM-073 (discovered during BEAM11):** the ets-backed `array_set` lowering
+inserts an arbitrary integer key without consulting the `[Table | Length]`
+extent, whereas the `:atomics` path traps on an out-of-range index. Existing
+language frontends emit bounds checks, so this is not yet a proven declared
+matrix failure. Audit direct IIR consumers and any reachable frontend path,
+then either enforce bounds in the shared backend with a real-Erlang regression
+or document the frontend precondition explicitly. Rank it after the measured
+VM-071 failure and the missing CI protection above unless execution proves a
+reachable silent error.
 
 ### VM-071 — BEAM04's pre-zero gap is no longer unreachable (opened by VM-070)
 

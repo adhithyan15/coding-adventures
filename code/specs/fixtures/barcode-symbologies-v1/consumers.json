@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "profile": "barcode-symbologies-v1-consumers",
+  "consumers": [
+    {
+      "symbology": "itf",
+      "language": "csharp",
+      "package_root": "code/packages/csharp/itf",
+      "test_path": "code/packages/csharp/itf/tests/CodingAdventures.Itf.Tests/ItfConformanceTests.cs",
+      "normalize": "Itf.NormalizeItf",
+      "encode": "Itf.EncodeItf",
+      "pair_binary_pattern": "EncodedPair.BinaryPattern",
+      "error_identifier": "InvalidItfInputException.ErrorId"
+    },
+    {
+      "symbology": "itf",
+      "language": "elixir",
+      "package_root": "code/packages/elixir/itf",
+      "test_path": "code/packages/elixir/itf/test/itf_conformance_test.exs",
+      "normalize": "CodingAdventures.Itf.normalize_itf/1",
+      "encode": "CodingAdventures.Itf.encode_itf/1",
+      "pair_binary_pattern": "pair.binary_pattern",
+      "error_identifier": "CodingAdventures.Itf.error_id/1"
+    },
+    {
+      "symbology": "itf",
+      "language": "fsharp",
+      "package_root": "code/packages/fsharp/itf",
+      "test_path": "code/packages/fsharp/itf/tests/CodingAdventures.Itf.Tests/ItfTests.fs",
+      "normalize": "Itf.normalizeItf",
+      "encode": "Itf.encodeItf",
+      "pair_binary_pattern": "EncodedPair.BinaryPattern",
+      "error_identifier": "Itf.errorId"
+    },
+    {
+      "symbology": "itf",
+      "language": "go",
+      "package_root": "code/packages/go/itf",
+      "test_path": "code/packages/go/itf/itf_conformance_test.go",
+      "normalize": "NormalizeITF",
+      "encode": "EncodeITF",
+      "pair_binary_pattern": "EncodedPair.BinaryPattern",
+      "error_identifier": "InputError.Code"
+    },
+    {
+      "symbology": "itf",
+      "language": "haskell",
+      "package_root": "code/packages/haskell/itf",
+      "test_path": "code/packages/haskell/itf/test/ItfSpec.hs",
+      "normalize": "normalizeItf",
+      "encode": "encodeItf",
+      "pair_binary_pattern": "encodedPairBinaryPattern",
+      "error_identifier": "itfErrorId"
+    },
+    {
+      "symbology": "itf",
+      "language": "lua",
+      "package_root": "code/packages/lua/itf",
+      "test_path": "code/packages/lua/itf/tests/test_itf_conformance.lua",
+      "normalize": "normalize_itf",
+      "encode": "encode_itf",
+      "pair_binary_pattern": "pair.binary_pattern",
+      "error_identifier": "error_id"
+    },
+    {
+      "symbology": "itf",
+      "language": "perl",
+      "package_root": "code/packages/perl/itf",
+      "test_path": "code/packages/perl/itf/t/02-conformance.t",
+      "normalize": "normalize_itf",
+      "encode": "encode_itf",
+      "pair_binary_pattern": "pair->{binary_pattern}",
+      "error_identifier": "error_id"
+    },
+    {
+      "symbology": "itf",
+      "language": "python",
+      "package_root": "code/packages/python/itf",
+      "test_path": "code/packages/python/itf/tests/test_itf_conformance.py",
+      "normalize": "normalize_itf",
+      "encode": "encode_itf",
+      "pair_binary_pattern": "EncodedPair.binary_pattern",
+      "error_identifier": "InvalidItfInputError.error_id"
+    },
+    {
+      "symbology": "itf",
+      "language": "ruby",
+      "package_root": "code/packages/ruby/itf",
+      "test_path": "code/packages/ruby/itf/test/test_itf.rb",
+      "normalize": "normalize_itf",
+      "encode": "encode_itf",
+      "pair_binary_pattern": "pair[:binary_pattern]",
+      "error_identifier": "error_id"
+    },
+    {
+      "symbology": "itf",
+      "language": "rust",
+      "package_root": "code/packages/rust/itf",
+      "test_path": "code/packages/rust/itf/tests/conformance.rs",
+      "normalize": "normalize_itf",
+      "encode": "encode_itf",
+      "pair_binary_pattern": "EncodedPair.binary_pattern",
+      "error_identifier": "itf_error_id"
+    },
+    {
+      "symbology": "itf",
+      "language": "swift",
+      "package_root": "code/packages/swift/ITF",
+      "test_path": "code/packages/swift/ITF/Tests/ITFTests/ITFConformanceTests.swift",
+      "normalize": "normalizeITF",
+      "encode": "encodeITF",
+      "pair_binary_pattern": "EncodedPair.binaryPattern",
+      "error_identifier": "itfErrorID"
+    },
+    {
+      "symbology": "itf",
+      "language": "typescript",
+      "package_root": "code/packages/typescript/itf",
+      "test_path": "code/packages/typescript/itf/tests/itf.conformance.test.ts",
+      "normalize": "normalizeItf",
+      "encode": "encodeItf",
+      "pair_binary_pattern": "EncodedPair.binaryPattern",
+      "error_identifier": "InvalidItfInputError.errorId"
+    }
+  ]
+}

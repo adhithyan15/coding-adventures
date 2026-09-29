@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C105-janno",
+    "language": "marwadi",
+    "chapter": 105,
+    "sequence": 6770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e55590f6fab43016"
+  },
+  "findings": []
+}

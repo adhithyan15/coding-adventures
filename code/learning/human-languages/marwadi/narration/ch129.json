@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 129,
+  "title": "Shirt, Sandals, Embroidered shoes, Thick bangle, Bangle",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:15e1c3719f9f7c86",
+  "lessons": [
+    {
+      "id": "MW-C129-kamij",
+      "sequence": 8150,
+      "title": "कमीज (kamīj) — a shirt",
+      "headword": "कमीज",
+      "romanization": "kamīj",
+      "gloss": "a shirt",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:809bc29b870defec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a bodice, then the Marwadi for a long coat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कमीज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कमीज — kamīj — \"a shirt\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamīj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamīj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamīj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamīj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kamīj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kamīj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a bodice, then the Marwadi for a long coat, then say kamīj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a bodice, then the Marwadi for a long coat, then say *kamīj* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कमीज (kamīj) mean? (\"A shirt\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C129-kamij-type",
+              "prompt": "Type the Marwadi for 'a shirt'.",
+              "assesses": [
+                "MW-LEX-C129-THINGS129-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कमीज",
+                "kamīj"
+              ],
+              "feedback": {
+                "correct": "Right: कमीज (kamīj) is 'a shirt'.",
+                "incorrect": "'a shirt' is कमीज (kamīj)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C129-chappal",
+      "sequence": 8160,
+      "title": "चप्पल (chappal) — sandals",
+      "headword": "चप्पल",
+      "romanization": "chappal",
+      "gloss": "sandals",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c749b36823d87115",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a long coat, then the Marwadi for a shirt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चप्पल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चप्पल — chappal — \"sandals\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chappal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chappal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chappal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chappal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chappal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chappal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a long coat, then the Marwadi for a shirt, then say chappal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a long coat, then the Marwadi for a shirt, then say *chappal* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चप्पल (chappal) mean? (\"Sandals\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C129-chappal-type",
+              "prompt": "Type the Marwadi for 'sandals'.",
+              "assesses": [
+                "MW-LEX-C129-THINGS129-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चप्पल",
+                "chappal"
+              ],
+              "feedback": {
+                "correct": "Right: चप्पल (chappal) is 'sandals'.",
+                "incorrect": "'sandals' is चप्पल (chappal)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C129-mochri",
+      "sequence": 8170,
+      "title": "मोचड़ी (mochṛī) — embroidered shoes",
+      "headword": "मोचड़ी",
+      "romanization": "mochṛī",
+      "gloss": "embroidered shoes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b7c4c8c7412f8ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a shirt, then the Marwadi for sandals."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोचड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोचड़ी — mochṛī — \"embroidered shoes\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mochṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mochṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a shirt, then the Marwadi for sandals, then say mochṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a shirt, then the Marwadi for sandals, then say *mochṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोचड़ी (mochṛī) mean? (\"Embroidered shoes\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C129-mochri-type",
+              "prompt": "Type the Marwadi for 'embroidered shoes'.",
+              "assesses": [
+                "MW-LEX-C129-THINGS129-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मोचड़ी",
+                "mochṛī"
+              ],
+              "feedback": {
+                "correct": "Right: मोचड़ी (mochṛī) is 'embroidered shoes'.",
+                "incorrect": "'embroidered shoes' is मोचड़ी (mochṛī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C129-karo",
+      "sequence": 8180,
+      "title": "कड़ो (kaṛo) — a thick bangle",
+      "headword": "कड़ो",
+      "romanization": "kaṛo",
+      "gloss": "a thick bangle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7ef81e4a747aba6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for sandals, then the Marwadi for embroidered shoes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कड़ो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कड़ो — kaṛo — \"a thick bangle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṛo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṛo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for sandals, then the Marwadi for embroidered shoes, then say kaṛo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for sandals, then the Marwadi for embroidered shoes, then say *kaṛo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कड़ो (kaṛo) mean? (\"A thick bangle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C129-karo-type",
+              "prompt": "Type the Marwadi for 'a thick bangle'.",
+              "assesses": [
+                "MW-LEX-C129-THINGS129-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कड़ो",
+                "kaṛo"
+              ],
+              "feedback": {
+                "correct": "Right: कड़ो (kaṛo) is 'a thick bangle'.",
+                "incorrect": "'a thick bangle' is कड़ो (kaṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C129-churi",
+      "sequence": 8190,
+      "title": "चूड़ी (chūṛī) — a bangle",
+      "headword": "चूड़ी",
+      "romanization": "chūṛī",
+      "gloss": "a bangle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32cbbf43bf64759b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for embroidered shoes, then the Marwadi for a thick bangle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चूड़ी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चूड़ी — chūṛī — \"a bangle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chūṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chūṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for embroidered shoes, then the Marwadi for a thick bangle, then say chūṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for embroidered shoes, then the Marwadi for a thick bangle, then say *chūṛī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चूड़ी (chūṛī) mean? (\"A bangle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C129-churi-type",
+              "prompt": "Type the Marwadi for 'a bangle'.",
+              "assesses": [
+                "MW-LEX-C129-THINGS129-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चूड़ी",
+                "chūṛī"
+              ],
+              "feedback": {
+                "correct": "Right: चूड़ी (chūṛī) is 'a bangle'.",
+                "incorrect": "'a bangle' is चूड़ी (chūṛī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R129-first-pass-things-in-the-house",
+      "sequence": 8200,
+      "title": "Things in the house — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 120-124",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bb1f7a6c7e12c50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a thick bangle and a bangle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a winnowing basket, a sieve, a grinding mill, a pestle, a rolling pin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a winnowing basket, a sieve, a grinding mill, a pestle, a rolling pin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rolling board, a wide platter, a bowl, tongs, a lock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rolling board, a wide platter, a bowl, tongs, a lock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a box, a trunk, a chest, a quilt, a mattress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a box, a trunk, a chest, a quilt, a mattress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pillow, a sheet, a cotton rug, a curtain, a mirror",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pillow, a sheet, a cotton rug, a curtain, a mirror]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a comb, soap, a towel, a needle, thread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a comb, soap, a towel, a needle, thread]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A winnowing basket? (सूपड़ो, sūpṛo.) A sieve? (चाळणी, chāḷṇī.) A grinding mill? (चक्की, chakkī.) A pestle? (मूसळ, mūsaḷ.) A rolling pin? (बेलण, belaṇ.) A rolling board? (चकलो, chaklo.) A wide platter? (परात, parāt.) A bowl? (कटोरो, kaṭoro.) Tongs? (चिमटो, chimṭo.) A lock? (ताळो, tāḷo.) A box? (डब्बो, ḍabbo.) A trunk? (पेटी, peṭī.) A chest? (संदूक, sandūk.) A quilt? (रजाई, rajāī.) A mattress? (गादी, gādī.) A pillow? (तकियो, takiyo.) A sheet? (चादर, chādar.) A cotton rug? (दरी, darī.) A curtain? (पड़दो, paṛdo.) A mirror? (आरसी, ārsī.) A comb? (कांगसी, kā̃gsī.) Soap? (साबण, sābaṇ.) A towel? (तौलियो, tauliyo.) A needle? (सुई, suī.) Thread? (डोरो, ḍoro.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R129-first-pass-things-in-the-house-type",
+              "prompt": "Type the Marwadi for 'a thick bangle'.",
+              "assesses": [
+                "MW-LEX-C129-THINGS129-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कड़ो",
+                "kaṛo"
+              ],
+              "feedback": {
+                "correct": "Right: कड़ो (kaṛo) is 'a thick bangle'.",
+                "incorrect": "'a thick bangle' is कड़ो (kaṛo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R129-second-pass-tools-and-clothes",
+      "sequence": 8210,
+      "title": "Tools and clothes — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 125-129",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c07e87abab612c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for scissors and a lantern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "scissors, a lantern, a candle, matches, wood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: scissors, a lantern, a candle, matches, wood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "coal, a dung cake, a sack, a rope, a peg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: coal, a dung cake, a sack, a rope, a peg]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nail, a hammer, an axe, a plough, a bullock cart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nail, a hammer, an axe, a plough, a bullock cart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a turban, a long skirt, a woman's wrap, a bodice, a long coat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a turban, a long skirt, a woman's wrap, a bodice, a long coat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shirt, sandals, embroidered shoes, a thick bangle, a bangle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shirt, sandals, embroidered shoes, a thick bangle, a bangle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Scissors? (कैंची, kaiñchī.) A lantern? (लालटेण, lālṭeṇ.) A candle? (मोमबत्ती, mombattī.) Matches? (माचिस, māchis.) Wood? (लकड़ी, lakṛī.) Coal? (कोयलो, koylo.) A dung cake? (छाणो, chhāṇo.) A sack? (बोरो, boro.) A rope? (रस्सी, rassī.) A peg? (खूंटी, khū̃ṭī.) A nail? (खीलो, khīlo.) A hammer? (हथोड़ो, hathoṛo.) An axe? (कुल्हाड़ी, kulhāṛī.) A plough? (हळ, haḷ.) A bullock cart? (बैलगाड़ी, bailgāṛī.) A turban? (पगड़ी, pagṛī.) A long skirt? (घाघरो, ghāghro.) A woman's wrap? (लूगड़ो, lūgṛo.) A bodice? (कांचळी, kā̃chaḷī.) A long coat? (अंगरखी, aṅgarkhī.) A shirt? (कमीज, kamīj.) Sandals? (चप्पल, chappal.) Embroidered shoes? (मोचड़ी, mochṛī.) A thick bangle? (कड़ो, kaṛo.) A bangle? (चूड़ी, chūṛī.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R129-second-pass-tools-and-clothes-type",
+              "prompt": "Type the Marwadi for 'scissors'.",
+              "assesses": [
+                "MW-LEX-C125-THINGS125-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "कैंची",
+                "kaiñchī"
+              ],
+              "feedback": {
+                "correct": "Right: कैंची (kaiñchī) is 'scissors'.",
+                "incorrect": "'scissors' is कैंची (kaiñchī)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

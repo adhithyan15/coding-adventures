@@ -12,7 +12,16 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { matchPath, matchSegment } from "../src/glob-match.js";
+import {
+  compilePatterns,
+  GlobPatternError,
+  matchCompiledPath,
+  matchPath,
+  matchPathWithStateCount,
+  matchSegment,
+  matchSegmentWithStateCount,
+  parseSegmentWithStateCount,
+} from "../src/glob-match.js";
 
 // ---------------------------------------------------------------------------
 // matchSegment -- single segment matching
@@ -67,6 +76,79 @@ describe("matchSegment", () => {
   it("consecutive stars act like one", () => {
     expect(matchSegment("f**o", "foo")).toBe(true);
     expect(matchSegment("f**o", "fxxxo")).toBe(true);
+  });
+
+  it("matches portable character classes with Python fnmatchcase semantics", () => {
+    const cases = [
+      ["[^a].txt", "^.txt", "b.txt"],
+      ["[]a].txt", "].txt", "b.txt"],
+      ["[-a].txt", "-.txt", "b.txt"],
+      ["[a-].txt", "-.txt", "b.txt"],
+      ["[a-c].txt", "b.txt", "z.txt"],
+      ["[!a-c].txt", "z.txt", "b.txt"],
+    ] as const;
+
+    for (const [pattern, matching, nonmatching] of cases) {
+      expect(matchSegment(pattern, matching), pattern).toBe(true);
+      expect(matchSegment(pattern, nonmatching), pattern).toBe(false);
+    }
+
+    expect(matchSegment("[^a].txt", "a.txt")).toBe(true);
+    expect(matchSegment("[!]].txt", "a.txt")).toBe(true);
+    expect(matchSegment("[!]].txt", "].txt")).toBe(false);
+  });
+
+  it("treats unmatched opening brackets and braces as literals", () => {
+    for (const [pattern, value] of [
+      ["[", "["],
+      ["prefix[", "prefix["],
+      ["[]", "[]"],
+      ["[!]", "[!]"],
+      ["{a,b}", "{a,b}"],
+    ] as const) {
+      expect(matchSegment(pattern, value), pattern).toBe(true);
+    }
+    expect(matchSegment("prefix[", "prefixx")).toBe(false);
+    expect(matchSegment("{a,b}", "a")).toBe(false);
+  });
+
+  it("rejects ambiguous and descending classes with one stable typed error", () => {
+    for (const pattern of [
+      "[z-a].txt",
+      "[a--b].txt",
+      "[a&&b].txt",
+      "[a~~b].txt",
+      "[a||b].txt",
+    ]) {
+      expect(() => matchSegment(pattern, "a.txt")).toThrow(GlobPatternError);
+      expect(() => matchSegment(pattern, "a.txt")).toThrow(
+        "ambiguous or descending character class in glob pattern",
+      );
+    }
+  });
+
+  it("counts Unicode scalars rather than UTF-16 code units", () => {
+    expect(matchSegment("?", "🐍")).toBe(true);
+    expect(matchSegment("[🐀-🙏]", "🐍")).toBe(true);
+    expect(matchSegment("[🐀-🙏]", "a")).toBe(false);
+    expect(matchSegment("?", "e\u0301")).toBe(false);
+    expect(matchSegment("??", "e\u0301")).toBe(true);
+  });
+
+  it("bounds unmatched-bracket parsing and segment matching states", () => {
+    const longUnmatchedClass = "[".repeat(16_384);
+    const parsed = parseSegmentWithStateCount(longUnmatchedClass);
+    expect(parsed.tokens).toHaveLength(longUnmatchedClass.length);
+    expect(parsed.visitedStates).toBe(2 * longUnmatchedClass.length);
+
+    const segment = "*a*a*a*a*a*b";
+    const value = "aaaaaaaaaaaaaaaaac";
+    const result = matchSegmentWithStateCount(segment, value);
+    const tokenCount = parseSegmentWithStateCount(segment).tokens.length;
+    expect(result.matched).toBe(false);
+    expect(result.visitedStates).toBe(
+      (tokenCount + 1) * (Array.from(value).length + 1),
+    );
   });
 });
 
@@ -201,5 +283,28 @@ describe("matchPath", () => {
     expect(matchPath("?.py", "a.py")).toBe(true);
     expect(matchPath("?.py", ".py")).toBe(false);
     expect(matchPath("?.py", "ab.py")).toBe(false);
+  });
+
+  it("visits each adversarial globstar path state exactly once", () => {
+    const pattern = [...Array.from({ length: 12 }, () => ["**", "a"]).flat(), "z"].join("/");
+    const candidate = [...Array.from({ length: 24 }, () => "a"), "y"].join("/");
+    const result = matchPathWithStateCount(pattern, candidate);
+
+    expect(result.matched).toBe(false);
+    expect(result.visitedStates).toBe(
+      (pattern.split("/").length + 1) * (candidate.split("/").length + 1),
+    );
+  });
+
+  it("keeps embedded double-stars segment-local and compiled forms reusable", () => {
+    expect(matchPath("foo**bar", "fooxbar")).toBe(true);
+    expect(matchPath("foo**bar", "foo/x/bar")).toBe(false);
+
+    const compiled = compilePatterns(["src/**/*.ts", "tests/[a-c]?.ts"]);
+    expect(Object.isFrozen(compiled)).toBe(true);
+    expect(compiled.every((pattern) => Object.isFrozen(pattern))).toBe(true);
+    expect(matchCompiledPath(compiled[0], "src/deep/file.ts")).toBe(true);
+    expect(matchCompiledPath(compiled[0], "src/deep/file.rb")).toBe(false);
+    expect(matchCompiledPath(compiled[1], "tests/b1.ts")).toBe(true);
   });
 });

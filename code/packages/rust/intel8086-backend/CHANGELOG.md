@@ -1,5 +1,28 @@
 # Changelog — intel8086-backend
 
+## Unreleased — WORD02b unary complement
+
+- Execute typed `not_u8`/`not_u16` through a width mask in `CX` while
+  preserving any other live source value and zero-extending byte results.
+
+## Unreleased — WORD02 two-live arithmetic
+
+- Allocate two same-width live values in `AX`/`BX` or `AL`/`BL`, with
+  `CX`/`CL` scratch and explicit capacity/mixed-width errors.
+- Execute wrapping add, subtract, and bitwise results at both widths in the
+  full 8086 simulator; preserve the zero-extended byte result ABI.
+- Validate CIR result types and instruction shapes, including Boolean return
+  provenance, before emitting code.
+
+## Unreleased — WORD01 fixed-width result ABI
+
+- Enforce the `u8` range for `const_u8` and zero-extend byte/bool results in
+  `AX`, making the boundary observable as `AL` with `AH = 0`.
+- Lower `const_u16`/`ret_u16` through `AX` and reject mismatched typed returns
+  while retaining the single-live-value restriction.
+- Execute `const_u16 0x1234; ret_u16` in `intel8086-simulator`, plus the `u8`
+  boundary and overflow proofs.
+
 ## [0.1.0] - 2026-08-17
 
 ### Added

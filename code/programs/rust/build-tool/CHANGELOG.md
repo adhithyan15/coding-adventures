@@ -4,6 +4,20 @@ All notable changes to the Rust build tool will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.11] - 2026-09-27
+
+### Fixed
+
+- Replace recursive byte-slice glob matching with compiled Unicode-scalar
+  tokens and bounded rolling-row dynamic programs for both path segments and
+  complete paths.
+- Implement the portable character-class contract, including leading `!`
+  negation, ascending ranges, literal edge hyphens and leading brackets, and
+  stable typed rejection of descending or host-ambiguous class operators.
+- Compile and validate every declared source glob before filesystem traversal,
+  then reuse the compiled list so an invalid later pattern cannot be hidden by
+  an earlier match or an exact BUILD-front shortcut.
+
 ## [0.2.10] - 2026-08-30
 
 ### Fixed

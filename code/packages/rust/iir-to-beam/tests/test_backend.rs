@@ -3680,7 +3680,7 @@ fn test_94_f64_array_ops_use_ets_not_atomics() {
 
     assert!(is_called("ets", "new", 2), "must call_ext ets:new/2");
     assert!(is_called("ets", "insert", 2), "must call_ext ets:insert/2");
-    assert!(is_called("ets", "lookup_element", 3), "must call_ext ets:lookup_element/3");
+    assert!(is_called("ets", "lookup_element", 4), "must call_ext ets:lookup_element/4");
     assert!(is_called("erlang", "list_to_tuple", 1), "must call_ext erlang:list_to_tuple/1");
     assert!(!is_called("atomics", "new", 2),
         "an all-f64 array module must NOT call_ext atomics:new/2");
@@ -3815,18 +3815,11 @@ fn test_96_real_erl_float_array_overwrite() {
     assert_eq!(stdout.trim(), "99.5", "expected erl output \"99.5\", got {:?}", stdout.trim());
 }
 
-/// Documents the known limitation from `BEAM04-float-array-representation.md`
-/// §"known limitation": unlike `atomics:new`, `ets:new` does not pre-zero N
-/// cells, so `array_get` on an index that was never `array_set` TRAPS
-/// (`badarg`) instead of returning `0.0`. No promoted corpus row exercises
-/// this (every promoted float-array row writes every cell it later reads),
-/// so this test pins the trap as a documented, intentional divergence rather
-/// than letting it regress silently into "returns 0.0" or "returns garbage"
-/// without anyone noticing.
+/// BEAM11: a missing in-range ets key is a zero-valued float array cell.
 ///
 /// Silently skipped when `erl` is not on PATH.
 #[test]
-fn test_97_real_erl_float_array_unset_read_traps() {
+fn test_97_real_erl_float_array_unset_read_returns_zero() {
     use iir_to_beam::encode_beam;
 
     if !erl_available() {
@@ -3864,10 +3857,61 @@ fn test_97_real_erl_float_array_unset_read_traps() {
         .output()
         .expect("spawn erl");
 
-    assert!(!output.status.success(), "reading an unset ets-backed cell must trap");
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(stderr.contains("badarg"),
-        "expected a badarg trap on the unset read, got stderr: {stderr}");
+    assert!(output.status.success(), "unset float read failed: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "0.0");
+}
+
+/// BEAM11 checks the other ets-backed element type and both boundaries.
+/// Each case uses a fresh process so the trap cannot mask an earlier result.
+#[test]
+fn beam11_real_erl_unset_string_and_out_of_range_reads() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    for (name, array_ty, elem_ty, index, index_ty, expected) in [
+        ("beam11_string_default", "array<str>", "str", Operand::Int(1), "i64", Some("[]")),
+        ("beam11_float_negative", "array<f64>", "f64", Operand::Int(-1), "i64", None),
+        ("beam11_float_upper", "array<f64>", "f64", Operand::Int(3), "i64", None),
+        ("beam11_string_upper", "array<str>", "str", Operand::Int(3), "i64", None),
+        ("beam11_float_fractional", "array<f64>", "f64", Operand::Float(1.5), "f64", None),
+    ] {
+        let module = make_module_fn("main", vec![], elem_ty, vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], array_ty),
+            IIRInstr::new("const", Some("i".into()), vec![index], index_ty),
+            IIRInstr::new("array_get", Some("r".into()),
+                vec![Operand::Var("p".into()), Operand::Var("i".into())], elem_ty),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], elem_ty),
+        ]);
+        let cfg = IIRBeamConfig::new(name);
+        let beam = lower_iir_to_beam(&module, &cfg).expect("lower BEAM11 array read");
+        let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+        std::fs::create_dir_all(&tmp).expect("create test directory");
+        std::fs::write(tmp.join(format!("{name}.beam")), encode_beam(&beam))
+            .expect("write BEAM11 module");
+        let output = std::process::Command::new("erl")
+            .arg("-noshell")
+            .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+            .arg("-eval")
+            .arg(format!("io:format(\"~w~n\",[{name}:main()]),halt(0)."))
+            .output().expect("spawn erl");
+        match expected {
+            Some(value) => {
+                assert!(output.status.success(), "{name}: {}",
+                    String::from_utf8_lossy(&output.stderr));
+                assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), value, "{name}");
+            }
+            None => {
+                assert!(!output.status.success(), "{name} must trap");
+                assert!(String::from_utf8_lossy(&output.stderr).contains("badarg"),
+                    "{name}: {}", String::from_utf8_lossy(&output.stderr));
+            }
+        }
+    }
 }
 
 // ===========================================================================
@@ -4177,7 +4221,7 @@ fn test_100_str_array_ops_use_ets_not_atomics() {
 
     assert!(is_called("ets", "new", 2), "must call_ext ets:new/2");
     assert!(is_called("ets", "insert", 2), "must call_ext ets:insert/2");
-    assert!(is_called("ets", "lookup_element", 3), "must call_ext ets:lookup_element/3");
+    assert!(is_called("ets", "lookup_element", 4), "must call_ext ets:lookup_element/4");
     assert!(is_called("erlang", "list_to_tuple", 1), "must call_ext erlang:list_to_tuple/1");
     assert!(!is_called("atomics", "new", 2),
         "an all-str array module must NOT call_ext atomics:new/2");
@@ -5086,6 +5130,8 @@ fn beam10_array_len_on_str_shares_the_ets_substrate() {
 /// needs no call, so neither of those instructions may appear on this path.
 #[test]
 fn beam10_alloc_array_on_ets_builds_the_handle_pair_without_a_second_call() {
+    use ir_to_beam::{BEAMOperand, BEAMTag};
+
     let beam = lower_iir_to_beam(&array_len_module("array<f64>"), &IIRBeamConfig::default())
         .expect("lower");
     assert!(
@@ -5110,6 +5156,16 @@ fn beam10_alloc_array_on_ets_builds_the_handle_pair_without_a_second_call() {
     let heap = first_index_of(&beam, 16).expect("test_heap present");
     let put = first_index_of(&beam, 69).expect("put_list present");
     assert!(heap < put, "test_heap must precede the put_list ({heap} vs {put})");
+    // The source length is dead after alloc_array, so ordinary liveness
+    // saving would omit it. An explicit Y slot must carry it through ets:new.
+    assert!(beam.instructions.iter().any(|i| i.opcode == OP_MOVE
+        && i.operands.first().is_some_and(|op| op.tag == BEAMTag::X)
+        && i.operands.get(1) == Some(&BEAMOperand::y(0))),
+        "ets allocation must park its declared length in a Y slot");
+    assert!(beam.instructions.iter().any(|i| i.opcode == OP_MOVE
+        && i.operands.first() == Some(&BEAMOperand::y(0))
+        && i.operands.get(1) == Some(&BEAMOperand::x(1))),
+        "ets allocation must reload its declared length after ets:new");
 }
 
 /// The substrate map is seeded from `IIRFunction::params`, not only from
@@ -5490,10 +5546,9 @@ fn beam10_array_set_on_ets_reserves_heap_before_building_its_tuple() {
 
 /// The behavioural half, on real `erl`.
 ///
-/// 2000 ets-backed allocations in one function. Without the reservation this
-/// segfaults the emulator outright — verified by reverting the fix — so this
-/// is a genuine end-to-end regression guard rather than a restatement of the
-/// structural tests above.
+/// 2000 ets-backed allocations in one function. The last handle must still
+/// report its declared extent after crossing `ets:new/2`, in addition to
+/// surviving the heap pressure that originally motivated this test.
 #[test]
 fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
     if !erl_available() {
@@ -5513,7 +5568,10 @@ fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
             "array<f64>",
         ));
     }
-    instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("len".into())], "i64"));
+    instrs.push(IIRInstr::new(
+        "array_len", Some("actual_len".into()), vec![Operand::Var("a".into())], "i64",
+    ));
+    instrs.push(IIRInstr::new("ret", None, vec![Operand::Var("actual_len".into())], "i64"));
 
     use iir_to_beam::encode_beam;
     let m = make_module_fn("main", vec![], "i64", instrs);
@@ -5539,8 +5597,7 @@ fn test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap() {
     assert_eq!(
         out.trim(),
         "4",
-        "2000 ets-backed allocations must not corrupt the process heap; without \
-         the `test_heap` before each length entry's `put_list` pair this \
-         segfaults the emulator"
+        "2000 ets-backed allocations must retain the declared length and \
+         not corrupt the process heap"
     );
 }

@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:c415d86c93dd48c9",
+  "lessonIds": [
+    "MW-C149-puro",
+    "MW-C149-khus",
+    "MW-C149-darpok",
+    "MW-C149-bahadur",
+    "MW-C149-gailo",
+    "MW-R149-first-pass-animals-and-describing-words",
+    "MW-R149-second-pass-describing-people"
+  ],
+  "tex": "marwadi/book/chapters/ch149-complete-happy-timid-brave-crazy.tex"
+}

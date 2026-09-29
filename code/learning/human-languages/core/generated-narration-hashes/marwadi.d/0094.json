@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:46ce03ac4bf01974",
+  "lessonIds": [
+    "MW-C94-pos",
+    "MW-C94-magh",
+    "MW-C94-unalo",
+    "MW-C94-siyalo",
+    "MW-C94-chaumaso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch94.txt",
+  "json": "marwadi/narration/ch94.json",
+  "textHash": "fnv1a64:457a83013fbc155d",
+  "jsonHash": "fnv1a64:504521c718e8325d",
+  "findings": []
+}

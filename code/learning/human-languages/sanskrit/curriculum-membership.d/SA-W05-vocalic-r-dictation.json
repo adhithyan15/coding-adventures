@@ -1,0 +1,11 @@
+{
+  "id": "SA-W05-vocalic-r-dictation",
+  "pathSegment": "SA-PATH-017",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "SA-EXT-141-WRITING-VOCALIC-R-BRIDGE",
+      "order": 2
+    }
+  ]
+}

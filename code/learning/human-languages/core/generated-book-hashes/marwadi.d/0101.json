@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:43bba4de2640d8a9",
+  "lessonIds": [
+    "MW-C101-yo",
+    "MW-C101-iso",
+    "MW-C101-uso",
+    "MW-C101-kiso",
+    "MW-C101-kun"
+  ],
+  "tex": "marwadi/book/chapters/ch101-this-like-this-like-that-which-who.tex"
+}

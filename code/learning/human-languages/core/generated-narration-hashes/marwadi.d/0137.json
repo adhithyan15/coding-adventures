@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:057d145018bf714d",
+  "lessonIds": [
+    "MW-C137-masalo",
+    "MW-C137-papito",
+    "MW-C137-anar",
+    "MW-C137-khajur",
+    "MW-C137-narel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch137.txt",
+  "json": "marwadi/narration/ch137.json",
+  "textHash": "fnv1a64:5759710695da15b6",
+  "jsonHash": "fnv1a64:a97730a7660db9d4",
+  "findings": []
+}

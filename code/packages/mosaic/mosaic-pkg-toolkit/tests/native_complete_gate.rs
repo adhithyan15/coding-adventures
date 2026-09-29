@@ -158,6 +158,7 @@ fn is_allowed(backend: Backend, component: &str, code: &str) -> bool {
 
 #[test]
 fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
+    let mut failures = Vec::new();
     for backend in [
         Backend::Xaml,
         Backend::SwiftUI,
@@ -183,11 +184,12 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
             .iter()
             .filter(|d| !is_allowed(backend, &d.component, &d.code))
             .collect();
-        assert!(
-            unexpected.is_empty(),
-            "{backend:?}: untracked degradation(s) — either fix them, or add an \
-             allowlist entry in this file pointing at a tracking issue: {unexpected:#?}"
-        );
+        if !unexpected.is_empty() {
+            failures.push(format!(
+                "{backend:?}: untracked degradation(s) — either fix them, or add an \
+                 allowlist entry in this file pointing at a tracking issue: {unexpected:#?}"
+            ));
+        }
 
         // The toolkit was never "clean" here — until #12022 reporting reached a
         // backend, that backend said nothing, and silence read as cleanliness.
@@ -206,13 +208,19 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
                     .is_none_or(|p| !is_allowed_style_drop(backend, p))
             })
             .collect();
-        assert!(
-            unexpected_drops.is_empty(),
-            "{backend:?}: style properties were dropped that this test's allowlist \
-             doesn't expect — either fix them, or add an entry pointing at a \
-             tracking issue: {unexpected_drops:#?}"
-        );
+        if !unexpected_drops.is_empty() {
+            failures.push(format!(
+                "{backend:?}: style properties were dropped that this test's allowlist \
+                 doesn't expect — either fix them, or add an entry pointing at a \
+                 tracking issue: {unexpected_drops:#?}"
+            ));
+        }
     }
+    assert!(
+        failures.is_empty(),
+        "toolkit native-completeness failures across all backends:\n\n{}",
+        failures.join("\n\n")
+    );
 }
 
 /// Every allowed degradation is still a degradation.

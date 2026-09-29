@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Why, Reason, For, Because of, Because",
+  "label": "ch:mw-why-reason-for-because-of-because",
+  "canDo": "I can say why, a reason, for, because of and because.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "MW-C117-kyukai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say why, a reason, for, because of and because.",
+    "assesses": [
+      "MW-LEX-C117-WHY117-03",
+      "MW-LEX-C117-WHY117-04",
+      "MW-LEX-C117-WHY117-05"
+    ]
+  }
+}

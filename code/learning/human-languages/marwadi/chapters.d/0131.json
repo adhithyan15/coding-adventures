@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Millet-and-lentil dish, Desert berry, Desert beans, Gram-flour dumplings, Papad",
+  "label": "ch:mw-millet-and-lentil-dish-desert-berry-desert-beans-gram-flour-dumplings-papad",
+  "canDo": "I can say a millet-and-lentil dish, a desert berry, desert beans, gram-flour dumplings and a papad.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C131-papar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say a millet-and-lentil dish, a desert berry, desert beans, gram-flour dumplings and a papad.",
+    "assesses": [
+      "MW-LEX-C131-THINGS131-03",
+      "MW-LEX-C131-THINGS131-04",
+      "MW-LEX-C131-THINGS131-05"
+    ]
+  }
+}

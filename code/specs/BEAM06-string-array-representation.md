@@ -1,5 +1,9 @@
 # BEAM06 — string-array representation for the BEAM backend
 
+**Later update:** BEAM11 supplies empty-string reads for unwritten in-range
+cells and explicit bounds checks. Historical `ets:lookup_element/3`
+descriptions below describe BEAM06 before that follow-up.
+
 **Status:** Delivered — this slice.
 **Depends on:** `BEAM04-float-array-representation.md` (the `:ets`-backed
 array substrate this spec reuses unmodified) and the scalar string

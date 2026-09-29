@@ -1,0 +1,11 @@
+{
+  "id": "MW-C105-bachno",
+  "pathSegment": "MW-PATH-105-ACT105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-105-ACT105",
+      "order": 1
+    }
+  ]
+}

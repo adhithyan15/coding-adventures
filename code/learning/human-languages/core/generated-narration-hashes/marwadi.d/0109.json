@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:5916447ff4ea61d7",
+  "lessonIds": [
+    "MW-C109-parno",
+    "MW-C109-thakno",
+    "MW-C109-jitno",
+    "MW-C109-harno",
+    "MW-C109-marno",
+    "MW-R109-first-pass-places-this-and-that-and-actions",
+    "MW-R109-second-pass-more-everyday-actions"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch109.txt",
+  "json": "marwadi/narration/ch109.json",
+  "textHash": "fnv1a64:439ea55fb8797283",
+  "jsonHash": "fnv1a64:89335f589ba6cba5",
+  "findings": []
+}

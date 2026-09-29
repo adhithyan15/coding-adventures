@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:02e6826308785722",
+  "lessonIds": [
+    "MW-C124-kagsi",
+    "MW-C124-saban",
+    "MW-C124-tauliyo",
+    "MW-C124-sui",
+    "MW-C124-doro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch124.txt",
+  "json": "marwadi/narration/ch124.json",
+  "textHash": "fnv1a64:9ca43674a5124009",
+  "jsonHash": "fnv1a64:85e912ad14f7f0c1",
+  "findings": []
+}

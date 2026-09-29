@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:8eda140aebe4533a",
+  "lessonIds": [
+    "MW-C130-borlo",
+    "MW-C130-nath",
+    "MW-C130-payal",
+    "MW-C130-bajro",
+    "MW-C130-rabri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch130.txt",
+  "json": "marwadi/narration/ch130.json",
+  "textHash": "fnv1a64:fca985267e186425",
+  "jsonHash": "fnv1a64:b1a9e66caea45e11",
+  "findings": []
+}

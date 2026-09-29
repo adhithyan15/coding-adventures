@@ -1,0 +1,11 @@
+{
+  "id": "MW-C98-chauraho",
+  "pathSegment": "MW-PATH-98-LOC98",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-98-LOC98",
+      "order": 2
+    }
+  ]
+}

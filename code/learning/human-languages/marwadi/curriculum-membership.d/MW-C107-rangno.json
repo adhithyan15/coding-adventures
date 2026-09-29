@@ -1,0 +1,11 @@
+{
+  "id": "MW-C107-rangno",
+  "pathSegment": "MW-PATH-107-ACT107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-107-ACT107",
+      "order": 1
+    }
+  ]
+}

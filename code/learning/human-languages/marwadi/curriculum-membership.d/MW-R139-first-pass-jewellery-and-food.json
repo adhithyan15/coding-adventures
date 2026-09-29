@@ -1,0 +1,11 @@
+{
+  "id": "MW-R139-first-pass-jewellery-and-food",
+  "pathSegment": "MW-PATH-139-THINGS139",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-139-THINGS139",
+      "order": 5
+    }
+  ]
+}

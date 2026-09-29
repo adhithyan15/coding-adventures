@@ -1,0 +1,11 @@
+{
+  "id": "MW-C116-hak",
+  "pathSegment": "MW-PATH-116-CAN116",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-116-CAN116",
+      "order": 3
+    }
+  ]
+}
