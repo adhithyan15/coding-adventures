@@ -269,7 +269,10 @@ describe("corpus snapshot", () => {
   it("names the steepest lesson, which is where a burn-down starts", () => {
     const { lessons } = loadEverything();
     const report = measureRamp(lessons, loadChapterPolicy());
-    expect(report.summary.steepestLesson).toMatchObject({ atoms: 6, budget: 3 });
+    // 6 -> 4: Bengali's one-to-five, the last six-atom lesson, split its দুই history
+    // into a continuation. Three lessons remain over budget, all at four atoms:
+    // PA-C07-hona, PA-C07-khana and RU-C03-govorit. Ties go to the first found.
+    expect(report.summary.steepestLesson).toMatchObject({ atoms: 4, budget: 3 });
   });
 });
 

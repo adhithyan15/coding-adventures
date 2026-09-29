@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C134-jhal",
+    "language": "bengali",
+    "chapter": 134,
+    "sequence": 7310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78315b250d350cee"
+  },
+  "findings": []
+}

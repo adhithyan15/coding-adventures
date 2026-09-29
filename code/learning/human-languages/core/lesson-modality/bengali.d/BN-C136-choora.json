@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C136-choora",
+    "language": "bengali",
+    "chapter": 136,
+    "sequence": 7410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98bba781f22e1842"
+  },
+  "findings": []
+}

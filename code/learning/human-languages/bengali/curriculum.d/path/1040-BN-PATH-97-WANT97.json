@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-97-WANT97",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "BN-EXT-97-WANT97"
+  ],
+  "after": []
+}

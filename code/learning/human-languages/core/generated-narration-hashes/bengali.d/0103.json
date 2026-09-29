@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:5100ddaee1db7894",
+  "lessonIds": [
+    "BN-C103-nama",
+    "BN-C103-satar",
+    "BN-C103-laphano",
+    "BN-C103-mara",
+    "BN-C103-bhag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch103.txt",
+  "json": "bengali/narration/ch103.json",
+  "textHash": "fnv1a64:6242072f2f832031",
+  "jsonHash": "fnv1a64:9c7a842be6cf1d9b",
+  "findings": []
+}

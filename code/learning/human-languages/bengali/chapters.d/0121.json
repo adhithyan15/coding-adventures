@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Owl, Parrot, Pigeon, Sparrow, Heron",
+  "label": "ch:bn-owl-parrot-pigeon-sparrow-heron",
+  "canDo": "I can say an owl, a parrot, a pigeon, a sparrow and a heron.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C121-bok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say an owl, a parrot, a pigeon, a sparrow and a heron.",
+    "assesses": [
+      "BN-LEX-C121-THINGS121-03",
+      "BN-LEX-C121-THINGS121-04",
+      "BN-LEX-C121-THINGS121-05"
+    ]
+  }
+}

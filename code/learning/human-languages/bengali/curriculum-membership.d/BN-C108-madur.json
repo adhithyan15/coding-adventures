@@ -1,0 +1,11 @@
+{
+  "id": "BN-C108-madur",
+  "pathSegment": "BN-PATH-108-THINGS108",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-108-THINGS108",
+      "order": 4
+    }
+  ]
+}

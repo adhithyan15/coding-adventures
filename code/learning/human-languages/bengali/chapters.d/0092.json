@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Saturday, Sunday, Every day, Daily, Winter",
+  "label": "ch:bn-saturday-sunday-every-day-daily-winter",
+  "canDo": "I can say Saturday, Sunday, every day, daily and winter.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "BN-C92-shit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say Saturday, Sunday, every day, daily and winter.",
+    "assesses": [
+      "BN-LEX-C92-TIME92-03",
+      "BN-LEX-C92-TIME92-04",
+      "BN-LEX-C92-TIME92-05"
+    ]
+  }
+}

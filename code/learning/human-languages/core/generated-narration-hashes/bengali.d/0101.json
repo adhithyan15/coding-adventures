@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:fdd9c6b12b47ab49",
+  "lessonIds": [
+    "BN-C101-ranna",
+    "BN-C101-jora",
+    "BN-C101-bhorano",
+    "BN-C101-porano",
+    "BN-C101-selai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch101.txt",
+  "json": "bengali/narration/ch101.json",
+  "textHash": "fnv1a64:5c2efd9ba4ac5dee",
+  "jsonHash": "fnv1a64:155d0e98f6b32ed7",
+  "findings": []
+}

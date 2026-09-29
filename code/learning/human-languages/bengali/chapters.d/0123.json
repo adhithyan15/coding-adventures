@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Cat, Elbow, Chest, Waist, Ankle",
+  "label": "ch:bn-cat-elbow-chest-waist-ankle",
+  "canDo": "I can say a cat, an elbow, the chest, the waist and an ankle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C123-gorali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say a cat, an elbow, the chest, the waist and an ankle.",
+    "assesses": [
+      "BN-LEX-C123-THINGS123-03",
+      "BN-LEX-C123-THINGS123-04",
+      "BN-LEX-C123-THINGS123-05"
+    ]
+  }
+}

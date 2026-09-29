@@ -1,0 +1,11 @@
+{
+  "id": "BN-C116-rosun",
+  "pathSegment": "BN-PATH-116-THINGS116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-116-THINGS116",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C95-dupurbela",
+    "language": "bengali",
+    "chapter": 95,
+    "sequence": 4980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d616f61edf18a35c"
+  },
+  "findings": []
+}

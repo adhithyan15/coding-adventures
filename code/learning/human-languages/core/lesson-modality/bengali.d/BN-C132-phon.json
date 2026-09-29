@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C132-phon",
+    "language": "bengali",
+    "chapter": 132,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3070b8e574e0d7b4"
+  },
+  "findings": []
+}

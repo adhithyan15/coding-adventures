@@ -1,0 +1,11 @@
+{
+  "id": "BN-C99-buddhi",
+  "pathSegment": "BN-PATH-99-CAN99",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-99-CAN99",
+      "order": 3
+    }
+  ]
+}

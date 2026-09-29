@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Beans, Pumpkin, Leafy greens, Radish, Uncooked rice",
+  "label": "ch:bn-beans-pumpkin-leafy-greens-radish-uncooked-rice",
+  "canDo": "I can say beans, a pumpkin, leafy greens, a radish and uncooked rice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C117-chal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say beans, a pumpkin, leafy greens, a radish and uncooked rice.",
+    "assesses": [
+      "BN-LEX-C117-THINGS117-03",
+      "BN-LEX-C117-THINGS117-04",
+      "BN-LEX-C117-THINGS117-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C137-ragi",
+    "language": "bengali",
+    "chapter": 137,
+    "sequence": 7470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:380bf0dc849ab05c"
+  },
+  "findings": []
+}

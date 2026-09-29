@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:2977ccc2adbab872",
+  "lessonIds": [
+    "BN-C91-agamikal",
+    "BN-C91-sombar",
+    "BN-C91-budhbar",
+    "BN-C91-brihospotibar",
+    "BN-C91-shukrobar"
+  ],
+  "tex": "bengali/book/chapters/ch91-tomorrow-monday-wednesday-thursday-friday.tex"
+}

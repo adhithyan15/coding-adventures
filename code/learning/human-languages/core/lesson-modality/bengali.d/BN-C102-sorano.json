@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C102-sorano",
+    "language": "bengali",
+    "chapter": 102,
+    "sequence": 5420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f50c65dcf6b34ff8"
+  },
+  "findings": []
+}

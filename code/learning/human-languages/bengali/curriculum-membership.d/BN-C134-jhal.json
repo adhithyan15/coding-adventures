@@ -1,0 +1,11 @@
+{
+  "id": "BN-C134-jhal",
+  "pathSegment": "BN-PATH-134-QUAL134",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-134-QUAL134",
+      "order": 1
+    }
+  ]
+}

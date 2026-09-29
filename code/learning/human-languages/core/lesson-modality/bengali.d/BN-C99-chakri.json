@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C99-chakri",
+    "language": "bengali",
+    "chapter": 99,
+    "sequence": 5170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc47f7a39559705e"
+  },
+  "findings": []
+}

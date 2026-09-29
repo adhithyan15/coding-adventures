@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:80d5c067b2b43ad7",
+  "lessonIds": [
+    "BN-C143-shoktishali",
+    "BN-C143-susbadu",
+    "BN-C143-borosoro",
+    "BN-C143-chhotokhato",
+    "BN-C143-hasikhushi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch143.txt",
+  "json": "bengali/narration/ch143.json",
+  "textHash": "fnv1a64:75f279a3e4f8bd1e",
+  "jsonHash": "fnv1a64:e744ba5831764823",
+  "findings": []
+}

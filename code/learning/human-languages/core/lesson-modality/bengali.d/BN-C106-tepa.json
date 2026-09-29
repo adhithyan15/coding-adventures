@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C106-tepa",
+    "language": "bengali",
+    "chapter": 106,
+    "sequence": 5610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f9c2a910cc38315"
+  },
+  "findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 123,
+  "output": "bengali/book/chapters/ch123-cat-elbow-chest-waist-ankle.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

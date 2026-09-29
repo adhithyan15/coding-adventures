@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:d39fb93c20c40d8a",
+  "lessonIds": [
+    "BN-C120-choti",
+    "BN-C120-maphlar",
+    "BN-C120-har",
+    "BN-C120-shiyal",
+    "BN-C120-badur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch120.txt",
+  "json": "bengali/narration/ch120.json",
+  "textHash": "fnv1a64:0a49e5e89d0006c4",
+  "jsonHash": "fnv1a64:469a2db8fb20be13",
+  "findings": []
+}

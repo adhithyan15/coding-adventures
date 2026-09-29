@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-100-CAN100",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "BN-EXT-100-CAN100"
+  ],
+  "after": []
+}

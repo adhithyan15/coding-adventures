@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:63a67201e51f5813",
+  "lessonIds": [
+    "BN-C98-para",
+    "BN-C98-shokti",
+    "BN-C98-sujog",
+    "BN-C98-malik",
+    "BN-C98-jomi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch98.txt",
+  "json": "bengali/narration/ch98.json",
+  "textHash": "fnv1a64:33d686b5392bfc0d",
+  "jsonHash": "fnv1a64:a3c8634720055163",
+  "findings": []
+}

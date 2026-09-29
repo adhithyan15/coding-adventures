@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C109-suto",
+    "language": "bengali",
+    "chapter": 109,
+    "sequence": 5790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0362f3172cd8fb8d"
+  },
+  "findings": []
+}

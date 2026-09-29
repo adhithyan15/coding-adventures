@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:6b6d042a885c5b90",
+  "lessonIds": [
+    "BN-C100-sahos",
+    "BN-C100-protibha",
+    "BN-C100-jontro",
+    "BN-C100-soronjam",
+    "BN-C100-poddhoti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch100.txt",
+  "json": "bengali/narration/ch100.json",
+  "textHash": "fnv1a64:35efa89b12722e76",
+  "jsonHash": "fnv1a64:bec24156a15624f7",
+  "findings": []
+}

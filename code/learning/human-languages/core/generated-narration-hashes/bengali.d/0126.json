@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:6494a8f64cc00ab2",
+  "lessonIds": [
+    "BN-C126-napit",
+    "BN-C126-dorji",
+    "BN-C126-dhopa",
+    "BN-C126-mudi",
+    "BN-C126-nars"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch126.txt",
+  "json": "bengali/narration/ch126.json",
+  "textHash": "fnv1a64:0b432de727b2c650",
+  "jsonHash": "fnv1a64:8ecd520f29025502",
+  "findings": []
+}

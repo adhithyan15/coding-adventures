@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:5fc3ee7c8c28ebfd",
+  "lessonIds": [
+    "BN-C132-phon",
+    "BN-C132-rediyo",
+    "BN-C132-alo",
+    "BN-C132-khat",
+    "BN-C132-toshok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch132.txt",
+  "json": "bengali/narration/ch132.json",
+  "textHash": "fnv1a64:4b327b9a42aa22cb",
+  "jsonHash": "fnv1a64:f589464a400145d8",
+  "findings": []
+}

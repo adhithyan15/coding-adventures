@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C92-robibar",
+    "language": "bengali",
+    "chapter": 92,
+    "sequence": 4810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea49c89390da7a96"
+  },
+  "findings": []
+}

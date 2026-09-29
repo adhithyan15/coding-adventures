@@ -9,7 +9,7 @@ headword: লেখা
 romanization: lekhā
 gloss: to write — and the dictionary form that is quietly a noun
 concept_tag: VERB-WRITE
-prerequisites: [BN-C08-pora, BN-C06-numbers-1-5]
+prerequisites: [BN-C08-pora, BN-C06-numbers-1-5, BN-C06-numbers-1-5-dui]
 sounds: [kha-aspirate, e-to-i-harmony]
 roots: [likh-scratch]
 etymology_hook: "লেখা is Sanskrit √likh 'to scratch, to engrave' — and Latin scrībere and Germanic wrītan also began as scratching, three unrelated roots that had the same idea, so the resemblance is convergence and not kinship and is named as such; the lesson's own point is that লেখা is simultaneously a verb and a noun, which is what Chapter 7's দেখা হবে was doing all along"

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:9cb86cd8530e3065",
+  "lessonIds": [
+    "BN-C115-bash",
+    "BN-C115-amgachh",
+    "BN-C115-narkel",
+    "BN-C115-anaros",
+    "BN-C115-pepe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch115.txt",
+  "json": "bengali/narration/ch115.json",
+  "textHash": "fnv1a64:3b8a6199eeb94d25",
+  "jsonHash": "fnv1a64:3520137c6eac7c4f",
+  "findings": []
+}

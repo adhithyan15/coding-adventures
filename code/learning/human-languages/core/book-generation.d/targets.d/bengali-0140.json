@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 140,
+  "output": "bengali/book/chapters/ch140-sharp-blunt-fresh-stale-raw.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

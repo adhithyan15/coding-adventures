@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:c7e4cd197004ed5a",
+  "lessonIds": [
+    "BN-C117-shim",
+    "BN-C117-kumro",
+    "BN-C117-shak",
+    "BN-C117-mulo",
+    "BN-C117-chal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch117.txt",
+  "json": "bengali/narration/ch117.json",
+  "textHash": "fnv1a64:ebac9b97bf85d916",
+  "jsonHash": "fnv1a64:54870cf9512595eb",
+  "findings": []
+}

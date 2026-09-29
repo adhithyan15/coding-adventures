@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C130-kham",
+    "language": "bengali",
+    "chapter": 130,
+    "sequence": 7120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a264b5eb9f8464e"
+  },
+  "findings": []
+}

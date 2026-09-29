@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-116-THINGS116",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a watermelon, an aubergine, garlic, ginger and a tomato.",
+  "prerequisites": []
+}

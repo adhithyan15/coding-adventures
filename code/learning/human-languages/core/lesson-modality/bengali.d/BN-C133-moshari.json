@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C133-moshari",
+    "language": "bengali",
+    "chapter": 133,
+    "sequence": 7250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1da7cbf9efd56a78"
+  },
+  "findings": []
+}

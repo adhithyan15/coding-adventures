@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C95-sararat",
+    "language": "bengali",
+    "chapter": 95,
+    "sequence": 4970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30d5ba4176e0c71e"
+  },
+  "findings": []
+}

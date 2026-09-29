@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:f41fc55e85a4662c",
+  "lessonIds": [
+    "BN-C91-agamikal",
+    "BN-C91-sombar",
+    "BN-C91-budhbar",
+    "BN-C91-brihospotibar",
+    "BN-C91-shukrobar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch91.txt",
+  "json": "bengali/narration/ch91.json",
+  "textHash": "fnv1a64:c9c3c8dd03d7fbb7",
+  "jsonHash": "fnv1a64:aa5303872544214d",
+  "findings": []
+}

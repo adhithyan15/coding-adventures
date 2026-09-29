@@ -1,0 +1,11 @@
+{
+  "id": "BN-C98-sujog",
+  "pathSegment": "BN-PATH-98-CAN98",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-98-CAN98",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C133-phuldani",
+  "pathSegment": "BN-PATH-133-THINGS133",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-133-THINGS133",
+      "order": 3
+    }
+  ]
+}

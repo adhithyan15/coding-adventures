@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:9d62f3c6ebb65742",
+  "lessonIds": [
+    "BN-C95-idaning",
+    "BN-C95-saradin",
+    "BN-C95-sararat",
+    "BN-C95-dupurbela",
+    "BN-C95-sokalbela"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch95.txt",
+  "json": "bengali/narration/ch95.json",
+  "textHash": "fnv1a64:55e47db8b2ff6f8d",
+  "jsonHash": "fnv1a64:55ec602745753931",
+  "findings": []
+}

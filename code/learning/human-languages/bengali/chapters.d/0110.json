@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Scissors, Hurricane lamp, Candle, Matches, Coal",
+  "label": "ch:bn-scissors-hurricane-lamp-candle-matches-coal",
+  "canDo": "I can say scissors, a hurricane lamp, a candle, matches and coal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C110-koyla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say scissors, a hurricane lamp, a candle, matches and coal.",
+    "assesses": [
+      "BN-LEX-C110-THINGS110-03",
+      "BN-LEX-C110-THINGS110-04",
+      "BN-LEX-C110-THINGS110-05"
+    ]
+  }
+}

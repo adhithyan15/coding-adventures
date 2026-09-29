@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "To get down, Swimming, To jump, To hit, Share",
+  "label": "ch:bn-to-get-down-swimming-to-jump-to-hit-share",
+  "canDo": "I can say to get down, swimming, to jump, to hit and a share.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C103-bhag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say to get down, swimming, to jump, to hit and a share.",
+    "assesses": [
+      "BN-LEX-C103-ACT103-03",
+      "BN-LEX-C103-ACT103-04",
+      "BN-LEX-C103-ACT103-05"
+    ]
+  }
+}

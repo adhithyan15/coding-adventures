@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:8e446a8ca162f53a",
+  "lessonIds": [
+    "BN-C102-bona",
+    "BN-C102-lagano",
+    "BN-C102-sorano",
+    "BN-C102-jagano",
+    "BN-C102-bachano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch102.txt",
+  "json": "bengali/narration/ch102.json",
+  "textHash": "fnv1a64:15a7fbf32cfa5f37",
+  "jsonHash": "fnv1a64:44a9053a102f3c2d",
+  "findings": []
+}

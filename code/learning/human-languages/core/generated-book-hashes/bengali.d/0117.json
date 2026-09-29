@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:03349651b00732d7",
+  "lessonIds": [
+    "BN-C117-shim",
+    "BN-C117-kumro",
+    "BN-C117-shak",
+    "BN-C117-mulo",
+    "BN-C117-chal"
+  ],
+  "tex": "bengali/book/chapters/ch117-beans-pumpkin-leafy-greens-radish-uncooked-rice.tex"
+}

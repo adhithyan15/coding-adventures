@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:fe5482185937639a",
+  "lessonIds": [
+    "BN-C144-lajuk",
+    "BN-C144-mishuk",
+    "BN-C144-chupchap",
+    "BN-C144-molayem",
+    "BN-C144-khoskhose",
+    "BN-R144-first-pass-describing-words",
+    "BN-R144-second-pass-describing-people"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch144.txt",
+  "json": "bengali/narration/ch144.json",
+  "textHash": "fnv1a64:5e2ba54f7f4438ed",
+  "jsonHash": "fnv1a64:86d8d8b3e19b01dd",
+  "findings": []
+}

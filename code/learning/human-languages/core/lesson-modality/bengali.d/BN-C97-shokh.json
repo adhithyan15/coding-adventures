@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C97-shokh",
+    "language": "bengali",
+    "chapter": 97,
+    "sequence": 5070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1bd7a1b9530b40e"
+  },
+  "findings": []
+}

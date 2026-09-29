@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:a91eef9a433f7e77",
+  "lessonIds": [
+    "BN-C109-chiruni",
+    "BN-C109-saban",
+    "BN-C109-gamchha",
+    "BN-C109-sui",
+    "BN-C109-suto",
+    "BN-R109-first-pass-everyday-actions",
+    "BN-R109-second-pass-things-in-the-kitchen-and-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch109.txt",
+  "json": "bengali/narration/ch109.json",
+  "textHash": "fnv1a64:5368c04a390e3da6",
+  "jsonHash": "fnv1a64:bd027e792d07f0f3",
+  "findings": []
+}
