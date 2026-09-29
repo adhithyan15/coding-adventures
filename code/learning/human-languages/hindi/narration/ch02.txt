@@ -541,10 +541,10 @@ Every atom is built and rooted. Here's the exchange it was for.
 
 The exchange.
 [a table of 4 rows, read aloud]
-मेरा नाम मीरा है। (merā nām Mīrā hai) (merā nām Mira hai) means My name is Mira.
-आपका नाम क्या है? (āpkā nām kyā hai?) means What's your name?
-मेरा नाम अरुण है। (merā nām Aruṇ hai) (merā nām Arun hai) means My name is Arun.
-आपसे मिलकर ख़ुशी हुई। (āpse milkar khushī huī) means Pleased to meet you.
+merā nām Mira hai means My name is Mira.
+āpkā nām kyā hai? means What's your name?
+merā nām Arun hai means My name is Arun.
+āpse milkar khushī huī means Pleased to meet you.
 Every atom traced:
 nām from Sanskrit nāman (English name, noun).
 merā from root ma- (English me, my, mine).

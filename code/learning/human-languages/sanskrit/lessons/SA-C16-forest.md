@@ -45,10 +45,10 @@ reviews_of: [SA-C16-road]
 
 In the older literature it carries a weight that "forest" does not quite catch:
 *वनम्* is where the settled world stops. To go to the *वनम्* is to leave the
-*ग्रामः* behind, and a great deal of Sanskrit narrative turns on somebody doing
+*grāmaḥ* behind, and a great deal of Sanskrit narrative turns on somebody doing
 exactly that.
 
-Its ending is *-am*, so it belongs with गृहम् — which gives the chapter a
+Its ending is *-am*, so it belongs with *gṛham* — which gives the chapter a
 neat symmetry: the two *-am* words so far are the house you live inside and the
 wild you do not.
 
@@ -70,4 +70,4 @@ have observed, not one you have been handed.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C16-PLACE-03, SA-LEX-C16-PLACE-04] -->
 
 [PAUSE 3s] What does वनम् mean beyond "forest"? (Where the settled world stops.) Which
-other word shares its ending? (गृहम्.)
+other word shares its ending? (*gṛham*.)

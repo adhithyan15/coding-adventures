@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a6438c31aca6042d",
+  "sourceHash": "fnv1a64:92f5ad95bac4a3be",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3003d27edb3430f",
+      "sourceHash": "fnv1a64:bd3abb8c926f1e2f",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "answer: क्या आप ठीक हैं? — नहीं (nahīṃ). (\"Are you well?\" — \"No.\")"
+              "text": "answer: kyā āp ṭhīk haiṁ? — नहीं (nahīṃ). (\"Are you well?\" — \"No.\")"
             },
             {
               "kind": "speech",

@@ -36,7 +36,7 @@ reviews_of: [HI-C02-kya]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01] -->
 
-[PAUSE 2s] You already met क्या (*kyā*, "what"). Here is its sibling — and, like
+[PAUSE 2s] You already met *kyā* ("what"). Here is its sibling — and, like
 all of Hindi's question-words, it starts with **k-**.
 
 ## The letters in this word
@@ -49,7 +49,7 @@ all of Hindi's question-words, it starts with **k-**.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01, HI-CONCEPT-C03-KAISE-01] -->
 
-**कैसे** (*kaise*, "how") ← Sanskrit **कीदृश** (*kīdṛśa*, "of what kind") / the
+**कैसे** (*kaise*, "how") ← Sanskrit *kīdṛśa* ("of what kind") / the
 interrogative stem **क-** (*ka-*), from Proto-Indo-European **\*kʷo-** — the same
 question-root behind English **wh-** (what, who, how) and Latin **qu-**. Notice
 the pattern: Hindi's question-words are nearly all **k-** words — *kyā* (what),

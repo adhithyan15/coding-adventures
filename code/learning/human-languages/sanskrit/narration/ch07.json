@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5224321b28f03301",
+  "sourceHash": "fnv1a64:1140f2db83ffc6a8",
   "lessons": [
     {
       "id": "SA-C07-asti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f63ff1accaa6c13",
+      "sourceHash": "fnv1a64:2890e968cfe6819f",
       "notice": null,
       "blocks": [
         {
@@ -92,11 +92,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Sanskrit files a verb under its धातु (dhātu), its root — the bare syllable a dictionary lists. Asti is filed under अस् (as), bhavati under भू (bhū)."
+              "text": "Sanskrit files a verb under its dhātu, its root — the bare syllable a dictionary lists. Asti is filed under अस् (as), bhavati under bhū."
             },
             {
               "kind": "speech",
-              "text": "A root is not yet a word. To reach the present it joins one of ten गण (gaṇa) classes, and the class decides what happens between root and ending. Class 2 adds nothing: as + ti becomes asti. Class 1 strengthens the root and adds a vowel: bhū becomes bhava + ti becomes bhavati."
+              "text": "A root is not yet a word. To reach the present it joins one of ten gaṇa classes, and the class decides what happens between root and ending. Class 2 adds nothing: as + ti becomes asti. Class 1 strengthens the root and adds a vowel: bhū becomes bhava + ti becomes bhavati."
             },
             {
               "kind": "speech",
@@ -115,7 +115,7 @@
             },
             {
               "kind": "speech",
-              "text": "भू is PIE bheu-, \"to grow, to come to be\": English be and been, Latin futūrus behind future, Greek phusis behind physics."
+              "text": "bhū is PIE bheu-, \"to grow, to come to be\": English be and been, Latin futūrus behind future, Greek phusis behind physics."
             },
             {
               "kind": "speech",
@@ -185,7 +185,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two roots stand behind asti and bhavati? (अस् as and भू bhū.) What does a गण class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed."
+              "text": "Which two roots stand behind asti and bhavati? (अस् as and bhū.) What does a gaṇa class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed."
             }
           ]
         }
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c81e702c50f5c46",
+      "sourceHash": "fnv1a64:85077216d5c5cc42",
       "notice": null,
       "blocks": [
         {
@@ -633,7 +633,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आ is an उपसर्ग (upasarga), a preverb. Sanskrit has about twenty, and any of them may ride in front of a root to re-aim it:"
+              "text": "आ is an upasarga, a preverb. Sanskrit has about twenty, and any of them may ride in front of a root to re-aim it:"
             },
             {
               "kind": "table",
@@ -652,7 +652,7 @@
             },
             {
               "kind": "speech",
-              "text": "A handful of roots plus a handful of prefixes covers an enormous amount of vocabulary. You have met the trick already without being told: संस्कृत (saṁskṛta, \"Sanskrit\") is sam \"together\" on the root कृ kṛ \"make\" — put-together, and so perfected."
+              "text": "A handful of roots plus a handful of prefixes covers an enormous amount of vocabulary. You have met the trick already without being told: saṁskṛta (\"Sanskrit\") is sam \"together\" on the root kṛ \"make\" — put-together, and so perfected."
             }
           ]
         },
@@ -724,7 +724,7 @@
             },
             {
               "kind": "speech",
-              "text": "How does Sanskrit say \"comes\"? (आगच्छति (āgacchati) — ā \"toward\" on \"goes.\") What is such a prefix called? (An उपसर्ग, upasarga.) Which Sanskrit word you already knew is built the same way? (संस्कृत — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English."
+              "text": "How does Sanskrit say \"comes\"? (आगच्छति (āgacchati) — ā \"toward\" on \"goes.\") What is such a prefix called? (An upasarga.) Which Sanskrit word you already knew is built the same way? (saṁskṛta — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English."
             }
           ]
         }
@@ -1459,7 +1459,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:baf874871c6b9fcd",
+      "sourceHash": "fnv1a64:36493ecb6dfabc91",
       "notice": null,
       "blocks": [
         {
@@ -1607,7 +1607,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the root of jānāti, and what does its class insert? (ज्ञा jñā; the syllable -ना-.) Give the six verbs of this chapter. (Asti, gacchati, āgacchati, khādati, paśyati, jānāti.) Which two are one root plus a prefix? (गच्छति and आगच्छति.) Which Sanskrit root is English know? (ज्ञा.) And which English words carry gam, ad, paś, and bhū? (Come, eat, inspect, be — four roots you now own in two languages.)"
+              "text": "What is the root of jānāti, and what does its class insert? (ज्ञा jñā; the syllable -ना-.) Give the six verbs of this chapter. (Asti, gacchati, āgacchati, khādati, paśyati, jānāti.) Which two are one root plus a prefix? (gacchati and āgacchati.) Which Sanskrit root is English know? (ज्ञा.) And which English words carry gam, ad, paś, and bhū? (Come, eat, inspect, be — four roots you now own in two languages.)"
             }
           ]
         }

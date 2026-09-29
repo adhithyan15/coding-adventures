@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cc5e2b06ff1ccca5",
+  "sourceHash": "fnv1a64:f8d5daa19b7a0bd7",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -2319,7 +2319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:599fdd6a479e507d",
+      "sourceHash": "fnv1a64:b93bc4d273ecef81",
       "notice": null,
       "blocks": [
         {
@@ -2353,10 +2353,10 @@
               "columns": 2,
               "rowCount": 4,
               "utterances": [
-                "मेरा नाम मीरा है। (merā nām Mīrā hai) (merā nām Mira hai) means My name is Mira.",
-                "आपका नाम क्या है? (āpkā nām kyā hai?) means What's your name?",
-                "मेरा नाम अरुण है। (merā nām Aruṇ hai) (merā nām Arun hai) means My name is Arun.",
-                "आपसे मिलकर ख़ुशी हुई। (āpse milkar khushī huī) means Pleased to meet you."
+                "merā nām Mira hai means My name is Mira.",
+                "āpkā nām kyā hai? means What's your name?",
+                "merā nām Arun hai means My name is Arun.",
+                "āpse milkar khushī huī means Pleased to meet you."
               ]
             },
             {

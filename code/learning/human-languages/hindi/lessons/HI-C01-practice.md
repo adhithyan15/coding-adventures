@@ -43,10 +43,10 @@ and which of Hindi's two heritages it comes from.
 
 - **नमस्ते** *namaste* — "I bow to you" (Sanskrit *nam*, "bow"); hello & bye.
 - **नमस्कार** *namaskār* — "the making of a bow" (Sanskrit); more formal.
-- **धन्यवाद** *dhanyavād* — "thanks" (Sanskrit *dhanya* "worthy" + *vāda*
+- *dhanyavād* — "thanks" (Sanskrit *dhanya* "worthy" + *vāda*
   "saying"); formal.
-- **शुक्रिया** *shukriyā* — "thanks" (Persian, ← Arabic *shukr*); everyday.
-- **अलविदा** *alvidā* — "the farewell" (Persian, ← Arabic *al-widāʿ*); weighty.
+- *shukriyā* — "thanks" (Persian, ← Arabic *shukr*); everyday.
+- *alvidā* — "the farewell" (Persian, ← Arabic *al-widāʿ*); weighty.
 
 Two big ideas from one small chapter: **how Devanagari reads** (consonants
 carry *a*; a *mātrā* changes the vowel; a *halant* removes it and makes a

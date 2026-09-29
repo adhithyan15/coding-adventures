@@ -43,7 +43,7 @@ meet Hindi's second bloodstream.
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C01-SHUKRIYA-01]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
 
-- [धन्यवाद](./HI-C01-dhanyavad.md) — the formal, Sanskrit "thanks"; this is its
+- [*dhanyavād*](./HI-C01-dhanyavad.md) — the formal, Sanskrit "thanks"; this is its
   casual counterpart.
 
 ## The letters in this word

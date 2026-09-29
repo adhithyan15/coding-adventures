@@ -48,10 +48,10 @@ goes." (*Gacchati*.) Listen to the middle of that one — it comes back here.
 | Sanskrit | sound | meaning |
 |---|---|---|
 | पृच्छति | *pṛcchati* | he, she, or it **asks** |
-| प्रश्न | *praśna* | a **question** |
+| — | *praśna* | a **question** |
 
 The root is **प्रछ्** (*prach*), class 6 — *likhati*'s class, a plain *-a-* on an
-untouched root. The root's *r* turns into the vowel **ऋ**, and the ending fuses
+untouched root. The root's *r* turns into the vowel *ṛ*, and the ending fuses
 into the doubled **च्छ** you already met in *gacchati*.
 
 ## Sounds you'll need: the letters in पृच्छति
@@ -76,8 +76,8 @@ law** — the very change that made *pañca* into **five**. That is why German a
 with **fragen**. Persian asks with *porsidan* and Russian with *prosit*, both
 the same word again.
 
-Eastward it wore down: Hindi and Urdu **पूछना** (*pūchnā*), Marathi **पुसणे**
-(*pusṇe*) — *tadbhava*, with the *r*-vowel flattened to *u*.
+Eastward it wore down: Hindi and Urdu *pūchnā*, Marathi
+*pusṇe* — *tadbhava*, with the *r*-vowel flattened to *u*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PRCCHATI-ASK, SA-ETYMON-PREK-PRAY-FRAGEN, SA-SOUND-GRIMMS-LAW-P-TO-F] -->
@@ -92,7 +92,7 @@ Eastward it wore down: Hindi and Urdu **पूछना** (*pūchnā*), Marathi 
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-PRCCHATI-ASK, SA-ETYMON-PREK-PRAY-FRAGEN, SA-SOUND-GRIMMS-LAW-P-TO-F, SA-HISTORY-TATSAMA-TADBHAVA, SA-LEX-GACCHATI-GO] -->
 
 [PAUSE 3s] Which class builds *pṛcchati*, and which verb shares its doubled
-middle? (**Class 6**; **गच्छति**.) What did Latin *precārī* mean, and name two
+middle? (**Class 6**; *gacchati*.) What did Latin *precārī* mean, and name two
 English words from it. (**To entreat**; **pray**, **precarious**.) Why does
 German say *fragen* with an *f*? (**Grimm's law turned initial *p* into *f*** —
 as in *pañca* and *five*.) And is Hindi *pūchnā* tatsama or tadbhava?

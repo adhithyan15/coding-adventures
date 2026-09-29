@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 26,
-  "sourceHash": "fnv1a64:f065e6ed6bab50ba",
+  "sourceHash": "fnv1a64:9fdb555a9072cd52",
   "lessonIds": [
     "SA-C26-teacher",
     "SA-C26-student",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch26.txt",
   "json": "sanskrit/narration/ch26.json",
-  "textHash": "fnv1a64:12a414e4d18a3638",
-  "jsonHash": "fnv1a64:69d2d1e8b0034d60",
+  "textHash": "fnv1a64:c0bc3662b3101756",
+  "jsonHash": "fnv1a64:9c9f16d011f2d0d5",
   "findings": []
 }

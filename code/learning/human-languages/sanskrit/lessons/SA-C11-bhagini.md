@@ -49,7 +49,7 @@ tell the same story.
 | भगिनी | *bhaginī* | **sister** |
 | मम भगिनी | *mama bhaginī* | **my sister** |
 
-Feminine — marked by the **-ई** you can hear at the end.
+Feminine — marked by the *-ī* you can hear at the end.
 
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -62,7 +62,7 @@ again this book: *bha-gi-nī*.
 <!-- hl-knowledge: introduces=[SA-ETYMON-BHAGA-SHARE]; assesses=[SA-LEX-BHRATA-BROTHER] -->
 
 Here the pattern breaks. भगिनी is built on **भग** (*bhaga*), "a share, good
-fortune," plus the feminine suffix **-इनी**: literally, "one with a share."
+fortune," plus the feminine suffix *-inī*: literally, "one with a share."
 
 Sanskrit's actual cousin of English **sister** is a different word,
 **स्वसृ** (*svasṛ*), from the same PIE root as *bhrātā*'s. It is real,

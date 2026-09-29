@@ -38,7 +38,7 @@ reviews_of: [SA-C08-cintayati, SA-C07-agacchati, SA-C07-gacchati]
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-GACCHATI-GO, SA-LEX-AGACCHATI-COME, SA-GRAMMAR-UPASARGA-PREFIX, SA-LEX-CINTAYATI-THINK] -->
 
 [PAUSE 2s] Say "it goes," then "it comes." (*Gacchati*, *āgacchati* — one
-उपसर्ग prefix apart.) And say "it thinks." (*Cintayati*.) One more prefix, and
+*upasarga* prefix apart.) And say "it thinks." (*Cintayati*.) One more prefix, and
 thinking turns into understanding.
 
 ## You'll want to know: अवगच्छति

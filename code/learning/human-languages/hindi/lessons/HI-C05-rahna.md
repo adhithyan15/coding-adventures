@@ -56,7 +56,7 @@ warm sign-off). Stem *rah-* + *-tā/-tī* + *honā*, exactly like *bolnā*.
 ## Grammar Lens: "in" comes after the noun
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-RAHNA-01] -->
 
-**मैं दिल्ली में रहता हूँ** (*maiṁ Dillī meṁ rahtā hūṁ*, "I live in Delhi"). The
+*maiṁ Dillī meṁ rahtā hūṁ* ("I live in Delhi"). The
 little word **में** (*meṁ*, "in") sits **after** Delhi, not before — Hindi uses
 **post**positions where English uses prepositions. "Delhi-in I live." The verb, as
 ever, is last.

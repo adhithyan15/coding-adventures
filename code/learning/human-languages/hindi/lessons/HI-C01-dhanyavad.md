@@ -43,7 +43,7 @@ is the Sanskrit one.
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C01-DHANYAVAD-01]; assesses=[HI-CONCEPT-C01-NAMASKAR-01] -->
 
-- [नमस्कार](./HI-C01-namaskar.md) — you know the *halant*/conjunct idea and
+- [*namaskār*](./HI-C01-namaskar.md) — you know the *halant*/conjunct idea and
   the **ा** ("ā") sign.
 
 ## The letters in this word
@@ -58,7 +58,7 @@ Left to right: **ध·न्·य·वा·द** = *dha-n-ya-vā-d* →
 
 > **धन्यवाद** = **dhanyavād**
 
-(You've now met two conjuncts — स्त in *namaste*, न्य here. A vowel-less
+(You've now met two conjuncts — *st* in *namaste*, न्य here. A vowel-less
 consonant always leans onto the next; that's the whole trick.)
 
 ## The word, taken apart
@@ -77,7 +77,7 @@ enriched, fortunate.)
 *dhanyavād* is the **formal, Sanskritic** "thank you" — the one you'd write, or
 say in respectful or official settings. It can even feel a little *heavy* for
 small everyday thanks, where Hindi speakers often reach for a lighter, Persian-
-derived word instead — **शुक्रिया** (*shukriyā*), your next lesson. Holding
+derived word instead — *shukriyā*, your next lesson. Holding
 those two side by side is the single best window into how Hindi works.
 
 ## Sounds you'll need

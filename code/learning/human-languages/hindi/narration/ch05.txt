@@ -55,7 +55,7 @@ The word, taken apart.
 रहना (rahnā, "to live, to remain, to stay") is from Sanskrit रह् (rah-, "to remain, be left"). It covers both "reside" and "keep on": maiṁ Dillī meṁ rahtā hūṁ ("I live in Delhi"), ṭhīk rahnā ("stay well" — a warm sign-off). Stem rah- + -tā/-tī + honā, exactly like bolnā.
 
 Grammar Lens: "in" comes after the noun.
-मैं दिल्ली में रहता हूँ (maiṁ Dillī meṁ rahtā hūṁ, "I live in Delhi"). The little word में (meṁ, "in") sits after Delhi, not before — Hindi uses postpositions where English uses prepositions. "Delhi-in I live." The verb, as ever, is last.
+maiṁ Dillī meṁ rahtā hūṁ ("I live in Delhi"). The little word में (meṁ, "in") sits after Delhi, not before — Hindi uses postpositions where English uses prepositions. "Delhi-in I live." The verb, as ever, is last.
 
 Sounds you'll need.
 र (ra) + ह (ha) + ना (nā) becomes रहना. The familiar infinitive -ना.
@@ -86,18 +86,18 @@ The letters in this word.
 क (ka) + र (ra) + ना (nā) becomes करना (karnā). Simple letters, enormous reach.
 
 The word, taken apart.
-करना (karnā, "to do, to make") is from Sanskrit √कृ (√kṛ, "to do, make") — one of the most productive roots in all of Sanskrit, and from Proto-Indo-European kʷer-. You have met its family already:
+करना (karnā, "to do, to make") is from Sanskrit √kṛ ("to do, make") — one of the most productive roots in all of Sanskrit, and from Proto-Indo-European kʷer-. You have met its family already:
 कर्म (karma) = "a thing done," an action and its consequence.
 नमस्कार (namaskār) = "the making of a bow" (namas + kār) — the greeting from Chapter 1.
-संस्कृत (saṃskṛta, "Sanskrit") = "put together, perfected."
+saṃskṛta ("Sanskrit") = "put together, perfected."
 So karnā is the everyday face of the root behind karma, namaskār, and the name Sanskrit itself.
 
 Grammar Lens: करना makes verbs out of anything.
 Hindi builds countless verbs as noun + करना:
 काम करना (kām karnā) = "work-do" = "to work" (kām, "work").
-बात करना (bāt karnā) = "talk-do" = "to converse".
-इंतज़ार करना (intazār karnā) = "to wait".
-So मैं काम करता हूँ (maiṁ kām kartā hūṁ) = "I work" (lit. "I work-do am"). Learn karnā and you unlock a whole grammar of "do-verbs."
+bāt karnā = "talk-do" = "to converse".
+intazār karnā = "to wait".
+So maiṁ kām kartā hūṁ = "I work" (lit. "I work-do am"). Learn karnā and you unlock a whole grammar of "do-verbs."
 
 Sounds you'll need.
 क (ka) + र (ra) + ना (nā) becomes करना.
@@ -106,7 +106,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "karnā"]
 [pause 8 seconds for the answer]
-[your turn — say: "I work" (m./f.) — मैं काम करता हूँ / करती हूँ (maiṁ kām kartā hūṁ / kartī hūṁ)]
+[your turn — say: "I work" (m./f.) — maiṁ kām kartā hūṁ / kartī hūṁ]
 [pause 8 seconds for the answer]
 [your turn — say: the Chapter 1 word that shares its root (namaskār — the "making" of a bow)]
 [pause 8 seconds for the answer]
@@ -132,7 +132,7 @@ To say what someone does in general, Hindi builds three pieces in a row: the ste
 [a table of 3 rows, read aloud]
 who: I (a man). the pieces: -ता -tā + हूँ hūṁ. the whole thing: बोलता हूँ boltā hūṁ.
 who: I (a woman). the pieces: -ती -tī + हूँ hūṁ. the whole thing: बोलती हूँ boltī hūṁ.
-who: आप āp (you, respectful). the pieces: -ते -te + हैं haiṁ. the whole thing: बोलते हैं bolte haiṁ.
+who: āp (you, respectful). the pieces: -ते -te + हैं haiṁ. the whole thing: बोलते हैं bolte haiṁ.
 Strip -nā, add the ending, add honā. That is the whole rule, and it does not change from verb to verb.
 
 Grammar Lens: the two agreements, and why they are two.

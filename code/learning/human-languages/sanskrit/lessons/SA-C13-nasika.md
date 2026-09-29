@@ -60,7 +60,7 @@ short-*i*. **का** closes it, **क** under long-*ā* again: *nā-si-kā*.
 <!-- hl-knowledge: introduces=[SA-ETYMON-NEHAS-NOSE]; assesses=[SA-LEX-MUKHAM-MOUTH] -->
 
 **नासिका** is built on an older word, **नासा** (*nāsā*), "nose," plus the
-diminutive suffix **-इका**. **नासा** itself, and the still-older root **नस्**
+diminutive suffix *-ikā*. **नासा** itself, and the still-older root **नस्**
 (*nas*) behind it, go back to PIE **nehas-**, the unbroken root of English
 **nose** and Latin **nasus** (→ *nasal*).
 
@@ -68,7 +68,7 @@ Here is the correction worth making carefully: **नासिका** is *not* t
 ancestor of Bengali *nāk* or Gujarati *nāk*. Both of
 those wore straight down from **नस्** itself, through Prakrit **ṇakka**, by
 adding a completely different suffix. नासिका and नाक share a root, the way
-**ग्रह्** and English *grab* share one — **relatives, not parent and
+*grah* and English *grab* share one — **relatives, not parent and
 child**. Reaching for the nearest-looking Sanskrit word is not always
 reaching for the right ancestor.
 

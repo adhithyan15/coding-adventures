@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a80300d29783f26d",
+  "sourceHash": "fnv1a64:1bd89aa0837c245e",
   "lessons": [
     {
       "id": "HI-C23-kutta-billi",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f6cf57d80fc0491",
+      "sourceHash": "fnv1a64:f272d06865a987f5",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बिल्ली (billī, \"cat\") traces through Sauraseni Prakrit to Sanskrit बिडालिका (biḍālikā), a diminutive of बिडाल (biḍāla, \"cat\")."
+              "text": "बिल्ली (billī, \"cat\") traces through Sauraseni Prakrit to Sanskrit biḍālikā, a diminutive of biḍāla (\"cat\")."
             },
             {
               "kind": "speech",
