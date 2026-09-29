@@ -473,16 +473,9 @@ fn emit_component(
             "import androidx.compose.ui.draganddrop.DragAndDropTarget"
         )
         .unwrap();
-        writeln!(
-            out,
-            "import androidx.compose.ui.draganddrop.DragAndDropTransferAction"
-        )
-        .unwrap();
-        writeln!(
-            out,
-            "import androidx.compose.ui.draganddrop.DragAndDropTransferData"
-        )
-        .unwrap();
+        // The outgoing transfer is built in MosaicPlatform.kt (UI89 §3.4):
+        // `DragAndDropTransferAction` is desktop-only, and an Android build
+        // refuses even an unused import of it.
 
         writeln!(out, "import androidx.compose.ui.geometry.Offset").unwrap();
         writeln!(out, "import androidx.compose.ui.geometry.Rect").unwrap();
@@ -10281,6 +10274,12 @@ mod tests {
             "dispatch(BoardEvent.Drop(data.key, data.kind, \"lane-a\", position))",
         ] {
             assert!(out.contains(expected), "missing `{expected}`:\n{out}");
+        }
+        // The component is shared with Android (UI89 §3.4): nothing desktop-only
+        // may appear in it, not even an unused import -- Android's compiler
+        // refuses `DragAndDropTransferAction` outright.
+        for desktop_only in ["java.awt", "awtTransferable", "DragAndDropTransferAction", "androidx.compose.ui.window.Window"] {
+            assert!(!out.contains(desktop_only), "`{desktop_only}` in a shared component:\n{out}");
         }
     }
 
