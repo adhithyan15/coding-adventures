@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT]
 introduces:
- knowledge: [RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN]
+  knowledge: [RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN]
+  knowledge: [RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -69,23 +69,8 @@ An **-е-** against an **-и-**. That one vowel is the whole difference, and it 
 why you learn the *you* form alongside the dictionary form: it names the family,
 and the remaining endings follow from it.
 
-## The word, taken apart — and a false friend
-<!-- hl-knowledge: introduces=[RU-ETYMON-GOVORIT-NOT-GOVERN]; assesses=[] -->
-
-**говорить** is built on the old Slavic noun \**govorъ*, "a murmur, a din, the
-noise of many voices." Russian still keeps **говор** for the buzz of a crowd or
-a regional way of talking. Most etymologists read the root as **imitative** —
-the word sounds like what it names — which is honest but means there is no tidy
-English cousin to hand you. Where a root is uncertain,
-this book says so.
-
-What there *is* to hand you is a trap. **Govern** is **not** related. That is
-Latin *gubernāre*, "to steer a ship," from Greek *kybernân* — the same word that
-gave English **cybernetics** and every **cyber-** since. A governor steers; a
-*говор* is a noise. Two roots that never met.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES] -->
 
 [PAUSE 1s]
 - [YOU SAY: the new letter — "**г** is gamma, and says *g* as in *go*"]
@@ -94,10 +79,9 @@ gave English **cybernetics** and every **cyber-** since. A governor steers; a
 - [YOU SAY: the two families — "знаешь … говоришь"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES, RU-ETYMON-GOVORIT-NOT-GOVERN] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-YA, RU-GRAMMAR-PRESENT-FIRST-PERSON-U, RU-LEX-ZNAT, RU-LEX-GOVORIT, RU-SCRIPT-GE-GAMMA, RU-GRAMMAR-TWO-VERB-FAMILIES] -->
 
 [PAUSE 3s] What sound is **г**? (A hard **g**, from Greek gamma.) Say
 "I speak." (**Я говорю**.) Which vowel separates the two verb families in the
-*you* form? (**-е-** in *знаешь* against **-и-** in *говоришь*.) Is *говорить*
-related to English *govern*? (**No** — *govern* is Greek *kybernân*, "to
-steer.") Next: видеть, "to see."
+*you* form? (**-е-** in *знаешь* against **-и-** in *говоришь*.) Next: why
+*говорить* is not English *govern*.

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C07-hona-two-roots",
+  "pathSegment": "PA-PATH-011",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-011-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

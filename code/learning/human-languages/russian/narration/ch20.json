@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "The Verb That Takes Another Verb",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d6e71ea5670ea447",
+  "sourceHash": "fnv1a64:66c0c8b1bb694391",
   "lessons": [
     {
       "id": "RU-C20-khotet",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffa6da5b2e4bdba7",
+      "sourceHash": "fnv1a64:74c3f9faace5e305",
       "notice": null,
       "blocks": [
         {

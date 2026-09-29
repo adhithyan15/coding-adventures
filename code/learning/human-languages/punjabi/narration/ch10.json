@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Water, Tea, Milk, and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:07e431023865d26f",
+  "sourceHash": "fnv1a64:7e3171d2167dd5ee",
   "lessons": [
     {
       "id": "PA-C10-paani",
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e33a2199fecb7d4",
+      "sourceHash": "fnv1a64:88f727c155a625db",
       "notice": null,
       "blocks": [
         {

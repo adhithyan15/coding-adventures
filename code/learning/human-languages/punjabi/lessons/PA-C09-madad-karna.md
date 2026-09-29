@@ -9,7 +9,7 @@ headword: ਮਦਦ ਕਰਨਾ
 romanization: madad karnā
 gloss: to help — literally “to do help,” and the help half is Arabic
 concept_tag: VERB-HELP
-prerequisites: [PA-C09-puchhna, PA-S07-rara-ghagga-dadda, PA-S09-aunkar-tippi, PA-S02-mamma-rara-lava, PA-C06-panj-convergence-homegrown]
+prerequisites: [PA-C09-puchhna, PA-S07-rara-ghagga-dadda, PA-S09-aunkar-tippi, PA-S02-mamma-rara-lava, PA-C06-panj-convergence-homegrown, PA-C07-hona-two-roots]
 sounds: [dental-da, dental-na]
 roots: [arabic-madad, arabic-mdd, sanskrit-kr]
 etymology_hook: ਮਦਦ is Arabic madad, on the root m-d-d “to stretch out, extend”, and it reached Punjabi through Persian on the same road as ਸ਼ੁਕਰੀਆ; ਕਰਨਾ is Sanskrit √kṛ “to do”, and noun-plus-ਕਰਨਾ is one of the most productive patterns in the language.

@@ -9,7 +9,7 @@ headword: и
 gloss: "and — one letter, one sound, and the commonest word in the language"
 concept_tag: RU-JOIN-AND
 romanization: i
-prerequisites: [RU-C13-sup, RU-C15-practice, RU-C01-practice, RU-C02-practice-zero-copula, RU-W02-false-friends-s-n, RU-W03-new-shapes-b-d, RU-W05-privet-dictation]
+prerequisites: [RU-C13-sup, RU-C15-practice, RU-C01-practice, RU-C02-practice-zero-copula, RU-W02-false-friends-s-n, RU-W03-new-shapes-b-d, RU-W05-privet-dictation, RU-C03-govorit-false-friend]
 sounds: []
 roots: [pie-hei]
 etymology_hook: "и is built on the ancient pointing stem behind его — the smallest word in Russian and one of its pronouns are relatives"

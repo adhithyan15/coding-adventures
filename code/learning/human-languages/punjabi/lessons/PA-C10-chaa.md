@@ -9,7 +9,7 @@ headword: ਚਾਹ
 romanization: cāh
 gloss: tea — a word that took the overland road out of China, and a level high tone hiding inside its own spelling
 concept_tag: PA-FOOD-TEA
-prerequisites: [PA-C10-paani, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora]
+prerequisites: [PA-C10-paani, PA-S08-khakkha-jhajja-pairin, PA-S08-pappa, PA-S09-aunkar-tippi, PA-S09-dulainkar-oora, PA-C07-khana-tone]
 sounds: [tone-high-level, kanna-aa]
 roots: [persian-caa, mandarin-cha]
 etymology_hook: ਚਾਹ is borrowed from Classical Persian čā, itself from Mandarin Chinese chá — the overland route out of China, the same one that gave Hindi-Urdu chāy, Russian chai, and Turkish çay; Punjabi's own final ਹ is not pronounced as a consonant at all, but marks the level high tone the word is actually said with.
