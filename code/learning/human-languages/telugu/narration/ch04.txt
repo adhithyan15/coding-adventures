@@ -64,7 +64,7 @@ One more, from much earlier: న — what does it do?
 
 
 Lesson 3 of 10.
-వెళ్ళు (veḷḷu) — "go," and వచ్చు (come).
+వెళ్ళు (veḷḷu) — "go," and vaccu (come).
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
@@ -73,13 +73,13 @@ Warm-up.
 Two everyday verbs — and together they make the Telugu goodbye.
 
 The letters in this word.
-వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: వచ్చు (vaccu, "come") with the doubled చ్చ (cc).
+వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: vaccu ("come") with a doubled cc.
 
 The word, taken apart.
-వెళ్ళు (veḷḷu, "to go") and వచ్చు (vaccu, "to come") are native Dravidian verbs. As commands they are whole words: veḷḷu! ("go!"), rā! ("come!"). You need both, because Telugu — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
+వెళ్ళు (veḷḷu, "to go") and vaccu ("to come") are native Dravidian verbs. As commands they are whole words: veḷḷu! ("go!"), rā! ("come!"). You need both, because Telugu — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
 
 Sounds you'll need.
-వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner వచ్చు (vaccu, “come”).
+వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner is vaccu (“come”).
 
 Guided Practice.
 [pause 1 second]
@@ -308,11 +308,11 @@ No new words. Three ways to part — none of them a blunt "goodbye."
 The exchange — the farewells.
 All three, side by side — none of them a blunt "goodbye":
 [a table of 4 rows, read aloud]
-Telugu: వెళ్ళి వస్తాను., veḷḷi vastānu. English: I'll go and come back. (the goodbye).
-Telugu: వెళ్ళి రండి., veḷḷi raṇḍi. English: Go and come back. (the reply).
+Telugu: —, veḷḷi vastānu. English: I'll go and come back. (the goodbye).
+Telugu: —, veḷḷi raṇḍi. English: Go and come back. (the reply).
 Telugu: రేపు కలుద్దాం., rēpu kaluddām. English: See you tomorrow.
-Telugu: మళ్ళీ కలుద్దాం., maḷḷī kaluddām. English: We'll meet again.
-A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead.
+Telugu: —, maḷḷī kaluddām. English: We'll meet again.
+Three of these stay in romanization for now: their doubled ḷ and their e-sign have not had their own lessons yet, and a line you cannot decode is not a line to read from. The letters catch up in the chapters ahead.
 [pause 1 second after each]
 [your turn — say: the everyday goodbye — veḷḷi vastānu ("I'll go and come back")]
 [pause 8 seconds for the answer]

@@ -39,7 +39,7 @@ used a native one.
 ## You'll want to know: The phrase
 <!-- hl-knowledge: introduces=[KA-LEX-C02-SANTOSHA-01]; assesses=[] -->
 
-The full form is **ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ** (*nimmannu bhēṭiyāgi santōṣa*) —
+The full form is *nimmannu bhēṭiyāgi santōṣa* —
 "having met you, joy."
 
 ## The word, taken apart

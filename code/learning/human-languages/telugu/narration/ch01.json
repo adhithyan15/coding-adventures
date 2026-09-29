@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6fae855e79445ced",
+  "sourceHash": "fnv1a64:d765eb705f4ae5fd",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -1574,7 +1574,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8bfe2cabbf99297d",
+      "sourceHash": "fnv1a64:f360fe6f99911f2f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1637,7 +1637,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "సరే (sarē) is native Dravidian \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Tamil and Kannada సరి/ಸರಿ/சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\""
+              "text": "సరే (sarē) is native Dravidian \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Kannada ಸರಿ and Tamil சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\""
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c04e680014a2aaaa",
+  "sourceHash": "fnv1a64:28b5077ecb8398a0",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -2494,7 +2494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:755d3c375d191713",
+      "sourceHash": "fnv1a64:f7d2e399121a86ff",
       "notice": null,
       "blocks": [
         {
@@ -2530,7 +2530,7 @@
               "utterances": [
                 "నా పేరు మీరా. (nā pēru Mira) means My name is Mira.",
                 "మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) (mī pēru ēmiṭi) means What's your name?",
-                "నా పేరు అరుణ్. (nā pēru Arun) means My name is Arun.",
+                "నా పేరు అను. (nā pēru Anu) means My name is Anu.",
                 "సంతోషం. (santōṣam) means Pleased to meet you."
               ]
             },

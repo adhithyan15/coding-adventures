@@ -45,7 +45,7 @@ memory, that ask them to slow down.
 |---|---|
 | **کوٹ** *koṭ* | straight from English, one generation old |
 | **ہوا** *hawā* | Arabic to Persian, Persian to Urdu — a loan of a loan |
-| **گرمی** *garmī* | Persian, on a root it shares with Greek *thermós* |
+| *garmī* | Persian, on a root it shares with Greek *thermós* |
 
 Three different histories, and the spelling announces none of them. **کوٹ** is
 the sharpest case: an identical **کوٹ** meaning "fort" came in from Sanskrit

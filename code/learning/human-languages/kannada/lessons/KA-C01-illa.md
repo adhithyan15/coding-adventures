@@ -56,7 +56,7 @@ Left to right: **ಇ · ಲ್ಲ** = *i-lla* →
 **ಇಲ್ಲ** (*illa*) is built on the old Dravidian root **il**, "not-being,
 absence" — so, like Tamil *illai*, it is really the statement **"[it] is not,
 [there] is not,"** doing duty as the everyday "no." Its positive twin is
-**ಇದೆ** (*ide*), "there is."
+*ide*, "there is."
 
 ## Grammar Lens: Dravidian negates by *being*, not with a "not"-word
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C01-ILLA-02]; assesses=[] -->

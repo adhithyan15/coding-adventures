@@ -77,10 +77,10 @@ willing to be asked. German still asks with it: *fragen*. English's own inherite
 cousin, Old English *friġnan*, died out, so English prays with the related word
 and asks with an unrelated one.
 
-Here is the part that is Urdu's alone. Persian asks with **پرسیدن** *porsīdan*,
+Here is the part that is Urdu's alone. Persian asks with *porsīdan*,
 and *porsīdan* is **the same root**, carried west into Iran rather than east into
 India. Urdu borrowed it back: **پرسش** *pursish* is “inquiry, asking after
-someone's health,” and **پرسانِ حال** *pursān-e-ḥāl* is “one who asks how you are.”
+someone's health,” and *pursān-e-ḥāl* is “one who asks how you are.”
 
 So *pūchhnā* came down the inherited road, *pursish* came in sideways off a
 Persian ship, and they are cousins. Urdu is the room where the two roads meet,
@@ -100,4 +100,4 @@ and the wellbeing question **آپ کیسے ہیں؟** is what either of them nam
 
 [PAUSE 3s] Which English word for praying shares a root with *pūchhnā*, and are Persian *porsīdan* and Urdu *pūchhnā* related? (**Pray**; **the same root, by two roads**.)
 
-Sources: [Wiktionary: پوچھنا](https://en.wiktionary.org/wiki/%D9%BE%D9%88%DA%86%DA%BE%D9%86%D8%A7); [Wiktionary: پرسیدن](https://en.wiktionary.org/wiki/%D9%BE%D8%B1%D8%B3%DB%8C%D8%AF%D9%86); [Rekhta Dictionary: pursish](https://www.rekhtadictionary.com/meaning-of-pursish).
+Sources: [Wiktionary: پوچھنا](https://en.wiktionary.org/wiki/%D9%BE%D9%88%DA%86%DA%BE%D9%86%D8%A7); [Wiktionary: porsīdan](https://en.wiktionary.org/wiki/%D9%BE%D8%B1%D8%B3%DB%8C%D8%AF%D9%86); [Rekhta Dictionary: pursish](https://www.rekhtadictionary.com/meaning-of-pursish).

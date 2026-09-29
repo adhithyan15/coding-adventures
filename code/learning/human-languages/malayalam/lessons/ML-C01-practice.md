@@ -39,21 +39,22 @@ easy.
 ## The exchange — read them back
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-NAMASKARAM-READ-01, ML-ETYMON-NAMASKARAM-BOW-01] -->
 
-Sound each out, left to right, before checking:
+Sound out the three written in Malayalam, left to right, before checking. The
+other two stay in romanization until their letters arrive in later chapters:
 
 | Read | | Meaning | Origin |
 |---|---|---|---|
 | **നമസ്കാരം** | *namaskāraṁ* | hello / greetings | Sanskrit |
 | **നന്ദി** | *nandi* | thank you | native (= Tamil *naṉṟi*) |
 | **അതെ** | *athe* | yes | native ("that [is so]") |
-| **ഇല്ല** | *illa* | no / there isn't | native (= Tamil *illai*) |
-| **ശരി** | *śari* | okay | native (= *sari*) |
+| — | *illa* | no / there isn't | native (= Tamil *illai*) |
+| — | *śari* | okay | native (= *sari*) |
 
 The letters that did it: consonants carry a built-in **"a"**; the
 **chandrakkala** strips that vowel so consonants can **join into conjuncts**
-(സ്ക, ന്ദ, ല്ല); a **vowel sign** swaps the vowel (ാ ā, ി i, െ e — the *e*-sign
+(സ്ക, ന്ദ); a **vowel sign** swaps the vowel (ാ ā, ി i, െ e — the *e*-sign
 written *before* its consonant); the **anusvāram** (ം) adds a final nasal; and
-a word-initial vowel gets a **full letter** (അ, ഇ).
+a word-initial vowel gets a **full letter** (അ in അതെ).
 
 Notice how **Tamil-like** the native core is: four of the five everyday words
 (*nandi, athe, illa, śari*) are shared with Tamil — because Malayalam *is*

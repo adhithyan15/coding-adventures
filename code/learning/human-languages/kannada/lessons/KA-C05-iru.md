@@ -46,14 +46,14 @@ own right, and use it to say where you live.
 
 **ಇರು** (*iru*, "to be, to exist, to stay, to live") is native Dravidian — the
 very same *iru* Tamil uses, and the verb behind Chapter 3's *hēgiddīrā* ("how are
-you") and *cennāgiddēne* ("I'm well"). It also means "to reside": **ನಾನು
-ಬೆಂಗಳೂರಿನಲ್ಲಿ ಇದ್ದೇನೆ** (*nānu Beṅgaḷūrinalli iddēne*, "I live in Bangalore"). One
+you") and *cennāgiddēne* ("I'm well"). It also means "to reside": *nānu
+Beṅgaḷūrinalli iddēne* ("I live in Bangalore"). One
 verb covers "be," "stay," and "live."
 
 ## Grammar Lens: "in" comes after the noun
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C05-IRU-02]; assesses=[] -->
 
-**ಬೆಂಗಳೂರಿನಲ್ಲಿ** (*Beṅgaḷūrinalli*) = *Bengaḷūru* + **-ಅಲ್ಲಿ** (*-alli*, "in"),
+*Beṅgaḷūrinalli* = *Bengaḷūru* + *-alli* ("in"),
 glued to the **end** of the noun. Kannada uses **post**positions (case-suffixes)
 where English uses prepositions: "Bangalore-in I am," the verb last.
 
