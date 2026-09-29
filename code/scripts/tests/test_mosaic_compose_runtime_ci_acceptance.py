@@ -160,9 +160,12 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('android_project="$RUNNER_TEMP/mosaic-compose-taskapp/compose/android"', block)
         self.assertIn('test ! -e "$android_project/src/main/kotlin/Main.kt"', block)
         self.assertIn("./gradlew --no-daemon --stacktrace assembleDebug", block)
-        self.assertIn("launchable-activity: name='mosaic.android.MosaicActivity'", block)
-        self.assertIn("package: name='dev.codingadventures.trestle'", block)
+        self.assertIn("launchable-activity: name='mosaic\\.android\\.MosaicActivity'", block)
+        self.assertIn("package: name='dev\\.codingadventures\\.trestle'", block)
+        self.assertIn("^(min)?[sS]dkVersion:'26'", block)
         self.assertIn('test -f "$dex/lib/x86_64/libjnidispatch.so"', block)
+        # A failed check says which one, instead of a silent `grep -q`.
+        self.assertIn("::error::the APK's badging has no line matching", block)
         # The SDK survives the disk reclaim and is set up for this lane.
         self.assertIn('[ "$NEEDS_MOSAIC_COMPOSE" != "true" ]', workflow)
         setup = workflow.index("- name: Set up Android SDK")

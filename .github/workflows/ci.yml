@@ -3310,20 +3310,38 @@ jobs:
           test -n "$aapt2"
           badging="$RUNNER_TEMP/mosaic-trestle-android-badging.txt"
           "$aapt2" dump badging "$apk" > "$badging"
-          grep -q "^package: name='dev.codingadventures.trestle'" "$badging"
-          grep -q "^application-label:'Trestle'" "$badging"
-          grep -q "^launchable-activity: name='mosaic.android.MosaicActivity'" "$badging"
-          grep -q "^sdkVersion:'26'" "$badging"
-          grep -q "^targetSdkVersion:'36'" "$badging"
+          # Every check names what it wanted and shows what it got: a bare
+          # `grep -q` under `set -e` fails the step without saying which line.
+          expect_badging() {
+            if ! grep -Eq "$1" "$badging"; then
+              echo "::error::the APK's badging has no line matching $1"
+              cat "$badging"
+              exit 1
+            fi
+          }
+          expect_badging "^package: name='dev\.codingadventures\.trestle'"
+          expect_badging "^application-label:'Trestle'"
+          expect_badging "^launchable-activity: name='mosaic\.android\.MosaicActivity'"
+          # aapt prints `sdkVersion:`, newer aapt2 `minSdkVersion:`.
+          expect_badging "^(min)?[sS]dkVersion:'26'"
+          expect_badging "^targetSdkVersion:'36'"
           # The shared sources and the Android seams are in the dex, and JNA
           # brought its dispatcher for the emulator's ABI.
           dex="$RUNNER_TEMP/mosaic-trestle-android-dex"
           rm -rf "$dex"
           unzip -q -o "$apk" 'classes*.dex' 'lib/*' -d "$dex"
           for class in 'Lmosaic/android/MosaicActivity;' 'LTaskAppKt;' 'LMosaicAppShellKt;' 'LMosaicRuntimeHost;' 'LMosaicPlatformKt;'; do
-            grep -a -q -F "$class" "$dex"/classes*.dex
+            if ! grep -a -q -F "$class" "$dex"/classes*.dex; then
+              echo "::error::no $class in the APK's dex"
+              ls -l "$dex"
+              exit 1
+            fi
           done
-          test -f "$dex/lib/x86_64/libjnidispatch.so"
+          if ! test -f "$dex/lib/x86_64/libjnidispatch.so"; then
+            echo "::error::no lib/x86_64/libjnidispatch.so in the APK"
+            find "$dex/lib" -type f
+            exit 1
+          fi
 
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
