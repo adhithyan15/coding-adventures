@@ -79,5 +79,5 @@ independently invented twice.
 [PAUSE 3s] What did লাল originally name, before it meant "red"? (**A deep
 red gemstone.**) Did Bengali and Hindi each invent this word separately?
 (**No** — both borrowed the identical Persian loan.) One more reach: give
-the polite excuse-me again, and its softening tense. (**মাফ করবেন — the
+the polite excuse-me again, and its softening tense. (**maf korben — the
 future**, "you will do.")

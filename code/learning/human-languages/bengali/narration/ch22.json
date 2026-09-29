@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Please, Sorry, and Welcome",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:98f197505338a055",
+  "sourceHash": "fnv1a64:ffeee9a065ba816a",
   "lessons": [
     {
       "id": "BN-C13-doya-kore",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:87758cc620b477fc",
+      "sourceHash": "fnv1a64:2b62c6e847588cc0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -92,7 +92,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Noun plus করা already builds a verb — কাজ করা, \"to work\"; জিজ্ঞাসা করা, \"to ask.\" Here করা takes a different shape, করে, \"having done\": not a full sentence on its own, but a piece that leans on the next word."
+              "text": "Noun plus করা already builds a verb — কাজ করা, \"to work\"; jijñāsā kôrā, \"to ask.\" Here করা takes a different shape, করে, \"having done\": not a full sentence on its own, but a piece that leans on the next word."
             },
             {
               "kind": "table",
@@ -342,7 +342,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0ab8d52812340450",
+      "sourceHash": "fnv1a64:76ecaf6a876ff546",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -382,7 +382,7 @@
             },
             {
               "kind": "speech",
-              "text": "মাফ করবেন, একটু জায়গা দেবেন? (maf korben, êktu jāygā debên?) — excuse me, could you make a little room?"
+              "text": "maf korben, êktu jāygā debên? — excuse me, could you make a little room?"
             }
           ]
         },
@@ -404,7 +404,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, \"to pardon, to wipe a wrong away.\" Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, ক্ষমা করবেন, from ক্ষমা (kṣamā), \"patience, forbearance\" — the everyday loan and the bookish native word side by side, the same split Hindi keeps."
+              "text": "মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, \"to pardon, to wipe a wrong away.\" Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, kṣamā korben, from kṣamā, \"patience, forbearance\" — the everyday loan and the bookish native word side by side, the same split Hindi keeps."
             }
           ]
         },
@@ -500,7 +500,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b28579b4d18728ba",
+      "sourceHash": "fnv1a64:337a0debd020146a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -628,7 +628,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"welcome\" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? (\"Good\" plus \"come\" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, \"hither\" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (দয়া করে (doya kore), দুঃখিত (dukkhito), মাফ করবেন (maf korben).) One more reach: what tense softened that pardon into a request? (Future — করবেন, \"you will do.\")"
+              "text": "Give \"welcome\" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? (\"Good\" plus \"come\" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, \"hither\" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (doya kore, dukkhito, maf korben.) One more reach: what tense softened that pardon into a request? (Future — করবেন, \"you will do.\")"
             }
           ]
         }

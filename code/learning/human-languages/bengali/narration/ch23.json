@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Five Colors",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:656e10df069e60ba",
+  "sourceHash": "fnv1a64:d74cc8724f076a86",
   "lessons": [
     {
       "id": "BN-C14-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:331d8a66f3f7ed4a",
+      "sourceHash": "fnv1a64:cd1332fd0a3ca2b8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -147,7 +147,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did লাল (lal) originally name, before it meant \"red\"? (A deep red gemstone.) Did Bengali and Hindi each invent this word separately? (No — both borrowed the identical Persian loan.) One more reach: give the polite excuse-me again, and its softening tense. (মাফ করবেন — the future, \"you will do.\")"
+              "text": "What did লাল (lal) originally name, before it meant \"red\"? (A deep red gemstone.) Did Bengali and Hindi each invent this word separately? (No — both borrowed the identical Persian loan.) One more reach: give the polite excuse-me again, and its softening tense. (maf korben — the future, \"you will do.\")"
             }
           ]
         }
@@ -464,7 +464,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:36d29674c39854fe",
+      "sourceHash": "fnv1a64:2911f5d3e798e208",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -526,7 +526,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "সাদা (shada) is usually traced to Sanskrit শ্বেত (śveta), \"white,\" worn down through Middle Bengali into today's everyday word — a tadbhava, the same road মুখ's own twin travelled, only in reverse: here the tadbhava is the common word and the tatsama, শ্বেত (śveto), survives kept whole inside compounds, like শ্বেতাঙ্গ (śvetāngo), \"pale-skinned.\""
+              "text": "সাদা (shada) is usually traced to Sanskrit śveta, \"white,\" worn down through Middle Bengali into today's everyday word — a tadbhava, the same road মুখ's own twin travelled, only in reverse: here the tadbhava is the common word and the tatsama, śveto, survives kept whole inside compounds, like śvetāngo, \"pale-skinned.\""
             },
             {
               "kind": "speech",
@@ -596,7 +596,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is সাদা (shada) a tatsama, kept whole, or a tadbhava, worn down by sound change? (A tadbhava — its tatsama twin, শ্বেত, survives only in compounds, the same split মুখ's own twin showed.) Of the colors met so far, which one did Hindi replace with a Persian loan while Bengali kept the native word? (White — Hindi's safed against Bengali's সাদা (shada).)"
+              "text": "Is সাদা (shada) a tatsama, kept whole, or a tadbhava, worn down by sound change? (A tadbhava — its tatsama twin, śveto, survives only in compounds, the same split মুখ's own twin showed.) Of the colors met so far, which one did Hindi replace with a Persian loan while Bengali kept the native word? (White — Hindi's safed against Bengali's সাদা (shada).)"
             }
           ]
         }
@@ -615,7 +615,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a071edfd1c854220",
+      "sourceHash": "fnv1a64:c5c10e1274eb05fc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -681,7 +681,7 @@
             },
             {
               "kind": "speech",
-              "text": "Step back and count the five colors this small set has taught: two Persian loans (লাল (lal), সবুজ (shobuj)), two Sanskrit words kept recognizably close to their root (নীল (nil), কালো (kalo)), and one worn down by sound change (সাদা (shada)). A more even split between inherited and borrowed than the food words or the family words showed — color, it turns out, came into Bengali from everywhere at once."
+              "text": "Step back and count the five colors this small set has taught: two Persian loans (লাল (lal), সবুজ (shobuj)), two Sanskrit words kept recognizably close to their root (nil, কালো (kalo)), and one worn down by sound change (সাদা (shada)). A more even split between inherited and borrowed than the food words or the family words showed — color, it turns out, came into Bengali from everywhere at once."
             }
           ]
         },
@@ -747,7 +747,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Persian word gives both সবুজ (shobuj) and Hindi's word for \"vegetable\"? (sabz, \"green\" — Hindi's sabzī is literally \"the green things.\") Of the five colors, how many are Persian loans, how many are Sanskrit words, and how many are worn down by sound change? (Two, two, and one — লাল (lal) and সবুজ (shobuj); নীল (nil) and কালো (kalo); সাদা (shada).) Name all five colors, in order. (লাল (lal), নীল (nil), কালো (kalo), সাদা (shada), সবুজ (shobuj).)"
+              "text": "What Persian word gives both সবুজ (shobuj) and Hindi's word for \"vegetable\"? (sabz, \"green\" — Hindi's sabzī is literally \"the green things.\") Of the five colors, how many are Persian loans, how many are Sanskrit words, and how many are worn down by sound change? (Two, two, and one — লাল (lal) and সবুজ (shobuj); nil and কালো (kalo); সাদা (shada).) Name all five colors, in order. (লাল (lal), nil, কালো (kalo), সাদা (shada), সবুজ (shobuj).)"
             }
           ]
         }

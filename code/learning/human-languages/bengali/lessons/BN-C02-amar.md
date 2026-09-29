@@ -44,7 +44,7 @@ reviews_of: [BN-C02-naam]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C02-AMAR-01, BN-CONCEPT-C02-NAAM-01] -->
 
-**আমার** (*āmār*, "my") is the possessive of **আমি** (*āmi*, "I"), on the
+**আমার** (*āmār*, "my") is the possessive of *āmi* ("I"), on the
 first-person stem **ām-** ← Sanskrit *asmad* (the "we/I" stem). Buried in it is
 the same ancient first-person **m-** that runs through English **me**, **my**,
 **mine** and Latin *mē* — so Bengali's "my" and English's "my" share, at the root,

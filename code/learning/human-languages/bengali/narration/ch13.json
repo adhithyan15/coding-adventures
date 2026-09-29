@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:49c0807f2cc14daa",
+  "sourceHash": "fnv1a64:c3a184f448cfbf47",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a103488d109eb3d",
+      "sourceHash": "fnv1a64:bfa4d401b9a96531",
       "notice": null,
       "blocks": [
         {
@@ -97,7 +97,7 @@
             },
             {
               "kind": "speech",
-              "text": "আছ-, the verb behind Chapter 5's kemon āchho, means being present. But it is unfinished: it has a present and a past, and nothing else at all. Push it into the future and it stops dead — so Bengali picks up হ- (hôbe), or Chapter 11's থাকা (āmi thākbo, \"I'll be there\"). One job, two verbs, split down the middle."
+              "text": "আছ-, the verb behind Chapter 5's kemon āchho, means being present. But it is unfinished: it has a present and a past, and nothing else at all. Push it into the future and it stops dead — so Bengali picks up হ- (hôbe), or Chapter 11's thākā (āmi thākbo, \"I'll be there\"). One job, two verbs, split down the middle."
             }
           ]
         },
@@ -154,7 +154,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which Sanskrit root is hôwā, and which two English words are its brothers? (√bhū, \"to become\" — be and been.) What can আছ- not do? (Anything past a present and a past — it has no future of its own.) So what does Bengali reach for instead? (হবে, or থাকা.) Next: one verb, three levels of respect."
+              "text": "Which Sanskrit root is hôwā, and which two English words are its brothers? (√bhū, \"to become\" — be and been.) What can আছ- not do? (Anything past a present and a past — it has no future of its own.) So what does Bengali reach for instead? (হবে, or thākā.) Next: one verb, three levels of respect."
             }
           ]
         }
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6ce56dafbdf46d3",
+      "sourceHash": "fnv1a64:ecfa5fa92c05863b",
       "notice": null,
       "blocks": [
         {
@@ -562,7 +562,7 @@
               "utterances": [
                 "জল খাওয়া (jôl khāwā) means to drink water — \"water-eat\".",
                 "চা খাওয়া (chā khāwā) means to drink tea.",
-                "ওষুধ খাওয়া (oshudh khāwā) means to take medicine."
+                "oshudh khāwā means to take medicine."
               ]
             },
             {
@@ -806,7 +806,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cc6f999f1836a3c",
+      "sourceHash": "fnv1a64:948888371ba625b4",
       "notice": null,
       "blocks": [
         {
@@ -855,11 +855,11 @@
         {
           "index": 3,
           "type": "pronunciation",
-          "title": "Sounds you'll need: জ্ঞ, the letter that lies",
+          "title": "Sounds you'll need: jñ, the letter that lies",
           "segments": [
             {
               "kind": "speech",
-              "text": "Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is জা + না, jā-nā, and nothing more."
+              "text": "Sanskrit writes the root with jñ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is জা + না, jā-nā, and nothing more."
             }
           ]
         },

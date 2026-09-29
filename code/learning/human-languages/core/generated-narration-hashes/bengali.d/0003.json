@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 3,
-  "sourceHash": "fnv1a64:2b07af12ef9e2284",
+  "sourceHash": "fnv1a64:79708e17987d75a5",
   "lessonIds": [
     "BN-C02-naam",
     "BN-C02-amar",
@@ -16,7 +16,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch03.txt",
   "json": "bengali/narration/ch03.json",
-  "textHash": "fnv1a64:bd6f4131977e6316",
-  "jsonHash": "fnv1a64:70293204182c3d79",
+  "textHash": "fnv1a64:298708e74e416c1d",
+  "jsonHash": "fnv1a64:352b87ccf875dc93",
   "findings": []
 }

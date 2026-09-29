@@ -50,7 +50,7 @@ recognizing. This word's road into English was much shorter.
 
 **শাড়ি** opens with **শ** — a second letter for an *s*-family sound, a
 different one from স. Sanskrit distinguished three of these (**স**, **শ**,
-and a third, **ষ**); modern Bengali speech has merged them into one sound,
+and a third, *ṣ*); modern Bengali speech has merged them into one sound,
 but the spelling keeps them apart. Then **া** (*ā*), **ড়** (the flap you
 now know from কাপড়), and **ি** (*i*): *shā-ṛi*.
 
@@ -84,4 +84,4 @@ carried whole into another language's dictionary.
 down over millennia, or as a direct modern loanword? (**A direct loanword**
 — "sari," borrowed whole, no PIE root involved.) How many distinct
 *s*-family letters did Sanskrit distinguish, now merged in Bengali speech?
-(**Three** — স, শ, ষ.)
+(**Three** — স, শ and *ṣ*.)
