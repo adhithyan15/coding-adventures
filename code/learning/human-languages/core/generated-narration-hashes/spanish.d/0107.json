@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 107,
-  "sourceHash": "fnv1a64:bf55ade65be42742",
+  "sourceHash": "fnv1a64:f602af152bf5f12b",
   "lessonIds": [
     "ES-C16-imperfecto",
     "ES-C16-comer-imperfecto",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch107.txt",
   "json": "spanish/narration/ch107.json",
-  "textHash": "fnv1a64:5aad010a121c0d3d",
-  "jsonHash": "fnv1a64:89e2397d527bd1a6",
+  "textHash": "fnv1a64:8e3ed23f44895070",
+  "jsonHash": "fnv1a64:748077be428c5098",
   "findings": []
 }

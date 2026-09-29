@@ -8,18 +8,18 @@ type: word
 headword: comí
 gloss: the regular singular -er preterite — comí, comiste, comió
 concept_tag: ES-PRETERITE-ER
-prerequisites: [ES-C14-practice, ES-C07-comer]
+prerequisites: [ES-C14-practice, ES-C07-comer, ES-C14-hablar-preterite]
 sounds: [stress-final, accent-acute]
 roots: [latin-perfect-i]
 etymology_hook: "the regular -er singular preterite continues Latin perfect material reshaped through Romance into Spanish -í, -iste, -ió"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE, ES-SOUND-WRITTEN-ACCENT]
+  knowledge: [ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE, ES-SOUND-WRITTEN-ACCENT, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]
 introduces:
   knowledge: [ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT]
 practises:
-  knowledge: [ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT]
+  knowledge: [ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-ETYMON-COMEDERE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-ER-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS, ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C14-practice, ES-C07-comer]
 # comí — one regular -er singular past
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-SOUND-WRITTEN-ACCENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR, ES-SOUND-WRITTEN-ACCENT, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT] -->
 
 [PAUSE 2s] You know present **como, comes, come** and the singular **-ar** past.
 To make a completed past from **comer**, keep **com-** and learn three forms:
 **comí, comiste, comió**.
+
+[PAUSE 2s] *Hablé, hablaste, habló*: the *-ar* past carries on the Latin perfect, *amāvī, amāvistī, amāvit*.
 
 ## Grammar Lens: present beside completed past
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-ER-PRETERITE-SINGULAR]; assesses=[ES-LEX-COMER, ES-GRAMMAR-ER-PRESENT-SINGULAR] -->

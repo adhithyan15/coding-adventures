@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 137,
-  "sourceHash": "fnv1a64:24cf4cea611e1147",
+  "sourceHash": "fnv1a64:7457ea1333b4ebc1",
   "lessonIds": [
     "ES-C20-lo-siento",
     "ES-C20-perdon"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch137.txt",
   "json": "spanish/narration/ch137.json",
-  "textHash": "fnv1a64:b743dcd84f0edc66",
-  "jsonHash": "fnv1a64:019c340e4e5b2e2e",
+  "textHash": "fnv1a64:69c205344939146e",
+  "jsonHash": "fnv1a64:b3bd7a2f26089018",
   "findings": []
 }

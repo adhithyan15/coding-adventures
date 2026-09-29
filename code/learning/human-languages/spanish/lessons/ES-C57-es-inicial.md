@@ -8,7 +8,7 @@ type: grammar
 headword: es- + consonant
 gloss: the little e- Spanish put in front of words that started with two consonants — and why English kept them bare
 concept_tag: ES-SOUND-ES-PROTHESIS
-prerequisites: [ES-C57-ll]
+prerequisites: [ES-C57-ll, ES-C57-f-a-h]
 sounds: []
 roots: [stare-latin, studere-latin]
 teaches_cells: []
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [ES-SOUND-ES-PROTHESIS]
 practises:
-  knowledge: [ES-SOUND-ES-PROTHESIS, ES-LEX-ESPANOL, ES-LEX-ESTAR, ES-ETYMON-STARE, ES-LEX-ESTUDIAR, ES-ETYMON-STUDERE, ES-FRIEND-CION-TION]
+  knowledge: [ES-SOUND-ES-PROTHESIS, ES-LEX-ESPANOL, ES-LEX-ESTAR, ES-ETYMON-STARE, ES-LEX-ESTUDIAR, ES-ETYMON-STUDERE, ES-FRIEND-CION-TION, ES-SOUND-F-TO-H-DECODER, ES-SOUND-CLUSTER-TO-LL]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -32,13 +32,15 @@ reviews_of: [ES-C04-estar, ES-C06-estudiar]
 # es- + consonant
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-LEX-ESTUDIAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ESTAR, ES-LEX-ESTUDIAR, ES-SOUND-F-TO-H-DECODER, ES-SOUND-CLUSTER-TO-LL] -->
 
 [PAUSE 2s] Say "to be" — the one about how and where. (*Estar*.) Now say "to
 study." (*Estudiar*.)
 
 [PAUSE 1s] You have known both since your first chapters. Today they explain
 each other.
+
+[PAUSE 2s] The two laws before the next one: a silent *h-* often stands where Latin had *f-* (*hablar* and English *fable*), and Latin *cl-* became *ll-* (*llamar* and English *claim*).
 
 ## Grammar Lens: a word cannot start like that
 <!-- hl-knowledge: introduces=[ES-SOUND-ES-PROTHESIS]; assesses=[ES-ETYMON-STARE, ES-ETYMON-STUDERE] -->

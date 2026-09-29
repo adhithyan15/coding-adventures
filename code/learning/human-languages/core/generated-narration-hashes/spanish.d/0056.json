@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 56,
-  "sourceHash": "fnv1a64:eb00805ab41c118b",
+  "sourceHash": "fnv1a64:7ce66d404a0f027b",
   "lessonIds": [
     "ES-C43-casa"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch56.txt",
   "json": "spanish/narration/ch56.json",
-  "textHash": "fnv1a64:8dc5837a056a7b71",
-  "jsonHash": "fnv1a64:e9be7f485e5cfece",
+  "textHash": "fnv1a64:f1d87ed1a9d31dbd",
+  "jsonHash": "fnv1a64:53e9b5a8a7a80a12",
   "findings": []
 }

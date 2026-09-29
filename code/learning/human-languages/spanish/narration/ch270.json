@@ -4,7 +4,7 @@
   "chapter": 270,
   "title": "Making a Case --- Claim, Example, However, Although",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d407c638d0060bed",
+  "sourceHash": "fnv1a64:76b24563583e9a9c",
   "lessons": [
     {
       "id": "ES-C270-en-mi-opinion",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9d7961032ef8528",
+      "sourceHash": "fnv1a64:dbc8525fb8eae807",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You can say what happened and how it felt. This chapter is for saying what you THINK, and defending it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before you give an opinion, ask for one. Plainly, with your voice alone: ¿Es bueno? Or asking for agreement: Es bueno, ¿no?"
             }
           ]
         },

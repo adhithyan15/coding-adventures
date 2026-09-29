@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "Water, Wine, and Bread",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:02a407898878b56a",
+  "sourceHash": "fnv1a64:26799cbceb5dfc21",
   "lessons": [
     {
       "id": "ES-C26-agua",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49dd787579da85ee",
+      "sourceHash": "fnv1a64:d309b9a1ea198f08",
       "notice": null,
       "blocks": [
         {
@@ -293,6 +293,16 @@
             {
               "kind": "speech",
               "text": "Spanish's word for bread hides the same lovely word-story you'd find in English's \"companion\" — except Spanish kept both halves, the bread and the friendship."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Offer the bread two ways: to a friend, come pan; to a stranger, coma pan, por favor. Neither is blunt. The person you choose carries the courtesy."
             }
           ]
         },

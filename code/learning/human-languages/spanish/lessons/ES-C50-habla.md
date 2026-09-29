@@ -8,7 +8,7 @@ type: grammar
 headword: habla · come · vive
 gloss: telling somebody to do something — and the form is one you have had since your seventh chapter
 concept_tag: ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE
-prerequisites: [ES-C18-sintesis-subjuntivo]
+prerequisites: [ES-C18-sintesis-subjuntivo, ES-C49-sintesis-dos-orillas]
 sounds: []
 roots: [imperare-latin]
 teaches_cells: []
@@ -16,11 +16,11 @@ etymology_hook: "imperative ← Latin imperāre 'to command' — the same imper-
 duration:
   max_seconds: 275
 requires:
-  knowledge: [ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-ER-PRESENT-3SG, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TU]
+  knowledge: [ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-ER-PRESENT-3SG, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TU, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT]
 introduces:
   knowledge: [ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE, ES-ETYMON-IMPERARE]
 practises:
-  knowledge: [ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-ER-PRESENT-3SG, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TU, ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE, ES-ETYMON-IMPERARE]
+  knowledge: [ES-GRAMMAR-AR-PRESENT-3SG, ES-GRAMMAR-ER-PRESENT-3SG, ES-LEX-HABLAR, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TU, ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE, ES-ETYMON-IMPERARE, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,12 @@ reviews_of: [ES-C06-habla, ES-C07-come]
 # habla — telling somebody to do something
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-3SG, ES-LEX-HABLAR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AR-PRESENT-3SG, ES-LEX-HABLAR, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT] -->
 
 [PAUSE 2s] Say "he speaks." (*Habla*.) Hold that word. You are about to be told
 it does a second job you have never been shown.
+
+[PAUSE 2s] Today, on two shores: Spain says *hoy he hablado*, most of Latin America says *hoy hablé*. Choose one and keep to it.
 
 ## Grammar Lens: you already have it
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE]; assesses=[ES-GRAMMAR-ER-PRESENT-3SG, ES-LEX-COMER, ES-LEX-VIVIR, ES-LEX-TU] -->

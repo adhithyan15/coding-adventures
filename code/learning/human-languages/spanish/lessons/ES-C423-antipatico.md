@@ -8,17 +8,17 @@ type: word
 headword: antipático
 gloss: unpleasant, disagreeable — simpático with the Greek anti- fastened on the front; the two words are a matched pair and neither means what its English lookalike means
 concept_tag: ES-COUNT-UNPLEASANT
-prerequisites: [ES-C380-simpatico]
+prerequisites: [ES-C380-simpatico, ES-W02-cuatro-lineas-ayer]
 sounds: [s-clear, t-dental, k-hard, accent-acute]
 roots: [sympatheia-greek]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-C380-COUNT-36]
+  knowledge: [ES-LEX-C380-COUNT-36, ES-WRITING-CONNECTED-COMPOSITION]
 introduces:
   knowledge: [ES-LEX-C423-CHAR-01]
 practises:
-  knowledge: [ES-LEX-C423-CHAR-01, ES-LEX-C380-COUNT-36]
+  knowledge: [ES-LEX-C423-CHAR-01, ES-LEX-C380-COUNT-36, ES-WRITING-CONNECTED-COMPOSITION]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,10 +30,12 @@ reviews_of: [ES-C380-simpatico]
 # antipático — the opposite made by fastening four letters on the front
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C380-COUNT-36] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C380-COUNT-36, ES-WRITING-CONNECTED-COMPOSITION] -->
 
 [PAUSE 2s] Say *simpático*. Now say what you would expect its opposite to look
 like, before reading on. This is one of the times the obvious guess is right.
+
+[PAUSE 3s] Write one line with *porque* before the new words: *Hablé con mi amiga porque tuve tiempo.* Then write one of your own.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -8,18 +8,18 @@ type: word
 headword: salir
 gloss: to leave or go out — with the singular present forms salgo, sales, and sale
 concept_tag: ES-VERB-SALIR
-prerequisites: [ES-C13-poner, ES-C09-soy-de]
+prerequisites: [ES-C13-poner, ES-C09-soy-de, ES-C09-falsos-amigos]
 sounds: [g-hard, l-clear]
 roots: [salire-latin]
 etymology_hook: "salir descends from Latin salīre 'to leap or jump'; English salient and sally preserve the same leaping family"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-DE]
+  knowledge: [ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-DE, ES-FRIENDS-FALSE-FRIENDS]
 introduces:
   knowledge: [ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-ETYMON-SALIRE]
 practises:
-  knowledge: [ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-DE, ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-ETYMON-SALIRE]
+  knowledge: [ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-HISTORY-YO-GO-CONVERGENCE, ES-LEX-DE, ES-LEX-SALIR, ES-GRAMMAR-SALIR-PRESENT-SINGULAR, ES-ETYMON-SALIRE, ES-FRIENDS-FALSE-FRIENDS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C13-poner, ES-C12-practice, ES-C09-soy-de]
 # salir — leaving with three singular forms
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-LEX-DE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PONER, ES-GRAMMAR-PONER-PRESENT-SINGULAR, ES-GRAMMAR-YO-GO-CONTRAST-LEARNED, ES-LEX-DE, ES-FRIENDS-FALSE-FRIENDS] -->
 
 [PAUSE 2s] You can retrieve **pongo, pones, pone**, and you already use **de**
 with a place name. Keep that frontier while adding **salir**, “to leave” or “to
 go out.”
+
+[PAUSE 2s] Settle the false friend before the real way out: *éxito* is **success**. To go out, Spanish uses today's verb, *salir*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

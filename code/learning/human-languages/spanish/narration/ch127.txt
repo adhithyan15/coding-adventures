@@ -13,6 +13,8 @@ person: yo. present subjunctive: hable.
 person: tú. present subjunctive: hables.
 person: él / ella / usted. present subjunctive: hable.
 Plural forms wait. Say the small row: hable, hables, hable.
+[pause 2 seconds]
+Viviría, vivirías, viviría: the conditional rides on the whole infinitive.
 
 Grammar Lens: the yo stem, then a vowel swap.
 Start from present hablo. Remove -o to reveal habl-. Regular -ar verbs then use e in these subjunctive endings: -e, -es, -e. The family vowel has swapped from the familiar a to e. This recipe will matter later because a verb's special present yo stem can travel with it.

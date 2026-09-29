@@ -8,17 +8,17 @@ type: word
 headword: billete
 gloss: ticket
 concept_tag: TRANSPORT-TICKET
-prerequisites: [ES-C268-donde-esta]
+prerequisites: [ES-C268-donde-esta, ES-C267-pregunta-si-no, ES-C267-verdad-no]
 sounds: [vowel-a, vowel-e]
 roots: [bulla]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-DONDE-ESTA]
+  knowledge: [ES-LEX-DONDE-ESTA, ES-GRAMMAR-C267-PREGUNTASINO-01, ES-GRAMMAR-C267-VERDADNO-01]
 introduces:
   knowledge: [ES-LEX-BILLETE, ES-SEMANTIC-TRAVEL-TICKET]
 practises:
-  knowledge: [ES-LEX-BILLETE, ES-SEMANTIC-TRAVEL-TICKET]
+  knowledge: [ES-LEX-BILLETE, ES-SEMANTIC-TRAVEL-TICKET, ES-GRAMMAR-C267-PREGUNTASINO-01, ES-GRAMMAR-C267-VERDADNO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,10 +30,12 @@ reviews_of: [ES-C268-donde-esta]
 # billete — the ticket, and the note in your pocket
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-PREGUNTASINO-01, ES-GRAMMAR-C267-VERDADNO-01] -->
 
 [PAUSE 2s] One word gets you onto the train. It also, confusingly and usefully,
 means the paper money you pay for it with.
+
+[PAUSE 2s] A question needs no question word: *¿Hablas español?* Nothing moves; only your voice rises. Then ask someone to agree: *Hablas español, ¿verdad?*
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

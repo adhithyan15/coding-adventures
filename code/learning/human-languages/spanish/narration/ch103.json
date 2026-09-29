@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "The Preterite --- Your First Past Tense",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d09adbee100a36e4",
+  "sourceHash": "fnv1a64:623242bacad15b1e",
   "lessons": [
     {
       "id": "ES-C14-ayer",
@@ -374,7 +374,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85595cddc8ade234",
+      "sourceHash": "fnv1a64:24eba3db4330a744",
       "notice": null,
       "blocks": [
         {
@@ -391,6 +391,16 @@
             {
               "kind": "speech",
               "text": "You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Start from ayer. It tells the listener when before the verb arrives, and the verb has to follow it backwards."
             }
           ]
         },

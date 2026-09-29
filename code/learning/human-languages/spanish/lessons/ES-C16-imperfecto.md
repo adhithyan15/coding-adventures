@@ -8,18 +8,18 @@ type: grammar
 headword: hablaba
 gloss: the singular -ar imperfect — hablaba, hablabas, hablaba
 concept_tag: ES-IMPERFECT
-prerequisites: [ES-C15-practice, ES-C06-hablar]
+prerequisites: [ES-C15-practice, ES-C06-hablar, ES-C14-ayer, ES-C14-ayer]
 sounds: [stress-penultimate]
 roots: [latin-abam]
 etymology_hook: "hablaba continues the Latin -ābam imperfect family, with its b still audible in Spanish -aba"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-LEX-AYER, ES-SEMANTIC-PAST-TIME-FRAME]
 introduces:
   knowledge: [ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL, ES-GRAMMAR-AR-IMPERFECT-SINGULAR, ES-LEX-AYER, ES-SEMANTIC-PAST-TIME-FRAME]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,12 +31,14 @@ reviews_of: [ES-C15-practice, ES-C06-hablar]
 # hablaba — let a past action stay open
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-LEX-AYER, ES-SEMANTIC-PAST-TIME-FRAME] -->
 
 [PAUSE 2s] **Hablé español** presents speaking as a completed past event. A
 different past, the **imperfect**, can leave the action open: **Hablaba
 español** — “I was speaking Spanish” or “I used to speak Spanish.” The sentence
 does not say where the action ended.
+
+[PAUSE 2s] Say *ayer hablé*. The time frame comes first, and the verb follows it into the past.
 
 ## Grammar Lens: three familiar persons
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-IMPERFECT-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL] -->

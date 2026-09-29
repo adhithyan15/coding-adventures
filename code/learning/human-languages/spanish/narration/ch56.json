@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "La Casa --- Your First Everyday Noun",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb00805ab41c118b",
+  "sourceHash": "fnv1a64:7ce66d404a0f027b",
   "lessons": [
     {
       "id": "ES-C43-casa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:515a6854078bb7d3",
+      "sourceHash": "fnv1a64:15b3454817b1c5be",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Él es artista. Ella es artista. The -a stays either way; only the article moves."
             }
           ]
         },
