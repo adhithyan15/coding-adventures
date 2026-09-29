@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f2c5f971ab36b3d6",
+  "sourceHash": "fnv1a64:e37fc22df8607723",
   "lessons": [
     {
       "id": "KA-C01-namaskara",
@@ -554,7 +554,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2f4202e9708561cf",
+      "sourceHash": "fnv1a64:7a34ca5340affe75",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -617,7 +617,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಇಲ್ಲ (illa) is built on the old Dravidian root il, \"not-being, absence\" — so, like Tamil illai, it is really the statement \"[it] is not, [there] is not,\" doing duty as the everyday \"no.\" Its positive twin is ಇದೆ (ide), \"there is.\""
+              "text": "ಇಲ್ಲ (illa) is built on the old Dravidian root il, \"not-being, absence\" — so, like Tamil illai, it is really the statement \"[it] is not, [there] is not,\" doing duty as the everyday \"no.\" Its positive twin is ide, \"there is.\""
             }
           ]
         },
@@ -1262,7 +1262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be031c3203b08d63",
+      "sourceHash": "fnv1a64:e4193c9a4c26b2b7",
       "notice": null,
       "blocks": [
         {
@@ -1289,7 +1289,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Sound each out, left to right, before checking:"
+              "text": "Sound out the three written in Kannada, left to right, before checking. The other two stay in romanization until their letters arrive in later chapters:"
             },
             {
               "kind": "table",
@@ -1304,13 +1304,13 @@
                 "Read: ನಮಸ್ಕಾರ namaskāra. Meaning: hello / greetings. Native or borrowed: Sanskrit.",
                 "Read: ಧನ್ಯವಾದ dhanyavāda. Meaning: thank you. Native or borrowed: Sanskrit.",
                 "Read: ಹೌದು haudu. Meaning: yes. Native or borrowed: native.",
-                "Read: ಇಲ್ಲ illa. Meaning: no / there isn't. Native or borrowed: native (= Tamil illai).",
-                "Read: ಸರಿ sari. Meaning: okay / correct. Native or borrowed: native (= Tamil sari)."
+                "Read: illa. Meaning: no / there isn't. Native or borrowed: native (= Tamil illai).",
+                "Read: sari. Meaning: okay / correct. Native or borrowed: native (= Tamil sari)."
               ]
             },
             {
               "kind": "speech",
-              "text": "The letters that did it: consonants carry a built-in \"a\"; a vowel sign swaps that vowel (ಾ for \"ā,\" ಿ for \"i,\" ು for \"u,\" ೌ for \"au\"); a virama strips the vowel so a consonant can stack under the next as a conjunct (ottakṣara — ಸ್ಕ, ನ್ಯ, ಲ್ಲ); and a word-initial vowel gets a full letter (ಇ)."
+              "text": "The letters that did it: consonants carry a built-in \"a\"; a vowel sign swaps that vowel (ಾ for \"ā,\" ು for \"u,\" ೌ for \"au\"); a virama strips the vowel so a consonant can stack under the next as a conjunct (ottakṣara — ಸ್ಕ, ನ್ಯ); and a word-initial vowel gets a full letter of its own, which the next chapters begin to teach."
             },
             {
               "kind": "speech",

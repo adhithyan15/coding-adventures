@@ -39,21 +39,22 @@ it feel easy.
 ## Guided Practice: Read them back
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-NAMASKARA-01, KA-LEX-C01-DHANYAVADA-01, KA-LEX-C01-HAUDU-01, KA-LEX-C01-ILLA-01, KA-LEX-C01-SARI-01] -->
 
-Sound each out, left to right, before checking:
+Sound out the three written in Kannada, left to right, before checking. The
+other two stay in romanization until their letters arrive in later chapters:
 
 | Read | Meaning | Native or borrowed |
 |---|---|---|
 | **ನಮಸ್ಕಾರ** *namaskāra* | hello / greetings | Sanskrit |
 | **ಧನ್ಯವಾದ** *dhanyavāda* | thank you | Sanskrit |
 | **ಹೌದು** *haudu* | yes | native |
-| **ಇಲ್ಲ** *illa* | no / there isn't | native (= Tamil *illai*) |
-| **ಸರಿ** *sari* | okay / correct | native (= Tamil *sari*) |
+| *illa* | no / there isn't | native (= Tamil *illai*) |
+| *sari* | okay / correct | native (= Tamil *sari*) |
 
 The letters that did it: consonants carry a built-in **"a"**; a **vowel sign**
-swaps that vowel (ಾ for "ā," ಿ for "i," ು for "u," ೌ for "au"); a **virama**
+swaps that vowel (ಾ for "ā," ು for "u," ೌ for "au"); a **virama**
 strips the vowel so a consonant can **stack under** the next as a conjunct
-(*ottakṣara* — ಸ್ಕ, ನ್ಯ, ಲ್ಲ); and a word-initial vowel gets a **full letter**
-(ಇ).
+(*ottakṣara* — ಸ್ಕ, ನ್ಯ); and a word-initial vowel gets a **full letter**
+of its own, which the next chapters begin to teach.
 
 Notice the pattern already: the two **greeting/politeness** words are Sanskrit
 loans; the three **everyday grammar** words are native Dravidian — and two of

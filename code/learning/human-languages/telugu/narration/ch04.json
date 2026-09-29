@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:52255cd67993af76",
+  "sourceHash": "fnv1a64:b59efc5a2f4b5a43",
   "lessons": [
     {
       "id": "TE-C04-dappu",
@@ -275,17 +275,17 @@
     {
       "id": "TE-C04-vellu",
       "sequence": 210,
-      "title": "వెళ్ళు (veḷḷu) — \"go,\" and వచ్చు (come)",
+      "title": "వెళ్ళు (veḷḷu) — \"go,\" and vaccu (come)",
       "headword": "వెళ్ళు",
       "romanization": "veḷḷu",
-      "gloss": "to go (and వచ్చు, to come)",
+      "gloss": "to go (and vaccu, to come)",
       "script": "telugu",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca8555c1bbb4a25f",
+      "sourceHash": "fnv1a64:0663528e381b7bce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -321,7 +321,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: వచ్చు (vaccu, \"come\") with the doubled చ్చ (cc)."
+              "text": "వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: vaccu (\"come\") with a doubled cc."
             }
           ]
         },
@@ -332,7 +332,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వెళ్ళు (veḷḷu, \"to go\") and వచ్చు (vaccu, \"to come\") are native Dravidian verbs. As commands they are whole words: veḷḷu! (\"go!\"), rā! (\"come!\"). You need both, because Telugu — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
+              "text": "వెళ్ళు (veḷḷu, \"to go\") and vaccu (\"to come\") are native Dravidian verbs. As commands they are whole words: veḷḷu! (\"go!\"), rā! (\"come!\"). You need both, because Telugu — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
             }
           ]
         },
@@ -343,7 +343,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner వచ్చు (vaccu, “come”)."
+              "text": "వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner is vaccu (“come”)."
             }
           ]
         },
@@ -1293,7 +1293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9de82e3f75be2312",
+      "sourceHash": "fnv1a64:7ab32e2722c078ce",
       "notice": null,
       "blocks": [
         {
@@ -1332,15 +1332,15 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "Telugu: వెళ్ళి వస్తాను., veḷḷi vastānu. English: I'll go and come back. (the goodbye).",
-                "Telugu: వెళ్ళి రండి., veḷḷi raṇḍi. English: Go and come back. (the reply).",
+                "Telugu: —, veḷḷi vastānu. English: I'll go and come back. (the goodbye).",
+                "Telugu: —, veḷḷi raṇḍi. English: Go and come back. (the reply).",
                 "Telugu: రేపు కలుద్దాం., rēpu kaluddām. English: See you tomorrow.",
-                "Telugu: మళ్ళీ కలుద్దాం., maḷḷī kaluddām. English: We'll meet again."
+                "Telugu: —, maḷḷī kaluddām. English: We'll meet again."
               ]
             },
             {
               "kind": "speech",
-              "text": "A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead."
+              "text": "Three of these stay in romanization for now: their doubled ḷ and their e-sign have not had their own lessons yet, and a line you cannot decode is not a line to read from. The letters catch up in the chapters ahead."
             },
             {
               "kind": "pause",

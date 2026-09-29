@@ -405,9 +405,9 @@ Warm-up.
 Five words, and a first handful of Malayalam letters read straight off the page. Let's gather only what you have already learned and make it feel easy.
 
 The exchange — read them back.
-Sound each out, left to right, before checking:
+Sound out the three written in Malayalam, left to right, before checking. The other two stay in romanization until their letters arrive in later chapters:
 There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Origin. Come back and look at it when you have stopped.
-The letters that did it: consonants carry a built-in "a"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ, ല്ല); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ, ഇ).
+The letters that did it: consonants carry a built-in "a"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ in അതെ (athe)).
 Notice how Tamil-like the native core is: four of the five everyday words (nandi, athe, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit.
 
 Why it's said this way — a promise for later.

@@ -59,7 +59,7 @@ Not every color in this book will be this simple.
 ## The word, taken apart — Persian, and it stops there
 <!-- hl-knowledge: introduces=[UR-ETYMON-LAL-PERSIAN]; assesses=[UR-LEX-LAL] -->
 
-**لال** is borrowed from Classical Persian **لَال**, "red." No further
+**لال** is borrowed from Classical Persian *lāl*, "red." No further
 ancestor is documented for the Persian word itself — the trail
 stops, the same honest kind of dead end *roṭī*'s Sanskrit root hit last
 lesson, except this time on the Persian side of the book's two layers

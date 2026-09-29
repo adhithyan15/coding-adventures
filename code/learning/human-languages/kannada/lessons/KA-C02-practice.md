@@ -41,8 +41,8 @@ reviews_of: [KA-C02-hesaru, KA-C02-nanna, KA-C02-nanna-hesaru, KA-C02-niinu-niiv
 |---|---|
 | ನನ್ನ ಹೆಸರು ಮೀರಾ. (*nanna hesaru Mira*) | My name is Mira. |
 | ನಿಮ್ಮ ಹೆಸರು ಏನು? (*nimma hesaru ēnu*) | What's your name? |
-| ನನ್ನ ಹೆಸರು ಅರುಣ್. (*nanna hesaru Arun*) | My name is Arun. |
-| ಸಂತೋಷ. (*santōṣa*) | Pleased to meet you. |
+| *nanna hesaru Arun* | My name is Arun. |
+| *santōṣa* | Pleased to meet you. |
 
 Every atom traced:
 

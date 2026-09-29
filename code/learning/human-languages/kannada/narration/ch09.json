@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5482a02c112ae13f",
+  "sourceHash": "fnv1a64:50671c74c3d8bc10",
   "lessons": [
     {
       "id": "KA-C09-kshamisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e742a8ffed5f8582",
+      "sourceHash": "fnv1a64:586466fab3258c5e",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "‑ಇಸು (‑isu) = a verb-making suffix: bolt it onto a Sanskrit noun and you get a brand-new Kannada verb. kṣamā + ‑isu becomes ಕ್ಷಮಿಸು (kṣamisu), \"to forgive.\" (The same move builds ಪ್ರಾರಂಭಿಸು prārambhisu, \"to begin,\" from Sanskrit prārambha.)"
+              "text": "‑ಇಸು (‑isu) = a verb-making suffix: bolt it onto a Sanskrit noun and you get a brand-new Kannada verb. kṣamā + ‑isu becomes ಕ್ಷಮಿಸು (kṣamisu), \"to forgive.\" (The same move builds prārambhisu, \"to begin,\" from Sanskrit prārambha.)"
             },
             {
               "kind": "speech",

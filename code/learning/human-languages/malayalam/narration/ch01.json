@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b5326ea2803b28c4",
+  "sourceHash": "fnv1a64:eced9b9a3e4a93d0",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -1649,7 +1649,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:d1f7af014669fdd8",
+      "sourceHash": "fnv1a64:82508875e2851f14",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1688,7 +1688,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Sound each out, left to right, before checking:"
+              "text": "Sound out the three written in Malayalam, left to right, before checking. The other two stay in romanization until their letters arrive in later chapters:"
             },
             {
               "kind": "table-skipped",
@@ -1705,7 +1705,7 @@
             },
             {
               "kind": "speech",
-              "text": "The letters that did it: consonants carry a built-in \"a\"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ, ല്ല); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ, ഇ)."
+              "text": "The letters that did it: consonants carry a built-in \"a\"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ in അതെ (athe))."
             },
             {
               "kind": "speech",

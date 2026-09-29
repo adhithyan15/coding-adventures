@@ -280,10 +280,10 @@ The letters in this word.
 ఉ (independent u) + ండు (ṇḍu, with the retroflex cluster ండ) becomes ఉండు (uṇḍu).
 
 The word, taken apart.
-ఉండు (uṇḍu, "to be, to exist, to stay, to live") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru ("you are") and bāgunnānu ("I'm well") — and it also means "to reside": నేను హైదరాబాద్లో ఉంటాను (nēnu Hyderābādlō uṇṭānu, "I live in Hyderabad"). One verb covers "be," "stay," and "live."
+ఉండు (uṇḍu, "to be, to exist, to stay, to live") is native Dravidian and does an enormous amount of work. It is the verb behind Chapter 3's unnāru ("you are") and bāgunnānu ("I'm well") — and it also means "to reside": nēnu Hyderābādlō uṇṭānu ("I live in Hyderabad"). One verb covers "be," "stay," and "live."
 
 Grammar Lens: "in" comes after the noun.
-హైదరాబాద్లో (Hyderābādlō) = Hyderabad + -లో (-lō, "in"). The little word for "in" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. "Hyderabad-in I stay," the verb last.
+Hyderābādlō = Hyderabad + -లో (-lō, "in"). The little word for "in" is glued to the end of the noun — Telugu uses postpositions (really, case-suffixes) where English uses prepositions. "Hyderabad-in I stay," the verb last.
 
 Guided Practice.
 [pause 1 second]
@@ -443,8 +443,8 @@ Three sentences about yourself, read off the page before you say them:
 [a table of 3 rows, read aloud]
 Telugu: నేను తెలుగు మాట్లాడతాను., nēnu telugu māṭlāḍatānu. English: I speak Telugu.
 Telugu: నేను హైదరాబాద్లో ఉంటాను., nēnu Hyderābādlō uṇṭānu. English: I live in Hyderabad.
-Telugu: నేను పని చేస్తాను., nēnu pani cēstānu. English: I work.
-A few of these characters have not had their own lesson yet. They are here to be recognised, not decoded — the romanization beside each line is what you read from. The letters catch up in the chapters ahead.
+Telugu: —, nēnu pani cēstānu. English: I work.
+One of these stays in romanization for now: its c has not had its own lesson yet, and a line you cannot decode is not a line to read from. The others are read straight off the page; the romanization is there to check against.
 [pause 1 second after each]
 [your turn — say: "I speak Telugu" — nēnu telugu māṭlāḍatānu]
 [pause 8 seconds for the answer]

@@ -47,7 +47,7 @@ reviews_of: [KA-C04-hoogi-baruttene]
 **ನಾಳೆ** (*nāḷe*, "tomorrow") is native Dravidian, from **ನಾಳ್** (*nāḷ*, "day") —
 the very same *nāḷ* behind Tamil's *nāḷai*. **ಸಿಗೋಣ** (*sigōṇa*, "let's meet") is
 from **ಸಿಗು** (*sigu*, "to meet, to be found") — so the phrase is "**tomorrow,
-let's meet**." The **-ಓಣ** (*-ōṇa*) ending is Kannada's warm "let's ___":
+let's meet**." The *-ōṇa* ending is Kannada's warm "let's ___":
 *hōgōṇa* ("let's go"), *tinnōṇa* ("let's eat").
 
 ## Guided Practice

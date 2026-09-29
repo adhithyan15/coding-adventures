@@ -6,7 +6,7 @@ sequence: 210
 chapter: 4
 type: word
 headword: ಹೋಗು
-gloss: to go (and ಬಾ, come)
+gloss: to go (and bā, come)
 romanization: "hōgu"
 concept_tag: KA-VERB-HOOGU
 prerequisites: [KA-C03-naanu, KA-C03-hege]
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: []
 ---
 
-# ಹೋಗು (hōgu) — "go," and ಬಾ (come)
+# ಹೋಗು (hōgu) — "go," and bā (come)
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -39,12 +39,12 @@ reviews_of: []
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **ಹೋ** (*hō*, *ha* + long-*ō* sign) + **ಗು** (*gu*) → **ಹೋಗು** (*hōgu*). Its
-partner: **ಬಾ** (*bā*, "come").
+partner: *bā* ("come").
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[KA-LEX-C04-HOOGU-01, KA-ETYMON-C04-HOOGU-02]; assesses=[] -->
 
-**ಹೋಗು** (*hōgu*, "to go") and **ಬಾ** (*bā*, "come") are native Dravidian verbs.
+**ಹೋಗು** (*hōgu*, "to go") and *bā* ("come") are native Dravidian verbs.
 As commands they are whole words: *hōgu!* ("go!"), *bā!* ("come!"). You need
 both, because Kannada — like every Dravidian language — does not say a plain
 "goodbye." It says "I go, and I **come back**."

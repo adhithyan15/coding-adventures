@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Before a Postposition, Everything Changes",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f7ae1e535c63859d",
+  "sourceHash": "fnv1a64:24b515c9bb1496f9",
   "lessons": [
     {
       "id": "UR-C23-kamra",
@@ -1008,7 +1008,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32599428fe93ba8b",
+      "sourceHash": "fnv1a64:9310cda4eac93761",
       "notice": null,
       "blocks": [
         {
@@ -1044,7 +1044,7 @@
               "utterances": [
                 "word: کوٹ koṭ. the road it took: straight from English, one generation old.",
                 "word: ہوا hawā. the road it took: Arabic to Persian, Persian to Urdu — a loan of a loan.",
-                "word: گرمی garmī. the road it took: Persian, on a root it shares with Greek thermós."
+                "word: garmī. the road it took: Persian, on a root it shares with Greek thermós."
               ]
             },
             {
