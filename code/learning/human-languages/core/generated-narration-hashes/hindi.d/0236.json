@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:28806a75740183e8",
+  "lessonIds": [
+    "HI-C236-adha",
+    "HI-C236-pura",
+    "HI-C236-dugna",
+    "HI-C236-alag",
+    "HI-C236-gol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch236.txt",
+  "json": "hindi/narration/ch236.json",
+  "textHash": "fnv1a64:d8b5c638d0544f7d",
+  "jsonHash": "fnv1a64:3898c5ac8b8b9e63",
+  "findings": []
+}

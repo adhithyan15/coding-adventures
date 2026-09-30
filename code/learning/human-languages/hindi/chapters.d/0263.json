@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "An earring, A bindi, A bangle, An anklet, A flute",
+  "label": "ch:hi-an-earring-a-bindi-a-bangle-an-anklet-a-flute",
+  "canDo": "I can say an earring, a bindi, a bangle, an anklet and a flute.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C263-basuri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: i can say an earring, a bindi, a bangle, an anklet and a flute.",
+    "assesses": [
+      "HI-LEX-C263-THG263-03",
+      "HI-LEX-C263-THG263-04",
+      "HI-LEX-C263-THG263-05"
+    ]
+  }
+}

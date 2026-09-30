@@ -1,0 +1,11 @@
+{
+  "id": "HI-C233-purv",
+  "pathSegment": "HI-PATH-233-LOC233",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-233-LOC233",
+      "order": 2
+    }
+  ]
+}

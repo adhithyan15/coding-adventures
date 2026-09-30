@@ -1,0 +1,11 @@
+{
+  "id": "HI-C246-plastik",
+  "pathSegment": "HI-PATH-246-THG246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-246-THG246",
+      "order": 3
+    }
+  ]
+}

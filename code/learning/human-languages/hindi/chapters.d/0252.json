@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "A sack, A branch, A bud, A thorn, Mud",
+  "label": "ch:hi-a-sack-a-branch-a-bud-a-thorn-mud",
+  "canDo": "I can say a sack, a branch, a bud, a thorn and mud.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C252-kicar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: i can say a sack, a branch, a bud, a thorn and mud.",
+    "assesses": [
+      "HI-LEX-C252-THG252-03",
+      "HI-LEX-C252-THG252-04",
+      "HI-LEX-C252-THG252-05"
+    ]
+  }
+}

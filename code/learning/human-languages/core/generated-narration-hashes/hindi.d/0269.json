@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:851e999a2e36f9f8",
+  "lessonIds": [
+    "HI-C269-koyla",
+    "HI-C269-gais",
+    "HI-C269-karahi",
+    "HI-C269-belan",
+    "HI-C269-chalni",
+    "HI-R269-first-pass-words-from-chapters-261-264",
+    "HI-R269-second-pass-words-from-chapters-265-269"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch269.txt",
+  "json": "hindi/narration/ch269.json",
+  "textHash": "fnv1a64:93de901661154e56",
+  "jsonHash": "fnv1a64:443eefc1378ad7e7",
+  "findings": []
+}

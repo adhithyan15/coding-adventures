@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:ada3ce7df9c38a39",
+  "lessonIds": [
+    "HI-C241-sarkari",
+    "HI-C241-niji",
+    "HI-C241-muft",
+    "HI-C241-kimti",
+    "HI-C241-anokha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch241.txt",
+  "json": "hindi/narration/ch241.json",
+  "textHash": "fnv1a64:a26ab331fea35769",
+  "jsonHash": "fnv1a64:16be62c6816cbe3a",
+  "findings": []
+}

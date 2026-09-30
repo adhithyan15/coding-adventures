@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:67542ccf4a94ba15",
+  "lessonIds": [
+    "HI-C274-dharkan",
+    "HI-C274-saas",
+    "HI-C274-khujli",
+    "HI-C274-jalan",
+    "HI-C274-sujan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch274.txt",
+  "json": "hindi/narration/ch274.json",
+  "textHash": "fnv1a64:8e977ad371cf9c53",
+  "jsonHash": "fnv1a64:ae6ea28379b27268",
+  "findings": []
+}

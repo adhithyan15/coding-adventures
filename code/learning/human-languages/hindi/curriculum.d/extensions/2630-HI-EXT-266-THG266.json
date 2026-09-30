@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-266-THG266",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a latch, a saw, a pickaxe, a spade and a mattress.",
+  "prerequisites": []
+}

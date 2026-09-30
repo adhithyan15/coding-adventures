@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C256-patti",
+    "language": "hindi",
+    "chapter": 256,
+    "sequence": 13920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5d159d54fa05a02"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C246-kagaz",
+  "pathSegment": "HI-PATH-246-THG246",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-246-THG246",
+      "order": 2
+    }
+  ]
+}

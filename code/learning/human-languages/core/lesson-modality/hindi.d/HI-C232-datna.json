@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C232-datna",
+    "language": "hindi",
+    "chapter": 232,
+    "sequence": 12170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38b3faeb7c52e5f8"
+  },
+  "findings": []
+}

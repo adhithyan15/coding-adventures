@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:1923b2a1ce6d18ec",
+  "lessonIds": [
+    "HI-C238-kacca",
+    "HI-C238-gunguna",
+    "HI-C238-rukha",
+    "HI-C238-cipcipa",
+    "HI-C238-khurdura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch238.txt",
+  "json": "hindi/narration/ch238.json",
+  "textHash": "fnv1a64:663e589b17933753",
+  "jsonHash": "fnv1a64:379fc9cdad9125d1",
+  "findings": []
+}

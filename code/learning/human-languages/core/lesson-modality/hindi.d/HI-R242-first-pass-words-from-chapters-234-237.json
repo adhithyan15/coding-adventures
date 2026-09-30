@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R242-first-pass-words-from-chapters-234-237",
+    "language": "hindi",
+    "chapter": 242,
+    "sequence": 12870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7420825e59290223"
+  },
+  "findings": []
+}

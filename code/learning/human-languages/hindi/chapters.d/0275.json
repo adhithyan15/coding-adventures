@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "A sprain, A hiccup, A nap, Turning over, A stretch",
+  "label": "ch:hi-a-sprain-a-hiccup-a-nap-turning-over-a-stretch",
+  "canDo": "I can say a sprain, a hiccup, a nap, turning over and a stretch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-R275-second-pass-words-from-chapters-273-275",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: i can say a sprain, a hiccup, a nap, turning over and a stretch.",
+    "assesses": [
+      "HI-LEX-C275-THG275-03",
+      "HI-LEX-C275-THG275-04",
+      "HI-LEX-C275-THG275-05"
+    ]
+  }
+}

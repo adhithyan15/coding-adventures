@@ -1,0 +1,11 @@
+{
+  "id": "HI-C236-gol",
+  "pathSegment": "HI-PATH-236-QUAL236",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-236-QUAL236",
+      "order": 4
+    }
+  ]
+}

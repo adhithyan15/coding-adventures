@@ -1,0 +1,11 @@
+{
+  "id": "HI-C248-acanak",
+  "pathSegment": "HI-PATH-248-THG248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-248-THG248",
+      "order": 4
+    }
+  ]
+}

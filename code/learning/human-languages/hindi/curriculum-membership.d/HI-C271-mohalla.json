@@ -1,0 +1,11 @@
+{
+  "id": "HI-C271-mohalla",
+  "pathSegment": "HI-PATH-271-THG271",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-271-THG271",
+      "order": 4
+    }
+  ]
+}

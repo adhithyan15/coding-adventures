@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C233-daya",
+    "language": "hindi",
+    "chapter": 233,
+    "sequence": 12220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c29ceffa3231b2d0"
+  },
+  "findings": []
+}

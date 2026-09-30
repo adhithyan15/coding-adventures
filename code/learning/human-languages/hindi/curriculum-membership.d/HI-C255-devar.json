@@ -1,0 +1,11 @@
+{
+  "id": "HI-C255-devar",
+  "pathSegment": "HI-PATH-255-THG255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-255-THG255",
+      "order": 2
+    }
+  ]
+}

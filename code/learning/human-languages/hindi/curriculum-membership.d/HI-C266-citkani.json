@@ -1,0 +1,11 @@
+{
+  "id": "HI-C266-citkani",
+  "pathSegment": "HI-PATH-266-THG266",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-266-THG266",
+      "order": 0
+    }
+  ]
+}

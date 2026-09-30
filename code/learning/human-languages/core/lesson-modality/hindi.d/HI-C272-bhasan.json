@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C272-bhasan",
+    "language": "hindi",
+    "chapter": 272,
+    "sequence": 15120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:95e7629cbf7c2c6f"
+  },
+  "findings": []
+}

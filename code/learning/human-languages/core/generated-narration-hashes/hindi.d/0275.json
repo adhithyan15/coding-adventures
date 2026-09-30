@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:0d15e86583623bcc",
+  "lessonIds": [
+    "HI-C275-moc",
+    "HI-C275-hicki",
+    "HI-C275-jhapki",
+    "HI-C275-karvat",
+    "HI-C275-angrai",
+    "HI-R275-first-pass-words-from-chapters-270-272",
+    "HI-R275-second-pass-words-from-chapters-273-275"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch275.txt",
+  "json": "hindi/narration/ch275.json",
+  "textHash": "fnv1a64:a2ffe07ee45badf6",
+  "jsonHash": "fnv1a64:465cba6a0929323c",
+  "findings": []
+}

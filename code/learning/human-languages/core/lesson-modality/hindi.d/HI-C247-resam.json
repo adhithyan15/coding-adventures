@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C247-resam",
+    "language": "hindi",
+    "chapter": 247,
+    "sequence": 13260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cda2a7328c9955fe"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C265-parda",
+  "pathSegment": "HI-PATH-265-THG265",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-265-THG265",
+      "order": 2
+    }
+  ]
+}

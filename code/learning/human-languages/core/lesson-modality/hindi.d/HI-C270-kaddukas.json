@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C270-kaddukas",
+    "language": "hindi",
+    "chapter": 270,
+    "sequence": 14980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64b7e246d34443db"
+  },
+  "findings": []
+}

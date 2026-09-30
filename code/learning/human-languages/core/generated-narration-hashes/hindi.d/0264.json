@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:ee825820076c0a14",
+  "lessonIds": [
+    "HI-C264-sitar",
+    "HI-C264-tabla",
+    "HI-C264-ghanti",
+    "HI-C264-khilauna",
+    "HI-C264-guriya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch264.txt",
+  "json": "hindi/narration/ch264.json",
+  "textHash": "fnv1a64:dec43d0fa09e4e5a",
+  "jsonHash": "fnv1a64:d0e6da14ef4ddb6f",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C256-goli",
+  "pathSegment": "HI-PATH-256-THG256",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-256-THG256",
+      "order": 4
+    }
+  ]
+}

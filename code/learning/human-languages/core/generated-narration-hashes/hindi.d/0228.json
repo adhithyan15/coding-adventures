@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:7deb9a637849e13b",
+  "lessonIds": [
+    "HI-C228-ugna",
+    "HI-C228-ugana",
+    "HI-C228-pakrana",
+    "HI-C228-dabana",
+    "HI-C228-ghumana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch228.txt",
+  "json": "hindi/narration/ch228.json",
+  "textHash": "fnv1a64:b001d0f3b425cda1",
+  "jsonHash": "fnv1a64:9d03d8477b770740",
+  "findings": []
+}

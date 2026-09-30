@@ -1,0 +1,11 @@
+{
+  "id": "HI-C264-ghanti",
+  "pathSegment": "HI-PATH-264-THG264",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-264-THG264",
+      "order": 2
+    }
+  ]
+}

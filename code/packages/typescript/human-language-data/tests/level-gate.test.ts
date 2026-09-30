@@ -262,6 +262,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // after its two over-budget lessons were split.
     // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
     // only with glyphs the script lessons have taught).
+    // The count stays 22 when a track climbs a second rung: Hindi was the first to
+    // attain A2, with chapters 166-275 (the practical-reading node, 540 headwords,
+    // sixty verbs), which moved it from the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious

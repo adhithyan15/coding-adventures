@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:bdcdf80e5c953bcd",
+  "lessonIds": [
+    "HI-C248-sirf",
+    "HI-C248-lagbhag",
+    "HI-C248-badme",
+    "HI-C248-jaldhi",
+    "HI-C248-acanak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch248.txt",
+  "json": "hindi/narration/ch248.json",
+  "textHash": "fnv1a64:ba7b071e96557208",
+  "jsonHash": "fnv1a64:17c8ea43c9f88b26",
+  "findings": []
+}

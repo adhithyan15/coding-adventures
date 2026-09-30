@@ -1,0 +1,11 @@
+{
+  "id": "HI-C228-ugana",
+  "pathSegment": "HI-PATH-228-ACT228",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-228-ACT228",
+      "order": 1
+    }
+  ]
+}

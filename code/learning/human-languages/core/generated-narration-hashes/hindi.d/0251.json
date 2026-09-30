@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:b2d065c08f59d06e",
+  "lessonIds": [
+    "HI-C251-thok",
+    "HI-C251-tarazu",
+    "HI-C251-kilo",
+    "HI-C251-litar",
+    "HI-C251-mitar",
+    "HI-R251-first-pass-words-from-chapters-243-246",
+    "HI-R251-second-pass-words-from-chapters-247-251"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch251.txt",
+  "json": "hindi/narration/ch251.json",
+  "textHash": "fnv1a64:fd8ca3ece05268a5",
+  "jsonHash": "fnv1a64:70e04ba2ccdb805d",
+  "findings": []
+}

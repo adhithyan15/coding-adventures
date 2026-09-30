@@ -1,0 +1,11 @@
+{
+  "id": "HI-C250-khudra",
+  "pathSegment": "HI-PATH-250-THG250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-250-THG250",
+      "order": 4
+    }
+  ]
+}

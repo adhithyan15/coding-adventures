@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Left, Straight, Upside down, The middle, A corner",
+  "label": "ch:hi-left-straight-upside-down-the-middle-a-corner",
+  "canDo": "I can say left, straight, upside down, the middle and a corner.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "HI-C234-kona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: i can say left, straight, upside down, the middle and a corner.",
+    "assesses": [
+      "HI-LEX-C234-LOC234-03",
+      "HI-LEX-C234-LOC234-04",
+      "HI-LEX-C234-LOC234-05"
+    ]
+  }
+}

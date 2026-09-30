@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C233-daksin",
+    "language": "hindi",
+    "chapter": 233,
+    "sequence": 12190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b401af3c0baeb90"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C274-khujli",
+    "language": "hindi",
+    "chapter": 274,
+    "sequence": 15200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc34881ce7211c1d"
+  },
+  "findings": []
+}

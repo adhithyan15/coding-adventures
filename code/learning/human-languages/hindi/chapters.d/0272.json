@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "A lane, A street corner, A fair, A procession, A speech",
+  "label": "ch:hi-a-lane-a-street-corner-a-fair-a-procession-a-speech",
+  "canDo": "I can say a lane, a street corner, a fair, a procession and a speech.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C272-bhasan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: i can say a lane, a street corner, a fair, a procession and a speech.",
+    "assesses": [
+      "HI-LEX-C272-THG272-03",
+      "HI-LEX-C272-THG272-04",
+      "HI-LEX-C272-THG272-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:b05063db6bcde04e",
+  "lessonIds": [
+    "HI-C267-rajai",
+    "HI-C267-maccharadani",
+    "HI-C267-nal",
+    "HI-C267-nali",
+    "HI-C267-tanki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch267.txt",
+  "json": "hindi/narration/ch267.json",
+  "textHash": "fnv1a64:c05ebe9d23696983",
+  "jsonHash": "fnv1a64:157d07dd6ccda65a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C226-banana",
+    "language": "hindi",
+    "chapter": 226,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41330964c2c3b3ac"
+  },
+  "findings": []
+}

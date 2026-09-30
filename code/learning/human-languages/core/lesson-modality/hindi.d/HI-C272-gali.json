@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C272-gali",
+    "language": "hindi",
+    "chapter": 272,
+    "sequence": 15080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3802250d2739704"
+  },
+  "findings": []
+}

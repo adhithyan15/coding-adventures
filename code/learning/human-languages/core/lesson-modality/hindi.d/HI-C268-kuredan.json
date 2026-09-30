@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C268-kuredan",
+    "language": "hindi",
+    "chapter": 268,
+    "sequence": 14700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e050bd1e5462996e"
+  },
+  "findings": []
+}
