@@ -57,13 +57,18 @@ metadata, grammar, and final CI gates passed. The next fresh audit selected
 VM-075's bounded Intel 8086 documentation reconciliation; VM-076's separate Z80
 wording audit remains next and is not part of this item.
 
+PR #16294 delivered VM-075 and merged as
+`5020c0f0a362f93c8cfed04ce865233fbedf15d2` after the protected documentation
+and metadata gates passed. The Intel 8086 backend spec now reflects the complete
+simulator, its 461-vector full-state differential, and the landed WORD02/WORD03
+surface. A fresh overlap and backlog audit selected VM-076 as the remaining
+bounded non-ALGOL item.
+
 The current queue is:
 
-1. **VM-075 (selected):** reconcile `intel8086-backend.md` with the completed
-   Rust simulator, its 461-vector full-state differential suite, and the
-   backend's landed WORD02/WORD03 surface.
-2. **VM-076:** narrow the Z80 simulator README's 8080-compatibility claim to
-   byte compatibility where applicable and account explicitly for flags.
+1. **VM-076 (selected):** narrow the Z80 simulator's 8080-compatibility claim
+   to byte and core-operation compatibility where applicable, and account
+   explicitly for the architectures' different flag state.
 
 The following run records the first VM-067 selection.
 

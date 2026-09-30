@@ -4,10 +4,13 @@
 
 The **Zilog Z80** (1976) is an 8-bit microprocessor designed by Federico Faggin,
 Masatoshi Shima, and Ralph Ungermann after they left Intel. It was designed as a
-superset of the Intel 8080: every valid 8080 opcode is a valid Z80 opcode with
-identical semantics, so all 8080 software runs unmodified. The Z80 then adds a
-richer instruction set, two index registers, an alternate register bank, and a
-more flexible interrupt system.
+superset of the Intel 8080: every documented 8080 instruction byte sequence is
+valid on the Z80 for the corresponding core data or control operation. The
+encoding compatibility lets many 8080 binaries run unchanged, but it is not a
+promise of identical complete machine state: Z80 flags differ, and software
+that observes those differences may need review. The Z80 also adds a richer
+instruction set, two index registers, an alternate register bank, and a more
+flexible interrupt system.
 
 The Z80 powered the most popular 8-bit personal computers:
 - **TRS-80** (1977, Tandy) — first mass-market home computer
@@ -17,8 +20,9 @@ The Z80 powered the most popular 8-bit personal computers:
 - **Coleco ColecoVision** / **Sega Master System** game consoles
 
 Microsoft BASIC (the direct descendant of the Altair BASIC written for the 8080)
-was ported to all of these Z80 platforms. Altair BASIC itself ran on the Z80
-without modification because the Z80 is binary-compatible with the 8080.
+was ported to all of these Z80 platforms. The shared instruction encodings made
+8080 software a practical starting point, subject to Z80-specific flag and
+platform behavior.
 
 This spec defines Layer **07k** — a Python behavioral simulator for the Z80
 following the SIM00 `Simulator[Z80State]` protocol.
@@ -72,7 +76,8 @@ Flag: S   Z   Y   H   X   P/V N   C
 | 0   | C    | Carry |
 
 **Differences from Intel 8080 flags:**
-- Z80 has N (subtract) and H (half-carry) as named flags (8080 has undocumented equivalents)
+- Z80 adds N (subtract); its H (half-carry) corresponds to the 8080's documented
+  AC (auxiliary-carry) flag, but the packed flag layouts differ
 - Z80 P/V combines parity (for AND/OR/XOR) and overflow (for ADD/SUB) into one flag
 - Bits 3 and 5 are "undocumented" but have defined behaviour in the Z80 silicon
 
@@ -112,10 +117,13 @@ the opcode space:
 
 ## Instruction set
 
-### Unprefixed (compatible with Intel 8080)
+### Unprefixed (Intel 8080 encoding-compatible)
 
-All 244 documented Intel 8080 opcodes have identical semantics on the Z80.
-The following are the main groups:
+All 244 documented Intel 8080 opcodes retain their byte encodings and core data
+or control operations on the Z80. They do not guarantee identical flag state:
+in particular, arithmetic writes overflow to Z80 `P/V` but parity to 8080 `P`,
+so `PE`/`PO`-conditioned control flow can diverge. The following are the main
+groups:
 
 **Load 8-bit:** `LD r, r'` — `LD r, n` — `LD r, (HL)` — `LD (HL), r` — `LD (HL), n`
 `LD A, (BC)` — `LD A, (DE)` — `LD A, (nn)` — `LD (BC), A` — `LD (DE), A` — `LD (nn), A`
@@ -380,9 +388,12 @@ tests/
 ## Implementation notes
 
 ### 8080 compatibility
-The simplest approach: implement all Z80 instructions, and verify that the 8080
-subset produces identical results to the 8080 simulator (07i). Any instruction
-with an 8080 opcode that was already tested in 07i should give the same result.
+Verify that the 8080 subset preserves instruction length, operand decoding, core
+register or memory results, and control-flow targets against the 8080 simulator
+(07i). Do not require full-state equality where the architectures define
+different flags. In particular, arithmetic must use a Z80-native oracle for
+`N`, `H`, and overflow-valued `P/V`, and tests must cover a following `PE`/`PO`
+condition whose result differs from the 8080's parity-only `P` condition.
 
 ### Prefix handling
 Read one byte at a time. If it is `0xDD`, `0xFD`, `0xED`, or `0xCB`, read
