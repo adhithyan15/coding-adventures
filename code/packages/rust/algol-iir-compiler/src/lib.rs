@@ -7165,12 +7165,11 @@ impl Compiler {
     ) -> Option<String> {
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(expression, "", &mut dependencies);
-        if dependencies.len() != 1 {
-            return None;
-        }
-        let dependency = dependencies.into_iter().next()?;
-        self.boolean_identity_expression_preserves_name(expression, &dependency)
-            .then_some(dependency)
+        let mut preserving_dependencies = dependencies.into_iter().filter(|dependency| {
+            self.selector_expression_unconditionally_preserves_name(expression, dependency)
+        });
+        let dependency = preserving_dependencies.next()?;
+        preserving_dependencies.next().is_none().then_some(dependency)
     }
 
     fn static_body_actions_name_has_acyclic_copy_path(
@@ -15483,6 +15482,32 @@ mod tests {
             "test",
         )
         .expect_err("a changing boolean selector copy expression must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_conditional_identity_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, other; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; other := false; for i := i + 1 while i <= n do begin n := n - delta; other := not other; flag := if i < 2 then true else false; gate := if other then flag and true else not not flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a conditional whose branches preserve one selector may forward it");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_differing_conditional_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, other; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; other := false; for i := i + 1 while i <= n do begin n := n - delta; other := not other; flag := if i < 2 then true else false; gate := if other then flag and true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("conditional selector copies with a changing branch must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

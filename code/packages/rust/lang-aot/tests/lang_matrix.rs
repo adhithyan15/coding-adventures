@@ -3304,6 +3304,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a dynamic conditional may forward a selector when both
+    // branches are established identities of that unique dependency.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate, other; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; other := false; for i := i + 1 while i <= n do begin n := n - delta; other := not other; flag := if i < 2 then true else false; gate := if other then flag and true else not not flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — exact cross-assigned boolean recurrences may evolve a
     // statement selector while source-order execution tracks both cycles.
     Prog {
@@ -15030,6 +15039,32 @@ fn algol_boolean_identity_partial_self_recursive_selector_copy_chains_run_on_eve
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the boolean-identity partial self-recursive selector copy chain did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_identity_partial_self_recursive_selector_copies_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := if other then flag and true else not not flag; choose := if gate then not choose else false",
+                )
+        })
+        .expect("the conditional-identity partial self-recursive selector-copy program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional-identity partial self-recursive selector copy did not run"
             );
             continue;
         };
