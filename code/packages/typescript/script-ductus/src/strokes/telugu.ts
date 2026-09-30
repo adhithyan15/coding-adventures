@@ -22,6 +22,70 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:ఠ",
+    {
+      script: "telugu",
+      glyph: "ఠ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep left and around the broad circular body",
+              path: [
+                { x: 295, y: 465 },
+                { x: 220, y: 455 },
+                { x: 145, y: 410 },
+                { x: 90, y: 340 },
+                { x: 75, y: 255 },
+                { x: 90, y: 165 },
+                { x: 145, y: 85 },
+                { x: 220, y: 35 },
+                { x: 300, y: 25 },
+                { x: 380, y: 35 },
+                { x: 455, y: 85 },
+                { x: 515, y: 160 },
+                { x: 535, y: 245 },
+                { x: 520, y: 325 },
+                { x: 480, y: 395 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl upward through the separate top flourish",
+              path: [
+                { x: 150, y: 550 },
+                { x: 180, y: 570 },
+                { x: 215, y: 540 },
+                { x: 245, y: 485 },
+                { x: 285, y: 450 },
+                { x: 330, y: 470 },
+                { x: 390, y: 525 },
+                { x: 445, y: 590 },
+                { x: 500, y: 650 },
+                { x: 555, y: 685 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "place the separate inner dot",
+              path: [
+                { x: 270, y: 245 },
+                { x: 325, y: 245 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఠ"),
+    },
+  ],
+  [
     "telugu:ట",
     {
       script: "telugu",

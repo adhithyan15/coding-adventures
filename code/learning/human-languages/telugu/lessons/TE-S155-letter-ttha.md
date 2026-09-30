@@ -56,17 +56,16 @@ This one is rare. It is worth a page because a month name needs it, and a
 reader who meets an unfamiliar shape in a familiar list has no way to tell
 whether the word or the printing is at fault.
 
-## Writing: ఠ — copy what you see
+## Writing: ఠ — three deliberate movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-155] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ఠ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed. Then write ట beside it and look at the two.
+Follow the filmstrip slowly. Movement 1 sweeps around the broad circular body.
+Movement 2 curls upward through the separate top flourish. Finish by placing
+the inner dot as movement 3. Then write ట beside it and look at the two.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+This is one attested school-style order. Telugu handwriting varies, so keep
+the three movements distinct and let the round shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-155, TE-SCRIPT-RECOG-152] -->
@@ -76,7 +75,8 @@ and larger than it is printed. Then write ట beside it and look at the two.
 
 > జ్యేష్ఠం
 
-- [YOU TRACE: ఠ three times, saying *ṭha* as you finish each one]
+- [YOU TRACE: ఠ once, following all three numbered movements]
+- [YOU COPY: ఠ twice without tracing, saying *ṭha* as you finish each one]
 - [YOU SAY: which of ట and ఠ has the breath after it]
 
 ## Wrap-up Recall
