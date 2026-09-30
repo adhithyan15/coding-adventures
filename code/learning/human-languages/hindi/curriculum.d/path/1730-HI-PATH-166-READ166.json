@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-166-READ166",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-166-READ166"
+  ],
+  "after": []
+}

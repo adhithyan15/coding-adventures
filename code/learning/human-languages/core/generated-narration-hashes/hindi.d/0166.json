@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:3b1f31f2f0b30d28",
+  "lessonIds": [
+    "HI-C166-sucna",
+    "HI-C166-sandesh",
+    "HI-C166-samay",
+    "HI-C166-vijnapan",
+    "HI-C166-marammat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch166.txt",
+  "json": "hindi/narration/ch166.json",
+  "textHash": "fnv1a64:c0f187470c2ca2fa",
+  "jsonHash": "fnv1a64:6c6452480be1e6f2",
+  "findings": []
+}
