@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:94bdee82528977e8",
+  "lessonIds": [
+    "HI-C212-bhadda",
+    "HI-C212-mazbut",
+    "HI-C212-kamzor",
+    "HI-C212-sasta",
+    "HI-C212-kathin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch212.txt",
+  "json": "hindi/narration/ch212.json",
+  "textHash": "fnv1a64:145911582ac8677c",
+  "jsonHash": "fnv1a64:46fc68b122b59048",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "A peanut, A radish, An aubergine, Okra, A papaya",
+  "label": "ch:hi-a-peanut-a-radish-an-aubergine-okra-a-papaya",
+  "canDo": "I can say a peanut, a radish, an aubergine, okra and a papaya.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C216-papita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: i can say a peanut, a radish, an aubergine, okra and a papaya.",
+    "assesses": [
+      "HI-LEX-C216-THG216-03",
+      "HI-LEX-C216-THG216-04",
+      "HI-LEX-C216-THG216-05"
+    ]
+  }
+}

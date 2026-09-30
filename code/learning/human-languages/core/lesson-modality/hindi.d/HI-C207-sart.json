@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C207-sart",
+    "language": "hindi",
+    "chapter": 207,
+    "sequence": 10410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fca7e58f5b985ba0"
+  },
+  "findings": []
+}

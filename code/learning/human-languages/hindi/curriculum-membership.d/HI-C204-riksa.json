@@ -1,0 +1,11 @@
+{
+  "id": "HI-C204-riksa",
+  "pathSegment": "HI-PATH-204-THG204",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-204-THG204",
+      "order": 1
+    }
+  ]
+}

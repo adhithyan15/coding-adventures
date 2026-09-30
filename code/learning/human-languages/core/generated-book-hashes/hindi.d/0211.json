@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:52725295792b90ed",
+  "lessonIds": [
+    "HI-C211-catni",
+    "HI-C211-masala",
+    "HI-C211-haldi",
+    "HI-C211-dhaniya",
+    "HI-C211-nibu"
+  ],
+  "tex": "hindi/book/chapters/ch211-chutney-spice-turmeric-coriander-a-lemon.tex"
+}

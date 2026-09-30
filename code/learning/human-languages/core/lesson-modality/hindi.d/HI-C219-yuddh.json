@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C219-yuddh",
+    "language": "hindi",
+    "chapter": 219,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:257b82119d8aa29f"
+  },
+  "findings": []
+}

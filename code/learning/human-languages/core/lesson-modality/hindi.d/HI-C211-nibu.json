@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C211-nibu",
+    "language": "hindi",
+    "chapter": 211,
+    "sequence": 10830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c037772f0f4b9bad"
+  },
+  "findings": []
+}

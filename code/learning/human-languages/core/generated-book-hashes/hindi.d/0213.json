@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:b12040dd34bbb2bb",
+  "lessonIds": [
+    "HI-C213-zaruri",
+    "HI-C213-khatarnak",
+    "HI-C213-suraksit",
+    "HI-C213-mitha",
+    "HI-C213-narm"
+  ],
+  "tex": "hindi/book/chapters/ch213-necessary-dangerous-safe-sweet-soft.tex"
+}

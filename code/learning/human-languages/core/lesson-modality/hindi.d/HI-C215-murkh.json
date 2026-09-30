@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C215-murkh",
+    "language": "hindi",
+    "chapter": 215,
+    "sequence": 11010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd7e520d7ded9999"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C224-daur",
+  "pathSegment": "HI-PATH-224-THG224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-224-THG224",
+      "order": 4
+    }
+  ]
+}

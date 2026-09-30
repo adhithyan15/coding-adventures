@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C205-patra",
+    "language": "hindi",
+    "chapter": 205,
+    "sequence": 10310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36f8b34c3c073df2"
+  },
+  "findings": []
+}

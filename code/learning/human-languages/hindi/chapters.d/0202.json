@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "A cave, A palace, A fort, A tower, A garden",
+  "label": "ch:hi-a-cave-a-palace-a-fort-a-tower-a-garden",
+  "canDo": "I can say a cave, a palace, a fort, a tower and a garden.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C202-bag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: i can say a cave, a palace, a fort, a tower and a garden.",
+    "assesses": [
+      "HI-LEX-C202-THG202-03",
+      "HI-LEX-C202-THG202-04",
+      "HI-LEX-C202-THG202-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C199-haddi",
+    "language": "hindi",
+    "chapter": 199,
+    "sequence": 9860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9c7b6495a06d145"
+  },
+  "findings": []
+}

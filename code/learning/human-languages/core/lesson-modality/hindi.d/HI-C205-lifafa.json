@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C205-lifafa",
+    "language": "hindi",
+    "chapter": 205,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:519b3d3cf6440c06"
+  },
+  "findings": []
+}

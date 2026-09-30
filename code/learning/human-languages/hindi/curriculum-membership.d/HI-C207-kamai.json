@@ -1,0 +1,11 @@
+{
+  "id": "HI-C207-kamai",
+  "pathSegment": "HI-PATH-207-THG207",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-207-THG207",
+      "order": 2
+    }
+  ]
+}

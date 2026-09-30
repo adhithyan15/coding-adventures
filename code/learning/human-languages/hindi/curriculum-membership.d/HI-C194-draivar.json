@@ -1,0 +1,11 @@
+{
+  "id": "HI-C194-draivar",
+  "pathSegment": "HI-PATH-194-THG194",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-194-THG194",
+      "order": 2
+    }
+  ]
+}

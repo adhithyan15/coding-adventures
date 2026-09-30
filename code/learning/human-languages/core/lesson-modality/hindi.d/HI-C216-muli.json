@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C216-muli",
+    "language": "hindi",
+    "chapter": 216,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e04231ae2378c33b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C204-havaijahaz",
+    "language": "hindi",
+    "chapter": 204,
+    "sequence": 10280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a173bb417fde7c0a"
+  },
+  "findings": []
+}

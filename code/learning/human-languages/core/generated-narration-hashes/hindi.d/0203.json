@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:a5bc4b014f125e68",
+  "lessonIds": [
+    "HI-C203-ciriyaghar",
+    "HI-C203-sangrahalay",
+    "HI-C203-surang",
+    "HI-C203-saikil",
+    "HI-C203-skutar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch203.txt",
+  "json": "hindi/narration/ch203.json",
+  "textHash": "fnv1a64:6a76ef8eb478d342",
+  "jsonHash": "fnv1a64:c8c38fbf3671add7",
+  "findings": []
+}

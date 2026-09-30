@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C208-fayda",
+    "language": "hindi",
+    "chapter": 208,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:332515a4298f9a2f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C203-saikil",
+  "pathSegment": "HI-PATH-203-THG203",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-203-THG203",
+      "order": 3
+    }
+  ]
+}

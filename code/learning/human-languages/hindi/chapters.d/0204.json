@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "A lorry, A rickshaw, An aeroplane, Petrol, A telephone",
+  "label": "ch:hi-a-lorry-a-rickshaw-an-aeroplane-petrol-a-telephone",
+  "canDo": "I can say a lorry, a rickshaw, an aeroplane, petrol and a telephone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C204-phon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: i can say a lorry, a rickshaw, an aeroplane, petrol and a telephone.",
+    "assesses": [
+      "HI-LEX-C204-THG204-03",
+      "HI-LEX-C204-THG204-04",
+      "HI-LEX-C204-THG204-05"
+    ]
+  }
+}

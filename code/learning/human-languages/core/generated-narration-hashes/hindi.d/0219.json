@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:0d75539fb5b090b6",
+  "lessonIds": [
+    "HI-C219-jel",
+    "HI-C219-azadi",
+    "HI-C219-santi",
+    "HI-C219-yuddh",
+    "HI-C219-sena"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch219.txt",
+  "json": "hindi/narration/ch219.json",
+  "textHash": "fnv1a64:8b8efd2988a72b84",
+  "jsonHash": "fnv1a64:06dade6ce7350d31",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:34a93fd8b6fadb83",
+  "lessonIds": [
+    "HI-C206-salah",
+    "HI-C206-ray",
+    "HI-C206-vicar",
+    "HI-C206-jhuth",
+    "HI-C206-vada"
+  ],
+  "tex": "hindi/book/chapters/ch206-advice-an-opinion-a-thought-a-lie-a-promise.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R201-second-pass-words-from-chapters-197-201",
+    "language": "hindi",
+    "chapter": 201,
+    "sequence": 9980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9ca913b51dbf337"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:4a8c7c4e4f9502c3",
+  "lessonIds": [
+    "HI-C198-sabd",
+    "HI-C198-vakya",
+    "HI-C198-arth",
+    "HI-C198-jnan",
+    "HI-C198-vijnan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch198.txt",
+  "json": "hindi/narration/ch198.json",
+  "textHash": "fnv1a64:ed4fb1779d7a5c94",
+  "jsonHash": "fnv1a64:ec22014769289c4d",
+  "findings": []
+}

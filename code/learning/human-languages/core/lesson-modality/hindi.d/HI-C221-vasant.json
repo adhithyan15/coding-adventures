@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C221-vasant",
+    "language": "hindi",
+    "chapter": 221,
+    "sequence": 11510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cfad7324ebc0a86"
+  },
+  "findings": []
+}
