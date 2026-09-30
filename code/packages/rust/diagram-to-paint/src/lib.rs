@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.66.0";
+pub const VERSION: &str = "0.67.0";
 
 use std::collections::HashMap;
 
@@ -2211,7 +2211,7 @@ where
                 let label_y = match baseline {
                     ChartTextBaseline::Top => *y,
                     ChartTextBaseline::Middle => y - font_size * 0.6,
-                    ChartTextBaseline::Bottom => y - font_size,
+                    ChartTextBaseline::Bottom => y - font_size * 0.8,
                 };
                 let mut node = text_node_no_wrap(
                     text,
@@ -2606,6 +2606,50 @@ where
                         },
                     ));
                     ex += legend_font_size + 4.0 + 88.0;
+                }
+            }
+            LayoutedChartItem::VerticalLegend {
+                x,
+                y,
+                entries,
+                box_size,
+                font_size,
+                line_height,
+                fill_opacity,
+            } => {
+                for (index, entry) in entries.iter().enumerate() {
+                    let entry_y = y + index as f64 * line_height;
+                    instructions.push(PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(),
+                        x: *x,
+                        y: entry_y,
+                        width: *box_size,
+                        height: *box_size,
+                        fill: Some(with_opacity(&entry.color, *fill_opacity)),
+                        stroke: Some(entry.color.clone()),
+                        stroke_width: Some(1.0),
+                        corner_radius: None,
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                    let mut label = text_node_no_wrap(
+                        &entry.label,
+                        x + 16.0,
+                        entry_y,
+                        120.0,
+                        font_size * 1.2,
+                        font_with_size(&lf, Some(*font_size)),
+                        Color {
+                            r: 51,
+                            g: 51,
+                            b: 51,
+                            a: 255,
+                        },
+                    );
+                    if let Some(Content::Text(content)) = &mut label.content {
+                        content.text_align = TextAlign::Start;
+                    }
+                    text_children.push(label);
                 }
             }
         }
@@ -5482,7 +5526,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.66.0");
+        assert_eq!(crate::VERSION, "0.67.0");
     }
 
     #[test]
@@ -6670,6 +6714,64 @@ mod tests {
             [200.0, 197.0, 194.0]
         );
         assert!(glyphs[0].y > glyphs[1].y && glyphs[1].y > glyphs[2].y);
+    }
+
+    #[test]
+    fn chart_vertical_legend_lowers_to_stroked_translucent_markers_and_glyphs() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedChartDiagram {
+            width: 700.0,
+            height: 700.0,
+            background_color: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            title_box: None,
+            items: vec![LayoutedChartItem::VerticalLegend {
+                x: 612.5,
+                y: 87.5,
+                entries: vec![
+                    diagram_ir::LegendEntry {
+                        color: "#8686ff".into(),
+                        label: "First".into(),
+                    },
+                    diagram_ir::LegendEntry {
+                        color: "#ffff86".into(),
+                        label: "Second".into(),
+                    },
+                ],
+                box_size: 12.0,
+                font_size: 12.0,
+                line_height: 20.0,
+                fill_opacity: 0.5,
+            }],
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        let markers = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::Rect(rect) => Some(rect),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(markers.len(), 2);
+        assert_eq!((markers[0].x, markers[0].y), (612.5, 87.5));
+        assert_eq!((markers[1].x, markers[1].y), (612.5, 107.5));
+        assert_eq!(markers[0].fill.as_deref(), Some("rgba(134,134,255,0.5)"));
+        assert_eq!(markers[0].stroke.as_deref(), Some("#8686ff"));
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_)))
+                .count(),
+            2
+        );
     }
 
     #[test]
