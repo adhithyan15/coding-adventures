@@ -9,7 +9,7 @@ headword: "ఝరి"
 gloss: "a stream; mountain stream"
 romanization: "jhari"
 concept_tag: TE-NOUN-STREAM
-prerequisites: [TE-S06-letter-ra, TE-S08-vowel-sign-i]
+prerequisites: [TE-S06-letter-ra, TE-S08-vowel-sign-i, TE-S171-letter-nga]
 sounds: []
 roots: []
 etymology_hook: "A learned or literary word shared with Sanskrit, used for a stream or mountain stream"
