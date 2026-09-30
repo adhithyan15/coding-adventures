@@ -590,6 +590,124 @@ export const entries: DuctusEntry[] = [
     },
   ],
   [
+    "telugu:ఝ",
+    {
+      script: "telugu",
+      glyph: "ఝ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle around the broad left bowl",
+              path: [
+                { x: 505, y: 245 },
+                { x: 500, y: 315 },
+                { x: 470, y: 375 },
+                { x: 420, y: 425 },
+                { x: 355, y: 455 },
+                { x: 290, y: 465 },
+                { x: 220, y: 455 },
+                { x: 155, y: 425 },
+                { x: 105, y: 375 },
+                { x: 75, y: 315 },
+                { x: 70, y: 245 },
+                { x: 78, y: 175 },
+                { x: 110, y: 115 },
+                { x: 160, y: 70 },
+                { x: 225, y: 42 },
+                { x: 295, y: 35 },
+                { x: 365, y: 48 },
+                { x: 425, y: 80 },
+                { x: 470, y: 130 },
+                { x: 498, y: 190 },
+                { x: 505, y: 245 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and circle around the middle bowl",
+              path: [
+                { x: 750, y: 403 },
+                { x: 670, y: 430 },
+                { x: 590, y: 403 },
+                { x: 531, y: 330 },
+                { x: 510, y: 230 },
+                { x: 531, y: 130 },
+                { x: 590, y: 57 },
+                { x: 670, y: 30 },
+                { x: 750, y: 57 },
+                { x: 809, y: 130 },
+                { x: 830, y: 230 },
+                { x: 809, y: 330 },
+                { x: 750, y: 403 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and circle around the right bowl",
+              path: [
+                { x: 1100, y: 383 },
+                { x: 1020, y: 410 },
+                { x: 940, y: 383 },
+                { x: 881, y: 310 },
+                { x: 860, y: 210 },
+                { x: 881, y: 110 },
+                { x: 940, y: 37 },
+                { x: 1020, y: 10 },
+                { x: 1100, y: 37 },
+                { x: 1159, y: 110 },
+                { x: 1180, y: 210 },
+                { x: 1159, y: 310 },
+                { x: 1100, y: 383 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and sweep through the upper flourish",
+              path: [
+                { x: 160, y: 565 },
+                { x: 175, y: 525 },
+                { x: 205, y: 485 },
+                { x: 245, y: 460 },
+                { x: 285, y: 458 },
+                { x: 325, y: 480 },
+                { x: 360, y: 520 },
+                { x: 395, y: 565 },
+                { x: 435, y: 615 },
+                { x: 480, y: 660 },
+                { x: 530, y: 690 },
+                { x: 580, y: 700 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "restart and draw the separate downward stem",
+              path: [
+                { x: 882, y: 12 },
+                { x: 882, y: -32 },
+                { x: 882, y: -78 },
+                { x: 882, y: -120 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ఝ"),
+    },
+  ],
+  [
     "telugu:చ",
     {
       script: "telugu",

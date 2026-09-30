@@ -37,10 +37,11 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
   // *gnya* into shapes with nothing on the page to copy, which is the same
-  // stage exercised on a harder pair. `TE-S171` and `TE-S172` then return to
-  // observe-and-trace for newly introduced rare letters. A rung may repeat;
-  // the ORDER assertion below still forbids one arriving before its
-  // prerequisite stages.
+  // stage exercised on a harder pair. `TE-S171`, `TE-S172`, and `TE-S173`
+  // then return to observe-and-trace for newly introduced rare letters. The
+  // `TE-R152` recall closes that last filmstrip with whole-word composition and
+  // a timed production check. A rung may repeat; the ORDER assertion below
+  // still forbids one arriving before its prerequisite stages.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["TE-S152-letter-tta", "observe-trace"],
     ["TE-S123-letter-dda", "observe-trace"],
@@ -53,6 +54,9 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S170-script-dictation-courtesy-letters", "dictation-transcription"],
     ["TE-S171-letter-nga", "observe-trace"],
     ["TE-S172-letter-chha", "observe-trace"],
+    ["TE-S173-letter-jha", "observe-trace"],
+    ["TE-R152-jhari-recall", "controlled-composition"],
+    ["TE-R152-jhari-recall", "timed-assessment-production"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({
