@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/barcode-layout-1d-v1-targets.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "targets"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "barcode-layout-1d-v1-targets" },
+    "targets": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/target" }
+    }
+  },
+  "$defs": {
+    "symbol": { "type": ["string", "null"], "minLength": 1, "maxLength": 256 },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["language", "status", "api_family", "package_root", "native_test_path", "planned_conformance_test_path", "capability_manifest", "binary_runs", "width_runs", "layout", "scene", "error_projection", "metadata_projection", "copy_semantics_hook", "known_divergences"],
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "conformant" } } },
+          "then": {
+            "required": ["verified_revision", "corpus_sha256", "adoption_pr", "zero_authority_evidence"],
+            "properties": { "capability_manifest": { "type": "string" } }
+          }
+        }
+      ],
+      "properties": {
+        "language": { "enum": ["csharp", "fsharp", "go", "haskell", "perl", "python", "rust", "typescript"] },
+        "status": { "enum": ["pending-adoption", "conformant"] },
+        "api_family": { "enum": ["modern", "legacy"] },
+        "package_root": { "type": "string", "pattern": "^code/packages/[^/]+/barcode-layout-1d$" },
+        "native_test_path": { "type": "string", "pattern": "^code/packages/" },
+        "planned_conformance_test_path": { "type": "string", "pattern": "^code/packages/" },
+        "capability_manifest": { "type": ["string", "null"], "pattern": "^code/packages/.+/required_capabilities\\.json$" },
+        "binary_runs": { "$ref": "#/$defs/symbol" },
+        "width_runs": { "$ref": "#/$defs/symbol" },
+        "layout": { "$ref": "#/$defs/symbol" },
+        "scene": { "$ref": "#/$defs/symbol" },
+        "error_projection": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "metadata_projection": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "copy_semantics_hook": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "known_divergences": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 256 } },
+        "verified_revision": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "corpus_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "adoption_pr": { "type": "integer", "minimum": 1 },
+        "zero_authority_evidence": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    }
+  }
+}
