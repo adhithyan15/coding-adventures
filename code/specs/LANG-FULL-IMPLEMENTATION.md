@@ -1053,7 +1053,10 @@ backend immediately) come before the enabler-dependent items.
   a conditional expression selected by an exact snapshot in that graph.
   Those exact snapshots may also select conditional statement branches
   containing cycle writes, including selector-cycle assignments whose other
-  dependencies are written elsewhere in the loop body. Unsupported selector
+  dependencies are written elsewhere in the loop body. Statement selectors
+  are control dependencies of their branch writes, so an exact statement
+  selector may itself close a cycle whose selected boolean assignments contain
+  exact conditional expressions. Unsupported selector
   writes remain conservative. A recurrence
   in the graph may use a conditional
   expression selected by the controlled scalar or another exact local
