@@ -15212,6 +15212,29 @@ identity or runtime authority. The fresh clean sparse worktree branch
 `codex/parity-python-neural-spec-tests-v2-20260930` starts from exact main
 `7a91de5ceb0eb36079e011557ae3028d9d1fb5f8`.
 
+### Python neural primitive neutral-vector completion
+
+ML01 now makes its `1e-7` clamp canonical and observable through exact
+formula-derived BCE and CCE boundary vectors for both loss and derivative
+paths. ML04's approximate sigmoid derivative at ten now agrees with the
+normative formula. The Python activation suite executes every mandatory table
+row plus the specified symmetry, strict ordinary-input ranges, ReLU
+idempotence, softplus derivative identity, and non-negative derivative
+properties. The loss suite asserts the exact clamp at both zero and one rather
+than merely checking finite output. Production source remains unchanged.
+
+Activation-functions passes 32 tests and loss-functions 17 tests under Python
+3.12 with 100% coverage and clean Ruff gates. Both Windows BUILD fronts pass;
+four distribution artifacts build and import cleanly; perceptron's dependent
+front passes three tests at 100%; and space-launch-predictor reproduces its
+deterministic safe/abort output. The complete Go build-tool suite, vet, and
+trimpath build pass. A production exact-diff run discovers the four available
+dependency-ordered packages and builds activation-functions, loss-functions,
+matrix, and perceptron. Collision, state-DAG, changelog reconstruction,
+Bandit, changed-line credential, JSON, and diff-hygiene checks pass, with no
+package identity, capability, workflow, dependency metadata, or runtime
+authority change.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
