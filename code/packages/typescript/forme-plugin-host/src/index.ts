@@ -13,6 +13,23 @@
 export { createPluginHost, FORME_PLUGIN_PROTOCOL_VERSION } from "./host.js";
 export { discoverPlugins, resolveContainedFile } from "./discovery.js";
 export { descriptorForKindReference } from "./kinds.js";
+export {
+  formatGrantsFile,
+  formatTrustStore,
+  parseGrantsFile,
+  parseTrustStore,
+  readGrantsFile,
+  readTrustStore,
+  writeGrantsFile,
+  writeTrustStore,
+} from "./persistent-authority.js";
+export type {
+  LoadedPluginGrants,
+  PluginGrantDecision,
+  PluginGrantsFile,
+  PluginTrustStore,
+  TrustedPluginKey,
+} from "./persistent-authority.js";
 export { mediateCapabilityRequest } from "./capability-mediator.js";
 export { decodeWireValue, encodeFrame, encodeWireValue, FrameDecoder, RpcPeer } from "./wire.js";
 export type {

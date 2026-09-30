@@ -15,6 +15,8 @@ export const PLUGIN_HOST_ERROR_CODES = Object.freeze([
   "TRUNCATED_FRAME",
   "PLUGIN_CRASHED",
   "RESOURCE_LIMIT_EXCEEDED",
+  "AUTHORITY_FILE_INVALID",
+  "AUTHORITY_FILE_UNSAFE",
 ] as const);
 
 export type PluginHostErrorCode = (typeof PLUGIN_HOST_ERROR_CODES)[number];

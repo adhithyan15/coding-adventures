@@ -6,12 +6,18 @@ and owns a strict bounded JSON-RPC connection for handshake, announcement,
 lifecycle, streaming, diagnostics, cancellation, crash isolation, and mediated
 `StageContext` calls.
 
+The package also persists trust and grant decisions through strict bounded
+TOML codecs and fail-closed filesystem helpers. Grants bind the exact manifest
+hash, so a changed plugin receives no stale authority. Reads reject linked or
+oversized files; writes use restrictive same-directory staging and atomic
+publication.
+
 The package deliberately does **not** spawn an unsandboxed subprocess. Callers
 must inject a `PluginProcessFactory`, and each returned process must attest that
 the FM02 isolation boundary was established and that it staged the exact
-manifest-plus-entry identity the host verified. Runtime adapters, installation,
-grant persistence, cancellable live storage-watch mediation, and per-OS
-sandbox launchers remain FM-B015.
+manifest-plus-entry identity the host verified. Runtime adapters, signed
+installation, cancellable live storage-watch mediation, and per-OS sandbox
+launchers remain FM-B049–FM-B052.
 
 ```ts
 const host = await createPluginHost({

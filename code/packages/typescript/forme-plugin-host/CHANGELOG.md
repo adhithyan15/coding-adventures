@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add strict bounded codecs and fail-closed filesystem persistence for the
+  user trust store and manifest-bound per-plugin capability grants.
+- Publish authority files through restrictive same-directory temporary files
+  and atomic rename while rejecting symlinked, multiply-linked, oversized, or
+  non-canonical inputs.
 - Make discovery and ignored-signal escalation coverage deterministic across
   POSIX and Windows hosts, and accept a clean natural child exit as successful
   bounded abandoned-stream cleanup without requiring a redundant kill signal.
