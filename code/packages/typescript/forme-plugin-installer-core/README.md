@@ -43,7 +43,9 @@ platform file remains `unverified-third-party`; an invalid declared signature
 fails installation. Signed manifests that reference external schemas remain
 unsupported until a later package-signature version binds every file.
 
-`installPreparedPlugin` requires an existing real host-owned root. It acquires
+`installPreparedPlugin` requires an existing canonical, real host-owned root.
+Callers must resolve platform aliases such as macOS `/tmp` before preparation so
+`$pluginDir` grants bind the same canonical path discovery will observe. It acquires
 an exclusive per-plugin directory lock, writes restrictive files into a private
 same-parent stage, revalidates the staged tree, and swaps it into place with a
 private backup for rollback. Existing symlinks, hardlinks, special files,

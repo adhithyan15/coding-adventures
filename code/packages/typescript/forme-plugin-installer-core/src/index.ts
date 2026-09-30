@@ -25,6 +25,7 @@ import {
 import {
   formatGrantsFile,
   formatTrustStore,
+  parseTrustStore,
   type PluginGrantDecision,
   type PluginTrustStore,
 } from "@coding-adventures/forme-plugin-host";
@@ -114,8 +115,8 @@ export function preparePluginInstallSnapshot(
     throw new TypeError("plugin signature verification failed");
   }
   // Formatting performs the same strict, bounded validation used by the host.
-  formatTrustStore(options.trustStore);
-  const trusted = manifest.signature !== undefined && options.trustStore.trustedKeys.some(key =>
+  const trustStore = parseTrustStore(formatTrustStore(options.trustStore));
+  const trusted = manifest.signature !== undefined && trustStore.trustedKeys.some(key =>
     key.algorithm === manifest.signature!.algorithm && key.publicKey === manifest.signature!.publicKey
   );
   const trustTier: PluginTrustTier = trusted && packageFiles.length === 2
@@ -371,6 +372,7 @@ async function requireSafeRoot(rootPath: string, destinationPath: string): Promi
     const info = await lstat(lexicalRoot, { bigint: true });
     if (info.isSymbolicLink() || !info.isDirectory()) throw new Error("install root is not a real directory");
     const canonicalRoot = await realpath(lexicalRoot);
+    if (canonicalRoot !== lexicalRoot) throw new Error("install root must use its canonical path");
     const canonicalInfo = await lstat(canonicalRoot, { bigint: true });
     /* v8 ignore next -- concurrent ancestor replacement race, guarded fail-closed */
     if (!sameIdentity(identity(info), identity(canonicalInfo))) throw new Error("install root changed during resolution");

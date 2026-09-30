@@ -513,7 +513,8 @@ core does not fetch packages or display prompts. It MUST:
    required capabilities to be granted, and write the exact manifest-bound
    grants file through the FM-B048 codec;
 7. derive the destination as `plugin-` plus Base64url of the UTF-8 plugin name,
-   under one existing real host-owned install root. Callers do not choose a
+   under one existing canonical, real host-owned install root. Callers resolve
+   platform path aliases before capability review and do not choose a
    destination basename;
 8. acquire an exclusive same-parent per-plugin lock, materialize a private
    sibling staging directory, write only exclusively-created regular files,

@@ -1,4 +1,4 @@
-import { chmod, mkdtemp, mkdir, readFile, readdir, stat, symlink, writeFile, link } from "node:fs/promises";
+import { chmod, mkdtemp, mkdir, readFile, readdir, realpath, stat, symlink, writeFile, link } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it } from "vitest";
@@ -38,8 +38,9 @@ afterEach(async () => {
 async function fixture(entry = "export const value = 1;\n") {
   const parent = await mkdtemp(join(tmpdir(), "forme-installer-test-"));
   roots.push(parent);
-  const installRoot = join(parent, "plugins");
-  await mkdir(installRoot);
+  const requestedRoot = join(parent, "plugins");
+  await mkdir(requestedRoot);
+  const installRoot = await realpath(requestedRoot);
   const files: PluginPackageFile[] = [
     { path: "plugin.toml", bytes: new TextEncoder().encode(MANIFEST) },
     { path: "plugin.mjs", bytes: new TextEncoder().encode(entry) },
