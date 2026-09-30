@@ -454,6 +454,66 @@ mod tests {
         assert!(host.contains("foreach (var (axis, value) in InitialEnvironment()) start[axis] = value;"));
     }
 
+    /// UI48 ENV4 on Flutter (§7.8): the XAML contract in Dart. The reducer
+    /// lives in the host beside the wire names; the shell only observes.
+    #[test]
+    fn flutter_host_reports_the_environment() {
+        let host = flutter_runtime_binding_for_application("probe", false);
+        assert!(host.contains(
+            "  Map<String, Object?>? reportEnvironment(Map<String, String> environment) {\n    final runtime = _runtime;"
+        ));
+        assert!(host.contains("static const String _environmentChanged = 'environmentChanged';"));
+        assert!(host.contains("'name': _environmentChanged,\n        'payload': report,"));
+        // Held back when equal to the last one taken or the last one refused
+        // (and inside a settle); a refusal is recorded as refused; the report
+        // taken is remembered once the dispatch returned.
+        let runtime_half = host
+            .find("Map<String, Object?>? reportEnvironment(Map<String, String> environment) {\n    _ensureOpen();")
+            .expect("runtime half");
+        let settling = host.find("    if (_settling > 0) return null;\n    final report").expect("settle backstop");
+        let taken = host
+            .find("if (_sameEnvironment(_lastReportedEnvironment, report)) return null;")
+            .expect("hold back taken");
+        let held_back = host
+            .find("if (_sameEnvironment(_lastRefusedEnvironment, report)) return null;")
+            .expect("hold back refused");
+        let sent = host.find("final answer = _dispatchEnvironment(report);").expect("send");
+        let remembered = host.find("_lastReportedEnvironment = report;").expect("remember");
+        assert!(runtime_half < settling && settling < taken && taken < held_back);
+        assert!(held_back < sent && sent < remembered);
+        assert!(host.contains("    } on Object {\n      _lastRefusedEnvironment = report;\n      rethrow;\n    }"));
+        // An ignored report has nothing to show; a tripped guard does.
+        assert!(host.contains("if (answer['error'] != null) return answer;"));
+        assert!(host.contains("return _revision(answer) == shownRevision ? null : answer;"));
+        // The public half never throws: a failure is an `error` answer.
+        assert!(host.contains("'error': 'Mosaic environment report failed: $error',"));
+        // Props kept only at the revision already showing, on every dispatch
+        // and effect completion, against the runtime's own (undecorated) props.
+        assert!(host.contains("if (revision == null || revision != _revision(_runtimeUpdate)) {"));
+        assert_eq!(
+            host.matches("final settled = _keepShowingProps(_settleEffects(update));\n    _runtimeUpdate = settled;").count(),
+            2,
+            "dispatch and effect completion"
+        );
+        assert_eq!(host.matches("_runtimeUpdate = ").count(), 5, "create, dispatch, completion, restore + field");
+        // The thresholds every host uses, and the platform's pointer.
+        assert!(host.contains(
+            "'sizeClass': width < 600\n        ? 'compact'\n        : width < 1024\n        ? 'regular'\n        : 'expanded',"
+        ));
+        assert!(host.contains("'orientation': height > width ? 'portrait' : 'landscape',"));
+        assert!(host.contains("'colorScheme': dark ? 'dark' : 'light',"));
+        assert!(host.contains("'reducedMotion': reduceMotion ? 'reduce' : 'no-preference',"));
+        assert!(host.contains("final touch = Platform.isAndroid || Platform.isIOS;"));
+        assert!(host.contains("'pointer': touch ? 'coarse' : 'fine',"));
+        assert!(host.contains("'hover': touch ? 'none' : 'hover',"));
+        // The start context carries them too.
+        assert!(host.contains("          ...MosaicHost.initialEnvironment(),\n          'restoredSnapshot'"));
+        // The binding still runs under the plain Dart VM (the conformance
+        // harness has no Flutter engine), so the reducer imports no Flutter.
+        assert!(!host.contains("package:flutter"));
+        assert!(!host.contains("dart:ui"));
+    }
+
     /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
     /// same kinds, limits and MIME table, so an app sees the same outcome on
     /// either host. A drift in one template fails here, not on a Mac.

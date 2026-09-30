@@ -178,6 +178,81 @@ class MosaicHost {
   Map<String, Object?>? restore(Map<String, Object?> snapshot) =>
       _runtime?.restore(snapshot);
 
+  /// What the platform knows before the first frame (UI48 ENV4, §7.8).
+  ///
+  /// A phone or tablet is touched, and a finger neither aims finely nor
+  /// hovers; every other platform Flutter runs this binding on has a mouse.
+  /// The reduce-motion setting lives in the Flutter engine, which this file
+  /// deliberately does not import (it also runs under the plain Dart VM), so
+  /// the start context says `no-preference` and the shell's first report
+  /// carries the real value. The same values go into the start context.
+  static Map<String, String> initialEnvironment() {
+    final touch = Platform.isAndroid || Platform.isIOS;
+    return <String, String>{
+      'pointer': touch ? 'coarse' : 'fine',
+      'hover': touch ? 'none' : 'hover',
+      'reducedMotion': 'no-preference',
+    };
+  }
+
+  /// A window reduced to the six UI48 §4 values, under `mosaic-app-runtime`'s
+  /// wire names.
+  ///
+  /// [width] and [height] are logical pixels (Flutter's `MediaQuery` size),
+  /// bucketed at 600 and 1024 as on every other host, so one window size is
+  /// one size class everywhere:
+  ///
+  ///     width      sizeClass     height vs width   orientation
+  ///     < 600      compact       taller            portrait
+  ///     < 1024     regular       otherwise         landscape (a square too)
+  ///     otherwise  expanded
+  ///
+  /// [dark] is the scheme the app is drawn in, and [reduceMotion] the
+  /// platform's request to cut animation (`MediaQuery.disableAnimations`).
+  static Map<String, String> environmentReport(
+    double width,
+    double height,
+    bool dark, {
+    bool reduceMotion = false,
+  }) => <String, String>{
+    ...initialEnvironment(),
+    'colorScheme': dark ? 'dark' : 'light',
+    'sizeClass': width < 600
+        ? 'compact'
+        : width < 1024
+        ? 'regular'
+        : 'expanded',
+    'orientation': height > width ? 'portrait' : 'landscape',
+    // Observed, so it replaces the start context's `no-preference` above: a
+    // later entry in a map literal wins over a spread one.
+    'reducedMotion': reduceMotion ? 'reduce' : 'no-preference',
+  };
+
+  /// Tell the runtime the window's environment (UI48 ENV4) as
+  /// `environmentChanged`.
+  ///
+  /// Returns null when there is nothing for the shell to do: no runtime, a
+  /// report the host held back (the same as the last one taken or the last
+  /// one refused), or an answer at the revision already showing -- an app
+  /// that does not react. Returns the runtime's answer when it moved the
+  /// revision (the app reacted) or carries an `error`, and
+  /// `{'error': 'Mosaic environment report failed: ...'}` when the report
+  /// failed: refused as invalid, or the runtime closed underneath.
+  ///
+  /// Never throws. A resize is not something the user did, so a failure is
+  /// something to log, never a reason to tear the running app down.
+  Map<String, Object?>? reportEnvironment(Map<String, String> environment) {
+    final runtime = _runtime;
+    if (runtime == null) return null;
+    try {
+      return runtime.reportEnvironment(environment);
+    } on Object catch (error) {
+      return <String, Object?>{
+        'error': 'Mosaic environment report failed: $error',
+      };
+    }
+  }
+
   void dispose() => _runtime?.dispose();
 }
 
@@ -248,6 +323,10 @@ final class _MosaicRuntime {
           'textScale': 1.0,
           ..._utcOffsetEntry(),
           'platform': _platformName(),
+          // What the platform knows before the first frame (UI48 ENV4). The
+          // window's size class and orientation arrive with the shell's first
+          // environment report.
+          ...MosaicHost.initialEnvironment(),
           'restoredSnapshot': restoredSnapshot,
         }, (input, output) => _create(input, appOut, output)), 'startup update');
       try {
@@ -262,6 +341,7 @@ final class _MosaicRuntime {
         );
         latestUpdate = create(null);
       }
+      _runtimeUpdate = latestUpdate;
       latestUpdate = _withPersistenceWarning(latestUpdate);
       _app = appOut.value;
       if (_app == nullptr) {
@@ -294,6 +374,19 @@ final class _MosaicRuntime {
   Pointer<Void> _app = nullptr;
   int _sequence = 0;
   late Map<String, Object?> latestUpdate;
+
+  /// The last update as the runtime answered it, before
+  /// [_withPersistenceWarning] decorated it for the UI. [_keepShowingProps]
+  /// keeps THESE props, so a storage warning that has since cleared is not
+  /// kept with them.
+  Map<String, Object?> _runtimeUpdate = const <String, Object?>{};
+
+  /// The last environment the runtime took (UI48 ENV4), so an unchanged report
+  /// is not sent twice. Per runtime: a retried start reports afresh.
+  Map<String, String>? _lastReportedEnvironment;
+
+  /// The last report the runtime refused, not re-sent until it changes.
+  Map<String, String>? _lastRefusedEnvironment;
   String? _persistenceWarning;
   void Function()? propsChangedHandler;
 
@@ -389,10 +482,93 @@ final class _MosaicRuntime {
     _sequence = nextSequence;
     // Settle BEFORE persisting: the runtime refuses to snapshot while an effect
     // is outstanding, so persisting first warns on every effect.
-    final settled = _settleEffects(update);
+    final settled = _keepShowingProps(_settleEffects(update));
+    _runtimeUpdate = settled;
     _persistSnapshot();
     latestUpdate = _withPersistenceWarning(settled);
     return latestUpdate;
+  }
+
+  /// The reserved event a host sends when its environment changes (UI48
+  /// §5.2); `mosaic-app-runtime`'s `ENVIRONMENT_CHANGED`.
+  static const String _environmentChanged = 'environmentChanged';
+
+  /// The host half of [MosaicHost.reportEnvironment].
+  ///
+  /// - Inside a settle -- an effect handler that reports synchronously -- a
+  ///   dispatch would nest in the outer settle and be overwritten by it.
+  ///   Nothing is sent and nothing remembered, so the next report is sent.
+  ///   The shell reports from a post-frame callback, so this is a backstop.
+  /// - The same report as the last one taken, or the last one refused, is not
+  ///   sent: a drag across a threshold would otherwise re-send a refused one,
+  ///   and log it, on every frame.
+  /// - A refusal (an invalid environment) throws, and is remembered as
+  ///   refused; it does not replace the last report taken.
+  /// - A report the runtime took is remembered at once.
+  Map<String, Object?>? reportEnvironment(Map<String, String> environment) {
+    _ensureOpen();
+    if (_settling > 0) return null;
+    final report = Map<String, String>.of(environment);
+    if (_sameEnvironment(_lastReportedEnvironment, report)) return null;
+    if (_sameEnvironment(_lastRefusedEnvironment, report)) return null;
+    final shownRevision = _revision(_runtimeUpdate);
+    final answer = _dispatchEnvironment(report);
+    _lastReportedEnvironment = report;
+    _lastRefusedEnvironment = null;
+    // A tripped settle guard reaches the shell only through the answer.
+    if (answer['error'] != null) return answer;
+    // An app that does not react answers at the revision already showing,
+    // its props kept by [_keepShowingProps]: nothing new to show, so the
+    // shell rebuilds nothing on a resize.
+    return _revision(answer) == shownRevision ? null : answer;
+  }
+
+  /// Send [report], recording it as refused when the runtime says no.
+  Map<String, Object?> _dispatchEnvironment(Map<String, String> report) {
+    try {
+      return dispatch(<String, Object?>{
+        'name': _environmentChanged,
+        'payload': report,
+      });
+    } on Object {
+      _lastRefusedEnvironment = report;
+      rethrow;
+    }
+  }
+
+  /// Set equality: two reports with the same axes and values are the same
+  /// report, whatever order the shell built them in.
+  static bool _sameEnvironment(
+    Map<String, String>? last,
+    Map<String, String> report,
+  ) {
+    if (last == null || last.length != report.length) return false;
+    for (final entry in report.entries) {
+      if (last[entry.key] != entry.value) return false;
+    }
+    return true;
+  }
+
+  /// An update without props AT THE REVISION ALREADY SHOWING (an environment
+  /// the app did not react to, UI48 §7.1) carries nothing to render: keep the
+  /// props showing, so the shell -- which reads `props` from every update it
+  /// is handed -- does not render an empty screen. Only then: a props-less
+  /// update that moves the revision is a defect, and is left as it is so it
+  /// surfaces.
+  Map<String, Object?> _keepShowingProps(Map<String, Object?> update) {
+    if (!update.containsKey('props') || update['props'] != null) return update;
+    final showing = _runtimeUpdate['props'];
+    if (showing is! Map) return update;
+    final revision = _revision(update);
+    if (revision == null || revision != _revision(_runtimeUpdate)) {
+      return update;
+    }
+    return <String, Object?>{...update, 'props': showing};
+  }
+
+  static int? _revision(Map<String, Object?> update) {
+    final value = update['revision'];
+    return value is int ? value : null;
   }
 
   /// Answer an effect the app is waiting on.
@@ -431,7 +607,8 @@ final class _MosaicRuntime {
       _answered = true;
       return update;
     }
-    final settled = _settleEffects(update);
+    final settled = _keepShowingProps(_settleEffects(update));
+    _runtimeUpdate = settled;
     _persistSnapshot();
     latestUpdate = _withPersistenceWarning(settled);
     // A deferred answer is the return value of no call the UI made, so the UI
@@ -718,7 +895,9 @@ final class _MosaicRuntime {
       _invokeInput(snapshot, (input, output) => _restore(_app, input, output)),
       'restore update',
     );
-    latestUpdate = _withPersistenceWarning(_settleEffects(update));
+    final settled = _settleEffects(update);
+    _runtimeUpdate = settled;
+    latestUpdate = _withPersistenceWarning(settled);
     propsChangedHandler?.call();
     return latestUpdate;
   }
