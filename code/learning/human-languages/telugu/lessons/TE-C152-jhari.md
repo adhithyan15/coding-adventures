@@ -16,30 +16,31 @@ etymology_hook: "A learned or literary word shared with Sanskrit, used for a str
 duration:
   max_seconds: 180
 requires:
-  knowledge: [TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-08]
+  knowledge: [TE-LEX-C150-LITERATURE-01, TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-08]
 introduces:
   knowledge: [TE-LEX-C152-STREAM-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [TE-LEX-C152-STREAM-01, TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-08]
+  knowledge: [TE-LEX-C150-LITERATURE-01, TE-LEX-C152-STREAM-01, TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-08]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output]
 register: literary
 variety: standard
-reviews_of: [TE-S06-letter-ra, TE-S08-vowel-sign-i]
+reviews_of: [TE-C150-vangmayam, TE-S06-letter-ra, TE-S08-vowel-sign-i]
 ---
 
 # ఝరి (jhari) — a stream
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-08] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C150-LITERATURE-01, TE-SCRIPT-RECOG-06, TE-SCRIPT-RECOG-08] -->
 
-[PAUSE 2s] Find the familiar **రి** at the end: **ర** carries the short **ి**
-sign. Now picture a narrow stream moving down a hillside. This lesson gives
-that stream a name before it asks you to study the uncommon first letter.
+[PAUSE 2s] What did **వాఙ్మయం** name? ("Literature.") Now find the familiar
+**రి** at the end of today's word: **ర** carries the short **ి** sign. Picture
+a narrow stream moving down a hillside. This lesson gives that stream a name
+before it asks you to study the uncommon first letter.
 
 ## You'll want to know: ఝరి
 <!-- hl-knowledge: introduces=[TE-LEX-C152-STREAM-01]; assesses=[] -->

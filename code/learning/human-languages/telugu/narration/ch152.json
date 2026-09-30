@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "A Word for a Stream — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:79f33fa3e9d48c75",
+  "sourceHash": "fnv1a64:288f2aa6b9cef876",
   "lessons": [
     {
       "id": "TE-C152-jhari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13709fc8bd9e04dd",
+      "sourceHash": "fnv1a64:53905176968a6e32",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Find the familiar రి at the end: ర carries the short ి sign. Now picture a narrow stream moving down a hillside. This lesson gives that stream a name before it asks you to study the uncommon first letter."
+              "text": "What did వాఙ్మయం name? (\"Literature.\") Now find the familiar రి at the end of today's word: ర carries the short ి sign. Picture a narrow stream moving down a hillside. This lesson gives that stream a name before it asks you to study the uncommon first letter."
             }
           ]
         },
@@ -354,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:365eed0ab62b414a",
+      "sourceHash": "fnv1a64:b9f7dab7daa2cdf2",
       "notice": null,
       "blocks": [
         {
@@ -381,29 +381,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read ఝరి (jhari) once. Cover it, then write only its first base letter: ఝ."
+              "text": "Look once at ఝరి (jhari), then cover it. Use only the picture of a stream as your cue and write the whole word from memory."
             },
             {
               "kind": "speech",
-              "text": "Now uncover the word and check the three rounded bowls, the upper flourish, and the separate downward stem. Keep the five pen-down runs distinct."
+              "text": "Now uncover the model and check both the whole word and its first base letter. Circle ఝ (jha). Check its three rounded bowls, upper flourish, and separate downward stem; keep the five pen-down runs distinct."
             },
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ఝ (jha) once from memory",
+              "instruction": "ఝరి (jhari) once from the picture cue",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: **ఝ** once from memory]"
+              "source": "[YOU WRITE: **ఝరి** once from the picture cue]"
             },
             {
               "kind": "prompt",
-              "action": "BUILD",
-              "instruction": "ఝ + రి = ఝరి (jhari)",
+              "action": "CIRCLE",
+              "instruction": "the first base letter ఝ (jha)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU BUILD: **ఝ** + **రి** = **ఝరి**]"
+              "source": "[YOU CIRCLE: the first base letter **ఝ**]"
             },
             {
               "kind": "prompt",
@@ -418,21 +418,21 @@
               "kind": "activity",
               "scored": true,
               "id": "TE-R152-jhari-recall-write",
-              "prompt": "Write the first base letter of ఝరి (jhari), then say what the whole word means.",
+              "prompt": "From the picture cue of a stream, write the whole Telugu word, circle its first base letter, and give the meaning.",
               "assesses": [
                 "TE-LEX-C152-STREAM-01",
                 "TE-SCRIPT-RECOG-173"
               ],
-              "responseSeconds": 15,
+              "responseSeconds": 20,
               "acceptedResponses": [
-                "ఝ — a stream",
-                "ఝ, stream",
-                "jha, stream",
-                "ఝ, mountain stream"
+                "ఝరి — a stream; first letter ఝ",
+                "ఝరి, stream, ఝ",
+                "jhari, stream, jha",
+                "ఝరి, mountain stream, ఝ"
               ],
               "feedback": {
-                "correct": "ఝ begins ఝరి — a stream.",
-                "incorrect": "Begin with ఝ; the whole word ఝరి means a stream."
+                "correct": "ఝరి means a stream, and ఝ is its first base letter.",
+                "incorrect": "Write ఝరి for the stream, then circle its first base letter ఝ."
               }
             }
           ]
@@ -444,13 +444,13 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 3,
+              "seconds": 15,
               "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[PAUSE 15s]"
             },
             {
               "kind": "speech",
-              "text": "What does ఝరి (jhari) mean, and which base letter begins it? (\"A stream\"; ఝ.)"
+              "text": "Without looking back, write the Telugu word for “a stream,” then circle its first base letter. (ఝరి (jhari); circle ఝ.)"
             }
           ]
         }

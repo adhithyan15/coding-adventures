@@ -41,20 +41,24 @@ it. (**ఝరి**.)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C152-STREAM-01, TE-SCRIPT-RECOG-173] -->
+<!-- hl-writing-stage: controlled-composition -->
 
-<!-- hl-activity: {"id":"TE-R152-jhari-recall-write","kind":"text","assesses":["TE-LEX-C152-STREAM-01","TE-SCRIPT-RECOG-173"],"prompt":"Write the first base letter of ఝరి, then say what the whole word means.","answer":"ఝ — a stream","accepted":["ఝ, stream","jha, stream","ఝ, mountain stream"],"feedback":{"correct":"ఝ begins ఝరి — a stream.","incorrect":"Begin with ఝ; the whole word ఝరి means a stream."},"response_seconds":15} -->
+<!-- hl-activity: {"id":"TE-R152-jhari-recall-write","kind":"text","assesses":["TE-LEX-C152-STREAM-01","TE-SCRIPT-RECOG-173"],"prompt":"From the picture cue of a stream, write the whole Telugu word, circle its first base letter, and give the meaning.","answer":"ఝరి — a stream; first letter ఝ","accepted":["ఝరి, stream, ఝ","jhari, stream, jha","ఝరి, mountain stream, ఝ"],"feedback":{"correct":"ఝరి means a stream, and ఝ is its first base letter.","incorrect":"Write ఝరి for the stream, then circle its first base letter ఝ."},"response_seconds":20} -->
 
-Read **ఝరి** once. Cover it, then write only its first base letter: **ఝ**.
+Look once at **ఝరి**, then cover it. Use only the picture of a stream as your
+cue and write the whole word from memory.
 
-Now uncover the word and check the three rounded bowls, the upper flourish,
-and the separate downward stem. Keep the five pen-down runs distinct.
+Now uncover the model and check both the whole word and its first base letter.
+Circle **ఝ**. Check its three rounded bowls, upper flourish, and separate
+downward stem; keep the five pen-down runs distinct.
 
-- [YOU WRITE: **ఝ** once from memory]
-- [YOU BUILD: **ఝ** + **రి** = **ఝరి**]
+- [YOU WRITE: **ఝరి** once from the picture cue]
+- [YOU CIRCLE: the first base letter **ఝ**]
 - [YOU SAY: “a stream”]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C152-STREAM-01, TE-SCRIPT-RECOG-173] -->
+<!-- hl-writing-stage: timed-assessment-production -->
 
-[PAUSE 3s] What does **ఝరి** mean, and which base letter begins it? ("A
-stream"; **ఝ**.)
+[PAUSE 15s] Without looking back, write the Telugu word for “a stream,” then
+circle its first base letter. (**ఝరి**; circle **ఝ**.)
