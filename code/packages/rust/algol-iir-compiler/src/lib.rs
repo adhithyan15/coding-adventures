@@ -6882,6 +6882,7 @@ impl Compiler {
     ) -> bool {
         Self::static_body_actions_dependency_path(
             actions,
+            actions,
             name,
             name,
             &mut HashSet::new(),
@@ -6890,6 +6891,7 @@ impl Compiler {
 
     fn static_body_actions_dependency_path(
         actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
         current: &str,
         goal: &str,
         visiting: &mut HashSet<String>,
@@ -6907,9 +6909,10 @@ impl Compiler {
                 );
                 dependencies.into_iter().any(|dependency| {
                     dependency == goal
-                        || (Self::static_body_actions_write_name(actions, &dependency)
+                        || (Self::static_body_actions_write_name(all_actions, &dependency)
                             && Self::static_body_actions_dependency_path(
-                                actions,
+                                all_actions,
+                                all_actions,
                                 &dependency,
                                 goal,
                                 visiting,
@@ -6923,11 +6926,13 @@ impl Compiler {
             } => {
                 Self::static_body_actions_dependency_path(
                     then_actions,
+                    all_actions,
                     current,
                     goal,
                     visiting,
                 ) || Self::static_body_actions_dependency_path(
                     else_actions,
+                    all_actions,
                     current,
                     goal,
                     visiting,
@@ -15015,6 +15020,38 @@ mod tests {
             "test",
         )
         .expect("an exact conditional recursive selector may select expressions in a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_statement_assigned_recursive_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := not choose else choose := guard; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-assigned recursive selector may select recurrence-cycle statements");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_statement_assigned_recursive_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := not choose else choose := guard; guard := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-assigned recursive selector may select a recurrence-cycle expression");
         let main = module.get_function("main").expect("has main");
         for expected in ["3.25", "1.5", "1.25"] {
             assert!(main.instructions.iter().any(|instr| {
