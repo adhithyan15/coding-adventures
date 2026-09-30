@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Retained a hard bound on Git-index snapshot capture while raising its timeout
+  from 15 to 60 seconds, preventing valid large-checkout enumeration from
+  failing on contended macOS CI runners.
+
 - Regenerated the source-input registry projection to pick up the
   `forme-deploy-runner-fs-adapter`, `forme-deploy-runner-github-pages-adapter`,
   and `forme-plugin-host` TypeScript roots plus the shared Lua lint consumers

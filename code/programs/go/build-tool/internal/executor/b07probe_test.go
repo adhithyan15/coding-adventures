@@ -3,7 +3,6 @@ package executor
 import (
 	"os"
 	"path/filepath"
-	"syscall"
 	"testing"
 	"time"
 
@@ -15,7 +14,7 @@ import (
 // build goroutine after a semaphore slot is taken, that hung the whole build.
 func TestManifestReadRejectsFIFO(t *testing.T) {
 	dir := t.TempDir()
-	if err := syscall.Mkfifo(filepath.Join(dir, "package.json"), 0o644); err != nil {
+	if err := createFIFOForTest(t, filepath.Join(dir, "package.json")); err != nil {
 		t.Skipf("mkfifo unavailable: %v", err)
 	}
 	done := make(chan []string, 1)

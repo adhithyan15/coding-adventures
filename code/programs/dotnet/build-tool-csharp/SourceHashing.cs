@@ -611,7 +611,10 @@ public static partial class Hasher
             {
                 throw new SourceHashException("SOURCE_HASH_TRACKED_SNAPSHOT_FAILED");
             }
-            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+            // Large hosted-runner checkouts can take longer than fifteen seconds
+            // to enumerate while CI is contended. Keep the operation bounded, but
+            // leave enough headroom for a valid repository-index snapshot.
+            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(60));
             var stdoutTask = ReadBoundedStream(process.StandardOutput.BaseStream, 1024 * 1024, cancellation.Token);
             var stderrTask = ReadBoundedStream(process.StandardError.BaseStream, 1024 * 1024, cancellation.Token);
             process.WaitForExitAsync(cancellation.Token).GetAwaiter().GetResult();

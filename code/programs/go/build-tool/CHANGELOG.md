@@ -40,6 +40,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Kept the FIFO manifest security regression on POSIX hosts while moving its
+  `mkfifo` syscall behind build-tagged test helpers, so the executor test suite
+  compiles on Windows and explicitly skips only the unavailable FIFO probe.
+
 - Strict Starlark diff selection now recognizes only the five canonical BUILD
   front basenames. Near names such as `BUILD_debug`, `BUILD.bak`, and
   `BUILD_windows.old` remain known package paths but no longer select a package
