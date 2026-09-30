@@ -14,9 +14,8 @@
 //!
 //! ## Scope (WORD03b)
 //!
-//! Minimal viable backend — covers the trivial-ROM case (`const_*`
-//! immediate + `ret_*`) needed by the `lang-aot` Intel 8086 e2e smoke
-//! test:
+//! The original trivial-ROM case (`const_*` immediate + `ret_*`) remains
+//! supported alongside the typed arithmetic and control-flow rungs:
 //!
 //! | CIR op | Lowering |
 //! |--------|----------|

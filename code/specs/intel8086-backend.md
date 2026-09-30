@@ -1,7 +1,7 @@
 # `intel8086-backend` spec
 
-> **Status:** v0.1.0 — ninth and **final** lane of the 9-architecture
-> expansion, 2026-08-17.
+> **Status:** WORD03b backend scope; the companion Rust simulator now covers
+> the Python oracle's complete specified instruction surface.
 
 ## Purpose
 
@@ -32,20 +32,24 @@ uses. The Intel 8086 never had an `iir-to-intel8086` predecessor to
 migrate away from — this crate starts at the correct layer from day
 one, same as every other lane in this expansion.
 
-Unlike ARM1 (whose behavioral simulator pre-existed complete in-tree)
-or MOS 6502/RV32I (which needed brand-new from-scratch Rust
-simulators), the Intel 8086 needed a **new Rust simulator that ports
-only a curated core** of an unusually large Python reference
-(`code/packages/python/intel-8086-simulator`, ~1670 lines implementing
-essentially the full ISA) — see `intel8086-simulator`'s crate-level doc
-for the full scoping rationale and the "deferred" list.
+The first Rust simulator release ported a curated core of the Python reference
+(`code/packages/python/intel-8086-simulator`). That was the v0.1.0 scope, not
+the current execution boundary. The top-level simulator now implements
+the Python oracle's complete specified instruction surface, including all 24
+ModRM effective-address forms, prefixes, stack and control flow, string
+operations, and port I/O. Its original curated decoder/executor remains as a
+compatibility helper. The checked simulator is covered by a reproducible
+461-vector Python full-state differential comparing registers and flags
+directly, plus hashes of full memory and both port banks; see
+`intel8086-simulator`'s README and
+`tests/python_differential.rs`.
 
 ## Segmented memory — structural, not deferrable
 
 The 8086's defining feature — `physical_address = (segment_register<<4)
 + offset` — is **not** a scoping choice like the memory-operand
-addressing modes this lane defers. Even the trivial `const 42; ret`
-program this backend compiles has its first opcode byte fetched via
+addressing modes the first simulator release deferred. Even the trivial
+`const 42; ret` program this backend compiles has its first opcode byte fetched via
 `CS:IP` segmented addressing when loaded into `intel8086-simulator`.
 This backend's own output is unaffected by segmentation (it emits a
 flat byte stream, same as every other lane), but the *simulator* that
@@ -55,32 +59,30 @@ do — see `code/specs/07m-intel-8086-simulator.md` and
 `intel8086-simulator/src/simulator.rs`'s module doc (`phys_addr`) for
 the exact formula and its 20-bit wraparound behaviour.
 
-## Current scope — WORD01 result ABI
+## Current scope — WORD03b
 
 | CIR op family | Lowering |
 |----------------|----------|
-| `const_u8`, `const_bool` | `MOV AX, #imm16`, zero-extended (`AH = 0`) |
-| `const_u16` | `MOV AX, #imm16` |
-| matching `ret_u8`, `ret_bool`, `ret_u16` | `HLT` (only if returning the current value at the matching width) |
+| `const_u8`, `const_bool` | `MOV AX/BX, #imm16`, zero-extended at the selected byte register |
+| `const_u16` | `MOV AX/BX, #imm16` |
+| historical `const_i64`/`ret_i64` smoke path | compatible 16-bit immediate/result path |
+| matching `ret_u8`, `ret_bool`, `ret_u16` | copy the selected value to `AX` at the matching width, then `HLT` |
 | `ret_void` | `HLT` |
 | Empty CIR body | `HLT` |
+| `add`, `sub`, `and`, `or`, `xor` on `u8`/`u16`; `not_u8`/`not_u16` | bounded two-live register ALU operations |
+| `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | unsigned compare with normalized `0`/`1` result |
+| `label`, `jmp`, `jmp_if_true`, `jmp_if_false` | branch fixups after final byte layout, including backward loops |
 | Anything else | `UnsupportedOp` from `compile()`; `None` from the `Backend::compile` trait method |
 
-There is **no real register allocator** — a trivial "last const var"
-scheme tracks the name and width of the single current value in `AX`. Byte and
-bool values are zero-extended so `AL` contains the result and `AH == 0`; word
-values occupy all of `AX`. A typed return succeeds only for the current
-variable at the matching width. Programs needing more than one live value fall
-through to `UnsupportedOp`. AOT treats `None` as a per-function compile
-failure; JIT keeps execution on the interpreter tier.
-
-Full op coverage (arithmetic, register-to-register moves, control flow
-— a mature backend's worth) is **intentionally not wired into this
-backend** in this PR, even though `intel8086-simulator` already
-implements a curated core of those mnemonics. Future increments can
-extend `intel8086-backend::compile_to_bytes` to emit `ADD`/`SUB`/`MOV
-reg,reg` using the encoder helpers `intel8086-encoder` already
-re-exports — the simulator-side work to execute them is already done.
+Reverse liveness allocates at most two same-width live values in `AX`/`BX`
+(or `AL`/`BL`), with `CX`/`CL` as transient scratch. It follows forward and
+backward control-flow edges and rejects divergent live register mappings at a
+join. A third live value, simultaneous byte and word values, and operations
+outside the table remain compile errors; spills and direct calls are still
+deferred in the backend. Byte and bool returns are zero-extended in `AX`, and
+word returns occupy all of `AX`. AOT treats `None` as a per-function compile
+failure; JIT keeps execution on the interpreter tier. This backend's lowering
+scope is narrower than the simulator's ISA coverage.
 
 ## Why `ret_*` lowers to real `HLT`, not a pseudo-halt
 
@@ -185,33 +187,35 @@ straight to disk as a flat `.bin`.
 
 | `BackendError` variant | Trigger |
 |--------------------------|---------|
-| `UnsupportedOp(String)` | CIR operation outside `const_*`/`ret_*` |
-| `InvalidOperand(String)` | Malformed CIR operands or missing `dest` |
-| `UndefinedVariable(String)` | A typed return has no current value |
+| `UnsupportedOp(String)` | CIR operation outside the table above, a third or mixed-width live value, or divergent register mappings at a join |
+| `InvalidOperand(String)` | Malformed CIR operands or operand types |
+| `UndefinedVariable(String)` | A source or typed return has no live value |
+| `UndefinedLabel(String)`, `DuplicateLabel(String)` | Branch target absent or label repeated |
+| `BranchOutOfRange(String)` | Final relative branch displacement cannot be encoded |
 | `ImmediateOutOfRange(i64)` | A literal falls outside its selected unsigned width (`u8` or `u16`) |
 
-## WORD01 execution proof
+## Execution proof
 
 `tests/test_backend.rs::word_u16_result_executes_in_ax` runs
 `MOV AX,0x1234; HLT` in `intel8086-simulator` and asserts the full word result.
-A companion test proves a `u8` boundary produces `AX == 0x00ff`, while other
-regressions reject 256 as a `u8` and reject a `ret_u8` for a current `u16`
-value.
+Companion tests cover the `u8` boundary and typed-return mismatch. WORD02 tests
+execute two-live arithmetic and complement operations; WORD03a tests execute
+all six normalized unsigned comparisons at both widths; WORD03b tests execute
+forward branches and a backward loop in the real simulator, including taken
+and untaken paths and invalid control-flow joins.
 
 ## Tests
 
-21 unit/integration tests in `tests/test_backend.rs` (mirroring
-`mos6502-backend`'s/`arm1-backend`'s test shape) pin the canonical byte
-sequence and edge cases (zero, 16-bit range boundaries — negative and
-`>65535` — bool, multi-var fallthrough, unsupported op, empty CIR,
-`ret_void`, `Backend::run` panics, `Backend::compile` vs the free
-`compile` function agree).
+The 38 `tests/test_backend.rs` tests pin the canonical byte sequence and
+range/typing errors, liveness limits, arithmetic/comparison results, branch
+layout, loop behavior, and `Backend` trait behavior. The separate
+`intel8086-simulator` suite includes its 461-vector full-state differential
+against the Python oracle.
 
-Two tests additionally load the compiled bytes into
+The original smoke tests also load compiled bytes into
 `intel8086-simulator` and genuinely execute them (through non-zero-`CS`
-segmented addressing, not a flat-memory shortcut) — byte-for-byte
-parity is necessary but not sufficient; the emitted bytes must actually
-execute correctly (and actually halt) in the new simulator:
+segmented addressing, not a flat-memory shortcut). They remain alongside
+the later arithmetic, comparison, and control-flow simulator tests:
 
 * `canonical_const_42_then_ret_actually_executes_to_ax_equals_42` —
   the `const 42; ret` program, asserting `AX == 42` and `halted ==
@@ -224,27 +228,15 @@ execute correctly (and actually halt) in the new simulator:
 
 ## Backlog
 
-1. [ ] Real register allocator using the 8086's other general-purpose
-   registers (`BX`/`CX`/`DX`) and the stack, removing the single-var
-   limitation.
-2. [ ] Arithmetic/logical CIR ops (`add`/`sub`/`and`/`or`/`xor`/`cmp`)
-   via the accumulator-immediate and register-to-register ALU
-   instructions `intel8086-simulator` already implements — only the
-   backend-side lowering + a wider `intel8086-encoder` re-export list
-   are missing.
-3. [ ] Memory-operand support (loads/stores through `[BX+SI]` and
-   friends) — this needs the effective-address computation
-   `intel8086-simulator`'s `decode.rs` explicitly defers, so this item
-   is gated on a simulator-side increment first.
-4. [ ] Comparisons and conditional branches. Unlike ARM1's per-
-   instruction condition-code field, the 8086 needs an explicit
-   `CMP`-then-conditional-jump pairing (closer to
-   `mips-r2000-backend`'s branch story than ARM1's).
-5. [ ] Direct calls (`CALL`/`RET` pairing) and a stack frame — once
+1. [ ] Extend the backend beyond two simultaneously live same-width values
+   with spills and a wider register allocation strategy.
+2. [ ] Lower memory-operand CIR loads/stores. The simulator already implements
+   the ModRM effective-address forms; the backend has no such lowering yet.
+3. [ ] Direct calls (`CALL`/`RET` pairing) and a stack frame — once
    this lands, `ret_*` could switch from `HLT` to `RET` for called
    functions (the `HLT` would remain for the outermost program-exit
    case, matching how other lanes' backlogs plan to keep their halt
    convention for program exit even after adding real calls).
-6. [ ] `Backend::run` wired to `intel8086-simulator` for JIT execution
+4. [ ] `Backend::run` wired to `intel8086-simulator` for JIT execution
    (best-effort per the migration spec — "no working JIT" is an
    acceptable outcome for a historical-arch target).
