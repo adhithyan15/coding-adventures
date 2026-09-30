@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/forme-plugin-installer-core",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "the explicit host-owned plugin install root, selected plugin target, and private transaction directories",
+      "justification": "Checks canonical directory identities and compares complete existing and staged snapshots without following links."
+    },
+    {
+      "category": "fs",
+      "action": "list",
+      "target": "the selected installed plugin target and private staging tree",
+      "justification": "Enumerates bounded complete trees to reject unexpected, linked, multiply linked, or non-portable entries."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "exclusive lock, staging, and backup directories inside the explicit host-owned plugin install root",
+      "justification": "Reserves same-filesystem private transaction paths before materializing or swapping a plugin snapshot."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "exclusive regular files beneath the private staging directory",
+      "justification": "Writes only bounded defensively copied package bytes and the installer-generated manifest-bound grants file."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "identity-bound lock, staging, and backup directories created by this installer transaction",
+      "justification": "Removes only transaction-owned paths after publication, cancellation, failure, or rollback."
+    }
+  ],
+  "justification": "Validates an in-memory plugin snapshot, writes it beneath one explicit host-owned root, and atomically publishes it with same-parent rename. It performs no network, environment, shell, or subprocess access."
+}

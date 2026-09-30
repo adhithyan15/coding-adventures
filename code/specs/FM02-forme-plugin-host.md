@@ -1,8 +1,9 @@
 # FM02 — Forme Plugin Host: Manifest, Sandboxing, Wire Protocol, Capability Mediation
 
 > **Status:** Host/wire boundary implemented in FM-B014; bounded authority
-> persistence implemented in FM-B048; installation, runtime adapters, and OS
-> sandboxes tracked in FM-B049–FM-B052 and the FM-B015 completion milestone.
+> persistence implemented in FM-B048; atomic installation active in FM-B049;
+> runtime adapters and OS sandboxes tracked in FM-B050–FM-B052 and the FM-B015
+> completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -22,6 +23,7 @@
 | Plugin discovery and handshake | Implemented | FM-B014 ships deterministic discovery, manifest-authored proxies, negotiation, and typed streaming. |
 | Capability mediation and crash isolation | Implemented | FM-B014 proves denial, cancellation escalation, malformed-wire isolation, process failure, and cleanup boundaries. |
 | Trust and grant persistence | Implemented | FM-B048 provides bounded exact codecs, manifest-bound stale-grant denial, safe reads, and atomic restrictive writes. |
+| Atomic plugin installation | Active | FM-B049 consumes registry-independent immutable snapshots and publishes one complete host-owned plugin directory. |
 | TypeScript/Python/Rust runners | Active | FM-B050/FM-B051 follow the implemented host wire protocol. |
 | OS sandbox profiles | Blocked | FM-B052 follows atomic installation and runner conformance. |
 | Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
@@ -466,7 +468,7 @@ signature that binds auxiliary files, a plugin with `[signature]` MUST NOT use
 an external `configSchema`; hosts reject that combination rather than imply the
 existing manifest-and-entry signature authenticates schema bytes.
 
-### 4.2 The `forme install` flow (informative)
+### 4.2 The `forme install` flow
 
 The CLI (FM07) provides `forme install <package>` which:
 
@@ -487,6 +489,51 @@ The CLI (FM07) provides `forme install <package>` which:
 8. Records the grants in `<project>/forme-plugins/<name>/grants.toml`.
    Subsequent runs read this file; no re-prompting unless the
    plugin's manifest changes.
+
+FM-B049 makes the registry-independent installation core normative. Registry
+and prompt adapters MUST hand `forme-plugin-installer-core` a complete immutable
+snapshot of regular-file entries plus the capabilities the user reviewed. The
+core does not fetch packages or display prompts. It MUST:
+
+1. accept at most 4,096 files, 16 MiB per file, and 128 MiB total;
+2. reject duplicate, absolute, empty, dot-segment, backslash, NUL, non-NFC,
+   non-portable, or case-fold-colliding relative paths before touching disk;
+3. defensively copy every byte array, require exactly one root `plugin.toml`,
+   parse and validate it, and require every selected runtime entry and schema
+   path to name a supplied regular file;
+4. compute the existing manifest hash over the validated manifest and selected
+   runtime entry, verify any declared signature, and compare its raw Ed25519
+   key against the FM-B048 trust store;
+5. assign `verified-third-party` only when that trusted signature verifies and
+   the distribution contains exactly `plugin.toml` plus the selected entry.
+   Because the v1 signature does not bind auxiliary or alternate-platform
+   files, any larger snapshot is installed only as `unverified-third-party`;
+6. resolve declared capability templates against caller-supplied installation
+   roots, require every reviewed grant to be declared, require all resolved
+   required capabilities to be granted, and write the exact manifest-bound
+   grants file through the FM-B048 codec;
+7. derive the destination as `plugin-` plus Base64url of the UTF-8 plugin name,
+   under one existing real host-owned install root. Callers do not choose a
+   destination basename;
+8. acquire an exclusive same-parent per-plugin lock, materialize a private
+   sibling staging directory, write only exclusively-created regular files,
+   flush them, set files read-only and directories owner-private where POSIX
+   modes exist, and verify the staged complete set and byte identities;
+9. replace an existing singly-linked host-owned target through same-parent
+   rename with a retained backup, restore that backup after any pre-finalize
+   failure, and report an indeterminate error if rollback itself cannot be
+   proved; and
+10. recheck parent, lock, stage, target, and backup identities at each state
+    transition, remove only identities created by the current transaction, and
+    never expose a partial tree as a discovery candidate.
+
+Install results contain the plugin name/version, manifest hash, trust tier,
+canonical destination, granted capabilities, file count, and total bytes.
+Reinstalling an identical snapshot with identical grants is an exact no-op;
+changing the manifest identity or grants creates one atomic replacement.
+Cancellation is checked before staging, between file writes, and before the
+commit rename. The single-user threat model still excludes a privileged actor
+that can replace the install root itself.
 
 `forme install` is outside FM02's package surface (it lives in the
 CLI, FM07), but the trust-store and grants-file formats are FM02's
