@@ -63,6 +63,50 @@ describe("persistent plugin authority codecs", () => {
       .toBe(`manifestHash = "${HASH_A}"\n`);
   });
 
+  it("implements TOML basic-string Unicode escapes and scalar validation", () => {
+    const text = `[[trustedKeys]]\nalgorithm = "ed25519"\npublicKey = "${KEY_A}"\naddedAt = "${WHEN}"\nnote = "smile: \\U0001F600"\n`;
+    expect(parseTrustStore(text).trustedKeys[0]?.note).toBe("smile: 😀");
+    expect(() => parseTrustStore(text.replace("\\U0001F600", "\\/"))).toThrow(/TOML escape/);
+    expect(() => parseTrustStore(text.replace("\\U0001F600", "\\uD800"))).toThrow(/non-scalar/);
+    expect(() => parseTrustStore(text.replace("\\U0001F600", "\\u12"))).toThrow(/Unicode escape/);
+    expect(() => parseTrustStore(text.replace("\\U0001F600", "\\uZZZZ"))).toThrow(/Unicode escape/);
+    expect(() => parseTrustStore(text.replace("smile: \\U0001F600", 'bad " quote'))).toThrow(/quote/);
+    const dangling = text.replace('note = "smile: \\U0001F600"', 'note = "dangling' + "\\" + '"');
+    expect(() => parseTrustStore(dangling)).toThrow(/dangling escape/);
+    expect(() => parseTrustStore(text.replace("\\U0001F600", "\uD800"))).toThrow(/invalid character/);
+    expect(() => parseTrustStore(text.replace("\\U0001F600", "\u0001"))).toThrow(/invalid character/);
+    expect(() => parseTrustStore(text.replace("\\U0001F600", "\u007f"))).toThrow(/invalid character/);
+    expect(() => formatTrustStore({
+      trustedKeys: [{ algorithm: "ed25519", publicKey: KEY_A, addedAt: WHEN, note: "\uD800" }],
+    })).toThrow(/Unicode scalar/);
+  });
+
+  it("sorts authority rows by Unicode code point rather than UTF-16 code unit", () => {
+    const bmp = "custom:\uE000";
+    const supplementary = "custom:\u{10000}";
+    const text = formatGrantsFile({
+      manifestHash: HASH_A,
+      granted: [
+        { capability: supplementary, grantedAt: WHEN },
+        { capability: bmp, grantedAt: WHEN },
+      ],
+    });
+    expect(text.indexOf(bmp)).toBeLessThan(text.indexOf(supplementary));
+    expect(parseGrantsFile(text).granted.map(entry => entry.capability)).toEqual([bmp, supplementary]);
+    const sharedSupplementary = formatGrantsFile({
+      manifestHash: HASH_A,
+      granted: [
+        { capability: "custom:\u{10000}b", grantedAt: WHEN },
+        { capability: "custom:\u{10000}a", grantedAt: WHEN },
+        { capability: "custom:a", grantedAt: WHEN },
+        { capability: "custom:aa", grantedAt: WHEN },
+      ],
+    });
+    expect(parseGrantsFile(sharedSupplementary).granted.map(entry => entry.capability)).toEqual([
+      "custom:a", "custom:aa", "custom:\u{10000}a", "custom:\u{10000}b",
+    ]);
+  });
+
   it.each([
     ["non-string input", () => parseTrustStore(null as never)],
     ["byte-order mark", () => parseTrustStore(`\uFEFF[[trustedKeys]]\n`)],
@@ -105,12 +149,31 @@ describe("persistent plugin authority codecs", () => {
       .toThrow(/row limit/);
   });
 
+  it("bounds formatter output before joining repeated large rows", () => {
+    const largeNote = "x".repeat(1024 * 1024);
+    expect(() => formatTrustStore({
+      trustedKeys: [{ algorithm: "ed25519", publicKey: KEY_A, addedAt: WHEN, note: largeNote }],
+    })).toThrow(/byte limit/);
+    expect(() => formatTrustStore({
+      trustedKeys: [{ algorithm: "ed25519", publicKey: KEY_A, addedAt: WHEN, note: '"'.repeat(600_000) }],
+    })).toThrow(/byte limit/);
+    expect(() => formatGrantsFile({
+      manifestHash: HASH_A,
+      granted: Array.from({ length: 4_096 }, (_, index) => ({
+        capability: `network:https:host-${index}.example`,
+        grantedAt: WHEN,
+        note: largeNote,
+      })),
+    })).toThrow(/byte limit/);
+  });
+
   it("validates trust stores passed to the formatter", () => {
     const valid = { algorithm: "ed25519" as const, publicKey: KEY_A, addedAt: WHEN };
     const tooMany = Array.from({ length: 4_097 }, () => valid);
     const cases: unknown[] = [
       null,
       {},
+      { trustedKeys: "no" },
       { trustedKeys: tooMany },
       { trustedKeys: [valid, valid] },
       { trustedKeys: [null] },
@@ -122,7 +185,12 @@ describe("persistent plugin authority codecs", () => {
       { trustedKeys: [{ ...valid, addedAt: 7 }] },
       { trustedKeys: [{ ...valid, addedAt: "2026-99-30T12:00:00Z" }] },
       { trustedKeys: [{ ...valid, addedAt: "2026-02-30T12:00:00Z" }] },
+      { trustedKeys: [{ ...valid, addedAt: "2026-01-01T24:00:00Z" }] },
+      { trustedKeys: [{ ...valid, addedAt: "2026-01-01T23:60:00Z" }] },
+      { trustedKeys: [{ ...valid, addedAt: "2026-01-01T23:59:60Z" }] },
       { trustedKeys: [{ ...valid, note: 7 }] },
+      { trustedKeys: [], extra: "x" },
+      Object.create({ trustedKeys: [] }),
     ];
     for (const value of cases) expect(() => formatTrustStore(value as never)).toThrow();
   });
@@ -133,6 +201,7 @@ describe("persistent plugin authority codecs", () => {
     const cases: unknown[] = [
       null,
       {},
+      { manifestHash: HASH_A, granted: "no" },
       { manifestHash: "bad", granted: [] },
       { manifestHash: HASH_A, granted: tooMany },
       { manifestHash: HASH_A, granted: [valid, valid] },
@@ -142,8 +211,13 @@ describe("persistent plugin authority codecs", () => {
       { manifestHash: HASH_A, granted: [{ ...valid, grantedAt: 7 }] },
       { manifestHash: HASH_A, granted: [{ ...valid, grantedAt: "2026-99-30T12:00:00Z" }] },
       { manifestHash: HASH_A, granted: [{ ...valid, note: 7 }] },
+      { manifestHash: HASH_A, granted: [], extra: "x" },
+      Object.create({ manifestHash: HASH_A, granted: [] }),
     ];
     for (const value of cases) expect(() => formatGrantsFile(value as never)).toThrow();
+    expect(() => formatTrustStore({
+      trustedKeys: [{ ...({ algorithm: "ed25519" as const, publicKey: KEY_A }), addedAt: "2024-02-29T23:59:59.123Z" }],
+    })).not.toThrow();
   });
 });
 

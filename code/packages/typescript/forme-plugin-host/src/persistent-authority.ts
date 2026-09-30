@@ -15,7 +15,7 @@ import { PluginHostError } from "./errors.js";
 const MAX_AUTHORITY_FILE_BYTES = 1024 * 1024;
 const MAX_AUTHORITY_ROWS = 4_096;
 const MANIFEST_HASH = /^blake2b:[0-9a-f]{64}$/;
-const RFC3339_UTC = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
+const RFC3339_UTC = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?Z$/;
 
 export interface TrustedPluginKey {
   readonly algorithm: "ed25519";
@@ -61,22 +61,27 @@ export function parseTrustStore(text: string): PluginTrustStore {
 }
 
 export function formatTrustStore(store: PluginTrustStore): string {
-  if (!store || !Array.isArray(store.trustedKeys)) invalid("trust store must contain trustedKeys");
-  if (store.trustedKeys.length > MAX_AUTHORITY_ROWS) rowLimit();
-  const normalized = store.trustedKeys.map((entry, index) => validateTrustedKey(record(entry), index));
+  const root = record(store);
+  exactFields(root, ["trustedKeys"], "trust store");
+  const trustedKeys = root.trustedKeys;
+  if (!Array.isArray(trustedKeys)) invalid("trust store must contain trustedKeys");
+  if (trustedKeys.length > MAX_AUTHORITY_ROWS) rowLimit();
+  const normalized = trustedKeys.map((entry, index) => validateTrustedKey(record(entry), index));
   const seen = new Set<string>();
   for (const key of normalized) {
     if (seen.has(key.publicKey)) invalid("trust store contains a duplicate public key");
     seen.add(key.publicKey);
   }
-  return normalized.sort(comparePublicKeys).map(key => [
-    "[[trustedKeys]]",
-    `algorithm = ${quote(key.algorithm)}`,
-    `publicKey = ${quote(key.publicKey)}`,
-    `addedAt = ${quote(key.addedAt)}`,
-    ...(key.note === undefined ? [] : [`note = ${quote(key.note)}`]),
-    "",
-  ].join("\n")).join("");
+  const output = new BoundedAuthorityOutput();
+  for (const key of normalized.sort(comparePublicKeys)) {
+    output.append("[[trustedKeys]]\n");
+    output.appendField("algorithm", key.algorithm);
+    output.appendField("publicKey", key.publicKey);
+    output.appendField("addedAt", key.addedAt);
+    if (key.note !== undefined) output.appendField("note", key.note);
+    output.append("\n");
+  }
+  return output.finish();
 }
 
 export function parseGrantsFile(text: string): PluginGrantsFile {
@@ -97,23 +102,29 @@ export function parseGrantsFile(text: string): PluginGrantsFile {
 }
 
 export function formatGrantsFile(file: PluginGrantsFile): string {
-  if (!file || !Array.isArray(file.granted)) invalid("grants file must contain granted decisions");
-  validateManifestHash(file.manifestHash);
-  if (file.granted.length > MAX_AUTHORITY_ROWS) rowLimit();
-  const normalized = file.granted.map((entry, index) => validateGrant(record(entry), index));
+  const root = record(file);
+  exactFields(root, ["manifestHash", "granted"], "grants file");
+  validateManifestHash(root.manifestHash);
+  const granted = root.granted;
+  if (!Array.isArray(granted)) invalid("grants file must contain granted decisions");
+  if (granted.length > MAX_AUTHORITY_ROWS) rowLimit();
+  const normalized = granted.map((entry, index) => validateGrant(record(entry), index));
   const seen = new Set<string>();
   for (const grant of normalized) {
     if (seen.has(grant.capability)) invalid("grants file contains a duplicate capability");
     seen.add(grant.capability);
   }
-  const rows = normalized.sort(compareCapabilities).map(grant => [
-    "[[granted]]",
-    `capability = ${quote(grant.capability)}`,
-    `grantedAt = ${quote(grant.grantedAt)}`,
-    ...(grant.note === undefined ? [] : [`note = ${quote(grant.note)}`]),
-    "",
-  ].join("\n")).join("");
-  return `manifestHash = ${quote(file.manifestHash)}\n${rows.length === 0 ? "" : `\n${rows}`}`;
+  const output = new BoundedAuthorityOutput();
+  output.appendField("manifestHash", root.manifestHash);
+  if (normalized.length > 0) output.append("\n");
+  for (const grant of normalized.sort(compareCapabilities)) {
+    output.append("[[granted]]\n");
+    output.appendField("capability", grant.capability);
+    output.appendField("grantedAt", grant.grantedAt);
+    if (grant.note !== undefined) output.appendField("note", grant.note);
+    output.append("\n");
+  }
+  return output.finish();
 }
 
 export async function readTrustStore(path: string): Promise<PluginTrustStore> {
@@ -204,14 +215,56 @@ function parseString(value: string, line: number): string {
   if (!value.startsWith('"') || !value.endsWith('"')) {
     invalid(`authority value on line ${line} must be a basic string`);
   }
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(value);
-  } catch {
-    invalid(`authority value on line ${line} is not a valid escaped string`);
+  let result = "";
+  for (let index = 1; index < value.length - 1; index += 1) {
+    const codeUnit = value.charCodeAt(index);
+    if (codeUnit === 0x22) invalid(`authority value on line ${line} contains an unescaped quote`);
+    if (codeUnit === 0x5c) {
+      if (index + 1 >= value.length - 1) {
+        invalid(`authority value on line ${line} has a dangling escape`);
+      }
+      const escape = value[index + 1];
+      const simple = TOML_ESCAPES[escape!];
+      if (simple !== undefined) {
+        result += simple;
+        index += 1;
+        continue;
+      }
+      if (escape === "u" || escape === "U") {
+        const digits = escape === "u" ? 4 : 8;
+        const hex = value.slice(index + 2, index + 2 + digits);
+        if (hex.length !== digits || !/^[0-9A-Fa-f]+$/u.test(hex)) {
+          invalid(`authority value on line ${line} has an invalid Unicode escape`);
+        }
+        const codePoint = Number.parseInt(hex, 16);
+        if (!isUnicodeScalar(codePoint)) {
+          invalid(`authority value on line ${line} has a non-scalar Unicode escape`);
+        }
+        result += String.fromCodePoint(codePoint);
+        index += 1 + digits;
+        continue;
+      }
+      invalid(`authority value on line ${line} has an invalid TOML escape`);
+    }
+    const codePoint = value.codePointAt(index)!;
+    if (!isUnicodeScalar(codePoint) || (codePoint < 0x20 && codePoint !== 0x09) || codePoint === 0x7f) {
+      invalid(`authority value on line ${line} contains an invalid character`);
+    }
+    result += String.fromCodePoint(codePoint);
+    if (codePoint > 0xffff) index += 1;
   }
-  return parsed as string;
+  return result;
 }
+
+const TOML_ESCAPES: Readonly<Record<string, string>> = Object.freeze({
+  b: "\b",
+  t: "\t",
+  n: "\n",
+  f: "\f",
+  r: "\r",
+  '"': '"',
+  "\\": "\\",
+});
 
 function validateTrustedKey(row: Record<string, unknown>, index: number): TrustedPluginKey {
   exactFields(row, ["algorithm", "publicKey", "addedAt"], `trusted key ${index}`, ["note"]);
@@ -267,14 +320,27 @@ function validateManifestHash(value: unknown): asserts value is string {
 }
 
 function validateTimestamp(value: string, label: string): void {
-  const validShape = RFC3339_UTC.test(value) && Number.isFinite(Date.parse(value));
-  const year = Number(value.slice(0, 4));
-  const month = Number(value.slice(5, 7));
-  const day = Number(value.slice(8, 10));
-  const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
-  if (!validShape || day < 1 || day > lastDay) {
+  const match = RFC3339_UTC.exec(value);
+  if (!match) invalid(`${label} must be an RFC 3339 UTC timestamp`);
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const hour = Number(match[4]);
+  const minute = Number(match[5]);
+  const second = Number(match[6]);
+  const monthLengths = [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (month < 1 || month > 12 || day < 1 || day > monthLengths[month - 1]!
+      || hour > 23 || minute > 59 || second > 59) {
     invalid(`${label} must be an RFC 3339 UTC timestamp`);
   }
+}
+
+function isLeapYear(year: number): boolean {
+  return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+}
+
+function isUnicodeScalar(codePoint: number): boolean {
+  return codePoint >= 0 && codePoint <= 0x10ffff && !(codePoint >= 0xd800 && codePoint <= 0xdfff);
 }
 
 function isCanonicalPublicKey(value: string): boolean {
@@ -289,8 +355,35 @@ function optionalString(value: unknown, label: string): string | undefined {
   return value;
 }
 
-function quote(value: string): string {
-  return JSON.stringify(value);
+class BoundedAuthorityOutput {
+  readonly #chunks: string[] = [];
+  #bytes = 0;
+
+  append(value: string): void {
+    const bytes = Buffer.byteLength(value, "utf8");
+    if (bytes > MAX_AUTHORITY_FILE_BYTES - this.#bytes) byteLimit();
+    this.#chunks.push(value);
+    this.#bytes += bytes;
+  }
+
+  appendField(name: string, value: string): void {
+    if (!isScalarText(value)) invalid(`${name} must contain only Unicode scalar values`);
+    if (Buffer.byteLength(value, "utf8") > MAX_AUTHORITY_FILE_BYTES - this.#bytes) byteLimit();
+    this.append(`${name} = ${JSON.stringify(value)}\n`);
+  }
+
+  finish(): string {
+    return this.#chunks.join("");
+  }
+}
+
+function isScalarText(value: string): boolean {
+  for (let index = 0; index < value.length; index += 1) {
+    const codePoint = value.codePointAt(index)!;
+    if (!isUnicodeScalar(codePoint)) return false;
+    if (codePoint > 0xffff) index += 1;
+  }
+  return true;
 }
 
 function record(value: unknown): Record<string, unknown> {
@@ -307,7 +400,16 @@ function compareCapabilities(a: PluginGrantDecision, b: PluginGrantDecision): nu
 }
 
 function compareCodePoints(a: string, b: string): number {
-  return a < b ? -1 : 1;
+  let aOffset = 0;
+  let bOffset = 0;
+  while (aOffset < a.length && bOffset < b.length) {
+    const aPoint = a.codePointAt(aOffset)!;
+    const bPoint = b.codePointAt(bOffset)!;
+    if (aPoint !== bPoint) return aPoint < bPoint ? -1 : 1;
+    aOffset += aPoint > 0xffff ? 2 : 1;
+    bOffset += bPoint > 0xffff ? 2 : 1;
+  }
+  return a.length - b.length;
 }
 
 async function readAuthorityFile(path: string, label: string): Promise<string | null> {
@@ -351,6 +453,7 @@ async function readAuthorityFile(path: string, label: string): Promise<string | 
 }
 
 async function writeAuthorityFile(path: string, text: string, label: string): Promise<void> {
+  /* v8 ignore next -- exported formatters enforce this invariant before calling the writer */
   if (Buffer.byteLength(text, "utf8") > MAX_AUTHORITY_FILE_BYTES) byteLimit();
   const requestedParent = resolve(dirname(path));
   let realParent: string;
