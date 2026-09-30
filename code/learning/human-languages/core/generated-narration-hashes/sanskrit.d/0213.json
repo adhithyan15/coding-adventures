@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:90a799c8fa191be7",
+  "lessonIds": [
+    "SA-C213-sadyah",
+    "SA-C213-tatksanam",
+    "SA-C213-prak",
+    "SA-C213-anantaram",
+    "SA-C213-yavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch213.txt",
+  "json": "sanskrit/narration/ch213.json",
+  "textHash": "fnv1a64:632715a63d61038f",
+  "jsonHash": "fnv1a64:3a2b2d9f324655ef",
+  "findings": []
+}

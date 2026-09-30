@@ -1,0 +1,11 @@
+{
+  "id": "SA-C214-prati",
+  "pathSegment": "SA-PATH-214-WHY214",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-214-WHY214",
+      "order": 4
+    }
+  ]
+}

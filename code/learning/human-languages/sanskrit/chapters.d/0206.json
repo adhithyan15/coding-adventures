@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Sinks, Bathes, Frolics, Shuts, Opens",
+  "label": "ch:sa-sinks-bathes-frolics-shuts-opens",
+  "canDo": "I can say sinks, bathes, frolics, shuts and opens.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C206-unmilayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say sinks, bathes, frolics, shuts and opens.",
+    "assesses": [
+      "SA-LEX-C206-ACT206-03",
+      "SA-LEX-C206-ACT206-04",
+      "SA-LEX-C206-ACT206-05"
+    ]
+  }
+}

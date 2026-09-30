@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C228-sangitam",
+    "language": "sanskrit",
+    "chapter": 228,
+    "sequence": 13440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0be7ef03bb6b2363"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:7a61531e66ab4c97",
+  "lessonIds": [
+    "SA-C214-eva",
+    "SA-C214-khalu",
+    "SA-C214-iva",
+    "SA-C214-vina",
+    "SA-C214-prati"
+  ],
+  "tex": "sanskrit/book/chapters/ch214-exactly-indeed-like-without-towards.tex"
+}

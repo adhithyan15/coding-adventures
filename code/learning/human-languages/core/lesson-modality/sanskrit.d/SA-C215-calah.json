@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C215-calah",
+    "language": "sanskrit",
+    "chapter": 215,
+    "sequence": 12420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b969ff8faff86380"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C206-snati",
+  "pathSegment": "SA-PATH-206-ACT206",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-206-ACT206",
+      "order": 1
+    }
+  ]
+}

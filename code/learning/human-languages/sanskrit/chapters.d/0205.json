@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "Forgives, Blames, Praises, Accepts, Blossoms",
+  "label": "ch:sa-forgives-blames-praises-accepts-blossoms",
+  "canDo": "I can say forgives, blames, praises, accepts and blossoms.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C205-vikasati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say forgives, blames, praises, accepts and blossoms.",
+    "assesses": [
+      "SA-LEX-C205-ACT205-03",
+      "SA-LEX-C205-ACT205-04",
+      "SA-LEX-C205-ACT205-05"
+    ]
+  }
+}

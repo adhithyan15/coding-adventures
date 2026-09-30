@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C224-kendram",
+    "language": "sanskrit",
+    "chapter": 224,
+    "sequence": 13060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a5ce3ec16ff9696"
+  },
+  "findings": []
+}

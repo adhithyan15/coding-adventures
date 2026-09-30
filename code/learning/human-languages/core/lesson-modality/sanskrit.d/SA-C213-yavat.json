@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C213-yavat",
+    "language": "sanskrit",
+    "chapter": 213,
+    "sequence": 12360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffdc85b50354927f"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:c27eb1106650ffa4",
+  "lessonIds": [
+    "SA-C216-kusalah",
+    "SA-C216-nipunah",
+    "SA-C216-ajnah",
+    "SA-C216-vijnah",
+    "SA-C216-buddhiman"
+  ],
+  "tex": "sanskrit/book/chapters/ch216-able-expert-ignorant-wise-intelligent.tex"
+}

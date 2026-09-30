@@ -1,0 +1,11 @@
+{
+  "id": "SA-C218-datram",
+  "pathSegment": "SA-PATH-218-THG218",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-218-THG218",
+      "order": 4
+    }
+  ]
+}

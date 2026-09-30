@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C225-sadvalam",
+    "language": "sanskrit",
+    "chapter": 225,
+    "sequence": 13150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d32e0b13d6e9413"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Planet, Comet, Animal, Creature, Winged creature",
+  "label": "ch:sa-planet-comet-animal-creature-winged-creature",
+  "canDo": "I can say a planet, a comet, an animal, a creature and a winged creature.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R226-second-pass-words-from-chapters-224-226",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say a planet, a comet, an animal, a creature and a winged creature.",
+    "assesses": [
+      "SA-LEX-C226-THG226-03",
+      "SA-LEX-C226-THG226-04",
+      "SA-LEX-C226-THG226-05"
+    ]
+  }
+}

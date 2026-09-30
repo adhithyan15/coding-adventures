@@ -1,0 +1,11 @@
+{
+  "id": "SA-C203-yacate",
+  "pathSegment": "SA-PATH-203-ACT203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-203-ACT203",
+      "order": 2
+    }
+  ]
+}

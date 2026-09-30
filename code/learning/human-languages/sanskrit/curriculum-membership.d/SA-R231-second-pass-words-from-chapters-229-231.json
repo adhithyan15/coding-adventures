@@ -1,0 +1,11 @@
+{
+  "id": "SA-R231-second-pass-words-from-chapters-229-231",
+  "pathSegment": "SA-PATH-231-TRV231",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "SA-EXT-231-TRV231",
+      "order": 6
+    }
+  ]
+}

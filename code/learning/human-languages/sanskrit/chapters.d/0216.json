@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Able, Expert, Ignorant, Wise, Intelligent",
+  "label": "ch:sa-able-expert-ignorant-wise-intelligent",
+  "canDo": "I can say able, expert, ignorant, wise and intelligent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C216-buddhiman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say able, expert, ignorant, wise and intelligent.",
+    "assesses": [
+      "SA-LEX-C216-QUAL216-03",
+      "SA-LEX-C216-QUAL216-04",
+      "SA-LEX-C216-QUAL216-05"
+    ]
+  }
+}

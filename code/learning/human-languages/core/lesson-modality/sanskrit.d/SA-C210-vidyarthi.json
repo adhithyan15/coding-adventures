@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C210-vidyarthi",
+    "language": "sanskrit",
+    "chapter": 210,
+    "sequence": 12000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afc098e8f4972c09"
+  },
+  "findings": []
+}

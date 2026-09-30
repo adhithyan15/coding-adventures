@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C229-dharmah",
+    "language": "sanskrit",
+    "chapter": 229,
+    "sequence": 13480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c724c9c40eeaa19"
+  },
+  "findings": []
+}

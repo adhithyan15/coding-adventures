@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-222-THG222",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an instrument, a load, goods for sale, a shopkeeper and a newspaper.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "Traveller, Guide, Holy ford, Hermitage, Monastery",
+  "label": "ch:sa-traveller-guide-holy-ford-hermitage-monastery",
+  "canDo": "I can say a traveller, a guide, a holy ford, a hermitage and a monastery.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C223-mathah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can say a traveller, a guide, a holy ford, a hermitage and a monastery.",
+    "assesses": [
+      "SA-LEX-C223-THG223-03",
+      "SA-LEX-C223-THG223-04",
+      "SA-LEX-C223-THG223-05"
+    ]
+  }
+}

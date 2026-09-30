@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-220-THG220",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a balance, a measuring rod, a stick, a staff and an archer's bow.",
+  "prerequisites": []
+}

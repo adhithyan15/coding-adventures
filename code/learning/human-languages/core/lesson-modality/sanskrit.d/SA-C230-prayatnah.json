@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C230-prayatnah",
+    "language": "sanskrit",
+    "chapter": 230,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a8d0439a194d9c1"
+  },
+  "findings": []
+}

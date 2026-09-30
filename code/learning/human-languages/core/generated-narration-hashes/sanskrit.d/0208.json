@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:33cba7e3dd30585b",
+  "lessonIds": [
+    "SA-C208-parivarah",
+    "SA-C208-bandhuh",
+    "SA-C208-sakha",
+    "SA-C208-satruh",
+    "SA-C208-prativesi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch208.txt",
+  "json": "sanskrit/narration/ch208.json",
+  "textHash": "fnv1a64:f26ef9ef4e98da6f",
+  "jsonHash": "fnv1a64:68442118a91c415b",
+  "findings": []
+}

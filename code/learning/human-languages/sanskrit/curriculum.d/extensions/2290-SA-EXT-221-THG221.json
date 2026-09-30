@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-221-THG221",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say cotton, silk, leather, a knot and a small stool.",
+  "prerequisites": []
+}

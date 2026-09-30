@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C220-manadandah",
+    "language": "sanskrit",
+    "chapter": 220,
+    "sequence": 12680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7ac98b3d812d8b8"
+  },
+  "findings": []
+}

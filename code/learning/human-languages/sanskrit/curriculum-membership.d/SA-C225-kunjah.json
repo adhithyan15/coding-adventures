@@ -1,0 +1,11 @@
+{
+  "id": "SA-C225-kunjah",
+  "pathSegment": "SA-PATH-225-THG225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-225-THG225",
+      "order": 3
+    }
+  ]
+}

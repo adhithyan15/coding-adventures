@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:c3dfa75bde42c0f3",
+  "lessonIds": [
+    "SA-C215-calah",
+    "SA-C215-mandah",
+    "SA-C215-tiksnah",
+    "SA-C215-kunthah",
+    "SA-C215-mulyavan"
+  ],
+  "tex": "sanskrit/book/chapters/ch215-moving-slow-sharp-blunt-valuable.tex"
+}

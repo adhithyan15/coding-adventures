@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C206-khelati",
+    "language": "sanskrit",
+    "chapter": 206,
+    "sequence": 11800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38ca6d821b95d9c7"
+  },
+  "findings": []
+}

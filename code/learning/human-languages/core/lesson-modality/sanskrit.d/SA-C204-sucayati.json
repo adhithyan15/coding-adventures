@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C204-sucayati",
+    "language": "sanskrit",
+    "chapter": 204,
+    "sequence": 11680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:028ee3fe18d98dba"
+  },
+  "findings": []
+}

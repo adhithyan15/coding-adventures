@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-231-TRV231",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a map, a place, a stay, a guest house and a stay abroad.",
+  "prerequisites": []
+}

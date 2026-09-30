@@ -1,0 +1,11 @@
+{
+  "id": "SA-C222-patrika",
+  "pathSegment": "SA-PATH-222-THG222",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-222-THG222",
+      "order": 4
+    }
+  ]
+}

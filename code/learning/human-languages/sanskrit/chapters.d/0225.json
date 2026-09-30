@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Valley, Desert, Woodland, Bower, Meadow",
+  "label": "ch:sa-valley-desert-woodland-bower-meadow",
+  "canDo": "I can say a valley, a desert, a woodland, a bower and a meadow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C225-sadvalam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say a valley, a desert, a woodland, a bower and a meadow.",
+    "assesses": [
+      "SA-LEX-C225-THG225-03",
+      "SA-LEX-C225-THG225-04",
+      "SA-LEX-C225-THG225-05"
+    ]
+  }
+}

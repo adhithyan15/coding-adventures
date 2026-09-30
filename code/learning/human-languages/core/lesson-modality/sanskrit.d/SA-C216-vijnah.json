@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C216-vijnah",
+    "language": "sanskrit",
+    "chapter": 216,
+    "sequence": 12500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0208e339636dd74"
+  },
+  "findings": []
+}

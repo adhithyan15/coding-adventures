@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Map, Place, Stay, Guest house, Stay abroad",
+  "label": "ch:sa-map-place-stay-guest-house-stay-abroad",
+  "canDo": "I can say a map, a place, a stay, a guest house and a stay abroad.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R231-second-pass-words-from-chapters-229-231",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can say a map, a place, a stay, a guest house and a stay abroad.",
+    "assesses": [
+      "SA-LEX-C231-TRV231-03",
+      "SA-LEX-C231-TRV231-04",
+      "SA-LEX-C231-TRV231-05"
+    ]
+  }
+}

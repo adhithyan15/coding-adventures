@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:d47a335f71ad559e",
+  "lessonIds": [
+    "SA-C214-eva",
+    "SA-C214-khalu",
+    "SA-C214-iva",
+    "SA-C214-vina",
+    "SA-C214-prati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch214.txt",
+  "json": "sanskrit/narration/ch214.json",
+  "textHash": "fnv1a64:089b8f3e92e479b1",
+  "jsonHash": "fnv1a64:55ee0e011fadccf8",
+  "findings": []
+}

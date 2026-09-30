@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C225-kananam",
+    "language": "sanskrit",
+    "chapter": 225,
+    "sequence": 13130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1617003d49ad4146"
+  },
+  "findings": []
+}

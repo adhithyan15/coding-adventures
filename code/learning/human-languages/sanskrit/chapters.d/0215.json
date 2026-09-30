@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Moving, Slow, Sharp, Blunt, Valuable",
+  "label": "ch:sa-moving-slow-sharp-blunt-valuable",
+  "canDo": "I can say moving, slow, sharp, blunt and valuable.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C215-mulyavan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say moving, slow, sharp, blunt and valuable.",
+    "assesses": [
+      "SA-LEX-C215-QUAL215-03",
+      "SA-LEX-C215-QUAL215-04",
+      "SA-LEX-C215-QUAL215-05"
+    ]
+  }
+}

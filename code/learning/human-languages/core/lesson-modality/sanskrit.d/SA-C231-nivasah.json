@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C231-nivasah",
+    "language": "sanskrit",
+    "chapter": 231,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd5c5dea78706155"
+  },
+  "findings": []
+}

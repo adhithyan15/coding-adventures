@@ -115,7 +115,9 @@ it("pins Sanskrit lesson-content budgets", () =>
     // most nine chapters. None declares an idiom, a sense or a culture claim.
     // 944 -> 1102: the second tranche, chapters 173-202: 150 word lessons and
     // two reviews per run, again with no idiom, sense or culture claim.
-    lessons: 1102,
+    // 1102 -> 1255: the third tranche, chapters 203-231: 145 word lessons and
+    // two reviews per run.
+    lessons: 1255,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R211-second-pass-words-from-chapters-207-211",
+    "language": "sanskrit",
+    "chapter": 211,
+    "sequence": 12090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:309a77c813029ae6"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:f180b6a96e463104",
+  "lessonIds": [
+    "SA-C203-modate",
+    "SA-C203-vandate",
+    "SA-C203-yacate",
+    "SA-C203-bhasate",
+    "SA-C203-sobhate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch203.txt",
+  "json": "sanskrit/narration/ch203.json",
+  "textHash": "fnv1a64:38650be8136c874a",
+  "jsonHash": "fnv1a64:be3b3835d9057d69",
+  "findings": []
+}

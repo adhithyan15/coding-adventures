@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:fba3daef28b60861",
+  "lessonIds": [
+    "SA-C209-kavih",
+    "SA-C209-gayakah",
+    "SA-C209-nartakah",
+    "SA-C209-citrakarah",
+    "SA-C209-silpi"
+  ],
+  "tex": "sanskrit/book/chapters/ch209-poet-singer-dancer-painter-craftsman.tex"
+}

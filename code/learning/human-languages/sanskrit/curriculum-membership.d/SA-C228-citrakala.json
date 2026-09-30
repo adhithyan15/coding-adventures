@@ -1,0 +1,11 @@
+{
+  "id": "SA-C228-citrakala",
+  "pathSegment": "SA-PATH-228-SCH228",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-228-SCH228",
+      "order": 4
+    }
+  ]
+}

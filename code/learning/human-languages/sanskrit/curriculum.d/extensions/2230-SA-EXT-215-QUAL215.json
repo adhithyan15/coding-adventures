@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-215-QUAL215",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say moving, slow, sharp, blunt and valuable.",
+  "prerequisites": []
+}

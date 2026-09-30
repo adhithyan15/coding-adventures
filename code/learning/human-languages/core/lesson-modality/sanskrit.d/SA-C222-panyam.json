@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C222-panyam",
+    "language": "sanskrit",
+    "chapter": 222,
+    "sequence": 12980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a29f7232693ecd0b"
+  },
+  "findings": []
+}

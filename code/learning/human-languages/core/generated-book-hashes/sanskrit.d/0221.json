@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:533561de577f6fcd",
+  "lessonIds": [
+    "SA-C221-karpasah",
+    "SA-C221-kauseyam",
+    "SA-C221-carma",
+    "SA-C221-granthih",
+    "SA-C221-pithika"
+  ],
+  "tex": "sanskrit/book/chapters/ch221-cotton-silk-leather-knot-small-stool.tex"
+}
