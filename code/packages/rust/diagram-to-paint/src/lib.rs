@@ -661,6 +661,16 @@ fn with_opacity(color: &str, opacity: f64) -> String {
     color.to_string()
 }
 
+fn event_model_kind_name(kind: &EventModelEntityKind) -> &'static str {
+    match kind {
+        EventModelEntityKind::Ui => "ui",
+        EventModelEntityKind::Processor => "processor",
+        EventModelEntityKind::Command => "command",
+        EventModelEntityKind::ReadModel => "readmodel",
+        EventModelEntityKind::Event => "event",
+    }
+}
+
 /// Lower a layouted Event Modeling diagram into backend-neutral paint instructions.
 pub fn diagram_to_paint_event_model<S, M, R>(
     diagram: &LayoutedEventModelDiagram,
@@ -801,6 +811,25 @@ where
         metadata.insert(format!("eventModel.note.{index}.data"), note.data.clone());
         if let Some(data_type) = &note.data_type {
             metadata.insert(format!("eventModel.note.{index}.type"), data_type.clone());
+        }
+    }
+    for (index, gwt) in diagram.gwt.iter().enumerate() {
+        metadata.insert(format!("eventModel.gwt.{index}.frame"), gwt.source_frame.clone());
+        for (section, statements) in [
+            ("given", &gwt.given),
+            ("when", &gwt.when),
+            ("then", &gwt.then),
+        ] {
+            for (statement_index, statement) in statements.iter().enumerate() {
+                metadata.insert(
+                    format!("eventModel.gwt.{index}.{section}.{statement_index}.kind"),
+                    event_model_kind_name(&statement.kind).into(),
+                );
+                metadata.insert(
+                    format!("eventModel.gwt.{index}.{section}.{statement_index}.entity"),
+                    statement.entity_id.clone(),
+                );
+            }
         }
     }
     let bg = &options.background;

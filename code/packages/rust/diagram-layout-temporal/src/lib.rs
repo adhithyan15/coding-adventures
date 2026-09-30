@@ -1316,6 +1316,7 @@ pub fn layout_event_model_diagram(
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         notes: diagram.notes.clone(),
+        gwt: diagram.gwt.clone(),
         items,
     }
 }
@@ -2418,6 +2419,18 @@ mod tests {
                 data_type: Some("md".into()),
                 data: "Order reviewed".into(),
             }],
+            gwt: vec![EventModelGwt {
+                source_frame: "02".into(),
+                given: vec![EventModelGwtStatement {
+                    kind: EventModelEntityKind::Event,
+                    entity_id: "CartCreated".into(),
+                }],
+                when: Vec::new(),
+                then: vec![EventModelGwtStatement {
+                    kind: EventModelEntityKind::Command,
+                    entity_id: "SubmitOrder".into(),
+                }],
+            }],
             frames: vec![
                 EventModelFrame {
                     id: "01".into(),
@@ -2463,5 +2476,6 @@ mod tests {
                     && data == "json: \"total\": 42"
         )));
         assert_eq!(layout.notes, diagram.notes);
+        assert_eq!(layout.gwt, diagram.gwt);
     }
 }

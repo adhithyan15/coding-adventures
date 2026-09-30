@@ -572,7 +572,7 @@ use diagram_ir::{
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    EventModelDataBlock, EventModelDiagram, EventModelEntityKind, EventModelFrame, EventModelNote, GitDiagram, GitEvent, JourneyConfig,
+    EventModelDataBlock, EventModelDiagram, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RadarConfig, RadarGraticule, RelKind,
     RequirementElementMetadata, RequirementKind,
@@ -3987,6 +3987,17 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
 
 // ── eventmodeling parser ──────────────────────────────────────────────────
 
+fn event_model_entity_kind(value: &str) -> EventModelEntityKind {
+    match value {
+        "ui" => EventModelEntityKind::Ui,
+        "pcr" | "processor" => EventModelEntityKind::Processor,
+        "cmd" | "command" => EventModelEntityKind::Command,
+        "rmo" | "readmodel" => EventModelEntityKind::ReadModel,
+        "evt" | "event" => EventModelEntityKind::Event,
+        _ => unreachable!("grammar restricts event-model entity kinds"),
+    }
+}
+
 /// Parse the Mermaid 11.16.1 event-modeling frame subset into dedicated IR.
 pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
@@ -4012,6 +4023,7 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
         accessibility_description: None,
         data_blocks: Vec::new(),
         notes: Vec::new(),
+        gwt: Vec::new(),
         frames: Vec::new(),
     };
     let mut data_blocks = HashMap::<String, EventModelDataBlock>::new();
@@ -4083,14 +4095,7 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                 if !frame_ids.insert(id.clone()) {
                     return Err(token_error(token, format!("duplicate event-model frame {id:?}")));
                 }
-                let kind = match fields[2] {
-                    "ui" => EventModelEntityKind::Ui,
-                    "pcr" | "processor" => EventModelEntityKind::Processor,
-                    "cmd" | "command" => EventModelEntityKind::Command,
-                    "rmo" | "readmodel" => EventModelEntityKind::ReadModel,
-                    "evt" | "event" => EventModelEntityKind::Event,
-                    _ => unreachable!("grammar restricts event-model entity kinds"),
-                };
+                let kind = event_model_entity_kind(fields[2]);
                 let entity = fields[3];
                 let namespace = entity.rsplit_once('.').map(|(prefix, _)| prefix.to_string());
                 let mut source_frames = fields[4..]
@@ -4138,6 +4143,36 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                     data: token.value[open + 1..close].trim().to_string(),
                 });
             }
+            "GWT_BLOCK" => {
+                let fields = token.value.split_whitespace().collect::<Vec<_>>();
+                let mut gwt = EventModelGwt {
+                    source_frame: fields[1].to_string(),
+                    given: Vec::new(),
+                    when: Vec::new(),
+                    then: Vec::new(),
+                };
+                let mut section = "given";
+                let mut index = 3;
+                while index < fields.len() {
+                    if matches!(fields[index], "when" | "then") {
+                        section = fields[index];
+                        index += 1;
+                        continue;
+                    }
+                    let statement = EventModelGwtStatement {
+                        kind: event_model_entity_kind(fields[index]),
+                        entity_id: fields[index + 1].to_string(),
+                    };
+                    match section {
+                        "given" => gwt.given.push(statement),
+                        "when" => gwt.when.push(statement),
+                        "then" => gwt.then.push(statement),
+                        _ => unreachable!("grammar restricts GWT sections"),
+                    }
+                    index += 2;
+                }
+                diagram.gwt.push(gwt);
+            }
             _ => {}
         }
     }
@@ -4157,6 +4192,15 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
         if !frame_ids.contains(&note.source_frame) {
             return Err(ParseError {
                 message: format!("unknown source frame {:?} for event-model note", note.source_frame),
+                line: 1,
+                col: 1,
+            });
+        }
+    }
+    for gwt in &diagram.gwt {
+        if !frame_ids.contains(&gwt.source_frame) {
+            return Err(ParseError {
+                message: format!("unknown source frame {:?} for event-model GWT", gwt.source_frame),
                 line: 1,
                 col: 1,
             });

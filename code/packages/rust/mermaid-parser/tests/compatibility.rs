@@ -210,6 +210,14 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.notes[0].source_frame, "01");
             assert_eq!(diagram.notes[0].data_type.as_deref(), Some("md"));
             assert!(diagram.notes[0].data.contains("Shows pending items"));
+        } else if id == "given-when-then" {
+            assert_eq!(diagram.gwt.len(), 2);
+            assert_eq!(diagram.gwt[0].source_frame, "02");
+            assert_eq!(diagram.gwt[0].given.len(), 2);
+            assert_eq!(diagram.gwt[0].when.len(), 2);
+            assert_eq!(diagram.gwt[0].then[0].entity_id, "ItemAdded");
+            assert_eq!(diagram.gwt[1].source_frame, "03");
+            assert!(diagram.gwt[1].when.is_empty());
         }
     }
     assert!(parse_event_modeling(
@@ -220,6 +228,9 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
     ).is_err());
     assert!(parse_event_modeling(
         "eventmodeling\ntf 01 cmd AddItem\nnote 02 { Missing frame }"
+    ).is_err());
+    assert!(parse_event_modeling(
+        "eventmodeling\ntf 01 cmd AddItem\ngwt 02 given evt Started then evt Finished"
     ).is_err());
 }
 

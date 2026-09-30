@@ -497,11 +497,12 @@ single-quoted, or double-quoted form plus
 reusable multiline data blocks survive in semantic IR and render as secondary
 frame labels. Typed and untyped frame notes remain semantic annotations and
 lower into backend-neutral PaintScene metadata without changing Mermaid's
-visible frame rendering. Temporal swimlane layout lowers through
-backend-neutral PaintScene instructions and a native Metal-to-PNG fixture.
-Given/When/Then annotations, standalone entity
-declarations, configuration, and interactive behavior remain unsupported at
-the partial level.
+visible frame rendering. Given/When/Then scenarios preserve their source frame
+and typed entity references through semantic IR and backend-neutral PaintScene
+metadata, likewise matching Mermaid's current non-visual treatment. Temporal
+swimlane layout lowers through backend-neutral PaintScene instructions and a
+native Metal-to-PNG fixture. Standalone entity declarations, configuration,
+and interactive behavior remain unsupported at the partial level.
 
 ### Treemap Native Slice
 
