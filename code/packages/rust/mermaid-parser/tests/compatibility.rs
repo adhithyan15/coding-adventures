@@ -200,6 +200,11 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.frames[1].data_type.as_deref(), Some("json"));
             assert!(diagram.frames[1].data.as_deref().is_some_and(|data| data.contains("quantity")));
             assert_eq!(diagram.frames[2].data_reference.as_deref(), Some("ItemAddedData"));
+        } else if id == "quoted-inline-data" {
+            assert_eq!(diagram.frames[0].data.as_deref(), Some("shopping cart"));
+            assert_eq!(diagram.frames[1].data_type.as_deref(), Some("json"));
+            assert_eq!(diagram.frames[1].data.as_deref(), Some("{ \"quantity\": 2 }"));
+            assert_eq!(diagram.frames[2].data.as_deref(), Some("accepted"));
         }
     }
     assert!(parse_event_modeling(
