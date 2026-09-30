@@ -7593,6 +7593,7 @@ public sealed partial class MainWindow : Window
 {{
     private static readonly string[] RequiredProps = {required_props};
     private bool dispatchWired;
+    private bool environmentWired;
 
     public MainWindow()
     {{
@@ -7622,6 +7623,7 @@ public sealed partial class MainWindow : Window
                 this.dispatchWired = true;
             }}
             ShowRuntimeContent();
+            ObserveEnvironment();
         }}
         catch (System.Exception error)
         {{
@@ -7663,6 +7665,37 @@ public sealed partial class MainWindow : Window
         var result = await MosaicRuntimeHost.HandleRequiredEvent(
             this.Component, mosaicEvent, RequiredProps);
         this.StatusText.Text = result.Status;
+    }}
+
+    // UI48 ENV4: tell the runtime the window's size class, orientation and
+    // colour scheme once it has started, then whenever the window's size or
+    // theme changes. The host sends only a report that differs from the last
+    // one the runtime took, so dragging an edge sends nothing until a
+    // threshold is crossed. Wired once; a retried start reports afresh.
+    private void ObserveEnvironment()
+    {{
+        if (this.Content is not FrameworkElement root) return;
+        if (!this.environmentWired)
+        {{
+            root.SizeChanged += (_, _) => ReportEnvironment();
+            root.ActualThemeChanged += (_, _) => ReportEnvironment();
+            this.environmentWired = true;
+        }}
+        ReportEnvironment();
+    }}
+
+    private void ReportEnvironment()
+    {{
+        // Not laid out yet: SizeChanged reports once it is.
+        if (this.Content is not FrameworkElement root || root.ActualWidth <= 0) return;
+        var report = MosaicRuntimeHost.EnvironmentReport(
+            root.ActualWidth, root.ActualHeight, root.ActualTheme == ElementTheme.Dark);
+        // Only a refusal is worth the status line; an accepted report is not
+        // something the user did.
+        if (MosaicRuntimeHost.ReportEnvironment(this.Component, report, RequiredProps) is {{ }} refusal)
+        {{
+            this.StatusText.Text = refusal;
+        }}
     }}
 }}
 "#
@@ -18709,6 +18742,75 @@ mod tests {
         assert!(source.contains("await MosaicRuntimeHost.HandleRequiredEvent("));
         assert!(!source.contains("TryApplyMosaicHostProps"));
         assert!(!source.contains("Sample Title"));
+    }
+
+    #[test]
+    fn native_complete_window_reports_its_environment_to_the_runtime() {
+        // UI48 ENV4: the strict UserControl shell observes the window's size
+        // and theme once the runtime has started and hands each change to the
+        // host, which dedupes, sends and applies.
+        let c = component(
+            "Foo",
+            vec![slot("greeting", SlotType::Text, true)],
+            vec![emit("onToggle", vec![])],
+        );
+        let l = layout_with_root("Foo", box_root());
+        let s = empty_style("Foo");
+        let mut o = opts();
+        o.emit_project = true;
+        o.require_runtime = true;
+        let r = from_pipeline(&c, &l, &s, None, &o).unwrap();
+        let source = &r.project.as_ref().expect("project populated").main_window_cs;
+
+        // After the runtime is up and showing, never before.
+        let show = source.find("            ShowRuntimeContent();\n").unwrap();
+        let observe = source.find("            ObserveEnvironment();\n").unwrap();
+        assert!(show < observe, "{source}");
+        assert!(source.find("MosaicRuntimeHost.LoadRequired()").unwrap() < observe);
+        // Wired once, so a retried start does not stack handlers.
+        assert!(source.contains("private bool environmentWired;"), "{source}");
+        assert_eq!(source.matches("root.SizeChanged += ").count(), 1, "{source}");
+        assert_eq!(source.matches("root.ActualThemeChanged += ").count(), 1, "{source}");
+        // Effective pixels and the rendered theme, through the host's reducer.
+        assert!(source.contains(
+            "MosaicRuntimeHost.EnvironmentReport(\n            root.ActualWidth, root.ActualHeight, root.ActualTheme == ElementTheme.Dark)"
+        ));
+        assert!(source.contains("root.ActualWidth <= 0) return;"));
+        // Strict, and only a refusal reaches the status line.
+        assert!(source.contains(
+            "MosaicRuntimeHost.ReportEnvironment(this.Component, report, RequiredProps) is { } refusal"
+        ));
+        assert!(source.contains("this.StatusText.Text = refusal;"));
+    }
+
+    #[test]
+    fn only_the_native_complete_window_observes_the_environment() {
+        // A sample shell has no runtime to tell, and a dialog-root window
+        // shows only the button that opens the dialog.
+        let c = component(
+            "Foo",
+            vec![slot("title", SlotType::Text, true)],
+            vec![emit("onClose", vec![])],
+        );
+        let s = empty_style("Foo");
+        let mut sample = opts();
+        sample.emit_project = true;
+        let r = from_pipeline(&c, &layout_with_root("Foo", box_root()), &s, None, &sample).unwrap();
+        let source = &r.project.as_ref().unwrap().main_window_cs;
+        assert!(!source.contains("ReportEnvironment"), "{source}");
+
+        let dialog_root = LayoutNode {
+            tag: "HostDialog".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: Vec::new(),
+        };
+        let mut strict = opts();
+        strict.emit_project = true;
+        strict.require_runtime = true;
+        let r = from_pipeline(&c, &layout_with_root("Foo", dialog_root), &s, None, &strict).unwrap();
+        let source = &r.project.as_ref().unwrap().main_window_cs;
+        assert!(!source.contains("ReportEnvironment"), "{source}");
     }
 
     #[test]

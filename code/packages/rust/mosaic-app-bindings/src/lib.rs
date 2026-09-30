@@ -391,6 +391,39 @@ mod tests {
         assert!(host.contains("mapOf(\"pointer\" to \"coarse\", \"hover\" to \"none\", \"reducedMotion\" to \"no-preference\")"));
     }
 
+    /// UI48 ENV4 on XAML (§7.7): the same contract as Compose's, plus the
+    /// reducer the WinUI shell calls, and no re-apply for an ignored report.
+    #[test]
+    fn xaml_host_reports_the_environment() {
+        let host = xaml_runtime_binding_for_application("Acme.App", "probe");
+        assert!(host.contains("public static string? ReportEnvironment("));
+        assert!(host.contains("Dispatch(\"environmentChanged\", report);"));
+        // Dropped when equal to the last one taken, remembered only after the
+        // dispatch (which throws on a refusal) and the apply.
+        let dropped = host.find("&& !last.Except(report).Any())").expect("dedupe");
+        let sent = host.find("Dispatch(\"environmentChanged\", report);").unwrap();
+        let applied = host
+            .find("ApplyProps(component, requiredProps, strict: requiredProps.Count > 0);")
+            .expect("apply");
+        let remembered = host.find("lastReportedEnvironment = report;").expect("remember");
+        assert!(dropped < sent && sent < applied && applied < remembered);
+        // Re-applied only when the revision moved.
+        assert!(host.contains("if (Revision(latestUpdate) != shownRevision)"));
+        // Props kept only at the revision already showing, on every dispatch.
+        assert!(host.contains("|| revision != shownRevision)"));
+        assert!(host.contains("latestUpdate = KeepShowingProps(SettleEffects(update));"));
+        // The thresholds every host uses, and the desktop's pointer.
+        assert!(host.contains(
+            "[\"sizeClass\"] = width < 600 ? \"compact\" : width < 1024 ? \"regular\" : \"expanded\","
+        ));
+        assert!(host.contains("[\"orientation\"] = height > width ? \"portrait\" : \"landscape\","));
+        assert!(host.contains("[\"pointer\"] = \"fine\","));
+        assert!(host.contains("[\"hover\"] = \"hover\","));
+        assert!(host.contains("[\"reducedMotion\"] = \"no-preference\","));
+        // The start context carries them too.
+        assert!(host.contains("foreach (var (axis, value) in InitialEnvironment()) start[axis] = value;"));
+    }
+
     /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
     /// same kinds, limits and MIME table, so an app sees the same outcome on
     /// either host. A drift in one template fails here, not on a Mac.

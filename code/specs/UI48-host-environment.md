@@ -648,6 +648,58 @@ that a changed one is sent. Emitter tests pin the observer in both
 `main.cpp` shapes. As on the other hosts, the resize-and-assert gate lands
 with ENV-last.
 
+### 7.7 ENV4 on XAML, as built
+
+The §7.3 contract on the WinUI shell. XAML has no layout variants yet, so
+this is the report alone.
+
+- **The host owns the values.** `MosaicRuntimeHost.EnvironmentReport(width,
+  height, dark)` reduces a window to the six §4 values from effective pixels
+  (WinUI's `ActualWidth`/`ActualHeight`) -- `sizeClass` at 600 and 1024,
+  `orientation` from height against width (a square is landscape),
+  `colorScheme` light or dark -- plus `MosaicRuntimeHost.InitialEnvironment()`:
+  `fine`/`hover`, and `reducedMotion` `no-preference` (WinUI's animation
+  setting is not read yet). The initial values also go into the start
+  context.
+- **The shell observes.** The native-complete `MainWindow` with a component
+  root calls `ObserveEnvironment()` once the runtime has started and is
+  showing: it reports once, then on the window content's `SizeChanged` and
+  `ActualThemeChanged` (the rendered theme). The handlers are wired once, so
+  a retried start reports afresh without stacking them; nothing is reported
+  before the first layout. A sample shell has no runtime to tell, and a
+  dialog-root window shows only the button that opens its dialog, so neither
+  observes.
+- **Deduplicated in the host, per runtime.** `ReportEnvironment` sends nothing
+  without a runtime or when the report equals the last one the runtime took,
+  and remembers a report only once taken and applied, so a refusal is sent
+  again with the next report. A new runtime (after a retry) starts with
+  nothing remembered.
+- **"No reaction" keeps the current props, and re-applies nothing.** Every
+  dispatch keeps the props showing when its update carries `props: null` at
+  the revision showing (as the Swift, Kotlin and Qt hosts do). A report whose
+  answer did not move the revision is not applied to the component at all:
+  XAML's apply rebuilds list view models, which would reset scrolling on every
+  resize. An answer that moves the revision is applied strictly, with the
+  shell's required props, as an event's is.
+- **Only a refusal reaches the status line.** `ReportEnvironment` answers a
+  status only when the runtime refused (an invalid environment, or strict
+  props missing); a resize is not something the user did, so an accepted
+  report leaves the status describing their last action.
+- **No settling guard.** Unlike Qt's modal dialogs, WinUI's pickers are
+  asynchronous: no nested event loop runs inside a settle, so a resize cannot
+  dispatch in the middle of one.
+
+**Acceptance.** The XAML conformance harness, run in CI's Windows lane against
+the conformance runtime (which ignores the event), checks the six values and
+thresholds, that an ignored report re-applies nothing and keeps the props for
+the next strict apply, that an invalid report is refused, keeps the props and
+is not remembered, and -- through the state file every dispatch rewrites --
+that an unchanged report is not sent and a changed one is. Rust tests pin the
+host template and the shell (the observer after start, wired once, strict,
+only refusals shown; none in a sample or dialog shell). The TaskApp WinUI
+build compiles the observer. As on the other hosts, the resize-and-assert
+gate lands with ENV-last.
+
 ## 8. Open questions
 
 1. **Should `size-class` thresholds be authorable per component?** A dense
