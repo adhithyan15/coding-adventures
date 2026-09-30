@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "To prove, To depend, To divide, To avoid, To trust",
+  "label": "ch:it-to-prove-to-depend-to-divide-to-avoid-to-trust",
+  "canDo": "I can say to prove, to depend, to divide, to avoid and to trust.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C179-fidarsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say to prove, to depend, to divide, to avoid and to trust.",
+    "assesses": [
+      "IT-LEX-C179-VERBI179-03",
+      "IT-LEX-C179-VERBI179-04",
+      "IT-LEX-C179-VERBI179-05"
+    ]
+  }
+}

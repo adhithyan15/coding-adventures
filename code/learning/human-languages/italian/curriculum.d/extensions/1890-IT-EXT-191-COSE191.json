@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-191-COSE191",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a ceiling, a lock, a doorbell, a sheet and a drawer.",
+  "prerequisites": []
+}

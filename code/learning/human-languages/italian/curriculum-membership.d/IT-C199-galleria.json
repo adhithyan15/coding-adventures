@@ -1,0 +1,11 @@
+{
+  "id": "IT-C199-galleria",
+  "pathSegment": "IT-PATH-199-COSE199",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-199-COSE199",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C183-legare",
+    "language": "italian",
+    "chapter": 183,
+    "sequence": 10210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05916e3a52a48bb1"
+  },
+  "findings": []
+}

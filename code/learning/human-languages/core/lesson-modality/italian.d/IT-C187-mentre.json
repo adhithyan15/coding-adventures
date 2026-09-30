@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C187-mentre",
+    "language": "italian",
+    "chapter": 187,
+    "sequence": 10400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a395cd0d01ae1e1b"
+  },
+  "findings": []
+}

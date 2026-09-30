@@ -1,0 +1,11 @@
+{
+  "id": "IT-C187-mentre",
+  "pathSegment": "IT-PATH-187-TEMPO187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-187-TEMPO187",
+      "order": 3
+    }
+  ]
+}

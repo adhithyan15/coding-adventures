@@ -1,0 +1,11 @@
+{
+  "id": "IT-C191-cassetto",
+  "pathSegment": "IT-PATH-191-COSE191",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-191-COSE191",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C193-economia",
+  "pathSegment": "IT-PATH-193-COSE193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-193-COSE193",
+      "order": 1
+    }
+  ]
+}

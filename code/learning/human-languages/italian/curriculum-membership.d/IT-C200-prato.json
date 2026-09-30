@@ -1,0 +1,11 @@
+{
+  "id": "IT-C200-prato",
+  "pathSegment": "IT-PATH-200-COSE200",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-200-COSE200",
+      "order": 3
+    }
+  ]
+}

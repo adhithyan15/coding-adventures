@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:7173ef33f049b440",
+  "lessonIds": [
+    "IT-C188-anzi",
+    "IT-C188-infatti",
+    "IT-C188-cioe",
+    "IT-C188-sebbene",
+    "IT-C188-nonostante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch188.txt",
+  "json": "italian/narration/ch188.json",
+  "textHash": "fnv1a64:1b29bc03f6859cea",
+  "jsonHash": "fnv1a64:02782c3cfb80024e",
+  "findings": []
+}

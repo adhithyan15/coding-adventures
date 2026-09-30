@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:ae7594cac2cfab59",
+  "lessonIds": [
+    "IT-C197-consiglio",
+    "IT-C197-promessa",
+    "IT-C197-sconto",
+    "IT-C197-saldi",
+    "IT-C197-fila",
+    "IT-R197-first-pass-words-from-chapters-192-194",
+    "IT-R197-second-pass-words-from-chapters-195-197"
+  ],
+  "tex": "italian/book/chapters/ch197-advice-promise-discount-sales-queue.tex"
+}

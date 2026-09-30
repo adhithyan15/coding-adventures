@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:b77b3408c560c34b",
+  "lessonIds": [
+    "IT-C200-ramo",
+    "IT-C200-tronco",
+    "IT-C200-spina",
+    "IT-C200-prato",
+    "IT-C200-sentiero"
+  ],
+  "tex": "italian/book/chapters/ch200-branch-trunk-thorn-lawn-path.tex"
+}

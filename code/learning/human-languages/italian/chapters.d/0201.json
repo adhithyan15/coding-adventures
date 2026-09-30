@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Electricity, Timber, Iron, Gold, Silver",
+  "label": "ch:it-electricity-timber-iron-gold-silver",
+  "canDo": "I can say electricity, timber, iron, gold and silver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C201-argento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say electricity, timber, iron, gold and silver.",
+    "assesses": [
+      "IT-LEX-C201-COSE201-03",
+      "IT-LEX-C201-COSE201-04",
+      "IT-LEX-C201-COSE201-05"
+    ]
+  }
+}

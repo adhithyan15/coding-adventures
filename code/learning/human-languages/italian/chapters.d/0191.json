@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Ceiling, Lock, Doorbell, Sheet, Drawer",
+  "label": "ch:it-ceiling-lock-doorbell-sheet-drawer",
+  "canDo": "I can say a ceiling, a lock, a doorbell, a sheet and a drawer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R191-second-pass-words-from-chapters-187-191",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say a ceiling, a lock, a doorbell, a sheet and a drawer.",
+    "assesses": [
+      "IT-LEX-C191-COSE191-03",
+      "IT-LEX-C191-COSE191-04",
+      "IT-LEX-C191-COSE191-05"
+    ]
+  }
+}

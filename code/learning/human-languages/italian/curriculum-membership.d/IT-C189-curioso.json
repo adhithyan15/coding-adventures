@@ -1,0 +1,11 @@
+{
+  "id": "IT-C189-curioso",
+  "pathSegment": "IT-PATH-189-QUAL189",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-189-QUAL189",
+      "order": 4
+    }
+  ]
+}

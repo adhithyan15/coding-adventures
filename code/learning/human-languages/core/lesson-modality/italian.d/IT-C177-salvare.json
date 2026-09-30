@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C177-salvare",
+    "language": "italian",
+    "chapter": 177,
+    "sequence": 9720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:286c71ba3396a4eb"
+  },
+  "findings": []
+}

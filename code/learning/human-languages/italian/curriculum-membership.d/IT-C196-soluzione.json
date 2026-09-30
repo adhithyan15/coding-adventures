@@ -1,0 +1,11 @@
+{
+  "id": "IT-C196-soluzione",
+  "pathSegment": "IT-PATH-196-COSE196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-196-COSE196",
+      "order": 3
+    }
+  ]
+}

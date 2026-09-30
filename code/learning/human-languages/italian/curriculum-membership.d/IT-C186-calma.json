@@ -1,0 +1,11 @@
+{
+  "id": "IT-C186-calma",
+  "pathSegment": "IT-PATH-186-SAL186",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-186-SAL186",
+      "order": 1
+    }
+  ]
+}

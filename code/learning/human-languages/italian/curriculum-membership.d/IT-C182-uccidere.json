@@ -1,0 +1,11 @@
+{
+  "id": "IT-C182-uccidere",
+  "pathSegment": "IT-PATH-182-VERBI182",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-182-VERBI182",
+      "order": 0
+    }
+  ]
+}

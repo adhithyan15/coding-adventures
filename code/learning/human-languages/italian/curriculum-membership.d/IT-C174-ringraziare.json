@@ -1,0 +1,11 @@
+{
+  "id": "IT-C174-ringraziare",
+  "pathSegment": "IT-PATH-174-VERBI174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-174-VERBI174",
+      "order": 3
+    }
+  ]
+}

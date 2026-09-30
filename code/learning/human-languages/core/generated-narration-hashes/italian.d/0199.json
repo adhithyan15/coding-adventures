@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:a1405ceab61c930c",
+  "lessonIds": [
+    "IT-C199-casco",
+    "IT-C199-galleria",
+    "IT-C199-rotonda",
+    "IT-C199-cantiere",
+    "IT-C199-palazzo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch199.txt",
+  "json": "italian/narration/ch199.json",
+  "textHash": "fnv1a64:63563d832495d6fd",
+  "jsonHash": "fnv1a64:0532ae001e316863",
+  "findings": []
+}

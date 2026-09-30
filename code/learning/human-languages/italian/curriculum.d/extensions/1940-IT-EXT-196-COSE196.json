@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-196-COSE196",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say experience, a thought, a memory, a solution and a choice.",
+  "prerequisites": []
+}

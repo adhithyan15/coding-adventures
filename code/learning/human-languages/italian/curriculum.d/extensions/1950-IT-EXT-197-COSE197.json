@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-197-COSE197",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say advice, a promise, a discount, the sales and a queue.",
+  "prerequisites": []
+}

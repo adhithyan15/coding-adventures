@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:5a87373365584b6b",
+  "lessonIds": [
+    "IT-C191-soffitto",
+    "IT-C191-serratura",
+    "IT-C191-campanello",
+    "IT-C191-lenzuolo",
+    "IT-C191-cassetto",
+    "IT-R191-first-pass-words-from-chapters-183-186",
+    "IT-R191-second-pass-words-from-chapters-187-191"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch191.txt",
+  "json": "italian/narration/ch191.json",
+  "textHash": "fnv1a64:f182ccf6a7c0ce08",
+  "jsonHash": "fnv1a64:019790a96220e862",
+  "findings": []
+}

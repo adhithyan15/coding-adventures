@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:9dcb20ded672681f",
+  "lessonIds": [
+    "IT-C189-allegro",
+    "IT-C189-timido",
+    "IT-C189-coraggioso",
+    "IT-C189-pauroso",
+    "IT-C189-curioso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch189.txt",
+  "json": "italian/narration/ch189.json",
+  "textHash": "fnv1a64:501d71aafc02c1b1",
+  "jsonHash": "fnv1a64:228f5b6925249fd4",
+  "findings": []
+}

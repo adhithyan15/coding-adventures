@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:cb1fd0eb400f7c3e",
+  "lessonIds": [
+    "IT-C179-dimostrare",
+    "IT-C179-dipendere",
+    "IT-C179-dividere",
+    "IT-C179-evitare",
+    "IT-C179-fidarsi"
+  ],
+  "tex": "italian/book/chapters/ch179-to-prove-to-depend-to-divide-to-avoid-to-trust.tex"
+}

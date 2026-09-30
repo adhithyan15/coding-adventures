@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:c35638f30778ff53",
+  "lessonIds": [
+    "IT-C203-contratto",
+    "IT-C203-colloquio",
+    "IT-C203-carriera",
+    "IT-C203-stampante",
+    "IT-C203-indirizzo",
+    "IT-R203-first-pass-words-from-chapters-198-200",
+    "IT-R203-second-pass-words-from-chapters-201-203"
+  ],
+  "tex": "italian/book/chapters/ch203-contract-interview-career-printer-address.tex"
+}

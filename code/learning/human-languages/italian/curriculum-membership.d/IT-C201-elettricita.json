@@ -1,0 +1,11 @@
+{
+  "id": "IT-C201-elettricita",
+  "pathSegment": "IT-PATH-201-COSE201",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-201-COSE201",
+      "order": 0
+    }
+  ]
+}

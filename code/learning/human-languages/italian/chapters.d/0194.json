@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Singer, Performance, Actor, Actress, Novel",
+  "label": "ch:it-singer-performance-actor-actress-novel",
+  "canDo": "I can say a singer, a performance, an actor, an actress and a novel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C194-romanzo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a singer, a performance, an actor, an actress and a novel.",
+    "assesses": [
+      "IT-LEX-C194-COSE194-03",
+      "IT-LEX-C194-COSE194-04",
+      "IT-LEX-C194-COSE194-05"
+    ]
+  }
+}

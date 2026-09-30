@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Branch, Trunk, Thorn, Lawn, Path",
+  "label": "ch:it-branch-trunk-thorn-lawn-path",
+  "canDo": "I can say a branch, a trunk, a thorn, a lawn and a path.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C200-sentiero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say a branch, a trunk, a thorn, a lawn and a path.",
+    "assesses": [
+      "IT-LEX-C200-COSE200-03",
+      "IT-LEX-C200-COSE200-04",
+      "IT-LEX-C200-COSE200-05"
+    ]
+  }
+}

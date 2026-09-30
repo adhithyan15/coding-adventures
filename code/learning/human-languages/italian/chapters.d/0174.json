@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "To kiss, To hug, To greet, To thank, To invite",
+  "label": "ch:it-to-kiss-to-hug-to-greet-to-thank-to-invite",
+  "canDo": "I can say to kiss, to hug, to greet, to thank and to invite.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C174-invitare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say to kiss, to hug, to greet, to thank and to invite.",
+    "assesses": [
+      "IT-LEX-C174-VERBI174-03",
+      "IT-LEX-C174-VERBI174-04",
+      "IT-LEX-C174-VERBI174-05"
+    ]
+  }
+}

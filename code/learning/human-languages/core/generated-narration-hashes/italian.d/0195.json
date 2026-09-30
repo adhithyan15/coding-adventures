@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:7cf88ceae9560dc6",
+  "lessonIds": [
+    "IT-C195-pilota",
+    "IT-C195-commercialista",
+    "IT-C195-scienziato",
+    "IT-C195-ricercatore",
+    "IT-C195-turista"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch195.txt",
+  "json": "italian/narration/ch195.json",
+  "textHash": "fnv1a64:e5313c1f3d9633a9",
+  "jsonHash": "fnv1a64:1316289e051f54dd",
+  "findings": []
+}

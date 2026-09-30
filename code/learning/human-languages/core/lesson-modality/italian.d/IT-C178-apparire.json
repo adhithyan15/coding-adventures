@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C178-apparire",
+    "language": "italian",
+    "chapter": 178,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9da3a10f2ca32199"
+  },
+  "findings": []
+}

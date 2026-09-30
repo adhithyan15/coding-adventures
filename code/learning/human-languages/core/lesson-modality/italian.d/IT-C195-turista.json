@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C195-turista",
+    "language": "italian",
+    "chapter": 195,
+    "sequence": 11000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a42434f8d3946d1c"
+  },
+  "findings": []
+}

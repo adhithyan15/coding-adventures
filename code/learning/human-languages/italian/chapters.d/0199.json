@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Helmet, Tunnel, Roundabout, Building site, Building",
+  "label": "ch:it-helmet-tunnel-roundabout-building-site-building",
+  "canDo": "I can say a helmet, a tunnel, a roundabout, a building site and a building.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C199-palazzo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say a helmet, a tunnel, a roundabout, a building site and a building.",
+    "assesses": [
+      "IT-LEX-C199-COSE199-03",
+      "IT-LEX-C199-COSE199-04",
+      "IT-LEX-C199-COSE199-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-193-COSE193",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say politics, the economy, war, peace and an army.",
+  "prerequisites": []
+}

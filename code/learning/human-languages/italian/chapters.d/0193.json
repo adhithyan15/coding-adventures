@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Politics, Economy, War, Peace, Army",
+  "label": "ch:it-politics-economy-war-peace-army",
+  "canDo": "I can say politics, the economy, war, peace and an army.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C193-esercito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say politics, the economy, war, peace and an army.",
+    "assesses": [
+      "IT-LEX-C193-COSE193-03",
+      "IT-LEX-C193-COSE193-04",
+      "IT-LEX-C193-COSE193-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C194-romanzo",
+    "language": "italian",
+    "chapter": 194,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9fa5f0e24ef7d11"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C192-dogana",
+  "pathSegment": "IT-PATH-192-COSE192",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-192-COSE192",
+      "order": 3
+    }
+  ]
+}

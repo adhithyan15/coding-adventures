@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "To risk, To solve, To steal, To run away, To discover",
+  "label": "ch:it-to-risk-to-solve-to-steal-to-run-away-to-discover",
+  "canDo": "I can say to risk, to solve, to steal, to run away and to discover.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C181-scoprire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say to risk, to solve, to steal, to run away and to discover.",
+    "assesses": [
+      "IT-LEX-C181-VERBI181-03",
+      "IT-LEX-C181-VERBI181-04",
+      "IT-LEX-C181-VERBI181-05"
+    ]
+  }
+}

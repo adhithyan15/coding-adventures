@@ -1,0 +1,11 @@
+{
+  "id": "IT-R197-first-pass-words-from-chapters-192-194",
+  "pathSegment": "IT-PATH-197-COSE197",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-197-COSE197",
+      "order": 5
+    }
+  ]
+}

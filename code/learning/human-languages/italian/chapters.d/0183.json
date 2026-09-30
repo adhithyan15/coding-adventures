@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "To chase, To insist, To interrupt, To launch, To tie",
+  "label": "ch:it-to-chase-to-insist-to-interrupt-to-launch-to-tie",
+  "canDo": "I can say to chase, to insist, to interrupt, to launch and to tie.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C183-legare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can say to chase, to insist, to interrupt, to launch and to tie.",
+    "assesses": [
+      "IT-LEX-C183-VERBI183-03",
+      "IT-LEX-C183-VERBI183-04",
+      "IT-LEX-C183-VERBI183-05"
+    ]
+  }
+}

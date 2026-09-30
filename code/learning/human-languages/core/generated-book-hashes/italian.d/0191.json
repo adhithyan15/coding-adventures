@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:391fc7303978f12b",
+  "lessonIds": [
+    "IT-C191-soffitto",
+    "IT-C191-serratura",
+    "IT-C191-campanello",
+    "IT-C191-lenzuolo",
+    "IT-C191-cassetto",
+    "IT-R191-first-pass-words-from-chapters-183-186",
+    "IT-R191-second-pass-words-from-chapters-187-191"
+  ],
+  "tex": "italian/book/chapters/ch191-ceiling-lock-doorbell-sheet-drawer.tex"
+}

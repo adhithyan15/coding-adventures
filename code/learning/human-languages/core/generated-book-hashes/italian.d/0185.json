@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:a010219cae3d2a21",
+  "lessonIds": [
+    "IT-C185-muscolo",
+    "IT-C185-pollice",
+    "IT-C185-ferita",
+    "IT-C185-cicatrice",
+    "IT-C185-raffreddore"
+  ],
+  "tex": "italian/book/chapters/ch185-muscle-thumb-wound-scar-cold.tex"
+}

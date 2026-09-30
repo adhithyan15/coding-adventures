@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:37bef68766f6d6a0",
+  "lessonIds": [
+    "IT-C194-cantante",
+    "IT-C194-spettacolo",
+    "IT-C194-attore",
+    "IT-C194-attrice",
+    "IT-C194-romanzo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch194.txt",
+  "json": "italian/narration/ch194.json",
+  "textHash": "fnv1a64:0a9e27fc44963730",
+  "jsonHash": "fnv1a64:e4174e149794fd8f",
+  "findings": []
+}

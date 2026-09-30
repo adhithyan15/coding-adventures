@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C175-dimenticare",
+    "language": "italian",
+    "chapter": 175,
+    "sequence": 9590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb384dec31904c1e"
+  },
+  "findings": []
+}

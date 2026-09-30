@@ -1,0 +1,11 @@
+{
+  "id": "IT-C177-proteggere",
+  "pathSegment": "IT-PATH-177-VERBI177",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-177-VERBI177",
+      "order": 3
+    }
+  ]
+}

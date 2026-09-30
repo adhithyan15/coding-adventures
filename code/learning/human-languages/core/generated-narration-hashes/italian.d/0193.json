@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:826bf0fa08a69a19",
+  "lessonIds": [
+    "IT-C193-politica",
+    "IT-C193-economia",
+    "IT-C193-guerra",
+    "IT-C193-pace",
+    "IT-C193-esercito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch193.txt",
+  "json": "italian/narration/ch193.json",
+  "textHash": "fnv1a64:b0dae51b9377db50",
+  "jsonHash": "fnv1a64:bade04ae058d7428",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C202-palestra",
+  "pathSegment": "IT-PATH-202-COSE202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-202-COSE202",
+      "order": 1
+    }
+  ]
+}

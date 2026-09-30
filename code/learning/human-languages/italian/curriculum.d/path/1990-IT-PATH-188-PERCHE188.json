@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-188-PERCHE188",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "IT-EXT-188-PERCHE188"
+  ],
+  "after": []
+}

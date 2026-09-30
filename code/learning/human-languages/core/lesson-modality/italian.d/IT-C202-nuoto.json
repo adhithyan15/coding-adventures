@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C202-nuoto",
+    "language": "italian",
+    "chapter": 202,
+    "sequence": 11500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:237ea61222d2b54f"
+  },
+  "findings": []
+}

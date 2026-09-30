@@ -1,0 +1,11 @@
+{
+  "id": "IT-C179-dipendere",
+  "pathSegment": "IT-PATH-179-VERBI179",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-179-VERBI179",
+      "order": 1
+    }
+  ]
+}

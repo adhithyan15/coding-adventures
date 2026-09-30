@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:18a67b9a9a0b910e",
+  "lessonIds": [
+    "IT-C186-ansia",
+    "IT-C186-calma",
+    "IT-C186-amore",
+    "IT-C186-amicizia",
+    "IT-C186-speranza"
+  ],
+  "tex": "italian/book/chapters/ch186-anxiety-calmness-love-friendship-hope.tex"
+}

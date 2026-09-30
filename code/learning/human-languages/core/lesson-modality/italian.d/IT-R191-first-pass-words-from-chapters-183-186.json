@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R191-first-pass-words-from-chapters-183-186",
+    "language": "italian",
+    "chapter": 191,
+    "sequence": 10620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ad7ab7d0c7f1572"
+  },
+  "findings": []
+}

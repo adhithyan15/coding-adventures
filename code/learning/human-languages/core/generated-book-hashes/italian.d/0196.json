@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:6c92b3383389aaa2",
+  "lessonIds": [
+    "IT-C196-esperienza",
+    "IT-C196-pensiero",
+    "IT-C196-ricordo",
+    "IT-C196-soluzione",
+    "IT-C196-scelta"
+  ],
+  "tex": "italian/book/chapters/ch196-experience-thought-memory-solution-choice.tex"
+}

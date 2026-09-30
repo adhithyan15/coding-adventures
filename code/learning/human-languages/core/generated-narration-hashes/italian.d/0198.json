@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:9edf10437ae30e9a",
+  "lessonIds": [
+    "IT-C198-cartella",
+    "IT-C198-busta-paga",
+    "IT-C198-etichetta",
+    "IT-C198-cartello",
+    "IT-C198-mappa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch198.txt",
+  "json": "italian/narration/ch198.json",
+  "textHash": "fnv1a64:eacebf4671b13b3b",
+  "jsonHash": "fnv1a64:65211c149ec62581",
+  "findings": []
+}

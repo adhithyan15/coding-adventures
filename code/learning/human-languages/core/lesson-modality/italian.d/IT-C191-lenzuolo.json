@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C191-lenzuolo",
+    "language": "italian",
+    "chapter": 191,
+    "sequence": 10600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee58abcca83a519c"
+  },
+  "findings": []
+}

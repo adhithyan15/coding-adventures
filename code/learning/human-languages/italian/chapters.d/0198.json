@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Folder, Pay slip, Label, Sign, Map",
+  "label": "ch:it-folder-pay-slip-label-sign-map",
+  "canDo": "I can say a folder, a pay slip, a label, a sign and a map.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C198-mappa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can say a folder, a pay slip, a label, a sign and a map.",
+    "assesses": [
+      "IT-LEX-C198-COSE198-03",
+      "IT-LEX-C198-COSE198-04",
+      "IT-LEX-C198-COSE198-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C200-spina",
+  "pathSegment": "IT-PATH-200-COSE200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-200-COSE200",
+      "order": 2
+    }
+  ]
+}

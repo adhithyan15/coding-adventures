@@ -1,0 +1,11 @@
+{
+  "id": "IT-C192-passaporto",
+  "pathSegment": "IT-PATH-192-COSE192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-192-COSE192",
+      "order": 1
+    }
+  ]
+}

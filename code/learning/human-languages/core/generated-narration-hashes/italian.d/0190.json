@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:7fe92b631e8a4780",
+  "lessonIds": [
+    "IT-C190-utile",
+    "IT-C190-inutile",
+    "IT-C190-strano",
+    "IT-C190-normale",
+    "IT-C190-diverso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch190.txt",
+  "json": "italian/narration/ch190.json",
+  "textHash": "fnv1a64:1d17c2736f7cb4c5",
+  "jsonHash": "fnv1a64:7454593465c52370",
+  "findings": []
+}

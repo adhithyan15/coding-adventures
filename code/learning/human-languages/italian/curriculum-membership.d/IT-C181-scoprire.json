@@ -1,0 +1,11 @@
+{
+  "id": "IT-C181-scoprire",
+  "pathSegment": "IT-PATH-181-VERBI181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-181-VERBI181",
+      "order": 4
+    }
+  ]
+}

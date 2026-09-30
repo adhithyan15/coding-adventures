@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "To listen to, To touch, To smell, To taste, To warm up",
+  "label": "ch:it-to-listen-to-to-touch-to-smell-to-taste-to-warm-up",
+  "canDo": "I can say to listen to, to touch, to smell, to taste and to warm up.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C176-scaldare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say to listen to, to touch, to smell, to taste and to warm up.",
+    "assesses": [
+      "IT-LEX-C176-VERBI176-03",
+      "IT-LEX-C176-VERBI176-04",
+      "IT-LEX-C176-VERBI176-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Cheerful, Shy, Brave, Fearful, Curious",
+  "label": "ch:it-cheerful-shy-brave-fearful-curious",
+  "canDo": "I can say cheerful, shy, brave, fearful and curious.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C189-curioso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say cheerful, shy, brave, fearful and curious.",
+    "assesses": [
+      "IT-LEX-C189-QUAL189-03",
+      "IT-LEX-C189-QUAL189-04",
+      "IT-LEX-C189-QUAL189-05"
+    ]
+  }
+}

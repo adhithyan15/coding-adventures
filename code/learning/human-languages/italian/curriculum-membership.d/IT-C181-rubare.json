@@ -1,0 +1,11 @@
+{
+  "id": "IT-C181-rubare",
+  "pathSegment": "IT-PATH-181-VERBI181",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-181-VERBI181",
+      "order": 2
+    }
+  ]
+}

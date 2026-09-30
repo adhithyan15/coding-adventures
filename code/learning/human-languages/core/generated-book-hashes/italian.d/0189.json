@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:21863603ce6931ac",
+  "lessonIds": [
+    "IT-C189-allegro",
+    "IT-C189-timido",
+    "IT-C189-coraggioso",
+    "IT-C189-pauroso",
+    "IT-C189-curioso"
+  ],
+  "tex": "italian/book/chapters/ch189-cheerful-shy-brave-fearful-curious.tex"
+}

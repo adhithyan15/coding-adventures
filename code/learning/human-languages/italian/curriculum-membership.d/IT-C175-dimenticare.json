@@ -1,0 +1,11 @@
+{
+  "id": "IT-C175-dimenticare",
+  "pathSegment": "IT-PATH-175-VERBI175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-175-VERBI175",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C181-risolvere",
+    "language": "italian",
+    "chapter": 181,
+    "sequence": 9890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23d11c3129c9ff9e"
+  },
+  "findings": []
+}
