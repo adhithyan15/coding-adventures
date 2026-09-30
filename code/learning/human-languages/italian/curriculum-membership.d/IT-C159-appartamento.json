@@ -1,0 +1,11 @@
+{
+  "id": "IT-C159-appartamento",
+  "pathSegment": "IT-PATH-159-COSE159",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-159-COSE159",
+      "order": 0
+    }
+  ]
+}

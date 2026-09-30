@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Arrival, Departure, Destination, Landscape, View",
+  "label": "ch:it-arrival-departure-destination-landscape-view",
+  "canDo": "I can say arrival, departure, a destination, a landscape and a view.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C171-vista",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say arrival, departure, a destination, a landscape and a view.",
+    "assesses": [
+      "IT-LEX-C171-COSE171-03",
+      "IT-LEX-C171-COSE171-04",
+      "IT-LEX-C171-COSE171-05"
+    ]
+  }
+}

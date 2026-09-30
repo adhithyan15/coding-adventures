@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C144-preoccuparsi",
+    "language": "italian",
+    "chapter": 144,
+    "sequence": 7300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd5b66ba2030147a"
+  },
+  "findings": []
+}

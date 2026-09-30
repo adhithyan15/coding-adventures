@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C152-dieta",
+    "language": "italian",
+    "chapter": 152,
+    "sequence": 7890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc4e7bcae60b5f62"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:cebb528e42c032f0",
+  "lessonIds": [
+    "IT-C170-chitarra",
+    "IT-C170-pianoforte",
+    "IT-C170-violino",
+    "IT-C170-tamburo",
+    "IT-C170-pallone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch170.txt",
+  "json": "italian/narration/ch170.json",
+  "textHash": "fnv1a64:e241fce3aa9bf34a",
+  "jsonHash": "fnv1a64:c5d0ee43232c368c",
+  "findings": []
+}

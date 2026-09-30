@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-161-COSE161",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a court, a judge, a mayor, the town council and elections.",
+  "prerequisites": []
+}

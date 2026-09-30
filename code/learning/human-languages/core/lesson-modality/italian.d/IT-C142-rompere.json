@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C142-rompere",
+    "language": "italian",
+    "chapter": 142,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:006e83016b52ba79"
+  },
+  "findings": []
+}

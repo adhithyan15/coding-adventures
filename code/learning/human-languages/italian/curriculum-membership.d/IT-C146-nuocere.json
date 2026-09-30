@@ -1,0 +1,11 @@
+{
+  "id": "IT-C146-nuocere",
+  "pathSegment": "IT-PATH-146-VERBI146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-146-VERBI146",
+      "order": 3
+    }
+  ]
+}

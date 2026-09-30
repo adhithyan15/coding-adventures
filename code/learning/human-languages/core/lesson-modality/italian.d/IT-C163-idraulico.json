@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C163-idraulico",
+    "language": "italian",
+    "chapter": 163,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20a31cc8591c4ff2"
+  },
+  "findings": []
+}

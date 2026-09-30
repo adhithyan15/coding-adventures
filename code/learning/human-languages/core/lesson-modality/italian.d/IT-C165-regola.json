@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C165-regola",
+    "language": "italian",
+    "chapter": 165,
+    "sequence": 8720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d72696361909377a"
+  },
+  "findings": []
+}

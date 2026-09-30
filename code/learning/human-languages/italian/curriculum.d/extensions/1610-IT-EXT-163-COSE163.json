@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-163-COSE163",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mechanic, an electrician, a plumber, a worker and an office worker.",
+  "prerequisites": []
+}

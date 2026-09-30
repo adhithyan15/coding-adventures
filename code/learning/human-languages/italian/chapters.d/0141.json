@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "To paint, To draw, To photograph, To repeat, To explain",
+  "label": "ch:it-to-paint-to-draw-to-photograph-to-repeat-to-explain",
+  "canDo": "I can say to paint, to draw, to photograph, to repeat and to explain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C141-spiegare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: I can say to paint, to draw, to photograph, to repeat and to explain.",
+    "assesses": [
+      "IT-LEX-C141-VERBI141-03",
+      "IT-LEX-C141-VERBI141-04",
+      "IT-LEX-C141-VERBI141-05"
+    ]
+  }
+}

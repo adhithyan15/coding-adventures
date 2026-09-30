@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "To switch on, To switch off, To jump, To smile, To shout",
+  "label": "ch:it-to-switch-on-to-switch-off-to-jump-to-smile-to-shout",
+  "canDo": "I can say to switch on, to switch off, to jump, to smile and to shout.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C140-gridare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: I can say to switch on, to switch off, to jump, to smile and to shout.",
+    "assesses": [
+      "IT-LEX-C140-VERBI140-03",
+      "IT-LEX-C140-VERBI140-04",
+      "IT-LEX-C140-VERBI140-05"
+    ]
+  }
+}

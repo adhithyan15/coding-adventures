@@ -1,0 +1,11 @@
+{
+  "id": "IT-C142-nascondere",
+  "pathSegment": "IT-PATH-142-VERBI142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-142-VERBI142",
+      "order": 2
+    }
+  ]
+}

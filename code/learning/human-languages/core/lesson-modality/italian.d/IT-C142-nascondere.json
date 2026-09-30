@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C142-nascondere",
+    "language": "italian",
+    "chapter": 142,
+    "sequence": 7210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e50eb302a1e396cc"
+  },
+  "findings": []
+}

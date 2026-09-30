@@ -1,0 +1,11 @@
+{
+  "id": "IT-C147-riscaldare",
+  "pathSegment": "IT-PATH-147-VERBI147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-147-VERBI147",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Rule, Permission, Ban, Danger, Safety",
+  "label": "ch:it-rule-permission-ban-danger-safety",
+  "canDo": "I can say a rule, permission, a ban, danger and safety.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C165-sicurezza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can say a rule, permission, a ban, danger and safety.",
+    "assesses": [
+      "IT-LEX-C165-COSE165-03",
+      "IT-LEX-C165-COSE165-04",
+      "IT-LEX-C165-COSE165-05"
+    ]
+  }
+}

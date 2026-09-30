@@ -1,0 +1,11 @@
+{
+  "id": "IT-C148-trascorrere",
+  "pathSegment": "IT-PATH-148-VERBI148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-148-VERBI148",
+      "order": 3
+    }
+  ]
+}

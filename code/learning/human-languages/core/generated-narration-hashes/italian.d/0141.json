@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:88db22b396310308",
+  "lessonIds": [
+    "IT-C141-dipingere",
+    "IT-C141-disegnare",
+    "IT-C141-fotografare",
+    "IT-C141-ripetere",
+    "IT-C141-spiegare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch141.txt",
+  "json": "italian/narration/ch141.json",
+  "textHash": "fnv1a64:fe0993dc70c855fb",
+  "jsonHash": "fnv1a64:42343b808677b5e3",
+  "findings": []
+}

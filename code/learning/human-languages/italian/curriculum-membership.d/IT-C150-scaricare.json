@@ -1,0 +1,11 @@
+{
+  "id": "IT-C150-scaricare",
+  "pathSegment": "IT-PATH-150-VERBI150",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-150-VERBI150",
+      "order": 3
+    }
+  ]
+}

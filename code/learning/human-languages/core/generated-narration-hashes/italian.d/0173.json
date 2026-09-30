@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:68eae2d528f5ce0c",
+  "lessonIds": [
+    "IT-C173-geografia",
+    "IT-C173-matematica",
+    "IT-C173-scienza",
+    "IT-C173-arte",
+    "IT-C173-partita",
+    "IT-R173-first-pass-words-from-chapters-167-169",
+    "IT-R173-second-pass-words-from-chapters-170-173"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch173.txt",
+  "json": "italian/narration/ch173.json",
+  "textHash": "fnv1a64:d4bd46fe0c9906b5",
+  "jsonHash": "fnv1a64:6de7a72efdc37338",
+  "findings": []
+}

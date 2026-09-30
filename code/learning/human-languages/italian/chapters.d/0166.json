@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Signature, Envelope, Stamp, Parcel, Postcard",
+  "label": "ch:it-signature-envelope-stamp-parcel-postcard",
+  "canDo": "I can say a signature, an envelope, a stamp, a parcel and a postcard.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R166-second-pass-words-from-chapters-162-166",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say a signature, an envelope, a stamp, a parcel and a postcard.",
+    "assesses": [
+      "IT-LEX-C166-COSE166-03",
+      "IT-LEX-C166-COSE166-04",
+      "IT-LEX-C166-COSE166-05"
+    ]
+  }
+}

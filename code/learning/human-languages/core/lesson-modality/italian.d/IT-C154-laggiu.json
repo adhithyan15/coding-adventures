@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C154-laggiu",
+    "language": "italian",
+    "chapter": 154,
+    "sequence": 8020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c2e7d19232dac0b"
+  },
+  "findings": []
+}

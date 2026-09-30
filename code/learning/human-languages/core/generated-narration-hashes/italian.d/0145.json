@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:ca50a9e22d820e89",
+  "lessonIds": [
+    "IT-C145-confrontare",
+    "IT-C145-consigliare",
+    "IT-C145-convincere",
+    "IT-C145-coprire",
+    "IT-C145-criticare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch145.txt",
+  "json": "italian/narration/ch145.json",
+  "textHash": "fnv1a64:a9272db9a08eada3",
+  "jsonHash": "fnv1a64:fd13ae39d5ba4918",
+  "findings": []
+}

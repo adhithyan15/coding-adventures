@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C167-patente",
+    "language": "italian",
+    "chapter": 167,
+    "sequence": 9050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90887d3e70e1c51a"
+  },
+  "findings": []
+}

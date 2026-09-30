@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Mechanic, Electrician, Plumber, Worker, Office worker",
+  "label": "ch:it-mechanic-electrician-plumber-worker-office-worker",
+  "canDo": "I can say a mechanic, an electrician, a plumber, a worker and an office worker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C163-impiegato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can say a mechanic, an electrician, a plumber, a worker and an office worker.",
+    "assesses": [
+      "IT-LEX-C163-COSE163-03",
+      "IT-LEX-C163-COSE163-04",
+      "IT-LEX-C163-COSE163-05"
+    ]
+  }
+}

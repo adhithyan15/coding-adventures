@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C165-pericolo",
+    "language": "italian",
+    "chapter": 165,
+    "sequence": 8750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6404495abe3a90c4"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:882a7f8b5e2f0923",
+  "lessonIds": [
+    "IT-C151-cervello",
+    "IT-C151-polmone",
+    "IT-C151-fegato",
+    "IT-C151-rene",
+    "IT-C151-osso"
+  ],
+  "tex": "italian/book/chapters/ch151-brain-lung-liver-kidney-bone.tex"
+}

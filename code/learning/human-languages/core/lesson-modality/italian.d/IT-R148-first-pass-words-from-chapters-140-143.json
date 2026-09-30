@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R148-first-pass-words-from-chapters-140-143",
+    "language": "italian",
+    "chapter": 148,
+    "sequence": 7540,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3c87b5cfd0ce6641"
+  },
+  "findings": []
+}

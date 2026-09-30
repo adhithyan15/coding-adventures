@@ -1,0 +1,11 @@
+{
+  "id": "IT-C154-altrove",
+  "pathSegment": "IT-PATH-154-LUOGO154",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-154-LUOGO154",
+      "order": 3
+    }
+  ]
+}

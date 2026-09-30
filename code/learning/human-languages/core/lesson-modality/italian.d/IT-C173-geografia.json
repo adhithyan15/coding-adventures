@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C173-geografia",
+    "language": "italian",
+    "chapter": 173,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:489c001a385e2f73"
+  },
+  "findings": []
+}

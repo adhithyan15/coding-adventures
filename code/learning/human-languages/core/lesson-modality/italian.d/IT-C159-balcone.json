@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C159-balcone",
+    "language": "italian",
+    "chapter": 159,
+    "sequence": 8450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6baaf03dbf352cd1"
+  },
+  "findings": []
+}

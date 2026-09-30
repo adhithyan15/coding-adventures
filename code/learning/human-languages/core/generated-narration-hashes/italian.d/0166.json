@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:fdcb5bacbc081736",
+  "lessonIds": [
+    "IT-C166-firma",
+    "IT-C166-busta",
+    "IT-C166-francobollo",
+    "IT-C166-pacco",
+    "IT-C166-cartolina",
+    "IT-R166-first-pass-words-from-chapters-158-161",
+    "IT-R166-second-pass-words-from-chapters-162-166"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch166.txt",
+  "json": "italian/narration/ch166.json",
+  "textHash": "fnv1a64:524b4f89bec402a6",
+  "jsonHash": "fnv1a64:f4a1bd9f8b95f971",
+  "findings": []
+}

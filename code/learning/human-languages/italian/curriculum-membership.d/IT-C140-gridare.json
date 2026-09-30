@@ -1,0 +1,11 @@
+{
+  "id": "IT-C140-gridare",
+  "pathSegment": "IT-PATH-140-VERBI140",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-140-VERBI140",
+      "order": 4
+    }
+  ]
+}

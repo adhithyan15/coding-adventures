@@ -1,0 +1,11 @@
+{
+  "id": "IT-C173-arte",
+  "pathSegment": "IT-PATH-173-LAV173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-173-LAV173",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:b6930000e710f205",
+  "lessonIds": [
+    "IT-C161-tribunale",
+    "IT-C161-giudice",
+    "IT-C161-sindaco",
+    "IT-C161-comune",
+    "IT-C161-elezioni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch161.txt",
+  "json": "italian/narration/ch161.json",
+  "textHash": "fnv1a64:a7601265da493cfd",
+  "jsonHash": "fnv1a64:e1c07052b60838a2",
+  "findings": []
+}

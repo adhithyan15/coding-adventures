@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C143-perdonare",
+    "language": "italian",
+    "chapter": 143,
+    "sequence": 7280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a1323dfd60325f5"
+  },
+  "findings": []
+}

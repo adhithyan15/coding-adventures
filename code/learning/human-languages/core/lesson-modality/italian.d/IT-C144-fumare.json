@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C144-fumare",
+    "language": "italian",
+    "chapter": 144,
+    "sequence": 7320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc52e59194c2c94f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C141-dipingere",
+  "pathSegment": "IT-PATH-141-VERBI141",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-141-VERBI141",
+      "order": 0
+    }
+  ]
+}

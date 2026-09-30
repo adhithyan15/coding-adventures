@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Toll, Motorway, Traffic, Fine, Driving licence",
+  "label": "ch:it-toll-motorway-traffic-fine-driving-licence",
+  "canDo": "I can say a toll, a motorway, traffic, a fine and a driving licence.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C167-patente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say a toll, a motorway, traffic, a fine and a driving licence.",
+    "assesses": [
+      "IT-LEX-C167-COSE167-03",
+      "IT-LEX-C167-COSE167-04",
+      "IT-LEX-C167-COSE167-05"
+    ]
+  }
+}

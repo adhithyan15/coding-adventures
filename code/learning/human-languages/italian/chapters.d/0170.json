@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Guitar, Piano, Violin, Drum, Ball",
+  "label": "ch:it-guitar-piano-violin-drum-ball",
+  "canDo": "I can say a guitar, a piano, a violin, a drum and a ball.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C170-pallone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can say a guitar, a piano, a violin, a drum and a ball.",
+    "assesses": [
+      "IT-LEX-C170-COSE170-03",
+      "IT-LEX-C170-COSE170-04",
+      "IT-LEX-C170-COSE170-05"
+    ]
+  }
+}

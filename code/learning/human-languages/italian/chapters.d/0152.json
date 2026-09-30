@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Medical visit, Diet, Rest, Sleep, Dream",
+  "label": "ch:it-medical-visit-diet-rest-sleep-dream",
+  "canDo": "I can say a medical visit, a diet, rest, sleep and a dream.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C152-sogno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say a medical visit, a diet, rest, sleep and a dream.",
+    "assesses": [
+      "IT-LEX-C152-SAL152-03",
+      "IT-LEX-C152-SAL152-04",
+      "IT-LEX-C152-SAL152-05"
+    ]
+  }
+}

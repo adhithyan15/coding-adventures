@@ -1,0 +1,11 @@
+{
+  "id": "IT-C168-radice",
+  "pathSegment": "IT-PATH-168-COSE168",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-168-COSE168",
+      "order": 4
+    }
+  ]
+}

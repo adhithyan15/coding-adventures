@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C155-comunque",
+    "language": "italian",
+    "chapter": 155,
+    "sequence": 8070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bec8f75144c625a"
+  },
+  "findings": []
+}

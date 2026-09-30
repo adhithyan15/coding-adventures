@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C148-trasportare",
+    "language": "italian",
+    "chapter": 148,
+    "sequence": 7530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b78e07290d9257a"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:2aac28588632c61f",
+  "lessonIds": [
+    "IT-C165-regola",
+    "IT-C165-permesso",
+    "IT-C165-divieto",
+    "IT-C165-pericolo",
+    "IT-C165-sicurezza"
+  ],
+  "tex": "italian/book/chapters/ch165-rule-permission-ban-danger-safety.tex"
+}

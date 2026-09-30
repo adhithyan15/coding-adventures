@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:f2e5340f06eeeb2b",
+  "lessonIds": [
+    "IT-C140-accendere",
+    "IT-C140-spegnere",
+    "IT-C140-saltare",
+    "IT-C140-sorridere",
+    "IT-C140-gridare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch140.txt",
+  "json": "italian/narration/ch140.json",
+  "textHash": "fnv1a64:33f0424317c211df",
+  "jsonHash": "fnv1a64:4cadbcea11b27aae",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C169-rifiuto",
+  "pathSegment": "IT-PATH-169-COSE169",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-169-COSE169",
+      "order": 2
+    }
+  ]
+}

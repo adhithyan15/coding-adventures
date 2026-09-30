@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:880b93dc69d30dd1",
+  "lessonIds": [
+    "IT-C152-visita",
+    "IT-C152-dieta",
+    "IT-C152-riposo",
+    "IT-C152-sonno",
+    "IT-C152-sogno"
+  ],
+  "tex": "italian/book/chapters/ch152-medical-visit-diet-rest-sleep-dream.tex"
+}

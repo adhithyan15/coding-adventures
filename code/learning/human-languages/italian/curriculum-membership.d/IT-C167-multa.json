@@ -1,0 +1,11 @@
+{
+  "id": "IT-C167-multa",
+  "pathSegment": "IT-PATH-167-COSE167",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-167-COSE167",
+      "order": 3
+    }
+  ]
+}

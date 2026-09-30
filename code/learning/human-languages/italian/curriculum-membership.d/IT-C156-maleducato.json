@@ -1,0 +1,11 @@
+{
+  "id": "IT-C156-maleducato",
+  "pathSegment": "IT-PATH-156-QUAL156",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-156-QUAL156",
+      "order": 3
+    }
+  ]
+}

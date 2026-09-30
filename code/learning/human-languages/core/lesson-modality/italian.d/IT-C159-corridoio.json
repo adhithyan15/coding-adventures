@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C159-corridoio",
+    "language": "italian",
+    "chapter": 159,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a769f1e13b655a9"
+  },
+  "findings": []
+}

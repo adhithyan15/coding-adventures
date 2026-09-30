@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Rarely, At once, Finally, Meanwhile, By now",
+  "label": "ch:it-rarely-at-once-finally-meanwhile-by-now",
+  "canDo": "I can say rarely, at once, finally, meanwhile and by now.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "IT-C153-ormai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can say rarely, at once, finally, meanwhile and by now.",
+    "assesses": [
+      "IT-LEX-C153-TEMPO153-03",
+      "IT-LEX-C153-TEMPO153-04",
+      "IT-LEX-C153-TEMPO153-05"
+    ]
+  }
+}

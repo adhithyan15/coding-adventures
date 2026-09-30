@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Website, Screen, Keyboard, Battery, Charger",
+  "label": "ch:it-website-screen-keyboard-battery-charger",
+  "canDo": "I can say a website, a screen, a keyboard, a battery and a charger.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C162-caricabatterie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say a website, a screen, a keyboard, a battery and a charger.",
+    "assesses": [
+      "IT-LEX-C162-COSE162-03",
+      "IT-LEX-C162-COSE162-04",
+      "IT-LEX-C162-COSE162-05"
+    ]
+  }
+}

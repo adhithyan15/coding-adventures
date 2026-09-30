@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "To deserve, To improve, To get worse, To harm, To offer",
+  "label": "ch:it-to-deserve-to-improve-to-get-worse-to-harm-to-offer",
+  "canDo": "I can say to deserve, to improve, to get worse, to harm and to offer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C146-offrire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can say to deserve, to improve, to get worse, to harm and to offer.",
+    "assesses": [
+      "IT-LEX-C146-VERBI146-03",
+      "IT-LEX-C146-VERBI146-04",
+      "IT-LEX-C146-VERBI146-05"
+    ]
+  }
+}

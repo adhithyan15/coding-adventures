@@ -1,0 +1,11 @@
+{
+  "id": "IT-C172-riunione",
+  "pathSegment": "IT-PATH-172-LAV172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-172-LAV172",
+      "order": 4
+    }
+  ]
+}

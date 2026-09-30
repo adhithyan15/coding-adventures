@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C150-salvarsi",
+    "language": "italian",
+    "chapter": 150,
+    "sequence": 7780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:055771b0c8d1898e"
+  },
+  "findings": []
+}

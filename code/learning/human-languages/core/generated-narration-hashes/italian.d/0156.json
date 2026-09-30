@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:d56b1adec77d02f7",
+  "lessonIds": [
+    "IT-C156-comodo",
+    "IT-C156-scomodo",
+    "IT-C156-cortese",
+    "IT-C156-maleducato",
+    "IT-C156-antipatico"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch156.txt",
+  "json": "italian/narration/ch156.json",
+  "textHash": "fnv1a64:4eab0fe1dd18c819",
+  "jsonHash": "fnv1a64:776c055a3972265e",
+  "findings": []
+}

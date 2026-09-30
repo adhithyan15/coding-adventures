@@ -1,0 +1,11 @@
+{
+  "id": "IT-C172-collega",
+  "pathSegment": "IT-PATH-172-LAV172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-172-LAV172",
+      "order": 2
+    }
+  ]
+}

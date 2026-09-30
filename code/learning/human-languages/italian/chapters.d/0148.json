@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "To be silent, To fear, To attempt, To pass, To transport",
+  "label": "ch:it-to-be-silent-to-fear-to-attempt-to-pass-to-transport",
+  "canDo": "I can say to be silent, to fear, to attempt, to pass and to transport.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R148-second-pass-words-from-chapters-144-148",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: I can say to be silent, to fear, to attempt, to pass and to transport.",
+    "assesses": [
+      "IT-LEX-C148-VERBI148-03",
+      "IT-LEX-C148-VERBI148-04",
+      "IT-LEX-C148-VERBI148-05"
+    ]
+  }
+}

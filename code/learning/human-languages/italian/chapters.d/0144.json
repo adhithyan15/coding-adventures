@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "To get angry, To worry, To fall in love, To smoke, To snow",
+  "label": "ch:it-to-get-angry-to-worry-to-fall-in-love-to-smoke-to-snow",
+  "canDo": "I can say to get angry, to worry, to fall in love, to smoke and to snow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C144-nevicare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: I can say to get angry, to worry, to fall in love, to smoke and to snow.",
+    "assesses": [
+      "IT-LEX-C144-VERBI144-03",
+      "IT-LEX-C144-VERBI144-04",
+      "IT-LEX-C144-VERBI144-05"
+    ]
+  }
+}

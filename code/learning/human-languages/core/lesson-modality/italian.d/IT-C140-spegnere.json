@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C140-spegnere",
+    "language": "italian",
+    "chapter": 140,
+    "sequence": 7100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:296911826ac0b51e"
+  },
+  "findings": []
+}

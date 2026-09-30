@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Flat, Living room, Corridor, Balcony, Inner wall",
+  "label": "ch:it-flat-living-room-corridor-balcony-inner-wall",
+  "canDo": "I can say a flat, a living room, a corridor, a balcony and an inner wall.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C159-parete",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can say a flat, a living room, a corridor, a balcony and an inner wall.",
+    "assesses": [
+      "IT-LEX-C159-COSE159-03",
+      "IT-LEX-C159-COSE159-04",
+      "IT-LEX-C159-COSE159-05"
+    ]
+  }
+}

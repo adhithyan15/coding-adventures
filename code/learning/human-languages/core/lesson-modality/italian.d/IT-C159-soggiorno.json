@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C159-soggiorno",
+    "language": "italian",
+    "chapter": 159,
+    "sequence": 8430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c42003644a027a2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C171-arrivo",
+    "language": "italian",
+    "chapter": 171,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e80c7cc0d6c0a29f"
+  },
+  "findings": []
+}

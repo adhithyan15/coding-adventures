@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:7faae329c17f4e2d",
+  "lessonIds": [
+    "IT-C155-quindi",
+    "IT-C155-dunque",
+    "IT-C155-pero",
+    "IT-C155-invece",
+    "IT-C155-comunque"
+  ],
+  "tex": "italian/book/chapters/ch155-so-well-then-however-instead-anyway.tex"
+}

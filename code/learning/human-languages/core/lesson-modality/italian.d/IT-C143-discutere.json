@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C143-discutere",
+    "language": "italian",
+    "chapter": 143,
+    "sequence": 7250,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:140bc8b43b0edd3d"
+  },
+  "findings": []
+}

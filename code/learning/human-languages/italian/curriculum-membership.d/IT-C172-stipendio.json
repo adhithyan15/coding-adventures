@@ -1,0 +1,11 @@
+{
+  "id": "IT-C172-stipendio",
+  "pathSegment": "IT-PATH-172-LAV172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-172-LAV172",
+      "order": 3
+    }
+  ]
+}

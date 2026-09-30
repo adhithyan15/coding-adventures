@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:71baea2ddea418f0",
+  "lessonIds": [
+    "IT-C157-semplice",
+    "IT-C157-complicato",
+    "IT-C157-possibile",
+    "IT-C157-impossibile",
+    "IT-C157-necessario",
+    "IT-R157-first-pass-words-from-chapters-149-152",
+    "IT-R157-second-pass-words-from-chapters-153-157"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch157.txt",
+  "json": "italian/narration/ch157.json",
+  "textHash": "fnv1a64:0e7b786db0d5320b",
+  "jsonHash": "fnv1a64:f4230a7460513f3d",
+  "findings": []
+}

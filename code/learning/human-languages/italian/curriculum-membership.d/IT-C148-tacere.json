@@ -1,0 +1,11 @@
+{
+  "id": "IT-C148-tacere",
+  "pathSegment": "IT-PATH-148-VERBI148",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-148-VERBI148",
+      "order": 0
+    }
+  ]
+}

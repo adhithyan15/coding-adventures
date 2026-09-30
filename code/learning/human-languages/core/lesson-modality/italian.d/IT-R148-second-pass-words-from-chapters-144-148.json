@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R148-second-pass-words-from-chapters-144-148",
+    "language": "italian",
+    "chapter": 148,
+    "sequence": 7550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbe4802d4c6408ac"
+  },
+  "findings": []
+}
