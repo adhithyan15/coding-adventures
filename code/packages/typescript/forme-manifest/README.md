@@ -86,7 +86,9 @@ separate to avoid cross-confusion at the call site.
 
 Only three variables are recognised: `$storageRoot`, `$cacheDir`,
 `$pluginDir`. Unrecognised variables fail validation. `$$` is the
-literal-dollar escape. This is intentionally minimal — it's NOT a
+literal-dollar escape. Substituted paths use `/` separators and percent-escape
+`%` and `:` (`C:\\site` becomes `C%3A/site`) so the path remains one
+capability detail segment on every platform. This is intentionally minimal — it's NOT a
 template engine; it's enough scoping syntax for a plugin's filesystem
 grants to inherit the user's project root without the plugin knowing
 that path.

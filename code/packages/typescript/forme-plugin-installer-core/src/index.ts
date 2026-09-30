@@ -39,9 +39,14 @@ const PREPARED_FILES = new WeakMap<object, readonly PluginPackageFile[]>();
 
 export const PLUGIN_INSTALL_LIMITS = Object.freeze({
   maxFileCount: 4_096,
+  maxDirectoryCount: 4_096,
+  maxTreeEntryCount: 8_193,
+  maxDepth: 256,
+  maxGrantCount: 4_096,
   maxFileSizeBytes: 16 * 1024 * 1024,
   maxTotalSizeBytes: 128 * 1024 * 1024,
   maxPathCharacters: 2_048,
+  maxDestinationNameBytes: 200,
 });
 
 export interface PluginPackageFile {
@@ -90,7 +95,10 @@ export function preparePluginInstallSnapshot(
 
   const packageFiles = copyAndValidateFiles(options.files);
   const byPath = new Map(packageFiles.map(file => [file.path, file]));
-  if (byPath.has("grants.toml")) {
+  if (packageFiles.some(file => {
+    const folded = file.path.toLowerCase();
+    return folded === "grants.toml" || folded.startsWith("grants.toml/");
+  })) {
     throw new TypeError("plugin packages must not supply the host-owned grants.toml file");
   }
   const manifestFile = byPath.get("plugin.toml");
@@ -105,6 +113,9 @@ export function preparePluginInstallSnapshot(
   }
 
   const destinationName = `plugin-${Buffer.from(manifest.plugin.name, "utf8").toString("base64url")}`;
+  if (Buffer.byteLength(destinationName, "utf8") > PLUGIN_INSTALL_LIMITS.maxDestinationNameBytes) {
+    throw new TypeError("plugin name produces an installation basename that exceeds the filesystem-safe limit");
+  }
   const destinationPath = join(installRoot, destinationName);
   const selectedEntry = canonicalManifestReference(runtimeEntry(manifest, options.platform), "runtime entry");
   const entryFile = byPath.get(selectedEntry);
@@ -132,6 +143,9 @@ export function preparePluginInstallSnapshot(
   const optional = manifest.capabilities.optional.map(entry => resolveCapability(entry, environment));
   const declared = new Set([...required, ...optional]);
   if (!Array.isArray(options.reviewedGrants)) throw new TypeError("reviewedGrants must be an array");
+  if (options.reviewedGrants.length > PLUGIN_INSTALL_LIMITS.maxGrantCount) {
+    throw new TypeError(`reviewedGrants exceeds the ${PLUGIN_INSTALL_LIMITS.maxGrantCount}-decision limit`);
+  }
   const reviewed = options.reviewedGrants.map(decision => cloneGrant(decision));
   const seenGrants = new Set<string>();
   for (const decision of reviewed) {
@@ -508,15 +522,21 @@ async function inspectTree(
   const expected = new Map(privateFilesFor(prepared).map(file => [file.path, file.bytes]));
   const seen = new Set<string>();
   const stack: Array<{ path: string; relative: string; depth: number }> = [{ path: rootPath, relative: "", depth: 0 }];
+  let directoryCount = 0;
+  let entryCount = 0;
   let matches = true;
   try {
     while (stack.length > 0) {
       throwIfAborted(signal);
       const current = stack.pop()!;
-      if (current.depth > 256) throw new Error("installed tree exceeds the maximum depth");
+      if (current.depth > PLUGIN_INSTALL_LIMITS.maxDepth) throw new Error("installed tree exceeds the maximum depth");
       const directory = await opendir(current.path);
       for await (const entry of directory) {
         throwIfAborted(signal);
+        entryCount += 1;
+        if (entryCount > PLUGIN_INSTALL_LIMITS.maxTreeEntryCount) {
+          throw new Error("installed tree exceeds the total entry limit");
+        }
         const relativePath = current.relative ? `${current.relative}/${entry.name}` : entry.name;
         validatePackagePath(relativePath, "installed path");
         const fullPath = join(current.path, entry.name);
@@ -526,6 +546,10 @@ async function inspectTree(
         }
         if (info.isSymbolicLink()) throw new Error(`installed path ${JSON.stringify(relativePath)} is a symbolic link`);
         if (info.isDirectory()) {
+          directoryCount += 1;
+          if (directoryCount > PLUGIN_INSTALL_LIMITS.maxDirectoryCount) {
+            throw new Error("installed tree exceeds the directory limit");
+          }
           stack.push({ path: fullPath, relative: relativePath, depth: current.depth + 1 });
           continue;
         }
@@ -628,10 +652,23 @@ function copyAndValidateFiles(files: readonly PluginPackageFile[]): PluginPackag
   const result: PluginPackageFile[] = [];
   const exact = new Set<string>();
   const portable = new Map<string, string>();
+  const directories = new Set<string>();
   let total = 0;
   for (const [index, value] of files.entries()) {
     if (!isRecord(value)) throw new TypeError(`files[${index}] must be an object`);
     const path = validatePackagePath(value.path, `files[${index}].path`);
+    const segments = path.split("/");
+    if (segments.length - 1 > PLUGIN_INSTALL_LIMITS.maxDepth) {
+      throw new TypeError(`files[${index}].path exceeds the maximum directory depth`);
+    }
+    let prefix = "";
+    for (const segment of segments.slice(0, -1)) {
+      prefix = prefix ? `${prefix}/${segment}` : segment;
+      directories.add(prefix);
+      if (directories.size > PLUGIN_INSTALL_LIMITS.maxDirectoryCount) {
+        throw new TypeError(`plugin package exceeds the ${PLUGIN_INSTALL_LIMITS.maxDirectoryCount}-directory limit`);
+      }
+    }
     if (!(value.bytes instanceof Uint8Array)) throw new TypeError(`files[${index}].bytes must be a Uint8Array`);
     if (value.bytes.byteLength > PLUGIN_INSTALL_LIMITS.maxFileSizeBytes) {
       throw new TypeError(`files[${index}] exceeds the per-file byte limit`);

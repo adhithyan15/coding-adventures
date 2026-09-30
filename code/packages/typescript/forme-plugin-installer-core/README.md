@@ -28,12 +28,16 @@ const result = await installPreparedPlugin({
 });
 ```
 
-`preparePluginInstallSnapshot` accepts at most 4,096 files, 16 MiB per file,
-and 128 MiB in aggregate. It defensively copies every byte row, rejects
+`preparePluginInstallSnapshot` accepts at most 4,096 files, 4,096 distinct
+directories, 256 directory levels, 16 MiB per file, 128 MiB in aggregate, and
+4,096 reviewed grants. It defensively copies every byte row, rejects
 absolute/traversing/control/non-NFC/non-portable paths, case-fold and prefix
-collisions, host-supplied `grants.toml`, missing selected runtime entries, and
+collisions, the case-insensitive `grants.toml` namespace, missing selected runtime entries, and
 missing declared schemas. Required reviewed grants must be present; every
 reviewed grant must be declared by the manifest after template resolution.
+Templated paths use a colon-free portable encoding, so Windows drive paths stay
+inside one capability detail segment. Destination and transaction basenames are
+bounded below common 255-byte filesystem limits.
 
 The current FM02 signature authenticates canonical manifest semantics plus the
 one selected runtime entry. Consequently, only a trusted signed package whose
@@ -52,7 +56,8 @@ private backup for rollback. Existing symlinks, hardlinks, special files,
 unsafe names, identity changes, and concurrent locks fail closed. An exact
 reinstall is `unchanged`; immutable mode rejects a different existing target;
 replace mode restores the old target if commit fails or cancellation arrives
-after backup.
+after backup. Existing-tree inspection has independent directory, file, depth,
+and aggregate-entry ceilings, including for directory-only trees.
 
 ## Development
 

@@ -71,6 +71,7 @@ export { signManifest, verifyManifest, assertManifestSigned } from "./signature.
 // Templating
 export {
   resolveCapabilityTemplate,
+  encodeCapabilityPath,
   hasTemplate,
   RECOGNISED_VARIABLES,
 } from "./templating.js";

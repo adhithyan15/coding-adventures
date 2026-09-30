@@ -21,7 +21,10 @@
  * The templating engine is deliberately tiny: no expressions, no
  * conditionals, no `$var.field`, no `${var}` syntax.  It exists so
  * a plugin's manifest can declare `"filesystem:read:$storageRoot"`
- * without knowing the user's project layout.  Nothing more.
+ * without knowing the user's project layout.  Nothing more. Path values are
+ * converted to a portable capability-detail representation: backslashes
+ * become `/`, `%` becomes `%25`, and `:` becomes `%3A`. This keeps Windows
+ * drive paths inside the third capability segment.
  *
  * @module templating
  */
@@ -127,6 +130,11 @@ export function hasTemplate(template: string): boolean {
   return false;
 }
 
+/** Encode an absolute host path for use as one colon-free capability detail. */
+export function encodeCapabilityPath(path: string): string {
+  return path.replaceAll("\\", "/").replaceAll("%", "%25").replaceAll(":", "%3A");
+}
+
 // ─── Helpers ────────────────────────────────────────────────────────
 
 function isIdentChar(ch: string): boolean {
@@ -148,7 +156,7 @@ function lookup(
           message: `template references "$storageRoot" but env.storageRoot is empty`,
         });
       }
-      return env.storageRoot;
+      return encodeCapabilityPath(env.storageRoot);
     case "cacheDir":
       if (env.cacheDir === null) {
         throw new ManifestError({
@@ -156,7 +164,7 @@ function lookup(
           message: `template references "$cacheDir" but the pipeline has no cacheDir`,
         });
       }
-      return env.cacheDir;
+      return encodeCapabilityPath(env.cacheDir);
     case "pluginDir":
       if (!env.pluginDir) {
         throw new ManifestError({
@@ -164,6 +172,6 @@ function lookup(
           message: `template references "$pluginDir" but env.pluginDir is empty`,
         });
       }
-      return env.pluginDir;
+      return encodeCapabilityPath(env.pluginDir);
   }
 }

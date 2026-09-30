@@ -402,6 +402,11 @@ capability is recorded:
 - `$cacheDir` — resolves to `settings.cacheDir`, if set.
 - `$pluginDir` — resolves to the plugin's installation directory.
 
+Path-valued substitutions use a portable capability-detail representation:
+backslashes become `/`, literal `%` becomes `%25`, and `:` becomes `%3A`.
+Thus `C:\\site\\content` resolves as `C%3A/site/content`, remains one third
+capability segment, and compares identically during installation and loading.
+
 Any unrecognised `$variable` causes a manifest validation error.
 Plain `$` characters that should not be templated must be escaped
 as `$$`.
@@ -495,9 +500,12 @@ and prompt adapters MUST hand `forme-plugin-installer-core` a complete immutable
 snapshot of regular-file entries plus the capabilities the user reviewed. The
 core does not fetch packages or display prompts. It MUST:
 
-1. accept at most 4,096 files, 16 MiB per file, and 128 MiB total;
+1. accept at most 4,096 files, 4,096 distinct directories, 256 directory
+   levels, 16 MiB per file, 128 MiB total, and 4,096 reviewed grants;
 2. reject duplicate, absolute, empty, dot-segment, backslash, NUL, non-NFC,
-   non-portable, or case-fold-colliding relative paths before touching disk;
+   non-portable, or case-fold-colliding relative paths before touching disk,
+   and reserve case-insensitive `grants.toml` plus every descendant path for
+   host-generated authority only;
 3. defensively copy every byte array, require exactly one root `plugin.toml`,
    parse and validate it, and require every selected runtime entry and schema
    path to name a supplied regular file;
@@ -515,11 +523,14 @@ core does not fetch packages or display prompts. It MUST:
 7. derive the destination as `plugin-` plus Base64url of the UTF-8 plugin name,
    under one existing canonical, real host-owned install root. Callers resolve
    platform path aliases before capability review and do not choose a
-   destination basename;
+   destination basename. The encoded destination is at most 200 UTF-8 bytes,
+   keeping its lock, stage, and backup transaction names below the common
+   255-byte filesystem segment limit;
 8. acquire an exclusive same-parent per-plugin lock, materialize a private
    sibling staging directory, write only exclusively-created regular files,
    flush them, set files read-only and directories owner-private where POSIX
-   modes exist, and verify the staged complete set and byte identities;
+   modes exist, and verify the staged complete set and byte identities under
+   the same independent file, directory, depth, and aggregate-entry ceilings;
 9. replace an existing singly-linked host-owned target through same-parent
    rename with a retained backup, restore that backup after any pre-finalize
    failure, and report an indeterminate error if rollback itself cannot be

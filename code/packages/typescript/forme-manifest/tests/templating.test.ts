@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   resolveCapabilityTemplate,
+  encodeCapabilityPath,
   hasTemplate,
   RECOGNISED_VARIABLES,
   ManifestError,
@@ -26,6 +27,19 @@ describe("resolveCapabilityTemplate", () => {
   it("substitutes $pluginDir", () => {
     expect(resolveCapabilityTemplate("filesystem:read:$pluginDir", env))
       .toBe("filesystem:read:/abs/plugin");
+  });
+
+  it("encodes Windows drive paths as one portable capability detail", () => {
+    const windows = {
+      storageRoot: "C:\\site\\content",
+      cacheDir: "D:\\cache%shared",
+      pluginDir: "C:\\forme\\plugins\\demo",
+    };
+    expect(resolveCapabilityTemplate("filesystem:read:$storageRoot", windows))
+      .toBe("filesystem:read:C%3A/site/content");
+    expect(resolveCapabilityTemplate("filesystem:write:$cacheDir", windows))
+      .toBe("filesystem:write:D%3A/cache%25shared");
+    expect(encodeCapabilityPath("C:\\x%y")).toBe("C%3A/x%25y");
   });
 
   it("handles $$ as literal dollar", () => {

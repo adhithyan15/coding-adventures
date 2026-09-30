@@ -276,5 +276,12 @@ describe("installPreparedPlugin", () => {
       writeFile(join(crowded.prepared.destinationPath, `f-${index}`), "")));
     await expect(installPreparedPlugin({ prepared: crowded.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
+
+    const directoryCrowd = await fixture();
+    await mkdir(directoryCrowd.prepared.destinationPath);
+    await Promise.all(Array.from({ length: 4_097 }, (_, index) =>
+      mkdir(join(directoryCrowd.prepared.destinationPath, `d-${index}`))));
+    await expect(installPreparedPlugin({ prepared: directoryCrowd.prepared }))
+      .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
   });
 });

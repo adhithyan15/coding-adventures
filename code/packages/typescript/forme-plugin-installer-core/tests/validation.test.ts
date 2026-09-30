@@ -75,6 +75,14 @@ describe("snapshot defensive validation", () => {
       { path: "grants.toml", bytes: ENTRY },
     ]))).toThrow(/host-owned/i);
     expect(() => preparePluginInstallSnapshot(opts([
+      ...packageFiles(),
+      { path: "GRANTS.TOML", bytes: ENTRY },
+    ]))).toThrow(/host-owned/i);
+    expect(() => preparePluginInstallSnapshot(opts([
+      ...packageFiles(),
+      { path: "grants.toml/child", bytes: ENTRY },
+    ]))).toThrow(/host-owned/i);
+    expect(() => preparePluginInstallSnapshot(opts([
       { path: "plugin.toml", bytes: new Uint8Array([0xff]) },
       { path: "plugin.mjs", bytes: ENTRY },
     ]))).toThrow(/validation/i);
@@ -109,11 +117,14 @@ describe("snapshot defensive validation", () => {
     expect(() => preparePluginInstallSnapshot({
       ...opts(), reviewedGrants: [{ capability: "storage:read", grantedAt: WHEN, note: 7 as never }],
     })).toThrow(/note/i);
+    expect(preparePluginInstallSnapshot({
+      ...opts(),
+      capabilityEnvironment: { storageRoot: "/tmp:portable", cacheDir: null },
+    }).pluginName).toBe("@example/validation");
     expect(() => preparePluginInstallSnapshot({
       ...opts(),
-      capabilityEnvironment: { storageRoot: "/tmp:bad", cacheDir: null },
-    }))
-      .toThrow(/invalid capability/i);
+      capabilityEnvironment: { storageRoot: "/tmp/bad path", cacheDir: null },
+    })).toThrow(/invalid capability/i);
   });
 
   it("rejects forged prepared snapshots and invalid modes", async () => {
@@ -158,6 +169,32 @@ describe("snapshot defensive validation", () => {
     const chunk = new Uint8Array(16 * 1024 * 1024);
     const extras = Array.from({ length: 8 }, (_, index) => ({ path: `chunk-${index}`, bytes: chunk }));
     expect(() => preparePluginInstallSnapshot(opts(packageFiles(BASE, extras)))).toThrow(/total byte limit/i);
+  });
+
+  it("bounds grant preprocessing, directory topology, depth, and destination names", () => {
+    expect(() => preparePluginInstallSnapshot({
+      ...opts(),
+      reviewedGrants: Array.from({ length: 4_097 }, () => ({
+        capability: "storage:read",
+        grantedAt: WHEN,
+      })),
+    })).toThrow(/decision limit/i);
+
+    const deepPath = `${Array.from({ length: 257 }, () => "a").join("/")}/leaf`;
+    expect(() => preparePluginInstallSnapshot(opts(packageFiles(BASE, [{ path: deepPath, bytes: ENTRY }]))))
+      .toThrow(/depth/i);
+
+    const wideDirectories = Array.from({ length: 17 }, (_, group) => ({
+      path: `${Array.from({ length: 256 }, (_, depth) => `x${group.toString(36)}${depth.toString(36)}`).join("/")}/leaf`,
+      bytes: ENTRY,
+    }));
+    expect(() => preparePluginInstallSnapshot(opts(packageFiles(BASE, wideDirectories))))
+      .toThrow(/directory limit/i);
+
+    const longName = `@example/${"a".repeat(180)}`;
+    const longManifest = BASE.replace("@example/validation", longName);
+    expect(() => preparePluginInstallSnapshot(opts(packageFiles(longManifest))))
+      .toThrow(/basename/i);
   });
 
   it("selects binary platform entries with canonical OS and architecture names", () => {

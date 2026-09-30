@@ -13,3 +13,6 @@
   reinstalls.
 - Reject unsafe roots and targets, links, non-regular files, identity changes,
   path collisions, and unbounded package or filesystem scans.
+- Bound grant preprocessing, package topology, destination names, and existing
+  directory-only trees; reserve the full case-folded `grants.toml` namespace.
+- Use portable colon-free capability path expansion for Windows drive paths.
