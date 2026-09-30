@@ -22,6 +22,97 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:డ",
+    {
+      script: "telugu",
+      glyph: "డ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep down around the upper-left curve",
+              path: [
+                { x: 277, y: 500 },
+                { x: 220, y: 485 },
+                { x: 165, y: 450 },
+                { x: 120, y: 410 },
+                { x: 75, y: 350 },
+                { x: 45, y: 285 },
+                { x: 35, y: 195 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "turn right around the lower-left bowl",
+              path: [
+                { x: 35, y: 195 },
+                { x: 55, y: 110 },
+                { x: 125, y: 25 },
+                { x: 200, y: -12 },
+                { x: 275, y: 0 },
+                { x: 345, y: 85 },
+                { x: 390, y: 130 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep right and upward around the lower-right bowl",
+              path: [
+                { x: 465, y: 35 },
+                { x: 535, y: 0 },
+                { x: 605, y: 0 },
+                { x: 665, y: 35 },
+                { x: 705, y: 95 },
+                { x: 711, y: 172 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve left around the upper-right shoulder",
+              path: [
+                { x: 675, y: 385 },
+                { x: 620, y: 415 },
+                { x: 560, y: 420 },
+                { x: 520, y: 395 },
+                { x: 520, y: 340 },
+                { x: 530, y: 285 },
+                { x: 505, y: 230 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curl upward through the separate top flourish",
+              path: [
+                { x: 235, y: 540 },
+                { x: 270, y: 565 },
+                { x: 310, y: 545 },
+                { x: 350, y: 490 },
+                { x: 405, y: 505 },
+                { x: 465, y: 555 },
+                { x: 525, y: 620 },
+                { x: 585, y: 675 },
+                { x: 645, y: 690 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("డ"),
+    },
+  ],
+  [
     "telugu:ఠ",
     {
       script: "telugu",

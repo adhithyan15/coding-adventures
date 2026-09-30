@@ -30,9 +30,10 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // whose rungs are in the wrong order and therefore prove nothing.
   //
   // TE-S152 is the earlier vocabulary-first observe-and-trace rung for tta.
-  // TE-S155 revisits it for the aspirated partner ttha after the first complete
-  // ladder. TE-S132 later revisits it again for newly introduced nya. The next rung
-  // is a SECOND dictation, roughly 1,150 sequence steps after the
+  // TE-S123 follows with dda, another vocabulary-first retroflex letter.
+  // TE-S155 revisits the stage for the aspirated partner ttha after the first
+  // complete ladder. TE-S132 later revisits it again for newly introduced nya.
+  // The next rung is a SECOND dictation, roughly 1,150 sequence steps after the
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
   // *gnya* into shapes with nothing on the page to copy, which is the same
@@ -42,6 +43,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // prerequisite stages.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["TE-S152-letter-tta", "observe-trace"],
+    ["TE-S123-letter-dda", "observe-trace"],
     ["TE-S01-letter-ta", "observe-trace"],
     ["TE-S01-copy-in-a-word", "guided-copy"],
     ["TE-S01-delayed-copy", "delayed-copy"],

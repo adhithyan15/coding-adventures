@@ -155,6 +155,10 @@ That is about 380 filmstrips that could print today.
   the aspirated retroflex from `జ్యేష్ఠం`, already taught in the previous
   chapter. Its three movements draw the circular body, upper flourish and inner
   dot from the packaged tracing guide, fitted to Noto Sans Telugu.
+- **Telugu డ continues with an existing word-first owner.** `TE-S123` extracts
+  the retroflex from `డప్పు`, already taught earlier in the chapter. Its five
+  movements draw the rounded body in four sections and finish with the separate
+  upper flourish, following the packaged tracing guide and Noto Sans Telugu fit.
 - **Next priority: Telugu ఝ needs its word first.** No existing lesson owns the
   base letter or teaches a word containing it, so the next tranche must verify
   an authentic, useful lexical anchor before adding a writing lesson. The same
