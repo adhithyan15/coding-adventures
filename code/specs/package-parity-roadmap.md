@@ -15055,6 +15055,53 @@ OCaml packages, zero collisions, and zero unknown buckets. None of those
 intervening changes creates an unowned eligible gap or overlaps the orphan-root
 contract now carried by this branch.
 
+### PR #16298 merge and Go neural-primitives build-front coverage
+
+PR #16298 completed all 51 final-head checks acceptably: 44 successes and seven
+expected skips or neutral results. GitHub reported the reviewed head mergeable
+and clean, guarded squash auto-merge was enabled only then, and GitHub merged
+the PR automatically at `2026-09-30T19:39:08Z` as
+`25b464472ca66cc71d20911bff02115ffdcc7c87`; no plain manual merge command was
+used.
+
+After fetching exact current `origin/main`
+`e8a0bc47780645f9281fbd3ac2a695a1c4d85208`, the collision-checked schema-3
+inventory remains unchanged at 15 established lanes, 1,472 implementation
+identities, 4,739 implementation slots, 1,514 all-reported identities,
+completion bands 178/265, 123/934, 181/2,282, and 990/13,860, 805 Rust
+singletons, five emerging OCaml packages, zero canonical collisions, and zero
+unknown language buckets.
+
+The parallel audit refresh decomposed several previously broad or ambiguous
+owners before the next selection. Lua now separates process-free source and
+dependency hashing from selection-blocked native source-snapshot and cache
+persistence authority. Barcode layout now has a neutral integer-geometry
+contract and an existing-lane reconciliation prerequisite before the Java,
+Kotlin, and Dart rollout. The duplicate .NET repository-boundary diff item is
+selection-blocked in favor of the existing graph/diff owner, and the OCaml
+status-documentation repair now covers OCAML06, OCAML07, OCAML08, and the lane
+README. Live non-parity PR #16296 proposes a TypeScript Forme plugin runner, so
+its process-free wire/lifecycle boundary is registered but remains blocked
+until that PR resolves and exact main can be inventoried; host I/O, process,
+filesystem, network, sandbox, trust, and installer authority remain excluded.
+
+The dependency/leverage refresh selects
+`go-activation-matrix-perceptron-build-front-coverage`. The three tracked Go
+modules form one small dependency chain, have no BUILD fronts, and already own
+reviewed missing-root ledger entries. The tranche adds discoverable generic Go
+fronts, direct perceptron coverage, and missing package documentation without
+changing production APIs or widening authority, then validates the three
+affected downstream programs. Twelve live open PRs have zero exact overlap
+with its state, roadmap, package, and documentation paths. The clean branch
+`codex/parity-go-neural-fronts-20260930` starts from exact current main above.
+
+Before publication, `origin/main` advanced through the unrelated Mermaid
+event-modeling coverage and non-ALGOL VM backlog closeout. Their grammar, Rust
+Mermaid, Mermaid-spec, and VM-roadmap paths have zero exact overlap with this
+tranche. The branch rebased conflict-free onto
+`e8a0bc47780645f9281fbd3ac2a695a1c4d85208`, and the collision-checked
+inventory remains unchanged.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

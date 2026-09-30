@@ -5,6 +5,13 @@ All notable changes to the Go activation-functions package will be documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-09-30
+
+### Added
+
+- Repository BUILD front with measured package coverage.
+- Package documentation for the numeric API and validation commands.
+
 ## [0.2.0] - 2026-03-31
 
 ### Changed
