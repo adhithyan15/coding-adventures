@@ -65,33 +65,17 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // emptiness is now a measurement rather than an absence of looking.
     //
     // Qt gained reporting in #15245 and named 60 drops that had always been
-    // there. 16 are fixed: `border-color`, `border-width` and `border-radius`
+    // there. All are now fixed: `border-color`, `border-width` and
+    // `border-radius`
     // were read from the base part only, so an Alert or a Toast wore the base
     // variant's border whatever its `variant` — the background beside them was
-    // already conditional, and the border was not. The 44 below are real, and
-    // each points at the issue that will retire it.
+    // already conditional, and the border was not.
     //
     // #15276 is fixed: paint/padding on Text parts now reaches a conditional
     // Rectangle wrapper, and a Box part's font-weight reaches its descendant
-    // Text. `padding` stays pinned for the unrelated host-control cases in
-    // #15277 (Button, Field, Input, Navbar).
-    (Backend::Qt, "padding"),
-    // #15277 — state-layer overrides are ignored outside the Rectangle
-    // builders. Spinner authors `width`/`height` per size variant and renders
-    // all three at the base's 24px. Extending the Rectangle path to
-    // `width`/`height` was tried and changed zero bytes of output, which is
-    // how we know those parts never traverse it -- Spinner is a `Stack` and
-    // lowers to a QML `Item`.
-    //
-    // `border-radius` was pinned here and is NOT any more: the fourth site
-    // that assembles a Rectangle (a host control's `background: Rectangle`)
-    // had a conditional `border.color` beside a base-only `radius`, so Button
-    // and Input rendered every size with the base corner. The inverse ratchet
-    // below is what caught it -- the pin was written, the site was fixed, and
-    // the assertion refused to let the stale entry stand.
-    (Backend::Qt, "font-size"),
-    (Backend::Qt, "height"),
-    (Backend::Qt, "width"),
+    // Text. #15277 then retired the last four pins: Stack geometry and host
+    // control padding/font size now retain size-variant state layers too. The
+    // inverse ratchet below keeps these fixes from silently regressing.
     // Flutter gained reporting in #12022 and exposed these pre-existing
     // control-decoration and typography losses. The inverse-ratchet test
     // below requires every pin to be removed when the emitter learns it.
