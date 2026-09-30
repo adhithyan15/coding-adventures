@@ -15242,6 +15242,13 @@ exact overlap with this tranche. All nine commits rebased conflict-free; the
 collision inventory remains unchanged, and the rebased focused suites, Ruff,
 changelog reconstruction, state-DAG, JSON, and diff checks pass.
 
+Ready-for-review PR #16321 publishes this bounded follow-up from
+`codex/parity-python-neural-spec-tests-v2-20260930`. GitHub reports the branch
+mergeable but blocked while initial CI, CodeQL, and human-language detection
+are queued or in progress. Guarded auto-merge remains disabled until every
+required check is terminal and acceptable and the branch remains
+conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

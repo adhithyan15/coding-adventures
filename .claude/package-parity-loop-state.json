@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16321,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16321",
+    "item_id": "python-neural-primitive-spec-vector-test-coverage",
+    "branch": "codex/parity-python-neural-spec-tests-v2-20260930",
+    "head_revision": "f832f1eb370b9ad9c826ede718c79e68b82dd3f3",
+    "status": "pr-open"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-30T21:40:37Z",
-    "pr_number": 16315,
-    "status": "merged",
-    "notes": "Every final-head check reached an acceptable terminal conclusion, including both Ubuntu builds, both metadata-contract runs, the CI gate, Python CodeQL, and the human-language gate. GitHub reported MERGEABLE and CLEAN, guarded squash auto-merge was enabled, and PR #16315 merged automatically as 7a91de5ceb0eb36079e011557ae3028d9d1fb5f8 without a plain manual merge command."
+    "observed_at": "2026-09-30T22:09:58Z",
+    "pr_number": 16321,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16321 is open and GitHub reports MERGEABLE but BLOCKED while CI detect, CodeQL language detection, and human-language change detection are queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict."
   },
   "last_inventory": {
     "revision": "0d12bc3c4caf1b9baff45029eac13bf39337378d",
@@ -11065,10 +11072,13 @@
     {
       "id": "python-neural-primitive-spec-vector-test-coverage",
       "title": "Complete Python activation and loss neutral-spec vector coverage",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage"],
       "branch": "codex/parity-python-neural-spec-tests-v2-20260930",
-      "pr_number": null,
+      "pr_number": 16321,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16321",
+      "opened_at": "2026-09-30T22:09:55Z",
+      "opened_revision": "f832f1eb370b9ad9c826ede718c79e68b82dd3f3",
       "selected_at": "2026-09-30T21:42:12Z",
       "selection_revision": "4f264437f57f650bae5972bb7f1fc4fec94dfda9",
       "selection_notes": "Selected after PR #16315 completed every final-head check acceptably and merged through guarded squash auto-merge as 7a91de5ceb0eb36079e011557ae3028d9d1fb5f8. The exact-main schema-3 inventory remains collision-clean and identity-neutral at 15 established lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits found the predictor-front successor blocked on the separately owned gradient-descent front, ranked barcode-layout neutral conformance and Haskell ITF Windows fronts as the next broad alternatives, and identified this smaller newly eligible neutral-spec regression gap on the just-merged Python primitives. The bounded tests-only follow-up is dependency-ready, changes no package identity or authority, and starts from exact main in a fresh clean sparse worktree after a collision-free backlog refresh.",
@@ -11078,6 +11088,7 @@
       "final_review_revision": "72b39c4135d497b2d3fd8d1d0ec694578b59ee96",
       "final_review_notes": "Independent correctness review verified the ML01 formulas, ML04 literals, exact mandatory inputs, Python assertions, lifecycle transition, and complete acyclic state graph. It caught a root changelog filename whose slug and digest did not match its heading; the focused rename now uses the exact heading-derived slug and SHA-256 prefix, and reconstruction plus an explicit digest check pass. Independent security review issued SHIP after confirming no production, dependency, capability, BUILD, workflow, secret, generated-artifact, mode, or overlap change; all thirteen live PRs have zero exact path overlap.",
       "rebase_notes": "Before publication, origin/main advanced to 0d12bc3c4caf1b9baff45029eac13bf39337378d through PR #16314's existing Rust Mosaic Flutter host-environment behavior and two lessons. Those paths have zero exact overlap with this Python/spec/state tranche. All nine commits rebased conflict-free. The regenerated schema-3 inventory is unchanged and collision-clean, and the rebased 32-test activation, 17-test loss, three-test perceptron, Ruff, changelog reconstruction, state-DAG, JSON, and diff checks pass.",
+      "publication_notes": "Opened ready-for-review PR #16321 from clean validated head f832f1eb370b9ad9c826ede718c79e68b82dd3f3 after a normal first push from exact origin/main 0d12bc3c4caf1b9baff45029eac13bf39337378d. Immediately before publication, the remote branch and prior PR were absent, thirteen live PRs had zero exact path overlap, focused package/downstream/build-tool/parity/state/metadata/security checks were acceptable, and independent correctness and security reviews passed after the changelog shard identity repair. GitHub reports MERGEABLE but BLOCKED with initial CI, CodeQL, and human-language detection queued or in progress; auto-merge remains disabled until every required check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered by the final read-only review of PR #16315. The activation suite omits mandatory nonzero ML04 derivative vectors plus specified symmetry, idempotence, and derivative properties, so constant derivative regressions could pass. The loss boundary test asserts only finiteness and does not prove ML01's exact [1e-7, 1-1e-7] clamp for BCE/CCE values and derivatives. Add exact language-neutral vector and property coverage without changing already-correct package behavior, then rerun direct coverage, BUILD fronts, downstream smokes, metadata, parity, diff, and security checks."
     },
     {
