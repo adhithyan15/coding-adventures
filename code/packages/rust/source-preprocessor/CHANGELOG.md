@@ -8,7 +8,8 @@
   unexpanded while macros elsewhere in the expression still expand normally.
 - The default hook is an identity transform, preserving MacroOct and every
   dialect without a protected condition operator. The engine rejects a hook
-  that increases the token count so it cannot become an unmetered producer.
+  that increases the token count or total spelling bytes, and attaches the
+  controlling directive's location to otherwise unlocated hook errors.
 - Integration coverage proves parenthesized and bare defined-style operands,
   expansion of the rest of the condition, malformed syntax, skipped groups,
   and the non-growing contract.

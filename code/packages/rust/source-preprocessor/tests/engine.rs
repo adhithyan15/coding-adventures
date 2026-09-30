@@ -51,6 +51,7 @@ struct TestDialect {
     evals: Cell<u32>,
     preparations: Cell<u32>,
     grow_condition: bool,
+    grow_condition_spelling: bool,
 }
 
 impl Dialect for TestDialect {
@@ -96,19 +97,23 @@ impl Dialect for TestDialect {
             }
 
             let operator = &tokens[index];
-            let (name, consumed) = match (
-                tokens.get(index + 1).map(|t| t.value.as_str()),
-                tokens.get(index + 2),
-                tokens.get(index + 3).map(|t| t.value.as_str()),
-            ) {
-                (Some("("), Some(name), Some(")")) => (name, 4),
-                (Some(_), Some(_), _) if tokens[index + 1].value != "(" => {
-                    (&tokens[index + 1], 2)
-                }
-                _ => {
-                    return Err(PpError::new("malformed `defined` operator"));
-                }
-            };
+            let parenthesized = tokens.get(index + 1).is_some_and(|token| token.value == "(");
+            let operand_index = index + if parenthesized { 2 } else { 1 };
+            let name = tokens
+                .get(operand_index)
+                .ok_or_else(|| PpError::new("malformed `defined` operator"))?;
+            let mut chars = name.value.chars();
+            if !chars.next().is_some_and(|ch| ch.is_ascii_alphabetic() || ch == '_')
+                || !chars.all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+            {
+                return Err(PpError::new("defined needs an identifier operand"));
+            }
+            if parenthesized
+                && tokens.get(operand_index + 1).is_none_or(|token| token.value != ")")
+            {
+                return Err(PpError::new("malformed `defined` operator"));
+            }
+            let consumed = if parenthesized { 4 } else { 2 };
 
             let mut truth = operator.clone();
             truth.value = if macros.is_defined(&name.value) { "1" } else { "0" }.into();
@@ -117,6 +122,9 @@ impl Dialect for TestDialect {
         }
         if self.grow_condition {
             prepared.push(tok("extra", 1));
+        }
+        if self.grow_condition_spelling {
+            prepared[0].value.push_str("extra");
         }
         Ok(prepared)
     }
@@ -284,10 +292,32 @@ fn an_undefined_operand_is_false_without_becoming_a_macro_candidate() {
 }
 
 #[test]
+fn a_bare_defined_operand_can_end_the_condition() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["@define FLAG 0", "@if defined FLAG", "kept", "@end"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out, ["kept"]);
+}
+
+#[test]
+fn defined_rejects_a_non_identifier_operand() {
+    let mut fs = MemoryFs::new();
+    let error = run(&["@if defined 123", "@end"], &mut fs, Bounds::default())
+        .expect_err("a numeric operand must fail");
+    assert!(error.to_string().contains("identifier"), "{error}");
+    assert_eq!(error.position().map(|position| position.line), Some(1));
+}
+
+#[test]
 fn malformed_pre_expansion_condition_syntax_is_a_dialect_error() {
     let mut fs = MemoryFs::new();
     let e = run(&["@if defined ( FLAG", "@end"], &mut fs, Bounds::default()).unwrap_err();
     assert!(e.to_string().contains("malformed `defined`"), "{e}");
+    assert_eq!(e.position().map(|position| position.line), Some(1));
 }
 
 #[test]
@@ -301,6 +331,19 @@ fn condition_preparation_cannot_be_an_unmetered_token_producer() {
         .unwrap_err();
     assert!(e.to_string().contains("must not increase the token count"), "{e}");
     assert_eq!(dialect.evals.get(), 0, "the oversized result must not reach evaluation");
+}
+
+#[test]
+fn condition_preparation_cannot_grow_text_at_a_fixed_token_count() {
+    let dialect = TestDialect {
+        grow_condition_spelling: true,
+        ..TestDialect::default()
+    };
+    let mut fs = MemoryFs::new();
+    let e = run_with(&["@if 1", "body", "@end"], &mut fs, Bounds::default(), &dialect)
+        .unwrap_err();
+    assert!(e.to_string().contains("must not increase the text bytes"), "{e}");
+    assert_eq!(dialect.evals.get(), 0, "the enlarged result must not reach evaluation");
 }
 
 #[test]

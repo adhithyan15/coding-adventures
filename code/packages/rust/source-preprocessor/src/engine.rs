@@ -306,11 +306,36 @@ fn apply_directive(
                 // the table while NAME is still spelled as written, then the
                 // generic engine expands everything that remains.
                 let raw_token_count = condition.len();
-                let condition = dialect.prepare_condition(condition, macros)?;
+                let raw_text_bytes = condition.iter().fold(0_u64, |sum, token| {
+                    sum.saturating_add(token.value.len() as u64)
+                });
+                let condition = dialect.prepare_condition(condition, macros).map_err(|error| {
+                    let position = error.position().or(Some(here));
+                    error.at_opt(position)
+                })?;
                 if condition.len() > raw_token_count {
                     return Err(PpError::new(
                         "dialect condition preparation must not increase the token count",
                     )
+                    .at(here));
+                }
+                let prepared_text_bytes = condition.iter().fold(0_u64, |sum, token| {
+                    sum.saturating_add(token.value.len() as u64)
+                });
+                if prepared_text_bytes > raw_text_bytes {
+                    return Err(PpError::new(
+                        "dialect condition preparation must not increase the text bytes",
+                    )
+                    .at(here));
+                }
+                if condition
+                    .iter()
+                    .any(|token| token.value.len() as u64 > bounds.token_spelling_bytes)
+                {
+                    return Err(PpError::new(format!(
+                        "a token's spelling exceeds {} bytes",
+                        bounds.token_spelling_bytes
+                    ))
                     .at(here));
                 }
 

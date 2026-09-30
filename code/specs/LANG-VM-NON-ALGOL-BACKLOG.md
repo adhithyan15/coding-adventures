@@ -542,7 +542,8 @@ runs before ordinary condition expansion with read-only access to the macro
 table. A future C dialect can replace `defined(NAME)` with a truth-value token,
 leaving `NAME` unexpanded while the shared engine expands the remainder. The
 default identity hook preserves dialects without this operator, and the engine
-rejects a growing result so the hook cannot produce unmetered tokens.
+rejects increases in token count or text bytes so the hook cannot return
+unmetered tokens.
 
 ### VM-068 — controlling expressions were not macro-expanded (found and fixed in slice 2)
 

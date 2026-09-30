@@ -247,8 +247,10 @@ dialect recognizes `defined NAME` or `defined(NAME)`, queries
 token. The operand consequently never enters ordinary macro expansion, while
 the engine still expands every remaining macro before `eval_condition`. The
 default identity implementation keeps dialects without such an operator
-unchanged. Preparation must not increase the token count; the engine rejects a
-growing result so this dialect seam cannot create unmetered output.
+unchanged. Preparation must not increase the token count or total token text
+bytes; the engine rejects a growing result and any token exceeding the spelling
+limit. An unlocated preparation error receives the controlling directive's
+source position.
 
 **`FileId` names a retained open handle, and that is load-bearing.** Splitting
 the operation across two calls would otherwise reopen the very TOCTOU the rules

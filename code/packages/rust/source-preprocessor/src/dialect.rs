@@ -76,8 +76,8 @@ pub trait Dialect {
     /// [`MacroTable::is_defined`]; consequently `NAME` is never expanded,
     /// while macros elsewhere in the expression still are.
     ///
-    /// Implementations must not increase the token count. The engine enforces
-    /// that restriction so this hook cannot become an unmetered producer.
+    /// Implementations must not increase the token count or total spelling
+    /// bytes. The engine enforces both limits on the returned tokens.
     fn prepare_condition(
         &self,
         tokens: Vec<Token>,
