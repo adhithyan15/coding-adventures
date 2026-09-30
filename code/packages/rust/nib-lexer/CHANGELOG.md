@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Reconcile the committed compiled token table with the canonical
+  `grammar-tools generate-rust-compiled-grammars nib` output so CI can protect
+  the artifact with a byte-for-byte regeneration check.
 - Add `SHL` (`<<`) and `SHR` (`>>`) tokens ahead of comparison tokens so Nib
   source can express logical shifts without token splitting.
 

@@ -176,19 +176,24 @@
         "code/programs/rust/grammar-tools/**"
       ]
     },
-    "macrooct-grammar-regen-check": {
+    "rust-grammar-regen-check": {
       "scope": "job",
-      "description": "Regenerates MacroOct's reconciled Rust _grammar.rs from macrooct.tokens and rejects stale committed output (#14202).",
+      "description": "Regenerates reconciled MacroOct and Nib Rust _grammar.rs artifacts from canonical sources and rejects stale committed output (#14202).",
       "packages": [
         "rust/grammar-tools",
         "rust/programs/grammar-tools",
-        "rust/macrooct-lexer"
+        "rust/macrooct-lexer",
+        "rust/nib-lexer",
+        "rust/nib-parser"
       ],
       "paths": [
         "code/grammars/macrooct/**",
+        "code/grammars/nib/**",
         "code/packages/rust/grammar-tools/**",
         "code/programs/rust/grammar-tools/**",
-        "code/packages/rust/macrooct-lexer/src/_grammar.rs"
+        "code/packages/rust/macrooct-lexer/src/_grammar.rs",
+        "code/packages/rust/nib-lexer/src/_grammar.rs",
+        "code/packages/rust/nib-parser/src/_grammar.rs"
       ]
     },
     "unicode17-elixir-conformance": {
