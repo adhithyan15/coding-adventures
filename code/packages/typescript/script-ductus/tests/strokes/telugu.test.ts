@@ -31,6 +31,7 @@ const TELUGU_DDA = DUCTUS[ductusKey("telugu", "డ")];
 const TELUGU_DDHA = DUCTUS[ductusKey("telugu", "ఢ")];
 const TELUGU_NNA = DUCTUS[ductusKey("telugu", "ణ")];
 const TELUGU_TA = DUCTUS[ductusKey("telugu", "త")];
+const TELUGU_THA = DUCTUS[ductusKey("telugu", "థ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -46,7 +47,7 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట, డ, ఢ, ణ and త routes and five-run pedagogical ఐ route cross
+  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట, డ, ఢ, ణ, త and థ routes and five-run pedagogical ఐ route cross
   // narrow printed counter transitions while still covering their complete
   // outlines. ట's six separately numbered source movements cut across the
   // broad printed bowl most strongly. డ's separately numbered arcs likewise
@@ -129,6 +130,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("త", TELUGU_TA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("థ", TELUGU_THA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -413,6 +417,22 @@ describe("handwriting ductus", () => {
         "return upward and curve left across the upper shoulder",
       ],
       ["sweep up through the separate top flourish"],
+    ]);
+  });
+
+  it("Telugu థ preserves all seven source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_THA)).toBe(6);
+    expect(TELUGU_THA.strokes).toHaveLength(7);
+    expect(
+      TELUGU_THA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep down around the upper-left curve",
+      "turn right around the lower-left bowl",
+      "sweep right and upward around the lower-right bowl",
+      "curve left around the upper-right shoulder",
+      "curl upward through the separate top flourish",
+      "draw the separate lower stem downward",
+      "place the separate inner dot",
     ]);
   });
 
