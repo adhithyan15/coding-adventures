@@ -1,0 +1,4 @@
+component LayoutProbe {
+  slot title : text ;
+  emit onPick ;
+}
