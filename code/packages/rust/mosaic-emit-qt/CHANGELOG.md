@@ -62,6 +62,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — Qt host controls preserve authored font families (#15254)
+
+`HostButton`, `HostInput`, `HostCheckbox`, and the other Qt Quick Controls now
+receive their part's `font-family` as a native `font.family` binding. Variant
+overrides remain conditional and fall back to the platform application font
+when only a state authors the family. This completes the host-control
+typography gap after `font-size` support landed with #15277; it does not claim
+font-family declarations on unrelated non-control containers.
+
 ### Fixed — state-layer sizing reaches Qt layout items and host controls (#15277)
 
 Size variants on `Stack` and other styled layout containers now drive
