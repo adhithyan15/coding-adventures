@@ -143,6 +143,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S151-letter-dha",
+      "sourceHash": "fnv1a64:1ffa754e653da17f",
+      "svgHash": "fnv1a64:5c7a5738e6738585",
+      "svg": "telugu/book/figures/TE-S151-letter-dha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S152-letter-tta",
       "sourceHash": "fnv1a64:a7f35348b009149d",
       "svgHash": "fnv1a64:31e5cb893d047c52",
