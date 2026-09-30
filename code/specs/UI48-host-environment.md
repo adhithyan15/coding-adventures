@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2) and Compose (§7.5); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2), Compose (§7.5) and Flutter (§7.9); ENV4 on SwiftUI (§7.3), Compose (§7.4), Qt (§7.6), XAML (§7.7) and Flutter (§7.8)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -768,6 +768,93 @@ queue, nothing before the host is ready, failures only logged; none in a
 sample shell). The same lane runs `flutter analyze`, a launch and the TaskApp
 lifecycle widget test on the generated TaskApp, which observes at start. As on
 the other hosts, the resize-and-assert gate lands with ENV-last.
+
+### 7.9 ENV2 and ENV3 on Flutter, as built
+
+§7.5 on the Flutter shell, reusing what §7.8 already reduces.
+
+**ENV2 — one app carries every variant.**
+
+- A variant's root is its own Dart widget class, `<Component><Variant>` in
+  PascalCase (`EngramApp.touch.mll` → `class EngramAppTouch`), named by
+  `mosaic-emit-flutter`'s `variant_widget_name` with the same rule as Compose
+  and SwiftUI. A variant whose widget would take a name the default file
+  declares (`Card.event-tap.mll` → `CardEventTap`, the `onTap` event) is
+  refused.
+- A variant file carries only what differs: its widget and the private
+  helpers its own tree uses. A leading `_` makes a Dart name private to its
+  file, so those may repeat. The interface — the `<C>Event` sealed class and
+  its `<C>Event<Case>` subclasses — is emitted once, by the default layout's
+  file. Dart resolves nothing across files without an import, so the variant
+  file imports it (`import 'EngramApp.dart';`); the import is always used,
+  because the widget's `dispatch` field names `<C>Event`. The variant widget
+  takes exactly the default's constructor arguments, since the slots are part
+  of the interface too.
+- The project shell copies every export's variant files
+  (`<C>.<variant>.dart`) into `lib/`, beside the default, so
+  `flutter analyze` checks every layout. `main.dart` imports the root's
+  selectable variants — only those, because an unused import is an error
+  under the generated `analysis_options.yaml`.
+- Two variants whose names differ only in letter case or in `-` / `_` are
+  already refused when variants are discovered (§7.5); that check is shared
+  by every backend, Flutter included.
+
+**ENV3 — the selector.**
+
+- The rules are the package's `[[app.layouts]]` (or the conventions),
+  computed by the same `effective_layout_rules` as SwiftUI and Compose, and
+  passed to the emitter as `EmitOptions::layout_variants`: one
+  `LayoutChoice` per rule, in rule order, each condition keyed by its wire
+  name (`EnvironmentAxis::wire_name`). The emitter checks them again before
+  writing Dart: a usable variant chosen once, camelCase axis names, lowercase
+  values. A rule for a variant with no `.mll` fails the build.
+- `main.dart` carries them as data, `mosaicLayoutRules`, a `const` list of
+  `(variant, conditions)` records, and a public
+  `mosaicLayoutVariant(environment)` that returns the first variant whose
+  conditions all hold, or null for the default — `select_variant`'s
+  semantics. It is public so a widget test can call it directly.
+- Selection runs in a `Builder` placed where the root used to be, below
+  `MaterialApp`'s `MediaQuery`: `_mosaicLayoutRoot(context)` reads the same
+  aspects §7.8's observer reads (`sizeOf`, `platformBrightnessOf`,
+  `disableAnimationsOf`), reduces them with `MosaicHost.environmentReport` —
+  so the report and the rules share wire names and thresholds — and switches:
+  `case 'touch': return EngramAppTouch(...); default: return EngramApp(...);`.
+  A resize across a threshold rebuilds just that `Builder` with the other
+  root, on the same frame. The props live in the shell's state (fed by the
+  runtime), so swapping roots loses nothing but the old root's own
+  widget-local state (a text field's cursor, say).
+- A test pins every rule axis's wire name as a key of the Flutter binding's
+  `environmentReport`, so a rule can never test a key the report does not
+  carry.
+- The observer (§7.8) is untouched: it still reports from `MaterialApp`'s
+  builder, post-frame. The selector does not wait for it and does not need
+  the runtime to have taken the report.
+- A sample-props shell with variants selects too, and reports to nobody, as
+  on Compose. Its host is the standard binding the builder installs; a
+  package that replaces `mosaic_host.dart` and has variants must provide
+  `environmentReport` (none does today). The emitter's placeholder host
+  gains an `environmentReport` answering an empty environment (the default
+  layout) whenever a shell selects from it.
+- A package without variants gets byte-identical output: TaskApp and
+  RatingControls were emitted before and after, both profiles, with no
+  difference. A test also pins that the variant shell, minus the import, the
+  `_mosaicLayoutRoot` method and the selector, is byte-for-byte the plain
+  shell.
+
+**Acceptance — the resize gate.** Unlike SwiftUI and Compose, Flutter's
+widget tests can resize the window (`tester.view.physicalSize`), so the gate
+§7 asks for lands here rather than waiting for ENV-last. A fixture package,
+`mosaic-emit-flutter/fixtures/layout-variants`, has a default layout and a
+`compact` one selected by convention; its widget test mounts the generated
+sample shell at 1200 × 800 (default), 400 × 800 (compact), 599 (compact),
+600 (default) and back, asserting which root is mounted each time and that
+the same props reach it. CI's Linux Flutter lane runs it after `flutter
+analyze`. The native-complete shell cannot be mounted in a widget test
+without a runtime library, so its selector is covered by Rust tests and by
+Engram — the one package with a variant — whose generated native-complete
+project the same lane analyzes and builds with both roots, after checking
+that `EngramAppTouch`, its import and the `switch` are in `lib/`. On Linux
+the pointer is `fine`, so Engram's touch layout is compiled but not shown.
 
 ## 8. Open questions
 
