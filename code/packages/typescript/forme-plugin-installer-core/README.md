@@ -35,8 +35,9 @@ absolute/traversing/control/non-NFC/non-portable paths, case-fold and prefix
 collisions, the case-insensitive `grants.toml` namespace, missing selected runtime entries, and
 missing declared schemas. Required reviewed grants must be present; every
 reviewed grant must be declared by the manifest after template resolution.
-Templated paths use a colon-free portable encoding, so Windows drive paths stay
-inside one capability detail segment. Destination and transaction basenames are
+Templated paths use reversible URI-path encoding, so Windows drive paths,
+backslashes, whitespace, and controls stay inside one capability detail segment
+without aliasing distinct POSIX names. Destination and transaction basenames are
 bounded below common 255-byte filesystem limits.
 
 The current FM02 signature authenticates canonical manifest semantics plus the
@@ -58,6 +59,11 @@ reinstall is `unchanged`; immutable mode rejects a different existing target;
 replace mode restores the old target if commit fails or cancellation arrives
 after backup. Existing-tree inspection has independent directory, file, depth,
 and aggregate-entry ceilings, including for directory-only trees.
+
+POSIX roots must not be group- or world-writable. Windows callers must supply
+`verifyWindowsRootAcl`, which independently verifies that the canonical root's
+ACL excludes untrusted writers; installation fails closed without it. Every
+created lock, stage, and backup is rechecked against the root owner and device.
 
 ## Development
 

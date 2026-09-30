@@ -254,6 +254,13 @@ describe("installPreparedPlugin", () => {
       .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
   });
 
+  it.runIf(process.platform !== "win32")("rejects a group- or world-writable install root", async () => {
+    const unsafe = await fixture();
+    await chmod(unsafe.installRoot, 0o777);
+    await expect(installPreparedPlugin({ prepared: unsafe.prepared }))
+      .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
+  });
+
   it("bounds cancellation, target depth, and target entry scans", async () => {
     const cancelled = await fixture();
     await installPreparedPlugin({ prepared: cancelled.prepared });

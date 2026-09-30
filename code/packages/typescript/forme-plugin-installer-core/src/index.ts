@@ -219,6 +219,8 @@ export interface InstallPreparedPluginOptions {
   readonly prepared: PreparedPluginInstall;
   readonly mode?: "replace" | "immutable";
   readonly signal?: AbortSignal;
+  /** Required on Windows; must verify the canonical root ACL excludes other writers. */
+  readonly verifyWindowsRootAcl?: (canonicalRoot: string) => boolean | Promise<boolean>;
 }
 
 export interface PluginInstallResult {
@@ -259,7 +261,11 @@ export async function installPreparedPlugin(
   }
   const prepared = options.prepared;
   throwIfAborted(options.signal);
-  const root = await requireSafeRoot(dirname(prepared.destinationPath), prepared.destinationPath);
+  const root = await requireSafeRoot(
+    dirname(prepared.destinationPath),
+    prepared.destinationPath,
+    options.verifyWindowsRootAcl,
+  );
   const targetPath = join(root.path, prepared.destinationName);
   const lockPath = join(root.path, `.${prepared.destinationName}.forme-lock`);
   const lock = await acquireLock(root, lockPath);
@@ -282,7 +288,7 @@ export async function installPreparedPlugin(
       throw new PluginInstallError("TARGET_EXISTS", "an installed plugin already exists and differs");
     }
     status = existing ? "updated" : "installed";
-    stage = await createOwnedDirectory(root.path, `.${prepared.destinationName}.forme-stage-`);
+    stage = await createOwnedDirectory(root, `.${prepared.destinationName}.forme-stage-`);
     try {
       await materializePreparedSnapshot(stage, prepared, options.signal);
       const staged = await inspectTree(stage.path, prepared, stage, options.signal, "STAGING_FAILED");
@@ -299,7 +305,7 @@ export async function installPreparedPlugin(
 
     if (existing) {
       await requireOwnedDirectory(existing, "TARGET_UNSAFE");
-      backup = await createOwnedDirectory(root.path, `.${prepared.destinationName}.forme-backup-`);
+      backup = await createOwnedDirectory(root, `.${prepared.destinationName}.forme-backup-`);
       backupTarget = join(backup.path, "root");
       await rename(targetPath, backupTarget);
       oldTargetMoved = true;
@@ -376,7 +382,11 @@ function resultFor(
   });
 }
 
-async function requireSafeRoot(rootPath: string, destinationPath: string): Promise<OwnedDirectory> {
+async function requireSafeRoot(
+  rootPath: string,
+  destinationPath: string,
+  verifyWindowsRootAcl?: (canonicalRoot: string) => boolean | Promise<boolean>,
+): Promise<OwnedDirectory> {
   try {
     const lexicalRoot = resolve(rootPath);
     /* v8 ignore next -- prepared snapshots derive destinationPath directly from this root */
@@ -392,6 +402,14 @@ async function requireSafeRoot(rootPath: string, destinationPath: string): Promi
     if (!sameIdentity(identity(info), identity(canonicalInfo))) throw new Error("install root changed during resolution");
     if (typeof process.getuid === "function" && canonicalInfo.uid !== BigInt(process.getuid())) {
       throw new Error("install root is not owned by the current host user");
+    }
+    if (process.platform !== "win32" && (canonicalInfo.mode & 0o022n) !== 0n) {
+      throw new Error("install root must not be writable by group or other users");
+    }
+    /* v8 ignore next 4 -- exercised by BUILD_windows; Windows has no trustworthy POSIX mode bits */
+    if (process.platform === "win32" &&
+        (verifyWindowsRootAcl === undefined || !await verifyWindowsRootAcl(canonicalRoot))) {
+      throw new Error("install root ACL was not verified as private to the current host user");
     }
     return { path: canonicalRoot, identity: identity(canonicalInfo), ownerUid: canonicalInfo.uid };
   } catch (cause) {
@@ -417,7 +435,7 @@ async function acquireLock(root: OwnedDirectory, path: string): Promise<OwnedDir
   await requireRootStable(root);
   try {
     await mkdir(path, { mode: 0o700 });
-    return await ownedDirectory(path, "TARGET_BUSY", root.ownerUid);
+    return await ownedDirectory(path, "TARGET_BUSY", root);
   } catch (cause) {
     if (isErrno(cause, "EEXIST")) throw new PluginInstallError("TARGET_BUSY", "another installer holds the plugin lock", cause);
     /* v8 ignore next -- only a concurrent lock-path replacement can make ownedDirectory fail here */
@@ -426,12 +444,12 @@ async function acquireLock(root: OwnedDirectory, path: string): Promise<OwnedDir
   }
 }
 
-async function createOwnedDirectory(parent: string, prefix: string): Promise<OwnedDirectory> {
+async function createOwnedDirectory(parent: OwnedDirectory, prefix: string): Promise<OwnedDirectory> {
   for (let attempt = 0; attempt < 16; attempt += 1) {
-    const path = join(parent, `${prefix}${randomBytes(12).toString("hex")}`);
+    const path = join(parent.path, `${prefix}${randomBytes(12).toString("hex")}`);
     try {
       await mkdir(path, { mode: 0o700 });
-      return await ownedDirectory(path, "STAGING_FAILED");
+      return await ownedDirectory(path, "STAGING_FAILED", parent);
     } catch (cause) {
       /* v8 ignore next -- a cryptographic random-name collision is operationally unreachable */
       if (isErrno(cause, "EEXIST")) continue;
@@ -441,11 +459,12 @@ async function createOwnedDirectory(parent: string, prefix: string): Promise<Own
   throw new PluginInstallError("STAGING_FAILED", "could not reserve a unique transaction directory");
 }
 
-async function ownedDirectory(path: string, code: PluginInstallErrorCode, expectedOwnerUid?: bigint): Promise<OwnedDirectory> {
+async function ownedDirectory(path: string, code: PluginInstallErrorCode, expectedParent?: OwnedDirectory): Promise<OwnedDirectory> {
   const info = await lstat(path, { bigint: true });
   /* v8 ignore next -- mkdir just created this private path; only an out-of-band replacement can violate it */
   if (info.isSymbolicLink() || !info.isDirectory() ||
-      (expectedOwnerUid !== undefined && info.uid !== expectedOwnerUid)) {
+      (expectedParent !== undefined &&
+       (info.uid !== expectedParent.ownerUid || info.dev !== expectedParent.identity.dev))) {
     throw new PluginInstallError(code, `${path} is not an owned directory`);
   }
   return { path, identity: identity(info), ownerUid: info.uid };
@@ -687,7 +706,7 @@ function copyAndValidateFiles(files: readonly PluginPackageFile[]): PluginPackag
     portable.set(folded, path);
     result.push(Object.freeze({ path, bytes: Uint8Array.from(value.bytes) }));
   }
-  rejectPrefixCollisions([...exact].sort(compareText));
+  rejectPrefixCollisions(exact, portable);
   return result;
 }
 
@@ -711,12 +730,15 @@ function validatePackagePath(value: unknown, field: string): string {
   return value;
 }
 
-function rejectPrefixCollisions(paths: readonly string[]): void {
-  for (let index = 1; index < paths.length; index += 1) {
-    const previous = paths[index - 1]!;
-    const current = paths[index]!;
-    if (current.startsWith(`${previous}/`)) {
-      throw new TypeError(`plugin package path prefix collision between ${JSON.stringify(previous)} and ${JSON.stringify(current)}`);
+function rejectPrefixCollisions(paths: ReadonlySet<string>, portable: ReadonlyMap<string, string>): void {
+  for (const path of paths) {
+    const segments = path.split("/");
+    for (let length = 1; length < segments.length; length += 1) {
+      const ancestor = segments.slice(0, length).join("/");
+      const collision = paths.has(ancestor) ? ancestor : portable.get(ancestor.toLowerCase());
+      if (collision !== undefined) {
+        throw new TypeError(`plugin package path prefix collision between ${JSON.stringify(collision)} and ${JSON.stringify(path)}`);
+      }
     }
   }
 }
@@ -765,6 +787,7 @@ function resolveCapability(entry: CapabilityEntry, environment: TemplateEnv): Ca
     ? `${entry.realm}:${entry.scope}:${entry.detail}`
     : `${entry.realm}:${entry.scope}`;
   const resolved = resolveCapabilityTemplate(template, environment);
+  /* v8 ignore next -- manifest validation plus reversible path encoding guarantees parseability */
   if (!tryParseCapability(resolved)) throw new TypeError(`manifest declares invalid capability ${JSON.stringify(resolved)}`);
   return resolved;
 }

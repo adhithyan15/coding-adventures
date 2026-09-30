@@ -402,10 +402,12 @@ capability is recorded:
 - `$cacheDir` — resolves to `settings.cacheDir`, if set.
 - `$pluginDir` — resolves to the plugin's installation directory.
 
-Path-valued substitutions use a portable capability-detail representation:
-backslashes become `/`, literal `%` becomes `%25`, and `:` becomes `%3A`.
-Thus `C:\\site\\content` resolves as `C%3A/site/content`, remains one third
-capability segment, and compares identically during installation and loading.
+Path-valued substitutions use reversible URI-path encoding: `/` remains the
+hierarchy separator while `%`, `:`, backslashes, whitespace, controls, and
+non-ASCII bytes are percent-encoded. Thus `C:\\site\\content` resolves as
+`C%3A%5Csite%5Ccontent`, remains one third capability segment, and compares
+identically during installation and loading without aliasing distinct POSIX
+paths. Platform path normalization occurs before template resolution.
 
 Any unrecognised `$variable` causes a manifest validation error.
 Plain `$` characters that should not be templated must be escaped
@@ -546,6 +548,13 @@ changing the manifest identity or grants creates one atomic replacement.
 Cancellation is checked before staging, between file writes, and before the
 commit rename. The single-user threat model still excludes a privileged actor
 that can replace the install root itself.
+
+On POSIX, the installer rejects an install root writable by group or other
+users and verifies every transaction directory has the root's owner and
+device. On Windows, POSIX mode bits do not describe ACL authority, so callers
+MUST provide the install operation's `verifyWindowsRootAcl` callback; the core
+fails closed unless it confirms that the canonical root ACL excludes writers
+other than the current host user and trusted administrators.
 
 `forme install` is outside FM02's package surface (it lives in the
 CLI, FM07), but the trust-store and grants-file formats are FM02's

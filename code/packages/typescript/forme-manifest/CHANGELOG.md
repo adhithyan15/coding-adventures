@@ -4,8 +4,9 @@
 
 - Accept one explicit `Stream<KindName>` wrapper in stage contribution kind
   references and reject malformed or nested wrappers before plugin loading.
-- Encode templated host paths into a colon-free portable capability detail so
-  Windows drive letters cannot expand a declaration beyond three segments.
+- Reversibly URI-encode templated host paths into one capability detail so
+  Windows drive letters, backslashes, whitespace, and controls remain safe
+  without aliasing distinct POSIX paths.
 
 ## 0.1.0 — 2026-05-16
 

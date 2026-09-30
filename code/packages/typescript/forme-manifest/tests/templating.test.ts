@@ -36,10 +36,16 @@ describe("resolveCapabilityTemplate", () => {
       pluginDir: "C:\\forme\\plugins\\demo",
     };
     expect(resolveCapabilityTemplate("filesystem:read:$storageRoot", windows))
-      .toBe("filesystem:read:C%3A/site/content");
+      .toBe("filesystem:read:C%3A%5Csite%5Ccontent");
     expect(resolveCapabilityTemplate("filesystem:write:$cacheDir", windows))
-      .toBe("filesystem:write:D%3A/cache%25shared");
-    expect(encodeCapabilityPath("C:\\x%y")).toBe("C%3A/x%25y");
+      .toBe("filesystem:write:D%3A%5Ccache%25shared");
+    expect(encodeCapabilityPath("C:\\x%y")).toBe("C%3A%5Cx%25y");
+    expect(encodeCapabilityPath("/x/a\\b")).not.toBe(encodeCapabilityPath("/x/a/b"));
+    expect(encodeCapabilityPath("/x/a b\n")).toBe("/x/a%20b%0A");
+  });
+
+  it("rejects an unpaired surrogate in a templated path", () => {
+    expect(() => encodeCapabilityPath("/bad/\ud800")).toThrow(ManifestError);
   });
 
   it("handles $$ as literal dollar", () => {

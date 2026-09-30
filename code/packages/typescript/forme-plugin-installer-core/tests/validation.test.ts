@@ -121,10 +121,10 @@ describe("snapshot defensive validation", () => {
       ...opts(),
       capabilityEnvironment: { storageRoot: "/tmp:portable", cacheDir: null },
     }).pluginName).toBe("@example/validation");
-    expect(() => preparePluginInstallSnapshot({
+    expect(preparePluginInstallSnapshot({
       ...opts(),
       capabilityEnvironment: { storageRoot: "/tmp/bad path", cacheDir: null },
-    })).toThrow(/invalid capability/i);
+    }).pluginName).toBe("@example/validation");
   });
 
   it("rejects forged prepared snapshots and invalid modes", async () => {
@@ -159,6 +159,15 @@ describe("snapshot defensive validation", () => {
   it("rejects prefix collisions and malformed file rows", () => {
     expect(() => preparePluginInstallSnapshot(opts(packageFiles(BASE, [
       { path: "tree", bytes: ENTRY },
+      { path: "tree/leaf", bytes: ENTRY },
+    ])))).toThrow(/prefix collision/i);
+    expect(() => preparePluginInstallSnapshot(opts(packageFiles(BASE, [
+      { path: "a", bytes: ENTRY },
+      { path: "a-x", bytes: ENTRY },
+      { path: "a/b", bytes: ENTRY },
+    ])))).toThrow(/prefix collision/i);
+    expect(() => preparePluginInstallSnapshot(opts(packageFiles(BASE, [
+      { path: "Tree", bytes: ENTRY },
       { path: "tree/leaf", bytes: ENTRY },
     ])))).toThrow(/prefix collision/i);
     expect(() => preparePluginInstallSnapshot(opts([null as never]))).toThrow(/object/i);

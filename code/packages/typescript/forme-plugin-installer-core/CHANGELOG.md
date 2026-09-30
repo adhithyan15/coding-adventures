@@ -15,4 +15,9 @@
   path collisions, and unbounded package or filesystem scans.
 - Bound grant preprocessing, package topology, destination names, and existing
   directory-only trees; reserve the full case-folded `grants.toml` namespace.
-- Use portable colon-free capability path expansion for Windows drive paths.
+- Use reversible URI capability path expansion for drive letters, backslashes,
+  whitespace, controls, and non-ASCII bytes without POSIX path aliasing.
+- Reject shared-writable POSIX roots, require an explicit Windows ACL verifier,
+  and bind every transaction directory to the root owner and filesystem.
+- Detect exact and case-folded file/ancestor collisions independent of input
+  order before any filesystem operation.

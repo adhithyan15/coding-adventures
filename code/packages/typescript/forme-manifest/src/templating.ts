@@ -22,9 +22,10 @@
  * conditionals, no `$var.field`, no `${var}` syntax.  It exists so
  * a plugin's manifest can declare `"filesystem:read:$storageRoot"`
  * without knowing the user's project layout.  Nothing more. Path values are
- * converted to a portable capability-detail representation: backslashes
- * become `/`, `%` becomes `%25`, and `:` becomes `%3A`. This keeps Windows
- * drive paths inside the third capability segment.
+ * converted to a reversible URI-path capability-detail representation. `/`
+ * remains the hierarchy separator while `%`, `:`, backslashes, whitespace,
+ * controls, and non-ASCII bytes are percent-encoded. This keeps Windows drive
+ * paths inside the third capability segment without aliasing POSIX names.
  *
  * @module templating
  */
@@ -132,7 +133,14 @@ export function hasTemplate(template: string): boolean {
 
 /** Encode an absolute host path for use as one colon-free capability detail. */
 export function encodeCapabilityPath(path: string): string {
-  return path.replaceAll("\\", "/").replaceAll("%", "%25").replaceAll(":", "%3A");
+  try {
+    return encodeURIComponent(path).replaceAll("%2F", "/");
+  } catch {
+    throw new ManifestError({
+      code: "TEMPLATE_MALFORMED",
+      message: "capability path contains an unpaired Unicode surrogate",
+    });
+  }
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────
