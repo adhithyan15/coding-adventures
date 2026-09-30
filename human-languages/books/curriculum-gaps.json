@@ -26,14 +26,14 @@
     "rampOverBudgetLessons": 0,
     "scriptRampOverBudgetLessons": 32,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 269,
+    "scriptClosureViolations": 243,
     "scriptExposureExemptedGlyphs": 1622,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
     "atomsNeverRevisited": 173,
-    "forwardReferences": 921,
+    "forwardReferences": 919,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
     "chapterGateCleanTracks": 10,
@@ -10188,22 +10188,22 @@
           "budget": 3
         },
         {
-          "lessonId": "KA-C02-santosha",
-          "language": "kannada",
-          "chapter": 2,
-          "glyphs": 8,
-          "sample": "ಂಗಟತಭಷೇೋ",
-          "systems": [
-            "Kannada"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "TE-C01-namaskaram",
           "language": "telugu",
           "chapter": 1,
           "glyphs": 8,
           "sample": "ంకనమరసా్",
+          "systems": [
+            "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C16-nelalu",
+          "language": "telugu",
+          "chapter": 16,
+          "glyphs": 8,
+          "sample": "ఖఘజఠఢణఫభ",
           "systems": [
             "Telugu"
           ],
@@ -10320,17 +10320,6 @@
           "budget": 3
         },
         {
-          "lessonId": "TE-C16-nelalu",
-          "language": "telugu",
-          "chapter": 16,
-          "glyphs": 6,
-          "sample": "ఖఘజఠఢఫ",
-          "systems": [
-            "Telugu"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "RU-C02-ya",
           "language": "russian",
           "chapter": 2,
@@ -10402,6 +10391,17 @@
           "chapter": 1,
           "glyphs": 4,
           "sample": "ದಧಯವ",
+          "systems": [
+            "Kannada"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "KA-C02-santosha",
+          "language": "kannada",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "ಂತಷೋ",
           "systems": [
             "Kannada"
           ],
@@ -10756,7 +10756,7 @@
           "script": "urdu-nastaliq",
           "latinScript": false,
           "lessonCount": 721,
-          "totalGlyphs": 47,
+          "totalGlyphs": 43,
           "lessonViolations": 2,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
@@ -211525,14 +211525,6 @@
         "lessonsEarly": 94
       },
       {
-        "lessonId": "KA-C04-hoogu",
-        "language": "kannada",
-        "position": 29,
-        "word": "ಬಾ",
-        "taughtBy": "KA-C32-baa",
-        "lessonsEarly": 94
-      },
-      {
         "lessonId": "ES-C285-enfermera",
         "language": "spanish",
         "position": 525,
@@ -212850,14 +212842,6 @@
         "position": 143,
         "word": "ഊണ്",
         "taughtBy": "ML-C40-oon",
-        "lessonsEarly": 29
-      },
-      {
-        "lessonId": "TE-C03-miiru-elaa-unnaaru",
-        "language": "telugu",
-        "position": 32,
-        "word": "ఉండు",
-        "taughtBy": "TE-C05-undu",
         "lessonsEarly": 29
       },
       {
@@ -215520,7 +215504,7 @@
         "forwardReviews": 0,
         "atomsTaught": 822,
         "atomsNeverRevisited": 0,
-        "forwardReferences": 14
+        "forwardReferences": 13
       },
       {
         "language": "latin",
@@ -215640,7 +215624,7 @@
         "forwardReviews": 0,
         "atomsTaught": 814,
         "atomsNeverRevisited": 3,
-        "forwardReferences": 11
+        "forwardReferences": 10
       },
       {
         "language": "urdu",
@@ -215667,7 +215651,7 @@
         "R3": 10767,
         "R4": 13268
       },
-      "forwardReferences": 921
+      "forwardReferences": 919
     }
   },
   "scriptClosure": {
@@ -215758,8 +215742,8 @@
         "taughtGlyphs": 69,
         "shownGlyphs": 69,
         "neverTaughtGlyphs": 0,
-        "violations": 11,
-        "exposureOnly": 36,
+        "violations": 0,
+        "exposureOnly": 42,
         "exposureExemptedGlyphs": 77,
         "headwordsWithoutRomanization": 0
       },
@@ -215771,7 +215755,7 @@
         "taughtGlyphs": 69,
         "shownGlyphs": 69,
         "neverTaughtGlyphs": 0,
-        "violations": 1,
+        "violations": 0,
         "exposureOnly": 36,
         "exposureExemptedGlyphs": 63,
         "headwordsWithoutRomanization": 0
@@ -215875,8 +215859,8 @@
         "taughtGlyphs": 65,
         "shownGlyphs": 65,
         "neverTaughtGlyphs": 0,
-        "violations": 8,
-        "exposureOnly": 27,
+        "violations": 0,
+        "exposureOnly": 30,
         "exposureExemptedGlyphs": 64,
         "headwordsWithoutRomanization": 0
       },
@@ -215886,10 +215870,10 @@
         "lessonCount": 721,
         "scriptLessons": 37,
         "taughtGlyphs": 43,
-        "shownGlyphs": 47,
-        "neverTaughtGlyphs": 4,
-        "violations": 6,
-        "exposureOnly": 74,
+        "shownGlyphs": 43,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
+        "exposureOnly": 77,
         "exposureExemptedGlyphs": 203,
         "headwordsWithoutRomanization": 0
       }
@@ -216323,13 +216307,6 @@
         "count": 6
       },
       {
-        "lessonId": "KA-C02-practice",
-        "language": "kannada",
-        "chapter": 2,
-        "glyphs": "ಂಅಣತಷೋ",
-        "count": 6
-      },
-      {
         "lessonId": "RU-C11-do-skorogo",
         "language": "russian",
         "chapter": 11,
@@ -216582,13 +216559,6 @@
         "count": 4
       },
       {
-        "lessonId": "KA-C02-santosha",
-        "language": "kannada",
-        "chapter": 2,
-        "glyphs": "ಗಟಭೇ",
-        "count": 4
-      },
-      {
         "lessonId": "RU-C02-kak-vas-zovut",
         "language": "russian",
         "chapter": 2,
@@ -216750,20 +216720,6 @@
         "count": 3
       },
       {
-        "lessonId": "KA-C01-practice",
-        "language": "kannada",
-        "chapter": 1,
-        "glyphs": "ಇಲಿ",
-        "count": 3
-      },
-      {
-        "lessonId": "ML-C01-practice",
-        "language": "malayalam",
-        "chapter": 1,
-        "glyphs": "ഇലശ",
-        "count": 3
-      },
-      {
         "lessonId": "RU-C02-kak-cross-language",
         "language": "russian",
         "chapter": 2,
@@ -216845,20 +216801,6 @@
         "language": "sanskrit",
         "chapter": 13,
         "glyphs": "ऋगण",
-        "count": 3
-      },
-      {
-        "lessonId": "UR-C08-puchhna",
-        "language": "urdu",
-        "chapter": 8,
-        "glyphs": "حدِ",
-        "count": 3
-      },
-      {
-        "lessonId": "UR-C15-hawa",
-        "language": "urdu",
-        "chapter": 15,
-        "glyphs": "ءهَ",
         "count": 3
       },
       {
@@ -217142,20 +217084,6 @@
         "count": 2
       },
       {
-        "lessonId": "KA-C01-illa",
-        "language": "kannada",
-        "chapter": 1,
-        "glyphs": "ದೆ",
-        "count": 2
-      },
-      {
-        "lessonId": "KA-C05-iru",
-        "language": "kannada",
-        "chapter": 5,
-        "glyphs": "ಅೂ",
-        "count": 2
-      },
-      {
         "lessonId": "RU-C02-ty-vy",
         "language": "russian",
         "chapter": 2,
@@ -217195,34 +217123,6 @@
         "language": "sanskrit",
         "chapter": 13,
         "glyphs": "इग",
-        "count": 2
-      },
-      {
-        "lessonId": "TE-C04-practice",
-        "language": "telugu",
-        "chapter": 4,
-        "glyphs": "ళె",
-        "count": 2
-      },
-      {
-        "lessonId": "TE-C05-undu",
-        "language": "telugu",
-        "chapter": 5,
-        "glyphs": "హై",
-        "count": 2
-      },
-      {
-        "lessonId": "TE-C09-kshaminchandi",
-        "language": "telugu",
-        "chapter": 9,
-        "glyphs": "ఇభ",
-        "count": 2
-      },
-      {
-        "lessonId": "UR-R22-second-pass-one-mark-apart",
-        "language": "urdu",
-        "chapter": 22,
-        "glyphs": "جض",
         "count": 2
       },
       {
@@ -217618,48 +217518,6 @@
         "count": 1
       },
       {
-        "lessonId": "KA-C03-cennaagi",
-        "language": "kannada",
-        "chapter": 3,
-        "glyphs": "ೇ",
-        "count": 1
-      },
-      {
-        "lessonId": "KA-C04-hoogu",
-        "language": "kannada",
-        "chapter": 4,
-        "glyphs": "ಬ",
-        "count": 1
-      },
-      {
-        "lessonId": "KA-C04-naale-sigona",
-        "language": "kannada",
-        "chapter": 4,
-        "glyphs": "ಓ",
-        "count": 1
-      },
-      {
-        "lessonId": "KA-C05-kelasa-maadu",
-        "language": "kannada",
-        "chapter": 5,
-        "glyphs": "ಅ",
-        "count": 1
-      },
-      {
-        "lessonId": "KA-C08-dayavittu",
-        "language": "kannada",
-        "chapter": 8,
-        "glyphs": "ಒ",
-        "count": 1
-      },
-      {
-        "lessonId": "KA-C09-kshamisi",
-        "language": "kannada",
-        "chapter": 9,
-        "glyphs": "ಭ",
-        "count": 1
-      },
-      {
         "lessonId": "PA-C06-panj-convergence",
         "language": "punjabi",
         "chapter": 6,
@@ -217721,69 +217579,13 @@
         "chapter": 26,
         "glyphs": "ऋ",
         "count": 1
-      },
-      {
-        "lessonId": "TE-C01-sare",
-        "language": "telugu",
-        "chapter": 1,
-        "glyphs": "ి",
-        "count": 1
-      },
-      {
-        "lessonId": "TE-C02-practice",
-        "language": "telugu",
-        "chapter": 2,
-        "glyphs": "ణ",
-        "count": 1
-      },
-      {
-        "lessonId": "TE-C03-miiru-elaa-unnaaru",
-        "language": "telugu",
-        "chapter": 3,
-        "glyphs": "డ",
-        "count": 1
-      },
-      {
-        "lessonId": "TE-C04-vellu",
-        "language": "telugu",
-        "chapter": 4,
-        "glyphs": "చ",
-        "count": 1
-      },
-      {
-        "lessonId": "TE-C05-practice",
-        "language": "telugu",
-        "chapter": 5,
-        "glyphs": "చ",
-        "count": 1
-      },
-      {
-        "lessonId": "UR-C13-kala",
-        "language": "urdu",
-        "chapter": 13,
-        "glyphs": "ِ",
-        "count": 1
-      },
-      {
-        "lessonId": "UR-C13-lal",
-        "language": "urdu",
-        "chapter": 13,
-        "glyphs": "َ",
-        "count": 1
-      },
-      {
-        "lessonId": "UR-R23-second-pass-three-layers",
-        "language": "urdu",
-        "chapter": 23,
-        "glyphs": "گ",
-        "count": 1
       }
     ],
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 269,
-      "exposureOnly": 503,
+      "violations": 243,
+      "exposureOnly": 515,
       "exposureExemptedGlyphs": 1622,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
@@ -236673,14 +236475,14 @@
         "atomChapterSpikes": 4,
         "glyphLessonSpikes": 4,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 11,
+        "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 14,
+        "forwardReferences": 13,
         "atomsTaught": 822,
         "atomsNeverRevisited": 0,
         "reinforcementWindowMisses": 1555,
@@ -236698,7 +236500,7 @@
           {
             "language": "kannada",
             "kind": "forward-language",
-            "count": 14,
+            "count": 13,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -236734,7 +236536,7 @@
         "next": {
           "language": "kannada",
           "kind": "forward-language",
-          "count": 14,
+          "count": 13,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -236818,7 +236620,7 @@
         "atomChapterSpikes": 3,
         "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 1,
+        "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -237613,14 +237415,14 @@
         "atomChapterSpikes": 5,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 8,
+        "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 11,
+        "forwardReferences": 10,
         "atomsTaught": 814,
         "atomsNeverRevisited": 3,
         "reinforcementWindowMisses": 1627,
@@ -237638,7 +237440,7 @@
           {
             "language": "telugu",
             "kind": "forward-language",
-            "count": 11,
+            "count": 10,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -237667,7 +237469,7 @@
         "next": {
           "language": "telugu",
           "kind": "forward-language",
-          "count": 11,
+          "count": 10,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -237682,8 +237484,8 @@
         "atomChapterSpikes": 6,
         "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 6,
-        "neverTaughtGlyphs": 4,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
@@ -237710,13 +237512,6 @@
             "count": 4,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "urdu",
-            "kind": "script-closure",
-            "count": 4,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
           {
             "language": "urdu",
@@ -237807,14 +237602,14 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "kannada",
+        "language": "arabic",
         "kind": "forward-language",
-        "count": 14,
+        "count": 13,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "arabic",
+        "language": "kannada",
         "kind": "forward-language",
         "count": 13,
         "unit": "use(s)",
@@ -237835,14 +237630,14 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "telugu",
+        "language": "marathi",
         "kind": "forward-language",
-        "count": 11,
+        "count": 10,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "marathi",
+        "language": "telugu",
         "kind": "forward-language",
         "count": 10,
         "unit": "use(s)",
@@ -237906,13 +237701,6 @@
       },
       {
         "language": "arabic",
-        "kind": "script-closure",
-        "count": 4,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
-        "language": "urdu",
         "kind": "script-closure",
         "count": 4,
         "unit": "glyph(s)",
@@ -238562,7 +238350,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
       "atomMeasurementBlindLessons": 103,
-      "findings": 114
+      "findings": 113
     }
   },
   "levelGate": {
@@ -291155,7 +290943,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 16775,
-    "usesBeforeIntroduction": 34250,
+    "usesBeforeIntroduction": 34249,
     "technicalUsesBeforeIntroduction": 6318,
     "technicalLessons": 3554,
     "worstTerms": [
