@@ -226,8 +226,12 @@ an exact snapshot in that graph. The same exact snapshots may select
 conditional statement branches containing recurrence-cycle writes. Those changing
 selector-cycle assignments may themselves appear in statically selected
 conditional statement branches while still resolving dependencies across the
-whole loop body. Changing dependency recurrences may contain conditional expressions when their selectors
-are the controlled scalar or other exact local snapshots in that graph. The
+whole loop body. A conditional statement selector is also treated as a control
+dependency of writes in its branches, so it may close an exact selector cycle
+whose selected boolean assignments contain their own exact conditional
+expressions. Changing dependency recurrences may contain conditional
+expressions when their selectors are the controlled scalar or other exact
+local snapshots in that graph. The
 recurrence assignment itself may also appear in one or both branches of a
 conditional statement selected by those snapshots; a branch without the
 assignment leaves the dependency unchanged for that pass. The controlled

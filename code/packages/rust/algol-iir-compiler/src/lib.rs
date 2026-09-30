@@ -6920,23 +6920,46 @@ impl Compiler {
                 })
             }
             StaticBodyAction::Conditional {
+                condition,
                 then_actions,
                 else_actions,
-                ..
             } => {
-                Self::static_body_actions_dependency_path(
+                let branches_write_current = Self::static_body_actions_write_name(
                     then_actions,
-                    all_actions,
                     current,
-                    goal,
-                    visiting,
-                ) || Self::static_body_actions_dependency_path(
-                    else_actions,
-                    all_actions,
-                    current,
-                    goal,
-                    visiting,
-                )
+                ) || Self::static_body_actions_write_name(else_actions, current);
+                // A statement selector controls whether and which write reaches
+                // `current`, so its scalar inputs are dependency edges too.
+                let condition_closes_cycle = branches_write_current && {
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(condition, "", &mut dependencies);
+                    dependencies.into_iter().any(|dependency| {
+                        dependency == goal
+                            || (Self::static_body_actions_write_name(all_actions, &dependency)
+                                && Self::static_body_actions_dependency_path(
+                                    all_actions,
+                                    all_actions,
+                                    &dependency,
+                                    goal,
+                                    visiting,
+                                ))
+                    })
+                };
+                condition_closes_cycle
+                    || Self::static_body_actions_dependency_path(
+                        then_actions,
+                        all_actions,
+                        current,
+                        goal,
+                        visiting,
+                    )
+                    || Self::static_body_actions_dependency_path(
+                        else_actions,
+                        all_actions,
+                        current,
+                        goal,
+                        visiting,
+                    )
             }
             _ => false,
         });
@@ -15059,6 +15082,48 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_statement_control_recursive_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; flag := true; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-control cycle may select recursive boolean assignments");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_statement_control_recursive_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; flag := true; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact statement-control cycle may select a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unknown_statement_control_recursive_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, guard, flag; i := 0; n := 4; delta := 2; choose := true; guard := false; for i := i + 1 while i <= n do begin n := n - delta; if guard then choose := if flag then true else false else choose := if flag then false else true; guard := not choose; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown nested selector must keep statement-control cycles conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
