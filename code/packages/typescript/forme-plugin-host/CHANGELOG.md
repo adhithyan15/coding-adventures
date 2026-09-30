@@ -5,6 +5,8 @@
 - Make discovery and ignored-signal escalation coverage deterministic across
   POSIX and Windows hosts, and accept a clean natural child exit as successful
   bounded abandoned-stream cleanup without requiring a redundant kill signal.
+- Give the discovery candidate-limit filesystem fixture enough time on
+  contended Windows CI while keeping the production limit unchanged.
 
 ## 0.1.0 — 2026-09-27
 

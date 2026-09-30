@@ -160,7 +160,7 @@ signedAt = "2026-05-16T00:00:00Z"
     const root = await mkdtemp(join(tmpdir(), "forme-plugin-candidates-"));
     await Promise.all(Array.from({ length: 1_025 }, (_, index) => mkdir(join(root, String(index)))));
     await expect(discoverPlugins([root])).rejects.toThrow(/1024 candidate limit/);
-  });
+  }, 30_000);
 
   it.each([
     ["invalid manifest", "not = [toml"],
