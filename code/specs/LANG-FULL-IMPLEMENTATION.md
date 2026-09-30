@@ -1074,7 +1074,9 @@ backend immediately) come before the enabler-dependent items.
   including bare variables, neutral boolean operations, and even `not` chains;
   copy cycles, changing expressions, and unknown conditional inputs remain
   conservative. A conditional identity copy may have a dynamic selector when
-  both branches preserve the same unique forwarded selector.
+  both branches preserve the same unique forwarded selector. A boolean
+  projection of the form `if selector then true else false` is also an exact
+  selector copy.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
