@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R220-first-pass-words-from-chapters-212-215",
+    "language": "sanskrit",
+    "chapter": 220,
+    "sequence": 12720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7154d03053d8b571"
+  },
+  "findings": []
+}

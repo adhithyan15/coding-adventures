@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:968e5202a1e8183f",
+  "lessonIds": [
+    "SA-C224-kendram",
+    "SA-C224-attalika",
+    "SA-C224-andhakarah",
+    "SA-C224-jyotih",
+    "SA-C224-bhumih"
+  ],
+  "tex": "sanskrit/book/chapters/ch224-centre-tall-building-darkness-radiance-ground.tex"
+}

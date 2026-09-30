@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:666e74b0df197e5b",
+  "lessonIds": [
+    "SA-C228-itihasah",
+    "SA-C228-bhugolah",
+    "SA-C228-sangitam",
+    "SA-C228-nrtyam",
+    "SA-C228-citrakala"
+  ],
+  "tex": "sanskrit/book/chapters/ch228-history-geography-music-dance-painting.tex"
+}

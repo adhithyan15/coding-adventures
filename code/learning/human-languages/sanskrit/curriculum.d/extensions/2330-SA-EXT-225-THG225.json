@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-225-THG225",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a valley, a desert, a woodland, a bower and a meadow.",
+  "prerequisites": []
+}

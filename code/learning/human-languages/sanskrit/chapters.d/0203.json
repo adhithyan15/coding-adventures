@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Rejoices, Salutes, Begs, Speaks, Shines",
+  "label": "ch:sa-rejoices-salutes-begs-speaks-shines",
+  "canDo": "I can say rejoices, salutes, begs, speaks and shines.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C203-sobhate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say rejoices, salutes, begs, speaks and shines.",
+    "assesses": [
+      "SA-LEX-C203-ACT203-03",
+      "SA-LEX-C203-ACT203-04",
+      "SA-LEX-C203-ACT203-05"
+    ]
+  }
+}

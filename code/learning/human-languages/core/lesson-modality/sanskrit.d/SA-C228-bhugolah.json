@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C228-bhugolah",
+    "language": "sanskrit",
+    "chapter": 228,
+    "sequence": 13430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dac5c104e9e36865"
+  },
+  "findings": []
+}

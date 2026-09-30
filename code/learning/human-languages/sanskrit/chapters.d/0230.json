@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Success, Failure, Effort, Opportunity, Experience",
+  "label": "ch:sa-success-failure-effort-opportunity-experience",
+  "canDo": "I can say success, failure, an effort, an opportunity and experience.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C230-anubhavah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say success, failure, an effort, an opportunity and experience.",
+    "assesses": [
+      "SA-LEX-C230-WRK230-03",
+      "SA-LEX-C230-WRK230-04",
+      "SA-LEX-C230-WRK230-05"
+    ]
+  }
+}

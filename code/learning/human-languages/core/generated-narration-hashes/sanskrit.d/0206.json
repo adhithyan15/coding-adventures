@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:bfe4066e2fab4a79",
+  "lessonIds": [
+    "SA-C206-majjati",
+    "SA-C206-snati",
+    "SA-C206-khelati",
+    "SA-C206-nimilayati",
+    "SA-C206-unmilayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch206.txt",
+  "json": "sanskrit/narration/ch206.json",
+  "textHash": "fnv1a64:40895ce8e78e9d6f",
+  "jsonHash": "fnv1a64:d68d8aff26c16dbc",
+  "findings": []
+}

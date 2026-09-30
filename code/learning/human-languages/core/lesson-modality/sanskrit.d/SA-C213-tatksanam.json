@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C213-tatksanam",
+    "language": "sanskrit",
+    "chapter": 213,
+    "sequence": 12330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:074143423ef31253"
+  },
+  "findings": []
+}

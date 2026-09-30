@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C223-tirtham",
+    "language": "sanskrit",
+    "chapter": 223,
+    "sequence": 13030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ccb6fad06fdc330"
+  },
+  "findings": []
+}

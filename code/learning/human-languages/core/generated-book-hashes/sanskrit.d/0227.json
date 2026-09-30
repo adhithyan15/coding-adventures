@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:3bd0cbf7d2f0b8ec",
+  "lessonIds": [
+    "SA-C227-paksah",
+    "SA-C227-pucchah",
+    "SA-C227-srngam",
+    "SA-C227-cancuh",
+    "SA-C227-grdhrah"
+  ],
+  "tex": "sanskrit/book/chapters/ch227-wing-tail-horn-beak-vulture.tex"
+}

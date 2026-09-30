@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 220,
+  "title": "Balance, Measuring rod, Stick, Staff, Archer's bow",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:a63d09fec1f010a4",
+  "lessons": [
+    {
+      "id": "SA-C220-tula",
+      "sequence": 12670,
+      "title": "तुला (tulā) — a balance, scales",
+      "headword": "तुला",
+      "romanization": "tulā",
+      "gloss": "a balance, scales",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f9e498be647db59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an apple, then the Sanskrit for flattened rice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तुला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुला — tulā — \"a balance, scales\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tulā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tulā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tulā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tulā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tulā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tulā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an apple, then the Sanskrit for flattened rice, then say tulā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an apple, then the Sanskrit for flattened rice, then say *tulā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तुला (tulā) mean? (\"A balance, scales\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C220-manadandah",
+      "sequence": 12680,
+      "title": "मानदण्डः (mānadaṇḍaḥ) — a measuring rod",
+      "headword": "मानदण्डः",
+      "romanization": "mānadaṇḍaḥ",
+      "gloss": "a measuring rod",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7ac98b3d812d8b8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for flattened rice, then the Sanskrit for a balance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मानदण्डः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मानदण्डः — mānadaṇḍaḥ — \"a measuring rod\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānadaṇḍaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānadaṇḍaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānadaṇḍaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānadaṇḍaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mānadaṇḍaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mānadaṇḍaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for flattened rice, then the Sanskrit for a balance, then say mānadaṇḍaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for flattened rice, then the Sanskrit for a balance, then say *mānadaṇḍaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मानदण्डः (mānadaṇḍaḥ) mean? (\"A measuring rod\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C220-dandah",
+      "sequence": 12690,
+      "title": "दण्डः (daṇḍaḥ) — a stick",
+      "headword": "दण्डः",
+      "romanization": "daṇḍaḥ",
+      "gloss": "a stick",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20d9394ea0a13ccc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a balance, then the Sanskrit for a measuring rod."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दण्डः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दण्डः — daṇḍaḥ — \"a stick\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daṇḍaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daṇḍaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say daṇḍaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *daṇḍaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a balance, then the Sanskrit for a measuring rod, then say daṇḍaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a balance, then the Sanskrit for a measuring rod, then say *daṇḍaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दण्डः (daṇḍaḥ) mean? (\"A stick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C220-yastih",
+      "sequence": 12700,
+      "title": "यष्टिः (yaṣṭiḥ) — a staff",
+      "headword": "यष्टिः",
+      "romanization": "yaṣṭiḥ",
+      "gloss": "a staff",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42b6a66875609cd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a measuring rod, then the Sanskrit for a stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यष्टिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यष्टिः — yaṣṭiḥ — \"a staff\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaṣṭiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaṣṭiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaṣṭiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaṣṭiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yaṣṭiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yaṣṭiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a measuring rod, then the Sanskrit for a stick, then say yaṣṭiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a measuring rod, then the Sanskrit for a stick, then say *yaṣṭiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does यष्टिः (yaṣṭiḥ) mean? (\"A staff\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C220-dhanuh",
+      "sequence": 12710,
+      "title": "धनुः (dhanuḥ) — an archer's bow",
+      "headword": "धनुः",
+      "romanization": "dhanuḥ",
+      "gloss": "an archer's bow",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7cfae19acaa0a52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a stick, then the Sanskrit for a staff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धनुः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धनुः — dhanuḥ — \"an archer's bow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanuḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanuḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dhanuḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dhanuḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a stick, then the Sanskrit for a staff, then say dhanuḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a stick, then the Sanskrit for a staff, then say *dhanuḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धनुः (dhanuḥ) mean? (\"An archer's bow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R220-first-pass-words-from-chapters-212-215",
+      "sequence": 12720,
+      "title": "Words from chapters 212-215 — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 212-215",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7154d03053d8b571",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a staff and an archer's bow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intelligence, the mind, the self, a dream, satisfaction",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: intelligence, the mind, the self, a dream, satisfaction]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at once, instantly, formerly, afterwards, as long as",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at once, instantly, formerly, afterwards, as long as]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exactly, indeed, like, without, towards",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exactly, indeed, like, without, towards]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moving, slow, sharp, blunt, valuable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: moving, slow, sharp, blunt, valuable]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Intelligence? (बुद्धिः, buddhiḥ.) The mind? (मनः, manaḥ.) The self? (आत्मा, ātmā.) A dream? (स्वप्नः, svapnaḥ.) Satisfaction? (तृप्तिः, tṛptiḥ.) At once? (सद्यः, sadyaḥ.) Instantly? (तत्क्षणम्, tatkṣaṇam.) Formerly? (प्राक्, prāk.) Afterwards? (अनन्तरम्, anantaram.) As long as? (यावत्, yāvat.) Exactly? (एव, eva.) Indeed? (खलु, khalu.) Like? (इव, iva.) Without? (विना, vinā.) Towards? (प्रति, prati.) Moving? (चलः, calaḥ.) Slow? (मन्दः, mandaḥ.) Sharp? (तीक्ष्णः, tīkṣṇaḥ.) Blunt? (कुण्ठः, kuṇṭhaḥ.) Valuable? (मूल्यवान्, mūlyavān.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R220-second-pass-words-from-chapters-216-220",
+      "sequence": 12730,
+      "title": "Words from chapters 216-220 — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 216-220",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f60c0982dbec702",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for able and expert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "able, expert, ignorant, wise, intelligent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: able, expert, ignorant, wise, intelligent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "red, reddish, tawny, equal, uneven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: red, reddish, tawny, equal, uneven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a broom, an axe, a spade, a plough, a sickle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a broom, an axe, a spade, a plough, a sickle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bael fruit, an orange, a wood apple, an apple, flattened rice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bael fruit, an orange, a wood apple, an apple, flattened rice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a balance, a measuring rod, a stick, a staff, an archer's bow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a balance, a measuring rod, a stick, a staff, an archer's bow]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Able? (कुशलः, kuśalaḥ.) Expert? (निपुणः, nipuṇaḥ.) Ignorant? (अज्ञः, ajñaḥ.) Wise? (विज्ञः, vijñaḥ.) Intelligent? (बुद्धिमान्, buddhimān.) Red? (रक्तः, raktaḥ.) Reddish? (अरुणः, aruṇaḥ.) Tawny? (कपिलः, kapilaḥ.) Equal? (समः, samaḥ.) Uneven? (विषमः, viṣamaḥ.) A broom? (सम्मार्जनी, sammārjanī.) An axe? (कुठारः, kuṭhāraḥ.) A spade? (खनित्रम्, khanitram.) A plough? (हलम्, halam.) A sickle? (दात्रम्, dātram.) A bael fruit? (बिल्वम्, bilvam.) An orange? (नारंगम्, nāraṅgam.) A wood apple? (कपित्थः, kapitthaḥ.) An apple? (सेवफलम्, sevaphalam.) Flattened rice? (चिपिटकः, cipiṭakaḥ.) A balance? (तुला, tulā.) A measuring rod? (मानदण्डः, mānadaṇḍaḥ.) A stick? (दण्डः, daṇḍaḥ.) A staff? (यष्टिः, yaṣṭiḥ.) An archer's bow? (धनुः, dhanuḥ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

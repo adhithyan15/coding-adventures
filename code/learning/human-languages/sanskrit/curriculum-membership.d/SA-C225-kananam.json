@@ -1,0 +1,11 @@
+{
+  "id": "SA-C225-kananam",
+  "pathSegment": "SA-PATH-225-THG225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-225-THG225",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:fb0057fd98b27ff8",
+  "lessonIds": [
+    "SA-C209-kavih",
+    "SA-C209-gayakah",
+    "SA-C209-nartakah",
+    "SA-C209-citrakarah",
+    "SA-C209-silpi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch209.txt",
+  "json": "sanskrit/narration/ch209.json",
+  "textHash": "fnv1a64:573ea15990e99e40",
+  "jsonHash": "fnv1a64:ef51d73049303dc7",
+  "findings": []
+}

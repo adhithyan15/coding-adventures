@@ -1,0 +1,11 @@
+{
+  "id": "SA-C220-dandah",
+  "pathSegment": "SA-PATH-220-THG220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-220-THG220",
+      "order": 2
+    }
+  ]
+}

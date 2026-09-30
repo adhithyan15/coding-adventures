@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C216-buddhiman",
+    "language": "sanskrit",
+    "chapter": 216,
+    "sequence": 12510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bef1fc6ae5640779"
+  },
+  "findings": []
+}

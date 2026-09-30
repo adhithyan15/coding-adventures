@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "At once, Instantly, Formerly, Afterwards, As long as",
+  "label": "ch:sa-at-once-instantly-formerly-afterwards-as-long-as",
+  "canDo": "I can say at once, instantly, formerly, afterwards and as long as.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "SA-C213-yavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say at once, instantly, formerly, afterwards and as long as.",
+    "assesses": [
+      "SA-LEX-C213-TIME213-03",
+      "SA-LEX-C213-TIME213-04",
+      "SA-LEX-C213-TIME213-05"
+    ]
+  }
+}

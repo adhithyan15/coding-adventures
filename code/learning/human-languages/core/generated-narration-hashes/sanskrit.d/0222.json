@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:febcd45a98f2e066",
+  "lessonIds": [
+    "SA-C222-sadhanam",
+    "SA-C222-bharah",
+    "SA-C222-panyam",
+    "SA-C222-apanikah",
+    "SA-C222-patrika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch222.txt",
+  "json": "sanskrit/narration/ch222.json",
+  "textHash": "fnv1a64:c1d240c5bcf0d477",
+  "jsonHash": "fnv1a64:41fc3f2cb5b29c5e",
+  "findings": []
+}

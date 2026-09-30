@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:860776692145fd8e",
+  "lessonIds": [
+    "SA-C226-grahah",
+    "SA-C226-dhumaketuh",
+    "SA-C226-pasuh",
+    "SA-C226-jantuh",
+    "SA-C226-paksi",
+    "SA-R226-first-pass-words-from-chapters-221-223",
+    "SA-R226-second-pass-words-from-chapters-224-226"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch226.txt",
+  "json": "sanskrit/narration/ch226.json",
+  "textHash": "fnv1a64:6ba8443a39155f72",
+  "jsonHash": "fnv1a64:b7c8a86733d8ef51",
+  "findings": []
+}

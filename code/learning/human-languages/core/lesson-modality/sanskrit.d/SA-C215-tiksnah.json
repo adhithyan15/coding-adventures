@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C215-tiksnah",
+    "language": "sanskrit",
+    "chapter": 215,
+    "sequence": 12440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41f9d6bc026460bf"
+  },
+  "findings": []
+}

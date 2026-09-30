@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-218-THG218",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a broom, an axe, a spade, a plough and a sickle.",
+  "prerequisites": []
+}

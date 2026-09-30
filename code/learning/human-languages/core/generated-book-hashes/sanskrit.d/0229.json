@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:97516983641fd86c",
+  "lessonIds": [
+    "SA-C229-niyamah",
+    "SA-C229-dharmah",
+    "SA-C229-kartavyam",
+    "SA-C229-adhikarah",
+    "SA-C229-prasnapatram"
+  ],
+  "tex": "sanskrit/book/chapters/ch229-rule-righteousness-obligation-authority-question-paper.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:91b1e1fb56277cc3",
+  "lessonIds": [
+    "SA-C204-sucayati",
+    "SA-C204-khanati",
+    "SA-C204-vapati",
+    "SA-C204-jivati",
+    "SA-C204-tapati"
+  ],
+  "tex": "sanskrit/book/chapters/ch204-points-out-digs-sows-is-alive-heats.tex"
+}

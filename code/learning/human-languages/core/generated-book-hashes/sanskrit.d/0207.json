@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:c65d782c9716be10",
+  "lessonIds": [
+    "SA-C207-divyati",
+    "SA-C207-pravahati",
+    "SA-C207-asvadayati",
+    "SA-C207-upadisati",
+    "SA-C207-sammanayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch207-gambles-flows-tastes-advises-honours.tex"
+}

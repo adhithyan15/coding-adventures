@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Gambles, Flows, Tastes, Advises, Honours",
+  "label": "ch:sa-gambles-flows-tastes-advises-honours",
+  "canDo": "I can say gambles, flows, tastes, advises and honours.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C207-sammanayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say gambles, flows, tastes, advises and honours.",
+    "assesses": [
+      "SA-LEX-C207-ACT207-03",
+      "SA-LEX-C207-ACT207-04",
+      "SA-LEX-C207-ACT207-05"
+    ]
+  }
+}

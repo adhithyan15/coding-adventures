@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Red, Reddish, Tawny, Equal, Uneven",
+  "label": "ch:sa-red-reddish-tawny-equal-uneven",
+  "canDo": "I can say red, reddish, tawny, equal and uneven.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C217-visamah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say red, reddish, tawny, equal and uneven.",
+    "assesses": [
+      "SA-LEX-C217-QUAL217-03",
+      "SA-LEX-C217-QUAL217-04",
+      "SA-LEX-C217-QUAL217-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C228-citrakala",
+    "language": "sanskrit",
+    "chapter": 228,
+    "sequence": 13460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f4e339efaae407e"
+  },
+  "findings": []
+}

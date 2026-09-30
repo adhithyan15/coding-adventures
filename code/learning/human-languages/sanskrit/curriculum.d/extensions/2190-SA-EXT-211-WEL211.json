@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-211-WEL211",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say exercise, yoga, toil, tiredness and a bath.",
+  "prerequisites": []
+}

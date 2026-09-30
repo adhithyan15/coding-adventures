@@ -1,0 +1,11 @@
+{
+  "id": "SA-C226-jantuh",
+  "pathSegment": "SA-PATH-226-THG226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-226-THG226",
+      "order": 3
+    }
+  ]
+}

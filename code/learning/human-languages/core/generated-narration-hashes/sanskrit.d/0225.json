@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:cdb2c8aee3193935",
+  "lessonIds": [
+    "SA-C225-upatyaka",
+    "SA-C225-marubhumih",
+    "SA-C225-kananam",
+    "SA-C225-kunjah",
+    "SA-C225-sadvalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch225.txt",
+  "json": "sanskrit/narration/ch225.json",
+  "textHash": "fnv1a64:416a11b79ad3abb2",
+  "jsonHash": "fnv1a64:d6818ea58781cc1f",
+  "findings": []
+}

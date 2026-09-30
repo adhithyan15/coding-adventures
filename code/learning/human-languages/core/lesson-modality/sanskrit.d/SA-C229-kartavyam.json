@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C229-kartavyam",
+    "language": "sanskrit",
+    "chapter": 229,
+    "sequence": 13490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:403a3aae3b7fe411"
+  },
+  "findings": []
+}

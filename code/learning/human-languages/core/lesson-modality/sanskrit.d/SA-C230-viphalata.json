@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C230-viphalata",
+    "language": "sanskrit",
+    "chapter": 230,
+    "sequence": 13530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14d9976c0ca9a1c5"
+  },
+  "findings": []
+}

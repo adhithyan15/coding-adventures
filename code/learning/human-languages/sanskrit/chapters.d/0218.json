@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Broom, Axe, Spade, Plough, Sickle",
+  "label": "ch:sa-broom-axe-spade-plough-sickle",
+  "canDo": "I can say a broom, an axe, a spade, a plough and a sickle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C218-datram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say a broom, an axe, a spade, a plough and a sickle.",
+    "assesses": [
+      "SA-LEX-C218-THG218-03",
+      "SA-LEX-C218-THG218-04",
+      "SA-LEX-C218-THG218-05"
+    ]
+  }
+}

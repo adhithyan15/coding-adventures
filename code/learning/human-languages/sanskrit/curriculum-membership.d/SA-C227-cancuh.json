@@ -1,0 +1,11 @@
+{
+  "id": "SA-C227-cancuh",
+  "pathSegment": "SA-PATH-227-THG227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-227-THG227",
+      "order": 3
+    }
+  ]
+}

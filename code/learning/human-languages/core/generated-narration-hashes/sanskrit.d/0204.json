@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:fdc1227e96310e2e",
+  "lessonIds": [
+    "SA-C204-sucayati",
+    "SA-C204-khanati",
+    "SA-C204-vapati",
+    "SA-C204-jivati",
+    "SA-C204-tapati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch204.txt",
+  "json": "sanskrit/narration/ch204.json",
+  "textHash": "fnv1a64:ed3611f0b3071535",
+  "jsonHash": "fnv1a64:f23e137bed35dc96",
+  "findings": []
+}

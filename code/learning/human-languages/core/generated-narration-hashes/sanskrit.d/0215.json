@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:ee99567a52851dd5",
+  "lessonIds": [
+    "SA-C215-calah",
+    "SA-C215-mandah",
+    "SA-C215-tiksnah",
+    "SA-C215-kunthah",
+    "SA-C215-mulyavan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch215.txt",
+  "json": "sanskrit/narration/ch215.json",
+  "textHash": "fnv1a64:ecf6a89b457099aa",
+  "jsonHash": "fnv1a64:831690256cbb239d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C226-pasuh",
+    "language": "sanskrit",
+    "chapter": 226,
+    "sequence": 13180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7442902c979b9db"
+  },
+  "findings": []
+}

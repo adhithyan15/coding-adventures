@@ -1,0 +1,11 @@
+{
+  "id": "SA-C229-kartavyam",
+  "pathSegment": "SA-PATH-229-SCH229",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-229-SCH229",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C214-vina",
+    "language": "sanskrit",
+    "chapter": 214,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b898883184ea2f13"
+  },
+  "findings": []
+}

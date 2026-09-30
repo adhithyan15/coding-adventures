@@ -1,0 +1,11 @@
+{
+  "id": "SA-C222-apanikah",
+  "pathSegment": "SA-PATH-222-THG222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-222-THG222",
+      "order": 3
+    }
+  ]
+}

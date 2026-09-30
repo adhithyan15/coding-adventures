@@ -1,0 +1,11 @@
+{
+  "id": "SA-C224-attalika",
+  "pathSegment": "SA-PATH-224-THG224",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-224-THG224",
+      "order": 1
+    }
+  ]
+}

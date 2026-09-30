@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:1be342d739cff1c2",
+  "lessonIds": [
+    "SA-C230-saphalata",
+    "SA-C230-viphalata",
+    "SA-C230-prayatnah",
+    "SA-C230-avasarah",
+    "SA-C230-anubhavah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch230.txt",
+  "json": "sanskrit/narration/ch230.json",
+  "textHash": "fnv1a64:fb423db6d763666f",
+  "jsonHash": "fnv1a64:0ef22291499e8a5d",
+  "findings": []
+}

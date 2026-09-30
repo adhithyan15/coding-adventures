@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C208-prativesi",
+    "language": "sanskrit",
+    "chapter": 208,
+    "sequence": 11920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82d977318b252af5"
+  },
+  "findings": []
+}

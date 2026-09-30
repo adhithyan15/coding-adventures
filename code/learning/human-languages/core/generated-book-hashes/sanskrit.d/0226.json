@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:39c2dc7887756777",
+  "lessonIds": [
+    "SA-C226-grahah",
+    "SA-C226-dhumaketuh",
+    "SA-C226-pasuh",
+    "SA-C226-jantuh",
+    "SA-C226-paksi",
+    "SA-R226-first-pass-words-from-chapters-221-223",
+    "SA-R226-second-pass-words-from-chapters-224-226"
+  ],
+  "tex": "sanskrit/book/chapters/ch226-planet-comet-animal-creature-winged-creature.tex"
+}

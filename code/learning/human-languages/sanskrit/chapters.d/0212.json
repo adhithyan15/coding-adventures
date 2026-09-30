@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Intelligence, Mind, Self, Dream, Satisfaction",
+  "label": "ch:sa-intelligence-mind-self-dream-satisfaction",
+  "canDo": "I can say intelligence, the mind, the self, a dream and satisfaction.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C212-trptih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say intelligence, the mind, the self, a dream and satisfaction.",
+    "assesses": [
+      "SA-LEX-C212-WEL212-03",
+      "SA-LEX-C212-WEL212-04",
+      "SA-LEX-C212-WEL212-05"
+    ]
+  }
+}

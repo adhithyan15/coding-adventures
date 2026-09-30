@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:198543259bc98676",
+  "lessonIds": [
+    "SA-C207-divyati",
+    "SA-C207-pravahati",
+    "SA-C207-asvadayati",
+    "SA-C207-upadisati",
+    "SA-C207-sammanayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch207.txt",
+  "json": "sanskrit/narration/ch207.json",
+  "textHash": "fnv1a64:d8e50e2e82cef4ea",
+  "jsonHash": "fnv1a64:67fed2d02c79be55",
+  "findings": []
+}

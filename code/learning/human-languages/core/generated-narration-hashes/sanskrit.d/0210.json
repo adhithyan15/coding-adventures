@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:6528964de2d73d07",
+  "lessonIds": [
+    "SA-C210-acaryah",
+    "SA-C210-pradhanacaryah",
+    "SA-C210-vidyarthi",
+    "SA-C210-sahapathi",
+    "SA-C210-cikitsakah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch210.txt",
+  "json": "sanskrit/narration/ch210.json",
+  "textHash": "fnv1a64:cf2bb5ac641a7e49",
+  "jsonHash": "fnv1a64:acbe07f48a1d2322",
+  "findings": []
+}

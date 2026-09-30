@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:a63d09fec1f010a4",
+  "lessonIds": [
+    "SA-C220-tula",
+    "SA-C220-manadandah",
+    "SA-C220-dandah",
+    "SA-C220-yastih",
+    "SA-C220-dhanuh",
+    "SA-R220-first-pass-words-from-chapters-212-215",
+    "SA-R220-second-pass-words-from-chapters-216-220"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch220.txt",
+  "json": "sanskrit/narration/ch220.json",
+  "textHash": "fnv1a64:9bbe762a8c4d0efc",
+  "jsonHash": "fnv1a64:7bfa28e631e7c67a",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-223-THG223",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a traveller, a guide, a holy ford, a hermitage and a monastery.",
+  "prerequisites": []
+}

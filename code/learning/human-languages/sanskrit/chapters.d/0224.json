@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Centre, Tall building, Darkness, Radiance, Ground",
+  "label": "ch:sa-centre-tall-building-darkness-radiance-ground",
+  "canDo": "I can say a centre, a tall building, darkness, radiance and the ground.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C224-bhumih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say a centre, a tall building, darkness, radiance and the ground.",
+    "assesses": [
+      "SA-LEX-C224-THG224-03",
+      "SA-LEX-C224-THG224-04",
+      "SA-LEX-C224-THG224-05"
+    ]
+  }
+}

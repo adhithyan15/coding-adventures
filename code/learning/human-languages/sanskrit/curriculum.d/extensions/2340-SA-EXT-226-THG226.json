@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-226-THG226",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a planet, a comet, an animal, a creature and a winged creature.",
+  "prerequisites": []
+}

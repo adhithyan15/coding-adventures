@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:075d6157cdbf58d8",
+  "lessonIds": [
+    "SA-C223-yatrikah",
+    "SA-C223-margadarsakah",
+    "SA-C223-tirtham",
+    "SA-C223-asramah",
+    "SA-C223-mathah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch223.txt",
+  "json": "sanskrit/narration/ch223.json",
+  "textHash": "fnv1a64:a958b12fbb8234b9",
+  "jsonHash": "fnv1a64:2a5edd7e4de723ea",
+  "findings": []
+}

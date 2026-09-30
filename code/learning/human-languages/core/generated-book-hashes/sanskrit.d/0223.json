@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:41dc897ef708c393",
+  "lessonIds": [
+    "SA-C223-yatrikah",
+    "SA-C223-margadarsakah",
+    "SA-C223-tirtham",
+    "SA-C223-asramah",
+    "SA-C223-mathah"
+  ],
+  "tex": "sanskrit/book/chapters/ch223-traveller-guide-holy-ford-hermitage-monastery.tex"
+}

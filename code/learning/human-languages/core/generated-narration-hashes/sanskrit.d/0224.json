@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:2332f0f391e23e84",
+  "lessonIds": [
+    "SA-C224-kendram",
+    "SA-C224-attalika",
+    "SA-C224-andhakarah",
+    "SA-C224-jyotih",
+    "SA-C224-bhumih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch224.txt",
+  "json": "sanskrit/narration/ch224.json",
+  "textHash": "fnv1a64:7edd4fc4225dc807",
+  "jsonHash": "fnv1a64:07197d1a22af229b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C228-itihasah",
+    "language": "sanskrit",
+    "chapter": 228,
+    "sequence": 13420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a557f74e37111188"
+  },
+  "findings": []
+}

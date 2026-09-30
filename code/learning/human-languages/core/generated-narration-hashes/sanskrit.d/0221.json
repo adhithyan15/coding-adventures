@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:e78d5245980cf1ac",
+  "lessonIds": [
+    "SA-C221-karpasah",
+    "SA-C221-kauseyam",
+    "SA-C221-carma",
+    "SA-C221-granthih",
+    "SA-C221-pithika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch221.txt",
+  "json": "sanskrit/narration/ch221.json",
+  "textHash": "fnv1a64:04e3d53345d7fe7d",
+  "jsonHash": "fnv1a64:f31d7cccf1eb4398",
+  "findings": []
+}

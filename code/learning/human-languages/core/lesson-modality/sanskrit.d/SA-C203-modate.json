@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C203-modate",
+    "language": "sanskrit",
+    "chapter": 203,
+    "sequence": 11630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dcdde0ced4cc606"
+  },
+  "findings": []
+}

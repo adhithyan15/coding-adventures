@@ -1,0 +1,11 @@
+{
+  "id": "SA-C227-srngam",
+  "pathSegment": "SA-PATH-227-THG227",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-227-THG227",
+      "order": 2
+    }
+  ]
+}

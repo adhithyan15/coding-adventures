@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C203-vandate",
+    "language": "sanskrit",
+    "chapter": 203,
+    "sequence": 11640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3ad52867314dd3d"
+  },
+  "findings": []
+}
