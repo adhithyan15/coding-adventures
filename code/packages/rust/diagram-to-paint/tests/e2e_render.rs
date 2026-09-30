@@ -62,6 +62,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/sequence-11.16.1-visual-corpus.json"
     ));
+    const EVENTMODELING_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/eventmodeling-11.16.1-corpus.json"
+    ));
+    const EVENTMODELING_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/eventmodeling-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -2226,6 +2234,56 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_eventmodeling_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_event_modeling_visual_corpus_to_png() {
+        let syntax: Value =
+            serde_json::from_str(EVENTMODELING_CORPUS).expect("event modeling corpus JSON");
+        let visual: Value = serde_json::from_str(EVENTMODELING_VISUAL_CORPUS)
+            .expect("event modeling visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid event modeling fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid
+                .iter()
+                .find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let diagram = parse_event_modeling(
+                fixture["source"].as_str().expect("event modeling fixture source"),
+            )
+            .unwrap_or_else(|error| panic!("visual fixture {id} failed to parse: {error}"));
+            let layout = layout_event_model_diagram(&diagram, 800.0);
+            let scene = diagram_to_paint_event_model(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 17.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(
+                &pixels,
+                &format!("/tmp/mermaid_eventmodeling_11_16_1_{id}.png"),
+            )
+            .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]

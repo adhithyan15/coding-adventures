@@ -163,7 +163,7 @@
     {
       "id": "eventmodeling",
       "headers": ["eventmodeling"],
-      "status": "partial",
+      "status": "full",
       "ir": "event-model",
       "smoke_source": "eventmodeling\ntf 01 ui CustomerUI"
     },

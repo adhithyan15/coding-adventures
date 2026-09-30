@@ -487,9 +487,9 @@ Radar is recorded at the `full` compatibility level. Backend font rasterization
 and SVG overflow behavior can differ without creating a Radar semantic
 compatibility gap.
 
-### Event Modeling Native Slice
+### Event Modeling Native Compatibility
 
-The initial Mermaid 11.16.1 Event Modeling slice uses dedicated portable
+Mermaid 11.16.1 Event Modeling compatibility uses dedicated portable
 grammars and semantic event-model IR for numbered time and reset frames,
 entity-kind aliases, qualified namespaces, inferred sequence relations, and
 explicit multi-source relations. Typed and untyped inline frame data in object,
@@ -509,11 +509,13 @@ All ten upstream `em*Fill` and `em*Stroke` theme variables resolve from init
 directives or YAML front matter into backend-neutral frame paint styles.
 Explicit frame sources enforce Mermaid's entity flow rules for UI, processor,
 command, event, and read-model frames, including every source in a multi-source
-declaration.
-Temporal
+declaration. Empty diagrams, multiline comments, empty metadata, separated
+block delimiters, every data type, and the pinned upstream parser examples are
+covered by the complete syntax corpus. Temporal
 swimlane layout lowers through backend-neutral PaintScene instructions and a
-native Metal-to-PNG fixture. Browser-only responsive behavior and complete
-upstream corpus coverage remain unsupported at the partial level.
+representative pinned visual corpus rendered through Metal-to-PNG. Event
+Modeling is therefore full at the pinned native compatibility level;
+browser-only responsive resizing remains outside the backend-neutral contract.
 
 ### Treemap Native Slice
 
