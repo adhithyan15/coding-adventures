@@ -189,6 +189,42 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
             'assign = text.index("_mosaicHost = widget.mosaicHost")', workflow
         )
 
+    def test_workflow_runs_the_platform_library_harness(self) -> None:
+        """UI87 §7.7: the lane checks TaskApp installs the platform library on
+        its started host, then runs the headless harness against TaskApp's
+        generated core and host -- after the TaskApp project was built, so the
+        files it copies exist."""
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn(
+            'install = text.index("installMosaicPlatformEffects(host, appKinds: null);")',
+            workflow,
+        )
+        self.assertIn(
+            "cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter-platform-effects",
+            workflow,
+        )
+        self.assertIn(
+            '"$taskapp_output/flutter/lib/mosaic_platform_effects_core.dart"', workflow
+        )
+        self.assertIn("dart analyze --fatal-infos", workflow)
+        self.assertIn(
+            'grep -F "Mosaic Flutter platform effects conformance passed"', workflow
+        )
+        taskapp_build = workflow.index(
+            "--project-name mosaic_taskapp_acceptance ."
+        )
+        harness = workflow.index("conformance/flutter-platform-effects")
+        self.assertLess(taskapp_build, harness)
+
+    def test_platform_harness_does_not_duplicate_the_generated_library(self) -> None:
+        harness = FLUTTER_CONFORMANCE.parent / "flutter-platform-effects"
+        self.assertTrue((harness / "bin" / "conformance.dart").is_file())
+        self.assertFalse((harness / "lib").exists())
+        pubspec = (harness / "pubspec.yaml").read_text(encoding="utf-8")
+        self.assertIn("ffi:", pubspec)
+        self.assertNotIn("sdk: flutter", pubspec)
+        self.assertNotIn("file_selector", pubspec)
+
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
         self.assertTrue(
             (FLUTTER_CONFORMANCE / "bin" / "conformance.dart").is_file()

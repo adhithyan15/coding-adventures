@@ -152,6 +152,14 @@ class MosaicHost {
   FutureOr<Map<String, Object?>?> handleEvent(Map<String, Object?> event) =>
       _runtime?.dispatch(event);
 
+  /// The handler installed now, or null (always null with no runtime).
+  ///
+  /// Read by Mosaic's platform library (UI87 §7.7), which wraps whatever the
+  /// app installed and routes each effect by kind -- the same reason the
+  /// Compose, SwiftUI and XAML hosts expose theirs.
+  void Function(int id, String kind, Object? payload, String delivery)?
+  get effectHandler => _runtime?.effectHandler;
+
   /// See `_MosaicRuntime.effectHandler`. Setting this on a host with no runtime
   /// is a no-op rather than an error, matching every other accessor here.
   set effectHandler(

@@ -81,6 +81,57 @@ pub fn xaml_platform_effects(namespace: &str) -> String {
         .replace("__MOSAIC_NAMESPACE__", namespace)
 }
 
+/// The Flutter platform library (UI87 §7, §7.7), as two files written into
+/// a generated project's `lib/` beside `mosaic_host.dart`.
+///
+/// Two, where XAML has one fenced file, because Dart has no conditional
+/// compilation: the dialogs need the Flutter engine (`package:file_selector`),
+/// and the rest must run on the plain Dart VM for the headless conformance
+/// harness to test it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FlutterPlatformEffects {
+    /// `mosaic_platform_effects.dart`: the `file_selector` dialogs and
+    /// `installMosaicPlatformEffects(host, appKinds: ...)`, which the
+    /// generated `main.dart` imports and calls. Re-exports the core.
+    pub library: String,
+    /// `mosaic_platform_effects_core.dart`: the contract, the file I/O and the
+    /// router, in plain Dart (dart:io, dart:ffi, package:ffi).
+    pub core: String,
+}
+
+/// The Flutter platform library: `files.open` and `files.save` through
+/// `package:file_selector`'s native dialogs on Linux, macOS and Windows (a
+/// clear failure on Android and iOS until UI89), and the router that sends
+/// each effect to the app's own handler or to this library by kind -- the
+/// same contract the Compose, SwiftUI, Qt and XAML libraries answer.
+pub fn flutter_platform_effects() -> FlutterPlatformEffects {
+    FlutterPlatformEffects {
+        library: include_str!("../templates/flutter/mosaic_platform_effects.dart").to_string(),
+        core: include_str!("../templates/flutter/mosaic_platform_effects_core.dart").to_string(),
+    }
+}
+
+/// The `file_selector` release every generated Flutter project depends on,
+/// pinned exactly: the dialogs are the one part of the platform library its
+/// headless harness cannot run, so the version that ships is the version the
+/// Flutter CI lane built and analysed. `file_selector` is published by the
+/// Flutter team (flutter.dev). 1.0.4 rather than the newer 1.1.0 because
+/// 1.1.0 requires Flutter 3.35, and generated projects declare Flutter 3.32
+/// as their floor; 1.0.4 requires 3.29. (Its platform implementations are
+/// resolved by `pub get` within the ranges it declares; a generated project
+/// ships no lockfile.)
+pub const FLUTTER_FILE_SELECTOR_VERSION: &str = "1.0.4";
+
+/// Add the platform library's dependency (`file_selector`, pinned) to a
+/// generated Flutter package manifest.
+pub fn flutter_pubspec_with_platform_effects(pubspec_yaml: &str) -> String {
+    pubspec_yaml.replacen(
+        "dependencies:\n",
+        &format!("dependencies:\n  file_selector: {FLUTTER_FILE_SELECTOR_VERSION}\n"),
+        1,
+    )
+}
+
 /// Files that make the fixed Mosaic application C ABI available to SwiftUI.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SwiftRuntimeBinding {
@@ -287,18 +338,61 @@ pub fn flutter_pubspec_with_runtime_binding(pubspec_yaml: &str) -> String {
 /// something the emitter has no reason to know about needs a way to say so.
 /// Engram's `mosaic_host.dart` imports `package:file_selector`, which no
 /// generated Dart uses.
+///
+/// A coordinate for a package the generated manifest already depends on is
+/// left out: YAML refuses a duplicate key, so writing both would break
+/// `pub get` for the whole project. The generated entry wins, because the
+/// generated code was built against it. This is what lets Engram and
+/// photo-picker keep declaring `file_selector` for their own handlers now that
+/// every project depends on it for the platform library (UI87 §7.7): their
+/// range admits the pinned release.
 pub fn flutter_pubspec_with_host_asset_dependencies(
     pubspec_yaml: &str,
     coordinates: &[String],
 ) -> String {
-    if coordinates.is_empty() {
-        return pubspec_yaml.to_string();
-    }
+    let declared = flutter_declared_dependencies(pubspec_yaml);
     let block: String = coordinates
         .iter()
+        .filter(|coordinate| {
+            let name = coordinate.split(':').next().unwrap_or_default().trim();
+            !declared.iter().any(|existing| existing == name)
+        })
         .map(|coordinate| format!("  {coordinate}\n"))
         .collect();
+    if block.is_empty() {
+        return pubspec_yaml.to_string();
+    }
     pubspec_yaml.replacen("dependencies:\n", &format!("dependencies:\n{block}"), 1)
+}
+
+/// The package names directly under the top-level `dependencies:` key of a
+/// generated pubspec -- the two-space-indented keys up to the next top-level
+/// key. Generated manifests are written in exactly that shape, so this reads
+/// them without a YAML parser; `dev_dependencies:` is a different key and is
+/// not read.
+fn flutter_declared_dependencies(pubspec_yaml: &str) -> Vec<String> {
+    let mut names = Vec::new();
+    let mut inside = false;
+    for line in pubspec_yaml.lines() {
+        if line == "dependencies:" {
+            inside = true;
+            continue;
+        }
+        if !inside || line.trim().is_empty() || line.trim_start().starts_with('#') {
+            continue;
+        }
+        if !line.starts_with(' ') {
+            break; // the next top-level key
+        }
+        if let Some(entry) = line.strip_prefix("  ") {
+            if !entry.starts_with(' ') {
+                if let Some((name, _)) = entry.split_once(':') {
+                    names.push(name.trim().to_string());
+                }
+            }
+        }
+    }
+    names
 }
 
 /// Add stable Dart build-hook dependencies and SDK floors to a Flutter
@@ -1202,6 +1296,333 @@ mod tests {
         assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
         assert!(pubspec.contains("hooks: '>=1.0.0 <3.0.0'"));
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+    }
+
+    /// The platform library's one pub dependency, pinned exactly, in the
+    /// runtime dependencies (not dev), alongside `ffi`.
+    #[test]
+    fn flutter_pubspec_pins_the_platform_librarys_file_selector() {
+        let base = "environment:\n  sdk: '>=3.5.0 <4.0.0'\n  flutter: '>=3.32.0 <4.0.0'\n\ndependencies:\n  flutter:\n    sdk: flutter\n\ndev_dependencies:\n  flutter_lints: '>=6.0.0 <7.0.0'\n";
+        let pubspec =
+            flutter_pubspec_with_platform_effects(&flutter_pubspec_with_runtime_binding(base));
+        assert!(pubspec.contains("dependencies:\n  file_selector: 1.0.4\n  ffi: '>=2.1.0 <3.0.0'\n"));
+        assert_eq!(FLUTTER_FILE_SELECTOR_VERSION, "1.0.4");
+        // Exact: a bare version, no caret, no range.
+        assert!(FLUTTER_FILE_SELECTOR_VERSION
+            .chars()
+            .all(|c| c.is_ascii_digit() || c == '.'));
+        assert_eq!(pubspec.matches("file_selector:").count(), 1);
+        assert_eq!(
+            flutter_declared_dependencies(&pubspec),
+            vec!["file_selector", "ffi", "flutter"]
+        );
+    }
+
+    /// A package that declares `file_selector` for its own handler (Engram,
+    /// photo-picker) must not produce a second `file_selector:` key, which YAML
+    /// refuses and `pub get` with it. Other coordinates are still added.
+    #[test]
+    fn flutter_host_asset_dependencies_skip_what_the_project_already_declares() {
+        let base = flutter_pubspec_with_platform_effects(
+            "dependencies:\n  flutter:\n    sdk: flutter\n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n",
+        );
+        let pubspec = flutter_pubspec_with_host_asset_dependencies(
+            &base,
+            &[
+                "file_selector: '>=1.0.0 <2.0.0'".to_string(),
+                "path: ^1.9.0".to_string(),
+                // A dev dependency's name is not a runtime dependency.
+                "flutter_test: any".to_string(),
+            ],
+        );
+        assert_eq!(pubspec.matches("file_selector:").count(), 1, "{pubspec}");
+        assert!(pubspec.contains("file_selector: 1.0.4"), "{pubspec}");
+        assert!(pubspec.contains("\n  path: ^1.9.0\n"), "{pubspec}");
+        assert!(pubspec.contains("\n  flutter_test: any\n"), "{pubspec}");
+        // Nothing left to add: unchanged.
+        assert_eq!(
+            flutter_pubspec_with_host_asset_dependencies(
+                &base,
+                &["file_selector: ^1.0.3".to_string()]
+            ),
+            base
+        );
+    }
+
+    /// The Flutter library answers the same contract (UI87 §7.7): the same
+    /// kinds, limits, MIME rows in the same order, executable list and failure
+    /// messages as the Compose library. Pinned here as well as run by the
+    /// headless harness, because the harness needs a Dart SDK.
+    #[test]
+    fn flutter_platform_effects_match_the_compose_contract() {
+        let dart = flutter_platform_effects().core;
+        let kotlin = compose_platform_effects();
+        assert!(dart.contains(
+            "const Set<String> mosaicStandardEffectKinds = <String>{\n  'files.open',\n  'files.save',\n};"
+        ));
+        assert!(kotlin.contains("setOf(\"files.open\", \"files.save\")"));
+        assert!(dart.contains("const int mosaicMaxOpenBytes = 50 * 1024 * 1024;"));
+        assert!(kotlin.contains("MOSAIC_MAX_OPEN_BYTES: Long = 50L * 1024 * 1024"));
+        assert!(dart.contains("const int mosaicMaxSaveBytes = 16 * 1024 * 1024;"));
+        assert!(kotlin.contains("MOSAIC_MAX_SAVE_BYTES: Int = 16 * 1024 * 1024"));
+        // Every MIME -> extensions row, in the same order, in both tables.
+        let kotlin_rows: Vec<(String, String)> = kotlin
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix('"')?.split_once("\" to listOf(")?;
+                Some((mime.to_string(), rest.trim_end_matches("),").to_string()))
+            })
+            .collect();
+        let dart_rows: Vec<(String, String)> = dart
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix("('")?.split_once("', <String>[")?;
+                Some((
+                    mime.to_string(),
+                    rest.trim_end_matches("]),").replace('\'', "\""),
+                ))
+            })
+            .collect();
+        assert_eq!(kotlin_rows.len(), 13, "{kotlin_rows:?}");
+        assert_eq!(dart_rows, kotlin_rows);
+        // The executable-extension denylist is one set.
+        fn listed(source: &str, start: &str, end: &str) -> std::collections::BTreeSet<String> {
+            let from = source.find(start).expect("list start") + start.len();
+            let to = from + source[from..].find(end).expect("list end");
+            source[from..to]
+                .lines()
+                .filter(|line| !line.trim_start().starts_with("//"))
+                .flat_map(|line| line.split(','))
+                .map(|item| item.trim().trim_matches('"').trim_matches('\'').to_string())
+                .filter(|item| !item.is_empty())
+                .collect()
+        }
+        let dart_list = listed(
+            &dart,
+            "const Set<String> mosaicExecutableExtensions = <String>{",
+            "};",
+        );
+        let kotlin_list = listed(
+            &kotlin,
+            "val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(",
+            ")\n",
+        );
+        assert!(dart_list.len() >= 60, "{dart_list:?}");
+        assert_eq!(dart_list, kotlin_list);
+        // The invisible (default-ignorable) ranges are Compose's, range for
+        // range: every hex literal in the one function appears in the other.
+        fn hex_literals(source: &str, start: &str, end: &str) -> Vec<String> {
+            let from = source.find(start).expect("function start");
+            let to = from + source[from..].find(end).expect("function end");
+            source[from..to]
+                .split(|c: char| !c.is_ascii_alphanumeric())
+                .filter(|word| word.starts_with("0x"))
+                .map(str::to_string)
+                .collect()
+        }
+        assert_eq!(
+            hex_literals(&dart, "bool _mosaicIsInvisible(", ";\n\n"),
+            hex_literals(&kotlin, "private fun mosaicIsInvisible(", "\n\n")
+        );
+        // The failure messages an app can see are the ones Compose sends.
+        for message in [
+            "that is not a regular file",
+            "couldn't read the selected file",
+            "suggestedName must be a plain file name",
+            "bytes must be base64 text",
+            "suggestedName must end in an extension of an accepted type",
+            "suggestedName must not end in an executable extension",
+            "couldn't save the file",
+            "another file operation is in progress",
+            "the file dialog failed",
+        ] {
+            assert!(
+                dart.contains(&format!("'{message}'")) || dart.contains(&format!("\"{message}\"")),
+                "Flutter: {message}"
+            );
+            assert!(kotlin.contains(&format!("\"{message}\"")), "Compose: {message}");
+        }
+        assert!(dart.contains("'the selected file is larger than $mosaicMaxOpenBytes bytes'"));
+        assert!(dart.contains("'the file is larger than $mosaicMaxSaveBytes bytes'"));
+        // SwiftUI's message for a platform without dialogs, word for word.
+        assert!(dart.contains("'$kind is not available on this platform yet'"));
+        assert!(swift_platform_effects().contains("\"\\(kind) is not available on this platform yet\""));
+        // Routing: the same three outcomes, null meaning nobody.
+        assert!(dart.contains("if (appKinds != null && appKinds.contains(kind)) return false;"));
+        assert!(dart.contains("if (mosaicStandardEffectKinds.contains(kind)) return true;"));
+        assert!(dart.contains("if (appKinds == null) return false;\n  return null;"));
+    }
+
+    /// The core must run on the plain Dart VM (the headless harness), so it
+    /// may not import Flutter or the dialogs; the dialogs file is the only
+    /// place `file_selector` appears, and it re-exports the core so
+    /// `main.dart` needs one import.
+    #[test]
+    fn flutter_platform_effects_keep_flutter_out_of_the_core() {
+        let effects = flutter_platform_effects();
+        let imports = |source: &str| -> Vec<String> {
+            source
+                .lines()
+                .filter(|line| line.starts_with("import ") || line.starts_with("export "))
+                .map(str::to_string)
+                .collect()
+        };
+        assert_eq!(
+            imports(&effects.core),
+            vec![
+                "import 'dart:async';",
+                "import 'dart:convert';",
+                "import 'dart:ffi';",
+                "import 'dart:io';",
+                "import 'dart:isolate';",
+                "import 'dart:math';",
+                "import 'dart:typed_data';",
+                "import 'package:ffi/ffi.dart';",
+                "import 'mosaic_host.dart';",
+            ]
+        );
+        assert!(!effects.core.contains("package:flutter"));
+        assert!(!effects.core.contains("package:file_selector"));
+        assert_eq!(
+            imports(&effects.library),
+            vec![
+                "import 'package:file_selector/file_selector.dart';",
+                "import 'mosaic_host.dart';",
+                "import 'mosaic_platform_effects_core.dart';",
+                "export 'mosaic_platform_effects_core.dart';",
+            ]
+        );
+        // The one entry point main.dart calls, over the generated host.
+        assert!(effects.library.contains(
+            "void installMosaicPlatformEffects(\n  MosaicHost host, {\n  required List<String>? appKinds,\n}) {"
+        ));
+        assert!(effects.library.contains("MosaicHostEffects(host),"));
+        // Bare extensions for file_selector (a leading dot filters `*..ext`),
+        // and no group at all for "any file" (Linux refuses an empty group).
+        assert!(effects
+            .library
+            .contains("XTypeGroup(label: 'Files', extensions: extensions)"));
+        assert!(effects.library.contains("? const <XTypeGroup>[]"));
+        // Both files are generated, bannered like the host they sit beside.
+        for source in [&effects.core, &effects.library] {
+            assert!(source.starts_with("// AUTO-GENERATED by Mosaic."));
+        }
+    }
+
+    /// The Flutter library answers the runtime that asked, defers before any
+    /// dialog, copies the payload before taking the busy flag, and does its
+    /// file I/O off the UI isolate (UI87 §7.7).
+    #[test]
+    fn flutter_platform_effects_defer_copy_and_answer_the_host_that_asked() {
+        let core = flutter_platform_effects().core;
+        // The host's handler is readable, so the router can wrap it.
+        let host = flutter_runtime_binding();
+        assert!(host.contains("get effectHandler => _runtime?.effectHandler;"));
+        // Bound to the host instance: a disposed host's completeEffect throws
+        // (its runtime's `_ensureOpen`), and the router drops that answer.
+        assert!(core.contains("final class MosaicHostEffects implements MosaicPlatformEffectHost"));
+        assert!(host.contains("void _ensureOpen() {"));
+        let complete = host
+            .find("Map<String, Object?> completeEffect(int id, Map<String, Object?> result) {\n    _ensureOpen();")
+            .is_some();
+        assert!(complete, "the runtime's completeEffect checks it is open first");
+        // Order inside the handler: copy < busy < defer < schedule.
+        let copy = core.find("final request = _mosaicCopyJson(payload);").expect("copy");
+        let busy = core.find("    _busy = true;").expect("busy");
+        let defer = core.find("owned = _host.deferEffect(id);").expect("defer");
+        let schedule = core
+            .find("_runOnUi(() => unawaited(_answer(id, kind, request)));")
+            .expect("schedule");
+        let refused = core
+            .find("_tryComplete(id, mosaicFailed('the file dialog failed'));")
+            .expect("refused");
+        assert!(copy < busy && busy < defer && defer < schedule && schedule < refused);
+        // The dialog runs after the settle (a microtask by default).
+        assert!(core.contains("void Function(void Function() work) runOnUi = scheduleMicrotask,"));
+        // File I/O in a background isolate, from top-level functions that
+        // capture only what they send.
+        assert!(core.contains("Isolate.run(() => _mosaicReadOpened(path));"));
+        assert!(core.contains("Isolate.run(() => mosaicWriteReplacing(target, bytes));"));
+        // Atomic save, as Qt and SwiftUI do it (UI87 §7.7): the temporary is
+        // opened O_CREAT | O_EXCL | O_NOFOLLOW at 0600, written, fchmod-ed and
+        // fsync-ed through that descriptor, closed, then renamed; unlinked
+        // only on failure. Never reopened, chmod-ed or deleted by path.
+        let save = core
+            .find("bool _mosaicSavePosix(")
+            .map(|at| &core[at..])
+            .expect("the POSIX save");
+        let buffer = save.find("final buffer = malloc<Uint8>(max(length, 1));").expect("buffer first");
+        let open = save
+            .find("flags.writeOnly |\n          flags.create |\n          flags.exclusive |\n          flags.noFollow |\n          flags.closeOnExec,\n      0x180, // 0600")
+            .expect("an exclusive, no-follow, owner-only open");
+        let write = save.find("buffer + written,").expect("write");
+        let fchmod = save.find("posix.fchmod(descriptor, mode) == 0 &&").expect("fchmod");
+        let fsync = save.find("posix.fsync(descriptor) == 0;").expect("fsync");
+        let close = save.find("if (posix.close(descriptor) != 0) complete = false;").expect("close");
+        let rename = save.find("renamed = complete && posix.rename(temporary, full) == 0;").expect("rename");
+        let unlink = save.find("if (!renamed) posix.unlink(temporary);").expect("unlink");
+        let free = save.find("    malloc.free(buffer);\n  }\n}").expect("free last");
+        // The buffer exists before the open, so nothing between the open and
+        // the finally blocks can throw and leak the descriptor.
+        assert!(buffer < open && open < write && write < fchmod && fchmod < fsync);
+        assert!(fsync < close && close < rename && rename < unlink && unlink < free);
+        for gone in [
+            "_mosaicLibcPathMode",
+            "privateDirectory",
+            "deleteSync(recursive: true)",
+            "createSync(exclusive: true)",
+            "openSync(mode: FileMode.writeOnly)",
+        ] {
+            assert!(!core.contains(gone), "the save no longer uses {gone}");
+        }
+        // The mode: a regular file's rwx bits only when this user owns it;
+        // someone else's (or nothing, or a link) gives 0600; an unknown owner
+        // loses group and other write.
+        assert!(core.contains("if (existing == null || !mosaicIsRegularMode(existing.mode)) return 0x180;"));
+        assert!(core.contains("if (owner == null) return existing.mode & 0x1ED; // 0755"));
+        assert!(core.contains("return owner == currentUid ? existing.mode & 0x1FF : 0x180;"));
+        // The open(2) flags per ABI, as the system headers define them.
+        for table in [
+            "Abi.linuxX64 => const MosaicOpenFlags(\n    writeOnly: 0x1,\n    create: 0x40,\n    exclusive: 0x80,\n    nonBlocking: 0x800,\n    noFollow: 0x20000,\n    closeOnExec: 0x80000,\n  ),",
+            "Abi.linuxArm64 => const MosaicOpenFlags(\n    writeOnly: 0x1,\n    create: 0x40,\n    exclusive: 0x80,\n    nonBlocking: 0x800,\n    noFollow: 0x8000,\n    closeOnExec: 0x80000,\n  ),",
+            "Abi.macosX64 || Abi.macosArm64 => const MosaicOpenFlags(\n    writeOnly: 0x1,\n    create: 0x200,\n    exclusive: 0x800,\n    nonBlocking: 0x4,\n    noFollow: 0x100,\n    closeOnExec: 0x1000000,\n  ),",
+            "  _ => null,\n};",
+        ] {
+            assert!(core.contains(table), "open flag table: {table}");
+        }
+        assert!(core.contains("Int32 Function(Pointer<Utf8>, Int32, VarArgs<(Uint32,)>);"));
+        // stat: Linux statx (one layout on every arch: mask @0, uid @20,
+        // mode @28); Apple's 64-bit-inode stat (mode @4, uid @16), exported
+        // as lstat$INODE64 / fstat$INODE64 on x86_64.
+        assert!(core.contains("final mask = view.getUint32(0, Endian.host);"));
+        assert!(core.contains("mode: view.getUint16(28, Endian.host),\n          uid: view.getUint32(20, Endian.host),"));
+        assert!(core.contains("mode: view.getUint16(4, Endian.host),\n        uid: view.getUint32(16, Endian.host),"));
+        assert!(core.contains("Abi.current() == Abi.macosX64 ? '$name\\$INODE64' : name;"));
+        assert!(core.contains("static const int _atSymlinkNoFollow = 0x100;"));
+        assert!(core.contains("static const int _atEmptyPath = 0x1000;"));
+        // The open: one descriptor, non-blocking and no-follow, typed by
+        // fstat before it is read.
+        assert!(core.contains("    MosaicOpenFlags.readOnly |\n        flags.nonBlocking |\n        flags.noFollow |\n        flags.closeOnExec,"));
+        // Fail closed: an untyped descriptor is never read; the buffer is
+        // allocated before the open.
+        assert!(core.contains("    if (status == null) return _mosaicUnreadable();\n    if (!mosaicIsRegularMode(status.mode)) {"));
+        let read = core
+            .find("Map<String, Object?>? mosaicReadThroughDescriptor(String path) {")
+            .map(|at| &core[at..])
+            .expect("the POSIX read");
+        assert!(read.find("buffer = malloc<Uint8>(chunk);").unwrap() < read.find("final descriptor = posix.open(").unwrap());
+        // Windows: CreateFileW(CREATE_NEW), written and flushed through that
+        // handle, then MoveFileExW with write-through, the move the host uses
+        // for its own state.
+        assert!(core.contains("const createNew = 1;"));
+        assert!(core.contains("const fileFlagOpenReparsePoint = 0x00200000;"));
+        assert!(core.contains("fileAttributeNormal | fileFlagOpenReparsePoint,"));
+        assert!(core.contains("flushFileBuffers(handle) != 0"));
+        assert!(core.contains("moveFileReplaceExisting | moveFileWriteThrough"));
+        // No static host: nothing answers "whichever runtime is loaded".
+        assert!(!core.contains("MosaicHost.load"));
     }
 
     #[test]

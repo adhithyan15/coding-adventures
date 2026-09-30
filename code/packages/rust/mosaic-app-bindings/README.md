@@ -43,8 +43,25 @@ window's `DispatcherQueue`, because the static host runs its handler inside
 the settle (UI87 §7.6). The WinUI half sits behind `#if !MOSAIC_HEADLESS_TEST`,
 so `conformance/xaml-platform-effects/` runs everything else on plain .NET
 with a fake host and a fake picker; `tests/xaml_platform_effects.rs` builds
-and runs that harness wherever `dotnet` is installed. Flutter follows (UI87
-§7.3).
+and runs that harness wherever `dotnet` is installed.
+
+Flutter's library (`flutter_platform_effects()`, UI87 §7.7) is two files,
+because Dart has no conditional compilation: `mosaic_platform_effects_core.dart`
+is the contract, the file I/O and the router in plain Dart, and
+`mosaic_platform_effects.dart` adds `package:file_selector`'s native dialogs
+(Linux, macOS, Windows) and `installMosaicPlatformEffects(host, appKinds:)`,
+which the generated `main.dart` calls. Each standard effect is deferred, its
+dialog run after the settle, and the file read or written in a background
+isolate; the router holds the `MosaicHost` it was installed on, so a late
+answer after a retried start meets the disposed host and is dropped. Every
+generated project depends on `file_selector` pinned exactly
+(`FLUTTER_FILE_SELECTOR_VERSION`, added by
+`flutter_pubspec_with_platform_effects`); a package's `[host_assets]`
+coordinate for a package the project already declares is left out rather
+than duplicated. `conformance/flutter-platform-effects/` runs the core on the
+plain Dart VM with a fake host and fake dialogs, and
+`tests/flutter_platform_effects.rs` runs it wherever `dart` is installed. On
+Android and iOS each request fails with a message until UI89.
 
 ## Persistence
 
