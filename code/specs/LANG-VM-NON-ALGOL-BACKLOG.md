@@ -22,6 +22,13 @@ after generation; committing the generator's canonical bytes removes that
 format-only drift. The selected slice widens the existing job to MacroOct and
 Nib rather than adding another queued CI job.
 
+The first protected Windows run exposed the already documented B07 test-only
+compile limitation: `syscall.Mkfifo` is unavailable on Windows, so touching the
+Go build tool made the package uncompilable before the gate tests could run.
+Keep the portable B07 probes cross-platform and move only the FIFO security
+regression behind explicit Unix build tags; the original regression continues
+to execute on Unix hosts.
+
 The current queue is:
 
 1. **VM-067 Nib (selected):** reconcile Nib's generated lexer bytes, then
