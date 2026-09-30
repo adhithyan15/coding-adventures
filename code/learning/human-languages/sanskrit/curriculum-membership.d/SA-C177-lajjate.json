@@ -1,0 +1,11 @@
+{
+  "id": "SA-C177-lajjate",
+  "pathSegment": "SA-PATH-177-ACT177",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-177-ACT177",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Plan, Goal, Way, Problem, Solution",
+  "label": "ch:sa-plan-goal-way-problem-solution",
+  "canDo": "I can say a plan, a goal, a way, a problem and a solution.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C201-samadhanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can say a plan, a goal, a way, a problem and a solution.",
+    "assesses": [
+      "SA-LEX-C201-WRK201-03",
+      "SA-LEX-C201-WRK201-04",
+      "SA-LEX-C201-WRK201-05"
+    ]
+  }
+}

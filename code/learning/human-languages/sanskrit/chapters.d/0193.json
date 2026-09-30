@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Purchase, Sale, Object, Item, Tool",
+  "label": "ch:sa-purchase-sale-object-item-tool",
+  "canDo": "I can say a purchase, a sale, an object, an item and a tool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C193-upakaranam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a purchase, a sale, an object, an item and a tool.",
+    "assesses": [
+      "SA-LEX-C193-THG193-03",
+      "SA-LEX-C193-THG193-04",
+      "SA-LEX-C193-THG193-05"
+    ]
+  }
+}

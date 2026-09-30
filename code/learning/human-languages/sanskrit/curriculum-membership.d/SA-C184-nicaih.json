@@ -1,0 +1,11 @@
+{
+  "id": "SA-C184-nicaih",
+  "pathSegment": "SA-PATH-184-LOC184",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-184-LOC184",
+      "order": 4
+    }
+  ]
+}

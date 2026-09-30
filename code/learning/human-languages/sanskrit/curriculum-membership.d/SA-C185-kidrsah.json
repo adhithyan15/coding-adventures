@@ -1,0 +1,11 @@
+{
+  "id": "SA-C185-kidrsah",
+  "pathSegment": "SA-PATH-185-WHY185",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-185-WHY185",
+      "order": 1
+    }
+  ]
+}

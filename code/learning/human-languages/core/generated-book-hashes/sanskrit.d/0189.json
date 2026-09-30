@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:0f109ebbccdff464",
+  "lessonIds": [
+    "SA-C189-manjusa",
+    "SA-C189-sikyam",
+    "SA-C189-pitakam",
+    "SA-C189-katah",
+    "SA-C189-astaranam"
+  ],
+  "tex": "sanskrit/book/chapters/ch189-trunk-hanging-basket-basket-mat-carpet.tex"
+}

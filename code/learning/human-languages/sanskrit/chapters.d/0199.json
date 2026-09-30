@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Sentence, Language, Grammar, Mathematics, Science",
+  "label": "ch:sa-sentence-language-grammar-mathematics-science",
+  "canDo": "I can say a sentence, a language, grammar, mathematics and science.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C199-vijnanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say a sentence, a language, grammar, mathematics and science.",
+    "assesses": [
+      "SA-LEX-C199-SCH199-03",
+      "SA-LEX-C199-SCH199-04",
+      "SA-LEX-C199-SCH199-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 194,
+  "title": "Prize, Invitation, Assembly, Discussion group, Fair",
+  "label": "ch:sa-prize-invitation-assembly-discussion-group-fair",
+  "canDo": "I can say a prize, an invitation, an assembly, a discussion group and a fair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C194-melakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 194: I can say a prize, an invitation, an assembly, a discussion group and a fair.",
+    "assesses": [
+      "SA-LEX-C194-THG194-03",
+      "SA-LEX-C194-THG194-04",
+      "SA-LEX-C194-THG194-05"
+    ]
+  }
+}

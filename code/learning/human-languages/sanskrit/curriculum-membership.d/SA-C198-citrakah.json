@@ -1,0 +1,11 @@
+{
+  "id": "SA-C198-citrakah",
+  "pathSegment": "SA-PATH-198-THG198",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-198-THG198",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C175-yatate",
+  "pathSegment": "SA-PATH-175-ACT175",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-175-ACT175",
+      "order": 4
+    }
+  ]
+}

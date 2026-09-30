@@ -1,0 +1,11 @@
+{
+  "id": "SA-C173-sevate",
+  "pathSegment": "SA-PATH-173-ACT173",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-173-ACT173",
+      "order": 3
+    }
+  ]
+}

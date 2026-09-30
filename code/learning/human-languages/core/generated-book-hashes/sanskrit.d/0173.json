@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:78dd1a5d48960719",
+  "lessonIds": [
+    "SA-C173-ksipati",
+    "SA-C173-muncati",
+    "SA-C173-labhate",
+    "SA-C173-sevate",
+    "SA-C173-ramate"
+  ],
+  "tex": "sanskrit/book/chapters/ch173-throws-lets-go-gets-serves-enjoys.tex"
+}

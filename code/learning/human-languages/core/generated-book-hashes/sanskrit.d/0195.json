@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:7047f964bee04318",
+  "lessonIds": [
+    "SA-C195-pattanam",
+    "SA-C195-rajadhani",
+    "SA-C195-janapadah",
+    "SA-C195-prantah",
+    "SA-C195-sima"
+  ],
+  "tex": "sanskrit/book/chapters/ch195-port-town-capital-district-province-boundary.tex"
+}

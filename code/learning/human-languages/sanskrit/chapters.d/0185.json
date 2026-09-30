@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "How much?, Of what kind?, For, Surely, Certainly",
+  "label": "ch:sa-how-much-of-what-kind-for-surely-certainly",
+  "canDo": "I can say how much?, of what kind?, for, surely and certainly.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "SA-C185-avasyam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can say how much?, of what kind?, for, surely and certainly.",
+    "assesses": [
+      "SA-LEX-C185-WHY185-03",
+      "SA-LEX-C185-WHY185-04",
+      "SA-LEX-C185-WHY185-05"
+    ]
+  }
+}

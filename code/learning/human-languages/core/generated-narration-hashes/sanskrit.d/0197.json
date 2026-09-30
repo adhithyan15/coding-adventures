@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:7ec01481cc5fb5e8",
+  "lessonIds": [
+    "SA-C197-venuvanam",
+    "SA-C197-indradhanuh",
+    "SA-C197-karaka",
+    "SA-C197-avasyayah",
+    "SA-C197-jyotsna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch197.txt",
+  "json": "sanskrit/narration/ch197.json",
+  "textHash": "fnv1a64:69fd28996b816c94",
+  "jsonHash": "fnv1a64:431781f7a046eb76",
+  "findings": []
+}

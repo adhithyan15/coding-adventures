@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Conceals, Distributes, Collects, Trusts, Is ashamed",
+  "label": "ch:sa-conceals-distributes-collects-trusts-is-ashamed",
+  "canDo": "I can say conceals, distributes, collects, trusts and is ashamed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C177-lajjate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say conceals, distributes, collects, trusts and is ashamed.",
+    "assesses": [
+      "SA-LEX-C177-ACT177-03",
+      "SA-LEX-C177-ACT177-04",
+      "SA-LEX-C177-ACT177-05"
+    ]
+  }
+}

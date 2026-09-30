@@ -1,0 +1,11 @@
+{
+  "id": "SA-C183-cirat",
+  "pathSegment": "SA-PATH-183-TIME183",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-183-TIME183",
+      "order": 4
+    }
+  ]
+}

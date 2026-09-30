@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:4e124f66ef145741",
+  "lessonIds": [
+    "SA-C201-yojana",
+    "SA-C201-laksyam",
+    "SA-C201-upayah",
+    "SA-C201-samasya",
+    "SA-C201-samadhanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch201.txt",
+  "json": "sanskrit/narration/ch201.json",
+  "textHash": "fnv1a64:a8c0c4faf16096b7",
+  "jsonHash": "fnv1a64:ecbd776e523d77ed",
+  "findings": []
+}

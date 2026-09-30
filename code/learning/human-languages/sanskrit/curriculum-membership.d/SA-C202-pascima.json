@@ -1,0 +1,11 @@
+{
+  "id": "SA-C202-pascima",
+  "pathSegment": "SA-PATH-202-TRV202",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-202-TRV202",
+      "order": 3
+    }
+  ]
+}

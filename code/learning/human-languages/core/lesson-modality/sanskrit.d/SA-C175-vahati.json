@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C175-vahati",
+    "language": "sanskrit",
+    "chapter": 175,
+    "sequence": 9550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af0a59486cdb7c30"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:6d472c07e5bff60b",
+  "lessonIds": [
+    "SA-C190-masah",
+    "SA-C190-yavah",
+    "SA-C190-kharjuram",
+    "SA-C190-amalakam",
+    "SA-C190-jambuphalam",
+    "SA-R190-first-pass-words-from-chapters-182-185",
+    "SA-R190-second-pass-words-from-chapters-186-190"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch190.txt",
+  "json": "sanskrit/narration/ch190.json",
+  "textHash": "fnv1a64:bb0046cfb39d1caf",
+  "jsonHash": "fnv1a64:791f4be7b2c6ecd6",
+  "findings": []
+}

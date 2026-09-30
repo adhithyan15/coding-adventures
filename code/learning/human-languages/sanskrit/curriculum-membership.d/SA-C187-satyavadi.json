@@ -1,0 +1,11 @@
+{
+  "id": "SA-C187-satyavadi",
+  "pathSegment": "SA-PATH-187-QUAL187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-187-QUAL187",
+      "order": 3
+    }
+  ]
+}

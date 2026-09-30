@@ -1,0 +1,11 @@
+{
+  "id": "SA-C192-mukutam",
+  "pathSegment": "SA-PATH-192-THG192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-192-THG192",
+      "order": 1
+    }
+  ]
+}

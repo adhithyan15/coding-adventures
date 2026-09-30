@@ -1,0 +1,11 @@
+{
+  "id": "SA-C198-andam",
+  "pathSegment": "SA-PATH-198-THG198",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-198-THG198",
+      "order": 4
+    }
+  ]
+}

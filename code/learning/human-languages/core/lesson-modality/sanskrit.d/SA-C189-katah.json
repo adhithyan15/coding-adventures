@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C189-katah",
+    "language": "sanskrit",
+    "chapter": 189,
+    "sequence": 10450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97cad02852ed8545"
+  },
+  "findings": []
+}

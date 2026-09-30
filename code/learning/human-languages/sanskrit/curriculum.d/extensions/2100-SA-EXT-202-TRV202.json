@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-202-TRV202",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a wayfarer, a direction, the east, the west and the north.",
+  "prerequisites": []
+}

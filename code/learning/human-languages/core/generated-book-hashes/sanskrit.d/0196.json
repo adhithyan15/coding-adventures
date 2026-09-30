@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:88dc0884546cb5f5",
+  "lessonIds": [
+    "SA-C196-tamram",
+    "SA-C196-pasanah",
+    "SA-C196-ratnakarah",
+    "SA-C196-sarit",
+    "SA-C196-guha",
+    "SA-R196-first-pass-words-from-chapters-191-193",
+    "SA-R196-second-pass-words-from-chapters-194-196"
+  ],
+  "tex": "sanskrit/book/chapters/ch196-copper-rock-ocean-stream-cave.tex"
+}

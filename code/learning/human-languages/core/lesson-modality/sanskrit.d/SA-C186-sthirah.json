@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C186-sthirah",
+    "language": "sanskrit",
+    "chapter": 186,
+    "sequence": 10310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c03efcb20e029394"
+  },
+  "findings": []
+}

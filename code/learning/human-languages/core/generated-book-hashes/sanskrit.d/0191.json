@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:77a901fea121bb9f",
+  "lessonIds": [
+    "SA-C191-saravah",
+    "SA-C191-kumbhah",
+    "SA-C191-ulukhalam",
+    "SA-C191-musalam",
+    "SA-C191-calani"
+  ],
+  "tex": "sanskrit/book/chapters/ch191-earthen-dish-pitcher-mortar-pestle-sieve.tex"
+}

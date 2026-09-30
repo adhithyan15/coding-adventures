@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Throws, Lets go, Gets, Serves, Enjoys",
+  "label": "ch:sa-throws-lets-go-gets-serves-enjoys",
+  "canDo": "I can say throws, lets go, gets, serves and enjoys.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C173-ramate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say throws, lets go, gets, serves and enjoys.",
+    "assesses": [
+      "SA-LEX-C173-ACT173-03",
+      "SA-LEX-C173-ACT173-04",
+      "SA-LEX-C173-ACT173-05"
+    ]
+  }
+}

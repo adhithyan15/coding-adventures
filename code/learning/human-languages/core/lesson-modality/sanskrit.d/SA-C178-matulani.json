@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C178-matulani",
+    "language": "sanskrit",
+    "chapter": 178,
+    "sequence": 9680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3656e5405a3e2930"
+  },
+  "findings": []
+}

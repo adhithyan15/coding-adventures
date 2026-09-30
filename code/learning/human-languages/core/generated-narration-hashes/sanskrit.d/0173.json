@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:bc2f66e2e1ed7858",
+  "lessonIds": [
+    "SA-C173-ksipati",
+    "SA-C173-muncati",
+    "SA-C173-labhate",
+    "SA-C173-sevate",
+    "SA-C173-ramate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch173.txt",
+  "json": "sanskrit/narration/ch173.json",
+  "textHash": "fnv1a64:bc85f53f608dfe19",
+  "jsonHash": "fnv1a64:58e066a64e61cf3f",
+  "findings": []
+}

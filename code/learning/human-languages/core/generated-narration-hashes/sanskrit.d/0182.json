@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:f277f79019aa9e87",
+  "lessonIds": [
+    "SA-C182-vismayah",
+    "SA-C182-sokah",
+    "SA-C182-santosah",
+    "SA-C182-krtajnata",
+    "SA-C182-smrtih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch182.txt",
+  "json": "sanskrit/narration/ch182.json",
+  "textHash": "fnv1a64:e86ba091dfea4c63",
+  "jsonHash": "fnv1a64:611319b626a3985f",
+  "findings": []
+}

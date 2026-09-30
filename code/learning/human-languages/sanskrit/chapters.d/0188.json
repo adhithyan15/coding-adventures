@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Thirsty, Ready, Busy, Spotless, Bright",
+  "label": "ch:sa-thirsty-ready-busy-spotless-bright",
+  "canDo": "I can say thirsty, ready, busy, spotless and bright.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C188-ujjvalah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say thirsty, ready, busy, spotless and bright.",
+    "assesses": [
+      "SA-LEX-C188-QUAL188-03",
+      "SA-LEX-C188-QUAL188-04",
+      "SA-LEX-C188-QUAL188-05"
+    ]
+  }
+}

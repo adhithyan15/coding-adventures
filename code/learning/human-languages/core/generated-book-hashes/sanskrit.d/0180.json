@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:af426395005a5fe5",
+  "lessonIds": [
+    "SA-C180-vyadhah",
+    "SA-C180-caurah",
+    "SA-C180-yacakah",
+    "SA-C180-panditah",
+    "SA-C180-vidvan"
+  ],
+  "tex": "sanskrit/book/chapters/ch180-hunter-thief-beggar-scholar-learned-person.tex"
+}

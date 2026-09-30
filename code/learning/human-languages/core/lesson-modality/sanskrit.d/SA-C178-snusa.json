@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C178-snusa",
+    "language": "sanskrit",
+    "chapter": 178,
+    "sequence": 9720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e729e3929d322eb6"
+  },
+  "findings": []
+}

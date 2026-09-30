@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:490b93995f3e80ca",
+  "lessonIds": [
+    "SA-C202-pathikah",
+    "SA-C202-disa",
+    "SA-C202-purva",
+    "SA-C202-pascima",
+    "SA-C202-uttara",
+    "SA-R202-first-pass-words-from-chapters-197-199",
+    "SA-R202-second-pass-words-from-chapters-200-202"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch202.txt",
+  "json": "sanskrit/narration/ch202.json",
+  "textHash": "fnv1a64:8ebaac6725170a4b",
+  "jsonHash": "fnv1a64:f34103edf58f4a0c",
+  "findings": []
+}

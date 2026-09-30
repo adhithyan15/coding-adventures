@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C178-svasurah",
+    "language": "sanskrit",
+    "chapter": 178,
+    "sequence": 9690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:138b8772917340ae"
+  },
+  "findings": []
+}

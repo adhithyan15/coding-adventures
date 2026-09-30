@@ -1,0 +1,11 @@
+{
+  "id": "SA-C195-prantah",
+  "pathSegment": "SA-PATH-195-THG195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-195-THG195",
+      "order": 3
+    }
+  ]
+}

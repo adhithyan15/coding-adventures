@@ -1,0 +1,11 @@
+{
+  "id": "SA-C196-sarit",
+  "pathSegment": "SA-PATH-196-THG196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-196-THG196",
+      "order": 3
+    }
+  ]
+}

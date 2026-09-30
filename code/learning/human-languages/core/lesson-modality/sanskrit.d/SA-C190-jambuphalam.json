@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C190-jambuphalam",
+    "language": "sanskrit",
+    "chapter": 190,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4987d9cb261f5554"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-183-TIME183",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an age, an auspicious hour, an hour, for a long time and after a long time.",
+  "prerequisites": []
+}

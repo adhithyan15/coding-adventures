@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "From afar, Close by, Between, Loudly, Softly",
+  "label": "ch:sa-from-afar-close-by-between-loudly-softly",
+  "canDo": "I can say from afar, close by, between, loudly and softly.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "SA-C184-nicaih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say from afar, close by, between, loudly and softly.",
+    "assesses": [
+      "SA-LEX-C184-LOC184-03",
+      "SA-LEX-C184-LOC184-04",
+      "SA-LEX-C184-LOC184-05"
+    ]
+  }
+}

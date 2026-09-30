@@ -1,0 +1,11 @@
+{
+  "id": "SA-C178-jamata",
+  "pathSegment": "SA-PATH-178-PPL178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-178-PPL178",
+      "order": 3
+    }
+  ]
+}

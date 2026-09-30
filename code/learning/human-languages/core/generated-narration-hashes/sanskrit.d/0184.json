@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:1ceb6ca75757c9eb",
+  "lessonIds": [
+    "SA-C184-duratah",
+    "SA-C184-nikate",
+    "SA-C184-antara",
+    "SA-C184-uccaih",
+    "SA-C184-nicaih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch184.txt",
+  "json": "sanskrit/narration/ch184.json",
+  "textHash": "fnv1a64:06a8718149228bb2",
+  "jsonHash": "fnv1a64:aad100bfad9d6f69",
+  "findings": []
+}

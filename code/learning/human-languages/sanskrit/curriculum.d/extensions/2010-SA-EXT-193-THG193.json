@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-193-THG193",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a purchase, a sale, an object, an item and a tool.",
+  "prerequisites": []
+}

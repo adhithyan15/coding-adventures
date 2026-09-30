@@ -1,0 +1,11 @@
+{
+  "id": "SA-C181-nadi",
+  "pathSegment": "SA-PATH-181-WEL181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-181-WEL181",
+      "order": 3
+    }
+  ]
+}

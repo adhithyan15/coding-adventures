@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:f199afe390ab0d9d",
+  "lessonIds": [
+    "SA-C193-krayah",
+    "SA-C193-vikrayah",
+    "SA-C193-vastu",
+    "SA-C193-padarthah",
+    "SA-C193-upakaranam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch193.txt",
+  "json": "sanskrit/narration/ch193.json",
+  "textHash": "fnv1a64:9e99506da97cee1d",
+  "jsonHash": "fnv1a64:8867ec2d1dde2318",
+  "findings": []
+}

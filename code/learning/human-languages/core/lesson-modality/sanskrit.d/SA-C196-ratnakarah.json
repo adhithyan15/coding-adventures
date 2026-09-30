@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C196-ratnakarah",
+    "language": "sanskrit",
+    "chapter": 196,
+    "sequence": 10980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d538235e8c3e2b9f"
+  },
+  "findings": []
+}

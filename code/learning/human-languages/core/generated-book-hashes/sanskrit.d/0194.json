@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:536644b19c85dfc1",
+  "lessonIds": [
+    "SA-C194-paritosikam",
+    "SA-C194-nimantranam",
+    "SA-C194-sabha",
+    "SA-C194-gosthi",
+    "SA-C194-melakah"
+  ],
+  "tex": "sanskrit/book/chapters/ch194-prize-invitation-assembly-discussion-group-fair.tex"
+}

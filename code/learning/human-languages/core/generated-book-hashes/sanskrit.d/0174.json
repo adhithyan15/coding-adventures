@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:3fcbf13930aae210",
+  "lessonIds": [
+    "SA-C174-corayati",
+    "SA-C174-bhaksayati",
+    "SA-C174-tadayati",
+    "SA-C174-palayati",
+    "SA-C174-pidayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch174-steals-eats-up-strikes-keeps-hurts.tex"
+}

@@ -113,7 +113,9 @@ it("pins Sanskrit lesson-content budgets", () =>
     // 776 -> 944: the first Sanskrit A2 vocabulary tranche, chapters 141-172.
     // 160 word lessons in thirty-two chapters, plus two reviews per run of at
     // most nine chapters. None declares an idiom, a sense or a culture claim.
-    lessons: 944,
+    // 944 -> 1102: the second tranche, chapters 173-202: 150 word lessons and
+    // two reviews per run, again with no idiom, sense or culture claim.
+    lessons: 1102,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

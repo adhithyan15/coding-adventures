@@ -1,0 +1,51 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-R202-first-pass-words-from-chapters-197-199
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 11470
+chapter: 202
+type: review
+headword: (dialogue)
+gloss: first pass over chapters 197-199
+concept_tag: REVIEW
+prerequisites: [SA-C197-venuvanam, SA-C197-indradhanuh, SA-C197-karaka, SA-C197-avasyayah, SA-C197-jyotsna, SA-C198-harinah, SA-C198-citrakah, SA-C198-gandakah, SA-C198-nidam, SA-C198-andam, SA-C199-vakyam, SA-C199-bhasa, SA-C199-vyakaranam, SA-C199-ganitam, SA-C199-vijnanam, SA-C202-pascima, SA-C202-uttara]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [SA-LEX-C197-THG197-01, SA-LEX-C197-THG197-02, SA-LEX-C197-THG197-03, SA-LEX-C197-THG197-04, SA-LEX-C197-THG197-05, SA-LEX-C198-THG198-01, SA-LEX-C198-THG198-02, SA-LEX-C198-THG198-03, SA-LEX-C198-THG198-04, SA-LEX-C198-THG198-05, SA-LEX-C199-SCH199-01, SA-LEX-C199-SCH199-02, SA-LEX-C199-SCH199-03, SA-LEX-C199-SCH199-04, SA-LEX-C199-SCH199-05, SA-LEX-C202-TRV202-04, SA-LEX-C202-TRV202-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-LEX-C197-THG197-01, SA-LEX-C197-THG197-02, SA-LEX-C197-THG197-03, SA-LEX-C197-THG197-04, SA-LEX-C197-THG197-05, SA-LEX-C198-THG198-01, SA-LEX-C198-THG198-02, SA-LEX-C198-THG198-03, SA-LEX-C198-THG198-04, SA-LEX-C198-THG198-05, SA-LEX-C199-SCH199-01, SA-LEX-C199-SCH199-02, SA-LEX-C199-SCH199-03, SA-LEX-C199-SCH199-04, SA-LEX-C199-SCH199-05, SA-LEX-C202-TRV202-04, SA-LEX-C202-TRV202-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [SA-C197-venuvanam, SA-C197-indradhanuh, SA-C197-karaka, SA-C197-avasyayah, SA-C197-jyotsna, SA-C198-harinah, SA-C198-citrakah, SA-C198-gandakah, SA-C198-nidam, SA-C198-andam, SA-C199-vakyam, SA-C199-bhasa, SA-C199-vyakaranam, SA-C199-ganitam, SA-C199-vijnanam, SA-C202-pascima, SA-C202-uttara]
+---
+
+# Words from chapters 197-199 — a first pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C202-TRV202-04, SA-LEX-C202-TRV202-05] -->
+
+[PAUSE 3s] Say the words for the west and the north.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C197-THG197-01, SA-LEX-C197-THG197-02, SA-LEX-C197-THG197-03, SA-LEX-C197-THG197-04, SA-LEX-C197-THG197-05, SA-LEX-C198-THG198-01, SA-LEX-C198-THG198-02, SA-LEX-C198-THG198-03, SA-LEX-C198-THG198-04, SA-LEX-C198-THG198-05, SA-LEX-C199-SCH199-01, SA-LEX-C199-SCH199-02, SA-LEX-C199-SCH199-03, SA-LEX-C199-SCH199-04, SA-LEX-C199-SCH199-05, SA-LEX-C202-TRV202-04, SA-LEX-C202-TRV202-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a bamboo grove, a rainbow, hail, dew, moonlight]
+- [YOU SAY: a deer, a leopard, a rhinoceros, a nest, an egg]
+- [YOU SAY: a sentence, a language, grammar, mathematics, science]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C197-THG197-01, SA-LEX-C197-THG197-02, SA-LEX-C197-THG197-03, SA-LEX-C197-THG197-04, SA-LEX-C197-THG197-05, SA-LEX-C198-THG198-01, SA-LEX-C198-THG198-02, SA-LEX-C198-THG198-03, SA-LEX-C198-THG198-04, SA-LEX-C198-THG198-05, SA-LEX-C199-SCH199-01, SA-LEX-C199-SCH199-02, SA-LEX-C199-SCH199-03, SA-LEX-C199-SCH199-04, SA-LEX-C199-SCH199-05, SA-LEX-C202-TRV202-04, SA-LEX-C202-TRV202-05] -->
+
+[PAUSE 3s] A bamboo grove? (**वेणुवनम्**, *veṇuvanam*.) A rainbow? (**इन्द्रधनुः**, *indradhanuḥ*.) Hail? (**करका**, *karakā*.) Dew? (**अवश्यायः**, *avaśyāyaḥ*.) Moonlight? (**ज्योत्स्ना**, *jyotsnā*.) A deer? (**हरिणः**, *hariṇaḥ*.) A leopard? (**चित्रकः**, *citrakaḥ*.) A rhinoceros? (**गण्डकः**, *gaṇḍakaḥ*.) A nest? (**नीडम्**, *nīḍam*.) An egg? (**अण्डम्**, *aṇḍam*.) A sentence? (**वाक्यम्**, *vākyam*.) A language? (**भाषा**, *bhāṣā*.) Grammar? (**व्याकरणम्**, *vyākaraṇam*.) Mathematics? (**गणितम्**, *gaṇitam*.) Science? (**विज्ञानम्**, *vijñānam*.)

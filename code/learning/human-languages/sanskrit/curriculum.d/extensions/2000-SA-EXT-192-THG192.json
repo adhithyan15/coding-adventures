@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-192-THG192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a necklace, a crown, a lower garment, clothing and a garment.",
+  "prerequisites": []
+}

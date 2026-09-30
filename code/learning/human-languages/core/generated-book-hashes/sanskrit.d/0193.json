@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:a78ed6bed53b386c",
+  "lessonIds": [
+    "SA-C193-krayah",
+    "SA-C193-vikrayah",
+    "SA-C193-vastu",
+    "SA-C193-padarthah",
+    "SA-C193-upakaranam"
+  ],
+  "tex": "sanskrit/book/chapters/ch193-purchase-sale-object-item-tool.tex"
+}

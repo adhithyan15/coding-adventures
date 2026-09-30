@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:a4016824aec80661",
+  "lessonIds": [
+    "SA-C195-pattanam",
+    "SA-C195-rajadhani",
+    "SA-C195-janapadah",
+    "SA-C195-prantah",
+    "SA-C195-sima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch195.txt",
+  "json": "sanskrit/narration/ch195.json",
+  "textHash": "fnv1a64:2ecbf73012acb7c6",
+  "jsonHash": "fnv1a64:8c042c1a4224b290",
+  "findings": []
+}

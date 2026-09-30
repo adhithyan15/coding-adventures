@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:f8deeb773572941d",
+  "lessonIds": [
+    "SA-C174-corayati",
+    "SA-C174-bhaksayati",
+    "SA-C174-tadayati",
+    "SA-C174-palayati",
+    "SA-C174-pidayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch174.txt",
+  "json": "sanskrit/narration/ch174.json",
+  "textHash": "fnv1a64:5925424a4f4d26d3",
+  "jsonHash": "fnv1a64:21a560ea85b2e938",
+  "findings": []
+}

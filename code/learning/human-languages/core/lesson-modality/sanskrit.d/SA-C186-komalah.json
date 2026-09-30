@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C186-komalah",
+    "language": "sanskrit",
+    "chapter": 186,
+    "sequence": 10270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1424ef8e1e38c16"
+  },
+  "findings": []
+}

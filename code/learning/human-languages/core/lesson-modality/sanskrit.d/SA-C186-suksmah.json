@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C186-suksmah",
+    "language": "sanskrit",
+    "chapter": 186,
+    "sequence": 10300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4ea81f1e1335d4d"
+  },
+  "findings": []
+}

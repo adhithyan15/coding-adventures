@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C192-mukutam",
+    "language": "sanskrit",
+    "chapter": 192,
+    "sequence": 10770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a46ad2c13d1a054e"
+  },
+  "findings": []
+}

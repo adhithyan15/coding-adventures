@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:71d8d22866e234e8",
+  "lessonIds": [
+    "SA-C186-komalah",
+    "SA-C186-vamanah",
+    "SA-C186-visalah",
+    "SA-C186-suksmah",
+    "SA-C186-sthirah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch186.txt",
+  "json": "sanskrit/narration/ch186.json",
+  "textHash": "fnv1a64:822e8d3af9564b92",
+  "jsonHash": "fnv1a64:5b05a267a72d985d",
+  "findings": []
+}
