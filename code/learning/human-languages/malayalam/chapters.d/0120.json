@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "ML-C120-stop",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 120: i can ask someone to show me or help me, ask them to stop, and say I did not hear or did not understand.",
+    "summary": "Complete the last lesson of chapter 120: I can ask someone to show me or help me, ask them to stop, and say I did not hear or did not understand.",
     "assesses": [
       "ML-LEX-C120-HELP-03",
       "ML-LEX-C120-HELP-04",

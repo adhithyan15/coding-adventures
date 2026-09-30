@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "ML-C131-onion",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 131: i can name fish, meat, eggs, vegetables and onions.",
+    "summary": "Complete the last lesson of chapter 131: I can name fish, meat, eggs, vegetables and onions.",
     "assesses": [
       "ML-LEX-C131-KITCHEN-03",
       "ML-LEX-C131-KITCHEN-04",

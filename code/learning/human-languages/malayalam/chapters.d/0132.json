@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "ML-C132-curry",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 132: i can name dosa, sambar, appam, puttu and curry.",
+    "summary": "Complete the last lesson of chapter 132: I can name dosa, sambar, appam, puttu and curry.",
     "assesses": [
       "ML-LEX-C132-DISHES-03",
       "ML-LEX-C132-DISHES-04",

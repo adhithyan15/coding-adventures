@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "ML-C138-rabbit",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 138: i can name a bird, a snake, a monkey, a tiger and a rabbit.",
+    "summary": "Complete the last lesson of chapter 138: I can name a bird, a snake, a monkey, a tiger and a rabbit.",
     "assesses": [
       "ML-LEX-C138-ANIMALS-03",
       "ML-LEX-C138-ANIMALS-04",

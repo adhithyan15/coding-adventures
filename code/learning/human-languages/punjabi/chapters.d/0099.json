@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "PA-C99-sardi",
     "kind": "production",
-    "summary": "Complete the last lesson of chapter 99: i can say midnight, daybreak, the day after tomorrow, summer and winter.",
+    "summary": "Complete the last lesson of chapter 99: I can say midnight, daybreak, the day after tomorrow, summer and winter.",
     "assesses": [
       "PA-LEX-C99-TIME99-03",
       "PA-LEX-C99-TIME99-04",
