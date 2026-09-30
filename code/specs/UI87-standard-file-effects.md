@@ -402,28 +402,49 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   `file_selector: '>=1.0.0 <2.0.0'` admit the pin. Extensions are passed bare,
   as one type group, or no group at all for "any file" (Linux refuses an
   empty group). A choice with no local path is a failure, not a cancel.
-- **Files through dart:io, plus two libc calls.** Open checks the type on the
-  path, following a link the person chose: a directory, a missing file, a FIFO
-  or a device is "not a regular file"; the read is bounded in 64 KiB chunks.
-  Dart has neither `O_NONBLOCK` nor `fstat`, so unlike SwiftUI and Qt the type
-  cannot be re-checked on the opened descriptor: a FIFO swapped in between the
-  check and the open would block the background isolate (never the UI), and
-  hold that request -- and the busy flag -- until something writes to it.
-  Save on POSIX: dart:io can neither create a file with a mode nor `chmod`
-  one, and `Directory.createTemp` is 0777 minus the umask, not `mkdtemp`'s
-  0700. So the library creates a private directory beside the target with
-  libc `mkdir(…, 0700)` (which fails if the name exists), writes and flushes
-  the bytes inside it, gives the file the replaced regular file's rwx bits
-  (never setuid, setgid or sticky; a new name or a link stays 0600) with libc
-  `chmod` on a path nobody else can reach, renames it onto the chosen path --
-  replacing a chosen link rather than writing through it, as Compose and Qt
-  do -- and removes the directory. On Windows it writes an exclusively created
-  temporary beside the target, flushes it, and moves it with
-  `MoveFileExW(MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)`, the move
-  the host uses for its own state; the folder's ACL applies, as with Compose
-  and Qt (XAML's `File.Replace` keeps the replaced file's). The base64
-  alphabet is checked first, because Dart's decoder also accepts the URL-safe
-  alphabet and `%3D` padding.
+- **Files through libc, as Qt and SwiftUI do it.** dart:io cannot do what
+  the save and the open need: its exclusive `createSync` closes the file it
+  created, and `openSync` then reopens by path (`O_CREAT | O_TRUNC`, no
+  `O_EXCL`, no `O_NOFOLLOW`), following whatever is at that name by then; it
+  cannot create with a mode, `fchmod`, or open without blocking. So both go
+  to libc through dart:ffi, with the `open(2)` flags taken per OS and
+  architecture from the system headers (they differ: `O_NOFOLLOW` is 0x20000
+  on Linux x64, 0x8000 on Linux arm64 and 0x100 on Apple platforms). Those
+  tables cover the ABIs Flutter builds desktop apps for (Linux x64 and arm64,
+  macOS x64 and arm64); on any other POSIX ABI a save fails rather than
+  guessing.
+  Save on POSIX: `open(<folder>/.mosaic-save-<random>.tmp, O_WRONLY |
+  O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC, 0600)` -- a new file or nothing,
+  so a link or file planted at that name (possible in a folder another user
+  can write to) fails the save and is left alone. The bytes are written,
+  `fchmod`-ed and `fsync`-ed through that descriptor, which is closed and
+  renamed onto the chosen path, replacing a chosen link rather than writing
+  through it, as Compose and Qt do; the temporary is `unlink`ed only if
+  something failed. The mode follows Qt: a regular file this user owns
+  lends its rwx bits (never setuid, setgid or sticky); someone else's file,
+  a link, or nothing gives 0600. Ownership comes from `lstat`: Linux calls
+  `statx` (glibc 2.28+), whose layout is the same on every architecture;
+  Apple platforms call the 64-bit-inode `lstat` (`lstat$INODE64` on x86_64).
+  Where there is no `statx` the owner is unknown, and the replaced file's
+  bits are kept without group and other write (`& 0755`).
+  Open on POSIX: the path is checked first, following a link the person
+  chose. dart:io types a device as not found, so a directory, a missing
+  file, a FIFO or a device is "not a regular file" before anything opens
+  it. The resolved path is then opened once with `O_RDONLY | O_NONBLOCK |
+  O_NOFOLLOW | O_CLOEXEC` and typed with `fstat` on that descriptor, so a
+  FIFO or device swapped in after the check is refused without blocking,
+  and a link swapped in is not followed. The bytes are read through the
+  same descriptor in 64 KiB chunks, bounded while reading.
+  On Windows the save is `CreateFileW(CREATE_NEW, no sharing)` beside the
+  target, `WriteFile` and `FlushFileBuffers` through that handle,
+  `CloseHandle`, then `MoveFileExW(MOVEFILE_REPLACE_EXISTING |
+  MOVEFILE_WRITE_THROUGH)`, the move the host uses for its own state (the
+  temporary is deleted only on failure). The folder's ACL applies, as with
+  Compose and Qt; XAML's `File.Replace` keeps the replaced file's. The
+  Windows open reads through dart:io after the same path check, since a
+  file dialog cannot return a FIFO there. The base64 alphabet is checked
+  first, because Dart's decoder also accepts the URL-safe alphabet and `%3D`
+  padding.
 - **Platforms.** Linux, macOS and Windows have the dialogs. On Android and iOS
   each request fails at once with "`<kind>` is not available on this platform
   yet", nothing deferred, as SwiftUI does on iOS, until UI89 adds a document
@@ -435,7 +456,14 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
   plain Dart VM with a fake host and fake dialogs: the Compose test's cases,
   the SwiftUI and XAML harnesses' router cases (including the host disposed
   while a dialog is open), a FIFO refused, a chosen link replaced, no dialogs
-  on mobile, and the adapter over a `MosaicHost` with no runtime.
+  on mobile, and the adapter over a `MosaicHost` with no runtime. It also
+  pins the four flag tables, probes the running ABI's table against the
+  kernel with raw `open(2)` calls (`O_NOFOLLOW` refuses a link, `O_EXCL` an
+  existing name, `O_NONBLOCK` opens a FIFO at once, and `O_CLOEXEC` sets
+  `FD_CLOEXEC`), plants a link, a dangling link and a file at the
+  temporary's name (each fails the save and nothing is written through it),
+  checks the ownership rule on real files, and hands a FIFO, a device and a
+  directory straight to the descriptor read.
   `tests/flutter_platform_effects.rs` runs it wherever `dart` is installed;
   the Flutter CI lane checks TaskApp's `main.dart` installs the library and
   runs the harness against TaskApp's generated files. The dialogs file is
@@ -445,8 +473,11 @@ Kotlin file. What differs is how Dart and Flutter shape the rest:
 **Known gaps.** `file_selector_linux` never turns on GTK's overwrite
 confirmation (off by default), so on Linux saving onto an existing name
 replaces it without asking; NSSavePanel and the Windows dialog ask. The macOS
-entitlement above belongs to whatever generates the macOS runner. Both, and
-the FIFO window, are follow-ups.
+entitlement above belongs to whatever generates the macOS runner. Both are
+follow-ups. The libc calls have run on Linux x64 only; the macOS and Linux
+arm64 flag values and the macOS `stat` layout come from the system headers
+and are pinned by tests, but no Mac or arm64 machine has run them yet. The
+Windows save has been type-checked, not run.
 
 ## 6. What this does not decide
 

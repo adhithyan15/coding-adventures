@@ -18,7 +18,11 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
+import 'dart:isolate';
+
+import 'package:ffi/ffi.dart';
 
 import 'package:mosaic_flutter_platform_effects_conformance/mosaic_host.dart';
 import 'package:mosaic_flutter_platform_effects_conformance/mosaic_platform_effects_core.dart';
@@ -903,6 +907,314 @@ Future<void> checkRouter(Directory directory) async {
   check(noRuntime.effectHandler == null, 'installing on no runtime is a no-op');
 }
 
+/// The calls the save and the open make through dart:ffi (UI87 §7.7): the
+/// `open(2)` flag tables, the mode rule, and -- on the running kernel -- that
+/// the running ABI's table means what it says, that the temporary is created
+/// exclusively and never through a link planted at its name, and that the
+/// opened descriptor is typed before anything reads it.
+Future<void> checkPosixCalls(Directory directory) async {
+  String table(Abi abi) {
+    final flags = mosaicOpenFlagsFor(abi);
+    if (flags == null) return 'none';
+    return <int>[
+      flags.writeOnly,
+      flags.create,
+      flags.exclusive,
+      flags.nonBlocking,
+      flags.noFollow,
+      flags.closeOnExec,
+    ].map((value) => '0x${value.toRadixString(16)}').join(' ');
+  }
+
+  // O_WRONLY O_CREAT O_EXCL O_NONBLOCK O_NOFOLLOW O_CLOEXEC, as the headers
+  // define them (arm64 Linux has its own O_NOFOLLOW).
+  check(
+    table(Abi.linuxX64) == '0x1 0x40 0x80 0x800 0x20000 0x80000',
+    'Linux x64 open flags: ${table(Abi.linuxX64)}',
+  );
+  check(
+    table(Abi.linuxArm64) == '0x1 0x40 0x80 0x800 0x8000 0x80000',
+    'Linux arm64 open flags: ${table(Abi.linuxArm64)}',
+  );
+  for (final abi in <Abi>[Abi.macosX64, Abi.macosArm64]) {
+    check(
+      table(abi) == '0x1 0x200 0x800 0x4 0x100 0x1000000',
+      '$abi open flags: ${table(abi)}',
+    );
+  }
+  for (final abi in <Abi>[Abi.windowsX64, Abi.linuxIA32, Abi.androidArm64]) {
+    check(table(abi) == 'none', 'no flag table for $abi');
+  }
+  check(MosaicOpenFlags.readOnly == 0, 'O_RDONLY is 0');
+
+  // The mode rule, as the Qt library applies it.
+  const me = 1000;
+  check(mosaicReplacementMode(null, me) == 0x180, 'nothing there: 0600');
+  check(
+    mosaicReplacementMode((mode: 0x81A4, uid: me), me) == 0x1A4,
+    'my 0644 file keeps 0644',
+  );
+  check(
+    mosaicReplacementMode((mode: 0x81B4, uid: me), me) == 0x1B4,
+    'my 0664 file keeps 0664',
+  );
+  check(
+    mosaicReplacementMode((mode: 0x89ED, uid: me), me) == 0x1ED,
+    'my setuid 4755 file becomes 0755',
+  );
+  check(
+    mosaicReplacementMode((mode: 0x81B6, uid: 1001), me) == 0x180,
+    "someone else's 0666 file becomes 0600",
+  );
+  check(
+    mosaicReplacementMode((mode: 0x81B6, uid: null), me) == 0x1A4,
+    'an unknown owner loses group and other write: 0666 -> 0644',
+  );
+  check(
+    mosaicReplacementMode((mode: 0x8FFF, uid: null), me) == 0x1ED,
+    'an unknown owner: 7777 -> 0755',
+  );
+  check(
+    mosaicReplacementMode((mode: 0xA1FF, uid: me), me) == 0x180,
+    'a link lends nothing: 0600',
+  );
+  check(
+    mosaicReplacementMode((mode: 0x41ED, uid: me), me) == 0x180,
+    'a directory lends nothing: 0600',
+  );
+
+  if (Platform.isWindows) return;
+  final flags = mosaicOpenFlagsFor(Abi.current());
+  check(flags != null, 'this POSIX ABI has a flag table: ${Abi.current()}');
+  _checkFlagsOnThisKernel(directory, flags!);
+
+  // A link planted at the temporary's name -- the attack a writable, shared
+  // folder allows -- fails the save; its target is neither written,
+  // truncated nor chmodded, and the link itself is left where it was.
+  final victim = '${directory.path}/victim-bashrc';
+  File(victim).writeAsStringSync('the victim keeps this');
+  Process.runSync('chmod', ['644', victim]);
+  final target = '${directory.path}/planted.txt';
+  const planted = '.mosaic-save-planted.tmp';
+  Link('${directory.path}/$planted').createSync(victim);
+  final throughLink = mosaicWriteReplacing(
+    target,
+    utf8.encode('the app bytes'),
+    temporaryName: planted,
+  );
+  check(
+    failure(throughLink) == "couldn't save the file",
+    'a link at the temporary name fails the save: $throughLink',
+  );
+  check(
+    File(victim).readAsStringSync() == 'the victim keeps this',
+    "the planted link's target is not written or truncated",
+  );
+  check(
+    mode(victim) == 0x1A4,
+    "the planted link's target keeps its mode, got ${mode(victim).toRadixString(8)}",
+  );
+  check(
+    FileSystemEntity.typeSync(
+          '${directory.path}/$planted',
+          followLinks: false,
+        ) ==
+        FileSystemEntityType.link,
+    'the planted link is left alone',
+  );
+  check(!File(target).existsSync(), 'nothing saved through a planted link');
+
+  // A dangling link: O_CREAT through it would create the file it names.
+  const dangling = '.mosaic-save-dangling.tmp';
+  final wouldCreate = '${directory.path}/created-through-a-link';
+  Link('${directory.path}/$dangling').createSync(wouldCreate);
+  check(
+    failure(
+          mosaicWriteReplacing(
+            target,
+            utf8.encode('x'),
+            temporaryName: dangling,
+          ),
+        ) ==
+        "couldn't save the file",
+    'a dangling link at the temporary name fails the save',
+  );
+  check(
+    !File(wouldCreate).existsSync(),
+    'nothing is created through a dangling link',
+  );
+
+  // O_EXCL: a regular file already at the name is refused, not truncated.
+  const squatter = '.mosaic-save-squatter.tmp';
+  File('${directory.path}/$squatter').writeAsStringSync("someone else's");
+  check(
+    failure(
+          mosaicWriteReplacing(
+            target,
+            utf8.encode('x'),
+            temporaryName: squatter,
+          ),
+        ) ==
+        "couldn't save the file",
+    'a file at the temporary name fails the save',
+  );
+  check(
+    File('${directory.path}/$squatter').readAsStringSync() == "someone else's",
+    'a file at the temporary name is not truncated',
+  );
+  Link('${directory.path}/$planted').deleteSync();
+  Link('${directory.path}/$dangling').deleteSync();
+  File('${directory.path}/$squatter').deleteSync();
+
+  // The same call with nothing in the way saves, and leaves nothing behind.
+  const fixed = '.mosaic-save-fixed.tmp';
+  final saved = mosaicWriteReplacing(
+    target,
+    utf8.encode('saved'),
+    temporaryName: fixed,
+  );
+  check(okValue(saved)?['name'] == 'planted.txt', 'a fixed-name save: $saved');
+  check(File(target).readAsStringSync() == 'saved', 'fixed-name save bytes');
+  check(
+    !File('${directory.path}/$fixed').existsSync(),
+    'the temporary is renamed away, not left behind',
+  );
+
+  // My own group-writable file keeps its bits.
+  final shared = '${directory.path}/shared.txt';
+  File(shared).writeAsStringSync('old');
+  Process.runSync('chmod', ['664', shared]);
+  check(
+    okValue(mosaicWriteReplacing(shared, utf8.encode('new'))) != null,
+    'save over my own 0664 file',
+  );
+  check(
+    mode(shared) == 0x1B4,
+    'my own 0664 file keeps 0664, got ${mode(shared).toRadixString(8)}',
+  );
+
+  // Someone else's file lends no bits (needs root to hand a file away). Its
+  // group stays root's, so an owner read from the group field would match.
+  if ((Process.runSync('id', ['-u']).stdout as String).trim() == '0') {
+    final theirs = '${directory.path}/theirs.txt';
+    File(theirs).writeAsStringSync('old');
+    Process.runSync('chmod', ['666', theirs]);
+    if (Process.runSync('chown', ['1000:0', theirs]).exitCode == 0) {
+      check(
+        okValue(mosaicWriteReplacing(theirs, utf8.encode('new'))) != null,
+        "save over someone else's 0666 file",
+      );
+      check(
+        mode(theirs) == 0x180,
+        "someone else's 0666 file is replaced 0600, got ${mode(theirs).toRadixString(8)}",
+      );
+    }
+  }
+
+  // The descriptor is typed before it is read. Handed straight to the read,
+  // as a swap after the path check would hand them: a FIFO (which must not
+  // block -- run in an isolate with a deadline, so a regression fails rather
+  // than hangs), a device and a directory are refused; a file is read.
+  final fifo = '${directory.path}/swapped-in.fifo';
+  if (Process.runSync('mkfifo', [fifo]).exitCode == 0) {
+    final Map<String, Object?>? fromFifo;
+    try {
+      fromFifo = await Isolate.run(
+        () => mosaicReadThroughDescriptor(fifo),
+      ).timeout(const Duration(seconds: 20));
+    } on TimeoutException {
+      stderr.writeln('Failed platform-effects assertion: a FIFO blocked the read');
+      exit(1);
+    }
+    check(
+      fromFifo != null && failure(fromFifo) == 'that is not a regular file',
+      'a FIFO on the descriptor is refused without blocking: $fromFifo',
+    );
+  }
+  final device = mosaicReadThroughDescriptor('/dev/null');
+  check(
+    device != null && failure(device) == 'that is not a regular file',
+    'a device on the descriptor is refused: $device',
+  );
+  final folder = mosaicReadThroughDescriptor(directory.path);
+  check(
+    folder != null && failure(folder) == 'that is not a regular file',
+    'a directory on the descriptor is refused: $folder',
+  );
+  final read = mosaicReadThroughDescriptor(target);
+  check(
+    read != null && okValue(read)?['bytes'] == encoded('saved'),
+    'a regular file is read through its descriptor: $read',
+  );
+}
+
+/// The running ABI's flag table, checked against the running kernel with raw
+/// `open(2)` calls: each flag does what the table says it does.
+void _checkFlagsOnThisKernel(Directory directory, MosaicOpenFlags flags) {
+  final libc = DynamicLibrary.process();
+  final open = libc.lookupFunction<
+    Int32 Function(Pointer<Utf8>, Int32, VarArgs<(Uint32,)>),
+    int Function(Pointer<Utf8>, int, int)
+  >('open');
+  final fcntl = libc.lookupFunction<
+    Int32 Function(Int32, Int32, VarArgs<(Int32,)>),
+    int Function(int, int, int)
+  >('fcntl');
+  final close = libc.lookupFunction<Int32 Function(Int32), int Function(int)>(
+    'close',
+  );
+  int openAt(String path, int openFlags) {
+    final native = path.toNativeUtf8();
+    try {
+      return open(native, openFlags, 0x180);
+    } finally {
+      malloc.free(native);
+    }
+  }
+
+  final existing = '${directory.path}/flags-existing';
+  File(existing).writeAsStringSync('here');
+  final link = '${directory.path}/flags-link';
+  Link(link).createSync(existing);
+
+  final followed = openAt(link, MosaicOpenFlags.readOnly);
+  check(followed >= 0, 'a link opens without O_NOFOLLOW');
+  close(followed);
+  check(
+    openAt(link, MosaicOpenFlags.readOnly | flags.noFollow) < 0,
+    'O_NOFOLLOW (0x${flags.noFollow.toRadixString(16)}) refuses a link',
+  );
+  check(
+    openAt(existing, flags.writeOnly | flags.create | flags.exclusive) < 0,
+    'O_CREAT|O_EXCL refuses an existing name',
+  );
+  final fresh = '${directory.path}/flags-fresh';
+  final created = openAt(fresh, flags.writeOnly | flags.create | flags.exclusive);
+  check(created >= 0 && File(fresh).existsSync(), 'O_CREAT|O_EXCL creates');
+  close(created);
+  final cloexec = openAt(existing, MosaicOpenFlags.readOnly | flags.closeOnExec);
+  // F_GETFD = 1 and FD_CLOEXEC = 1 on Linux and Apple platforms.
+  check(
+    cloexec >= 0 && fcntl(cloexec, 1, 0) & 1 == 1,
+    'O_CLOEXEC (0x${flags.closeOnExec.toRadixString(16)}) sets FD_CLOEXEC',
+  );
+  close(cloexec);
+  final fifo = '${directory.path}/flags-fifo';
+  if (Process.runSync('mkfifo', [fifo]).exitCode == 0) {
+    // Without O_NONBLOCK this open would wait for a writer forever.
+    final nonBlocking = openAt(
+      fifo,
+      MosaicOpenFlags.readOnly | flags.nonBlocking,
+    );
+    check(nonBlocking >= 0, 'O_NONBLOCK opens a FIFO at once');
+    close(nonBlocking);
+    File(fifo).deleteSync();
+  }
+  Link(link).deleteSync();
+  File(existing).deleteSync();
+  File(fresh).deleteSync();
+}
+
 Future<void> main() async {
   final directory = Directory.systemTemp.createTempSync(
     'mosaic-flutter-platform-effects-',
@@ -910,6 +1222,7 @@ Future<void> main() async {
   try {
     checkRouting();
     await checkSave(directory);
+    await checkPosixCalls(directory);
     await checkSaveRefusals(directory);
     await checkOpen(directory);
     await checkRouter(directory);

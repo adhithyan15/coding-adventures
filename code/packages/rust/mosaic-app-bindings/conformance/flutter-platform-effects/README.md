@@ -26,6 +26,15 @@ runtime. It checks the same cases as the Compose library's
   extensions in order, cancel, a directory, a missing file and a FIFO refused,
   a chosen symlink read and named as chosen, exactly 50 MiB accepted and one
   byte more refused;
+- the libc calls behind both (POSIX): the `open(2)` flag table for each ABI
+  pinned, and the running ABI's table probed with raw `open(2)` calls
+  (`O_NOFOLLOW`, `O_CREAT | O_EXCL`, `O_NONBLOCK` on a FIFO, `O_CLOEXEC`); a
+  link, a dangling link and a file planted at the save's temporary name each
+  fail the save with nothing written, truncated or created through them; the
+  mode rule (a file this user owns keeps its rwx bits, someone else's gives
+  0600, an unknown owner loses group and other write); and a FIFO (under a
+  deadline, so a regression fails instead of hanging), a device and a
+  directory handed straight to the descriptor read are refused;
 - the router's timing: deferred before any dialog, the dialog run from the
   scheduled work, one operation at a time, a request that outlives the
   payload it was copied from, a notify ignored, a refused deferral leaving it

@@ -1544,16 +1544,70 @@ mod tests {
         // File I/O in a background isolate, from top-level functions that
         // capture only what they send.
         assert!(core.contains("Isolate.run(() => _mosaicReadOpened(path));"));
-        assert!(core.contains("Isolate.run(() => _mosaicWriteReplacing(target, bytes));"));
-        // Atomic save: a private (0700) directory, the rwx bits of a regular
-        // file only, rename into place; MoveFileExW with write-through on
-        // Windows, the move the host uses for its own state.
-        assert!(core.contains("_mosaicLibcPathMode('mkdir', privateDirectory, 0x1C0)"));
-        assert!(core.contains("mode = File(full).statSync().mode & 0x1FF;"));
-        assert!(core.contains("var mode = 0x180; // 0600"));
-        assert!(core.contains("written.renameSync(full);"));
+        assert!(core.contains("Isolate.run(() => mosaicWriteReplacing(target, bytes));"));
+        // Atomic save, as Qt and SwiftUI do it (UI87 §7.7): the temporary is
+        // opened O_CREAT | O_EXCL | O_NOFOLLOW at 0600, written, fchmod-ed and
+        // fsync-ed through that descriptor, closed, then renamed; unlinked
+        // only on failure. Never reopened, chmod-ed or deleted by path.
+        let save = core
+            .find("bool _mosaicSavePosix(")
+            .map(|at| &core[at..])
+            .expect("the POSIX save");
+        let open = save
+            .find("flags.writeOnly |\n        flags.create |\n        flags.exclusive |\n        flags.noFollow |\n        flags.closeOnExec,\n    0x180, // 0600")
+            .expect("an exclusive, no-follow, owner-only open");
+        let write = save.find("posix.write(descriptor, buffer + written").expect("write");
+        let fchmod = save.find("posix.fchmod(descriptor, mode) == 0 &&").expect("fchmod");
+        let fsync = save.find("posix.fsync(descriptor) == 0;").expect("fsync");
+        let close = save.find("if (posix.close(descriptor) != 0) complete = false;").expect("close");
+        let rename = save.find("if (complete && posix.rename(temporary, full) == 0) return true;").expect("rename");
+        let unlink = save.find("  posix.unlink(temporary);\n  return false;").expect("unlink");
+        assert!(open < write && write < fchmod && fchmod < fsync && fsync < close);
+        assert!(close < rename && rename < unlink);
+        for gone in [
+            "_mosaicLibcPathMode",
+            "privateDirectory",
+            "deleteSync(recursive: true)",
+            "createSync(exclusive: true)",
+            "openSync(mode: FileMode.writeOnly)",
+        ] {
+            assert!(!core.contains(gone), "the save no longer uses {gone}");
+        }
+        // The mode: a regular file's rwx bits only when this user owns it;
+        // someone else's (or nothing, or a link) gives 0600; an unknown owner
+        // loses group and other write.
+        assert!(core.contains("if (existing == null || !mosaicIsRegularMode(existing.mode)) return 0x180;"));
+        assert!(core.contains("if (owner == null) return existing.mode & 0x1ED; // 0755"));
+        assert!(core.contains("return owner == currentUid ? existing.mode & 0x1FF : 0x180;"));
+        // The open(2) flags per ABI, as the system headers define them.
+        for table in [
+            "Abi.linuxX64 => const MosaicOpenFlags(\n    writeOnly: 0x1,\n    create: 0x40,\n    exclusive: 0x80,\n    nonBlocking: 0x800,\n    noFollow: 0x20000,\n    closeOnExec: 0x80000,\n  ),",
+            "Abi.linuxArm64 => const MosaicOpenFlags(\n    writeOnly: 0x1,\n    create: 0x40,\n    exclusive: 0x80,\n    nonBlocking: 0x800,\n    noFollow: 0x8000,\n    closeOnExec: 0x80000,\n  ),",
+            "Abi.macosX64 || Abi.macosArm64 => const MosaicOpenFlags(\n    writeOnly: 0x1,\n    create: 0x200,\n    exclusive: 0x800,\n    nonBlocking: 0x4,\n    noFollow: 0x100,\n    closeOnExec: 0x1000000,\n  ),",
+            "  _ => null,\n};",
+        ] {
+            assert!(core.contains(table), "open flag table: {table}");
+        }
+        assert!(core.contains("Int32 Function(Pointer<Utf8>, Int32, VarArgs<(Uint32,)>);"));
+        // stat: Linux statx (one layout on every arch: mask @0, uid @20,
+        // mode @28); Apple's 64-bit-inode stat (mode @4, uid @16), exported
+        // as lstat$INODE64 / fstat$INODE64 on x86_64.
+        assert!(core.contains("final mask = view.getUint32(0, Endian.host);"));
+        assert!(core.contains("mode: view.getUint16(28, Endian.host),\n          uid: view.getUint32(20, Endian.host),"));
+        assert!(core.contains("mode: view.getUint16(4, Endian.host),\n        uid: view.getUint32(16, Endian.host),"));
+        assert!(core.contains("Abi.current() == Abi.macosX64 ? '$name\\$INODE64' : name;"));
+        assert!(core.contains("static const int _atSymlinkNoFollow = 0x100;"));
+        assert!(core.contains("static const int _atEmptyPath = 0x1000;"));
+        // The open: one descriptor, non-blocking and no-follow, typed by
+        // fstat before it is read.
+        assert!(core.contains("    MosaicOpenFlags.readOnly |\n        flags.nonBlocking |\n        flags.noFollow |\n        flags.closeOnExec,"));
+        assert!(core.contains("if (status != null && !mosaicIsRegularMode(status.mode)) {"));
+        // Windows: CreateFileW(CREATE_NEW), written and flushed through that
+        // handle, then MoveFileExW with write-through, the move the host uses
+        // for its own state.
+        assert!(core.contains("const createNew = 1;"));
+        assert!(core.contains("flushFileBuffers(handle) != 0"));
         assert!(core.contains("moveFileReplaceExisting | moveFileWriteThrough"));
-        assert!(core.contains("temporary.createSync(exclusive: true);"));
         // No static host: nothing answers "whichever runtime is loaded".
         assert!(!core.contains("MosaicHost.load"));
     }

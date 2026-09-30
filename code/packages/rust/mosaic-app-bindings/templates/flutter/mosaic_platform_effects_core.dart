@@ -490,16 +490,18 @@ Future<Map<String, Object?>> _mosaicReadInBackground(String path) =>
 /// the length first: a file can grow between a check and a read, which is
 /// the TOCTOU the first XAML handler's review found (#15218).
 ///
-/// The type is checked on the path, following a link the person chose: a
-/// directory, a missing file, a pipe or a device is "not a regular file".
-/// Dart has neither `O_NONBLOCK` nor `fstat`, so unlike the SwiftUI and Qt
-/// libraries this cannot re-check the type on the opened descriptor; a FIFO
-/// swapped in between the check and the open would block this background
-/// isolate (never the UI) until something writes to it (UI87 §7.7).
+/// A directory or a missing path is refused up front, following a link the
+/// person chose (a device is refused here too: dart:io types it as not
+/// found, so it is never opened). On Linux and macOS the file is then opened
+/// ONCE, as the Qt and SwiftUI libraries open it
+/// ([mosaicReadThroughDescriptor]); elsewhere (Windows,
+/// which has no FIFOs a file dialog can return) it is read through dart:io.
 Map<String, Object?> _mosaicReadOpened(String path) {
   if (FileSystemEntity.typeSync(path) != FileSystemEntityType.file) {
     return mosaicFailed('that is not a regular file');
   }
+  final throughDescriptor = mosaicReadThroughDescriptor(path);
+  if (throughDescriptor != null) return throughDescriptor;
   RandomAccessFile? handle;
   try {
     handle = File(path).openSync();
@@ -508,28 +510,102 @@ Map<String, Object?> _mosaicReadOpened(String path) {
       final chunk = handle.readSync(64 * 1024);
       if (chunk.isEmpty) break;
       if (builder.length + chunk.length > mosaicMaxOpenBytes) {
-        return mosaicFailed(
-          'the selected file is larger than $mosaicMaxOpenBytes bytes',
-        );
+        return _mosaicTooLargeToOpen();
       }
       builder.add(chunk);
     }
-    final name = _mosaicBaseName(path);
-    return _mosaicOk(<String, Object?>{
-      'name': name,
-      'mimeType': _mosaicMimeTypeFor(name),
-      'bytes': base64Encode(builder.takeBytes()),
-    });
+    return _mosaicOpened(path, builder.takeBytes());
   } on Object {
     // Not the exception's own text: it can carry the full local path, and a
     // failure message is data the app sees.
-    return mosaicFailed("couldn't read the selected file");
+    return _mosaicUnreadable();
   } finally {
     try {
       handle?.closeSync();
     } on Object {
       // Closing a read-only handle has nothing left to lose.
     }
+  }
+}
+
+Map<String, Object?> _mosaicUnreadable() =>
+    mosaicFailed("couldn't read the selected file");
+
+Map<String, Object?> _mosaicTooLargeToOpen() =>
+    mosaicFailed('the selected file is larger than $mosaicMaxOpenBytes bytes');
+
+/// The `ok` outcome: the name the person chose (never the path), its type
+/// from the extension, and the bytes as base64.
+Map<String, Object?> _mosaicOpened(String path, Uint8List bytes) {
+  final name = _mosaicBaseName(path);
+  return _mosaicOk(<String, Object?>{
+    'name': name,
+    'mimeType': _mosaicMimeTypeFor(name),
+    'bytes': base64Encode(bytes),
+  });
+}
+
+/// The POSIX read: one descriptor, typed and read through itself.
+///
+///   1. The chosen path is resolved (`realpath`), so a link the person chose
+///      is followed once, here, on purpose.
+///   2. `open(O_RDONLY | O_NONBLOCK | O_NOFOLLOW | O_CLOEXEC)`: `O_NOFOLLOW`
+///      refuses a link swapped in after that, and `O_NONBLOCK` makes the open
+///      -- and any read -- return at once on a FIFO swapped in, where a
+///      blocking open would wait for a writer forever and hold `_busy`.
+///   3. The type is `fstat` on that descriptor, never a second lookup: only a
+///      regular file is read. (Where `fstat` is unavailable -- a glibc older
+///      than 2.28 has no `statx` -- the up-front check and `O_NONBLOCK` still
+///      keep a FIFO from blocking; a device would read to the size limit.)
+///   4. It is read through the same descriptor with `read(2)`.
+///
+/// Null where there is no descriptor to read through (Windows, or a POSIX ABI
+/// without a flag table). Public so the conformance harness can hand it a
+/// FIFO and a device directly -- what a swap between the path check and the
+/// open would hand it -- which the path check would otherwise refuse first.
+Map<String, Object?>? mosaicReadThroughDescriptor(String path) {
+  if (Platform.isWindows) return null;
+  final posix = _MosaicPosix.load();
+  if (posix == null) return null;
+  final String resolved;
+  try {
+    resolved = File(path).resolveSymbolicLinksSync();
+  } on Object {
+    return _mosaicUnreadable();
+  }
+  final flags = posix.flags;
+  final descriptor = posix.open(
+    resolved,
+    MosaicOpenFlags.readOnly |
+        flags.nonBlocking |
+        flags.noFollow |
+        flags.closeOnExec,
+    0,
+  );
+  if (descriptor < 0) return _mosaicUnreadable();
+  const chunk = 64 * 1024;
+  final buffer = malloc<Uint8>(chunk);
+  try {
+    final status = posix.statusOfDescriptor(descriptor);
+    if (status != null && !mosaicIsRegularMode(status.mode)) {
+      return mosaicFailed('that is not a regular file');
+    }
+    final builder = BytesBuilder(copy: true);
+    while (true) {
+      final count = posix.read(descriptor, buffer, chunk);
+      if (count < 0) return _mosaicUnreadable();
+      if (count == 0) break;
+      if (builder.length + count > mosaicMaxOpenBytes) {
+        return _mosaicTooLargeToOpen();
+      }
+      builder.add(buffer.asTypedList(count));
+    }
+    return _mosaicOpened(path, builder.takeBytes());
+  } on Object {
+    return _mosaicUnreadable();
+  } finally {
+    malloc.free(buffer);
+    posix.close(descriptor);
   }
 }
 
@@ -603,31 +679,51 @@ Future<Map<String, Object?>> mosaicRunFilesSave(
   final target = await dialogs.chooseFileToSave(suggestedName, extensions);
   if (target == null) return _mosaicCancelled();
   // Up to 16 MiB written and flushed to disk: in a background isolate, as the
-  // read in files.open is. _mosaicWriteReplacing never throws.
+  // read in files.open is. mosaicWriteReplacing never throws.
   return _mosaicWriteInBackground(target, bytes);
 }
 
-/// [_mosaicWriteReplacing] in a short-lived isolate; see
+/// [mosaicWriteReplacing] in a short-lived isolate; see
 /// [_mosaicReadInBackground] for why this is a top-level function.
 Future<Map<String, Object?>> _mosaicWriteInBackground(
   String target,
   Uint8List bytes,
-) => Isolate.run(() => _mosaicWriteReplacing(target, bytes));
+) => Isolate.run(() => mosaicWriteReplacing(target, bytes));
 
 /// Write [bytes] where the person chose and return the `files.save` outcome.
+/// Never throws.
 ///
 /// Written beside the target first and moved into place in one step, so an
 /// interrupted save never leaves a half-written file where the person's old
-/// one was.
-Map<String, Object?> _mosaicWriteReplacing(String target, Uint8List bytes) {
+/// one was. The temporary is created exclusively and written, flushed and
+/// given its mode through the handle that created it -- never reopened by
+/// path -- so nothing planted at its name (a link to `~/.bashrc`, say) is
+/// ever followed, truncated or chmodded.
+///
+/// Synchronous: the router runs it in a background isolate.
+/// [temporaryName] is for the conformance harness, which plants a link at a
+/// known name; an app never passes it.
+Map<String, Object?> mosaicWriteReplacing(
+  String target,
+  Uint8List bytes, {
+  String? temporaryName,
+}) {
   try {
     final full = File(target).absolute.path;
     final name = _mosaicBaseName(full);
     if (name.isEmpty) return mosaicFailed("couldn't save the file");
     final directory = File(full).parent.path;
-    final saved = Platform.isWindows
-        ? _mosaicSaveWindows(directory, full, bytes)
-        : _mosaicSavePosix(directory, full, bytes);
+    final temporary = temporaryName ?? _mosaicTemporaryName();
+    final bool saved;
+    if (Platform.isWindows) {
+      saved = _mosaicSaveWindows(full, '$directory\\$temporary', bytes);
+    } else {
+      // A POSIX ABI without a flag table below cannot open safely: refuse.
+      final posix = _MosaicPosix.load();
+      saved =
+          posix != null &&
+          _mosaicSavePosix(posix, full, '$directory/$temporary', bytes);
+    }
     return saved
         ? _mosaicOk(<String, Object?>{'name': name})
         : mosaicFailed("couldn't save the file");
@@ -636,7 +732,7 @@ Map<String, Object?> _mosaicWriteReplacing(String target, Uint8List bytes) {
   }
 }
 
-/// A name nobody else will pick: `.mosaic-save-<32 hex>`.
+/// A name nobody else will pick: `.mosaic-save-<32 hex>.tmp`.
 String _mosaicTemporaryName() {
   final random = Random.secure();
   final hex = StringBuffer();
@@ -646,128 +742,485 @@ String _mosaicTemporaryName() {
   return '.mosaic-save-$hex.tmp';
 }
 
-/// Write [bytes] and flush them to disk (`fsync`) before anything moves.
-void _mosaicWriteFlushed(File file, Uint8List bytes) {
-  final handle = file.openSync(mode: FileMode.writeOnly);
-  try {
-    handle.writeFromSync(bytes);
-    handle.flushSync();
-  } finally {
-    handle.closeSync();
-  }
+/// True when a `st_mode` (type bits included) is a regular file: `S_ISREG`.
+/// `S_IFMT` and `S_IFREG` are the same on Linux and Apple platforms.
+bool mosaicIsRegularMode(int mode) => mode & 0xF000 == 0x8000;
+
+/// The mode a saved file gets, from what the chosen path held (Qt parity):
+///
+///   nothing there, or not a regular file (a link, a directory) .. 0600
+///   a regular file this user owns ............ its rwx bits (& 0777)
+///   a regular file someone else owns ........ 0600
+///   a regular file whose owner is unknown .... its rwx bits without
+///                                              group/other write (& 0755)
+///
+/// Never setuid, setgid or sticky: only the low nine bits survive. The
+/// owner is unknown only where the library has no `lstat` to call (a glibc
+/// older than 2.28), and then the bits come from a stat that follows links;
+/// clearing the write bits means a link swapped in there can at worst lend
+/// read access, never let another user write the saved file.
+int mosaicReplacementMode(({int mode, int? uid})? existing, int currentUid) {
+  if (existing == null || !mosaicIsRegularMode(existing.mode)) return 0x180;
+  final owner = existing.uid;
+  if (owner == null) return existing.mode & 0x1ED; // 0755
+  return owner == currentUid ? existing.mode & 0x1FF : 0x180;
 }
 
-/// The POSIX save (Linux, macOS).
+/// The POSIX save (Linux, macOS), as the Qt and SwiftUI libraries do it:
 ///
-/// Dart creates files `0666 & ~umask` and has no way to create one owner-only
-/// or to `fchmod` an open handle, so the owner-only step the Compose, Qt and
-/// XAML libraries take on the temporary file is taken on a DIRECTORY instead:
-///
-///   1. `mkdir(<folder>/.mosaic-save-<random>.tmp, 0700)` through libc -- one
-///      call, owner-only from the start, and it fails if the name exists, so
-///      a planted directory or link is refused, not reused;
-///   2. the bytes are written into a file inside it and flushed to disk --
-///      nobody else can reach that file, whatever its own mode, because
-///      nobody else can enter the directory;
-///   3. that file is given the rwx bits of the regular file it replaces
-///      (never setuid, setgid or sticky), or stays owner-only (0600) for a
-///      new name, by `chmod` on a path inside the private directory, which
-///      nobody else can swap;
-///   4. it is renamed onto the chosen path (`rename(2)`: one step, on the same
-///      file system), and the empty directory is removed.
-bool _mosaicSavePosix(String directory, String full, Uint8List bytes) {
-  // The replaced file's rwx bits -- only from a regular file, not a link.
-  var mode = 0x180; // 0600
-  if (FileSystemEntity.typeSync(full, followLinks: false) ==
-      FileSystemEntityType.file) {
-    mode = File(full).statSync().mode & 0x1FF; // user, group, other: rwx
-  }
-  final privateDirectory = '$directory/${_mosaicTemporaryName()}';
-  if (_mosaicLibcPathMode('mkdir', privateDirectory, 0x1C0) != 0) return false; // 0700
+///   1. the mode, from `lstat` of the chosen path ([mosaicReplacementMode]);
+///   2. `open(temporary, flags, 0600)` on `.mosaic-save-<random>.tmp` beside
+///      the target, flags `O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW |
+///      O_CLOEXEC` -- a new file or nothing: a link or anything else already
+///      at that name fails the open, and is left alone;
+///   3. the bytes written through that descriptor, then `fchmod` (never a
+///      chmod by path, which would follow a link swapped in) and `fsync`;
+///   4. `close`, then `rename(2)` onto the chosen path -- one step on the same
+///      file system. Only if something failed is the temporary `unlink`ed
+///      (which removes a name, never follows it).
+bool _mosaicSavePosix(
+  _MosaicPosix posix,
+  String full,
+  String temporary,
+  Uint8List bytes,
+) {
+  final mode = mosaicReplacementMode(
+    posix.statusOfPath(full) ?? _mosaicStatusWithoutOwner(full),
+    posix.getuid(),
+  );
+  final flags = posix.flags;
+  final descriptor = posix.open(
+    temporary,
+    flags.writeOnly |
+        flags.create |
+        flags.exclusive |
+        flags.noFollow |
+        flags.closeOnExec,
+    0x180, // 0600
+  );
+  if (descriptor < 0) return false;
+  var complete = false;
+  final length = bytes.length;
+  final buffer = malloc<Uint8>(max(length, 1));
   try {
-    final written = File('$privateDirectory/contents');
-    _mosaicWriteFlushed(written, bytes);
-    if (_mosaicLibcPathMode('chmod', written.path, mode) != 0) return false;
-    written.renameSync(full);
-    return true;
+    buffer.asTypedList(length).setAll(0, bytes);
+    var written = 0;
+    while (written < length) {
+      final step = posix.write(descriptor, buffer + written, length - written);
+      // A regular file does not return EINTR mid-write; -1 or 0 is a failure.
+      if (step <= 0) break;
+      written += step;
+    }
+    complete =
+        written == length &&
+        posix.fchmod(descriptor, mode) == 0 &&
+        posix.fsync(descriptor) == 0;
   } finally {
+    malloc.free(buffer);
+    if (posix.close(descriptor) != 0) complete = false;
+  }
+  if (complete && posix.rename(temporary, full) == 0) return true;
+  posix.unlink(temporary);
+  return false;
+}
+
+/// The chosen path's type and rwx bits, owner unknown -- for a POSIX system
+/// where [_MosaicPosix.statusOfPath] has nothing to call.
+({int mode, int? uid})? _mosaicStatusWithoutOwner(String path) {
+  if (FileSystemEntity.typeSync(path, followLinks: false) !=
+      FileSystemEntityType.file) {
+    return null;
+  }
+  return (mode: 0x8000 | (FileStat.statSync(path).mode & 0xFFF), uid: null);
+}
+
+// ── The POSIX calls ───────────────────────────────────────────────────────
+//
+// dart:io can neither create a file exclusively AND keep the handle it
+// created (an exclusive `createSync` closes it, and `openSync` then reopens
+// by path, following whatever is there by then -- `O_CREAT | O_TRUNC`, no
+// `O_EXCL`, no `O_NOFOLLOW`), nor create with a mode, nor `fchmod`, nor open
+// without blocking. So the save and the open go to libc through dart:ffi, as
+// the Qt and SwiftUI libraries call it directly.
+
+/// The `open(2)` flags this library passes, for one ABI, as that platform's
+/// headers define them. They differ by OS and, for `O_NOFOLLOW`, by
+/// architecture on Linux: a wrong value here would silently drop a
+/// protection, so each table is pinned by a test and checked by the
+/// conformance harness against the running kernel.
+final class MosaicOpenFlags {
+  const MosaicOpenFlags({
+    required this.writeOnly,
+    required this.create,
+    required this.exclusive,
+    required this.nonBlocking,
+    required this.noFollow,
+    required this.closeOnExec,
+  });
+
+  /// `O_RDONLY`: 0 everywhere.
+  static const int readOnly = 0;
+
+  final int writeOnly;
+  final int create;
+  final int exclusive;
+  final int nonBlocking;
+  final int noFollow;
+  final int closeOnExec;
+}
+
+/// The flag table for [abi], or null where this library has none (it then
+/// refuses to save, and opens through dart:io).
+///
+///   flag         Linux x64   Linux arm64   macOS (x64, arm64)
+///   O_WRONLY     0x1         0x1           0x1
+///   O_CREAT      0x40        0x40          0x200
+///   O_EXCL       0x80        0x80          0x800
+///   O_NONBLOCK   0x800       0x800         0x4
+///   O_NOFOLLOW   0x20000     0x8000        0x100
+///   O_CLOEXEC    0x80000     0x80000       0x1000000
+///
+/// (Linux: asm-generic/fcntl.h, with arch/arm64's own O_NOFOLLOW; Apple:
+/// sys/fcntl.h.) These are the ABIs Flutter builds desktop apps for.
+MosaicOpenFlags? mosaicOpenFlagsFor(Abi abi) => switch (abi) {
+  Abi.linuxX64 => const MosaicOpenFlags(
+    writeOnly: 0x1,
+    create: 0x40,
+    exclusive: 0x80,
+    nonBlocking: 0x800,
+    noFollow: 0x20000,
+    closeOnExec: 0x80000,
+  ),
+  Abi.linuxArm64 => const MosaicOpenFlags(
+    writeOnly: 0x1,
+    create: 0x40,
+    exclusive: 0x80,
+    nonBlocking: 0x800,
+    noFollow: 0x8000,
+    closeOnExec: 0x80000,
+  ),
+  Abi.macosX64 || Abi.macosArm64 => const MosaicOpenFlags(
+    writeOnly: 0x1,
+    create: 0x200,
+    exclusive: 0x800,
+    nonBlocking: 0x4,
+    noFollow: 0x100,
+    closeOnExec: 0x1000000,
+  ),
+  _ => null,
+};
+
+typedef _MosaicOpenNative =
+    Int32 Function(Pointer<Utf8>, Int32, VarArgs<(Uint32,)>);
+typedef _MosaicOpen = int Function(Pointer<Utf8>, int, int);
+typedef _MosaicTransferNative = IntPtr Function(Int32, Pointer<Uint8>, Size);
+typedef _MosaicTransfer = int Function(int, Pointer<Uint8>, int);
+typedef _MosaicDescriptorNative = Int32 Function(Int32);
+typedef _MosaicDescriptor = int Function(int);
+typedef _MosaicPathNative = Int32 Function(Pointer<Utf8>);
+typedef _MosaicPath = int Function(Pointer<Utf8>);
+typedef _MosaicTwoPathsNative = Int32 Function(Pointer<Utf8>, Pointer<Utf8>);
+typedef _MosaicTwoPaths = int Function(Pointer<Utf8>, Pointer<Utf8>);
+typedef _MosaicStatxNative =
+    Int32 Function(Int32, Pointer<Utf8>, Int32, Uint32, Pointer<Uint8>);
+typedef _MosaicStatx = int Function(int, Pointer<Utf8>, int, int, Pointer<Uint8>);
+typedef _MosaicStatPathNative = Int32 Function(Pointer<Utf8>, Pointer<Uint8>);
+typedef _MosaicStatPath = int Function(Pointer<Utf8>, Pointer<Uint8>);
+typedef _MosaicStatDescriptorNative = Int32 Function(Int32, Pointer<Uint8>);
+typedef _MosaicStatDescriptor = int Function(int, Pointer<Uint8>);
+
+/// libc, for the calls dart:io does not make. [load] returns null on an ABI
+/// without a flag table, or when a required symbol is missing.
+///
+/// `stat` layouts: on Linux, `statx` (glibc 2.28+), whose `struct statx` is
+/// the same on every architecture -- stx_mask u32 @0, stx_uid u32 @20,
+/// stx_mode u16 @28 -- where `struct stat` is not. On Apple platforms the
+/// 64-bit-inode `struct stat` -- st_mode u16 @4, st_uid u32 @16 -- which
+/// arm64 exports as `lstat`/`fstat` and x86_64 as `lstat$INODE64`/
+/// `fstat$INODE64` (its plain `lstat` is the old 32-bit-inode layout).
+final class _MosaicPosix {
+  _MosaicPosix._(this.flags, DynamicLibrary libc)
+    : _open = libc.lookupFunction<_MosaicOpenNative, _MosaicOpen>('open'),
+      _read = libc.lookupFunction<_MosaicTransferNative, _MosaicTransfer>(
+        'read',
+      ),
+      _write = libc.lookupFunction<_MosaicTransferNative, _MosaicTransfer>(
+        'write',
+      ),
+      _fsync = libc.lookupFunction<_MosaicDescriptorNative, _MosaicDescriptor>(
+        'fsync',
+      ),
+      _close = libc.lookupFunction<_MosaicDescriptorNative, _MosaicDescriptor>(
+        'close',
+      ),
+      _rename = libc.lookupFunction<_MosaicTwoPathsNative, _MosaicTwoPaths>(
+        'rename',
+      ),
+      _unlink = libc.lookupFunction<_MosaicPathNative, _MosaicPath>('unlink'),
+      _getuid = libc.lookupFunction<Uint32 Function(), int Function()>(
+        'getuid',
+      ),
+      // mode_t is 32 bits on Linux and 16 on Apple platforms.
+      _fchmod = Platform.isLinux
+          ? libc.lookupFunction<Int32 Function(Int32, Uint32), int Function(int, int)>(
+              'fchmod',
+            )
+          : libc.lookupFunction<Int32 Function(Int32, Uint16), int Function(int, int)>(
+              'fchmod',
+            ),
+      _statx = Platform.isLinux && libc.providesSymbol('statx')
+          ? libc.lookupFunction<_MosaicStatxNative, _MosaicStatx>('statx')
+          : null,
+      _lstat = Platform.isMacOS && libc.providesSymbol(_appleStat('lstat'))
+          ? libc.lookupFunction<_MosaicStatPathNative, _MosaicStatPath>(
+              _appleStat('lstat'),
+            )
+          : null,
+      _fstat = Platform.isMacOS && libc.providesSymbol(_appleStat('fstat'))
+          ? libc.lookupFunction<_MosaicStatDescriptorNative, _MosaicStatDescriptor>(
+              _appleStat('fstat'),
+            )
+          : null;
+
+  /// The 64-bit-inode `stat` family's symbol on this Apple ABI.
+  static String _appleStat(String name) =>
+      Abi.current() == Abi.macosX64 ? '$name\$INODE64' : name;
+
+  static _MosaicPosix? load() {
+    final flags = mosaicOpenFlagsFor(Abi.current());
+    if (flags == null) return null;
     try {
-      Directory(privateDirectory).deleteSync(recursive: true);
+      return _MosaicPosix._(flags, DynamicLibrary.process());
     } on Object {
-      // Best effort: owner-only, and empty once the rename has happened.
+      return null;
+    }
+  }
+
+  final MosaicOpenFlags flags;
+  final _MosaicOpen _open;
+  final _MosaicTransfer _read;
+  final _MosaicTransfer _write;
+  final _MosaicDescriptor _fsync;
+  final _MosaicDescriptor _close;
+  final _MosaicTwoPaths _rename;
+  final _MosaicPath _unlink;
+  final int Function() _getuid;
+  final int Function(int, int) _fchmod;
+  final _MosaicStatx? _statx;
+  final _MosaicStatPath? _lstat;
+  final _MosaicStatDescriptor? _fstat;
+
+  static const int _atFdCwd = -100;
+  static const int _atSymlinkNoFollow = 0x100;
+  static const int _atEmptyPath = 0x1000;
+  static const int _statxTypeModeUid = 0x1 | 0x2 | 0x8; // TYPE | MODE | UID
+
+  int open(String path, int flags, int mode) =>
+      _withPath(path, (native) => _open(native, flags, mode));
+  int read(int descriptor, Pointer<Uint8> buffer, int length) =>
+      _read(descriptor, buffer, length);
+  int write(int descriptor, Pointer<Uint8> buffer, int length) =>
+      _write(descriptor, buffer, length);
+  int fchmod(int descriptor, int mode) => _fchmod(descriptor, mode);
+  int fsync(int descriptor) => _fsync(descriptor);
+  int close(int descriptor) => _close(descriptor);
+  int unlink(String path) => _withPath(path, _unlink);
+  int getuid() => _getuid();
+  int rename(String from, String to) => _withPath(
+    from,
+    (source) => _withPath(to, (destination) => _rename(source, destination)),
+  );
+
+  /// `lstat(path)`: its type and mode bits and its owner, without following
+  /// a link; null when there is nothing there or nothing to call.
+  ({int mode, int? uid})? statusOfPath(String path) {
+    final statx = _statx;
+    final lstat = _lstat;
+    if (statx == null && lstat == null) return null;
+    return _withPath(
+      path,
+      (native) => _status(
+        (buffer) => statx != null
+            ? statx(_atFdCwd, native, _atSymlinkNoFollow, _statxTypeModeUid, buffer)
+            : lstat!(native, buffer),
+      ),
+    );
+  }
+
+  /// `fstat(descriptor)`; null when there is nothing to call.
+  ({int mode, int? uid})? statusOfDescriptor(int descriptor) {
+    final statx = _statx;
+    final fstat = _fstat;
+    if (statx == null && fstat == null) return null;
+    return _withPath(
+      '',
+      (empty) => _status(
+        (buffer) => statx != null
+            ? statx(descriptor, empty, _atEmptyPath, _statxTypeModeUid, buffer)
+            : fstat!(descriptor, buffer),
+      ),
+    );
+  }
+
+  ({int mode, int? uid})? _status(int Function(Pointer<Uint8>) call) {
+    const size = 512; // struct statx is 256 bytes, Apple's struct stat 144
+    final buffer = calloc<Uint8>(size);
+    try {
+      if (call(buffer) != 0) return null;
+      final view = ByteData.sublistView(buffer.asTypedList(size));
+      if (_statx != null) {
+        final mask = view.getUint32(0, Endian.host);
+        if (mask & _statxTypeModeUid != _statxTypeModeUid) return null;
+        return (
+          mode: view.getUint16(28, Endian.host),
+          uid: view.getUint32(20, Endian.host),
+        );
+      }
+      return (
+        mode: view.getUint16(4, Endian.host),
+        uid: view.getUint32(16, Endian.host),
+      );
+    } finally {
+      calloc.free(buffer);
+    }
+  }
+
+  static T _withPath<T>(String path, T Function(Pointer<Utf8>) call) {
+    final native = path.toNativeUtf8();
+    try {
+      return call(native);
+    } finally {
+      malloc.free(native);
     }
   }
 }
 
-/// Call a libc `int f(const char *path, mode_t mode)` -- `mkdir` or `chmod`.
-///
-/// `mode_t` is 32 bits on Linux and 16 on Apple platforms; the value always
-/// fits in 16, and each signature is declared as the platform declares it.
-int _mosaicLibcPathMode(String symbol, String path, int mode) {
-  final libc = DynamicLibrary.process();
-  final int Function(Pointer<Utf8>, int) call =
-      Platform.isMacOS || Platform.isIOS
-      ? libc.lookupFunction<
-          Int32 Function(Pointer<Utf8>, Uint16),
-          int Function(Pointer<Utf8>, int)
-        >(symbol)
-      : libc.lookupFunction<
-          Int32 Function(Pointer<Utf8>, Uint32),
-          int Function(Pointer<Utf8>, int)
-        >(symbol);
-  final native = path.toNativeUtf8();
-  try {
-    return call(native, mode);
-  } finally {
-    malloc.free(native);
-  }
-}
+// ── The Windows save ──────────────────────────────────────────────────────
 
+typedef _MosaicCreateFileNative =
+    Pointer<Void> Function(
+      Pointer<Utf16>,
+      Uint32,
+      Uint32,
+      Pointer<Void>,
+      Uint32,
+      Uint32,
+      Pointer<Void>,
+    );
+typedef _MosaicCreateFile =
+    Pointer<Void> Function(
+      Pointer<Utf16>,
+      int,
+      int,
+      Pointer<Void>,
+      int,
+      int,
+      Pointer<Void>,
+    );
+typedef _MosaicWriteFileNative =
+    Int32 Function(
+      Pointer<Void>,
+      Pointer<Uint8>,
+      Uint32,
+      Pointer<Uint32>,
+      Pointer<Void>,
+    );
+typedef _MosaicWriteFile =
+    int Function(Pointer<Void>, Pointer<Uint8>, int, Pointer<Uint32>, Pointer<Void>);
+typedef _MosaicHandleNative = Int32 Function(Pointer<Void>);
+typedef _MosaicHandle = int Function(Pointer<Void>);
+typedef _MosaicWidePathNative = Int32 Function(Pointer<Utf16>);
+typedef _MosaicWidePath = int Function(Pointer<Utf16>);
 typedef _MosaicMoveFileExNative =
     Int32 Function(Pointer<Utf16>, Pointer<Utf16>, Uint32);
 typedef _MosaicMoveFileEx = int Function(Pointer<Utf16>, Pointer<Utf16>, int);
 
-/// The Windows save: a temporary created exclusively beside the target,
-/// written and flushed, then `MoveFileExW(MOVEFILE_REPLACE_EXISTING |
-/// MOVEFILE_WRITE_THROUGH)` -- the move the generated host uses for its own
-/// state file. A new file inherits the folder's ACL, and so does a replaced
-/// one, as with the Compose and Qt libraries (XAML's `File.Replace` keeps the
-/// old file's ACL; that is recorded as the difference, UI87 §7.7).
-bool _mosaicSaveWindows(String directory, String full, Uint8List bytes) {
-  final temporary = File('$directory\\${_mosaicTemporaryName()}');
-  var created = false;
+/// The Windows save, through the handle that created the temporary:
+///
+///   1. `CreateFileW(temporary, GENERIC_WRITE, no sharing, CREATE_NEW)` -- a
+///      new file or nothing: anything already at that name, a link included,
+///      fails the call and is left alone;
+///   2. `WriteFile` and `FlushFileBuffers` on that handle, then `CloseHandle`;
+///   3. `MoveFileExW(MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)` --
+///      the move the generated host uses for its own state file. Only if
+///      something failed is the temporary deleted (`DeleteFileW` removes a
+///      link, never what it points at).
+///
+/// A new file inherits the folder's ACL, and so does a replaced one, as with
+/// the Compose and Qt libraries (XAML's `File.Replace` keeps the old file's
+/// ACL; that is recorded as the difference, UI87 §7.7).
+bool _mosaicSaveWindows(String full, String temporary, Uint8List bytes) {
+  final kernel32 = DynamicLibrary.open('kernel32.dll');
+  final createFile = kernel32
+      .lookupFunction<_MosaicCreateFileNative, _MosaicCreateFile>('CreateFileW');
+  final writeFile = kernel32
+      .lookupFunction<_MosaicWriteFileNative, _MosaicWriteFile>('WriteFile');
+  final flushFileBuffers = kernel32
+      .lookupFunction<_MosaicHandleNative, _MosaicHandle>('FlushFileBuffers');
+  final closeHandle = kernel32
+      .lookupFunction<_MosaicHandleNative, _MosaicHandle>('CloseHandle');
+  final deleteFile = kernel32
+      .lookupFunction<_MosaicWidePathNative, _MosaicWidePath>('DeleteFileW');
+  final moveFileEx = kernel32
+      .lookupFunction<_MosaicMoveFileExNative, _MosaicMoveFileEx>('MoveFileExW');
+  const genericWrite = 0x40000000;
+  const createNew = 1;
+  const fileAttributeNormal = 0x80;
+  const invalidHandleValue = -1; // (HANDLE)-1
+  const moveFileReplaceExisting = 0x1;
+  const moveFileWriteThrough = 0x8;
+
+  final source = temporary.toNativeUtf16();
+  final destination = full.toNativeUtf16();
+  final length = bytes.length;
+  final buffer = malloc<Uint8>(max(length, 1));
+  final count = calloc<Uint32>();
   try {
-    temporary.createSync(exclusive: true);
-    created = true;
-    _mosaicWriteFlushed(temporary, bytes);
-    final moveFileEx = DynamicLibrary.open(
-      'kernel32.dll',
-    ).lookupFunction<_MosaicMoveFileExNative, _MosaicMoveFileEx>('MoveFileExW');
-    final source = temporary.path.toNativeUtf16();
-    final destination = full.toNativeUtf16();
+    buffer.asTypedList(length).setAll(0, bytes);
+    final handle = createFile(
+      source,
+      genericWrite,
+      0,
+      nullptr,
+      createNew,
+      fileAttributeNormal,
+      nullptr,
+    );
+    if (handle.address == invalidHandleValue) return false;
+    var complete = false;
     try {
-      const moveFileReplaceExisting = 0x1;
-      const moveFileWriteThrough = 0x8;
-      final moved = moveFileEx(
-        source,
-        destination,
-        moveFileReplaceExisting | moveFileWriteThrough,
-      );
-      if (moved == 0) return false;
-      created = false;
-      return true;
-    } finally {
-      malloc.free(destination);
-      malloc.free(source);
-    }
-  } finally {
-    if (created) {
-      try {
-        temporary.deleteSync();
-      } on Object {
-        // Best effort.
+      var written = 0;
+      while (written < length) {
+        final ok = writeFile(
+          handle,
+          buffer + written,
+          length - written,
+          count,
+          nullptr,
+        );
+        if (ok == 0 || count.value == 0) break;
+        written += count.value;
       }
+      complete = written == length && flushFileBuffers(handle) != 0;
+    } finally {
+      if (closeHandle(handle) == 0) complete = false;
     }
+    if (complete &&
+        moveFileEx(
+              source,
+              destination,
+              moveFileReplaceExisting | moveFileWriteThrough,
+            ) !=
+            0) {
+      return true;
+    }
+    deleteFile(source);
+    return false;
+  } finally {
+    calloc.free(count);
+    malloc.free(buffer);
+    malloc.free(destination);
+    malloc.free(source);
   }
 }
 
