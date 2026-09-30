@@ -210,6 +210,10 @@ fn pinned_radar_subset_corpus_parses_to_chart_ir() {
                 chart.y_axis.as_ref().map(|axis| (axis.min, axis.max)),
                 Some((10.0, 90.0))
             );
+        } else if id == "curve-list-and-multiline" {
+            assert_eq!(chart.series.len(), 2);
+            assert_eq!(chart.series[1].label.as_deref(), Some("Second"));
+            assert_eq!(chart.series[1].data[2].value, 1.0);
         }
     }
 }
