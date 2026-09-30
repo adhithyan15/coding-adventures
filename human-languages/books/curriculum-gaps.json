@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 18635,
+    "totalLessons": 18850,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,8 +40,8 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 16859,
-    "drivablePercent": 90,
+    "drivableLessons": 17074,
+    "drivablePercent": 91,
     "chaptersWithoutDrivablePrefix": 274,
     "unexplainedModalityOverrides": 0
   },
@@ -2482,7 +2482,48 @@
           207,
           208,
           209,
-          210
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251
         ],
         "bookChapters": [
           1,
@@ -2694,7 +2735,48 @@
           207,
           208,
           209,
-          210
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250,
+          251
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -8522,9 +8604,9 @@
       {
         "language": "german",
         "status": "version-2",
-        "lessonCount": 1169,
+        "lessonCount": 1384,
         "versions": {
-          "2": 1169
+          "2": 1384
         }
       },
       {
@@ -9377,8 +9459,8 @@
       },
       {
         "language": "german",
-        "bookChapters": 210,
-        "declaredChapters": 210,
+        "bookChapters": 251,
+        "declaredChapters": 251,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -9529,8 +9611,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 3773,
-      "declaredChapters": 3773,
+      "bookChapters": 3814,
+      "declaredChapters": 3814,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -9542,10 +9624,10 @@
     }
   },
   "levels": {
-    "totalLessons": 18635,
+    "totalLessons": 18850,
     "byLevel": {
       "pre-A1": 8759,
-      "A1": 8809,
+      "A1": 9024,
       "A2": 983,
       "B1": 39,
       "B2": 17,
@@ -9617,10 +9699,10 @@
       },
       {
         "language": "german",
-        "lessonCount": 1169,
+        "lessonCount": 1384,
         "byLevel": {
           "pre-A1": 387,
-          "A1": 676,
+          "A1": 891,
           "A2": 106,
           "B1": 0,
           "B2": 0,
@@ -10379,8 +10461,8 @@
       },
       {
         "language": "german",
-        "lessonCount": 1169,
-        "measurable": 1166,
+        "lessonCount": 1384,
+        "measurable": 1381,
         "unmeasurable": 3,
         "lessonViolations": 0,
         "chapterViolations": 5
@@ -10913,7 +10995,7 @@
           "language": "german",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 1169,
+          "lessonCount": 1384,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -38730,6 +38812,498 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C197-THING197-03",
+        "language": "german",
+        "introducedBy": "GE-C197-hitze",
+        "introducedAt": 1095,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C197-THING197-04",
+        "language": "german",
+        "introducedBy": "GE-C197-kaelte",
+        "introducedAt": 1096,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C197-THING197-05",
+        "language": "german",
+        "introducedBy": "GE-C197-blitz",
+        "introducedAt": 1097,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C198-THING198-01",
+        "language": "german",
+        "introducedBy": "GE-C198-tier",
+        "introducedAt": 1098,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C200-THING200-03",
+        "language": "german",
+        "introducedBy": "GE-C200-trinkgeld",
+        "introducedAt": 1110,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C200-THING200-04",
+        "language": "german",
+        "introducedBy": "GE-C200-kellnerin",
+        "introducedAt": 1111,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C200-THING200-05",
+        "language": "german",
+        "introducedBy": "GE-C200-besteck",
+        "introducedAt": 1112,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C202-THING202-02",
+        "language": "german",
+        "introducedBy": "GE-C202-buegeleisen",
+        "introducedAt": 1121,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C202-THING202-03",
+        "language": "german",
+        "introducedBy": "GE-C202-shampoo",
+        "introducedAt": 1122,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C202-THING202-04",
+        "language": "german",
+        "introducedBy": "GE-C202-buerste",
+        "introducedAt": 1123,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C202-THING202-05",
+        "language": "german",
+        "introducedBy": "GE-C202-anzug",
+        "introducedAt": 1124,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C203-THING203-01",
+        "language": "german",
+        "introducedBy": "GE-C203-portemonnaie",
+        "introducedAt": 1125,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C205-THING205-03",
+        "language": "german",
+        "introducedBy": "GE-C205-sprechstunde",
+        "introducedAt": 1137,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C205-THING205-04",
+        "language": "german",
+        "introducedBy": "GE-C205-untersuchung",
+        "introducedAt": 1138,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C205-THING205-05",
+        "language": "german",
+        "introducedBy": "GE-C205-verletzung",
+        "introducedAt": 1139,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C207-THING207-02",
+        "language": "german",
+        "introducedBy": "GE-C207-feuerwehr",
+        "introducedAt": 1148,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C207-THING207-03",
+        "language": "german",
+        "introducedBy": "GE-C207-dieb",
+        "introducedAt": 1149,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C207-THING207-04",
+        "language": "german",
+        "introducedBy": "GE-C207-diebstahl",
+        "introducedAt": 1150,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C207-THING207-05",
+        "language": "german",
+        "introducedBy": "GE-C207-gericht",
+        "introducedAt": 1151,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C208-THING208-01",
+        "language": "german",
+        "introducedBy": "GE-C208-gesetz",
+        "introducedAt": 1152,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C210-THING210-03",
+        "language": "german",
+        "introducedBy": "GE-C210-geschaeft",
+        "introducedAt": 1164,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C210-THING210-04",
+        "language": "german",
+        "introducedBy": "GE-C210-metzgerei",
+        "introducedAt": 1165,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C210-THING210-05",
+        "language": "german",
+        "introducedBy": "GE-C210-kaufhaus",
+        "introducedAt": 1166,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C216-QUAL216-03",
+        "language": "german",
+        "introducedBy": "GE-C216-herrlich",
+        "introducedAt": 1196,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C216-QUAL216-04",
+        "language": "german",
+        "introducedBy": "GE-C216-hilfsbereit",
+        "introducedAt": 1197,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C216-QUAL216-05",
+        "language": "german",
+        "introducedBy": "GE-C216-intelligent",
+        "introducedAt": 1198,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C217-QUAL217-01",
+        "language": "german",
+        "introducedBy": "GE-C217-kaputt",
+        "introducedAt": 1199,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C219-QUAL219-03",
+        "language": "german",
+        "introducedBy": "GE-C219-oeffentlich",
+        "introducedAt": 1211,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C219-QUAL219-04",
+        "language": "german",
+        "introducedBy": "GE-C219-ordentlich",
+        "introducedAt": 1212,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C219-QUAL219-05",
+        "language": "german",
+        "introducedBy": "GE-C219-persoenlich",
+        "introducedAt": 1213,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C225-THING225-03",
+        "language": "german",
+        "introducedBy": "GE-C225-alltag",
+        "introducedAt": 1243,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C225-THING225-04",
+        "language": "german",
+        "introducedBy": "GE-C225-ausbildung",
+        "introducedAt": 1244,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C225-THING225-05",
+        "language": "german",
+        "introducedBy": "GE-C225-ausstellung",
+        "introducedAt": 1245,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C226-THING226-01",
+        "language": "german",
+        "introducedBy": "GE-C226-aussprache",
+        "introducedAt": 1246,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C228-THING228-03",
+        "language": "german",
+        "introducedBy": "GE-C228-erlaubnis",
+        "introducedAt": 1258,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C228-THING228-04",
+        "language": "german",
+        "introducedBy": "GE-C228-ergebnis",
+        "introducedAt": 1259,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C228-THING228-05",
+        "language": "german",
+        "introducedBy": "GE-C228-erklaerung",
+        "introducedAt": 1260,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-C234-THING234-03",
+        "language": "german",
+        "introducedBy": "GE-C234-mehrheit",
+        "introducedAt": 1290,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C234-THING234-04",
+        "language": "german",
+        "introducedBy": "GE-C234-mode",
+        "introducedAt": 1291,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C234-THING234-05",
+        "language": "german",
+        "introducedBy": "GE-C234-mut",
+        "introducedAt": 1292,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C235-THING235-01",
+        "language": "german",
+        "introducedBy": "GE-C235-neuigkeit",
+        "introducedAt": 1293,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "GE-LEX-C64-VERBEN1-02",
@@ -102125,10 +102699,1814 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C197-THING197-03",
+        "atom": "GE-LEX-C196-THING196-02",
         "language": "german",
-        "introducedBy": "GE-C197-hitze",
-        "introducedAt": 1095,
+        "introducedBy": "GE-C196-ufer",
+        "introducedAt": 1089,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C196-THING196-03",
+        "language": "german",
+        "introducedBy": "GE-C196-strand",
+        "introducedAt": 1090,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C196-THING196-04",
+        "language": "german",
+        "introducedBy": "GE-C196-wiese",
+        "introducedAt": 1091,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C196-THING196-05",
+        "language": "german",
+        "introducedBy": "GE-C196-tal",
+        "introducedAt": 1092,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C197-THING197-01",
+        "language": "german",
+        "introducedBy": "GE-C197-kueste",
+        "introducedAt": 1093,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C197-THING197-02",
+        "language": "german",
+        "introducedBy": "GE-C197-nebel",
+        "introducedAt": 1094,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C198-THING198-02",
+        "language": "german",
+        "introducedBy": "GE-C198-hase",
+        "introducedAt": 1099,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C198-THING198-03",
+        "language": "german",
+        "introducedBy": "GE-C198-fliege",
+        "introducedAt": 1100,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C198-THING198-04",
+        "language": "german",
+        "introducedBy": "GE-C198-schmetterling",
+        "introducedAt": 1101,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C198-THING198-05",
+        "language": "german",
+        "introducedBy": "GE-C198-pflanze",
+        "introducedAt": 1102,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C199-THING199-01",
+        "language": "german",
+        "introducedBy": "GE-C199-gras",
+        "introducedAt": 1103,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C199-THING199-02",
+        "language": "german",
+        "introducedBy": "GE-C199-frucht",
+        "introducedAt": 1104,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C199-THING199-03",
+        "language": "german",
+        "introducedBy": "GE-C199-karotte",
+        "introducedAt": 1105,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C199-THING199-04",
+        "language": "german",
+        "introducedBy": "GE-C199-haehnchen",
+        "introducedAt": 1106,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C199-THING199-05",
+        "language": "german",
+        "introducedBy": "GE-C199-torte",
+        "introducedAt": 1107,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C200-THING200-01",
+        "language": "german",
+        "introducedBy": "GE-C200-speisekarte",
+        "introducedAt": 1108,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C200-THING200-02",
+        "language": "german",
+        "introducedBy": "GE-C200-bestellung",
+        "introducedAt": 1109,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C201-THING201-01",
+        "language": "german",
+        "introducedBy": "GE-C201-dose",
+        "introducedAt": 1115,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C201-THING201-02",
+        "language": "german",
+        "introducedBy": "GE-C201-topf",
+        "introducedAt": 1116,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C201-THING201-03",
+        "language": "german",
+        "introducedBy": "GE-C201-pfanne",
+        "introducedAt": 1117,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C201-THING201-04",
+        "language": "german",
+        "introducedBy": "GE-C201-ofen",
+        "introducedAt": 1118,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C201-THING201-05",
+        "language": "german",
+        "introducedBy": "GE-C201-spuelmaschine",
+        "introducedAt": 1119,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C202-THING202-01",
+        "language": "german",
+        "introducedBy": "GE-C202-staubsauger",
+        "introducedAt": 1120,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C203-THING203-02",
+        "language": "german",
+        "introducedBy": "GE-C203-groesse",
+        "introducedAt": 1126,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C203-THING203-03",
+        "language": "german",
+        "introducedBy": "GE-C203-stoff",
+        "introducedAt": 1127,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C203-THING203-04",
+        "language": "german",
+        "introducedBy": "GE-C203-wolle",
+        "introducedAt": 1128,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C203-THING203-05",
+        "language": "german",
+        "introducedBy": "GE-C203-seide",
+        "introducedAt": 1129,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C204-THING204-01",
+        "language": "german",
+        "introducedBy": "GE-C204-leder",
+        "introducedAt": 1130,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C204-THING204-02",
+        "language": "german",
+        "introducedBy": "GE-C204-holz",
+        "introducedAt": 1131,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C204-THING204-03",
+        "language": "german",
+        "introducedBy": "GE-C204-metall",
+        "introducedAt": 1132,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C204-THING204-04",
+        "language": "german",
+        "introducedBy": "GE-C204-kunststoff",
+        "introducedAt": 1133,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C204-THING204-05",
+        "language": "german",
+        "introducedBy": "GE-C204-koerper",
+        "introducedAt": 1134,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C205-THING205-01",
+        "language": "german",
+        "introducedBy": "GE-C205-knochen",
+        "introducedAt": 1135,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C205-THING205-02",
+        "language": "german",
+        "introducedBy": "GE-C205-zahnarzt",
+        "introducedAt": 1136,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C206-THING206-01",
+        "language": "german",
+        "introducedBy": "GE-C206-wunde",
+        "introducedAt": 1142,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C206-THING206-02",
+        "language": "german",
+        "introducedBy": "GE-C206-pflaster",
+        "introducedAt": 1143,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C206-THING206-03",
+        "language": "german",
+        "introducedBy": "GE-C206-salbe",
+        "introducedAt": 1144,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C206-THING206-04",
+        "language": "german",
+        "introducedBy": "GE-C206-spritze",
+        "introducedAt": 1145,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C206-THING206-05",
+        "language": "german",
+        "introducedBy": "GE-C206-notfall",
+        "introducedAt": 1146,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C207-THING207-01",
+        "language": "german",
+        "introducedBy": "GE-C207-krankenwagen",
+        "introducedAt": 1147,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C208-THING208-02",
+        "language": "german",
+        "introducedBy": "GE-C208-strafe",
+        "introducedAt": 1153,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C208-THING208-03",
+        "language": "german",
+        "introducedBy": "GE-C208-regierung",
+        "introducedAt": 1154,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C208-THING208-04",
+        "language": "german",
+        "introducedBy": "GE-C208-staat",
+        "introducedAt": 1155,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C208-THING208-05",
+        "language": "german",
+        "introducedBy": "GE-C208-bevoelkerung",
+        "introducedAt": 1156,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C209-THING209-01",
+        "language": "german",
+        "introducedBy": "GE-C209-buerger",
+        "introducedAt": 1157,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C209-THING209-02",
+        "language": "german",
+        "introducedBy": "GE-C209-wahl",
+        "introducedAt": 1158,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C209-THING209-03",
+        "language": "german",
+        "introducedBy": "GE-C209-partei",
+        "introducedAt": 1159,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C209-THING209-04",
+        "language": "german",
+        "introducedBy": "GE-C209-politik",
+        "introducedAt": 1160,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C209-THING209-05",
+        "language": "german",
+        "introducedBy": "GE-C209-wirtschaft",
+        "introducedAt": 1161,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C210-THING210-01",
+        "language": "german",
+        "introducedBy": "GE-C210-industrie",
+        "introducedAt": 1162,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C210-THING210-02",
+        "language": "german",
+        "introducedBy": "GE-C210-werkstatt",
+        "introducedAt": 1163,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C211-QUAL211-01",
+        "language": "german",
+        "introducedBy": "GE-C211-aengstlich",
+        "introducedAt": 1169,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C211-QUAL211-02",
+        "language": "german",
+        "introducedBy": "GE-C211-anstrengend",
+        "introducedAt": 1170,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C211-QUAL211-03",
+        "language": "german",
+        "introducedBy": "GE-C211-aufgeregt",
+        "introducedAt": 1171,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C211-QUAL211-04",
+        "language": "german",
+        "introducedBy": "GE-C211-ausgezeichnet",
+        "introducedAt": 1172,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C211-QUAL211-05",
+        "language": "german",
+        "introducedBy": "GE-C211-berufstaetig",
+        "introducedAt": 1173,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C212-QUAL212-01",
+        "language": "german",
+        "introducedBy": "GE-C212-bewoelkt",
+        "introducedAt": 1174,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C212-QUAL212-02",
+        "language": "german",
+        "introducedBy": "GE-C212-blond",
+        "introducedAt": 1175,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C212-QUAL212-03",
+        "language": "german",
+        "introducedBy": "GE-C212-ehrlich",
+        "introducedAt": 1176,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C212-QUAL212-04",
+        "language": "german",
+        "introducedBy": "GE-C212-eilig",
+        "introducedAt": 1177,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C212-QUAL212-05",
+        "language": "german",
+        "introducedBy": "GE-C212-einsam",
+        "introducedAt": 1178,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C213-QUAL213-01",
+        "language": "german",
+        "introducedBy": "GE-C213-eifersuechtig",
+        "introducedAt": 1179,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C213-QUAL213-02",
+        "language": "german",
+        "introducedBy": "GE-C213-erfolgreich",
+        "introducedAt": 1180,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C213-QUAL213-03",
+        "language": "german",
+        "introducedBy": "GE-C213-erkaeltet",
+        "introducedAt": 1181,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C213-QUAL213-04",
+        "language": "german",
+        "introducedBy": "GE-C213-fantastisch",
+        "introducedAt": 1182,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C213-QUAL213-05",
+        "language": "german",
+        "introducedBy": "GE-C213-feucht",
+        "introducedAt": 1183,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C214-QUAL214-01",
+        "language": "german",
+        "introducedBy": "GE-C214-froehlich",
+        "introducedAt": 1184,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C214-QUAL214-02",
+        "language": "german",
+        "introducedBy": "GE-C214-furchtbar",
+        "introducedAt": 1185,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C214-QUAL214-03",
+        "language": "german",
+        "introducedBy": "GE-C214-geduldig",
+        "introducedAt": 1186,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C214-QUAL214-04",
+        "language": "german",
+        "introducedBy": "GE-C214-geizig",
+        "introducedAt": 1187,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C214-QUAL214-05",
+        "language": "german",
+        "introducedBy": "GE-C214-gemuetlich",
+        "introducedAt": 1188,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C215-QUAL215-01",
+        "language": "german",
+        "introducedBy": "GE-C215-gerecht",
+        "introducedAt": 1189,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C215-QUAL215-02",
+        "language": "german",
+        "introducedBy": "GE-C215-geschieden",
+        "introducedAt": 1190,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C215-QUAL215-03",
+        "language": "german",
+        "introducedBy": "GE-C215-gleichzeitig",
+        "introducedAt": 1191,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C215-QUAL215-04",
+        "language": "german",
+        "introducedBy": "GE-C215-grosszuegig",
+        "introducedAt": 1192,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C215-QUAL215-05",
+        "language": "german",
+        "introducedBy": "GE-C215-guenstig",
+        "introducedAt": 1193,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C216-QUAL216-01",
+        "language": "german",
+        "introducedBy": "GE-C216-gruendlich",
+        "introducedAt": 1194,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C216-QUAL216-02",
+        "language": "german",
+        "introducedBy": "GE-C216-haeufig",
+        "introducedAt": 1195,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C217-QUAL217-02",
+        "language": "german",
+        "introducedBy": "GE-C217-klug",
+        "introducedAt": 1200,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C217-QUAL217-03",
+        "language": "german",
+        "introducedBy": "GE-C217-kostenlos",
+        "introducedAt": 1201,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C217-QUAL217-04",
+        "language": "german",
+        "introducedBy": "GE-C217-kraeftig",
+        "introducedAt": 1202,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C217-QUAL217-05",
+        "language": "german",
+        "introducedBy": "GE-C217-ledig",
+        "introducedAt": 1203,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C218-QUAL218-01",
+        "language": "german",
+        "introducedBy": "GE-C218-lecker",
+        "introducedAt": 1204,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C218-QUAL218-02",
+        "language": "german",
+        "introducedBy": "GE-C218-lieb",
+        "introducedAt": 1205,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C218-QUAL218-03",
+        "language": "german",
+        "introducedBy": "GE-C218-locker",
+        "introducedAt": 1206,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C218-QUAL218-04",
+        "language": "german",
+        "introducedBy": "GE-C218-mager",
+        "introducedAt": 1207,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C218-QUAL218-05",
+        "language": "german",
+        "introducedBy": "GE-C218-mutig",
+        "introducedAt": 1208,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C219-QUAL219-01",
+        "language": "german",
+        "introducedBy": "GE-C219-neugierig",
+        "introducedAt": 1209,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C219-QUAL219-02",
+        "language": "german",
+        "introducedBy": "GE-C219-nuetzlich",
+        "introducedAt": 1210,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C220-QUAL220-01",
+        "language": "german",
+        "introducedBy": "GE-C220-puenktlich",
+        "introducedAt": 1216,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C220-QUAL220-02",
+        "language": "german",
+        "introducedBy": "GE-C220-regnerisch",
+        "introducedAt": 1217,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C220-QUAL220-03",
+        "language": "german",
+        "introducedBy": "GE-C220-roh",
+        "introducedAt": 1218,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C220-QUAL220-04",
+        "language": "german",
+        "introducedBy": "GE-C220-salzig",
+        "introducedAt": 1219,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C220-QUAL220-05",
+        "language": "german",
+        "introducedBy": "GE-C220-sauer",
+        "introducedAt": 1220,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C221-QUAL221-01",
+        "language": "german",
+        "introducedBy": "GE-C221-schlank",
+        "introducedAt": 1221,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C221-QUAL221-02",
+        "language": "german",
+        "introducedBy": "GE-C221-schrecklich",
+        "introducedAt": 1222,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C221-QUAL221-03",
+        "language": "german",
+        "introducedBy": "GE-C221-schuechtern",
+        "introducedAt": 1223,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C221-QUAL221-04",
+        "language": "german",
+        "introducedBy": "GE-C221-selbststaendig",
+        "introducedAt": 1224,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C221-QUAL221-05",
+        "language": "german",
+        "introducedBy": "GE-C221-sonnig",
+        "introducedAt": 1225,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C222-QUAL222-01",
+        "language": "german",
+        "introducedBy": "GE-C222-sparsam",
+        "introducedAt": 1226,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C222-QUAL222-02",
+        "language": "german",
+        "introducedBy": "GE-C222-sportlich",
+        "introducedAt": 1227,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C222-QUAL222-03",
+        "language": "german",
+        "introducedBy": "GE-C222-streng",
+        "introducedAt": 1228,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C222-QUAL222-04",
+        "language": "german",
+        "introducedBy": "GE-C222-sympathisch",
+        "introducedAt": 1229,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C222-QUAL222-05",
+        "language": "german",
+        "introducedBy": "GE-C222-tot",
+        "introducedAt": 1230,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C223-QUAL223-01",
+        "language": "german",
+        "introducedBy": "GE-C223-treu",
+        "introducedAt": 1231,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C223-QUAL223-02",
+        "language": "german",
+        "introducedBy": "GE-C223-typisch",
+        "introducedAt": 1232,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C223-QUAL223-03",
+        "language": "german",
+        "introducedBy": "GE-C223-ungeduldig",
+        "introducedAt": 1233,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C223-QUAL223-04",
+        "language": "german",
+        "introducedBy": "GE-C223-ungluecklich",
+        "introducedAt": 1234,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C223-QUAL223-05",
+        "language": "german",
+        "introducedBy": "GE-C223-verheiratet",
+        "introducedAt": 1235,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C224-QUAL224-01",
+        "language": "german",
+        "introducedBy": "GE-C224-verliebt",
+        "introducedAt": 1236,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C224-QUAL224-02",
+        "language": "german",
+        "introducedBy": "GE-C224-verschieden",
+        "introducedAt": 1237,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C224-QUAL224-03",
+        "language": "german",
+        "introducedBy": "GE-C224-vorsichtig",
+        "introducedAt": 1238,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C224-QUAL224-04",
+        "language": "german",
+        "introducedBy": "GE-C224-windig",
+        "introducedAt": 1239,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C224-QUAL224-05",
+        "language": "german",
+        "introducedBy": "GE-C224-witzig",
+        "introducedAt": 1240,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C225-THING225-01",
+        "language": "german",
+        "introducedBy": "GE-C225-abenteuer",
+        "introducedAt": 1241,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C225-THING225-02",
+        "language": "german",
+        "introducedBy": "GE-C225-ahnung",
+        "introducedAt": 1242,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C226-THING226-02",
+        "language": "german",
+        "introducedBy": "GE-C226-bedeutung",
+        "introducedAt": 1247,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C226-THING226-03",
+        "language": "german",
+        "introducedBy": "GE-C226-begruessung",
+        "introducedAt": 1248,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C226-THING226-04",
+        "language": "german",
+        "introducedBy": "GE-C226-beschreibung",
+        "introducedAt": 1249,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C226-THING226-05",
+        "language": "german",
+        "introducedBy": "GE-C226-besuch",
+        "introducedAt": 1250,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C227-THING227-01",
+        "language": "german",
+        "introducedBy": "GE-C227-bewerbung",
+        "introducedAt": 1251,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C227-THING227-02",
+        "language": "german",
+        "introducedBy": "GE-C227-beziehung",
+        "introducedAt": 1252,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C227-THING227-03",
+        "language": "german",
+        "introducedBy": "GE-C227-eindruck",
+        "introducedAt": 1253,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C227-THING227-04",
+        "language": "german",
+        "introducedBy": "GE-C227-eintritt",
+        "introducedAt": 1254,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C227-THING227-05",
+        "language": "german",
+        "introducedBy": "GE-C227-eintrittskarte",
+        "introducedAt": 1255,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C228-THING228-01",
+        "language": "german",
+        "introducedBy": "GE-C228-entscheidung",
+        "introducedAt": 1256,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C228-THING228-02",
+        "language": "german",
+        "introducedBy": "GE-C228-erinnerung",
+        "introducedAt": 1257,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C229-THING229-01",
+        "language": "german",
+        "introducedBy": "GE-C229-erlebnis",
+        "introducedAt": 1263,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C229-THING229-02",
+        "language": "german",
+        "introducedBy": "GE-C229-fuehrung",
+        "introducedAt": 1264,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C229-THING229-03",
+        "language": "german",
+        "introducedBy": "GE-C229-gebuehr",
+        "introducedAt": 1265,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C229-THING229-04",
+        "language": "german",
+        "introducedBy": "GE-C229-gefuehl",
+        "introducedAt": 1266,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C229-THING229-05",
+        "language": "german",
+        "introducedBy": "GE-C229-gegend",
+        "introducedAt": 1267,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C230-THING230-01",
+        "language": "german",
+        "introducedBy": "GE-C230-gegenteil",
+        "introducedAt": 1268,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C230-THING230-02",
+        "language": "german",
+        "introducedBy": "GE-C230-geschichte",
+        "introducedAt": 1269,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C230-THING230-03",
+        "language": "german",
+        "introducedBy": "GE-C230-gespraech",
+        "introducedAt": 1270,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C230-THING230-04",
+        "language": "german",
+        "introducedBy": "GE-C230-gewicht",
+        "introducedAt": 1271,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C230-THING230-05",
+        "language": "german",
+        "introducedBy": "GE-C230-gewohnheit",
+        "introducedAt": 1272,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C231-THING231-01",
+        "language": "german",
+        "introducedBy": "GE-C231-hobby",
+        "introducedAt": 1273,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C231-THING231-02",
+        "language": "german",
+        "introducedBy": "GE-C231-hoffnung",
+        "introducedAt": 1274,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C231-THING231-03",
+        "language": "german",
+        "introducedBy": "GE-C231-humor",
+        "introducedAt": 1275,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C231-THING231-04",
+        "language": "german",
+        "introducedBy": "GE-C231-interesse",
+        "introducedAt": 1276,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C231-THING231-05",
+        "language": "german",
+        "introducedBy": "GE-C231-jugend",
+        "introducedAt": 1277,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C232-THING232-01",
+        "language": "german",
+        "introducedBy": "GE-C232-kindheit",
+        "introducedAt": 1278,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C232-THING232-02",
+        "language": "german",
+        "introducedBy": "GE-C232-kenntnis",
+        "introducedAt": 1279,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C232-THING232-03",
+        "language": "german",
+        "introducedBy": "GE-C232-kultur",
+        "introducedAt": 1280,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C232-THING232-04",
+        "language": "german",
+        "introducedBy": "GE-C232-kunst",
+        "introducedAt": 1281,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C232-THING232-05",
+        "language": "german",
+        "introducedBy": "GE-C232-landschaft",
+        "introducedAt": 1282,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C233-THING233-01",
+        "language": "german",
+        "introducedBy": "GE-C233-laerm",
+        "introducedAt": 1283,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C233-THING233-02",
+        "language": "german",
+        "introducedBy": "GE-C233-laune",
+        "introducedAt": 1284,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C233-THING233-03",
+        "language": "german",
+        "introducedBy": "GE-C233-lebenslauf",
+        "introducedAt": 1285,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C233-THING233-04",
+        "language": "german",
+        "introducedBy": "GE-C233-leistung",
+        "introducedAt": 1286,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C233-THING233-05",
+        "language": "german",
+        "introducedBy": "GE-C233-lektion",
+        "introducedAt": 1287,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C234-THING234-01",
+        "language": "german",
+        "introducedBy": "GE-C234-lohn",
+        "introducedAt": 1288,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C234-THING234-02",
+        "language": "german",
+        "introducedBy": "GE-C234-mannschaft",
+        "introducedAt": 1289,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C235-THING235-02",
+        "language": "german",
+        "introducedBy": "GE-C235-nummer",
+        "introducedAt": 1294,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C235-THING235-03",
+        "language": "german",
+        "introducedBy": "GE-C235-oeffentlichkeit",
+        "introducedAt": 1295,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C235-THING235-04",
+        "language": "german",
+        "introducedBy": "GE-C235-ordnung",
+        "introducedAt": 1296,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C235-THING235-05",
+        "language": "german",
+        "introducedBy": "GE-C235-paar",
+        "introducedAt": 1297,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C236-THING236-01",
+        "language": "german",
+        "introducedBy": "GE-C236-pflicht",
+        "introducedAt": 1298,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C236-THING236-02",
+        "language": "german",
+        "introducedBy": "GE-C236-qualitaet",
+        "introducedAt": 1299,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C236-THING236-03",
+        "language": "german",
+        "introducedBy": "GE-C236-rede",
+        "introducedAt": 1300,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C236-THING236-04",
+        "language": "german",
+        "introducedBy": "GE-C236-reihe",
+        "introducedAt": 1301,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C236-THING236-05",
+        "language": "german",
+        "introducedBy": "GE-C236-religion",
+        "introducedAt": 1302,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C237-THING237-01",
+        "language": "german",
+        "introducedBy": "GE-C237-rolle",
+        "introducedAt": 1303,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C237-THING237-03",
+        "language": "german",
+        "introducedBy": "GE-C237-sache",
+        "introducedAt": 1305,
         "missed": [
           "R2",
           "R3"
@@ -102136,54 +104514,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C197-THING197-04",
+        "atom": "GE-LEX-C237-THING237-04",
         "language": "german",
-        "introducedBy": "GE-C197-kaelte",
-        "introducedAt": 1096,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C197-THING197-05",
-        "language": "german",
-        "introducedBy": "GE-C197-blitz",
-        "introducedAt": 1097,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C198-THING198-01",
-        "language": "german",
-        "introducedBy": "GE-C198-tier",
-        "introducedAt": 1098,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C200-THING200-03",
-        "language": "german",
-        "introducedBy": "GE-C200-trinkgeld",
-        "introducedAt": 1110,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C200-THING200-04",
-        "language": "german",
-        "introducedBy": "GE-C200-kellnerin",
-        "introducedAt": 1111,
+        "introducedBy": "GE-C237-schatten",
+        "introducedAt": 1306,
         "missed": [
           "R2",
           "R3"
@@ -102191,10 +104525,10 @@
         "revisits": 4
       },
       {
-        "atom": "GE-LEX-C200-THING200-05",
+        "atom": "GE-LEX-C237-THING237-05",
         "language": "german",
-        "introducedBy": "GE-C200-besteck",
-        "introducedAt": 1112,
+        "introducedBy": "GE-C237-schritt",
+        "introducedAt": 1307,
         "missed": [
           "R2",
           "R3"
@@ -102202,10 +104536,10 @@
         "revisits": 4
       },
       {
-        "atom": "GE-LEX-C202-THING202-02",
+        "atom": "GE-LEX-C243-THING243-03",
         "language": "german",
-        "introducedBy": "GE-C202-buegeleisen",
-        "introducedAt": 1121,
+        "introducedBy": "GE-C243-werbung",
+        "introducedAt": 1337,
         "missed": [
           "R2",
           "R3"
@@ -102213,10 +104547,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C202-THING202-03",
+        "atom": "GE-LEX-C243-THING243-04",
         "language": "german",
-        "introducedBy": "GE-C202-shampoo",
-        "introducedAt": 1122,
+        "introducedBy": "GE-C243-wettbewerb",
+        "introducedAt": 1338,
         "missed": [
           "R2",
           "R3"
@@ -102224,10 +104558,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C202-THING202-04",
+        "atom": "GE-LEX-C243-THING243-05",
         "language": "german",
-        "introducedBy": "GE-C202-buerste",
-        "introducedAt": 1123,
+        "introducedBy": "GE-C243-ziel",
+        "introducedAt": 1339,
         "missed": [
           "R2",
           "R3"
@@ -102235,10 +104569,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C202-THING202-05",
+        "atom": "GE-LEX-C244-VERB244-01",
         "language": "german",
-        "introducedBy": "GE-C202-anzug",
-        "introducedAt": 1124,
+        "introducedBy": "GE-C244-anbieten",
+        "introducedAt": 1340,
         "missed": [
           "R2",
           "R3"
@@ -102246,10 +104580,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C203-THING203-01",
+        "atom": "GE-LEX-C246-VERB246-03",
         "language": "german",
-        "introducedBy": "GE-C203-portemonnaie",
-        "introducedAt": 1125,
+        "introducedBy": "GE-C246-beraten",
+        "introducedAt": 1352,
         "missed": [
           "R2",
           "R3"
@@ -102257,21 +104591,10 @@
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C205-THING205-03",
+        "atom": "GE-LEX-C246-VERB246-04",
         "language": "german",
-        "introducedBy": "GE-C205-sprechstunde",
-        "introducedAt": 1137,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C205-THING205-04",
-        "language": "german",
-        "introducedBy": "GE-C205-untersuchung",
-        "introducedAt": 1138,
+        "introducedBy": "GE-C246-berichten",
+        "introducedAt": 1353,
         "missed": [
           "R2",
           "R3"
@@ -102279,10 +104602,10 @@
         "revisits": 4
       },
       {
-        "atom": "GE-LEX-C205-THING205-05",
+        "atom": "GE-LEX-C246-VERB246-05",
         "language": "german",
-        "introducedBy": "GE-C205-verletzung",
-        "introducedAt": 1139,
+        "introducedBy": "GE-C246-besichtigen",
+        "introducedAt": 1354,
         "missed": [
           "R2",
           "R3"
@@ -102290,10 +104613,10 @@
         "revisits": 4
       },
       {
-        "atom": "GE-LEX-C207-THING207-02",
+        "atom": "GE-LEX-C248-VERB248-02",
         "language": "german",
-        "introducedBy": "GE-C207-feuerwehr",
-        "introducedAt": 1148,
+        "introducedBy": "GE-C248-enden",
+        "introducedAt": 1363,
         "missed": [
           "R2",
           "R3"
@@ -195007,440 +197330,490 @@
         "revisits": 18
       },
       {
-        "atom": "GE-LEX-C196-THING196-02",
+        "atom": "GE-LEX-C237-THING237-02",
         "language": "german",
-        "introducedBy": "GE-C196-ufer",
-        "introducedAt": 1089,
+        "introducedBy": "GE-C237-ruhe",
+        "introducedAt": 1304,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C238-THING238-01",
+        "language": "german",
+        "introducedBy": "GE-C238-schwierigkeit",
+        "introducedAt": 1310,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C196-THING196-03",
+        "atom": "GE-LEX-C238-THING238-02",
         "language": "german",
-        "introducedBy": "GE-C196-strand",
-        "introducedAt": 1090,
+        "introducedBy": "GE-C238-sicherheit",
+        "introducedAt": 1311,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C196-THING196-04",
+        "atom": "GE-LEX-C238-THING238-03",
         "language": "german",
-        "introducedBy": "GE-C196-wiese",
-        "introducedAt": 1091,
+        "introducedBy": "GE-C238-sinn",
+        "introducedAt": 1312,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C196-THING196-05",
+        "atom": "GE-LEX-C238-THING238-04",
         "language": "german",
-        "introducedBy": "GE-C196-tal",
-        "introducedAt": 1092,
+        "introducedBy": "GE-C238-sorge",
+        "introducedAt": 1313,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C197-THING197-01",
+        "atom": "GE-LEX-C238-THING238-05",
         "language": "german",
-        "introducedBy": "GE-C197-kueste",
-        "introducedAt": 1093,
+        "introducedBy": "GE-C238-stimme",
+        "introducedAt": 1314,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C197-THING197-02",
+        "atom": "GE-LEX-C239-THING239-01",
         "language": "german",
-        "introducedBy": "GE-C197-nebel",
-        "introducedAt": 1094,
+        "introducedBy": "GE-C239-stimmung",
+        "introducedAt": 1315,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C198-THING198-02",
+        "atom": "GE-LEX-C239-THING239-02",
         "language": "german",
-        "introducedBy": "GE-C198-hase",
-        "introducedAt": 1099,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C198-THING198-03",
-        "language": "german",
-        "introducedBy": "GE-C198-fliege",
-        "introducedAt": 1100,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C198-THING198-04",
-        "language": "german",
-        "introducedBy": "GE-C198-schmetterling",
-        "introducedAt": 1101,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C198-THING198-05",
-        "language": "german",
-        "introducedBy": "GE-C198-pflanze",
-        "introducedAt": 1102,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C199-THING199-01",
-        "language": "german",
-        "introducedBy": "GE-C199-gras",
-        "introducedAt": 1103,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C199-THING199-02",
-        "language": "german",
-        "introducedBy": "GE-C199-frucht",
-        "introducedAt": 1104,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C199-THING199-03",
-        "language": "german",
-        "introducedBy": "GE-C199-karotte",
-        "introducedAt": 1105,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C199-THING199-04",
-        "language": "german",
-        "introducedBy": "GE-C199-haehnchen",
-        "introducedAt": 1106,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C199-THING199-05",
-        "language": "german",
-        "introducedBy": "GE-C199-torte",
-        "introducedAt": 1107,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C200-THING200-01",
-        "language": "german",
-        "introducedBy": "GE-C200-speisekarte",
-        "introducedAt": 1108,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C200-THING200-02",
-        "language": "german",
-        "introducedBy": "GE-C200-bestellung",
-        "introducedAt": 1109,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "GE-LEX-C201-THING201-01",
-        "language": "german",
-        "introducedBy": "GE-C201-dose",
-        "introducedAt": 1115,
+        "introducedBy": "GE-C239-streit",
+        "introducedAt": 1316,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C201-THING201-02",
+        "atom": "GE-LEX-C239-THING239-03",
         "language": "german",
-        "introducedBy": "GE-C201-topf",
-        "introducedAt": 1116,
+        "introducedBy": "GE-C239-studium",
+        "introducedAt": 1317,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C201-THING201-03",
+        "atom": "GE-LEX-C239-THING239-04",
         "language": "german",
-        "introducedBy": "GE-C201-pfanne",
-        "introducedAt": 1117,
+        "introducedBy": "GE-C239-stufe",
+        "introducedAt": 1318,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C201-THING201-04",
+        "atom": "GE-LEX-C239-THING239-05",
         "language": "german",
-        "introducedBy": "GE-C201-ofen",
-        "introducedAt": 1118,
+        "introducedBy": "GE-C239-tatsache",
+        "introducedAt": 1319,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C201-THING201-05",
+        "atom": "GE-LEX-C240-THING240-01",
         "language": "german",
-        "introducedBy": "GE-C201-spuelmaschine",
-        "introducedAt": 1119,
+        "introducedBy": "GE-C240-thema",
+        "introducedAt": 1320,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C202-THING202-01",
+        "atom": "GE-LEX-C240-THING240-02",
         "language": "german",
-        "introducedBy": "GE-C202-staubsauger",
-        "introducedAt": 1120,
+        "introducedBy": "GE-C240-tradition",
+        "introducedAt": 1321,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C203-THING203-02",
+        "atom": "GE-LEX-C240-THING240-03",
         "language": "german",
-        "introducedBy": "GE-C203-groesse",
-        "introducedAt": 1126,
+        "introducedBy": "GE-C240-traum",
+        "introducedAt": 1322,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C240-THING240-04",
+        "language": "german",
+        "introducedBy": "GE-C240-ueberraschung",
+        "introducedAt": 1323,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C240-THING240-05",
+        "language": "german",
+        "introducedBy": "GE-C240-umgebung",
+        "introducedAt": 1324,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C241-THING241-01",
+        "language": "german",
+        "introducedBy": "GE-C241-umwelt",
+        "introducedAt": 1325,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C241-THING241-02",
+        "language": "german",
+        "introducedBy": "GE-C241-unterricht",
+        "introducedAt": 1326,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C241-THING241-03",
+        "language": "german",
+        "introducedBy": "GE-C241-unterschied",
+        "introducedAt": 1327,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C241-THING241-04",
+        "language": "german",
+        "introducedBy": "GE-C241-ursache",
+        "introducedAt": 1328,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C241-THING241-05",
+        "language": "german",
+        "introducedBy": "GE-C241-verhalten",
+        "introducedAt": 1329,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C242-THING242-01",
+        "language": "german",
+        "introducedBy": "GE-C242-verkehr",
+        "introducedAt": 1330,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C242-THING242-02",
+        "language": "german",
+        "introducedBy": "GE-C242-vertrauen",
+        "introducedAt": 1331,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C242-THING242-03",
+        "language": "german",
+        "introducedBy": "GE-C242-verein",
+        "introducedAt": 1332,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C242-THING242-04",
+        "language": "german",
+        "introducedBy": "GE-C242-vorsicht",
+        "introducedAt": 1333,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C242-THING242-05",
+        "language": "german",
+        "introducedBy": "GE-C242-vorteil",
+        "introducedAt": 1334,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C243-THING243-01",
+        "language": "german",
+        "introducedBy": "GE-C243-nachteil",
+        "introducedAt": 1335,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C243-THING243-02",
+        "language": "german",
+        "introducedBy": "GE-C243-wahrheit",
+        "introducedAt": 1336,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GE-LEX-C244-VERB244-02",
+        "language": "german",
+        "introducedBy": "GE-C244-annehmen",
+        "introducedAt": 1341,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C203-THING203-03",
+        "atom": "GE-LEX-C244-VERB244-03",
         "language": "german",
-        "introducedBy": "GE-C203-stoff",
-        "introducedAt": 1127,
+        "introducedBy": "GE-C244-ablehnen",
+        "introducedAt": 1342,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C203-THING203-04",
+        "atom": "GE-LEX-C244-VERB244-04",
         "language": "german",
-        "introducedBy": "GE-C203-wolle",
-        "introducedAt": 1128,
+        "introducedBy": "GE-C244-abschliessen",
+        "introducedAt": 1343,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C203-THING203-05",
+        "atom": "GE-LEX-C244-VERB244-05",
         "language": "german",
-        "introducedBy": "GE-C203-seide",
-        "introducedAt": 1129,
+        "introducedBy": "GE-C244-anmelden",
+        "introducedAt": 1344,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C204-THING204-01",
+        "atom": "GE-LEX-C245-VERB245-01",
         "language": "german",
-        "introducedBy": "GE-C204-leder",
-        "introducedAt": 1130,
+        "introducedBy": "GE-C245-aufpassen",
+        "introducedAt": 1345,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C204-THING204-02",
+        "atom": "GE-LEX-C245-VERB245-02",
         "language": "german",
-        "introducedBy": "GE-C204-holz",
-        "introducedAt": 1131,
+        "introducedBy": "GE-C245-ausgeben",
+        "introducedAt": 1346,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C204-THING204-03",
+        "atom": "GE-LEX-C245-VERB245-03",
         "language": "german",
-        "introducedBy": "GE-C204-metall",
-        "introducedAt": 1132,
+        "introducedBy": "GE-C245-aussprechen",
+        "introducedAt": 1347,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C204-THING204-04",
+        "atom": "GE-LEX-C245-VERB245-04",
         "language": "german",
-        "introducedBy": "GE-C204-kunststoff",
-        "introducedAt": 1133,
+        "introducedBy": "GE-C245-beantworten",
+        "introducedAt": 1348,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C204-THING204-05",
+        "atom": "GE-LEX-C245-VERB245-05",
         "language": "german",
-        "introducedBy": "GE-C204-koerper",
-        "introducedAt": 1134,
+        "introducedBy": "GE-C245-beenden",
+        "introducedAt": 1349,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C205-THING205-01",
+        "atom": "GE-LEX-C246-VERB246-01",
         "language": "german",
-        "introducedBy": "GE-C205-knochen",
-        "introducedAt": 1135,
+        "introducedBy": "GE-C246-begleiten",
+        "introducedAt": 1350,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C205-THING205-02",
+        "atom": "GE-LEX-C246-VERB246-02",
         "language": "german",
-        "introducedBy": "GE-C205-zahnarzt",
-        "introducedAt": 1136,
+        "introducedBy": "GE-C246-bemerken",
+        "introducedAt": 1351,
         "missed": [
           "R3"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C206-THING206-01",
+        "atom": "GE-LEX-C247-VERB247-01",
         "language": "german",
-        "introducedBy": "GE-C206-wunde",
-        "introducedAt": 1142,
+        "introducedBy": "GE-C247-bestehen",
+        "introducedAt": 1357,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C206-THING206-02",
+        "atom": "GE-LEX-C247-VERB247-02",
         "language": "german",
-        "introducedBy": "GE-C206-pflaster",
-        "introducedAt": 1143,
+        "introducedBy": "GE-C247-beweisen",
+        "introducedAt": 1358,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C206-THING206-03",
+        "atom": "GE-LEX-C247-VERB247-03",
         "language": "german",
-        "introducedBy": "GE-C206-salbe",
-        "introducedAt": 1144,
+        "introducedBy": "GE-C247-bluehen",
+        "introducedAt": 1359,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C206-THING206-04",
+        "atom": "GE-LEX-C247-VERB247-04",
         "language": "german",
-        "introducedBy": "GE-C206-spritze",
-        "introducedAt": 1145,
+        "introducedBy": "GE-C247-diskutieren",
+        "introducedAt": 1360,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C206-THING206-05",
+        "atom": "GE-LEX-C247-VERB247-05",
         "language": "german",
-        "introducedBy": "GE-C206-notfall",
-        "introducedAt": 1146,
+        "introducedBy": "GE-C247-einpacken",
+        "introducedAt": 1361,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C207-THING207-01",
+        "atom": "GE-LEX-C248-VERB248-01",
         "language": "german",
-        "introducedBy": "GE-C207-krankenwagen",
-        "introducedAt": 1147,
+        "introducedBy": "GE-C248-einrichten",
+        "introducedAt": 1362,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C207-THING207-03",
+        "atom": "GE-LEX-C248-VERB248-03",
         "language": "german",
-        "introducedBy": "GE-C207-dieb",
-        "introducedAt": 1149,
+        "introducedBy": "GE-C248-entdecken",
+        "introducedAt": 1364,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C207-THING207-04",
+        "atom": "GE-LEX-C248-VERB248-04",
         "language": "german",
-        "introducedBy": "GE-C207-diebstahl",
-        "introducedAt": 1150,
+        "introducedBy": "GE-C248-entschuldigen",
+        "introducedAt": 1365,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C207-THING207-05",
+        "atom": "GE-LEX-C248-VERB248-05",
         "language": "german",
-        "introducedBy": "GE-C207-gericht",
-        "introducedAt": 1151,
+        "introducedBy": "GE-C248-erfahren",
+        "introducedAt": 1366,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "GE-LEX-C208-THING208-01",
+        "atom": "GE-LEX-C249-VERB249-01",
         "language": "german",
-        "introducedBy": "GE-C208-gesetz",
-        "introducedAt": 1152,
+        "introducedBy": "GE-C249-ergaenzen",
+        "introducedAt": 1367,
         "missed": [
           "R2"
         ],
@@ -226166,11 +228539,11 @@
       },
       {
         "language": "german",
-        "lessonCount": 1169,
+        "lessonCount": 1384,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1290,
+        "atomsTaught": 1495,
         "atomsNeverRevisited": 24,
         "forwardReferences": 29
       },
@@ -226360,14 +228733,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 19669,
+      "atomsTaught": 19874,
       "atomsNeverRevisited": 156,
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1745,
-        "R2": 12733,
-        "R3": 11183,
-        "R4": 14169
+        "R2": 12883,
+        "R3": 11274,
+        "R4": 14374
       },
       "forwardReferences": 968
     }
@@ -246486,8 +248859,8 @@
       },
       {
         "language": "german",
-        "lessonCount": 1169,
-        "atomMeasurableLessons": 1166,
+        "lessonCount": 1384,
+        "atomMeasurableLessons": 1381,
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -246502,14 +248875,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 29,
-        "atomsTaught": 1290,
+        "atomsTaught": 1495,
         "atomsNeverRevisited": 24,
-        "reinforcementWindowMisses": 2731,
+        "reinforcementWindowMisses": 3177,
         "reinforcementMissesByWindow": {
           "R1": 143,
-          "R2": 873,
-          "R3": 722,
-          "R4": 993
+          "R2": 1023,
+          "R3": 813,
+          "R4": 1198
         },
         "payoffSurprises": 1,
         "writingPracticeLessons": 10,
@@ -246533,7 +248906,7 @@
           {
             "language": "german",
             "kind": "reinforcement",
-            "count": 2731,
+            "count": 3177,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -248339,7 +250712,7 @@
       {
         "language": "german",
         "kind": "reinforcement",
-        "count": 2731,
+        "count": 3177,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -248805,16 +251178,26 @@
       {
         "language": "german",
         "touches": "A2",
-        "attained": "A1",
-        "inProgressAt": "A2",
+        "attained": "A2",
+        "inProgressAt": "B1",
         "blockers": [
           {
+            "criterion": "spine-nodes",
+            "detail": "5 of 5 B1 spine node(s) unrealized: SPINE-NARRATE-EVENTS, SPINE-GIVE-REASONS, SPINE-HANDLE-TRAVEL, SPINE-DESCRIBE-EXPERIENCE…",
+            "shortfall": 5
+          },
+          {
             "criterion": "vocabulary",
-            "detail": "teaches 1007 distinct headwords at or below A2, against 1200",
-            "shortfall": 193
+            "detail": "teaches 1212 distinct headwords at or below B1, against 2500",
+            "shortfall": 1288
+          },
+          {
+            "criterion": "verb-vocabulary",
+            "detail": "teaches 249 distinct verb headwords at or below B1, against 250",
+            "shortfall": 1
           }
         ],
-        "vocabulary": 1007
+        "vocabulary": 1212
       },
       {
         "language": "gujarati",
@@ -249130,12 +251513,12 @@
       }
     ],
     "summary": {
-      "tracksOverstating": 21,
+      "tracksOverstating": 20,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
         "pre-A1": 13,
-        "A1": 8,
-        "A2": 1,
+        "A1": 7,
+        "A2": 2,
         "B1": 0,
         "B2": 0,
         "C1": 0,
@@ -249145,13 +251528,13 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 18635,
-    "voice": 16282,
+    "totalLessons": 18850,
+    "voice": 16497,
     "sight": 991,
     "pen": 1362,
-    "coreVoice": 16859,
+    "coreVoice": 17074,
     "lessonsWithWritingSegments": 879,
-    "drivablePercent": 90,
+    "drivablePercent": 91,
     "tracks": [
       {
         "language": "arabic",
@@ -255855,13 +258238,13 @@
       },
       {
         "language": "german",
-        "lessonCount": 1169,
-        "voice": 1152,
+        "lessonCount": 1384,
+        "voice": 1367,
         "sight": 7,
         "pen": 10,
-        "coreVoice": 1153,
+        "coreVoice": 1368,
         "drivablePercent": 99,
-        "drivablePrefixTotal": 1121,
+        "drivablePrefixTotal": 1336,
         "chapters": [
           {
             "language": "german",
@@ -258805,6 +261188,580 @@
           {
             "language": "german",
             "chapter": 210,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 211,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 212,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 213,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 214,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 215,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 216,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 217,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 218,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 219,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 220,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 221,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 222,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 223,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 224,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 225,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 226,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 227,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 228,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 229,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 230,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 231,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 232,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 233,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 234,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 235,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 236,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 237,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 238,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 239,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 240,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 241,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 242,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 243,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 244,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 245,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 246,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 247,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 248,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 249,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 250,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 251,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -303761,7 +306718,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 18635,
+    "lessons": 18850,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -303769,11 +306726,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 18635,
-    "measuredLessons": 14462,
-    "idiomMeasuredLessons": 14462,
-    "senseMeasuredLessons": 14463,
-    "cultureClaimMeasuredLessons": 14462,
+    "lessons": 18850,
+    "measuredLessons": 14677,
+    "idiomMeasuredLessons": 14677,
+    "senseMeasuredLessons": 14678,
+    "cultureClaimMeasuredLessons": 14677,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -303782,10 +306739,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 17723,
-    "usesBeforeIntroduction": 35276,
-    "technicalUsesBeforeIntroduction": 6343,
-    "technicalLessons": 3563,
+    "lessonsUsingTerms": 17938,
+    "usesBeforeIntroduction": 35508,
+    "technicalUsesBeforeIntroduction": 6360,
+    "technicalLessons": 3579,
     "worstTerms": [
       {
         "term": "verb",
@@ -303814,12 +306771,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 18635,
+    "lessonsScanned": 18850,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 3842,
+    "filesScanned": 3883,
     "mainCharacters": 135,
     "scriptCharacters": 801,
     "gaps": 0
