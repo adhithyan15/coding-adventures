@@ -1,6 +1,7 @@
-from matrix.matrix import Matrix
-from loss_functions import bce, bce_derivative
 from activation_functions.activations import sigmoid, sigmoid_derivative
+from loss_functions import bce, bce_derivative
+from matrix.matrix import Matrix
+
 
 class Perceptron:
     def __init__(self, learning_rate: float = 0.1, epochs: int = 2000):
@@ -12,7 +13,7 @@ class Perceptron:
     def fit(self, X_train: list, Y_train: list, log_steps: int = 400):
         features = Matrix(X_train)
         true_labels = Matrix(Y_train)
-        
+
         # Initialize Weights (Columns match Feature Dimension, Rows=1 per neuron mapping)
         self.weights = Matrix.zeros(features.cols, 1)
         self.bias = 0.0
@@ -50,7 +51,7 @@ class Perceptron:
     def predict(self, X_data: list) -> list:
         if self.weights is None:
             raise ValueError("Perceptron has not been trained yet. Call .fit() first.")
-        
+
         features = Matrix(X_data)
         raw_preds = features.dot(self.weights) + self.bias
         return [sigmoid(raw_preds.data[i][0]) for i in range(features.rows)]

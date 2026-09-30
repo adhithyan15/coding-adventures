@@ -69,5 +69,7 @@ M.close(other, tolerance=1e-9)  # within tolerance
 ## Running Tests
 
 ```bash
-python -m pytest tests/ -v
+uv venv .venv --no-project --clear --python 3.12
+uv pip install --python .venv -e ".[dev]"
+.venv/bin/python -m pytest tests/ -v
 ```

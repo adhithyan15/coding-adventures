@@ -86,7 +86,6 @@ PENDING code/packages/go/algol-lexer  # owned by go-algol-lexer-parser-build-fro
 PENDING code/packages/go/algol-parser  # owned by go-algol-lexer-parser-build-front-coverage
 PENDING code/packages/haskell/arc2d  # owned by haskell-arc2d-build-front-coverage
 PENDING code/packages/kotlin/micro-qr  # owned by kotlin-micro-qr-build-front-and-gradle-metadata-coverage
-PENDING code/packages/python/activation-functions  # owned by python-activation-matrix-loss-perceptron-build-front-coverage
 PENDING code/packages/python/algol-lexer  # owned by python-algol-lexer-parser-build-front-coverage
 PENDING code/packages/python/algol-parser  # owned by python-algol-lexer-parser-build-front-coverage
 PENDING code/packages/python/alpha-axp-simulator  # owned by alpha-axp-simulator-two-lane-classification
@@ -99,11 +98,8 @@ PENDING code/packages/python/cdc6600-simulator  # owned by cdc6600-simulator-two
 PENDING code/packages/python/fpga  # owned by python-block-ram-fpga-build-front-coverage
 PENDING code/packages/python/gradient-descent  # owned by python-gradient-descent-build-front-coverage
 PENDING code/packages/python/intel8051-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
-PENDING code/packages/python/loss-functions  # owned by python-activation-matrix-loss-perceptron-build-front-coverage
-PENDING code/packages/python/matrix  # owned by python-activation-matrix-loss-perceptron-build-front-coverage
 PENDING code/packages/python/mips-r2000-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
 PENDING code/packages/python/pdp11-simulator  # owned by pdp11-simulator-two-lane-classification
-PENDING code/packages/python/perceptron  # owned by python-activation-matrix-loss-perceptron-build-front-coverage
 PENDING code/packages/python/sparc-v8-simulator  # owned by python-intel8051-mips-r2000-sparc-v8-build-front-coverage
 PENDING code/packages/python/wave_physics  # owned by python-wave-physics-orphan-package-root-classification
 PENDING code/packages/ruby/activation-functions  # owned by ruby-activation-matrix-perceptron-build-front-coverage

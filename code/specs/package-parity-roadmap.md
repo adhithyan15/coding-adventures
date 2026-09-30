@@ -15102,6 +15102,80 @@ tranche. The branch rebased conflict-free onto
 `e8a0bc47780645f9281fbd3ac2a695a1c4d85208`, and the collision-checked
 inventory remains unchanged.
 
+### PR #16310 merge and Python neural-primitives build-front coverage
+
+The first final-head metadata run exposed one invalid changelog-shard heading.
+The focused one-line level-3 heading repair passed the TypeScript build and
+doc-shard reconstruction locally. Every replacement check then completed
+acceptably on final head `f18c1e78f8e4297b4a40cad9191e782bdc22def4`.
+GitHub reported the PR mergeable and clean, guarded squash auto-merge was
+enabled only then, and PR #16310 merged automatically at
+`2026-09-30T20:57:39Z` as
+`c6685aa8d882b061ef810f32027331b40898eebd`; no plain manual merge command was
+used.
+
+The exact-main schema-3 inventory is collision-clean at 15 established lanes,
+1,473 implementation identities, 4,740 package slots, 1,515 all-reported
+identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805
+Rust singletons, five emerging OCaml packages, zero canonical collisions, and
+zero unknown buckets. Its only identity delta is the TypeScript
+`forme-plugin-runner-ts` singleton from merged PR #16296. The existing
+`forme-plugin-runner-wire-lifecycle-portable-conformance` owner already covers
+that process-free boundary, so no new backlog item is required; its temporary
+live-PR block is removed while its existing family-classification dependency
+remains.
+
+The dependency/leverage refresh selects
+`python-activation-matrix-loss-perceptron-build-front-coverage`. These four
+dependency-ordered Python roots have no repository BUILD fronts, already have
+reviewed orphan-ledger entries, and feed five direct downstream programs. The
+bounded tranche adds discoverable fail-closed fronts, fills direct test and
+documentation gaps, removes exactly the resolved exemptions, and validates the
+affected downstream closure without changing the separately owned loss
+semantics or widening authority. Current open PRs have no exact overlap with
+its package, state, roadmap, or documentation paths. The fresh clean branch
+`codex/parity-python-neural-fronts-20260930` starts from the exact merge above.
+
+### Python neural-primitives implementation and downstream discovery
+
+The bounded tranche now supplies cross-platform BUILD fronts for Python
+`activation-functions`, `matrix`, `loss-functions`, and `perceptron`. The
+perceptron front declares all three leaf packages as exact build-tool edges.
+Direct suites cover the ML01 loss vectors and clamps, ML03 construction and
+extension invariants, ML04 activations and overflow boundaries, and a learned
+AND gate. The activation package exposes the canonical `tanh` surface while
+preserving `tanh_func`; matrix construction now deep-copies numeric grids and
+rejects ragged or invalid values. All four packages have documented Hatch
+metadata, measured coverage, Ruff gates, Windows overrides, and exactly their
+four resolved orphan-ledger records removed.
+
+Local evidence includes 97 direct tests with 99-100% coverage, four clean
+wheel/sdist builds and wheel imports, all four executable predictor smokes,
+the complete Go build-tool suite, and a production build-tool run that selects
+exactly the four changed packages, validates the 38 remaining exemption records,
+and orders the three leaf packages before perceptron. The capability profiles
+remain empty pure-computation declarations.
+
+The downstream audit also found a separate coherent gap. None of the five
+Python predictor program roots has a BUILD front, and metadata-only
+`xor-classifier` requests the nonexistent distribution names `matrix` and
+`loss-functions` instead of the repository package names. Pending owner
+`python-neural-predictor-program-front-and-metadata-coverage` now records this
+work and depends on the four-package tranche; it is not absorbed into the
+current implementation PR.
+
+Before publication, `origin/main` advanced to
+`6c0273d68563c8d3b2babdda66636daa848ad4ad` through changes confined to existing
+Rust ALGOL and photo-picker roots. The branch rebased cleanly; no package-root
+identity changed, so the collision-clean inventory counts remain valid and its
+exact revision is refreshed.
+
+Ready-for-review PR #16315 publishes the tranche from
+`codex/parity-python-neural-fronts-20260930`. GitHub reports the branch
+mergeable; initial CI, CodeQL language detection, and human-language change
+detection are queued. Guarded auto-merge remains disabled until every required
+check reaches a terminal acceptable state and the branch remains conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

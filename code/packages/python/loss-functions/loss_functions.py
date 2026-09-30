@@ -4,6 +4,7 @@ import math
 # Since log(0) evaluates to negative infinity, we clamp predictions to [EPSILON, 1 - EPSILON].
 EPSILON = 1e-7
 
+
 def mse(y_true: list[float], y_pred: list[float]) -> float:
     """
     Calculates Mean Squared Error (MSE).
@@ -28,21 +29,22 @@ def mse(y_true: list[float], y_pred: list[float]) -> float:
     """
     if len(y_true) != len(y_pred) or len(y_true) == 0:
         raise ValueError("Lists must have the same non-zero length")
-    
+
     total_error = 0.0
     for true_val, pred_val in zip(y_true, y_pred):
         diff = true_val - pred_val
         total_error += diff * diff
-        
+
     return total_error / len(y_true)
+
 
 def mae(y_true: list[float], y_pred: list[float]) -> float:
     """
     Calculates Mean Absolute Error (MAE).
 
-    MAE measures the average magnitude of the errors in a set of predictions, without 
-    considering their direction. It is the average over the test sample of the absolute 
-    differences between prediction and actual observation where all individual differences 
+    MAE measures the average magnitude of the errors in a set of predictions, without
+    considering their direction. It is the average over the test sample of the absolute
+    differences between prediction and actual observation where all individual differences
     have equal weight. It's often used for robust regression to ignore extreme outliers.
 
     Equation:
@@ -61,18 +63,19 @@ def mae(y_true: list[float], y_pred: list[float]) -> float:
     """
     if len(y_true) != len(y_pred) or len(y_true) == 0:
         raise ValueError("Lists must have the same non-zero length")
-        
+
     total_error = 0.0
     for true_val, pred_val in zip(y_true, y_pred):
         total_error += abs(true_val - pred_val)
-        
+
     return total_error / len(y_true)
+
 
 def bce(y_true: list[float], y_pred: list[float]) -> float:
     """
     Calculates Binary Cross-Entropy (BCE) loss.
 
-    BCE is used for binary classification tasks (e.g., Cat vs. Dog). It quantifies the 
+    BCE is used for binary classification tasks (e.g., Cat vs. Dog). It quantifies the
     difference between two probability distributions. Predictions must be between 0 and 1.
     We apply a small epsilon clamp to prevent taking the log of 0, which would result
     in negative infinity and disrupt gradient calculations during backpropagation.
@@ -93,14 +96,15 @@ def bce(y_true: list[float], y_pred: list[float]) -> float:
     """
     if len(y_true) != len(y_pred) or len(y_true) == 0:
         raise ValueError("Lists must have the same non-zero length")
-        
+
     total_error = 0.0
     for true_val, pred_val in zip(y_true, y_pred):
         # Clamp prediction to avoid log(0)
         p = max(EPSILON, min(1 - EPSILON, pred_val))
         total_error += true_val * math.log(p) + (1 - true_val) * math.log(1 - p)
-        
+
     return -total_error / len(y_true)
+
 
 def cce(y_true: list[float], y_pred: list[float]) -> float:
     """
@@ -109,7 +113,7 @@ def cce(y_true: list[float], y_pred: list[float]) -> float:
     CCE is used for multi-class classification tasks (e.g., classifying a digit 0-9).
     It expects `y_true` to be a one-hot encoded vector representing the true class.
     Only the probability assigned to the true class affects the loss.
-    
+
     Like BCE, we clamp predictions using epsilon to avoid negative infinity from log(0).
 
     Equation:
@@ -128,20 +132,22 @@ def cce(y_true: list[float], y_pred: list[float]) -> float:
     """
     if len(y_true) != len(y_pred) or len(y_true) == 0:
         raise ValueError("Lists must have the same non-zero length")
-        
+
     total_error = 0.0
     for true_val, pred_val in zip(y_true, y_pred):
         # Clamp prediction to avoid log(0)
         p = max(EPSILON, min(1 - EPSILON, pred_val))
         total_error += true_val * math.log(p)
-        
+
     return -total_error / len(y_true)
+
 
 def mse_derivative(y_true: list[float], y_pred: list[float]) -> list[float]:
     if len(y_true) != len(y_pred) or len(y_true) == 0:
         raise ValueError("Lists must have the same non-zero length")
     n = len(y_true)
     return [(2 / n) * (p - t) for t, p in zip(y_true, y_pred)]
+
 
 def mae_derivative(y_true: list[float], y_pred: list[float]) -> list[float]:
     if len(y_true) != len(y_pred) or len(y_true) == 0:
@@ -157,6 +163,7 @@ def mae_derivative(y_true: list[float], y_pred: list[float]) -> list[float]:
             res.append(0.0)
     return res
 
+
 def bce_derivative(y_true: list[float], y_pred: list[float]) -> list[float]:
     if len(y_true) != len(y_pred) or len(y_true) == 0:
         raise ValueError("Lists must have the same non-zero length")
@@ -166,6 +173,7 @@ def bce_derivative(y_true: list[float], y_pred: list[float]) -> list[float]:
         p = max(EPSILON, min(1 - EPSILON, p))
         res.append((1.0 / n) * ((p - t) / (p * (1.0 - p))))
     return res
+
 
 def cce_derivative(y_true: list[float], y_pred: list[float]) -> list[float]:
     if len(y_true) != len(y_pred) or len(y_true) == 0:
