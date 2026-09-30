@@ -10,12 +10,16 @@ encoder/backend writeups this crate feeds. Seventh lane of the
 9-architecture expansion documented in
 [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 
-## The Z80 is an Intel 8080 superset
+## The Z80 preserves the Intel 8080 opcode map
 
-Every valid 8080 opcode is a valid Z80 opcode with **identical** semantics
-and **identical** byte encoding — Zilog designed the Z80 for source (and
-largely binary) compatibility with 8080 software. This crate's base
-instruction set is therefore a direct structural port of
+Every documented 8080 instruction byte sequence remains a valid Z80 sequence
+for the corresponding core data or control operation, with byte-identical
+encoding. This is opcode and operand compatibility, not identical complete
+machine-state semantics: the Z80 adds flag state, and its `P/V` bit records
+signed overflow after arithmetic where the 8080's `P` bit records parity.
+Consequently, the same arithmetic instruction can leave a different flags byte
+and make a following parity/overflow-conditioned branch choose a different
+path. This crate's base instruction set is a direct structural port of
 `intel8080-simulator`, renamed to Zilog's assembler mnemonics (`LD`
 instead of `MOV`/`MVI`/`LXI`/`STA`/`LDA`/…, `JP` instead of `JMP`, `CP`
 instead of `CMP`, `RLCA`/`RRCA`/`RLA`/`RRA` instead of `RLC`/`RRC`/`RAL`/
@@ -25,7 +29,8 @@ two encoders.
 
 ## Supported instructions
 
-**Base (8080-compatible) set** — byte-identical to `intel8080-simulator`:
+**Base (8080-encoding-compatible) set** — byte-identical to
+`intel8080-simulator`:
 - Data transfer: `LD r,r'`, `LD r,n`, `LD rp,nn`, `LD (nn),A`/`LD A,(nn)`,
   `LD (nn),HL`/`LD HL,(nn)`, `LD (BC),A`/`LD (DE),A`/`LD A,(BC)`/
   `LD A,(DE)`, `EX DE,HL`
@@ -79,10 +84,12 @@ simulator.rs -- top-level Z80Simulator with fetch-decode-execute
 
 ## What differs from `intel8080-simulator`
 
-- **An extra flag.** The Z80 F register carries `N` (add/subtract),
+- **Different flag state.** The Z80 F register carries `N` (add/subtract),
   needed for correct `DAA` behaviour after both `ADD`- and `SUB`-family
   ops; `P/V` is dual-purpose (parity after logical ops, signed overflow
-  after arithmetic ops) rather than 8080's parity-only `P`.
+  after arithmetic ops) rather than 8080's parity-only `P`. The 8080's
+  auxiliary-carry flag corresponds to the Z80's half-carry flag, but the
+  packed flags bytes are not interchangeable.
 - **An alternate register bank** stored as raw byte values (`Registers`
   has `a2`/`f2`/`b2`/…) rather than unpacked flags — it's opaque to every
   instruction except `EX AF,AF'`/`EXX`.

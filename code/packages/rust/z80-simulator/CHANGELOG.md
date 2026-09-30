@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Clarified that the unprefixed Intel 8080 subset preserves instruction bytes
+  and core operations, not identical complete-state semantics: Z80 `N`/`H`,
+  packed flags, and arithmetic `P/V` differ from the 8080 flag contract.
 - Completed all ED operations represented by the Python reference:
   16-bit arithmetic/load families, special-register transfers, nibble
   rotates, interrupt control, and repeating/non-repeating transfer,
