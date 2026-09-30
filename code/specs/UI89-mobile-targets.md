@@ -257,7 +257,39 @@ What step 4 changed from §3.4, and why:
 - **The gate.** CI builds TaskApp's engine for the four ABIs, packages it,
   and requires the APK to hold `lib/<abi>/libmosaic_app.so` for each, each
   exporting `mosaic_app_create` (`llvm-nm` from the NDK). The emulator launch
-  and restore test is the second half of step 5.
+  and restore test is the second half of step 5 (§3.7).
+
+### 3.7 The Android emulator gate, as built (step 5, second half)
+
+- **The emulator.** `code/scripts/start-mosaic-android-emulator.sh` boots a
+  pinned image (`system-images;android-34;default;x86_64`: plain AOSP, no
+  Google services to sign in to, the ABI KVM runs natively) headless, cold and
+  software-rendered, and waits for `sys.boot_completed`. It refuses to start
+  without `/dev/kvm`; CI opens it to the runner's user first.
+- **No UI automation, as on iOS (§2.3).** The host persists after every event,
+  and the first event needs no finger: the activity reports the window's
+  environment (UI48 ENV4) once it lays out. So a state file appearing at
+  `filesDir/<application id>/mosaic-state.v1.json` proves at once that the
+  activity started, JNA loaded `libmosaic_app.so`, the engine answered, and
+  the host persisted where `MosaicActivity` pointed it. This is stronger than
+  "still running": a native-complete app that fails to start shows its
+  failure screen and keeps running.
+- **Three launches.** `code/scripts/mosaic-android-emulator-gate.sh <apk>
+  <android package> <application id>` installs the debug APK (`run-as`, which
+  reads and seeds the app's private files, needs a debuggable app) and
+  launches `MosaicActivity` three times. Each must still be running ten
+  seconds later with no `FATAL EXCEPTION` in its logcat:
+  1. fresh: state is written;
+  2. again: that state is restored -- nothing quarantined, and no "rejected
+     persisted state" on `System.err`;
+  3. seeded with `{}`, which the runtime refuses: it is moved to
+     `mosaic-state.v1.json.corrupt` inside the app's storage, and fresh state
+     is written.
+  Unlike the iOS gate, which restores the macOS run's snapshot, the app
+  restores its own: the Linux job has no desktop TaskApp snapshot to hand,
+  and one written by the same APK is the case a user meets.
+- **Still to come:** an instrumented Compose test that edits, relaunches and
+  reads the screen (§4), and the same gate for Journal (step 7).
 
 ## 4. CI
 
@@ -281,8 +313,9 @@ lanes are green, as their own PRs.
    seam; Trestle builds an APK. *Done (§3.5): every Compose `--emit-project`
    build writes `android/`; there is no separate target flag.*
 5. **Android runtime:** `cargo-ndk` ABIs, JNA on Android, `filesDir`; the
-   emulator test. *First half done (§3.6): the engine is built per ABI and
-   packaged; the emulator launch follows.*
+   emulator test. *Done (§3.6, §3.7): the engine is built per ABI and
+   packaged, and Trestle launches, restores its state and quarantines refused
+   state on an x86_64 emulator.*
 6. **Mobile host effects** through UI87's shared libraries.
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
