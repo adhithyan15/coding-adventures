@@ -23,6 +23,7 @@ const TELUGU_NGA = DUCTUS[ductusKey("telugu", "ఙ")];
 const TELUGU_CA = DUCTUS[ductusKey("telugu", "చ")];
 const TELUGU_JA = DUCTUS[ductusKey("telugu", "జ")];
 const TELUGU_NYA = DUCTUS[ductusKey("telugu", "ఞ")];
+const TELUGU_TTA = DUCTUS[ductusKey("telugu", "ట")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -38,15 +39,17 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ and ఞ routes and five-run pedagogical ఐ route cross
+  // The sourced క, ఙ, ఞ and ట routes and five-run pedagogical ఐ route cross
   // narrow printed counter transitions while still covering their complete
-  // outlines.
+  // outlines. ట's six separately numbered source movements cut across the
+  // broad printed bowl most strongly.
   registerStrokeHonestyTests(letters, {
     అ: 0.96,
     క: 0.93,
     ఖ: 0.93,
     ఙ: 0.9,
     ఞ: 0.86,
+    ట: 0.55,
     ఐ: 0.59,
     ఒ: 0.84,
     ఋ: 0.84,
@@ -75,6 +78,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఞ", TELUGU_NYA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ట", TELUGU_TTA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -213,7 +219,9 @@ describe("handwriting ductus", () => {
   it("Telugu జ preserves all four source-verified pen-down runs", () => {
     expect(penLifts(TELUGU_JA)).toBe(3);
     expect(TELUGU_JA.strokes).toHaveLength(4);
-    expect(TELUGU_JA.strokes.map((stroke) => stroke.segments[0]!.label)).toEqual([
+    expect(
+      TELUGU_JA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
       "sweep right across the rounded upper-left arch",
       "curve down and right around the lower-left bowl",
       "sweep right and up around the lower-right bowl",
@@ -235,6 +243,21 @@ describe("handwriting ductus", () => {
       "draw the short downward tail",
       "draw the right horizontal bar",
       "draw the separate upper vertical stem downward",
+    ]);
+  });
+
+  it("Telugu ట preserves all six source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_TTA)).toBe(5);
+    expect(TELUGU_TTA.strokes).toHaveLength(6);
+    expect(
+      TELUGU_TTA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "curl upward along the inner shoulder",
+      "sweep down around the upper-left curve",
+      "turn right around the lower-left bowl",
+      "sweep right and upward around the lower-right bowl",
+      "curve upward and left around the outer shoulder",
+      "draw the separate upper stem downward",
     ]);
   });
 
@@ -353,7 +376,9 @@ describe("handwriting ductus", () => {
   it("Telugu ఐ preserves all five source-verified pen-down runs", () => {
     expect(penLifts(TELUGU_AI)).toBe(4);
     expect(TELUGU_AI.strokes).toHaveLength(5);
-    expect(TELUGU_AI.strokes.map((stroke) => stroke.segments[0]!.label)).toEqual([
+    expect(
+      TELUGU_AI.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
       "sweep left across the compact upper arch",
       "curve down around the left bowl",
       "sweep right around the broad lower bowl",
@@ -365,10 +390,12 @@ describe("handwriting ductus", () => {
   it("Telugu ఒ preserves all three source-verified pen-down runs", () => {
     expect(penLifts(TELUGU_O)).toBe(2);
     expect(TELUGU_O.strokes).toHaveLength(3);
-    expect(TELUGU_O.strokes.map((stroke) => stroke.segments[0]!.label)).toEqual([
-      "sweep right across the upper arch",
-      "curve down around the left bowl",
-      "sweep right around the broad lower bowl",
-    ]);
+    expect(TELUGU_O.strokes.map((stroke) => stroke.segments[0]!.label)).toEqual(
+      [
+        "sweep right across the upper arch",
+        "curve down around the left bowl",
+        "sweep right around the broad lower bowl",
+      ],
+    );
   });
 });

@@ -1670,8 +1670,22 @@
       "components": [
         "ట  ṭa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "curl upward along the inner shoulder",
+        "sweep down around the upper-left curve",
+        "turn right around the lower-left bowl",
+        "sweep right and upward around the lower-right bowl",
+        "curve upward and left around the outer shoulder",
+        "draw the separate upper stem downward"
+      ],
+      "strokeOrderNote": "Six numbered movements in six pen-down runs: movement 1 curls up the inner shoulder, movements 2–5 trace the outer rounded body in sections, and movement 6 draws the separate upper stem.",
+      "penLifts": 5,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant ట packaged tracing guide res/drawable/dot_stroke_c_3_1_ta.png, movements 1–6 (version 2.6)",
+        "accessed": "2026-09-29",
+        "variation": "The packaged tracing guide numbers six separately positioned directional movements around the inner shoulder, outer rounded body and upper stem. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      }
     },
     {
       "glyph": "టా",
