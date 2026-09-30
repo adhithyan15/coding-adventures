@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C143-quittung",
+    "language": "german",
+    "chapter": 143,
+    "sequence": 6250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b160b782af519944"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-143-READ143",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read an advert, an appointment, opening hours and a receipt, and act on what they say.",
+  "prerequisites": []
+}
