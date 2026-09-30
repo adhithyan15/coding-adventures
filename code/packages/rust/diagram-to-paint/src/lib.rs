@@ -688,9 +688,9 @@ where
     if let Some(title) = &diagram.title {
         text_children.push(text_node(
             title,
-            0.0,
-            8.0,
-            diagram.width,
+            diagram.config.padding,
+            diagram.config.padding + 8.0,
+            diagram.width - 2.0 * diagram.config.padding,
             28.0,
             options.title_font.clone(),
             label_color,
@@ -806,6 +806,9 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    metadata.insert("eventModel.config.padding".into(), diagram.config.padding.to_string());
+    metadata.insert("eventModel.config.rowHeight".into(), diagram.config.row_height.to_string());
+    metadata.insert("eventModel.config.useMaxWidth".into(), diagram.config.use_max_width.to_string());
     for (index, entity) in diagram.entities.iter().enumerate() {
         metadata.insert(format!("eventModel.entity.{index}.id"), entity.id.clone());
         if let Some(namespace) = &entity.namespace {

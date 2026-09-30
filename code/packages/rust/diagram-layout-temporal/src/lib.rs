@@ -1255,6 +1255,7 @@ pub fn layout_event_model_diagram(
         lane_indices.entry(lane).or_insert(next);
     }
 
+    let padding = diagram.config.padding;
     let title_height = if diagram.title.is_some() { 42.0 } else { 16.0 };
     let has_inline_data = diagram.frames.iter().any(|frame| frame.data.is_some());
     let lane_height = if has_inline_data { 108.0 } else { 92.0 };
@@ -1262,8 +1263,9 @@ pub fn layout_event_model_diagram(
     let frame_width = 122.0;
     let frame_height = if has_inline_data { 70.0 } else { 54.0 };
     let frame_step = 148.0;
-    let width = canvas_width.max(label_width + 32.0 + diagram.frames.len() as f64 * frame_step);
-    let height = title_height + lane_indices.len() as f64 * lane_height + 20.0;
+    let content_width = canvas_width.max(label_width + 32.0 + diagram.frames.len() as f64 * frame_step);
+    let width = content_width + 2.0 * padding;
+    let height = title_height + lane_indices.len() as f64 * lane_height + 20.0 + 2.0 * padding;
     let mut items = Vec::new();
     let mut positions = HashMap::<String, (f64, f64)>::new();
 
@@ -1271,9 +1273,9 @@ pub fn layout_event_model_diagram(
     lanes.sort_by_key(|(_, index)| **index);
     for (label, index) in lanes {
         items.push(LayoutedEventModelItem::Lane {
-            x: 12.0,
-            y: title_height + *index as f64 * lane_height,
-            width: width - 24.0,
+            x: padding + 12.0,
+            y: padding + title_height + *index as f64 * lane_height,
+            width: content_width - 24.0,
             height: lane_height - 8.0,
             label: label.clone(),
             fill: if *index % 2 == 0 { "#f8fafc".into() } else { "#f1f5f9".into() },
@@ -1281,8 +1283,8 @@ pub fn layout_event_model_diagram(
     }
     for (index, frame) in diagram.frames.iter().enumerate() {
         let lane = lane_indices[&lane_name(frame)];
-        let x = label_width + 24.0 + index as f64 * frame_step;
-        let y = title_height + lane as f64 * lane_height + 15.0;
+        let x = padding + label_width + 24.0 + index as f64 * frame_step;
+        let y = padding + title_height + lane as f64 * lane_height + 15.0;
         positions.insert(frame.id.clone(), (x, y));
         items.push(LayoutedEventModelItem::Frame {
             x,
@@ -1312,6 +1314,7 @@ pub fn layout_event_model_diagram(
     LayoutedEventModelDiagram {
         width,
         height,
+        config: diagram.config.clone(),
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
@@ -2407,6 +2410,7 @@ mod tests {
     #[test]
     fn event_model_layout_builds_lanes_frames_and_relations() {
         let diagram = EventModelDiagram {
+            config: EventModelConfig::default(),
             title: Some("Checkout".into()),
             accessibility_title: None,
             accessibility_description: None,
@@ -2483,5 +2487,14 @@ mod tests {
         assert_eq!(layout.notes, diagram.notes);
         assert_eq!(layout.gwt, diagram.gwt);
         assert_eq!(layout.entities, diagram.entities);
+        assert_eq!(layout.config, diagram.config);
+        assert!(layout.items.iter().all(|item| match item {
+            LayoutedEventModelItem::Lane { x, .. } | LayoutedEventModelItem::Frame { x, .. } => {
+                *x >= diagram.config.padding
+            }
+            LayoutedEventModelItem::Relation { from, to } => {
+                from.x >= diagram.config.padding && to.x >= diagram.config.padding
+            }
+        }));
     }
 }

@@ -572,7 +572,7 @@ use diagram_ir::{
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    EventModelDataBlock, EventModelDiagram, EventModelEntity, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, GitDiagram, GitEvent, JourneyConfig,
+    EventModelConfig, EventModelDataBlock, EventModelDiagram, EventModelEntity, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RadarConfig, RadarGraticule, RelKind,
     RequirementElementMetadata, RequirementKind,
@@ -3998,8 +3998,49 @@ fn event_model_entity_kind(value: &str) -> EventModelEntityKind {
     }
 }
 
+fn parse_event_model_config(source: &str) -> EventModelConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "eventmodeling"]);
+    let config_source = mermaid_directive_object(source, "eventmodeling")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(config_source, key).or_else(|| {
+            config_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().to_string())
+            })
+        })
+    };
+    let defaults = EventModelConfig::default();
+    let non_negative = |key, fallback| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 0.0)
+            .unwrap_or(fallback)
+    };
+    let positive = |key, fallback| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+            .unwrap_or(fallback)
+    };
+    let use_max_width = value("useMaxWidth")
+        .and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        })
+        .unwrap_or(defaults.use_max_width);
+    EventModelConfig {
+        padding: non_negative("padding", defaults.padding),
+        row_height: positive("rowHeight", defaults.row_height),
+        use_max_width,
+    }
+}
+
 /// Parse the Mermaid 11.16.1 event-modeling frame subset into dedicated IR.
 pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseError> {
+    let config = parse_event_model_config(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_eventmodeling(&prepared).map_err(|message| ParseError {
         message,
@@ -4018,6 +4059,7 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
         })?;
 
     let mut diagram = EventModelDiagram {
+        config,
         title: None,
         accessibility_title: None,
         accessibility_description: None,

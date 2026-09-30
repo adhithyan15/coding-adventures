@@ -224,6 +224,14 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.entities[0].namespace.as_deref(), Some("Sales"));
             assert_eq!(diagram.entities[1].id, "AddItem");
             assert_eq!(diagram.entities[1].namespace, None);
+        } else if id == "init-layout-config" {
+            assert_eq!(diagram.config.padding, 18.0);
+            assert_eq!(diagram.config.row_height, 40.0);
+            assert!(!diagram.config.use_max_width);
+        } else if id == "front-matter-layout-config" {
+            assert_eq!(diagram.config.padding, 22.0);
+            assert_eq!(diagram.config.row_height, 36.0);
+            assert!(!diagram.config.use_max_width);
         }
     }
     assert!(parse_event_modeling(

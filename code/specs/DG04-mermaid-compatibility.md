@@ -501,10 +501,14 @@ visible frame rendering. Given/When/Then scenarios preserve their source frame
 and typed entity references through semantic IR and backend-neutral PaintScene
 metadata, likewise matching Mermaid's current non-visual treatment. Standalone
 entity declarations preserve qualified identifiers and namespaces through the
-same backend-neutral pipeline. Temporal
+same backend-neutral pipeline. Init directives and YAML front matter preserve
+the Event Modeling `padding`, `rowHeight`, and `useMaxWidth` configuration;
+padding affects native viewport geometry while the currently non-visual row
+height and responsive-width settings remain available in PaintScene metadata.
+Temporal
 swimlane layout lowers through backend-neutral PaintScene instructions and a
-native Metal-to-PNG fixture. Configuration and interactive behavior remain
-unsupported at the partial level.
+native Metal-to-PNG fixture. Theme overrides and browser-only responsive
+behavior remain unsupported at the partial level.
 
 ### Treemap Native Slice
 
