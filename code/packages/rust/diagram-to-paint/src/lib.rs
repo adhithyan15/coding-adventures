@@ -796,6 +796,13 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    for (index, note) in diagram.notes.iter().enumerate() {
+        metadata.insert(format!("eventModel.note.{index}.frame"), note.source_frame.clone());
+        metadata.insert(format!("eventModel.note.{index}.data"), note.data.clone());
+        if let Some(data_type) = &note.data_type {
+            metadata.insert(format!("eventModel.note.{index}.type"), data_type.clone());
+        }
+    }
     let bg = &options.background;
     PaintScene {
         width: diagram.width,

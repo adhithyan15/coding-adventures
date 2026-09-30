@@ -205,6 +205,11 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.frames[1].data_type.as_deref(), Some("json"));
             assert_eq!(diagram.frames[1].data.as_deref(), Some("{ \"quantity\": 2 }"));
             assert_eq!(diagram.frames[2].data.as_deref(), Some("accepted"));
+        } else if id == "frame-notes" {
+            assert_eq!(diagram.notes.len(), 2);
+            assert_eq!(diagram.notes[0].source_frame, "01");
+            assert_eq!(diagram.notes[0].data_type.as_deref(), Some("md"));
+            assert!(diagram.notes[0].data.contains("Shows pending items"));
         }
     }
     assert!(parse_event_modeling(
@@ -212,6 +217,9 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
     ).is_err());
     assert!(parse_event_modeling(
         "eventmodeling\ntf 01 cmd AddItem [[Payload]]\ndata Payload { one: 1 }\ndata Payload { two: 2 }"
+    ).is_err());
+    assert!(parse_event_modeling(
+        "eventmodeling\ntf 01 cmd AddItem\nnote 02 { Missing frame }"
     ).is_err());
 }
 
