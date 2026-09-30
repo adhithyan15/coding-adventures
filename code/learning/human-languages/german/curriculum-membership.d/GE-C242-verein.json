@@ -1,0 +1,11 @@
+{
+  "id": "GE-C242-verein",
+  "pathSegment": "GE-PATH-242-THING242",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-242-THING242",
+      "order": 2
+    }
+  ]
+}

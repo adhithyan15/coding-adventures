@@ -1,0 +1,11 @@
+{
+  "id": "GE-C242-vertrauen",
+  "pathSegment": "GE-PATH-242-THING242",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-242-THING242",
+      "order": 1
+    }
+  ]
+}

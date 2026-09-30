@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Childhood, Knowledge, Culture, Art, A landscape",
+  "label": "ch:ge-childhood-knowledge-culture-art-a-landscape",
+  "canDo": "I can say childhood, knowledge, culture, art and a landscape.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C232-landschaft",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: i can say childhood, knowledge, culture, art and a landscape.",
+    "assesses": [
+      "GE-LEX-C232-THING232-03",
+      "GE-LEX-C232-THING232-04",
+      "GE-LEX-C232-THING232-05"
+    ]
+  }
+}

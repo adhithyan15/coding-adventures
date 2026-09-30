@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-250-LINK250",
+  "spine_node": "SPINE-SAY-WHY",
+  "before": [],
+  "inline": [
+    "GE-EXT-250-LINK250"
+  ],
+  "after": []
+}

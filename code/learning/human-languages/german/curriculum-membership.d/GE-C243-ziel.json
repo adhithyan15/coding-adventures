@@ -1,0 +1,11 @@
+{
+  "id": "GE-C243-ziel",
+  "pathSegment": "GE-PATH-243-THING243",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-243-THING243",
+      "order": 4
+    }
+  ]
+}

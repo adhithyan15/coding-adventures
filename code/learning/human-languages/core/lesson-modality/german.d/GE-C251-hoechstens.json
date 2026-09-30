@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C251-hoechstens",
+    "language": "german",
+    "chapter": 251,
+    "sequence": 13980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6dc85e11dc703a8d"
+  },
+  "findings": []
+}

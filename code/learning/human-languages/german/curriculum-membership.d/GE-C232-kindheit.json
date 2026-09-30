@@ -1,0 +1,11 @@
+{
+  "id": "GE-C232-kindheit",
+  "pathSegment": "GE-PATH-232-THING232",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-232-THING232",
+      "order": 0
+    }
+  ]
+}

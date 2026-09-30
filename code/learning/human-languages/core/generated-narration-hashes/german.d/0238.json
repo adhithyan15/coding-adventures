@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:de07a9997bad1945",
+  "lessonIds": [
+    "GE-C238-schwierigkeit",
+    "GE-C238-sicherheit",
+    "GE-C238-sinn",
+    "GE-C238-sorge",
+    "GE-C238-stimme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch238.txt",
+  "json": "german/narration/ch238.json",
+  "textHash": "fnv1a64:9f9e83c03e678050",
+  "jsonHash": "fnv1a64:27a15e9bde8f8b64",
+  "findings": []
+}

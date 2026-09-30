@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:72e9b24c88f7d6fe",
+  "lessonIds": [
+    "GE-C250-ausserdem",
+    "GE-C250-deshalb",
+    "GE-C250-trotzdem",
+    "GE-C250-jedenfalls",
+    "GE-C250-eigentlich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch250.txt",
+  "json": "german/narration/ch250.json",
+  "textHash": "fnv1a64:e87f607df6addecf",
+  "jsonHash": "fnv1a64:f4f8485722e0b0ca",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "The environment, Lessons, A difference, A cause, Behaviour",
+  "label": "ch:ge-the-environment-lessons-a-difference-a-cause-behaviour",
+  "canDo": "I can say the environment, lessons, a difference, a cause and behaviour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C241-verhalten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: i can say the environment, lessons, a difference, a cause and behaviour.",
+    "assesses": [
+      "GE-LEX-C241-THING241-03",
+      "GE-LEX-C241-THING241-04",
+      "GE-LEX-C241-THING241-05"
+    ]
+  }
+}

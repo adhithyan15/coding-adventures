@@ -1,0 +1,11 @@
+{
+  "id": "GE-C221-schuechtern",
+  "pathSegment": "GE-PATH-221-QUAL221",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-221-QUAL221",
+      "order": 2
+    }
+  ]
+}

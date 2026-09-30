@@ -1,0 +1,11 @@
+{
+  "id": "GE-C239-stufe",
+  "pathSegment": "GE-PATH-239-THING239",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-239-THING239",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C229-erlebnis",
+  "pathSegment": "GE-PATH-229-THING229",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-229-THING229",
+      "order": 0
+    }
+  ]
+}

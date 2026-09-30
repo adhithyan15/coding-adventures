@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Anxious, Tiring, Excited, Excellent, Working",
+  "label": "ch:ge-anxious-tiring-excited-excellent-working",
+  "canDo": "I can say anxious, tiring, excited, excellent and working.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C211-berufstaetig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: i can say anxious, tiring, excited, excellent and working.",
+    "assesses": [
+      "GE-LEX-C211-QUAL211-03",
+      "GE-LEX-C211-QUAL211-04",
+      "GE-LEX-C211-QUAL211-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C251-uebrigens",
+    "language": "german",
+    "chapter": 251,
+    "sequence": 13960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c78107640b11049"
+  },
+  "findings": []
+}

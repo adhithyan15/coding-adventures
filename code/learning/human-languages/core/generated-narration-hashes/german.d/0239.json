@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:5c0c06e310482524",
+  "lessonIds": [
+    "GE-C239-stimmung",
+    "GE-C239-streit",
+    "GE-C239-studium",
+    "GE-C239-stufe",
+    "GE-C239-tatsache"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch239.txt",
+  "json": "german/narration/ch239.json",
+  "textHash": "fnv1a64:1813628a7c00515c",
+  "jsonHash": "fnv1a64:8016d77f138f67e4",
+  "findings": []
+}

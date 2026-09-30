@@ -1,0 +1,11 @@
+{
+  "id": "GE-C248-entschuldigen",
+  "pathSegment": "GE-PATH-248-VERB248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-248-VERB248",
+      "order": 3
+    }
+  ]
+}

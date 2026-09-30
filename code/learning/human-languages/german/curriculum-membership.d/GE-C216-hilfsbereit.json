@@ -1,0 +1,11 @@
+{
+  "id": "GE-C216-hilfsbereit",
+  "pathSegment": "GE-PATH-216-QUAL216",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-216-QUAL216",
+      "order": 3
+    }
+  ]
+}

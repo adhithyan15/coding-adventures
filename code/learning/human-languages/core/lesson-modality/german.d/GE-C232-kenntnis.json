@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C232-kenntnis",
+    "language": "german",
+    "chapter": 232,
+    "sequence": 12640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a621a4527f6e7ca5"
+  },
+  "findings": []
+}

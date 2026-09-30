@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C215-gleichzeitig",
+    "language": "german",
+    "chapter": 215,
+    "sequence": 11420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a4b9c8323c6c040"
+  },
+  "findings": []
+}

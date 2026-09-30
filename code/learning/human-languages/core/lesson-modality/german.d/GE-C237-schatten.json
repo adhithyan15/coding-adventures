@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C237-schatten",
+    "language": "german",
+    "chapter": 237,
+    "sequence": 12910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4db9b4817b6ba0d2"
+  },
+  "findings": []
+}

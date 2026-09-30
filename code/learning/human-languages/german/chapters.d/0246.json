@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "To accompany, To notice, To advise, To report, To visit",
+  "label": "ch:ge-to-accompany-to-notice-to-advise-to-report-to-visit",
+  "canDo": "I can say to accompany, to notice, to advise, to report and to visit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R246-second-pass-words-from-chapters-242-246",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: i can say to accompany, to notice, to advise, to report and to visit.",
+    "assesses": [
+      "GE-LEX-C246-VERB246-03",
+      "GE-LEX-C246-VERB246-04",
+      "GE-LEX-C246-VERB246-05"
+    ]
+  }
+}

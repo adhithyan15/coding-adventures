@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:535906b121aa8d8d",
+  "lessonIds": [
+    "GE-C236-pflicht",
+    "GE-C236-qualitaet",
+    "GE-C236-rede",
+    "GE-C236-reihe",
+    "GE-C236-religion"
+  ],
+  "tex": "german/book/chapters/ch236-a-duty-quality-a-speech-a-row-religion.tex"
+}

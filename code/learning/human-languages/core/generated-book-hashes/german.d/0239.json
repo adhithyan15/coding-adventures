@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:e9f19a27d11339a2",
+  "lessonIds": [
+    "GE-C239-stimmung",
+    "GE-C239-streit",
+    "GE-C239-studium",
+    "GE-C239-stufe",
+    "GE-C239-tatsache"
+  ],
+  "tex": "german/book/chapters/ch239-an-atmosphere-an-argument-university-studies-a-step-a-fact.tex"
+}

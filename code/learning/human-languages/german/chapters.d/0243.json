@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "A disadvantage, The truth, Advertising, A competition, A goal",
+  "label": "ch:ge-a-disadvantage-the-truth-advertising-a-competition-a-goal",
+  "canDo": "I can say a disadvantage, the truth, advertising, a competition and a goal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C243-ziel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: i can say a disadvantage, the truth, advertising, a competition and a goal.",
+    "assesses": [
+      "GE-LEX-C243-THING243-03",
+      "GE-LEX-C243-THING243-04",
+      "GE-LEX-C243-THING243-05"
+    ]
+  }
+}

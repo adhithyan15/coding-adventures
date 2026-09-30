@@ -1,0 +1,11 @@
+{
+  "id": "GE-C225-ausstellung",
+  "pathSegment": "GE-PATH-225-THING225",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-225-THING225",
+      "order": 4
+    }
+  ]
+}

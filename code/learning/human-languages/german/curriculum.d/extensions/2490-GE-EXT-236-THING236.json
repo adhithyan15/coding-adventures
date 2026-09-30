@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-236-THING236",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a duty, quality, a speech, a row and religion.",
+  "prerequisites": []
+}

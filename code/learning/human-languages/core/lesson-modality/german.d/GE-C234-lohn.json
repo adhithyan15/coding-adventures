@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C234-lohn",
+    "language": "german",
+    "chapter": 234,
+    "sequence": 12730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b049ebba44d79884"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R251-first-pass-words-from-chapters-247-248",
+    "language": "german",
+    "chapter": 251,
+    "sequence": 14010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25e5c4786f1a06b3"
+  },
+  "findings": []
+}

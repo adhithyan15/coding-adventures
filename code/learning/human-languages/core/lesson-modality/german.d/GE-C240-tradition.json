@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C240-tradition",
+    "language": "german",
+    "chapter": 240,
+    "sequence": 13230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2b98b61985ecdcb"
+  },
+  "findings": []
+}

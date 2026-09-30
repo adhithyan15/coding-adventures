@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C233-laune",
+    "language": "german",
+    "chapter": 233,
+    "sequence": 12690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c23138e80165d5a"
+  },
+  "findings": []
+}

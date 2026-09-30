@@ -1,0 +1,11 @@
+{
+  "id": "GE-C239-studium",
+  "pathSegment": "GE-PATH-239-THING239",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-239-THING239",
+      "order": 2
+    }
+  ]
+}

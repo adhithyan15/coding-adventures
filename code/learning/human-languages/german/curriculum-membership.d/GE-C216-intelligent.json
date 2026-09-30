@@ -1,0 +1,11 @@
+{
+  "id": "GE-C216-intelligent",
+  "pathSegment": "GE-PATH-216-QUAL216",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-216-QUAL216",
+      "order": 4
+    }
+  ]
+}

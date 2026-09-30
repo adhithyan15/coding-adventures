@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-242-THING242",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say traffic, trust, a club, caution and an advantage.",
+  "prerequisites": []
+}

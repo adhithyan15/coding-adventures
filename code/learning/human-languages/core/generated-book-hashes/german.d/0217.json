@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:7ac672d9d19c848b",
+  "lessonIds": [
+    "GE-C217-kaputt",
+    "GE-C217-klug",
+    "GE-C217-kostenlos",
+    "GE-C217-kraeftig",
+    "GE-C217-ledig"
+  ],
+  "tex": "german/book/chapters/ch217-broken-clever-free-of-charge-strong-single.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C235-neuigkeit",
+    "language": "german",
+    "chapter": 235,
+    "sequence": 12780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:103d7b7069e3c316"
+  },
+  "findings": []
+}

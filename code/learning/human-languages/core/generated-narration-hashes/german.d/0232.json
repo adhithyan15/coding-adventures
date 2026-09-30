@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:94cbec4878081ad5",
+  "lessonIds": [
+    "GE-C232-kindheit",
+    "GE-C232-kenntnis",
+    "GE-C232-kultur",
+    "GE-C232-kunst",
+    "GE-C232-landschaft"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch232.txt",
+  "json": "german/narration/ch232.json",
+  "textHash": "fnv1a64:dbc7be3dd0cf4240",
+  "jsonHash": "fnv1a64:ebea0fcc9a54e9dd",
+  "findings": []
+}

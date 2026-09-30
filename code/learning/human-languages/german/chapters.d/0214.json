@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Cheerful, Terrible, Patient, Stingy, Cosy",
+  "label": "ch:ge-cheerful-terrible-patient-stingy-cosy",
+  "canDo": "I can say cheerful, terrible, patient, stingy and cosy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C214-gemuetlich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: i can say cheerful, terrible, patient, stingy and cosy.",
+    "assesses": [
+      "GE-LEX-C214-QUAL214-03",
+      "GE-LEX-C214-QUAL214-04",
+      "GE-LEX-C214-QUAL214-05"
+    ]
+  }
+}

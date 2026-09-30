@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C237-rolle",
+    "language": "german",
+    "chapter": 237,
+    "sequence": 12880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5ca12e8e1cad67a"
+  },
+  "findings": []
+}

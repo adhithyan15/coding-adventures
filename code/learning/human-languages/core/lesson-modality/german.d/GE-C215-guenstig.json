@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C215-guenstig",
+    "language": "german",
+    "chapter": 215,
+    "sequence": 11440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e9a174f388e7319"
+  },
+  "findings": []
+}

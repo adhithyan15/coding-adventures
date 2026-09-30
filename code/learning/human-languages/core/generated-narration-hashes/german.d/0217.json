@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:eecbc7f16c401d7f",
+  "lessonIds": [
+    "GE-C217-kaputt",
+    "GE-C217-klug",
+    "GE-C217-kostenlos",
+    "GE-C217-kraeftig",
+    "GE-C217-ledig"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch217.txt",
+  "json": "german/narration/ch217.json",
+  "textHash": "fnv1a64:6bd4a7271578fd2c",
+  "jsonHash": "fnv1a64:33352a61a342444d",
+  "findings": []
+}

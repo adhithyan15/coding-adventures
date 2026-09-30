@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C229-gebuehr",
+    "language": "german",
+    "chapter": 229,
+    "sequence": 12500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:649039cee55f4e44"
+  },
+  "findings": []
+}

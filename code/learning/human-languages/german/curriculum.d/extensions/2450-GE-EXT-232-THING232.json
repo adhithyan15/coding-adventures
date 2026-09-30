@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-232-THING232",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say childhood, knowledge, culture, art and a landscape.",
+  "prerequisites": []
+}

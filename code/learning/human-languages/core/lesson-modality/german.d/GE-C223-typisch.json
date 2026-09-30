@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C223-typisch",
+    "language": "german",
+    "chapter": 223,
+    "sequence": 12000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0150e8b251e8a922"
+  },
+  "findings": []
+}

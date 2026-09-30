@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:222cec9c03001d0f",
+  "lessonIds": [
+    "GE-C221-schlank",
+    "GE-C221-schrecklich",
+    "GE-C221-schuechtern",
+    "GE-C221-selbststaendig",
+    "GE-C221-sonnig"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch221.txt",
+  "json": "german/narration/ch221.json",
+  "textHash": "fnv1a64:e59fa7aea90ef61c",
+  "jsonHash": "fnv1a64:794ee9c3a3f926f3",
+  "findings": []
+}

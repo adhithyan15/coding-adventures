@@ -1,0 +1,11 @@
+{
+  "id": "GE-C248-erfahren",
+  "pathSegment": "GE-PATH-248-VERB248",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-248-VERB248",
+      "order": 4
+    }
+  ]
+}

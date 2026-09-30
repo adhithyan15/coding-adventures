@@ -1,0 +1,11 @@
+{
+  "id": "GE-C228-erinnerung",
+  "pathSegment": "GE-PATH-228-THING228",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-228-THING228",
+      "order": 1
+    }
+  ]
+}

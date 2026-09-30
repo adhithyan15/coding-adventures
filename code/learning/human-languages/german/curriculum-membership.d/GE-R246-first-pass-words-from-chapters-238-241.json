@@ -1,0 +1,11 @@
+{
+  "id": "GE-R246-first-pass-words-from-chapters-238-241",
+  "pathSegment": "GE-PATH-246-VERB246",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-246-VERB246",
+      "order": 5
+    }
+  ]
+}

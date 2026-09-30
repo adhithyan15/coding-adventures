@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C248-entschuldigen",
+    "language": "german",
+    "chapter": 248,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02be866704db5d29"
+  },
+  "findings": []
+}
