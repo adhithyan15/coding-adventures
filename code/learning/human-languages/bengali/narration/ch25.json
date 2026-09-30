@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Cloth, Shirt, Sari, and Glasses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9e2c064037d3d44a",
+  "sourceHash": "fnv1a64:ed0b38296acd794c",
   "lessons": [
     {
       "id": "BN-C15-kapor",
@@ -322,7 +322,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c946ba971d40fcbe",
+      "sourceHash": "fnv1a64:0c8785411a8dd908",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -373,7 +373,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "শাড়ি (shari) opens with শ — a second letter for an s-family sound, a different one from স. Sanskrit distinguished three of these (স, শ, and a third, ষ); modern Bengali speech has merged them into one sound, but the spelling keeps them apart. Then া (ā), ড় (the flap you now know from কাপড় (kapor)), and ি (i): shā-ṛi."
+              "text": "শাড়ি (shari) opens with শ — a second letter for an s-family sound, a different one from স. Sanskrit distinguished three of these (স, শ, and a third, ṣ); modern Bengali speech has merged them into one sound, but the spelling keeps them apart. Then া (ā), ড় (the flap you now know from কাপড় (kapor)), and ি (i): shā-ṛi."
             }
           ]
         },
@@ -459,7 +459,7 @@
             },
             {
               "kind": "speech",
-              "text": "How did শাড়ি (shari) reach English — through a shared ancient root, worn down over millennia, or as a direct modern loanword? (A direct loanword — \"sari,\" borrowed whole, no PIE root involved.) How many distinct s-family letters did Sanskrit distinguish, now merged in Bengali speech? (Three — স, শ, ষ.)"
+              "text": "How did শাড়ি (shari) reach English — through a shared ancient root, worn down over millennia, or as a direct modern loanword? (A direct loanword — \"sari,\" borrowed whole, no PIE root involved.) How many distinct s-family letters did Sanskrit distinguish, now merged in Bengali speech? (Three — স, শ and ṣ.)"
             }
           ]
         }
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7264407a9f9c6f5e",
+      "sourceHash": "fnv1a64:241a63196782c110",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -540,7 +540,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "চশমা (choshma) is built on Persian chashm, \"eye\" — the exact word the eye lesson once named as চোখ's only named cousin outside the Indo-Aryan family, with no secure English descendant claimed for চোখ itself. চশমা (choshma) takes that word and adds a suffix that turns \"eye\" into \"eye-thing\": spectacles, the thing that sits in front of your eyes. Bengali did not build this the way it built জিজ্ঞাসা করা or সাহায্য করা, by hanging করা on a noun; it took a ready-made South Asian coinage on a Persian root, the same formation Hindi and Urdu also use."
+              "text": "চশমা (choshma) is built on Persian chashm, \"eye\" — the exact word the eye lesson once named as চোখ's only named cousin outside the Indo-Aryan family, with no secure English descendant claimed for চোখ itself. চশমা (choshma) takes that word and adds a suffix that turns \"eye\" into \"eye-thing\": spectacles, the thing that sits in front of your eyes. Bengali did not build this the way it built jijñāsā kôrā or সাহায্য করা, by hanging করা on a noun; it took a ready-made South Asian coinage on a Persian root, the same formation Hindi and Urdu also use."
             }
           ]
         },

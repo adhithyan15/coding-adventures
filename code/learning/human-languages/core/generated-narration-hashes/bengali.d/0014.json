@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 14,
-  "sourceHash": "fnv1a64:737e56b3e48f33e6",
+  "sourceHash": "fnv1a64:6678f089b801e971",
   "lessonIds": [
     "BN-C08-bhaba",
     "BN-C08-bojha",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch14.txt",
   "json": "bengali/narration/ch14.json",
-  "textHash": "fnv1a64:969df668f617d733",
-  "jsonHash": "fnv1a64:49b916de47cf4f85",
+  "textHash": "fnv1a64:704c941a47454ee2",
+  "jsonHash": "fnv1a64:0a6b9f84d4f8e952",
   "findings": []
 }

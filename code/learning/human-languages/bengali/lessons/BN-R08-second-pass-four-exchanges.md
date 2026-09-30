@@ -43,10 +43,10 @@ the last thing you say on leaving.
 
 | | |
 |---|---|
-| **আবার দেখা হবে** | we'll meet again |
-| **কাল দেখা হবে** | see you tomorrow |
+| *ābār dækhā hôbe* | we'll meet again |
+| *kāl dækhā hôbe* | see you tomorrow |
 
-**দেখা হবে** — "a meeting will happen" — does the work in both. What changes is
+*dækhā hôbe* — "a meeting will happen" — does the work in both. What changes is
 the one word in front: *again*, or *tomorrow*. Neither goodbye says *goodbye*;
 both name the next meeting, and the front word is how far off it is.
 
@@ -65,4 +65,4 @@ both name the next meeting, and the front word is how far off it is.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-PRACTICE-01, BN-CONCEPT-C02-PRACTICE-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01] -->
 
-[PAUSE 3s] What do both goodbyes share? (**দেখা হবে** — a meeting will happen.) What changes between them? (**The word in front** — again, or tomorrow.) What is odd about **কাল**? (**It is also *yesterday***.) And what tells you which one is meant? (**The verb around it.**)
+[PAUSE 3s] What do both goodbyes share? (*dækhā hôbe* — a meeting will happen.) What changes between them? (**The word in front** — again, or tomorrow.) What is odd about *kāl*? (**It is also *yesterday***.) And what tells you which one is meant? (**The verb around it.**)

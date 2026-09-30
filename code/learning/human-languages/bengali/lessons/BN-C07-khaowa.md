@@ -70,7 +70,7 @@ whole difference between two words, and Bengali gives each its own letter.
 |---|---|
 | জল খাওয়া (*jôl khāwā*) | to drink water — "water-eat" |
 | চা খাওয়া (*chā khāwā*) | to drink tea |
-| ওষুধ খাওয়া (*oshudh khāwā*) | to take medicine |
+| *oshudh khāwā* | to take medicine |
 
 Hindi keeps a second verb, *pīnā*, for drinking. Bengali's everyday speech does
 not bother: whatever goes in the mouth is *khāwā*. There **is** a drink-verb —

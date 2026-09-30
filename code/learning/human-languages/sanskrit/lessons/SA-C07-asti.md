@@ -65,12 +65,12 @@ into a single letter. **भवति** needs no fusing: **भ** *bha*, **व** *
 ## Grammar Lens: the dhātu and its gaṇa
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-DHATU-GANA]; assesses=[] -->
 
-Sanskrit files a verb under its **धातु** (*dhātu*), its **root** — the bare
+Sanskrit files a verb under its *dhātu*, its **root** — the bare
 syllable a dictionary lists. *Asti* is filed under **अस्** (*as*), *bhavati*
-under **भू** (*bhū*).
+under *bhū*.
 
-A root is not yet a word. To reach the present it joins one of ten **गण**
-(*gaṇa*) classes, and the class decides what happens between root and ending.
+A root is not yet a word. To reach the present it joins one of ten
+*gaṇa* classes, and the class decides what happens between root and ending.
 Class 2 adds nothing: *as* + *ti* → *asti*. Class 1 strengthens the root and adds
 a vowel: *bhū* → *bhava* + *ti* → *bhavati*.
 
@@ -81,7 +81,7 @@ Root, then class, then ending. Every verb in this chapter is built that way.
 
 **अस्** is PIE \**es-*: English **is**, Latin *est*, German *ist*, barely worn.
 
-**भू** is PIE \**bheu-*, "to grow, to come to be": English **be** and **been**,
+*bhū* is PIE \**bheu-*, "to grow, to come to be": English **be** and **been**,
 Latin *futūrus* behind **future**, Greek *phusis* behind **physics**.
 
 Now the surprise. English "to be" is stitched from *both* — *am, is, are* from
@@ -101,7 +101,7 @@ ragged paradigm. Sanskrit left them side by side.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-ASTI-BHAVATI-BE, SA-GRAMMAR-DHATU-GANA] -->
 
 [PAUSE 3s] Which two roots stand behind *asti* and *bhavati*? (**अस्** *as* and
-**भू** *bhū*.) What does a गण class do? (**Turns a root into a present stem** —
+*bhū*.) What does a *gaṇa* class do? (**Turns a root into a present stem** —
 nothing added for *as*, a vowel added for *bhū*.) Which English words descend
 from each? (*Is* from *as*; *be* and *been* from *bhū*.) Next: a root whose
 present stem you could never have guessed.

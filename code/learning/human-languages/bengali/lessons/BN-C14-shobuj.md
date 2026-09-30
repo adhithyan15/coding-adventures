@@ -63,7 +63,7 @@ vocabulary.
 
 Step back and count the five colors this small set has taught: two Persian
 loans (**লাল**, **সবুজ**), two Sanskrit words kept recognizably close to
-their root (**নীল**, **কালো**), and one worn down by sound change
+their root (*nil*, **কালো**), and one worn down by sound change
 (**সাদা**). A more even split between inherited and borrowed than the food
 words or the family words showed — color, it turns out, came into Bengali
 from everywhere at once.
@@ -85,5 +85,5 @@ from everywhere at once.
 "vegetable"? (**sabz, "green"** — Hindi's *sabzī* is literally "the green
 things.") Of the five colors, how many are Persian loans, how many are
 Sanskrit words, and how many are worn down by sound change? (**Two, two,
-and one** — লাল and সবুজ; নীল and কালো; সাদা.) Name all five colors, in
-order. (**লাল, নীল, কালো, সাদা, সবুজ.**)
+and one** — লাল and সবুজ; *nil* and কালো; সাদা.) Name all five colors, in
+order. (**লাল**, *nil*, **কালো**, **সাদা**, **সবুজ**.)

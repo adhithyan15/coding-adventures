@@ -53,8 +53,8 @@ Neuter — the family this whole chapter keeps returning to.
 ## The letters in this word
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**हृ** is *hṛ*: **ह** *ha* carrying the vocalic **ऋ**, the same buzzing
-vowel you first sounded out in **गृह्णाति**. **द** is *da*, **य** is *ya*,
+**हृ** is *hṛ*: **ह** *ha* carrying the vocalic *ṛ*, the same buzzing
+vowel you first sounded out in *gṛhṇāti*. **द** is *da*, **य** is *ya*,
 **म्** closes it neuter: *hṛ-da-ya-m*.
 
 ## The word, taken apart — a root barely disguised anywhere

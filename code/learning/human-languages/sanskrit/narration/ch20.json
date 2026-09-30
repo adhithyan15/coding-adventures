@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "People --- and the Four Noun Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:baaec3e1bc30f97b",
+  "sourceHash": "fnv1a64:3365d3b67b4f9a52",
   "lessons": [
     {
       "id": "SA-C20-man",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:45454878b8d2ca0a",
+      "sourceHash": "fnv1a64:ba0718067338beb2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -198,7 +198,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at it beside नरः (naraḥ) and the relationship is visible: the same nar-, a different ending. Sanskrit builds a great many feminine nouns with a long -ई (-ī), and this is your first."
+              "text": "Look at it beside नरः (naraḥ) and the relationship is visible: the same nar-, a different ending. Sanskrit builds a great many feminine nouns with a long -ī, and this is your first."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f8e99dc31bdf76b9",
+  "sourceHash": "fnv1a64:2ad68367084cafc8",
   "lessons": [
     {
       "id": "SA-C13-nasika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ccc250cc21dfec4",
+      "sourceHash": "fnv1a64:41b5a51b76cc1cc6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -91,11 +91,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नासिका (nāsikā) is built on an older word, नासा (nāsā), \"nose,\" plus the diminutive suffix -इका. नासा itself, and the still-older root नस् (nas) behind it, go back to PIE nehas-, the unbroken root of English nose and Latin nasus ( becomes nasal)."
+              "text": "नासिका (nāsikā) is built on an older word, नासा (nāsā), \"nose,\" plus the diminutive suffix -ikā. नासा itself, and the still-older root नस् (nas) behind it, go back to PIE nehas-, the unbroken root of English nose and Latin nasus ( becomes nasal)."
             },
             {
               "kind": "speech",
-              "text": "Here is the correction worth making carefully: नासिका (nāsikā) is not the ancestor of Bengali nāk or Gujarati nāk. Both of those wore straight down from नस् itself, through Prakrit ṇakka, by adding a completely different suffix. नासिका (nāsikā) and नाक share a root, the way ग्रह् and English grab share one — relatives, not parent and child. Reaching for the nearest-looking Sanskrit word is not always reaching for the right ancestor."
+              "text": "Here is the correction worth making carefully: नासिका (nāsikā) is not the ancestor of Bengali nāk or Gujarati nāk. Both of those wore straight down from नस् itself, through Prakrit ṇakka, by adding a completely different suffix. नासिका (nāsikā) and नाक share a root, the way grah and English grab share one — relatives, not parent and child. Reaching for the nearest-looking Sanskrit word is not always reaching for the right ancestor."
             }
           ]
         },
@@ -368,7 +368,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7fbba132677e3021",
+      "sourceHash": "fnv1a64:4ba7fddfedaa7207",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -429,7 +429,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "हृ is hṛ: ह ha carrying the vocalic ऋ, the same buzzing vowel you first sounded out in गृह्णाति. द is da, य is ya, म् closes it neuter: hṛ-da-ya-m."
+              "text": "हृ is hṛ: ह ha carrying the vocalic ṛ, the same buzzing vowel you first sounded out in gṛhṇāti. द is da, य is ya, म् closes it neuter: hṛ-da-ya-m."
             }
           ]
         },

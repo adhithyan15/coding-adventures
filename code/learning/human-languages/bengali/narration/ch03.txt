@@ -44,7 +44,7 @@ The letters in this word.
 আ (the independent long ā, used because the word starts with a vowel) + মা (mā) + র (r) becomes আমার (āmār).
 
 The word, taken apart.
-আমার (āmār, "my") is the possessive of আমি (āmi, "I"), on the first-person stem ām- from Sanskrit asmad (the "we/I" stem). Buried in it is the same ancient first-person m- that runs through English me, my, mine and Latin mē — so Bengali's "my" and English's "my" share, at the root, one first-person sound.
+আমার (āmār, "my") is the possessive of āmi ("I"), on the first-person stem ām- from Sanskrit asmad (the "we/I" stem). Buried in it is the same ancient first-person m- that runs through English me, my, mine and Latin mē — so Bengali's "my" and English's "my" share, at the root, one first-person sound.
 
 Grammar Lens: no gender here.
 Note something Bengali does not do: আমার never changes for gender. Hindi and Punjabi have merā (m.) / merī (f.); Bengali has one form, āmār, for a man or a woman, a masculine or feminine thing. Bengali threw grammatical gender away entirely — you will see this again and again, and it makes Bengali, in this one respect, simpler than its western cousins.
@@ -159,7 +159,7 @@ The letters in this word.
 
 The word, taken apart.
 তুমি (tumi, familiar "you") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu. Bengali grades respect in three levels:
-তুই (tui) — intimate: close friends, children, family.
+tui — intimate: close friends, children, family.
 তুমি (tumi) — familiar: friends, juniors, warmth.
 আপনি (āpni) — respectful: elders, strangers, formality.
 (This is like Hindi's tū / tum / āp, and finer than the two-way split of the Romance tracks.) For a first meeting, use আপনি.
@@ -191,7 +191,7 @@ The two words — assembled.
 তোমার (tomār, "your," from tumi) + নাম (nām) (name) + কি (ki) (what) becomes literally "your name what?" And note — still no "is." The zero copula holds here too: Bengali lays "your name" beside "what," and the question is complete.
 
 Grammar Lens: answering, and the respectful form.
-Answer with the sentence you built: Āmār nām Arun. The respectful version swaps tomār (from tumi) for আপনার (āpnār, "your," from āpni): āpnār nām ki? — the one to use with a stranger.
+Answer with the sentence you built: Āmār nām Arun. The respectful version swaps tomār (from tumi) for āpnār ("your," from āpni): āpnār nām ki? — the one to use with a stranger.
 
 Guided Practice.
 [pause 1 second]

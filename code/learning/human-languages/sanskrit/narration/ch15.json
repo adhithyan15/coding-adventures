@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Describing Things",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:674a7d14290e1839",
+  "sourceHash": "fnv1a64:4eb6d0203539cc1d",
   "lessons": [
     {
       "id": "SA-C15-big",
@@ -530,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:903316c6237baf12",
+      "sourceHash": "fnv1a64:03f42d3e0954fae8",
       "notice": null,
       "blocks": [
         {
@@ -565,7 +565,7 @@
             },
             {
               "kind": "speech",
-              "text": "You met उत्तम uttama a moment ago. Put them side by side and nothing about either one changes."
+              "text": "You met uttama a moment ago. Put them side by side and nothing about either one changes."
             },
             {
               "kind": "speech",

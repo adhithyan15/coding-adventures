@@ -9,13 +9,13 @@ Before we start: this one needs your eyes, so it is not fully a driving lesson. 
 
 Warm-up.
 [pause 2 seconds]
-You already met क्या (kyā, "what"). Here is its sibling — and, like all of Hindi's question-words, it starts with k-.
+You already met kyā ("what"). Here is its sibling — and, like all of Hindi's question-words, it starts with k-.
 
 The letters in this word.
 (Skim if you read Devanagari.) क (ka) + ै (the ai-mātrā) becomes कै (kai); स (sa) + े (the e-mātrā) becomes से (se). Read कै, से becomes kaise.
 
 The word, taken apart.
-कैसे (kaise, "how") from Sanskrit कीदृश (kīdṛśa, "of what kind") / the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the same question-root behind English wh- (what, who, how) and Latin qu-. Notice the pattern: Hindi's question-words are nearly all k- words — kyā (what), kaun (who), kab (when), kahāṁ (where), kaise (how). Learn to hear the k- and you can spot a question.
+कैसे (kaise, "how") from Sanskrit kīdṛśa ("of what kind") / the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the same question-root behind English wh- (what, who, how) and Latin qu-. Notice the pattern: Hindi's question-words are nearly all k- words — kyā (what), kaun (who), kab (when), kahāṁ (where), kaise (how). Learn to hear the k- and you can spot a question.
 
 Grammar Lens: कैसा agrees.
 The adjective form कैसा (kaisā) changes to match what it describes: kaisā (m.), kaisī (f.), kaise (m. plural / respectful). Because the respectful "you" (āp) takes a plural verb, "how are you?" uses the plural कैसे — that is the form you will use next.
@@ -84,7 +84,7 @@ The letters in this word.
 म (ma) + ै (the ai-mātrā) + the anusvāra nasal ं becomes मैं (maiṁ). One nasal syllable.
 
 The word, taken apart.
-मैं (maiṁ, "I") from Sanskrit मया (mayā, "by me"), on the first-person root म- (ma-) — the same root that gave you merā ("my") last chapter, and the same m- behind English me, my, mine and Latin mē. Hindi's "I," its "my," and English's "me/my" all grow from one ancient first-person sound.
+मैं (maiṁ, "I") from Sanskrit mayā ("by me"), on the first-person root म- (ma-) — the same root that gave you merā ("my") last chapter, and the same m- behind English me, my, mine and Latin mē. Hindi's "I," its "my," and English's "me/my" all grow from one ancient first-person sound.
 
 Grammar Lens: the pronoun you can often drop.
 Hindi verbs carry the person in their ending, so maiṁ is frequently left out once context is clear — much like Spanish or Latin. You will still learn it first, because the answer to āp kaise haiṁ? begins with it: maiṁ …
@@ -154,17 +154,17 @@ The word that answers "how are you?" — and does a dozen other jobs besides.
 
 The letters in this word.
 ठ (ṭha, a retroflex th — tongue curled back to the roof of the mouth).
-ी (the long-ī mātrā) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian languages; the tongue touches further back than for an English "t."
+ी (the long-ī mātrā) + क (ka) becomes ठीक (ṭhīk). The retroflex ṭ-ṭh-ḍ series is a hallmark of Indian languages; the tongue touches further back than for an English "t."
 
 The word, taken apart.
 ठीक (ṭhīk) means "correct, right, fine, exactly, OK." It is a genuinely native Indian word — no European cousin to hand — and one of the most useful in the language: ṭhīk hai ("OK / agreed"), ṭhīk samay ("the right time"), sab ṭhīk? ("all well?"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core.
 
 The exchange — the reply.
-Put it together with Chapter 3's atoms: मैं ठीक हूँ (maiṁ ṭhīk hūṁ) — "I am fine." Literally "I fine am," verb last. Add thanks: maiṁ ṭhīk hūṁ, dhanyavād. And the whole exchange stands:
+Put it together with Chapter 3's atoms: maiṁ ṭhīk hūṁ — "I am fine." Literally "I fine am," verb last. Add thanks: maiṁ ṭhīk hūṁ, dhanyavād. And the whole exchange stands:
 — āp kaise haiṁ? ("How are you?") — maiṁ ṭhīk hūṁ, dhanyavād. ("I'm fine, thank you.")
 
 Sounds you'll need.
-ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long ī) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian sound.
+ठ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ी (long ī) + क (ka) becomes ठीक (ṭhīk). The retroflex ṭ-ṭh-ḍ series is a hallmark of Indian sound.
 
 Guided Practice.
 [pause 1 second]

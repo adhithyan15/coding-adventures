@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 23,
-  "sourceHash": "fnv1a64:a80300d29783f26d",
+  "sourceHash": "fnv1a64:1bd89aa0837c245e",
   "lessonIds": [
     "HI-C23-kutta-billi",
     "HI-C23-billi-history"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch23.txt",
   "json": "hindi/narration/ch23.json",
-  "textHash": "fnv1a64:d4025caa0b67bbea",
-  "jsonHash": "fnv1a64:4a1e876791d601a7",
+  "textHash": "fnv1a64:32387a723823c22b",
+  "jsonHash": "fnv1a64:38f5e4869892384f",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ae73cc3a05043921",
+  "sourceHash": "fnv1a64:d298edeb6eb2e207",
   "lessons": [
     {
       "id": "HI-C08-kripaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3f0f2f0e79e85b1",
+      "sourceHash": "fnv1a64:b9c2f8f5109a1811",
       "notice": null,
       "blocks": [
         {
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the catch a textbook often hides: कृपया is formal and bookish. You'll see it on signs and hear it in announcements (\"kṛpayā mind the gap\"), but in everyday speech Hindi speakers rarely say it. Real politeness usually rides on the verb instead — the respectful request ending ‑इए / ‑इएगा (-iye / -iyegā): baiṭhiye \"please sit,\" suniye \"please listen.\" And very often, people simply say the English word \"please.\""
+              "text": "Here's the catch a textbook often hides: कृपया is formal and bookish. You'll see it on signs and hear it in announcements (\"kṛpayā mind the gap\"), but in everyday speech Hindi speakers rarely say it. Real politeness usually rides on the verb instead — the respectful request ending -iye / -iyegā: baiṭhiye \"please sit,\" suniye \"please listen.\" And very often, people simply say the English word \"please.\""
             },
             {
               "kind": "speech",

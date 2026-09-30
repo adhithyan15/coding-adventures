@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b3ee8602ae73ab32",
+  "sourceHash": "fnv1a64:48d468a99a007ed3",
   "lessons": [
     {
       "id": "SA-C12-akshi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd08febb8ac0d388",
+      "sourceHash": "fnv1a64:5d0689827f9c4db6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -64,7 +64,7 @@
               "rowCount": 2,
               "utterances": [
                 "Sanskrit: अक्षि. sound: akṣi. meaning: eye.",
-                "Sanskrit: अक्षिणी. sound: akṣiṇī. meaning: the two eyes."
+                "Sanskrit: —. sound: akṣiṇī. meaning: the two eyes."
               ]
             },
             {
@@ -91,11 +91,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अक्षि (akṣi) is PIE h3ekw-, and the descent runs almost as clean as bhrātā's: English eye, Latin oculus ( becomes ocular, monocle), Lithuanian akìs — one root, barely disguised anywhere. It carries straight into Hindi आँख and Gujarati āṅkh, both inherited, not borrowed back the way मित्र was."
+              "text": "अक्षि (akṣi) is PIE h3ekw-, and the descent runs almost as clean as bhrātā's: English eye, Latin oculus ( becomes ocular, monocle), Lithuanian akìs — one root, barely disguised anywhere. It carries straight into Hindi and Gujarati āṅkh, both inherited, not borrowed back the way मित्र was."
             },
             {
               "kind": "speech",
-              "text": "And eyes are exactly the reason Sanskrit keeps a dual number at all — the exactly-two form Chapter 6 built around द्वौ, \"two,\" rather than an ordinary count word. A single eye is अक्षि (akṣi); the two you were born with are not a small plural, they are अक्षिणी — grammar built for a body that comes in pairs."
+              "text": "And eyes are exactly the reason Sanskrit keeps a dual number at all — the exactly-two form Chapter 6 built around dvau, \"two,\" rather than an ordinary count word. A single eye is अक्षि; the two you were born with are not a small plural, they are akṣiṇī — grammar built for a body that comes in pairs."
             }
           ]
         },
@@ -152,7 +152,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name two English words from the same root as अक्षि (akṣi). (Eye, and, through Latin, ocular or monocle.) What is the dual form for \"two eyes,\" and what grammatical number is that? (अक्षिणी; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)"
+              "text": "Name two English words from the same root as अक्षि. (Eye, and, through Latin, ocular or monocle.) What is the dual form for \"two eyes,\" and what grammatical number is that? (akṣiṇī; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)"
             }
           ]
         }
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b35aab82efe51fc5",
+      "sourceHash": "fnv1a64:e0bd58993cea15f7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -216,12 +216,12 @@
               "rowCount": 2,
               "utterances": [
                 "Sanskrit: कर्णः. sound: karṇaḥ. meaning: ear.",
-                "Sanskrit: कर्णौ. sound: karṇau. meaning: the two ears — dual again."
+                "Sanskrit: —. sound: karṇau. meaning: the two ears — dual again."
               ]
             },
             {
               "kind": "speech",
-              "text": "Masculine, unlike अक्षि (akṣi)."
+              "text": "Masculine, unlike akṣi."
             }
           ]
         },
@@ -232,7 +232,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "कर् is kar, the r you have sounded since संस्कृत. ण is the curled-back retroflex n, familiar from गृह्णाति. The final ः, a visarga, breathes the word out on an echo of its own vowel: kar-ṇa-ḥ, the same puff first heard closing नमस्ते."
+              "text": "कर् is kar, the r you have sounded since संस्कृत. ण is the curled-back retroflex n, familiar from gṛhṇāti. The final ः, a visarga, breathes the word out on an echo of its own vowel: kar-ṇa-ḥ, the same puff first heard closing नमस्ते."
             }
           ]
         },
@@ -243,7 +243,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where अक्षि (akṣi)'s ancestry runs clean back to PIE, कर्णः (karṇaḥ)'s does not run anywhere agreed. Proposed roots mean \"a defect,\" \"a point,\" \"a handle,\" and \"to hear\" — and no single account has won out over the others."
+              "text": "Where akṣi's ancestry runs clean back to PIE, कर्णः (karṇaḥ)'s does not run anywhere agreed. Proposed roots mean \"a defect,\" \"a point,\" \"a handle,\" and \"to hear\" — and no single account has won out over the others."
             },
             {
               "kind": "speech",

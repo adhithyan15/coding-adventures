@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:84645d774851fad6",
+  "sourceHash": "fnv1a64:368289f845db3f4e",
   "lessons": [
     {
       "id": "HI-C36-ghar",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e28a251a41b63026",
+      "sourceHash": "fnv1a64:c433a0a018fa229e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -211,7 +211,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have a house. This is what you stand at to be let into one — and it is where नमस्ते is said and where शुभ रात्रि is said back."
+              "text": "You have a house. This is what you stand at to be let into one — and it is where नमस्ते is said and where śubh rātri is said back."
             }
           ]
         },

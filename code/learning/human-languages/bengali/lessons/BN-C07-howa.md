@@ -74,7 +74,7 @@ again on খাওয়া and যাওয়া.
 আছ-, the verb behind Chapter 5's *kemon āchho*, means **being present**. But it
 is unfinished: it has a present and a past, and nothing else at all. Push it into
 the future and it stops dead — so Bengali picks up হ- (*hôbe*), or Chapter 11's
-থাকা (*āmi thākbo*, "I'll be there"). One job, two verbs, split down the middle.
+*thākā* (*āmi thākbo*, "I'll be there"). One job, two verbs, split down the middle.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C07-HOWA-01, BN-GRAMMAR-C07-HOWA-02] -->
@@ -90,5 +90,5 @@ the future and it stops dead — so Bengali picks up হ- (*hôbe*), or Chapter 
 [PAUSE 3s] Which Sanskrit root is *hôwā*, and which two English words are its
 brothers? (**√bhū**, "to become" — **be** and **been**.) What can আছ- not do?
 (**Anything past a present and a past** — it has no future of its own.) So what
-does Bengali reach for instead? (**হবে**, or থাকা.) Next: one verb, three
+does Bengali reach for instead? (**হবে**, or *thākā*.) Next: one verb, three
 levels of respect.

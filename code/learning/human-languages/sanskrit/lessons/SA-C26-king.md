@@ -45,7 +45,7 @@ reviews_of: [SA-C26-student]
 
 **राजा** (*rājā*) — "a king".
 
-**राजा** is a king, and it belongs to the same *-ऋ*-shaped family as पिता and माता — the stem is *rājan-*.
+**राजा** is a king, and it belongs to the same *-ṛ*-shaped family as पिता and माता — the stem is *rājan-*.
 
 Its cousin in Rome is *rēx*, in its other forms *rēgem*: *regal*, *royal*, *regent*, *rex*. In Gaul, chieftains' names ended in *-rīx* — Vercingetorix. English borrowed *raj* and *maharaja* back from India in the nineteenth century, so the word has now entered English twice, three thousand years apart, by two different doors.
 

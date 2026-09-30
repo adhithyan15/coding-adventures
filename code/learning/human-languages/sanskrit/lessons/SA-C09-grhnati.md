@@ -51,14 +51,14 @@ word. (*Jānāti*; **-ना-**.) That syllable is back.
 
 The root is **ग्रह्** (*grah*), class 9 — *jānāti*'s class. It plants the same
 syllable, and the syllable comes out **-णा-** rather than **-ना-**: a curled-back
-**ऋ** earlier in the word pulls the following *n* back to match it. Sanskrit
+*ṛ* earlier in the word pulls the following *n* back to match it. Sanskrit
 tidies its consonants after the fact.
 
 ## Sounds you'll need: the letters in गृह्णाति
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**गृ** is *gṛ*: the vowel **ऋ** is a vowel made of *r* itself, a short buzz
-between *ri* and *ru* — the same vowel inside **संस्कृत**. Then **ह्णा**, *h*
+**गृ** is *gṛ*: the vowel *ṛ* is a vowel made of *r* itself, a short buzz
+between *ri* and *ru* — the same vowel inside *saṁskṛta*. Then **ह्णा**, *h*
 and curled-back *ṇ* fused with a long *ā*: *gṛh-ṇā-ti*.
 
 ## The word, taken apart — grab, grip, grasp
@@ -75,7 +75,7 @@ caution you put on *eka* beside *one*.
 
 Inside Sanskrit the root spreads out: **ग्रह** (*graha*) is a **planet**, named
 as the *seizer* that takes hold of a life. Eastward it wore down to Marathi
-**घेणे** (*gheṇe*), the ordinary verb for taking.
+*gheṇe*, the ordinary verb for taking.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-HISTORY-TATSAMA-TADBHAVA] -->
@@ -90,7 +90,7 @@ as the *seizer* that takes hold of a life. Eastward it wore down to Marathi
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-GRHNATI-TAKE, SA-ETYMON-GHREBH-GRAB, SA-GRAMMAR-DHATU-GANA, SA-LEX-JANATI-KNOW, SA-ETYMON-EKA-SUFFIX-CAVEAT, SA-HISTORY-TATSAMA-TADBHAVA] -->
 
 [PAUSE 3s] Which class builds *gṛhṇāti*, and which earlier verb shares it?
-(**Class 9**; **जानाति**.) Why **-णा-** and not **-ना-**? (**The curled-back ऋ
+(**Class 9**; *jānāti*.) Why **-णा-** and not **-ना-**? (**The curled-back *ṛ*
 pulls the *n* back to match**.) Name three English words from the same root.
 (**Grab, grip, grasp**.) Are they the same word as *gṛhṇāti* or relatives of it?
 (**Relatives** — same root, different suffixes, like *eka* and *one*.) Is

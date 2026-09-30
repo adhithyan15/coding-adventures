@@ -43,7 +43,7 @@ phrase — and it softens a request in a way you have not met yet.
 
 > **মাফ করবেন** — *maf korben* — **excuse me**
 
-মাফ করবেন, একটু জায়গা দেবেন? (*maf korben, êktu jāygā debên?*) — excuse me,
+*maf korben, êktu jāygā debên?* — excuse me,
 could you make a little room?
 
 ## The letters in this word
@@ -62,8 +62,8 @@ reader which one a given word means.
 **মাফ** is not Bengali, and not Sanskrit: it is borrowed, by way of Persian,
 from Arabic ***'afw***, "to pardon, to wipe a wrong away." Hindi borrowed
 the identical word for the identical job. Bengali also keeps a formal,
-Sanskritic cousin for the same idea, **ক্ষমা করবেন**, from **ক্ষমা**
-(*kṣamā*), "patience, forbearance" — the everyday loan and the bookish
+Sanskritic cousin for the same idea, *kṣamā korben*, from
+*kṣamā*, "patience, forbearance" — the everyday loan and the bookish
 native word side by side, the same split Hindi keeps.
 
 ## Grammar Lens: the future, asked to be gentle
