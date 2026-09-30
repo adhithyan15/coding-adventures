@@ -495,9 +495,11 @@ entity-kind aliases, qualified namespaces, inferred sequence relations, and
 explicit multi-source relations. Typed and untyped inline frame data in object,
 single-quoted, or double-quoted form plus
 reusable multiline data blocks survive in semantic IR and render as secondary
-frame labels. Temporal swimlane layout lowers through
+frame labels. Typed and untyped frame notes remain semantic annotations and
+lower into backend-neutral PaintScene metadata without changing Mermaid's
+visible frame rendering. Temporal swimlane layout lowers through
 backend-neutral PaintScene instructions and a native Metal-to-PNG fixture.
-Notes, Given/When/Then annotations, standalone entity
+Given/When/Then annotations, standalone entity
 declarations, configuration, and interactive behavior remain unsupported at
 the partial level.
 

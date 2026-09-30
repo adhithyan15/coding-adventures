@@ -1315,6 +1315,7 @@ pub fn layout_event_model_diagram(
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        notes: diagram.notes.clone(),
         items,
     }
 }
@@ -2412,6 +2413,11 @@ mod tests {
                 data_type: Some("json".into()),
                 data: "\"total\": 42".into(),
             }],
+            notes: vec![EventModelNote {
+                source_frame: "02".into(),
+                data_type: Some("md".into()),
+                data: "Order reviewed".into(),
+            }],
             frames: vec![
                 EventModelFrame {
                     id: "01".into(),
@@ -2456,5 +2462,6 @@ mod tests {
                 if reference == "OrderData"
                     && data == "json: \"total\": 42"
         )));
+        assert_eq!(layout.notes, diagram.notes);
     }
 }

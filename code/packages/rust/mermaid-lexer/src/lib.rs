@@ -678,7 +678,7 @@ mod tests {
     #[test]
     fn tokenizes_eventmodeling_frames_as_complete_statements() {
         let tokens = try_tokenize_mermaid_eventmodeling(
-            "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem ->> 01 [[AddItemData]]\ntf 03 evt ItemAdded `text`\"accepted\"\ndata AddItemData `json`{\n  \"quantity\": 2\n}\n",
+            "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem ->> 01 [[AddItemData]]\ntf 03 evt ItemAdded `text`\"accepted\"\ndata AddItemData `json`{\n  \"quantity\": 2\n}\nnote 02 `md` {\n  Order reviewed\n}\n",
         )
         .unwrap();
         let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
@@ -687,6 +687,7 @@ mod tests {
         assert!(values.contains(&"[[AddItemData]]"));
         assert!(values.contains(&"tf 03 evt ItemAdded `text`\"accepted\""));
         assert!(values.contains(&"data AddItemData `json`{\n  \"quantity\": 2\n}"));
+        assert!(values.contains(&"note 02 `md` {\n  Order reviewed\n}"));
     }
 
     #[test]

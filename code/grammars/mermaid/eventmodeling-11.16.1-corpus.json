@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, titles, and accessibility metadata.",
+  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, titles, and accessibility metadata.",
   "fixtures": [
     {
       "id": "state-change",
@@ -31,6 +31,10 @@
     {
       "id": "quoted-inline-data",
       "source": "eventmodeling\ntf 01 ui CartUI \"shopping cart\"\ntf 02 cmd AddItem `json`\"{ \"quantity\": 2 }\"\ntf 03 evt ItemAdded 'accepted'"
+    },
+    {
+      "id": "frame-notes",
+      "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\nnote 01 `md` {\n  # Cart\n  Shows pending items\n}\nnote 02 {\n  Validates inventory\n}"
     }
   ]
 }
