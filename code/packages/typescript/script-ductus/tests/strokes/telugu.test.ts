@@ -26,6 +26,7 @@ const TELUGU_JA = DUCTUS[ductusKey("telugu", "జ")];
 const TELUGU_NYA = DUCTUS[ductusKey("telugu", "ఞ")];
 const TELUGU_TTA = DUCTUS[ductusKey("telugu", "ట")];
 const TELUGU_TTHA = DUCTUS[ductusKey("telugu", "ఠ")];
+const TELUGU_DDA = DUCTUS[ductusKey("telugu", "డ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -41,10 +42,11 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ, ఛ, ఞ, and ట routes and five-run pedagogical ఐ route cross
+  // The sourced క, ఙ, ఛ, ఞ, ట and డ routes and five-run pedagogical ఐ route cross
   // narrow printed counter transitions while still covering their complete
   // outlines. ట's six separately numbered source movements cut across the
-  // broad printed bowl most strongly.
+  // broad printed bowl most strongly. డ's separately numbered arcs likewise
+  // cross the printed joins between the broad body sections.
   registerStrokeHonestyTests(letters, {
     అ: 0.96,
     క: 0.93,
@@ -53,6 +55,7 @@ describe("handwriting ductus", () => {
     ఞ: 0.86,
     ట: 0.55,
     ఛ: 0.92,
+    డ: 0.32,
     ఐ: 0.59,
     ఒ: 0.84,
     ఋ: 0.84,
@@ -90,6 +93,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("ఠ", TELUGU_TTHA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("డ", TELUGU_DDA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -297,6 +303,20 @@ describe("handwriting ductus", () => {
       "sweep left and around the broad circular body",
       "curl upward through the separate top flourish",
       "place the separate inner dot",
+    ]);
+  });
+
+  it("Telugu డ preserves all five source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_DDA)).toBe(4);
+    expect(TELUGU_DDA.strokes).toHaveLength(5);
+    expect(
+      TELUGU_DDA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep down around the upper-left curve",
+      "turn right around the lower-left bowl",
+      "sweep right and upward around the lower-right bowl",
+      "curve left around the upper-right shoulder",
+      "curl upward through the separate top flourish",
     ]);
   });
 
