@@ -118,10 +118,20 @@ def test_ml01_parity_vectors():
 
 
 def test_cross_entropy_clamps_zero_and_one_predictions():
-    assert math.isfinite(bce([1.0, 0.0], [1.0, 0.0]))
-    assert math.isfinite(cce([1.0, 0.0], [0.0, 1.0]))
-    assert all(math.isfinite(value) for value in bce_derivative([1.0, 0.0], [1.0, 0.0]))
-    assert all(math.isfinite(value) for value in cce_derivative([1.0, 0.0], [0.0, 1.0]))
+    epsilon = 1e-7
+
+    assert bce([1.0, 0.0], [1.0, 0.0]) == pytest.approx(-math.log(1.0 - epsilon))
+    assert bce_derivative([1.0, 0.0], [1.0, 0.0]) == pytest.approx(
+        [-1.0 / (2.0 * (1.0 - epsilon)), 1.0 / (2.0 * (1.0 - epsilon))]
+    )
+
+    assert cce([1.0, 0.0], [0.0, 1.0]) == pytest.approx(-math.log(epsilon) / 2.0)
+    assert cce_derivative([1.0, 0.0], [0.0, 1.0]) == pytest.approx([-1.0 / (2.0 * epsilon), 0.0])
+
+    assert cce([0.0, 1.0], [0.0, 1.0]) == pytest.approx(-math.log(1.0 - epsilon) / 2.0)
+    assert cce_derivative([0.0, 1.0], [0.0, 1.0]) == pytest.approx(
+        [0.0, -1.0 / (2.0 * (1.0 - epsilon))]
+    )
 
 
 @pytest.mark.parametrize(
