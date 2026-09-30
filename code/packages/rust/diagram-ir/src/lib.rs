@@ -1248,6 +1248,19 @@ pub enum EventModelEntityKind {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct EventModelConfig {
+    pub padding: f64,
+    pub row_height: f64,
+    pub use_max_width: bool,
+}
+
+impl Default for EventModelConfig {
+    fn default() -> Self {
+        Self { padding: 30.0, row_height: 32.0, use_max_width: true }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct EventModelEntity {
     pub id: String,
     pub namespace: Option<String>,
@@ -1297,6 +1310,7 @@ pub struct EventModelFrame {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct EventModelDiagram {
+    pub config: EventModelConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -1337,6 +1351,7 @@ pub enum LayoutedEventModelItem {
 pub struct LayoutedEventModelDiagram {
     pub width: f64,
     pub height: f64,
+    pub config: EventModelConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,

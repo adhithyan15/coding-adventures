@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, standalone entity declarations, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, titles, and accessibility metadata.",
+  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, standalone entity declarations, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, layout configuration, titles, and accessibility metadata.",
   "fixtures": [
     {
       "id": "state-change",
@@ -43,6 +43,14 @@
     {
       "id": "standalone-entities",
       "source": "eventmodeling\nentity Sales.CartUI\nentity AddItem\nentity Sales.ItemAdded\ntf 01 ui Sales.CartUI\ntf 02 cmd AddItem\ntf 03 evt Sales.ItemAdded"
+    },
+    {
+      "id": "init-layout-config",
+      "source": "%%{init: {\"eventmodeling\": {\"padding\": 18, \"rowHeight\": 40, \"useMaxWidth\": false}}}%%\neventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem"
+    },
+    {
+      "id": "front-matter-layout-config",
+      "source": "---\nconfig:\n  eventmodeling:\n    padding: 22\n    rowHeight: 36\n    useMaxWidth: false\n---\neventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem"
     }
   ]
 }
