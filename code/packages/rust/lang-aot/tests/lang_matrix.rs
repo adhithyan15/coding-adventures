@@ -3277,6 +3277,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — two exact acyclic copies may forward an evolving selector
+    // to the partial self-recursive boolean recurrence.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag; key := gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — exact cross-assigned boolean recurrences may evolve a
     // statement selector while source-order execution tracks both cycles.
     Prog {
@@ -14925,6 +14934,32 @@ fn algol_transitive_exact_partial_self_recursive_selectors_run_on_every_availabl
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the transitive exact partial self-recursive selector did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_two_level_transitive_partial_self_recursive_selectors_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "gate := flag; key := gate; choose := if key then not choose else false",
+                )
+        })
+        .expect("the two-level transitive partial self-recursive selector program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the two-level transitive partial self-recursive selector did not run"
             );
             continue;
         };

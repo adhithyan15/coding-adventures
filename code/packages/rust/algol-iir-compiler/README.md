@@ -247,7 +247,7 @@ An acyclic boolean recurrence may use an exact conditional expression to choose
 different boolean values on successive passes and then select recurrence-cycle
 statements or expressions. Such an exact evolving selector may also choose
 between a directly self-recursive boolean leaf and a non-recursive exact leaf;
-one exact acyclic bare-variable copy may sit between that selector recurrence
+up to two exact acyclic bare-variable copies may sit between that selector recurrence
 and the partial self-recursive assignment. Unknown conditional inputs still
 fail closed.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
