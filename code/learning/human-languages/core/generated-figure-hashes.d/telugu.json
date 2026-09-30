@@ -45,6 +45,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S126-letter-nna",
+      "sourceHash": "fnv1a64:3dc7b291dbbfc639",
+      "svgHash": "fnv1a64:9d823e359d701378",
+      "svg": "telugu/book/figures/TE-S126-letter-nna-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S127-letter-ja",
       "sourceHash": "fnv1a64:375e1a0b50f7d0ce",
       "svgHash": "fnv1a64:a9e77d71bbe2dba2",

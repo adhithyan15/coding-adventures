@@ -169,11 +169,18 @@ That is about 380 filmstrips that could print today.
   numbered movements trace four sections of the rounded body, the upper
   flourish and the lower stem from the packaged `dot_stroke_c_3_4_dha.png`
   guide, fitted to Noto Sans Telugu.
-- **Next priority: Telugu ణ already has a word-first owner.** `TE-S126` takes
-  ణ from **వాతావరణం**, **శ్రావణం** and **ఫాల్గుణం**, all already taught before
-  the letter lesson. The packaged source provides
-  `dot_stroke_c_3_5_na.png`; verify its numbered movements and replace the
-  lesson's unsourced copy-only instruction with the source-backed route.
+- **Telugu ణ now follows its existing word-first owner.** `TE-S126` takes ణ
+  from **వాతావరణం**, **శ్రావణం** and **ఫాల్గుణం**, all already taught before
+  the letter lesson. Its five separately numbered movements trace the paired
+  bowls and inner curve from the packaged `dot_stroke_c_3_5_na.png` guide,
+  fitted to Noto Sans Telugu.
+- **Next priority: Telugu త already has word-first owners and a full writing
+  ladder.** Tracked as #16281 and dependent on #16279, `TE-S01` takes త from
+  **సంతోషం** and **వెళ్ళి వస్తాను**, then moves through observe-and-trace,
+  guided copy, delayed copy and dictation. The packaged source provides
+  `dot_stroke_c_4_1_ta.png`; verify its numbered movements and replace the
+  observe lesson's unsourced copy-only instruction with the source-backed
+  route.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 

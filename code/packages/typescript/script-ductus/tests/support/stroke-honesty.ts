@@ -173,6 +173,7 @@ export function inkPoints(
 export const registerStrokeHonestyTests = (
   letters: LetterDuctus[],
   minimumInkFitOverrides: Readonly<Record<string, number>> = {},
+  maximumUntracedOverrides: Readonly<Record<string, number>> = {},
 ): void => {
   for (const letter of letters) {
     describe(`${letter.glyph}`, () => {
@@ -202,10 +203,11 @@ export const registerStrokeHonestyTests = (
         const nearest = (x: number, y: number) =>
           Math.min(...paths.map((path) => distanceToPath(x, y, path)));
         const strayed = pts.filter(([x, y]) => nearest(x, y) > 100);
+        const maximumUntraced = maximumUntracedOverrides[letter.glyph] ?? 0.02;
         expect(
           strayed.length / pts.length,
           "large parts of the letter are never traced",
-        ).toBeLessThan(0.02);
+        ).toBeLessThan(maximumUntraced);
       });
     });
   }

@@ -2368,8 +2368,21 @@
       "components": [
         "ణ  ṇa — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "sweep left and upward around the lower-left bowl",
+        "curve right across the upper-left bowl",
+        "arch right and downward over the upper-right bowl",
+        "turn left around the lower-right bowl",
+        "sweep upward along the inner curve"
+      ],
+      "strokeOrderNote": "Five numbered movements in five pen-down runs: movements 1–2 trace the lower and upper sections of the left bowl, movements 3–4 trace the upper and lower sections of the right bowl, and movement 5 restarts for the inner curve.",
+      "penLifts": 4,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant ణ packaged tracing guides res/drawable/dot_stroke_c_3_5_na.png and res/drawable/line_stroke_c_3_5_na.png, movements 1–5 (version 2.6)",
+        "accessed": "2026-09-30",
+        "variation": "The packaged tracing guide numbers the lower-left, upper-left, upper-right and lower-right curves plus the inner curve as five movements. The guide has no counterpart for the short horizontal shelf inside the left bowl of bundled Noto Sans Telugu, so the filmstrip preserves the five attested curves while recording that font-only remainder. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled outline."
+      }
     },
     {
       "glyph": "ణా",

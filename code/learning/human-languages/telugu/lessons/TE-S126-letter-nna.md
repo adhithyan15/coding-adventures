@@ -58,17 +58,17 @@ You already say these, and every one of them has ణ somewhere inside it:
 - **శ్రావణం** *Śrāvaṇaṁ* — the fifth of the twelve months
 - **ఫాల్గుణం** *Phālguṇaṁ* — the twelfth
 
-## Writing: ణ — copy what you see
+## Writing: ణ — five deliberate movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-126] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ణ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the filmstrip slowly. Movement 1 sweeps left and upward around the
+lower-left bowl. Movement 2 curves right across the upper-left bowl. Movement
+3 arches right and downward over the upper-right bowl. Movement 4 turns left
+around the lower-right bowl. Movement 5 finishes along the inner curve.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+This is one attested school-style order. Telugu handwriting varies, so keep
+the five movements distinct and let the paired round shapes grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-126] -->

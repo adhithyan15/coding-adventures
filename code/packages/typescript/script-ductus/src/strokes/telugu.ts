@@ -22,6 +22,95 @@ const teluguIndependentVowelSource = teluguLetterSource;
 
 export const entries: DuctusEntry[] = [
   [
+    "telugu:ణ",
+    {
+      script: "telugu",
+      glyph: "ణ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "sweep left and upward around the lower-left bowl",
+              path: [
+                { x: 345, y: 130 },
+                { x: 320, y: 80 },
+                { x: 235, y: 25 },
+                { x: 170, y: 45 },
+                { x: 115, y: 90 },
+                { x: 80, y: 150 },
+                { x: 85, y: 225 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "curve right across the upper-left bowl",
+              path: [
+                { x: 85, y: 265 },
+                { x: 80, y: 335 },
+                { x: 110, y: 400 },
+                { x: 165, y: 450 },
+                { x: 235, y: 465 },
+                { x: 310, y: 450 },
+                { x: 385, y: 390 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "arch right and downward over the upper-right bowl",
+              path: [
+                { x: 455, y: 390 },
+                { x: 520, y: 445 },
+                { x: 590, y: 462 },
+                { x: 660, y: 445 },
+                { x: 715, y: 395 },
+                { x: 750, y: 330 },
+                { x: 750, y: 245 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "turn left around the lower-right bowl",
+              path: [
+                { x: 735, y: 145 },
+                { x: 705, y: 90 },
+                { x: 655, y: 50 },
+                { x: 595, y: 28 },
+                { x: 545, y: 38 },
+                { x: 505, y: 75 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "sweep upward along the inner curve",
+              path: [
+                { x: 480, y: 180 },
+                { x: 490, y: 195 },
+                { x: 505, y: 215 },
+                { x: 525, y: 235 },
+                { x: 550, y: 250 },
+                { x: 580, y: 260 },
+                { x: 610, y: 250 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguLetterSource("ణ"),
+    },
+  ],
+  [
     "telugu:ఢ",
     {
       script: "telugu",
