@@ -3,10 +3,10 @@
 ## Unreleased
 
 - Regenerated the repository source-input boundary projection to pick up the
-  `forme-deploy-runner-fs-adapter` and `forme-deploy-runner-github-pages-adapter`
-  TypeScript roots (added on main without regenerating this checked
-  projection, which broke the neutral conformance test). Digest updated to
-  `c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566`.
+  `forme-deploy-runner-fs-adapter`, `forme-deploy-runner-github-pages-adapter`,
+  and `forme-plugin-host` TypeScript roots plus the shared Lua lint consumers
+  added on main without a complete projection refresh. Digest updated to
+  `7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59`.
 
 - Added the two exact registered TypeScript site roots and their 13 reviewed
   authored inputs to the generated source-input projection and neutral tests.

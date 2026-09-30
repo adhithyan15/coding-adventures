@@ -13668,7 +13668,7 @@ cover both exact packages plus the foreign-package rejection boundary.
 The language registry digest is now
 `190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530`.
 Its repository-boundary cascade is
-`c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566`.
+`7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59`.
 The Python oracle and already-adopted Go, Haskell, Swift, and shared .NET
 engines consume the same exact-root rules; all five checked projections
 regenerate byte-for-byte. The registry test additionally proves that every
