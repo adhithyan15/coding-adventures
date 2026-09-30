@@ -26,12 +26,13 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.65.0";
+pub const VERSION: &str = "0.66.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
+    ChartTextAnchor, ChartTextBaseline, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
+    LayoutedChartDiagram, LayoutedChartItem,
     EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
@@ -2191,6 +2192,44 @@ where
                     color,
                     *stroke_width,
                 )));
+            }
+            LayoutedChartItem::AnchoredLabel {
+                x,
+                y,
+                text,
+                font_size,
+                color,
+                anchor,
+                baseline,
+            } => {
+                let width = diagram.width.min(240.0);
+                let label_x = match anchor {
+                    ChartTextAnchor::Start => *x,
+                    ChartTextAnchor::Middle => x - width / 2.0,
+                    ChartTextAnchor::End => x - width,
+                };
+                let label_y = match baseline {
+                    ChartTextBaseline::Top => *y,
+                    ChartTextBaseline::Middle => y - font_size * 0.6,
+                    ChartTextBaseline::Bottom => y - font_size,
+                };
+                let mut node = text_node_no_wrap(
+                    text,
+                    label_x,
+                    label_y,
+                    width,
+                    font_size * 1.2,
+                    font_with_size(&lf, Some(*font_size)),
+                    css_to_color(color),
+                );
+                if let Some(Content::Text(content)) = &mut node.content {
+                    content.text_align = match anchor {
+                        ChartTextAnchor::Start => TextAlign::Start,
+                        ChartTextAnchor::Middle => TextAlign::Center,
+                        ChartTextAnchor::End => TextAlign::End,
+                    };
+                }
+                text_children.push(node);
             }
             LayoutedChartItem::PointLabel {
                 x,
@@ -5443,7 +5482,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.65.0");
+        assert_eq!(crate::VERSION, "0.66.0");
     }
 
     #[test]
@@ -6581,6 +6620,56 @@ mod tests {
                 .count(),
             2
         );
+    }
+
+    #[test]
+    fn chart_anchored_labels_preserve_horizontal_and_vertical_placement() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let labels = [
+            ("S", ChartTextAnchor::Start, ChartTextBaseline::Top),
+            ("M", ChartTextAnchor::Middle, ChartTextBaseline::Middle),
+            ("E", ChartTextAnchor::End, ChartTextBaseline::Bottom),
+        ];
+        let layout = LayoutedChartDiagram {
+            width: 400.0,
+            height: 300.0,
+            background_color: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            title_box: None,
+            items: labels
+                .into_iter()
+                .map(|(text, anchor, baseline)| LayoutedChartItem::AnchoredLabel {
+                    x: 200.0,
+                    y: 100.0,
+                    text: text.into(),
+                    font_size: 12.0,
+                    color: "#203040".into(),
+                    anchor,
+                    baseline,
+                })
+                .collect(),
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        let glyphs = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::GlyphRun(run) => run.glyphs.first(),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(glyphs.len(), 3);
+        assert_eq!(
+            [glyphs[0].x, glyphs[1].x, glyphs[2].x],
+            [200.0, 197.0, 194.0]
+        );
+        assert!(glyphs[0].y > glyphs[1].y && glyphs[1].y > glyphs[2].y);
     }
 
     #[test]

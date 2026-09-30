@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.72.0";
+pub const VERSION: &str = "0.73.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1035,6 +1035,20 @@ pub struct CubicCurveSegment {
     pub end: Point,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChartTextAnchor {
+    Start,
+    Middle,
+    End,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChartTextBaseline {
+    Top,
+    Middle,
+    Bottom,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum LayoutedChartItem {
     AxisSpine {
@@ -1102,6 +1116,15 @@ pub enum LayoutedChartItem {
         y2: f64,
         color: String,
         stroke_width: f64,
+    },
+    AnchoredLabel {
+        x: f64,
+        y: f64,
+        text: String,
+        font_size: f64,
+        color: String,
+        anchor: ChartTextAnchor,
+        baseline: ChartTextBaseline,
     },
     PointLabel {
         x: f64,
@@ -2333,7 +2356,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.72.0");
+        assert_eq!(VERSION, "0.73.0");
     }
     #[test]
     fn default_direction_is_tb() {
