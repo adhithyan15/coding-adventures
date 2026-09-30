@@ -424,10 +424,11 @@ console.log(prose, nested);
         # +1: forme-plugin-host, the FM02 subprocess wire and mediation boundary.
         # +1: forme-plugin-installer-core, the FM02 atomic install boundary.
         # +1: forme-plugin-runner-ts, the FM02 TypeScript SDK boundary.
+        # +1: forme-plugin-runner-conformance, the reusable FM02 runner suite.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 479)
-        self.assertEqual(summary.shared_projects, 299)
+        self.assertEqual(summary.total_projects, 480)
+        self.assertEqual(summary.shared_projects, 300)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 151)
@@ -472,8 +473,9 @@ console.log(prose, nested);
         # cryptographic hashes, temporary directories, and discovery paths.
         # +1: forme-plugin-installer-core owns its atomic filesystem transaction.
         # +1: forme-plugin-runner-ts owns bounded Node stream and Buffer framing.
+        # +1: forme-plugin-runner-conformance owns subprocess test fixtures.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_api_projects, 76)
+        self.assertEqual(summary.node_api_projects, 77)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -497,8 +499,9 @@ console.log(prose, nested);
         # filesystem, path, OS, and test-fixture type provider.
         # +1: forme-plugin-installer-core owns its Node filesystem provider.
         # +1: forme-plugin-runner-ts owns its Node stream and Buffer provider.
+        # +1: forme-plugin-runner-conformance owns its Node process provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_provider_projects, 76)
+        self.assertEqual(summary.node_provider_projects, 77)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -533,8 +536,9 @@ console.log(prose, nested);
         # +1: forme-plugin-host locks its compiler and cross-process test graph.
         # +1: forme-plugin-installer-core locks its compiler and test graph.
         # +1: forme-plugin-runner-ts locks its compiler and conformance graph.
+        # +1: forme-plugin-runner-conformance locks its compiler and test graph.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 478)
+        self.assertEqual(summary.locked_compilers, 479)
 
 
 if __name__ == "__main__":

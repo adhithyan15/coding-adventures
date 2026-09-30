@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-- Added the `forme-plugin-installer-core` and `forme-plugin-runner-ts`
+- Added the `forme-plugin-installer-core`, `forme-plugin-runner-conformance`, and `forme-plugin-runner-ts`
   TypeScript roots to the repository source-input boundary projection. Digest updated to
-  `33049a139a5f2394e644648f91660098f3a09490409324ab706dbbbed0498814`.
+  `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
 
 - Regenerated both source-input projections for exact lowercase `blib`, the
   current Lua and Forme boundary consumers, and the new canonical registry and

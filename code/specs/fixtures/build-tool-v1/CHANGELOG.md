@@ -2,6 +2,10 @@
 
 ## 2026-09-30
 
+- Registered `forme-plugin-runner-conformance` as a TypeScript shared-config
+  consumer, regenerated the Swift and C# projections, and refreshed the
+  canonical repository-boundary digest to
+  `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
 - Added a closed `orphan_package_root_snapshot`, four independent validation
   cases, package-root-specific diagnostics, and exact 8,192-root,
   16,384-BUILD, and 2,000,000-byte ceilings without changing the legacy Cargo

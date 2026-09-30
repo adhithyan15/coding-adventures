@@ -2,13 +2,15 @@
 
 > **Status:** Host/wire boundary implemented in FM-B014; bounded authority
 > persistence implemented in FM-B048; atomic installation implemented in FM-B049;
-> the TypeScript runtime adapter active in FM-B050; remaining runtimes and OS
-> sandboxes tracked in FM-B051–FM-B052 and the FM-B015
+> the TypeScript runtime adapter implemented in FM-B050; the reusable runner
+> conformance harness active in FM-B053; remaining runtimes and OS sandboxes
+> tracked in FM-B051–FM-B052 and the FM-B015
 > completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
 > `forme-manifest`, `forme-plugin-host`, `forme-plugin-runner-ts`,
+> `forme-plugin-runner-conformance`,
 > and the per-OS sandbox modules `forme-sandbox-linux`,
 > `forme-sandbox-macos`, `forme-sandbox-windows`.
 > **Out of scope:** The orchestrator runtime itself (FM03), the
@@ -26,7 +28,8 @@
 | Trust and grant persistence | Implemented | FM-B048 provides bounded exact codecs, manifest-bound stale-grant denial, safe reads, and atomic restrictive writes. |
 | Atomic plugin installation | Implemented | FM-B049 consumes registry-independent immutable snapshots and publishes one complete host-owned plugin directory. |
 | TypeScript runner | Implemented | FM-B050 supplies the bounded reference SDK and host-launched end-to-end fixture. |
-| Python/Rust runners | Blocked | FM-B051 follows the TypeScript runner's conformance harness. |
+| Shared runner conformance | Active | FM-B053 extracts canonical vectors and a language-neutral subprocess driver from the TypeScript-only reference tests. |
+| Python/Rust runners | Blocked | FM-B051 follows FM-B053's reusable conformance harness. |
 | OS sandbox profiles | Blocked | FM-B052 follows atomic installation and runner conformance. |
 | Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
 
@@ -1695,7 +1698,7 @@ A new SDK is "ready" when it passes the suite.
 
 ## 14. Package Layout
 
-Six new packages under `code/packages/typescript/` (plus per-OS
+Seven new packages under `code/packages/typescript/` (plus per-OS
 sandbox modules that may be native add-ons or shell-outs to
 existing tools like `bwrap` / `sandbox-exec`).
 
@@ -1750,7 +1753,20 @@ The TypeScript-side SDK. The library a plugin author imports.
 - `src/stream-bridge.ts` — `AsyncIterable` ↔ stream notifications
 - `src/index.ts`
 
-### 14.4 `@coding-adventures/forme-sandbox-linux`
+### 14.4 `@coding-adventures/forme-plugin-runner-conformance`
+
+The language-neutral subprocess driver and canonical FM02 runner corpus.
+
+- `src/driver.ts` — bounded Content-Length/JSON-RPC subprocess peer
+- `src/vectors.ts` — shared fixture identity and ordered vector vocabulary
+- `src/suite.ts` — lifecycle, value, capability, stream, cancellation, error,
+  malformed-peer, and resource-bound scenarios
+- `src/index.ts`
+
+The package imports no SDK implementation. Each language supplies fixture
+commands for the four I/O shapes and must pass the same public corpus.
+
+### 14.5 `@coding-adventures/forme-sandbox-linux`
 
 Linux-only sandbox primitives.
 
@@ -1760,14 +1776,14 @@ Linux-only sandbox primitives.
 - Native addon (Rust + N-API) for the syscalls Node can't make
   directly.
 
-### 14.5 `@coding-adventures/forme-sandbox-macos`
+### 14.6 `@coding-adventures/forme-sandbox-macos`
 
 macOS-only sandbox primitives.
 
 - `src/sandbox-exec.ts` — generates `sandbox_init` profiles
 - `src/rlimits.ts` — `setrlimit` wrapper
 
-### 14.6 `@coding-adventures/forme-sandbox-windows`
+### 14.7 `@coding-adventures/forme-sandbox-windows`
 
 Windows-only sandbox primitives.
 
@@ -1776,7 +1792,7 @@ Windows-only sandbox primitives.
 - `src/restricted-token.ts` — token creation
 - Native addon for Win32 APIs not exposed in Node.
 
-### 14.7 Dependency graph
+### 14.8 Dependency graph
 
 ```
 forme-types ◄── forme-errors ◄── forme-capability ◄── forme-manifest
@@ -1790,9 +1806,11 @@ forme-types ◄── forme-errors ◄── forme-capability ◄── forme-ma
                                               (depends on forme-stage,
                                                forme-types — same as any
                                                in-process stage author)
+
+forme-plugin-runner-conformance ──subprocess-drives──► every runner fixture
 ```
 
-### 14.8 BUILD ordering
+### 14.9 BUILD ordering
 
 Leaf-to-root, per `lessons.md` convention:
 
@@ -1803,6 +1821,7 @@ forme-types → forme-errors → forme-capability → forme-manifest
                                               → forme-sandbox-windows
                                               → forme-plugin-host
                                               → forme-plugin-runner-ts
+                                              → forme-plugin-runner-conformance
 ```
 
 ---
@@ -1848,7 +1867,19 @@ forme-types → forme-errors → forme-capability → forme-manifest
 - Memory of a no-op plugin stays bounded across 10,000
   request cycles.
 
-### 15.4 `forme-sandbox-*` (per OS)
+### 15.4 `forme-plugin-runner-conformance`
+
+- The same public corpus drives SDK fixtures without importing their language
+  implementation.
+- Malformed frames, identities, response envelopes, timeouts, and payloads
+  above the canonical bound fail closed.
+- Capability vectors compare every authority-bearing path, environment name,
+  URL, HTTP field, command argument, and byte payload exactly; aggregate wire
+  traffic and queued work are bounded and failed peers receive bounded
+  TERM-to-KILL cleanup.
+- The TypeScript reference runner passes before Python or Rust work begins.
+
+### 15.5 `forme-sandbox-*` (per OS)
 
 - The sandbox blocks an unauthorised filesystem read (a fixture
   process tries `open("/etc/passwd")`; syscall fails).
@@ -1858,7 +1889,7 @@ forme-types → forme-errors → forme-capability → forme-manifest
   with a 256 MiB cap; process killed).
 - The sandbox enforces fd limit.
 
-### 15.5 Integration tests
+### 15.6 Integration tests
 
 A fixture plugin published as `code/packages/typescript/forme-fixture-plugin/`
 that does:
@@ -1874,7 +1905,7 @@ end-to-end behaviour. This becomes the smallest possible
 end-to-end FM02 demo, analogous to `forme-hello-world` for
 FM03.
 
-### 15.6 Coverage target
+### 15.7 Coverage target
 
 ≥ 95% line and branch across `forme-manifest` and
 `forme-plugin-host`. ≥ 90% for the per-OS sandbox modules
@@ -1973,7 +2004,7 @@ FM-B014 (host and wire protocol) is complete when:
 
 FM02 as a whole is complete when:
 
-1. **All six packages exist** under `code/packages/typescript/forme-*`,
+1. **All seven packages exist** under `code/packages/typescript/forme-*`,
    each with `package.json`, `BUILD`, `BUILD_windows`,
    `README.md`, `CHANGELOG.md`.
 2. **Test coverage ≥ 95%** for `forme-manifest` and

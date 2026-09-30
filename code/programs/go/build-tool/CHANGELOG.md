@@ -7,8 +7,9 @@ All notable changes to the Go build tool will be documented in this file.
 ### Changed
 
 - Advanced the graphdiff test's repository source-input boundary digest pin
-  for the new `forme-plugin-installer-core` and `forme-plugin-runner-ts` TypeScript roots to
-  `33049a139a5f2394e644648f91660098f3a09490409324ab706dbbbed0498814`.
+  for the new `forme-plugin-installer-core`, `forme-plugin-runner-conformance`,
+  and `forme-plugin-runner-ts` TypeScript roots to
+  `3370c811b51962c87757b01e98ad3db5206cad2c75e74c6853bf5209548bd18e`.
 
 - Adopted the generalized established-lane orphan package validator without
   widening the legacy Cargo snapshot contract.
