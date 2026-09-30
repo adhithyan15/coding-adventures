@@ -184,16 +184,17 @@ pub fn preprocess(
                     // is never expanded at all, so an expansion bomb cannot be
                     // reached from inside `@if 0` -- the one place a reviewer
                     // stops reading.
+                    let input = run
+                        .iter()
+                        .cloned()
+                        .map(|token| MToken::bare(token, current_file))
+                        .collect();
                     let expanded = if macros.is_empty() {
-                        run.clone()
+                        input
                     } else {
-                        let input = run.iter().cloned().map(MToken::bare).collect();
-                        expand(input, &macros, &mut hides, &bounds, &mut spend)?
-                            .into_iter()
-                            .map(|m| m.token)
-                            .collect()
+                        expand(input, &macros, &mut hides, &mut map, &bounds, &mut spend)?
                     };
-                    emit(&expanded, current_file, &mut out, &mut map, &bounds)?;
+                    emit(&expanded, &mut out, &mut map, &bounds)?;
                 }
             }
             Some(Err(e)) => return Err(e),
@@ -210,6 +211,7 @@ pub fn preprocess(
                     &mut conds,
                     &mut macros,
                     &mut hides,
+                    &mut map,
                     &mut frames,
                     &mut open_files,
                     &mut cond_floor,
@@ -229,8 +231,7 @@ pub fn preprocess(
 }
 
 fn emit(
-    run: &[Token],
-    file: FileId,
+    run: &[MToken],
     out: &mut Vec<Token>,
     map: &mut SourceMap,
     bounds: &Bounds,
@@ -238,17 +239,17 @@ fn emit(
     for t in run {
         // No token counting here: see the main loop, which charges every
         // token produced rather than only those that survive.
-        if t.value.len() as u64 > bounds.token_spelling_bytes {
+        if t.token.value.len() as u64 > bounds.token_spelling_bytes {
             return Err(PpError::new(format!(
                 "a token's spelling exceeds {} bytes",
                 bounds.token_spelling_bytes
             )));
         }
         map.push(Locus {
-            position: Position { file, line: t.line as u32, column: t.column as u32 },
-            expansion: None,
+            position: t.position,
+            expansion: t.expansion,
         });
-        out.push(t.clone());
+        out.push(t.token.clone());
     }
     Ok(())
 }
@@ -266,6 +267,7 @@ fn apply_directive(
     conds: &mut Vec<Cond>,
     macros: &mut MacroTable,
     hides: &mut HideSets,
+    map: &mut SourceMap,
     frames: &mut Vec<Frame>,
     open_files: &mut Vec<FileId>,
     cond_floor: &mut Vec<usize>,
@@ -317,8 +319,11 @@ fn apply_directive(
                 let condition = if macros.is_empty() {
                     condition
                 } else {
-                    let input = condition.into_iter().map(MToken::bare).collect();
-                    expand(input, macros, hides, bounds, spend)?
+                    let input = condition
+                        .into_iter()
+                        .map(|token| MToken::bare(token, current_file))
+                        .collect();
+                    expand(input, macros, hides, map, bounds, spend)?
                         .into_iter()
                         .map(|m| m.token)
                         .collect::<Vec<_>>()
@@ -420,7 +425,14 @@ fn apply_directive(
             if !emitting {
                 return Ok(());
             }
-            macros.define(name, MacroDef { params, body });
+            macros.define(
+                name,
+                MacroDef {
+                    params,
+                    body,
+                    defined_at: here,
+                },
+            );
         }
         Directive::Ignore => {}
     }

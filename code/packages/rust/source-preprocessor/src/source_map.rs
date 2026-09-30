@@ -43,6 +43,7 @@
 //! which makes the map `O(tokens + expansions)`. This is load-bearing for the
 //! memory bounds in [`crate::bounds`], not an optimisation.
 
+use std::collections::HashMap;
 use std::num::NonZeroU32;
 
 /// An opaque handle to a source file.
@@ -68,7 +69,7 @@ impl FileId {
 }
 
 /// An interned macro expansion: which macro, expanded where, nested in what.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ExpansionId(u32);
 
 #[derive(Debug, Clone)]
@@ -77,6 +78,8 @@ struct Expansion {
     name: String,
     /// Where the invocation appeared.
     at: Position,
+    /// Where the macro was defined.
+    defined_at: Position,
     /// The expansion this one happened inside, if any.
     parent: Option<ExpansionId>,
 }
@@ -113,6 +116,8 @@ pub struct Locus {
 pub struct SourceMap {
     loci: Vec<Locus>,
     expansions: Vec<Expansion>,
+    /// Reuse copied prefixes when a pre-expanded argument appears repeatedly.
+    reparented: HashMap<(ExpansionId, Option<ExpansionId>, ExpansionId), ExpansionId>,
 }
 
 impl SourceMap {
@@ -147,10 +152,16 @@ impl SourceMap {
         &mut self,
         name: impl Into<String>,
         at: Position,
+        defined_at: Position,
         parent: Option<ExpansionId>,
     ) -> ExpansionId {
         let id = ExpansionId(self.expansions.len() as u32);
-        self.expansions.push(Expansion { name: name.into(), at, parent });
+        self.expansions.push(Expansion {
+            name: name.into(),
+            at,
+            defined_at,
+            parent,
+        });
         id
     }
 
@@ -165,6 +176,55 @@ impl SourceMap {
     #[must_use]
     pub fn expansion_site(&self, id: ExpansionId) -> Option<(&str, Position)> {
         self.expansions.get(id.0 as usize).map(|e| (e.name.as_str(), e.at))
+    }
+
+    /// Where the named macro was defined for this expansion.
+    #[must_use]
+    pub fn expansion_definition(&self, id: ExpansionId) -> Option<Position> {
+        self.expansions.get(id.0 as usize).map(|e| e.defined_at)
+    }
+
+    /// Insert a new invocation between an argument's existing expansion
+    /// prefix and its shared outer parent. Copy the prefix: mutating an arena
+    /// record would change every earlier token that points to it. Memoized
+    /// copies and the pre-allocation cap bound work and memory.
+    pub(crate) fn reparent_chain(
+        &mut self,
+        inner: ExpansionId,
+        old_parent: Option<ExpansionId>,
+        new_parent: ExpansionId,
+        max_nodes: u64,
+    ) -> Option<ExpansionId> {
+        let mut prefix = Vec::new();
+        let mut cursor = Some(inner);
+        let mut parent = new_parent;
+        while let Some(id) = cursor {
+            if Some(id) == old_parent {
+                break;
+            }
+            if let Some(&cached) = self.reparented.get(&(id, old_parent, new_parent)) {
+                parent = cached;
+                break;
+            }
+            let expansion = self.expansions.get(id.0 as usize)?;
+            prefix.push(id);
+            cursor = expansion.parent;
+        }
+        if (self.expansions.len() as u64).saturating_add(prefix.len() as u64) > max_nodes {
+            return None;
+        }
+        for id in prefix.into_iter().rev() {
+            let original = self.expansions[id.0 as usize].clone();
+            let copied = self.intern_expansion(
+                original.name,
+                original.at,
+                original.defined_at,
+                Some(parent),
+            );
+            self.reparented.insert((id, old_parent, new_parent), copied);
+            parent = copied;
+        }
+        Some(parent)
     }
 
     /// Number of interned expansions. With [`SourceMap::len`] this is the whole
@@ -231,13 +291,16 @@ mod tests {
     fn expansion_chain_is_walkable_to_the_root() {
         let mut map = SourceMap::new();
         let f = FileId::new(0);
-        let outer = map.intern_expansion("OUTER", pos(f, 1), None);
-        let inner = map.intern_expansion("INNER", pos(f, 2), Some(outer));
+        let outer = map.intern_expansion("OUTER", pos(f, 10), pos(f, 1), None);
+        let inner = map.intern_expansion("INNER", pos(f, 20), pos(f, 2), Some(outer));
 
         assert_eq!(map.expansion_parent(inner), Some(outer));
         assert_eq!(map.expansion_parent(outer), None);
         assert_eq!(map.expansion_site(inner).unwrap().0, "INNER");
         assert_eq!(map.expansion_site(outer).unwrap().0, "OUTER");
+        assert_eq!(map.expansion_site(inner).unwrap().1, pos(f, 20));
+        assert_eq!(map.expansion_definition(inner), Some(pos(f, 2)));
+        assert_eq!(map.expansion_definition(outer), Some(pos(f, 1)));
     }
 
     #[test]
@@ -246,7 +309,7 @@ mod tests {
         // one expansion must cost ONE expansion entry, not 1000 chains.
         let mut map = SourceMap::new();
         let f = FileId::new(0);
-        let e = map.intern_expansion("BIG", pos(f, 1), None);
+        let e = map.intern_expansion("BIG", pos(f, 2), pos(f, 1), None);
         for line in 0..1000 {
             map.push(Locus { position: pos(f, line), expansion: Some(e) });
         }
