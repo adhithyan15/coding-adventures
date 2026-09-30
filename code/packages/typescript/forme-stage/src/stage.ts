@@ -93,6 +93,11 @@ export interface Stage<
   readonly name: string;
   /** Semver of this stage package. */
   readonly version: string;
+  /**
+   * Optional immutable implementation identity used by caches and revision
+   * ledgers when semver alone does not identify executable bytes.
+   */
+  readonly implementationIdentity?: string;
   /** Forme kernel `apiVersion` this stage targets. */
   readonly apiVersion: number;
   /** Short human description for logs and tool UI. */

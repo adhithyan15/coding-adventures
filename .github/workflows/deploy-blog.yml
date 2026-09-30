@@ -150,6 +150,10 @@ jobs:
 
       - name: Prove write-free target plan
         working-directory: code/sites/blog
+        env:
+          # The dry run only reads repository metadata, but authenticating its
+          # GitHub API requests avoids the shared unauthenticated rate limit.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run deploy:dry-run
 
       - name: Prove filesystem rollback contract

@@ -2,18 +2,17 @@
 
 ## Unreleased
 
+- Retained a hard bound on Git-index snapshot capture while raising its timeout
+  from 15 to 60 seconds, preventing valid large-checkout enumeration from
+  failing on contended macOS CI runners.
+
 - Regenerated the repository source-input boundary projection against the
   neutral fixture: removed the ten Haskell roots that now carry their own
-  `cabal.project` (#16153) and added the `lua/der_asn1` and
-  `lua/x509_extension` lint roots the fixture gained earlier without this
-  projection being regenerated. Digest updated to
-  `4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e`.
-
-- Regenerated the source-input registry projection to pick up the
-  `forme-deploy-runner-fs-adapter` and `forme-deploy-runner-github-pages-adapter`
-  TypeScript roots (added on main without regenerating this checked
-  projection, which broke the neutral conformance test). Digest updated to
-  `c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566`.
+  `cabal.project`, added the `lua/der_asn1` and `lua/x509_extension` lint
+  roots, and picked up the
+  `forme-deploy-runner-fs-adapter`, `forme-deploy-runner-github-pages-adapter`,
+  and `forme-plugin-host` TypeScript roots. Digest updated to
+  `7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59`.
 
 - Extended the generated source-input projection and xUnit coverage with the
   two exact TypeScript site roots and their 13 authored inputs. Discovery keeps

@@ -28,11 +28,15 @@ import type {
 class OrchestratorImpl implements Orchestrator {
   private disposed = false;
   private readonly sessions = new Set<WatchSession>();
-  constructor(private readonly options: Required<OrchestratorOptions>) {}
+  constructor(private readonly options: {
+    readonly cache: NonNullable<OrchestratorOptions["cache"]>;
+    readonly logger: NonNullable<OrchestratorOptions["logger"]>;
+    readonly pluginHost?: OrchestratorOptions["pluginHost"];
+  }) {}
 
   async buildPipeline(config: Parameters<Orchestrator["buildPipeline"]>[0]): Promise<Pipeline> {
     this.assertNotDisposed();
-    return buildPipeline(config);
+    return buildPipeline(config, this.options.pluginHost);
   }
 
   async runOnce(pipeline: Pipeline, options?: RunOptions): Promise<RunResult> {
@@ -65,9 +69,17 @@ class OrchestratorImpl implements Orchestrator {
   async dispose(): Promise<void> {
     if (this.disposed) return;
     this.disposed = true;
-    await Promise.all([...this.sessions].map(session => session.stop()));
+    const sessionResults = await Promise.allSettled(
+      [...this.sessions].map(session => session.stop()),
+    );
     this.sessions.clear();
-    await this.options.cache.dispose();
+    const resourceResults = await Promise.allSettled([
+      this.options.cache.dispose(),
+      this.options.pluginHost?.dispose?.(),
+    ]);
+    const failures = [...sessionResults, ...resourceResults]
+      .filter((result): result is PromiseRejectedResult => result.status === "rejected");
+    if (failures.length > 0) throw new AggregateError(failures.map(result => result.reason));
   }
 
   private assertNotDisposed(): void {
@@ -88,5 +100,6 @@ export function createOrchestrator(
   return new OrchestratorImpl({
     cache: options.cache ?? memoryCache(),
     logger: options.logger ?? silentLogger(),
+    pluginHost: options.pluginHost,
   });
 }

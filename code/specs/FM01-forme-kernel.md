@@ -1182,6 +1182,13 @@ export interface StorageApi {
   /** Read bytes at `path`. Throws if the file does not exist. */
   read(path: string): Promise<Uint8Array>;
 
+  /**
+   * Return the complete file only when it is at most `maxBytes`.
+   * Implementations MUST reject larger content after reading at most
+   * `maxBytes + 1` bytes; truncation is forbidden.
+   */
+  readBounded(path: string, maxBytes: number): Promise<Uint8Array>;
+
   /** Write bytes at `path`. Creates parent directories as needed. */
   write(path: string, bytes: Uint8Array): Promise<void>;
 
@@ -1225,6 +1232,11 @@ The `path` here is relative to the pipeline's **configured storage
 root**, not the process working directory. Escape attempts
 (`../../../etc/passwd`) are refused by the host.
 
+Host adapters that mediate untrusted runtimes MUST use `readBounded`, not
+`read` followed by a size check. This prevents FIFOs, device files, concurrent
+growth, and very large regular files from allocating unbounded trusted-host
+memory. Exactly `maxBytes` is accepted; `maxBytes + 1` is rejected.
+
 #### 4.8.2 NetworkApi (capability: `network:*` or `network:<host>`)
 
 ```typescript
@@ -1266,11 +1278,17 @@ this are a strong install-time warning.
 ```typescript
 export interface FilesystemApi {
   readAbsolute(path: string): Promise<Uint8Array>;
+  /** Same complete-or-reject, maxBytes+1 read bound as StorageApi.readBounded. */
+  readAbsoluteBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   writeAbsolute(path: string, bytes: Uint8Array): Promise<void>;
   homeDir(): string;
   tempDir(): string;
 }
 ```
+
+Untrusted adapters MUST use `readAbsoluteBounded`. Implementations MUST reject
+oversized content rather than truncate it, and MUST decide after reading no
+more than `maxBytes + 1` bytes.
 
 #### 4.8.5 ShellApi (capability: `system:shell`)
 

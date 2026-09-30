@@ -9,7 +9,7 @@ Last big package of the FM03 orchestrator stack.
 ```typescript
 import { createOrchestrator } from "@coding-adventures/forme-orchestrator";
 
-const o = createOrchestrator();
+const o = createOrchestrator({ pluginHost }); // omit for direct-import-only pipelines
 const pipeline = await o.buildPipeline(config);
 const result = await o.runOnce(pipeline);
 console.log(result.outcome, result.outputs);
@@ -92,6 +92,8 @@ These limits remain after the concurrent scheduler milestone:
   propagation, and cancellation-safe teardown
 - `buildId` derived from the observed external state (or materialized output)
   of every source plus the pipeline sink set
+- Optional FM02 `PluginStageLoader` resolution of `StageRef`s before config
+  validation; unresolved references remain a hard error without a host
 
 ## Coverage
 

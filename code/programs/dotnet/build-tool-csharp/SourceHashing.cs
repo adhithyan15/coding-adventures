@@ -226,7 +226,7 @@ public static partial class Hasher
     public const string LanguageSourceInputRegistryDigest =
         "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530";
     public const string RepositorySourceInputBoundaryDigest =
-        "4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e";
+        "7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59";
 
     private static readonly JsonSerializerOptions RegistryJsonOptions = new()
     {
@@ -611,7 +611,10 @@ public static partial class Hasher
             {
                 throw new SourceHashException("SOURCE_HASH_TRACKED_SNAPSHOT_FAILED");
             }
-            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+            // Large hosted-runner checkouts can take longer than fifteen seconds
+            // to enumerate while CI is contended. Keep the operation bounded, but
+            // leave enough headroom for a valid repository-index snapshot.
+            using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(60));
             var stdoutTask = ReadBoundedStream(process.StandardOutput.BaseStream, 1024 * 1024, cancellation.Token);
             var stderrTask = ReadBoundedStream(process.StandardError.BaseStream, 1024 * 1024, cancellation.Token);
             process.WaitForExitAsync(cancellation.Token).GetAwaiter().GetResult();

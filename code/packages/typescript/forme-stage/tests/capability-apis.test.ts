@@ -22,6 +22,9 @@ describe("deniedStorageApi", () => {
     await expect(api.read("foo")).rejects.toMatchObject({
       capability: "storage:read",
     });
+    await expect(api.readBounded("foo", 1024)).rejects.toMatchObject({
+      capability: "storage:read",
+    });
   });
 
   it("write denies with storage:write", async () => {
@@ -101,6 +104,9 @@ describe("deniedFilesystemApi", () => {
 
   it("readAbsolute denies with filesystem:user", async () => {
     await expect(api.readAbsolute("/etc/passwd")).rejects.toMatchObject({
+      capability: "filesystem:user",
+    });
+    await expect(api.readAbsoluteBounded("/etc/passwd", 1024)).rejects.toMatchObject({
       capability: "filesystem:user",
     });
   });

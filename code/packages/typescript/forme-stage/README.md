@@ -65,6 +65,12 @@ the hook continue to execute at capability boundaries.
 
 The orchestrator builds a `StageContext` per invocation by composing the in-memory facilities (logger, cancellation, clock, cache, telemetry, event bus) with capability-gated APIs (`StorageApi`, `NetworkApi`, `EnvApi`, `FilesystemApi`, `ShellApi`). For each capability the stage **didn't** declare, the orchestrator plugs in the matching `denied*Api()` so a method call throws `CapabilityError` with the missing capability embedded.
 
+Storage and absolute-filesystem providers also implement `readBounded` and
+`readAbsoluteBounded`. These are the mandatory boundary for untrusted adapters:
+the provider must return the complete value only when it fits, reject larger
+content after reading at most `limit + 1` bytes, and never read an arbitrary
+file in full before checking its size.
+
 A source may also implement `externalState(config, ctx)`. It returns a sorted,
 versioned manifest of provider locators plus stable logical/content revisions.
 The orchestrator calls the hook immediately before `run` with the same context;

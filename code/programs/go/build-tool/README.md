@@ -55,7 +55,9 @@ Unreadable, unstable, non-portable, linked, or reparse-backed source inputs do
 not produce a cache digest. `HashPackage` returns a checked error, and the CLI
 emits the root-redacted `Error: HASH_PACKAGE_FAILED "<package-identity>"`
 record with Go-escaped control characters and exits `2` instead of caching a
-sentinel digest or printing an uncontrolled stack trace.
+sentinel digest or printing an uncontrolled stack trace. Executor regressions
+exercise hostile FIFO manifests on POSIX hosts; Windows builds use a
+build-tagged helper and explicitly skip only that unavailable POSIX primitive.
 
 ## Process-free graph and diff selection
 

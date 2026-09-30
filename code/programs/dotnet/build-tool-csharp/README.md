@@ -58,7 +58,9 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   reparse, non-regular, or multiply linked inputs. Each package retains the
   repository root while reopening and revalidating directory and file identity
   with constant descriptor use; complete Git
-  mode/OID/stage/path evidence is checked before and after batch hashing.
+  mode/OID/stage/path evidence is checked before and after batch hashing. Each
+  index snapshot remains bounded to 1 MiB per output stream and 60 seconds, so
+  contended CI runners have headroom without creating an unbounded subprocess.
   Package-hash failures expose only a stable quoted package identity; tracked
   snapshot failures expose only a stable `SOURCE_HASH_*` code.
 - Keeps the handwritten engine and secure source reader in focused literate

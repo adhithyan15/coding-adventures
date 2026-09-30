@@ -1,5 +1,10 @@
 # Changelog — @coding-adventures/forme-manifest
 
+## Unreleased
+
+- Accept one explicit `Stream<KindName>` wrapper in stage contribution kind
+  references and reject malformed or nested wrappers before plugin loading.
+
 ## 0.1.0 — 2026-05-16
 
 Initial release. First FM02 package — the manifest layer that

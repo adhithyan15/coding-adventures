@@ -12,4 +12,4 @@
  * All arithmetic uses JavaScript's native BigInt for clarity.
  */
 
-export { generateKeypair, sign, verify, hexToBytes, bytesToHex } from "./ed25519";
+export { generateKeypair, sign, verify, hexToBytes, bytesToHex } from "./ed25519.js";

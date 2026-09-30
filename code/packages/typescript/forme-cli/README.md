@@ -52,8 +52,9 @@ project.
   one directory/canonical-bundle/regular-file-descriptor inline content store, one `fs` or
   `github-pages` target, and one strict target-config JSON file. Dry-run
   preflights all content and uses write-free target inspection; it rejects
-  `--report`. GitHub publication accepts only `GITHUB_TOKEN`, uses a GET-only
-  anonymous boundary for dry-run, and supports an explicit identity-bound
+  `--report`. GitHub publication accepts only `GITHUB_TOKEN`; its GET-only
+  dry-run boundary uses that token when available and otherwise stays
+  anonymous. It supports an explicit identity-bound
   one-time ownership bootstrap for legacy Pages content. Once that deployment
   owner exists, retaining the bootstrap flag is a validated no-op even after
   later publications legitimately change its owned path or digest set.

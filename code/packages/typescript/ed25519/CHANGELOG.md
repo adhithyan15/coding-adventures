@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add the explicit ESM extension to the public implementation re-export so
+  Node16 module-resolution consumers compile the package transitively.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.1.0] - 2026-04-13

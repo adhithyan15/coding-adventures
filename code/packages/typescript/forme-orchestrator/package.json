@@ -21,6 +21,7 @@
     "@coding-adventures/forme-capability": "file:../forme-capability"
   },
   "devDependencies": {
+    "@coding-adventures/forme-plugin-host": "file:../forme-plugin-host",
     "@types/node": "^22.20.1",
     "typescript": "^5.0.0",
     "vitest": "^4.1.11",

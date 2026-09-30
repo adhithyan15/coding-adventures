@@ -1596,6 +1596,7 @@ internal static class SourceInputRegistryProjection
           "code/packages/typescript/forme-orchestrator",
           "code/packages/typescript/forme-parse-markdown",
           "code/packages/typescript/forme-pipeline-config",
+          "code/packages/typescript/forme-plugin-host",
           "code/packages/typescript/forme-render-static",
           "code/packages/typescript/forme-resolve-asset-refs-fs",
           "code/packages/typescript/forme-router",

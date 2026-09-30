@@ -460,7 +460,7 @@ describe("filesystem containment", () => {
     const disappearing = join(root, "nested", "vanish.txt");
     await writeFile(disappearing, "old");
     fsFaults.beforeLstat = async path => {
-      if (!path.endsWith("/nested/vanish.txt")) return false;
+      if (basename(path) !== "vanish.txt" || basename(dirname(path)) !== "nested") return false;
       await rm(disappearing, { force: true });
       return true;
     };

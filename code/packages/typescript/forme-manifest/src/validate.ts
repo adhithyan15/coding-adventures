@@ -201,10 +201,11 @@ function validateSafePath(
 }
 
 function validateCapabilities(m: Manifest, add: (e: ManifestErrorEntry) => void): void {
-  for (const [bucket, entries] of [
+  const buckets: ReadonlyArray<readonly ["required" | "optional", readonly CapabilityEntry[]]> = [
     ["required" as const, m.capabilities?.required ?? []],
     ["optional" as const, m.capabilities?.optional ?? []],
-  ]) {
+  ];
+  for (const [bucket, entries] of buckets) {
     entries.forEach((cap, i) => validateCapabilityEntry(cap, bucket, i, add));
   }
 }
@@ -325,6 +326,24 @@ function validateStage(
 }
 
 function validateKindReference(
+  kind: string,
+  path: string,
+  add: (e: ManifestErrorEntry) => void,
+): void {
+  const streamMatch = /^Stream<([^<>]+)>$/.exec(kind);
+  if (streamMatch) {
+    validateBareKindReference(streamMatch[1]!, path, add);
+    return;
+  }
+  if (kind.startsWith("Stream<") || kind.includes("<") || kind.includes(">")) {
+    add({ code: "STAGE_KIND_NAME_INVALID", path,
+      message: `invalid stream kind reference "${kind}"; expected Stream<KindName> with no nesting` });
+    return;
+  }
+  validateBareKindReference(kind, path, add);
+}
+
+function validateBareKindReference(
   kind: string,
   path: string,
   add: (e: ManifestErrorEntry) => void,

@@ -37,7 +37,7 @@ public sealed class HasherConformanceTests
             "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530",
             Hasher.LanguageSourceInputRegistryDigest);
         Assert.Equal(
-            "4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e",
+            "7983f42a84dc9905f50729798a5d7d4000a4356016eb2b9cfd42217b15070b59",
             Hasher.RepositorySourceInputBoundaryDigest);
         Assert.Equal(
             Hasher.LanguageSourceInputRegistryDigest,
