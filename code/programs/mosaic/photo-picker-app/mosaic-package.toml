@@ -7,9 +7,9 @@ license = "MIT"
 [components]
 exports = ["PhotoPickerApp"]
 
-# XAML, Qt and Flutter carry this app's own `files.open` handler (UI59 §2).
-# Compose and SwiftUI answer it from Mosaic's platform library (UI87 §7), and
-# the other three move onto theirs as those libraries land (UI87 §7.4).
+# XAML and Flutter carry this app's own `files.open` handler (UI59 §2).
+# Compose, SwiftUI and Qt answer it from Mosaic's platform library (UI87 §7),
+# and the other two move onto theirs as those libraries land (UI87 §7.4).
 #
 # `[host_assets]` exists ONLY to declare the Flutter handler's third-party pub
 # dependency -- unlike Engram, this app has no legacy hand-written host to
@@ -27,14 +27,9 @@ dependencies = [
 [host_effects]
 files = [
   { backend = "xaml", source = "host/xaml/PhotoPickerEffects.cs", target = "PhotoPickerEffects.cs" },
-  # Qt names its sources and needs `target_sources` (unlike SwiftUI/Compose,
-  # which compile whole directories) -- both the header and the source are
-  # listed, matching engram-app's own Qt `[host_effects]` entry.
-  { backend = "qt", source = "host/qt/PhotoPickerEffects.h", target = "PhotoPickerEffects.h" },
-  { backend = "qt", source = "host/qt/PhotoPickerEffects.cpp", target = "PhotoPickerEffects.cpp" },
-  # No Compose (or SwiftUI) entry: Mosaic's platform library answers
-  # `files.open` for every app on those backends (UI87 §7), so this app keeps
-  # no copy of its own (UI87 §7.4).
+  # No Compose, SwiftUI or Qt entry: Mosaic's platform library answers
+  # `files.open` for every app on those backends (UI87 §7, §7.4a), so this
+  # app keeps no copy of its own (UI87 §7.4).
   # Dart compiles everything under `lib/`, like Kotlin does under
   # `src/main/kotlin` -- but unlike Kotlin, Dart resolves nothing across
   # files without an import, so this one still needs an `include` below.
@@ -55,10 +50,6 @@ handlers = [
   # a same-named handler namespace. Confirmed by a real `dotnet build`
   # failure (CS0117) before this was caught.
   { backend = "xaml", install = "PhotoPickerHost.PhotoPickerEffects.Install" },
-  # `include` names the header (plain C++, not a static class method like
-  # XAML), matching engram-app's `{ backend = "qt", include = ...,
-  # install = "installEngramEffects" }` shape exactly.
-  { backend = "qt", include = "PhotoPickerEffects.h", install = "installPhotoPickerEffects" },
   # `include` names the file relative to `lib/`, matching engram-app's own
   # Flutter entry -- Dart, unlike Kotlin/Swift, resolves nothing across
   # files without an explicit import, and `flutter_main_with_host_effects`
