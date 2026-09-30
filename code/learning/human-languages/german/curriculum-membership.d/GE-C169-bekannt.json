@@ -1,0 +1,11 @@
+{
+  "id": "GE-C169-bekannt",
+  "pathSegment": "GE-PATH-169-QUAL169",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-169-QUAL169",
+      "order": 0
+    }
+  ]
+}

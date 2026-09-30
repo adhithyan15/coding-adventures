@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:c30281bcde812f00",
+  "lessonIds": [
+    "GE-C152-unterschreiben",
+    "GE-C152-verdienen",
+    "GE-C152-verkaufen",
+    "GE-C152-versprechen",
+    "GE-C152-vorstellen",
+    "GE-R152-first-pass-words-from-chapters-144-147",
+    "GE-R152-second-pass-words-from-chapters-148-152"
+  ],
+  "tex": "german/book/chapters/ch152-to-sign-to-earn-to-sell-to-promise-to-introduce.tex"
+}

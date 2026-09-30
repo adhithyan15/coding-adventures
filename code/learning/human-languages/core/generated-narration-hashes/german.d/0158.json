@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:344115d5943a8932",
+  "lessonIds": [
+    "GE-C158-angebot",
+    "GE-C158-rechnung",
+    "GE-C158-tuete",
+    "GE-C158-paket",
+    "GE-C158-briefmarke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch158.txt",
+  "json": "german/narration/ch158.json",
+  "textHash": "fnv1a64:20cbcf8c287604e9",
+  "jsonHash": "fnv1a64:a00f9b708d2b0e86",
+  "findings": []
+}

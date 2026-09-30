@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C160-aufgabe",
+    "language": "german",
+    "chapter": 160,
+    "sequence": 7380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02253da49581fdad"
+  },
+  "findings": []
+}

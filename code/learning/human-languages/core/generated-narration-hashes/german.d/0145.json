@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:b8dd5dfe9299fb48",
+  "lessonIds": [
+    "GE-C145-benutzen",
+    "GE-C145-einkaufen",
+    "GE-C145-einladen",
+    "GE-C145-empfehlen",
+    "GE-C145-entscheiden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch145.txt",
+  "json": "german/narration/ch145.json",
+  "textHash": "fnv1a64:86d708be03614539",
+  "jsonHash": "fnv1a64:533548754daf3c5a",
+  "findings": []
+}

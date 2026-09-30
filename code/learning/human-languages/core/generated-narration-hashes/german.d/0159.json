@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:003adabf38a81de9",
+  "lessonIds": [
+    "GE-C159-adresse",
+    "GE-C159-telefonnummer",
+    "GE-C159-internet",
+    "GE-C159-e-mail",
+    "GE-C159-nachricht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch159.txt",
+  "json": "german/narration/ch159.json",
+  "textHash": "fnv1a64:dfcf586207b2de14",
+  "jsonHash": "fnv1a64:ff952a3a0de2b6dd",
+  "findings": []
+}

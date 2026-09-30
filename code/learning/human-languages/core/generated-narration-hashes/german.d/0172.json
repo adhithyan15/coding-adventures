@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:3ebb02ffe421ecdc",
+  "lessonIds": [
+    "GE-C172-leider",
+    "GE-C172-vielleicht",
+    "GE-C172-wahrscheinlich",
+    "GE-C172-natuerlich",
+    "GE-C172-genau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch172.txt",
+  "json": "german/narration/ch172.json",
+  "textHash": "fnv1a64:8b936f68df8ff02f",
+  "jsonHash": "fnv1a64:99f168e91712f9d0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C153-wechseln",
+    "language": "german",
+    "chapter": 153,
+    "sequence": 7020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c45f47e24dce0106"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C149-nennen",
+    "language": "german",
+    "chapter": 149,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b408e3b69a866aee"
+  },
+  "findings": []
+}

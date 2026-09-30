@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C159-e-mail",
+    "language": "german",
+    "chapter": 159,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fa432eec1e19da3"
+  },
+  "findings": []
+}

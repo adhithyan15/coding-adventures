@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C165-leute",
+    "language": "german",
+    "chapter": 165,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58ff050186df4b24"
+  },
+  "findings": []
+}

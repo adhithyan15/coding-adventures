@@ -1,0 +1,11 @@
+{
+  "id": "GE-C149-riechen",
+  "pathSegment": "GE-PATH-149-VERB149",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-149-VERB149",
+      "order": 1
+    }
+  ]
+}

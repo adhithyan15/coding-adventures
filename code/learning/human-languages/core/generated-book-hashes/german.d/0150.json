@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:a20f6aec4b2aa72d",
+  "lessonIds": [
+    "GE-C150-sparen",
+    "GE-C150-springen",
+    "GE-C150-sterben",
+    "GE-C150-stoeren",
+    "GE-C150-streiten"
+  ],
+  "tex": "german/book/chapters/ch150-to-save-to-jump-to-die-to-disturb-to-argue.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:b38e224a4d5a0534",
+  "lessonIds": [
+    "GE-C157-tablette",
+    "GE-C157-versicherung",
+    "GE-C157-konto",
+    "GE-C157-kreditkarte",
+    "GE-C157-preis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch157.txt",
+  "json": "german/narration/ch157.json",
+  "textHash": "fnv1a64:bac918838d882bd9",
+  "jsonHash": "fnv1a64:93b266550e4a4232",
+  "findings": []
+}

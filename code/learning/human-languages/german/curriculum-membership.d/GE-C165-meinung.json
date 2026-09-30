@@ -1,0 +1,11 @@
+{
+  "id": "GE-C165-meinung",
+  "pathSegment": "GE-PATH-165-THING165",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-165-THING165",
+      "order": 4
+    }
+  ]
+}

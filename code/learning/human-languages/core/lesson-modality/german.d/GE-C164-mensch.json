@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C164-mensch",
+    "language": "german",
+    "chapter": 164,
+    "sequence": 7790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd47cac5a47c6495"
+  },
+  "findings": []
+}

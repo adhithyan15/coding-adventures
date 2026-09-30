@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:3b7a01ee6d911825",
+  "lessonIds": [
+    "GE-C147-gewinnen",
+    "GE-C147-haengen",
+    "GE-C147-heiraten",
+    "GE-C147-kennen",
+    "GE-C147-klingeln"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch147.txt",
+  "json": "german/narration/ch147.json",
+  "textHash": "fnv1a64:c472547d36bf9826",
+  "jsonHash": "fnv1a64:2294f0f99fc8c438",
+  "findings": []
+}

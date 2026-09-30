@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "The temperature, A birthday, A wedding, A party, An invitation",
+  "label": "ch:ge-the-temperature-a-birthday-a-wedding-a-party-an-invitation",
+  "canDo": "I can say the temperature, a birthday, a wedding, a party and an invitation.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C163-einladung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: i can say the temperature, a birthday, a wedding, a party and an invitation.",
+    "assesses": [
+      "GE-LEX-C163-THING163-03",
+      "GE-LEX-C163-THING163-04",
+      "GE-LEX-C163-THING163-05"
+    ]
+  }
+}

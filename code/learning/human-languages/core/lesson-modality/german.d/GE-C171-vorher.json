@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C171-vorher",
+    "language": "german",
+    "chapter": 171,
+    "sequence": 8290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93a85cc37b5ddeb1"
+  },
+  "findings": []
+}

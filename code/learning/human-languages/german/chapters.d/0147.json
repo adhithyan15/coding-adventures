@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To win, To hang, To marry, To know, To ring",
+  "label": "ch:ge-to-win-to-hang-to-marry-to-know-to-ring",
+  "canDo": "I can say to win, to hang, to marry, to know and to ring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C147-klingeln",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say to win, to hang, to marry, to know and to ring.",
+    "assesses": [
+      "GE-LEX-C147-VERB147-03",
+      "GE-LEX-C147-VERB147-04",
+      "GE-LEX-C147-VERB147-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C146-gefallen",
+    "language": "german",
+    "chapter": 146,
+    "sequence": 6510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90bb0800732f819d"
+  },
+  "findings": []
+}

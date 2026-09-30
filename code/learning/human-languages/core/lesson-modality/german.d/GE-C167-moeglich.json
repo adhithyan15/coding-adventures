@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C167-moeglich",
+    "language": "german",
+    "chapter": 167,
+    "sequence": 7940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:868376f0c86c2a23"
+  },
+  "findings": []
+}

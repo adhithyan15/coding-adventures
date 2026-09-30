@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:35bcbb6dd3a2f42e",
+  "lessonIds": [
+    "GE-C170-selten",
+    "GE-C170-meistens",
+    "GE-C170-gleich",
+    "GE-C170-endlich",
+    "GE-C170-noch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch170.txt",
+  "json": "german/narration/ch170.json",
+  "textHash": "fnv1a64:d8778a5a997eff8e",
+  "jsonHash": "fnv1a64:50e73694e2822891",
+  "findings": []
+}

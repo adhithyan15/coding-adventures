@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C153-ziehen",
+    "language": "german",
+    "chapter": 153,
+    "sequence": 7050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c53f402d8f7d6d98"
+  },
+  "findings": []
+}

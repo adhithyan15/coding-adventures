@@ -1,0 +1,11 @@
+{
+  "id": "GE-C164-baby",
+  "pathSegment": "GE-PATH-164-THING164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-164-THING164",
+      "order": 3
+    }
+  ]
+}

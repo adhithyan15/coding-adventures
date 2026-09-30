@@ -1,0 +1,11 @@
+{
+  "id": "GE-C148-leihen",
+  "pathSegment": "GE-PATH-148-VERB148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-148-VERB148",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C167-hoeflich",
+    "language": "german",
+    "chapter": 167,
+    "sequence": 7920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21aa27567fc23c9c"
+  },
+  "findings": []
+}

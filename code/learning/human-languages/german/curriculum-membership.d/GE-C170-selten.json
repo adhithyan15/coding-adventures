@@ -1,0 +1,11 @@
+{
+  "id": "GE-C170-selten",
+  "pathSegment": "GE-PATH-170-TIME170",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-170-TIME170",
+      "order": 0
+    }
+  ]
+}

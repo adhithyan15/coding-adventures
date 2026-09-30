@@ -1,0 +1,11 @@
+{
+  "id": "GE-C148-mitbringen",
+  "pathSegment": "GE-PATH-148-VERB148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-148-VERB148",
+      "order": 3
+    }
+  ]
+}

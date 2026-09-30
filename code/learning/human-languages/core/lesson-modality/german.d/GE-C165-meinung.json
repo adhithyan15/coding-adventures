@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C165-meinung",
+    "language": "german",
+    "chapter": 165,
+    "sequence": 7840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f13908bd41333d55"
+  },
+  "findings": []
+}

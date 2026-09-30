@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:317c59e0e18229fb",
+  "lessonIds": [
+    "GE-C166-grund",
+    "GE-C166-loesung",
+    "GE-C166-erfahrung",
+    "GE-C166-moeglichkeit",
+    "GE-C166-nachmittag"
+  ],
+  "tex": "german/book/chapters/ch166-a-reason-a-solution-experience-a-possibility-the-afternoon.tex"
+}

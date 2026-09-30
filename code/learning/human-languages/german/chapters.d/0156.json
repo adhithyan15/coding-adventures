@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "A prescription, A pain, A cold, A cough, The flu",
+  "label": "ch:ge-a-prescription-a-pain-a-cold-a-cough-the-flu",
+  "canDo": "I can say a prescription, a pain, a cold, a cough and the flu.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C156-grippe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: i can say a prescription, a pain, a cold, a cough and the flu.",
+    "assesses": [
+      "GE-LEX-C156-THING156-03",
+      "GE-LEX-C156-THING156-04",
+      "GE-LEX-C156-THING156-05"
+    ]
+  }
+}

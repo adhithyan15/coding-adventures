@@ -1,0 +1,11 @@
+{
+  "id": "GE-C171-nachher",
+  "pathSegment": "GE-PATH-171-TIME171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-171-TIME171",
+      "order": 4
+    }
+  ]
+}

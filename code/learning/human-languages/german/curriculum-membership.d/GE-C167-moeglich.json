@@ -1,0 +1,11 @@
+{
+  "id": "GE-C167-moeglich",
+  "pathSegment": "GE-PATH-167-QUAL167",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-167-QUAL167",
+      "order": 4
+    }
+  ]
+}

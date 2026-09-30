@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "Quite, Especially, About, Together, Alone",
+  "label": "ch:ge-quite-especially-about-together-alone",
+  "canDo": "I can say quite, especially, about, together and alone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-R173-second-pass-words-from-chapters-171-173",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: i can say quite, especially, about, together and alone.",
+    "assesses": [
+      "GE-LEX-C173-ADV173-03",
+      "GE-LEX-C173-ADV173-04",
+      "GE-LEX-C173-ADV173-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C146-fuellen",
+  "pathSegment": "GE-PATH-146-VERB146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-146-VERB146",
+      "order": 3
+    }
+  ]
+}

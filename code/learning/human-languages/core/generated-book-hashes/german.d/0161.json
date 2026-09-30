@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:699bb3ec1fc5e93d",
+  "lessonIds": [
+    "GE-C161-haus",
+    "GE-C161-schlafzimmer",
+    "GE-C161-wohnzimmer",
+    "GE-C161-balkon",
+    "GE-C161-keller",
+    "GE-R161-first-pass-words-from-chapters-153-156",
+    "GE-R161-second-pass-words-from-chapters-157-161"
+  ],
+  "tex": "german/book/chapters/ch161-a-house-a-bedroom-a-living-room-a-balcony-a-cellar.tex"
+}

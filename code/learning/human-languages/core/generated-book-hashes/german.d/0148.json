@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:3c301a547d0fc54c",
+  "lessonIds": [
+    "GE-C148-kosten",
+    "GE-C148-leihen",
+    "GE-C148-lieben",
+    "GE-C148-mitbringen",
+    "GE-C148-mitnehmen"
+  ],
+  "tex": "german/book/chapters/ch148-to-cost-to-lend-to-love-to-bring-along-to-take-along.tex"
+}

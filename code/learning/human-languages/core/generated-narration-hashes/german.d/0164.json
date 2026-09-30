@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:f198ecf5b868727d",
+  "lessonIds": [
+    "GE-C164-nachbarin",
+    "GE-C164-cousine",
+    "GE-C164-enkelin",
+    "GE-C164-baby",
+    "GE-C164-mensch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch164.txt",
+  "json": "german/narration/ch164.json",
+  "textHash": "fnv1a64:b9bbabb307c32550",
+  "jsonHash": "fnv1a64:c14eebe13e3df902",
+  "findings": []
+}

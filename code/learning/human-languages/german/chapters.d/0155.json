@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "A salary, An identity card, A visa, A traffic jam, An accident",
+  "label": "ch:ge-a-salary-an-identity-card-a-visa-a-traffic-jam-an-accident",
+  "canDo": "I can say a salary, an identity card, a visa, a traffic jam and an accident.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C155-unfall",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: i can say a salary, an identity card, a visa, a traffic jam and an accident.",
+    "assesses": [
+      "GE-LEX-C155-THING155-03",
+      "GE-LEX-C155-THING155-04",
+      "GE-LEX-C155-THING155-05"
+    ]
+  }
+}

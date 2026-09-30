@@ -1,0 +1,11 @@
+{
+  "id": "GE-C156-schmerz",
+  "pathSegment": "GE-PATH-156-THING156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-156-THING156",
+      "order": 1
+    }
+  ]
+}

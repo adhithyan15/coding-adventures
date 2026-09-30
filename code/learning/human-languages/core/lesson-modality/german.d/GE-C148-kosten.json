@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C148-kosten",
+    "language": "german",
+    "chapter": 148,
+    "sequence": 6570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:115bd6ae131660dc"
+  },
+  "findings": []
+}

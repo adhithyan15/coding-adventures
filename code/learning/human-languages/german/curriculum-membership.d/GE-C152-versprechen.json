@@ -1,0 +1,11 @@
+{
+  "id": "GE-C152-versprechen",
+  "pathSegment": "GE-PATH-152-VERB152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-152-VERB152",
+      "order": 3
+    }
+  ]
+}

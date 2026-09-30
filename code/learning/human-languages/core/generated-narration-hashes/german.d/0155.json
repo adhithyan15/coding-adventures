@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:8120e7126e1b8b86",
+  "lessonIds": [
+    "GE-C155-gehalt",
+    "GE-C155-ausweis",
+    "GE-C155-visum",
+    "GE-C155-stau",
+    "GE-C155-unfall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch155.txt",
+  "json": "german/narration/ch155.json",
+  "textHash": "fnv1a64:093e0f94b3953e52",
+  "jsonHash": "fnv1a64:7ab9d348c55721b5",
+  "findings": []
+}
