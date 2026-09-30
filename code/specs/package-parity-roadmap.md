@@ -15249,6 +15249,37 @@ are queued or in progress. Guarded auto-merge remains disabled until every
 required check is terminal and acceptable and the branch remains
 conflict-free.
 
+### PR #16321 merge and barcode-layout neutral-contract selection
+
+Every final-head check completed acceptably, including both Ubuntu builds,
+both repository-metadata runs, Python CodeQL, the human-language gate, the CI
+push gate, and the CI gate. GitHub reported the branch mergeable and clean,
+guarded squash auto-merge was enabled, and PR #16321 merged automatically at
+`2026-09-30T22:24:41Z` as
+`68afa3eedabb0bc1bfc98165e1b4b023013f1fa7`; no plain manual merge command was
+used.
+
+The exact package-tree delta from the prior collision-checked inventory at
+`0d12bc3c4caf1b9baff45029eac13bf39337378d` contains no package-root additions,
+removals, or manifest identity changes. The exact-main schema-3 inventory is
+therefore unchanged at 15 established lanes, 1,473 implementation identities,
+4,740 package slots, 1,515 all-reported identities, completion bands 178/265,
+123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml
+packages, zero canonical collisions, and zero unknown buckets.
+
+The preserved parallel audit ranks
+`barcode-layout-1d-language-neutral-conformance` first: it is dependency-free
+and unlocks three direct and fifteen total unfinished descendants. The next
+alternatives are the Haskell ITF Windows-front tranche (three direct and eight
+total descendants) and the Python gradient-descent front (two descendants).
+All current open PRs have zero exact path or conceptual ownership overlap with
+the selected contract. The bounded work freezes a separate pure integer
+geometry fixture and specification rather than widening the encoder-only
+barcode corpus or modifying implementations before the existing-lane
+reconciliation owner. The fresh clean sparse branch
+`codex/parity-barcode-layout-conformance-20260930` starts from exact current
+main above.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
