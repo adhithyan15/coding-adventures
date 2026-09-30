@@ -4876,11 +4876,14 @@ fn host_control_style_qml_lines(
     }
 
     let mut lines = Vec::new();
-    if let Some(padding) = style_prop(base, "padding").and_then(qml_px_or_none) {
-        lines.push(format!("leftPadding: {padding}"));
-        lines.push(format!("rightPadding: {padding}"));
-        lines.push(format!("topPadding: {padding}"));
-        lines.push(format!("bottomPadding: {padding}"));
+    // #16223 -- Controls expose one property per edge. Reuse the container
+    // resolver so longhands override the shorthand with the same CSS rules.
+    if has_any_padding(base) {
+        let (left, top, right, bottom) = qml_padding_edges(base);
+        lines.push(format!("leftPadding: {left}"));
+        lines.push(format!("rightPadding: {right}"));
+        lines.push(format!("topPadding: {top}"));
+        lines.push(format!("bottomPadding: {bottom}"));
     }
     if let Some(property) = caps.text_color {
         let foreground = style_prop(base, "color").and_then(qml_hex_color_or_none);
@@ -16884,7 +16887,7 @@ mod tests {
 
     // ---- host controls read part styles (#14780) ---------------------
 
-    fn styled_host(tag: &str, props: Vec<LayoutProp>) -> String {
+    fn styled_host_with_base(tag: &str, props: Vec<LayoutProp>, base: Vec<StyleProp>) -> String {
         let c = component(
             "P",
             vec![
@@ -16908,21 +16911,29 @@ mod tests {
             component_name: "P".to_string(),
             parts: vec![PartStyle {
                 name: "ctl".to_string(),
-                base: vec![
-                    StyleProp {
-                        name: "padding".to_string(),
-                        value: "37".to_string(),
-                    },
-                    StyleProp {
-                        name: "background".to_string(),
-                        value: "#abcdef".to_string(),
-                    },
-                ],
+                base,
                 transitions: vec![],
                 states: vec![],
             }],
         };
         from_pipeline(&c, &l, &s).expect("emit ok").output
+    }
+
+    fn styled_host(tag: &str, props: Vec<LayoutProp>) -> String {
+        styled_host_with_base(
+            tag,
+            props,
+            vec![
+                StyleProp {
+                    name: "padding".to_string(),
+                    value: "37".to_string(),
+                },
+                StyleProp {
+                    name: "background".to_string(),
+                    value: "#abcdef".to_string(),
+                },
+            ],
+        )
     }
 
     fn slot_prop(name: &str, slot_name: &str) -> LayoutProp {
@@ -16950,6 +16961,68 @@ mod tests {
                 out.contains("Padding: 37"),
                 "{tag} dropped authored padding, got:\n{out}"
             );
+        }
+    }
+
+    #[test]
+    fn every_host_control_preserves_directional_padding() {
+        let base = || {
+            vec![
+                StyleProp {
+                    name: "padding".to_string(),
+                    value: "37".to_string(),
+                },
+                StyleProp {
+                    name: "padding-left".to_string(),
+                    value: "11".to_string(),
+                },
+                StyleProp {
+                    name: "padding-top".to_string(),
+                    value: "12".to_string(),
+                },
+                StyleProp {
+                    name: "padding-right".to_string(),
+                    value: "13".to_string(),
+                },
+                StyleProp {
+                    name: "padding-bottom".to_string(),
+                    value: "14".to_string(),
+                },
+            ]
+        };
+        for (tag, props) in [
+            ("HostButton", vec![slot_prop("label", "label")]),
+            ("HostCheckbox", vec![slot_prop("checked", "on")]),
+            ("HostRadio", vec![slot_prop("checked", "on")]),
+            ("HostInput", vec![slot_prop("value", "value")]),
+            ("HostSlider", vec![slot_prop("value", "num")]),
+            ("HostNumberInput", vec![slot_prop("value", "num")]),
+        ] {
+            let out = styled_host_with_base(tag, props, base());
+            for expected in [
+                "leftPadding: 11",
+                "topPadding: 12",
+                "rightPadding: 13",
+                "bottomPadding: 14",
+            ] {
+                assert!(
+                    out.contains(expected),
+                    "{tag} dropped {expected}, got:\n{out}"
+                );
+            }
+        }
+
+        let out = styled_host_with_base(
+            "HostButton",
+            vec![slot_prop("label", "label")],
+            vec![sp("padding", "37"), sp("padding-left", "11")],
+        );
+        for inherited in [
+            "topPadding: 37",
+            "rightPadding: 37",
+            "bottomPadding: 37",
+        ] {
+            assert!(out.contains(inherited), "shorthand fallback: {out}");
         }
     }
 

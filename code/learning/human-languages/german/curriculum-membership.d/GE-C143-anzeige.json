@@ -1,0 +1,11 @@
+{
+  "id": "GE-C143-anzeige",
+  "pathSegment": "GE-PATH-143-READ143",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-143-READ143",
+      "order": 1
+    }
+  ]
+}

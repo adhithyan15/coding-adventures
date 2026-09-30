@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:4929d55380341bad",
+  "lessonIds": [
+    "GE-C142-zukunft",
+    "GE-C142-naechste-woche",
+    "GE-C142-uebermorgen",
+    "GE-C142-naechstes-jahr",
+    "GE-C142-vorhaben"
+  ],
+  "tex": "german/book/chapters/ch142-the-future-next-week-the-day-after-tomorrow-next-year-to-plan.tex"
+}

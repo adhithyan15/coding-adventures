@@ -1,0 +1,11 @@
+{
+  "id": "GE-C142-naechstes-jahr",
+  "pathSegment": "GE-PATH-142-FUT142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-142-FUT142",
+      "order": 3
+    }
+  ]
+}

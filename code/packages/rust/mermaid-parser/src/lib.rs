@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.129.0";
+pub const VERSION: &str = "0.130.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -5017,6 +5017,116 @@ fn parse_radar_number(raw: &str, token: &Token) -> Result<f64, ParseError> {
     Ok(value)
 }
 
+fn parse_radar_curve_specs<'a>(
+    raw: &'a str,
+    token: &Token,
+) -> Result<Vec<(&'a str, &'a str)>, ParseError> {
+    let mut remainder = raw["curve".len()..].trim();
+    let mut curves = Vec::new();
+    loop {
+        let open = remainder
+            .find('{')
+            .ok_or_else(|| token_error(token, "radar curve requires entries"))?;
+        let close = remainder[open + 1..]
+            .find('}')
+            .map(|index| open + 1 + index)
+            .ok_or_else(|| token_error(token, "unterminated radar curve entries"))?;
+        curves.push((
+            remainder[..open].trim(),
+            remainder[open + 1..close].trim(),
+        ));
+        remainder = remainder[close + 1..].trim();
+        if remainder.is_empty() {
+            return Ok(curves);
+        }
+        remainder = remainder
+            .strip_prefix(',')
+            .ok_or_else(|| token_error(token, "expected ',' between radar curves"))?
+            .trim_start();
+    }
+}
+
+fn parse_radar_curve(
+    curve: &str,
+    body: &str,
+    axis_ids: &[String],
+    token: &Token,
+) -> Result<ChartSeries, ParseError> {
+    let (id, label) = parse_radar_labeled_id(curve, token)?;
+    let entries = body
+        .split(',')
+        .map(str::trim)
+        .filter(|entry| !entry.is_empty())
+        .collect::<Vec<_>>();
+    if entries.is_empty() {
+        return Err(token_error(token, "radar curves require entries"));
+    }
+    let detailed = entries
+        .iter()
+        .any(|entry| entry.contains(':') || entry.split_whitespace().count() == 2);
+    let values = if detailed {
+        let mut by_axis = HashMap::<String, f64>::new();
+        for entry in entries {
+            let parts = entry
+                .split_once(':')
+                .map(|(axis, value)| (axis.trim(), value.trim()))
+                .or_else(|| {
+                    let mut parts = entry.split_whitespace();
+                    Some((parts.next()?, parts.next()?))
+                })
+                .ok_or_else(|| {
+                    token_error(token, "cannot mix positional and keyed radar entries")
+                })?;
+            if !axis_ids.iter().any(|axis| axis == parts.0) {
+                return Err(token_error(
+                    token,
+                    format!("unknown radar axis {:?}", parts.0),
+                ));
+            }
+            if by_axis
+                .insert(parts.0.to_string(), parse_radar_number(parts.1, token)?)
+                .is_some()
+            {
+                return Err(token_error(
+                    token,
+                    format!("duplicate radar entry for {:?}", parts.0),
+                ));
+            }
+        }
+        axis_ids
+            .iter()
+            .map(|axis| {
+                by_axis.get(axis).copied().ok_or_else(|| {
+                    token_error(token, format!("missing radar entry for {axis:?}"))
+                })
+            })
+            .collect::<Result<Vec<_>, _>>()?
+    } else {
+        entries
+            .iter()
+            .map(|entry| parse_radar_number(entry, token))
+            .collect::<Result<Vec<_>, _>>()?
+    };
+    if values.len() != axis_ids.len() {
+        return Err(token_error(
+            token,
+            format!(
+                "radar curve {id:?} has {} values for {} axes",
+                values.len(),
+                axis_ids.len()
+            ),
+        ));
+    }
+    Ok(ChartSeries {
+        kind: SeriesKind::Line,
+        label: Some(label),
+        data: values
+            .into_iter()
+            .map(|value| ChartDataPoint { value, label: None })
+            .collect(),
+    })
+}
+
 /// Parse the Mermaid 11.16.1 radar axes-and-curves subset into chart IR.
 pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
     let prepared = prepare_line_grammar_source(source)?;
@@ -5074,82 +5184,9 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
                 if axis_ids.is_empty() {
                     return Err(token_error(token, "radar curves require declared axes"));
                 }
-                let open = token.value.find('{').expect("grammar requires '{'");
-                let close = token.value.rfind('}').expect("grammar requires '}'");
-                let (id, label) =
-                    parse_radar_labeled_id(token.value["curve".len()..open].trim(), token)?;
-                let entries = token.value[open + 1..close]
-                    .split(',')
-                    .map(str::trim)
-                    .filter(|entry| !entry.is_empty())
-                    .collect::<Vec<_>>();
-                if entries.is_empty() {
-                    return Err(token_error(token, "radar curves require entries"));
+                for (curve, body) in parse_radar_curve_specs(&token.value, token)? {
+                    series.push(parse_radar_curve(curve, body, &axis_ids, token)?);
                 }
-                let detailed = entries
-                    .iter()
-                    .any(|entry| entry.contains(':') || entry.split_whitespace().count() == 2);
-                let values = if detailed {
-                    let mut by_axis = HashMap::<String, f64>::new();
-                    for entry in entries {
-                        let parts = entry
-                            .split_once(':')
-                            .map(|(axis, value)| (axis.trim(), value.trim()))
-                            .or_else(|| {
-                                let mut parts = entry.split_whitespace();
-                                Some((parts.next()?, parts.next()?))
-                            })
-                            .ok_or_else(|| {
-                                token_error(token, "cannot mix positional and keyed radar entries")
-                            })?;
-                        if !axis_ids.iter().any(|axis| axis == parts.0) {
-                            return Err(token_error(
-                                token,
-                                format!("unknown radar axis {:?}", parts.0),
-                            ));
-                        }
-                        if by_axis
-                            .insert(parts.0.to_string(), parse_radar_number(parts.1, token)?)
-                            .is_some()
-                        {
-                            return Err(token_error(
-                                token,
-                                format!("duplicate radar entry for {:?}", parts.0),
-                            ));
-                        }
-                    }
-                    axis_ids
-                        .iter()
-                        .map(|axis| {
-                            by_axis.get(axis).copied().ok_or_else(|| {
-                                token_error(token, format!("missing radar entry for {axis:?}"))
-                            })
-                        })
-                        .collect::<Result<Vec<_>, _>>()?
-                } else {
-                    entries
-                        .iter()
-                        .map(|entry| parse_radar_number(entry, token))
-                        .collect::<Result<Vec<_>, _>>()?
-                };
-                if values.len() != axis_ids.len() {
-                    return Err(token_error(
-                        token,
-                        format!(
-                            "radar curve {id:?} has {} values for {} axes",
-                            values.len(),
-                            axis_ids.len()
-                        ),
-                    ));
-                }
-                series.push(ChartSeries {
-                    kind: SeriesKind::Line,
-                    label: Some(label),
-                    data: values
-                        .into_iter()
-                        .map(|value| ChartDataPoint { value, label: None })
-                        .collect(),
-                });
             }
             "OPTION_STATEMENT" => {
                 for option in token.value.split(',') {
@@ -13553,7 +13590,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.129.0");
+        assert_eq!(crate::VERSION, "0.130.0");
     }
 
     #[test]

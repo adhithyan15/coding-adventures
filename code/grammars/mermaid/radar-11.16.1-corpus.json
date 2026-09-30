@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: titles, accessibility metadata, labeled axes, positional and axis-keyed curves, and core chart options.",
+  "scope": "Native partial slice: titles, accessibility metadata, labeled axes, positional and axis-keyed curves, curve lists, multiline curve bodies, and core chart options.",
   "fixtures": [
     {
       "id": "basic",
@@ -19,6 +19,10 @@
     {
       "id": "multiple-statements",
       "source": "radar-beta\naxis A, B, C, D\ncurve first{1, 2, 3, 4}\ncurve second[\"Second\"]{4, 3, 2, 1}"
+    },
+    {
+      "id": "curve-list-and-multiline",
+      "source": "radar-beta\naxis A, B, C\ncurve first{1, 2, 3}, second[\"Second\"]{\n  3,\n  2,\n  1\n}"
     },
     {
       "id": "core-options",

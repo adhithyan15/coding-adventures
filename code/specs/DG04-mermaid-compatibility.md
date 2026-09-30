@@ -470,8 +470,9 @@ instructions, with a native Metal-to-PNG fixture. Core Radar options preserve
 `showLegend`, positive numeric `ticks`, numeric `min`/`max`, and circle or
 polygon `graticule` choices in semantic chart IR. Layout applies the configured
 scale and graticule geometry before backend-neutral Paint lowering. Multiple
-curves on one statement, multiline curve bodies, configuration, and filled or
-smoothed curve styling remain unsupported at the partial level.
+curves on one statement and multiline curve bodies lower into ordered semantic
+series through the same grammar-backed path. Configuration and filled or smoothed
+curve styling remain unsupported at the partial level.
 
 ### Event Modeling Native Slice
 

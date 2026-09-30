@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.73.0";
+pub const VERSION: &str = "0.74.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -665,12 +665,12 @@ mod tests {
     #[test]
     fn tokenizes_radar_axes_and_curves_as_complete_statements() {
         let tokens = try_tokenize_mermaid_radar(
-            "radar-beta\naxis speed[\"Speed\"], quality\ncurve product{80, 60}\nshowLegend false, ticks 4\ngraticule polygon\n",
+            "radar-beta\naxis speed[\"Speed\"], quality\ncurve product{80, 60}, baseline{\n50,\n40\n}\nshowLegend false, ticks 4\ngraticule polygon\n",
         )
         .unwrap();
         let values = tokens.iter().map(|token| token.value.as_str()).collect::<Vec<_>>();
         assert!(values.contains(&"axis speed[\"Speed\"], quality"));
-        assert!(values.contains(&"curve product{80, 60}"));
+        assert!(values.contains(&"curve product{80, 60}, baseline{\n50,\n40\n}"));
         assert!(values.contains(&"showLegend false, ticks 4"));
         assert!(values.contains(&"graticule polygon"));
     }
@@ -707,7 +707,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.73.0");
+        assert_eq!(VERSION, "0.74.0");
     }
 
     #[test]

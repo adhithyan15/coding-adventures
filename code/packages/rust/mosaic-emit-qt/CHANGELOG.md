@@ -58,6 +58,16 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — host controls preserve directional padding (#16223)
+
+`HostButton`, `HostCheckbox`, `HostRadio`, `HostInput`, `HostSlider`, and
+`HostNumberInput` now lower `padding-left`, `padding-top`, `padding-right`, and
+`padding-bottom` to the matching Qt Quick Control properties. A longhand wins
+over `padding` for its edge, and an omitted edge still inherits the shorthand.
+Previously host controls read only `padding`, so TaskApp silently lost 56
+authored edge values even though its layout containers already preserved them.
+The TaskApp Qt style-drop ratchet moves from 307 to 251 accordingly.
+
 ### Fixed — the navigation split rendered nothing at all (#15833)
 
 `HostNavigationSplit` laid out to **0 × 0 at every window size**, so a Qt app
