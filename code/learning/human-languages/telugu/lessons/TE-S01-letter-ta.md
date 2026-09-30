@@ -50,17 +50,17 @@ You already say these, and every one of them has త somewhere inside it:
 - **సంతోషం** — joy / pleased to meet you
 - **వెళ్ళి వస్తాను** *veḷḷi vastānu* — goodbye (lit. "I'll go and come back")
 
-## Writing: త — copy what you see
+## Writing: త — observe, then trace
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->
 
-Put your pen on త and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. The first pen-down run
+uses six small movements: curl up inside the left shoulder, turn down around the
+left bowl, sweep right around the broad bottom, curve up around the right bowl,
+turn down inside it, then curve left across the upper shoulder. Lift once. The
+second run sweeps up through the separate top flourish.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. The numbers divide a long connected body into
+manageable turns; they do not ask you to lift until the top flourish.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->
