@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C173-magna",
+    "language": "hindi",
+    "chapter": 173,
+    "sequence": 8250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1ff722a9a43c4cb"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:89e174c0f8613ba2",
+  "lessonIds": [
+    "HI-C189-citthi",
+    "HI-C189-kahani",
+    "HI-C189-saval",
+    "HI-C189-javab",
+    "HI-C189-galti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch189.txt",
+  "json": "hindi/narration/ch189.json",
+  "textHash": "fnv1a64:59a1385786aebb68",
+  "jsonHash": "fnv1a64:eb116d2fbb7984c0",
+  "findings": []
+}

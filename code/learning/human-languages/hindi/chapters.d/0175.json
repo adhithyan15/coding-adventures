@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "To measure, To drop, To light, To burn (by itself), To put out (a fire or light)",
+  "label": "ch:hi-to-measure-to-drop-to-light-to-burn-by-itself-to-put-out-a-fire-or-light",
+  "canDo": "I can say to measure, to drop, to light, to burn (by itself) and to put out (a fire or light).",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-R175-second-pass-verbs-of-the-hands-and-the-kitchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: i can say to measure, to drop, to light, to burn (by itself) and to put out (a fire or light).",
+    "assesses": [
+      "HI-LEX-C175-ACT175-03",
+      "HI-LEX-C175-ACT175-04",
+      "HI-LEX-C175-ACT175-05"
+    ]
+  }
+}

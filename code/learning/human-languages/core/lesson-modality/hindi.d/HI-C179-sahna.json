@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C179-sahna",
+    "language": "hindi",
+    "chapter": 179,
+    "sequence": 8620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f27cc01ae54d1f5"
+  },
+  "findings": []
+}

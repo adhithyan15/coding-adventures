@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:e74a8e8d1bc6171c",
+  "lessonIds": [
+    "HI-C170-marna",
+    "HI-C170-jina",
+    "HI-C170-bitna",
+    "HI-C170-uthana",
+    "HI-C170-sunana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch170.txt",
+  "json": "hindi/narration/ch170.json",
+  "textHash": "fnv1a64:0dead11178ef0150",
+  "jsonHash": "fnv1a64:0c9eb3bea237e7c1",
+  "findings": []
+}

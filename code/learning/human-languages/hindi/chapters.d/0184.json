@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "A floor (surface), A key, A cupboard, A mirror, Rain",
+  "label": "ch:hi-a-floor-surface-a-key-a-cupboard-a-mirror-rain",
+  "canDo": "I can say a floor (surface), a key, a cupboard, a mirror and rain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C184-baris",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: i can say a floor (surface), a key, a cupboard, a mirror and rain.",
+    "assesses": [
+      "HI-LEX-C184-THG184-03",
+      "HI-LEX-C184-THG184-04",
+      "HI-LEX-C184-THG184-05"
+    ]
+  }
+}

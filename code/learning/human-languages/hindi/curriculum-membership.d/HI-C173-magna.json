@@ -1,0 +1,11 @@
+{
+  "id": "HI-C173-magna",
+  "pathSegment": "HI-PATH-173-ACT173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-173-ACT173",
+      "order": 4
+    }
+  ]
+}

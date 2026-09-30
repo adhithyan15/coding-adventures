@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:c3bbc146bc42e0d8",
+  "lessonIds": [
+    "HI-C180-dava",
+    "HI-C180-mariz",
+    "HI-C180-ilaj",
+    "HI-C180-yatra",
+    "HI-C180-saman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch180.txt",
+  "json": "hindi/narration/ch180.json",
+  "textHash": "fnv1a64:91dde3f0785a6b81",
+  "jsonHash": "fnv1a64:7e8a50b45f337531",
+  "findings": []
+}

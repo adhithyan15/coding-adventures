@@ -1,0 +1,11 @@
+{
+  "id": "HI-C190-khabar",
+  "pathSegment": "HI-PATH-190-THG190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-190-THG190",
+      "order": 1
+    }
+  ]
+}

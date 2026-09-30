@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:eeaab22e4c3ba56a",
+  "lessonIds": [
+    "HI-C187-girjaghar",
+    "HI-C187-thana",
+    "HI-C187-dakiya",
+    "HI-C187-sinema",
+    "HI-C187-park"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch187.txt",
+  "json": "hindi/narration/ch187.json",
+  "textHash": "fnv1a64:e7824999a87a5674",
+  "jsonHash": "fnv1a64:0bb69496607dc8c0",
+  "findings": []
+}

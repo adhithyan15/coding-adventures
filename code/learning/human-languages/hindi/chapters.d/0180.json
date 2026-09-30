@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Medicine, A patient, Treatment, A journey, Luggage",
+  "label": "ch:hi-medicine-a-patient-treatment-a-journey-luggage",
+  "canDo": "I can say medicine, a patient, treatment, a journey and luggage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C180-saman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: i can say medicine, a patient, treatment, a journey and luggage.",
+    "assesses": [
+      "HI-LEX-C180-THG180-03",
+      "HI-LEX-C180-THG180-04",
+      "HI-LEX-C180-THG180-05"
+    ]
+  }
+}

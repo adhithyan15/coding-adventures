@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Anger, Love, Shame, Hope, A memory",
+  "label": "ch:hi-anger-love-shame-hope-a-memory",
+  "canDo": "I can say anger, love, shame, hope and a memory.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C186-yad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: i can say anger, love, shame, hope and a memory.",
+    "assesses": [
+      "HI-LEX-C186-THG186-03",
+      "HI-LEX-C186-THG186-04",
+      "HI-LEX-C186-THG186-05"
+    ]
+  }
+}

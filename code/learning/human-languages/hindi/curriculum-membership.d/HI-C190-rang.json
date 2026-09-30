@@ -1,0 +1,11 @@
+{
+  "id": "HI-C190-rang",
+  "pathSegment": "HI-PATH-190-THG190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-190-THG190",
+      "order": 4
+    }
+  ]
+}

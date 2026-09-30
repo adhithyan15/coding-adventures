@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C184-aina",
+    "language": "hindi",
+    "chapter": 184,
+    "sequence": 8990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55e2ac33e0bbbaf7"
+  },
+  "findings": []
+}

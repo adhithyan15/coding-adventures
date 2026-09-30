@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:0147f335e2e29d94",
+  "lessonIds": [
+    "HI-C188-batan",
+    "HI-C188-jeb",
+    "HI-C188-dusman",
+    "HI-C188-caci",
+    "HI-C188-bhatija"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch188.txt",
+  "json": "hindi/narration/ch188.json",
+  "textHash": "fnv1a64:c8db8a05b8f2356a",
+  "jsonHash": "fnv1a64:b9d5bf71e08c4d1c",
+  "findings": []
+}
