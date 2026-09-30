@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-138-FUT138",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what will happen, and when: this evening, next week, in a year.",
+  "prerequisites": []
+}

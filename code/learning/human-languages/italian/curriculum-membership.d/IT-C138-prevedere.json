@@ -1,0 +1,11 @@
+{
+  "id": "IT-C138-prevedere",
+  "pathSegment": "IT-PATH-138-FUT138",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-138-FUT138",
+      "order": 3
+    }
+  ]
+}

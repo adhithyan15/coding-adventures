@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R139-first-pass-the-past-and-the-future",
+    "language": "italian",
+    "chapter": 139,
+    "sequence": 6970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ff755aa294c5572"
+  },
+  "findings": []
+}

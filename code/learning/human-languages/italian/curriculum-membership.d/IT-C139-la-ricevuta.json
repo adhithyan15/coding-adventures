@@ -1,0 +1,11 @@
+{
+  "id": "IT-C139-la-ricevuta",
+  "pathSegment": "IT-PATH-139-READ139",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-139-READ139",
+      "order": 3
+    }
+  ]
+}

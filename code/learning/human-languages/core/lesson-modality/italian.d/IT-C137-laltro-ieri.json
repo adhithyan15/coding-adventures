@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C137-laltro-ieri",
+    "language": "italian",
+    "chapter": 137,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:daa49c8b30c69cfc"
+  },
+  "findings": []
+}

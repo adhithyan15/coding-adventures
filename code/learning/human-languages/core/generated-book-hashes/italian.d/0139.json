@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:45ac98faceb6916a",
+  "lessonIds": [
+    "IT-C139-lorario",
+    "IT-C139-lavviso",
+    "IT-C139-laffitto",
+    "IT-C139-la-ricevuta",
+    "IT-C139-lappuntamento",
+    "IT-R139-first-pass-the-past-and-the-future",
+    "IT-R139-second-pass-reading-notices"
+  ],
+  "tex": "italian/book/chapters/ch139-opening-hours-a-notice-the-rent-a-receipt-an-appointment.tex"
+}

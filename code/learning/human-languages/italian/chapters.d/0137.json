@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Last, Already, the Day before Yesterday, Recently, To Happen",
+  "label": "ch:it-last-already-the-day-before-yesterday-recently-to-happen",
+  "canDo": "I can say what happened, and when: last week, the day before yesterday, recently.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "IT-C137-succedere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: I can say what happened, and when: last week, the day before yesterday, recently.",
+    "assesses": [
+      "IT-LEX-C137-PAST137-03",
+      "IT-LEX-C137-PAST137-04",
+      "IT-LEX-C137-PAST137-05"
+    ]
+  }
+}

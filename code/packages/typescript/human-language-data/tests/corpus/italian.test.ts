@@ -30,7 +30,10 @@ it("pins Italian lesson-content budgets", () =>
     // 395 -> 665: the A1 vocabulary tranche, chapters 85-136. 260 word lessons
     // (twenty-seven verbs) in five runs of ten or eleven chapters, each closing on
     // two reviews. No idiom, sense or culture claim.
-    lessons: 665,
+    // 665 -> 682: chapters 137-139 realize Italian's last three A2 spine
+    // nodes: the past, the future and reading practical texts. Fifteen word
+    // lessons and two reviews, with no idiom, sense or culture claim.
+    lessons: 682,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

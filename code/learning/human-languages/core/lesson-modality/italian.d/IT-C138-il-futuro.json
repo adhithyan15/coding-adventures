@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C138-il-futuro",
+    "language": "italian",
+    "chapter": 138,
+    "sequence": 6870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:206e0320b999d21a"
+  },
+  "findings": []
+}
