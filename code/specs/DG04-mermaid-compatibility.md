@@ -499,10 +499,12 @@ frame labels. Typed and untyped frame notes remain semantic annotations and
 lower into backend-neutral PaintScene metadata without changing Mermaid's
 visible frame rendering. Given/When/Then scenarios preserve their source frame
 and typed entity references through semantic IR and backend-neutral PaintScene
-metadata, likewise matching Mermaid's current non-visual treatment. Temporal
+metadata, likewise matching Mermaid's current non-visual treatment. Standalone
+entity declarations preserve qualified identifiers and namespaces through the
+same backend-neutral pipeline. Temporal
 swimlane layout lowers through backend-neutral PaintScene instructions and a
-native Metal-to-PNG fixture. Standalone entity declarations, configuration,
-and interactive behavior remain unsupported at the partial level.
+native Metal-to-PNG fixture. Configuration and interactive behavior remain
+unsupported at the partial level.
 
 ### Treemap Native Slice
 

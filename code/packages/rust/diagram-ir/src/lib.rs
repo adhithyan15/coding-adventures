@@ -1248,6 +1248,12 @@ pub enum EventModelEntityKind {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct EventModelEntity {
+    pub id: String,
+    pub namespace: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct EventModelDataBlock {
     pub id: String,
     pub data_type: Option<String>,
@@ -1294,6 +1300,7 @@ pub struct EventModelDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub entities: Vec<EventModelEntity>,
     pub data_blocks: Vec<EventModelDataBlock>,
     pub notes: Vec<EventModelNote>,
     pub gwt: Vec<EventModelGwt>,
@@ -1333,6 +1340,7 @@ pub struct LayoutedEventModelDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub entities: Vec<EventModelEntity>,
     pub notes: Vec<EventModelNote>,
     pub gwt: Vec<EventModelGwt>,
     pub items: Vec<LayoutedEventModelItem>,

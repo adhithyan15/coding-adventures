@@ -2162,7 +2162,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_event_modeling_to_png() {
         let diagram = parse_event_modeling(
-            "eventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 [[OrderData]]\ntf 03 evt Sales.OrderSubmitted ->> 02 `text`\"order accepted\"\ndata OrderData `json`{ \"total\": 42 }\nnote 02 `md` {\n  Order reviewed\n}\ngwt 02 given evt CartCreated when ui CheckoutUI then evt OrderSubmitted",
+            "eventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nentity Sales.CheckoutUI\nentity Sales.SubmitOrder\nentity Sales.OrderSubmitted\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 [[OrderData]]\ntf 03 evt Sales.OrderSubmitted ->> 02 `text`\"order accepted\"\ndata OrderData `json`{ \"total\": 42 }\nnote 02 `md` {\n  Order reviewed\n}\ngwt 02 given evt CartCreated when ui CheckoutUI then evt OrderSubmitted",
         )
         .expect("event modeling parse failed");
         let layout = layout_event_model_diagram(&diagram, 720.0);
@@ -2210,6 +2210,10 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(
             scene.metadata.as_ref().and_then(|metadata| metadata.get("eventModel.gwt.0.when.0.entity")),
             Some(&"CheckoutUI".to_string())
+        );
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("eventModel.entity.1.id")),
+            Some(&"Sales.SubmitOrder".to_string())
         );
         assert!(!scene.instructions.is_empty());
         let pixels = render(&scene);

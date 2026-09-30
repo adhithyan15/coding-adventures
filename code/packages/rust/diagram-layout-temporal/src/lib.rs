@@ -1315,6 +1315,7 @@ pub fn layout_event_model_diagram(
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        entities: diagram.entities.clone(),
         notes: diagram.notes.clone(),
         gwt: diagram.gwt.clone(),
         items,
@@ -2409,6 +2410,10 @@ mod tests {
             title: Some("Checkout".into()),
             accessibility_title: None,
             accessibility_description: None,
+            entities: vec![EventModelEntity {
+                id: "Sales.SubmitOrder".into(),
+                namespace: Some("Sales".into()),
+            }],
             data_blocks: vec![EventModelDataBlock {
                 id: "OrderData".into(),
                 data_type: Some("json".into()),
@@ -2477,5 +2482,6 @@ mod tests {
         )));
         assert_eq!(layout.notes, diagram.notes);
         assert_eq!(layout.gwt, diagram.gwt);
+        assert_eq!(layout.entities, diagram.entities);
     }
 }

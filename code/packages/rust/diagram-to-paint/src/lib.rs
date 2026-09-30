@@ -806,6 +806,12 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    for (index, entity) in diagram.entities.iter().enumerate() {
+        metadata.insert(format!("eventModel.entity.{index}.id"), entity.id.clone());
+        if let Some(namespace) = &entity.namespace {
+            metadata.insert(format!("eventModel.entity.{index}.namespace"), namespace.clone());
+        }
+    }
     for (index, note) in diagram.notes.iter().enumerate() {
         metadata.insert(format!("eventModel.note.{index}.frame"), note.source_frame.clone());
         metadata.insert(format!("eventModel.note.{index}.data"), note.data.clone());
