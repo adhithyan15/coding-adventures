@@ -369,12 +369,16 @@ class BoundedAuthorityOutput {
   appendField(name: string, value: string): void {
     if (!isScalarText(value)) invalid(`${name} must contain only Unicode scalar values`);
     if (Buffer.byteLength(value, "utf8") > MAX_AUTHORITY_FILE_BYTES - this.#bytes) byteLimit();
-    this.append(`${name} = ${JSON.stringify(value)}\n`);
+    this.append(`${name} = ${quoteTomlBasicString(value)}\n`);
   }
 
   finish(): string {
     return this.#chunks.join("");
   }
+}
+
+function quoteTomlBasicString(value: string): string {
+  return JSON.stringify(value).replace(/\u007f/gu, "\\u007F");
 }
 
 function isScalarText(value: string): boolean {

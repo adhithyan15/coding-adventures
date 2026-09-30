@@ -79,6 +79,12 @@ describe("persistent plugin authority codecs", () => {
     expect(() => formatTrustStore({
       trustedKeys: [{ algorithm: "ed25519", publicKey: KEY_A, addedAt: WHEN, note: "\uD800" }],
     })).toThrow(/Unicode scalar/);
+    const controls = "del:\u007f backspace:\b tab:\t newline:\n formfeed:\f return:\r quote:\" slash:\\";
+    const formatted = formatTrustStore({
+      trustedKeys: [{ algorithm: "ed25519", publicKey: KEY_A, addedAt: WHEN, note: controls }],
+    });
+    expect(formatted).toContain("\\u007F");
+    expect(parseTrustStore(formatted).trustedKeys[0]?.note).toBe(controls);
   });
 
   it("sorts authority rows by Unicode code point rather than UTF-16 code unit", () => {
