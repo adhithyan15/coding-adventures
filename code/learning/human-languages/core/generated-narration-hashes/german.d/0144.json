@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:bd302c90a34647e3",
+  "lessonIds": [
+    "GE-C144-aendern",
+    "GE-C144-anrufen",
+    "GE-C144-aufhoeren",
+    "GE-C144-ausgehen",
+    "GE-C144-aussehen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch144.txt",
+  "json": "german/narration/ch144.json",
+  "textHash": "fnv1a64:ff7d9bb5b29dd9ee",
+  "jsonHash": "fnv1a64:731962fc2d5b7ae4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C149-schreien",
+  "pathSegment": "GE-PATH-149-VERB149",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-149-VERB149",
+      "order": 4
+    }
+  ]
+}

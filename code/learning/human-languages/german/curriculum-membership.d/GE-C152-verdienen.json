@@ -1,0 +1,11 @@
+{
+  "id": "GE-C152-verdienen",
+  "pathSegment": "GE-PATH-152-VERB152",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-152-VERB152",
+      "order": 1
+    }
+  ]
+}

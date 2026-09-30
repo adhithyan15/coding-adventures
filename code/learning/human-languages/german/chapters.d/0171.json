@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Only, First, Afterwards, Before, Later",
+  "label": "ch:ge-only-first-afterwards-before-later",
+  "canDo": "I can say only, first, afterwards, before and later.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GE-C171-nachher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: i can say only, first, afterwards, before and later.",
+    "assesses": [
+      "GE-LEX-C171-TIME171-03",
+      "GE-LEX-C171-TIME171-04",
+      "GE-LEX-C171-TIME171-05"
+    ]
+  }
+}

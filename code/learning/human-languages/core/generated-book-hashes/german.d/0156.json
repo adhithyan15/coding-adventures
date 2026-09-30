@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:05a9da997c61041f",
+  "lessonIds": [
+    "GE-C156-rezept",
+    "GE-C156-schmerz",
+    "GE-C156-erkaeltung",
+    "GE-C156-husten",
+    "GE-C156-grippe"
+  ],
+  "tex": "german/book/chapters/ch156-a-prescription-a-pain-a-cold-a-cough-the-flu.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C164-enkelin",
+    "language": "german",
+    "chapter": 164,
+    "sequence": 7770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df9aa7f6c8b119a4"
+  },
+  "findings": []
+}

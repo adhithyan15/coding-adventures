@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:92180e2b9c727512",
+  "lessonIds": [
+    "GE-C172-leider",
+    "GE-C172-vielleicht",
+    "GE-C172-wahrscheinlich",
+    "GE-C172-natuerlich",
+    "GE-C172-genau"
+  ],
+  "tex": "german/book/chapters/ch172-unfortunately-perhaps-probably-of-course-exactly.tex"
+}

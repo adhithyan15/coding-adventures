@@ -133,6 +133,13 @@
       "sourceHash": "fnv1a64:0941ff45929fbd8a",
       "svgHash": "fnv1a64:d6d61fa3c824ebe8",
       "svg": "telugu/book/figures/TE-S171-letter-nga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S172-letter-chha",
+      "sourceHash": "fnv1a64:d0d70816f5de1a1d",
+      "svgHash": "fnv1a64:32198fc5f2eaf578",
+      "svg": "telugu/book/figures/TE-S172-letter-chha-filmstrip.svg"
     }
   ]
 }

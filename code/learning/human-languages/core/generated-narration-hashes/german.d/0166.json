@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:f15266ad1ca7e31d",
+  "lessonIds": [
+    "GE-C166-grund",
+    "GE-C166-loesung",
+    "GE-C166-erfahrung",
+    "GE-C166-moeglichkeit",
+    "GE-C166-nachmittag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch166.txt",
+  "json": "german/narration/ch166.json",
+  "textHash": "fnv1a64:064b040d09611b92",
+  "jsonHash": "fnv1a64:d96f89d0cad658ca",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C154-stelle",
+  "pathSegment": "GE-PATH-154-THING154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-154-THING154",
+      "order": 4
+    }
+  ]
+}

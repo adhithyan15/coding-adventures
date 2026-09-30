@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:720ffdab0cac1c23",
+  "lessonIds": [
+    "GE-C158-angebot",
+    "GE-C158-rechnung",
+    "GE-C158-tuete",
+    "GE-C158-paket",
+    "GE-C158-briefmarke"
+  ],
+  "tex": "german/book/chapters/ch158-an-offer-a-bill-a-bag-a-parcel-a-stamp.tex"
+}

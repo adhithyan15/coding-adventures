@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C170-gleich",
+    "language": "german",
+    "chapter": 170,
+    "sequence": 8230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:319f601fa5dddafc"
+  },
+  "findings": []
+}

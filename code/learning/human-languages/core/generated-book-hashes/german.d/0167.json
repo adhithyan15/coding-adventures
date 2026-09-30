@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:474ef67fa6d86d84",
+  "lessonIds": [
+    "GE-C167-bequem",
+    "GE-C167-unfreundlich",
+    "GE-C167-hoeflich",
+    "GE-C167-spannend",
+    "GE-C167-moeglich",
+    "GE-R167-first-pass-words-from-chapters-162-164",
+    "GE-R167-second-pass-words-from-chapters-165-167"
+  ],
+  "tex": "german/book/chapters/ch167-comfortable-unfriendly-polite-exciting-possible.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:31a99960adf2fbb5",
+  "lessonIds": [
+    "GE-C150-sparen",
+    "GE-C150-springen",
+    "GE-C150-sterben",
+    "GE-C150-stoeren",
+    "GE-C150-streiten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch150.txt",
+  "json": "german/narration/ch150.json",
+  "textHash": "fnv1a64:eb2ac0e8907fa828",
+  "jsonHash": "fnv1a64:569133504a254406",
+  "findings": []
+}

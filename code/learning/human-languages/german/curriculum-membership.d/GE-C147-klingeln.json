@@ -1,0 +1,11 @@
+{
+  "id": "GE-C147-klingeln",
+  "pathSegment": "GE-PATH-147-VERB147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-147-VERB147",
+      "order": 4
+    }
+  ]
+}

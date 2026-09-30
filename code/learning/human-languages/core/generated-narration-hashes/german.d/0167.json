@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:4543a1e8942b8c74",
+  "lessonIds": [
+    "GE-C167-bequem",
+    "GE-C167-unfreundlich",
+    "GE-C167-hoeflich",
+    "GE-C167-spannend",
+    "GE-C167-moeglich",
+    "GE-R167-first-pass-words-from-chapters-162-164",
+    "GE-R167-second-pass-words-from-chapters-165-167"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch167.txt",
+  "json": "german/narration/ch167.json",
+  "textHash": "fnv1a64:696466d7acb7aa9f",
+  "jsonHash": "fnv1a64:2f475c5cddcf9c1a",
+  "findings": []
+}

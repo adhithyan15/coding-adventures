@@ -1,0 +1,11 @@
+{
+  "id": "GE-C166-loesung",
+  "pathSegment": "GE-PATH-166-THING166",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-166-THING166",
+      "order": 1
+    }
+  ]
+}

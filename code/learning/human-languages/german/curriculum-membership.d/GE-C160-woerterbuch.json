@@ -1,0 +1,11 @@
+{
+  "id": "GE-C160-woerterbuch",
+  "pathSegment": "GE-PATH-160-THING160",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-160-THING160",
+      "order": 3
+    }
+  ]
+}

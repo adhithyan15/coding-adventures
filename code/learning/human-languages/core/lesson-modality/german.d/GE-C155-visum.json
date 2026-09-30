@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C155-visum",
+    "language": "german",
+    "chapter": 155,
+    "sequence": 7130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aad9a7d6fd2ff122"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:80426ab9dcdc3d89",
+  "lessonIds": [
+    "GE-C170-selten",
+    "GE-C170-meistens",
+    "GE-C170-gleich",
+    "GE-C170-endlich",
+    "GE-C170-noch"
+  ],
+  "tex": "german/book/chapters/ch170-rarely-mostly-right-away-finally-still.tex"
+}

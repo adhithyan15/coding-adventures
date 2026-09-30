@@ -1,0 +1,11 @@
+{
+  "id": "GE-C161-balkon",
+  "pathSegment": "GE-PATH-161-THING161",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-161-THING161",
+      "order": 3
+    }
+  ]
+}

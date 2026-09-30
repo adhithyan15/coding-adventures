@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S172-letter-chha",
+    "language": "telugu",
+    "chapter": 151,
+    "sequence": 6570,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:503272392ea34070",
+    "detachableSegments": [
+      "Script you'll notice: ఛ",
+      "Writing: ఛ — five movements, two runs"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

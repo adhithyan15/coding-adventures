@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:7b9271b7d21eecf3",
+  "lessonIds": [
+    "GE-C148-kosten",
+    "GE-C148-leihen",
+    "GE-C148-lieben",
+    "GE-C148-mitbringen",
+    "GE-C148-mitnehmen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch148.txt",
+  "json": "german/narration/ch148.json",
+  "textHash": "fnv1a64:10ef418894658b40",
+  "jsonHash": "fnv1a64:3cd8ee8dc95ad836",
+  "findings": []
+}

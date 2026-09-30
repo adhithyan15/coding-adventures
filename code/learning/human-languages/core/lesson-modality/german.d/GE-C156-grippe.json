@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C156-grippe",
+    "language": "german",
+    "chapter": 156,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e48dcba3aaff54a8"
+  },
+  "findings": []
+}

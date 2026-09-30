@@ -1,0 +1,11 @@
+{
+  "id": "GE-C153-wiederholen",
+  "pathSegment": "GE-PATH-153-VERB153",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-153-VERB153",
+      "order": 3
+    }
+  ]
+}

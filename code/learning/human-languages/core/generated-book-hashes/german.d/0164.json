@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:26a5657a1b217d34",
+  "lessonIds": [
+    "GE-C164-nachbarin",
+    "GE-C164-cousine",
+    "GE-C164-enkelin",
+    "GE-C164-baby",
+    "GE-C164-mensch"
+  ],
+  "tex": "german/book/chapters/ch164-a-neighbour-a-cousin-a-granddaughter-a-baby-a-human-being.tex"
+}

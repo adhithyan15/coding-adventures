@@ -1,0 +1,11 @@
+{
+  "id": "TE-S172-letter-chha",
+  "pathSegment": "TE-PATH-151-SHADE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-151-SHADE",
+      "order": 1
+    }
+  ]
+}

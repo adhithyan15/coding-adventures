@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:99cbeb9b5b973e04",
+  "lessonIds": [
+    "GE-C153-wandern",
+    "GE-C153-wechseln",
+    "GE-C153-werfen",
+    "GE-C153-wiederholen",
+    "GE-C153-ziehen"
+  ],
+  "tex": "german/book/chapters/ch153-to-hike-to-change-to-throw-to-repeat-to-pull.tex"
+}

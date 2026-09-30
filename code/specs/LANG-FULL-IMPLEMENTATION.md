@@ -1051,7 +1051,10 @@ backend immediately) come before the enabler-dependent items.
   recursively through their own supported recurrence, or through an exact
   mutually recursive selector cycle. A selector recurrence may itself contain
   a conditional expression selected by an exact snapshot in that graph,
-  including a direct self-reference in one selected leaf.
+  including a direct self-reference in one selected leaf. A selector that
+  changes during capped execution may choose different leaves when every leaf
+  retains that direct self-reference; partial dynamic self-recursion remains
+  conservative.
   Those exact snapshots may also select conditional statement branches
   containing cycle writes, including selector-cycle assignments whose other
   dependencies are written elsewhere in the loop body. Statement selectors

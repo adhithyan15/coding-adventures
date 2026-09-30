@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-166-THING166",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a reason, a solution, experience, a possibility and the afternoon.",
+  "prerequisites": []
+}

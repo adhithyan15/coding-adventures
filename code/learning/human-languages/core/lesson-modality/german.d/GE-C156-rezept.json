@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C156-rezept",
+    "language": "german",
+    "chapter": 156,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c910f6fa70e9e73a"
+  },
+  "findings": []
+}

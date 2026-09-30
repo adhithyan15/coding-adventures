@@ -28,6 +28,39 @@ public:
 
     Q_INVOKABLE QVariantMap props() const;
     Q_INVOKABLE QVariantMap handleEvent(const QVariantMap &event);
+
+    // Report the window's environment (UI48 ENV4, §7.6): `environmentChanged`
+    // with the whole environment -- the six UI48 §4 values under
+    // mosaic-app-runtime's wire names -- as its payload.
+    //
+    // - No runtime (a sample shell), or a report equal to the last one the
+    //   runtime took: nothing is sent, and the answer is an empty map.
+    // - An app that does not react answers with the props already showing
+    //   (see keepShowingProps).
+    // - A refusal (an invalid environment) answers {"error": ...} and is not
+    //   remembered as the runtime's environment; only the identical report is
+    //   not resent.
+    // - In a native-complete shell (configureRequiredProps) the answer is
+    //   checked and mapped to QML names, as handleRequiredEvent's is.
+    Q_INVOKABLE QVariantMap reportEnvironment(const QVariantMap &environment);
+
+    // True while effects are being settled. A report arriving then -- a window
+    // resized behind a modal file dialog, whose event loop is nested inside
+    // the settle -- is for the shell to retry once the settle is over, rather
+    // than a dispatch in the middle of one.
+    bool isSettling() const { return settling_ > 0; }
+
+    // The platform's pointer, hover and reduced motion (UI48 §4): coarse and
+    // without hover on phones and tablets, fine and hovering elsewhere. Qt
+    // has no portable reduced-motion setting, so that axis is no-preference.
+    // They go into the start context, and into every report.
+    static QVariantMap initialEnvironment();
+
+    // What a window of `width` x `height` logical pixels, dark or not, reports:
+    // initialEnvironment() plus colorScheme, sizeClass (600 and 1024, the
+    // thresholds every host uses, so one window size gives one bucket
+    // everywhere) and orientation.
+    static QVariantMap environmentReport(double width, double height, bool dark);
     Q_INVOKABLE QVariantMap handleRequiredEvent(const QVariantMap &event);
     Q_INVOKABLE QVariant snapshot();
     Q_INVOKABLE QVariantMap restore(const QVariantMap &snapshot);
@@ -148,10 +181,14 @@ private:
     QVariantMap requireMap(const QVariant &value, const char *kind) const;
     QVariantMap requireAndMapUpdate(const QVariantMap &update, const char *kind) const;
     QVariantMap failure(const QString &message) const;
+    QVariantMap keepShowingProps(const QVariantMap &update) const;
     QVariant loadPersistedSnapshot();
     void quarantinePersistedState(const QString &reason);
     void persistSnapshot();
     QVariantMap withPersistenceWarning(const QVariantMap &update) const;
+    // Record `settled` as what is showing: latestUpdate_ with any persistence
+    // warning, and the runtime's own props beside it for keepShowingProps.
+    void showUpdate(const QVariantMap &settled);
     QVariantMap settleEffects(QVariantMap update);
     QVariantMap completeEffectOnce(quint64 id, const QVariantMap &result);
     void failOutstanding(const QVariantMap &update, const QString &reason);
@@ -164,6 +201,16 @@ private:
     void *app_ = nullptr;
     quint64 sequence_ = 0;
     QVariantMap latestUpdate_;
+    // The last environment the runtime took; a report is never empty, so the
+    // empty map means "none yet".
+    QVariantMap lastReportedEnvironment_;
+    // The last report the runtime refused, so an identical one is not resent.
+    QVariantMap lastRefusedEnvironment_;
+    // The props the runtime last gave, before any persistence warning.
+    QVariant shownRuntimeProps_;
+    // Set by configureRequiredProps: answers are checked and mapped to QML
+    // names (requireAndMapUpdate) before a shell applies them.
+    bool requiredMode_ = false;
     QVariantMap requiredSlotNames_;
     QStringList requiredProps_;
     QString error_;

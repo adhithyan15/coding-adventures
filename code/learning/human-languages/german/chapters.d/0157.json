@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "A tablet, Insurance, A bank account, A credit card, A price",
+  "label": "ch:ge-a-tablet-insurance-a-bank-account-a-credit-card-a-price",
+  "canDo": "I can say a tablet, insurance, a bank account, a credit card and a price.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C157-preis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: i can say a tablet, insurance, a bank account, a credit card and a price.",
+    "assesses": [
+      "GE-LEX-C157-THING157-03",
+      "GE-LEX-C157-THING157-04",
+      "GE-LEX-C157-THING157-05"
+    ]
+  }
+}

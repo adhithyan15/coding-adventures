@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C160-universitaet",
+    "language": "german",
+    "chapter": 160,
+    "sequence": 7360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:946bf54de7878aba"
+  },
+  "findings": []
+}

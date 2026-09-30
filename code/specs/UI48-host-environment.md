@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2) and Compose (§7.5); ENV4 on SwiftUI (§7.3) and Compose (§7.4)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2) and Compose (§7.5); ENV4 on SwiftUI (§7.3), Compose (§7.4) and Qt (§7.6)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -595,6 +595,52 @@ refused, no variants → no selector). CI's Linux Compose lane compiles Engram,
 the one package with a variant (`EngramApp.touch.mll`), so both roots and the
 selector compile together. On desktop the pointer is `fine`, so the touch
 layout is compiled but not shown; the resize-and-assert gate still lands
+with ENV-last.
+
+### 7.6 ENV4 on Qt, as built
+
+The §7.3 contract on the Qt shell. Qt has no layout variants yet, so this is
+the report alone.
+
+- **The host owns the values.** `MosaicHost::environmentReport(width,
+  height, dark)` reduces a window to the six §4 values -- `sizeClass` at 600
+  and 1024 logical pixels (every host's thresholds), `orientation` from height
+  against width (a square window is landscape), `colorScheme` light or dark --
+  plus `MosaicHost::initialEnvironment()`: `coarse`/`none` on Android and iOS,
+  `fine`/`hover` elsewhere, and `reducedMotion` `no-preference` (Qt has no
+  portable setting). The initial values also go into the start context.
+- **The shell observes.** Every generated `main.cpp` with a host defines
+  `mosaicObserveEnvironment(view, host)` and calls it before the window is
+  shown: it reports once, then on `QWindow::widthChanged` /
+  `heightChanged` and, on Qt 6.5+, `QStyleHints::colorSchemeChanged` (earlier
+  Qts read the palette once). The packaged native-complete shell installs it
+  for each host that starts, so a retry's new host is observed and the old
+  one's connections go with it.
+- **Deduplicated in the host.** `reportEnvironment` sends nothing without a
+  runtime or when the report equals the last one the runtime took; it
+  remembers a report only once taken, so a refusal is retried with the next
+  change (only the identical refused report is not resent).
+- **Strict shells get strict answers.** In a native-complete shell
+  (`configureRequiredProps`) the answer is checked for required props and
+  mapped to QML property names, exactly as `handleRequiredEvent`'s is; a
+  missing prop is a refusal, not a half-applied screen.
+- **Not in the middle of a settle.** A modal file dialog runs a nested event
+  loop inside `settleEffects`, and a resize behind it would dispatch there.
+  The shell asks `MosaicHost::isSettling()` first and, if so, retries on one
+  restartable 100 ms timer instead.
+- **"No reaction" keeps the current props.** `handleEvent` keeps the props it
+  is showing when an update carries `props: null` at the revision it is
+  showing, as the Swift and Kotlin hosts do -- the runtime's own props, so a
+  persistence warning that has since cleared is not kept with them. The shell applies a report's
+  answer only when it carries props, and logs a refusal instead of applying
+  it (a refusal's props are an empty map, which would blank the screen).
+
+**Acceptance.** The Qt effect driver, linked to the conformance runtime (which
+ignores the event), checks the six values and thresholds, that an ignored
+report keeps the props and revision, that an unchanged report is not resent,
+that an invalid one is refused, leaves the props and is not remembered, and
+that a changed one is sent. Emitter tests pin the observer in both
+`main.cpp` shapes. As on the other hosts, the resize-and-assert gate lands
 with ENV-last.
 
 ## 8. Open questions

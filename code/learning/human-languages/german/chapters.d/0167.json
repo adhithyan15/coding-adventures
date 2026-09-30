@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Comfortable, Unfriendly, Polite, Exciting, Possible",
+  "label": "ch:ge-comfortable-unfriendly-polite-exciting-possible",
+  "canDo": "I can say comfortable, unfriendly, polite, exciting and possible.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-R167-second-pass-words-from-chapters-165-167",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: i can say comfortable, unfriendly, polite, exciting and possible.",
+    "assesses": [
+      "GE-LEX-C167-QUAL167-03",
+      "GE-LEX-C167-QUAL167-04",
+      "GE-LEX-C167-QUAL167-05"
+    ]
+  }
+}

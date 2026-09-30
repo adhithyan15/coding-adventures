@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R152-first-pass-words-from-chapters-144-147",
+    "language": "german",
+    "chapter": 152,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29af035803650816"
+  },
+  "findings": []
+}

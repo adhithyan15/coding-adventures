@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:8d742a79054b462a",
+  "lessonIds": [
+    "GE-C168-unmoeglich",
+    "GE-C168-hell",
+    "GE-C168-dunkel",
+    "GE-C168-voll",
+    "GE-C168-altmodisch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch168.txt",
+  "json": "german/narration/ch168.json",
+  "textHash": "fnv1a64:57391d921dce6ca6",
+  "jsonHash": "fnv1a64:48787a1bf9dd0c5a",
+  "findings": []
+}

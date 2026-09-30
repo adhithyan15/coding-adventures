@@ -1,0 +1,11 @@
+{
+  "id": "GE-C161-wohnzimmer",
+  "pathSegment": "GE-PATH-161-THING161",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-161-THING161",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C155-unfall",
+  "pathSegment": "GE-PATH-155-THING155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-155-THING155",
+      "order": 4
+    }
+  ]
+}

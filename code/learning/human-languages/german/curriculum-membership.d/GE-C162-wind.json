@@ -1,0 +1,11 @@
+{
+  "id": "GE-C162-wind",
+  "pathSegment": "GE-PATH-162-THING162",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-162-THING162",
+      "order": 3
+    }
+  ]
+}

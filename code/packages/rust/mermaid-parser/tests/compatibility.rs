@@ -214,6 +214,22 @@ fn pinned_radar_subset_corpus_parses_to_chart_ir() {
             assert_eq!(chart.series.len(), 2);
             assert_eq!(chart.series[1].label.as_deref(), Some("Second"));
             assert_eq!(chart.series[1].data[2].value, 1.0);
+        } else if id == "init-layout-config" {
+            assert_eq!(
+                (chart.radar_config.width, chart.radar_config.height),
+                (Some(520.0), Some(480.0))
+            );
+            assert_eq!(
+                (
+                    chart.radar_config.margin_left,
+                    chart.radar_config.margin_right
+                ),
+                (Some(25.0), Some(35.0))
+            );
+            assert_eq!(chart.radar_config.axis_label_factor, Some(1.1));
+        } else if id == "front-matter-layout-config" {
+            assert_eq!(chart.radar_config.width, Some(440.0));
+            assert_eq!(chart.radar_config.axis_scale_factor, Some(0.8));
         }
     }
 }

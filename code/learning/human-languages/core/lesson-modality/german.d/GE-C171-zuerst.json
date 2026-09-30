@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C171-zuerst",
+    "language": "german",
+    "chapter": 171,
+    "sequence": 8270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71f054f5cea617c5"
+  },
+  "findings": []
+}

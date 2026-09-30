@@ -1,0 +1,11 @@
+{
+  "id": "GE-C149-sammeln",
+  "pathSegment": "GE-PATH-149-VERB149",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-149-VERB149",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C151-treffen",
+    "language": "german",
+    "chapter": 151,
+    "sequence": 6720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:558f9d19f64ac194"
+  },
+  "findings": []
+}

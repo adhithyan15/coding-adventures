@@ -1,0 +1,17 @@
+{
+  "language": "telugu",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:2acd6b30ca87d447",
+  "lessonIds": [
+    "TE-C151-chhaya",
+    "TE-S172-letter-chha",
+    "TE-R151-chhaya-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "telugu/narration/ch151.txt",
+  "json": "telugu/narration/ch151.json",
+  "textHash": "fnv1a64:e17ce8e9b16b2cd4",
+  "jsonHash": "fnv1a64:4d571e995ca85b24",
+  "findings": []
+}

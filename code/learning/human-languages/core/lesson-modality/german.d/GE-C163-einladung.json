@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C163-einladung",
+    "language": "german",
+    "chapter": 163,
+    "sequence": 7740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5b128aab5f10023"
+  },
+  "findings": []
+}
