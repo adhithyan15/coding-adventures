@@ -8,6 +8,7 @@ turned a correct launch (exit 124) into a failed check on a CI runner.
 from __future__ import annotations
 
 import os
+import re
 import stat
 import subprocess
 import tempfile
@@ -64,6 +65,12 @@ class RunUnderXvfbTest(unittest.TestCase):
         result = self.run_with(NEVER_STARTS_BUT_ZERO, "true")
         self.assertEqual(result.returncode, 1)
 
+    def test_shell_errors_name_the_helper_not_the_status_file(self) -> None:
+        result = self.run_with(AGREES, "/nonexistent-command")
+        self.assertEqual(result.returncode, 127, result.stderr)
+        self.assertIn("run-under-xvfb", result.stderr)
+        self.assertNotIn("/tmp", result.stderr.split("run-under-xvfb:")[0])
+
     def test_arguments_are_never_parsed_as_shell(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "injected"
@@ -75,7 +82,8 @@ class RunUnderXvfbTest(unittest.TestCase):
     def test_workflows_launch_through_the_helper(self) -> None:
         for name in ("ci.yml", "release-task-app.yml"):
             workflow = (WORKFLOWS / name).read_text(encoding="utf-8")
-            self.assertNotIn("xvfb-run -a ", workflow, name)
+            # Any direct call, whatever its flags: only the helper may run it.
+            self.assertIsNone(re.search(r"(?<![-\w])xvfb-run(?![-\w.])", workflow), name)
             self.assertIn('bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh"', workflow, name)
 
 

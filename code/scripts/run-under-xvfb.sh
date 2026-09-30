@@ -31,15 +31,19 @@ fi
 status_file="$(mktemp)"
 trap 'rm -f -- "$status_file"' EXIT
 
-# `sh -c` receives the status file as $0 and the command as "$@", so nothing
-# the caller passes is ever parsed as shell text; it exits with the command's
+# `sh -c` receives the status file as $1 and the command as the rest of "$@",
+# so nothing the caller passes is ever parsed as shell text ($0 names this
+# script in the shell's own error messages). It exits with the command's
 # status too, so xvfb-run agrees with it whenever cleanup succeeds.
 # shellcheck disable=SC2016
-xvfb-run -a sh -c '"$@"; s=$?; echo "$s" > "$0"; exit "$s"' "$status_file" "$@"
+xvfb-run -a sh -c 'f=$1; shift; "$@"; s=$?; echo "$s" > "$f"; exit "$s"' run-under-xvfb "$status_file" "$@"
 xvfb_status=$?
 
 if [[ -s "$status_file" ]]; then
   status="$(cat -- "$status_file")"
+  # Only `$?` is ever written there, but `[[ -ne ]]` evaluates arithmetic:
+  # anything else is a failure, not an expression.
+  [[ "$status" =~ ^[0-9]+$ ]] || status=1
   if [[ "$xvfb_status" -ne "$status" ]]; then
     echo "run-under-xvfb: xvfb-run exited $xvfb_status after the command exited $status; reporting the command's status" >&2
   fi
