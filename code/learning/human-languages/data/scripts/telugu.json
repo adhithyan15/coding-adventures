@@ -2536,8 +2536,23 @@
       "components": [
         "త  ta — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "curl upward along the inner-left shoulder",
+        "turn downward around the outer-left bowl",
+        "sweep right around the broad lower bowl",
+        "curve upward around the outer-right bowl",
+        "turn downward along the inner-right shoulder",
+        "return upward and curve left across the upper shoulder",
+        "sweep up through the separate top flourish"
+      ],
+      "strokeOrderNote": "Seven numbered movements grouped into two pen-down runs: movements 1–6 stay joined through the paired bowls and broad lower body, then movement 7 restarts for the separate top flourish.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "url": "https://play.google.com/store/apps/details?id=com.sathishshanmugam.writetelugualphabets",
+        "citation": "Sathish Shanmugam, Write Telugu Alphabets, consonant త packaged tracing guides res/drawable/dot_stroke_c_4_1_ta.png and res/drawable/line_stroke_c_4_1_ta.png, movements 1–7 (version 2.6)",
+        "accessed": "2026-09-30",
+        "variation": "The packaged tracing guide numbers six connected movements around the paired bowls and lower body, followed by a separate seventh movement for the top flourish. Telugu letter direction is not uniform across the script, so this is one attested pedagogical order fitted to the bundled Noto Sans Telugu outline."
+      }
     },
     {
       "glyph": "తా",

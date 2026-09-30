@@ -3,6 +3,34 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S01-copy-in-a-word",
+      "sourceHash": "fnv1a64:c42d2019117739ad",
+      "svgHash": "fnv1a64:62108b4950ea193b",
+      "svg": "telugu/book/figures/TE-S01-copy-in-a-word-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S01-delayed-copy",
+      "sourceHash": "fnv1a64:bf72f97156d34f8d",
+      "svgHash": "fnv1a64:62108b4950ea193b",
+      "svg": "telugu/book/figures/TE-S01-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S01-dictation",
+      "sourceHash": "fnv1a64:6380b93d5c3b614a",
+      "svgHash": "fnv1a64:62108b4950ea193b",
+      "svg": "telugu/book/figures/TE-S01-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S01-letter-ta",
+      "sourceHash": "fnv1a64:0af7910f15d80d05",
+      "svgHash": "fnv1a64:62108b4950ea193b",
+      "svg": "telugu/book/figures/TE-S01-letter-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S03-letter-ka",
       "sourceHash": "fnv1a64:67de851626b7df61",
       "svgHash": "fnv1a64:70ba046e62a181c2",
