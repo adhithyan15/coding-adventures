@@ -203,6 +203,14 @@ fn pinned_radar_subset_corpus_parses_to_chart_ir() {
         let chart = parse_radar(source)
             .unwrap_or_else(|error| panic!("radar fixture {id} failed: {error}"));
         assert!(!chart.series.is_empty());
+        if id == "core-options" {
+            assert!(!chart.radar_config.show_legend);
+            assert_eq!(chart.radar_config.ticks, 4.0);
+            assert_eq!(
+                chart.y_axis.as_ref().map(|axis| (axis.min, axis.max)),
+                Some((10.0, 90.0))
+            );
+        }
     }
 }
 

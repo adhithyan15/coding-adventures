@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.68.0";
+pub const VERSION: &str = "0.69.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -922,6 +922,34 @@ pub struct QuadrantConfig {
     pub title_fill: Option<String>,
 }
 
+#[derive(Clone, Debug, Default, PartialEq)]
+pub enum RadarGraticule {
+    #[default]
+    Circle,
+    Polygon,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct RadarConfig {
+    pub show_legend: bool,
+    pub ticks: f64,
+    pub min: f64,
+    pub max: Option<f64>,
+    pub graticule: RadarGraticule,
+}
+
+impl Default for RadarConfig {
+    fn default() -> Self {
+        Self {
+            show_legend: true,
+            ticks: 5.0,
+            min: 0.0,
+            max: None,
+            graticule: RadarGraticule::Circle,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct ChartDiagram {
     pub title: Option<String>,
@@ -939,6 +967,7 @@ pub struct ChartDiagram {
     pub quadrant_points: Vec<QuadrantPoint>,
     pub quadrant_config: QuadrantConfig,
     pub xy_config: XyChartConfig,
+    pub radar_config: RadarConfig,
     pub orientation: ChartOrientation,
 }
 
@@ -2236,7 +2265,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.68.0");
+        assert_eq!(VERSION, "0.69.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -2349,6 +2378,7 @@ mod tests {
             quadrant_points: vec![],
             quadrant_config: QuadrantConfig::default(),
             xy_config: XyChartConfig::default(),
+            radar_config: RadarConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         assert_eq!(d.series[0].data.len(), 2);

@@ -464,12 +464,14 @@ unsupported at the partial level.
 
 The initial Mermaid 11.16.1 Radar slice uses dedicated portable grammars and
 maps labeled axes plus positional or axis-keyed curves into chart semantic IR.
-The chart layout emits deterministic polygonal graticules, radial spokes, axis
-labels, closed series paths, and legends using backend-neutral PaintScene
-instructions, with a native Metal-to-PNG fixture. Radar options (`showLegend`,
-`ticks`, `min`, `max`, and `graticule`), multiple curves on one statement,
-multiline curve bodies, configuration, and filled or smoothed curve styling
-remain unsupported at the partial level.
+The chart layout emits deterministic polygonal or circular graticules, radial
+spokes, axis labels, closed series paths, and legends using backend-neutral PaintScene
+instructions, with a native Metal-to-PNG fixture. Core Radar options preserve
+`showLegend`, positive numeric `ticks`, numeric `min`/`max`, and circle or
+polygon `graticule` choices in semantic chart IR. Layout applies the configured
+scale and graticule geometry before backend-neutral Paint lowering. Multiple
+curves on one statement, multiline curve bodies, configuration, and filled or
+smoothed curve styling remain unsupported at the partial level.
 
 ### Event Modeling Native Slice
 
