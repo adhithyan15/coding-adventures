@@ -422,10 +422,11 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-github-pages-adapter, the hosted publication
         # boundary over GitHub's Git Data API.
         # +1: forme-plugin-host, the FM02 subprocess wire and mediation boundary.
+        # +1: forme-plugin-installer-core, the FM02 atomic install boundary.
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
-        self.assertEqual(summary.total_projects, 477)
-        self.assertEqual(summary.shared_projects, 297)
+        self.assertEqual(summary.total_projects, 478)
+        self.assertEqual(summary.shared_projects, 298)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         self.assertEqual(summary.standalone_emit_projects, 151)
@@ -468,8 +469,9 @@ console.log(prose, nested);
         # and ownership manifests through the Node Buffer API.
         # +1: forme-plugin-host owns subprocess streams, bounded wire buffers,
         # cryptographic hashes, temporary directories, and discovery paths.
+        # +1: forme-plugin-installer-core owns its atomic filesystem transaction.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_api_projects, 74)
+        self.assertEqual(summary.node_api_projects, 75)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -491,8 +493,9 @@ console.log(prose, nested);
         # provider for binary Git blob transport.
         # +1: forme-plugin-host owns its Node process, stream, crypto,
         # filesystem, path, OS, and test-fixture type provider.
+        # +1: forme-plugin-installer-core owns its Node filesystem provider.
         # -1: the retired checklist-app (its Electron shell used Node APIs).
-        self.assertEqual(summary.node_provider_projects, 74)
+        self.assertEqual(summary.node_provider_projects, 75)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -525,8 +528,9 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-github-pages-adapter locks its compiler and
         # test graph.
         # +1: forme-plugin-host locks its compiler and cross-process test graph.
+        # +1: forme-plugin-installer-core locks its compiler and test graph.
         # -1: the retired checklist-app took its lockfile with it.
-        self.assertEqual(summary.locked_compilers, 476)
+        self.assertEqual(summary.locked_compilers, 477)
 
 
 if __name__ == "__main__":

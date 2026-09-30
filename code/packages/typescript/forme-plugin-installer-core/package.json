@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/forme-plugin-installer-core",
+  "version": "0.1.0",
+  "description": "Bounded validation and atomic filesystem installation for complete Forme plugin snapshots.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/forme-capability": "file:../forme-capability",
+    "@coding-adventures/forme-manifest": "file:../forme-manifest",
+    "@coding-adventures/forme-plugin-host": "file:../forme-plugin-host"
+  },
+  "devDependencies": {
+    "@coding-adventures/ed25519": "file:../ed25519",
+    "@types/node": "^22.20.1",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.11"
+  }
+}

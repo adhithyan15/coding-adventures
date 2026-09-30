@@ -21,7 +21,11 @@
  * The templating engine is deliberately tiny: no expressions, no
  * conditionals, no `$var.field`, no `${var}` syntax.  It exists so
  * a plugin's manifest can declare `"filesystem:read:$storageRoot"`
- * without knowing the user's project layout.  Nothing more.
+ * without knowing the user's project layout.  Nothing more. Path values are
+ * converted to a reversible URI-path capability-detail representation. `/`
+ * remains the hierarchy separator while `%`, `:`, backslashes, whitespace,
+ * controls, and non-ASCII bytes are percent-encoded. This keeps Windows drive
+ * paths inside the third capability segment without aliasing POSIX names.
  *
  * @module templating
  */
@@ -127,6 +131,18 @@ export function hasTemplate(template: string): boolean {
   return false;
 }
 
+/** Encode an absolute host path for use as one colon-free capability detail. */
+export function encodeCapabilityPath(path: string): string {
+  try {
+    return encodeURIComponent(path).replaceAll("%2F", "/");
+  } catch {
+    throw new ManifestError({
+      code: "TEMPLATE_MALFORMED",
+      message: "capability path contains an unpaired Unicode surrogate",
+    });
+  }
+}
+
 // ─── Helpers ────────────────────────────────────────────────────────
 
 function isIdentChar(ch: string): boolean {
@@ -148,7 +164,7 @@ function lookup(
           message: `template references "$storageRoot" but env.storageRoot is empty`,
         });
       }
-      return env.storageRoot;
+      return encodeCapabilityPath(env.storageRoot);
     case "cacheDir":
       if (env.cacheDir === null) {
         throw new ManifestError({
@@ -156,7 +172,7 @@ function lookup(
           message: `template references "$cacheDir" but the pipeline has no cacheDir`,
         });
       }
-      return env.cacheDir;
+      return encodeCapabilityPath(env.cacheDir);
     case "pluginDir":
       if (!env.pluginDir) {
         throw new ManifestError({
@@ -164,6 +180,6 @@ function lookup(
           message: `template references "$pluginDir" but env.pluginDir is empty`,
         });
       }
-      return env.pluginDir;
+      return encodeCapabilityPath(env.pluginDir);
   }
 }
