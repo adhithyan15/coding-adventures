@@ -250,7 +250,9 @@ between a directly self-recursive boolean leaf and a non-recursive exact leaf;
 a finite chain of distinct exact boolean identity copies may sit between that
 selector recurrence and the partial self-recursive assignment. These include
 bare variables, neutral boolean operations, and even `not` chains. Copy cycles,
-changing expressions, and unknown conditional inputs still fail closed.
+changing expressions, and unknown conditional inputs still fail closed. A
+conditional identity copy may have a dynamic selector when both branches
+preserve the same unique forwarded selector.
 Unknown selectors, unsupported selector or dependency writes, string targets, overflow,
 non-finite values, and loops that do not reach false within 4,096 evaluations
 fail closed.
