@@ -14437,7 +14437,7 @@ the aggregate repository-source boundary, and ten boundary-derived corpus cases.
 The combined Lua boundary keeps both the new `der_asn1` root from #16100 and
 this branch's `x509_extension` root: 18 boundaries, 21 inputs, 489 scopes, 492
 authorizations, and digest
-`252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3`. The
+`4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e`. The
 disjoint official OCaml content-addressed archive mirror repair is preserved.
 The regenerated exact-main inventory is topology-neutral at 1,470 identities,
 4,723 slots, and zero collisions; the branch remains 1,470 identities, 4,737
