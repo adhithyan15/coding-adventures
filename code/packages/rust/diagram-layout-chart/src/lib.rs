@@ -12,12 +12,13 @@
 //!   * **Radar** — radial axes with polygonal series
 
 use diagram_ir::{
-    AxisKind, ChartDiagram, ChartKind, CubicCurveSegment, LayoutedChartDiagram,
-    LayoutedChartItem, LegendEntry, Orientation, Point, RadarGraticule, SeriesKind,
+    AxisKind, ChartDiagram, ChartKind, ChartTextAnchor, ChartTextBaseline, CubicCurveSegment,
+    LayoutedChartDiagram, LayoutedChartItem, LegendEntry, Orientation, Point, RadarGraticule,
+    SeriesKind,
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.21.0";
+pub const VERSION: &str = "0.22.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -1483,10 +1484,14 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
             index,
             count,
         );
+        let angle = 2.0 * std::f64::consts::PI * index as f64 / count as f64
+            - std::f64::consts::FRAC_PI_2;
+        let cos_angle = angle.cos();
+        let sin_angle = angle.sin();
         let label_point = radar_point(
             cx,
             cy,
-            radius * diagram.radar_config.axis_label_factor.unwrap_or(1.0) + 24.0,
+            radius * diagram.radar_config.axis_label_factor.unwrap_or(1.05) + 4.0,
             index,
             count,
         );
@@ -1502,18 +1507,30 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 .unwrap_or_else(|| "#374151".into()),
             stroke_width: diagram.radar_config.axis_stroke_width.unwrap_or(2.0),
         });
-        items.push(LayoutedChartItem::DataLabel {
+        items.push(LayoutedChartItem::AnchoredLabel {
             x: label_point.x,
             y: label_point.y,
             text: label.clone(),
-            font_size: Some(diagram.radar_config.axis_label_font_size.unwrap_or(12.0)),
-            color: Some(
-                diagram
-                    .radar_config
-                    .axis_color
-                    .clone()
-                    .unwrap_or_else(|| "#374151".into()),
-            ),
+            font_size: diagram.radar_config.axis_label_font_size.unwrap_or(12.0),
+            color: diagram
+                .radar_config
+                .axis_color
+                .clone()
+                .unwrap_or_else(|| "#374151".into()),
+            anchor: if cos_angle > 0.01 {
+                ChartTextAnchor::Start
+            } else if cos_angle < -0.01 {
+                ChartTextAnchor::End
+            } else {
+                ChartTextAnchor::Middle
+            },
+            baseline: if sin_angle > 0.01 {
+                ChartTextBaseline::Top
+            } else if sin_angle < -0.01 {
+                ChartTextBaseline::Bottom
+            } else {
+                ChartTextBaseline::Middle
+            },
         });
     }
 
@@ -1689,7 +1706,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.21.0");
+        assert_eq!(crate::VERSION, "0.22.0");
     }
 
     #[test]
@@ -2464,12 +2481,65 @@ mod tests {
         assert_eq!(first_axis, Some((220.0, 170.0, 220.0, 124.0)));
 
         let first_label = layout.items.iter().find_map(|item| match item {
-            LayoutedChartItem::DataLabel { x, y, text, .. } if text == "A" => Some((*x, *y)),
+            LayoutedChartItem::AnchoredLabel { x, y, text, .. } if text == "A" => {
+                Some((*x, *y))
+            }
             _ => None,
         });
         let (label_x, label_y) = first_label.expect("first radar axis label");
         assert!((label_x - 220.0).abs() < f64::EPSILON);
-        assert!((label_y - 35.6).abs() < 1e-10);
+        assert!((label_y - 55.6).abs() < 1e-10);
+    }
+
+    #[test]
+    fn radar_axis_labels_anchor_away_from_the_chart_center() {
+        let mut diagram = xy_diagram();
+        diagram.kind = ChartKind::Radar;
+        diagram.title = None;
+        diagram.x_axis = Some(Axis {
+            kind: AxisKind::Categorical,
+            title: None,
+            categories: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+                .into_iter()
+                .map(str::to_string)
+                .collect(),
+            min: 0.0,
+            max: 8.0,
+        });
+        diagram.series.clear();
+        diagram.radar_config.show_legend = false;
+
+        let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
+        let anchors = layout
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                LayoutedChartItem::AnchoredLabel {
+                    text,
+                    anchor,
+                    baseline,
+                    ..
+                } => Some((text.as_str(), *anchor, *baseline)),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            anchors[0],
+            ("N", ChartTextAnchor::Middle, ChartTextBaseline::Bottom)
+        );
+        assert_eq!(
+            anchors[2],
+            ("E", ChartTextAnchor::Start, ChartTextBaseline::Middle)
+        );
+        assert_eq!(
+            anchors[4],
+            ("S", ChartTextAnchor::Middle, ChartTextBaseline::Top)
+        );
+        assert_eq!(
+            anchors[6],
+            ("W", ChartTextAnchor::End, ChartTextBaseline::Middle)
+        );
     }
 
     #[test]

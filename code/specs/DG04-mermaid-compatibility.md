@@ -477,8 +477,10 @@ front matter survive typed semantic configuration and control deterministic
 native geometry. Circular graticules lower Radar series through backend-neutral
 cubic Paint paths. Core Radar theme variables control axis and graticule
 strokes, label and legend sizing, series palettes, translucent curve fills, and
-stroke widths through the same semantic layout and Paint pipeline. Pixel-exact
-default-theme matching and upstream text anchoring remain partial.
+stroke widths through the same semantic layout and Paint pipeline. Axis labels
+carry angle-derived horizontal anchors and vertical baselines into backend-neutral
+text layout so text extends away from the chart center. Pixel-exact default-theme
+matching remains partial.
 
 ### Event Modeling Native Slice
 

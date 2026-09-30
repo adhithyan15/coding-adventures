@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: titles, accessibility metadata, labeled axes, positional and axis-keyed curves, curve lists, multiline curve bodies, core chart options, layout configuration, curve tension, and core Radar theme variables.",
+  "scope": "Native partial slice: titles, accessibility metadata, labeled axes with angular text anchoring, positional and axis-keyed curves, curve lists, multiline curve bodies, core chart options, layout configuration, curve tension, and core Radar theme variables.",
   "fixtures": [
     {
       "id": "basic",
@@ -11,6 +11,10 @@
     {
       "id": "labels-and-metadata",
       "source": "radar-beta:\ntitle Restaurant Comparison\naccTitle: Comparison chart\naccDescr: Scores by category\naxis food[\"Food Quality\"], service[\"Service\"], price[\"Price\"]\ncurve a[\"Restaurant A\"]{4, 3, 2}"
+    },
+    {
+      "id": "angular-label-anchors",
+      "source": "radar-beta\naxis N, NE, E, SE, S, SW, W, NW\ncurve compass{8, 7, 6, 5, 4, 3, 2, 1}"
     },
     {
       "id": "detailed-entries",

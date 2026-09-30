@@ -2360,11 +2360,21 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_radar_to_png() {
         let chart = parse_radar(
-            "%%{init: {\"radar\": {\"width\": 520, \"height\": 480, \"marginTop\": 30, \"marginBottom\": 40, \"marginLeft\": 25, \"marginRight\": 35, \"axisScaleFactor\": 0.9, \"axisLabelFactor\": 1.1, \"curveTension\": 0.25}, \"themeVariables\": {\"cScale0\": \"#102030\", \"cScale1\": \"#405060\", \"radar\": {\"axisColor\": \"#203040\", \"axisStrokeWidth\": 3, \"curveOpacity\": 0.4, \"curveStrokeWidth\": 4, \"graticuleColor\": \"#304050\", \"graticuleOpacity\": 0.2}}}}%%\nradar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"], support[\"Support\"]\ncurve alpha[\"Alpha\"]{80,\n65,\n45,\n90}, beta[\"Beta\"]{55, 85, 75, 60}\nticks 4\nmin 20\nmax 100\ngraticule circle\nshowLegend true",
+            "%%{init: {\"radar\": {\"width\": 520, \"height\": 480, \"marginTop\": 30, \"marginBottom\": 40, \"marginLeft\": 25, \"marginRight\": 35, \"axisScaleFactor\": 0.9, \"axisLabelFactor\": 1.1, \"curveTension\": 0.25}, \"themeVariables\": {\"cScale0\": \"#102030\", \"cScale1\": \"#405060\", \"radar\": {\"axisColor\": \"#203040\", \"axisStrokeWidth\": 3, \"curveOpacity\": 0.4, \"curveStrokeWidth\": 4, \"graticuleColor\": \"#304050\", \"graticuleOpacity\": 0.2}}}}%%\nradar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], value[\"Value\"], usability[\"Usability\"], cost[\"Cost\"], reach[\"Reach\"], support[\"Support\"], security[\"Security\"]\ncurve alpha[\"Alpha\"]{80,\n65,\n70,\n55,\n45,\n75,\n90,\n85}, beta[\"Beta\"]{55, 85, 65, 80, 75, 50, 60, 70}\nticks 4\nmin 20\nmax 100\ngraticule circle\nshowLegend true",
         )
         .expect("radar parse failed");
         let layout = layout_chart_diagram(&chart, 640.0, 560.0);
         assert_eq!((layout.width, layout.height), (580.0, 550.0));
+        assert_eq!(
+            layout
+                .items
+                .iter()
+                .filter(|item| {
+                    matches!(item, diagram_ir::LayoutedChartItem::AnchoredLabel { .. })
+                })
+                .count(),
+            8
+        );
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();
