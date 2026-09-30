@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:b6fba2be2de6be59",
+  "lessonIds": [
+    "IT-C137-scorso",
+    "IT-C137-gia",
+    "IT-C137-laltro-ieri",
+    "IT-C137-recentemente",
+    "IT-C137-succedere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch137.txt",
+  "json": "italian/narration/ch137.json",
+  "textHash": "fnv1a64:7cd84ae534c29212",
+  "jsonHash": "fnv1a64:c21f5fe4ebcfc7d5",
+  "findings": []
+}

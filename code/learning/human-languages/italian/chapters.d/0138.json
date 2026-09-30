@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "The Future, This Evening, a Plan, To Foresee, To Organise",
+  "label": "ch:it-the-future-this-evening-a-plan-to-foresee-to-organise",
+  "canDo": "I can say what will happen, and when: this evening, next week, in a year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "IT-C138-organizzare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: I can say what will happen, and when: this evening, next week, in a year.",
+    "assesses": [
+      "IT-LEX-C138-FUT138-03",
+      "IT-LEX-C138-FUT138-04",
+      "IT-LEX-C138-FUT138-05"
+    ]
+  }
+}

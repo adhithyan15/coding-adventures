@@ -1,0 +1,11 @@
+{
+  "id": "IT-C138-stasera",
+  "pathSegment": "IT-PATH-138-FUT138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-138-FUT138",
+      "order": 1
+    }
+  ]
+}

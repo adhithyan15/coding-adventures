@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Opening Hours, a Notice, the Rent, a Receipt, an Appointment",
+  "label": "ch:it-opening-hours-a-notice-the-rent-a-receipt-an-appointment",
+  "canDo": "I can read opening hours, a notice, an advert, a receipt and an appointment, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "IT-R139-second-pass-reading-notices",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: I can read opening hours, a notice, an advert, a receipt and an appointment, and act on what they say.",
+    "assesses": [
+      "IT-LEX-C139-READ139-03",
+      "IT-LEX-C139-READ139-04",
+      "IT-LEX-C139-READ139-05"
+    ]
+  }
+}

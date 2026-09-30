@@ -1,0 +1,11 @@
+{
+  "id": "IT-C138-organizzare",
+  "pathSegment": "IT-PATH-138-FUT138",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-138-FUT138",
+      "order": 4
+    }
+  ]
+}

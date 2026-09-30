@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-139-READ139",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "IT-EXT-139-READ139"
+  ],
+  "after": []
+}
