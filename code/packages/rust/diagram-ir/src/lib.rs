@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.69.0";
+pub const VERSION: &str = "0.70.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -936,6 +936,14 @@ pub struct RadarConfig {
     pub min: f64,
     pub max: Option<f64>,
     pub graticule: RadarGraticule,
+    pub width: Option<f64>,
+    pub height: Option<f64>,
+    pub margin_top: Option<f64>,
+    pub margin_bottom: Option<f64>,
+    pub margin_left: Option<f64>,
+    pub margin_right: Option<f64>,
+    pub axis_scale_factor: Option<f64>,
+    pub axis_label_factor: Option<f64>,
 }
 
 impl Default for RadarConfig {
@@ -946,6 +954,14 @@ impl Default for RadarConfig {
             min: 0.0,
             max: None,
             graticule: RadarGraticule::Circle,
+            width: None,
+            height: None,
+            margin_top: None,
+            margin_bottom: None,
+            margin_left: None,
+            margin_right: None,
+            axis_scale_factor: None,
+            axis_label_factor: None,
         }
     }
 }
@@ -2265,7 +2281,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.69.0");
+        assert_eq!(VERSION, "0.70.0");
     }
     #[test]
     fn default_direction_is_tb() {

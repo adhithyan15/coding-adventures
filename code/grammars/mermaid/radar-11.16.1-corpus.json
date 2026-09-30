@@ -27,6 +27,14 @@
     {
       "id": "core-options",
       "source": "radar-beta\naxis A, B, C\ncurve scores{20, 50, 80}\nshowLegend false, ticks 4\nmin 10\nmax 90\ngraticule polygon"
+    },
+    {
+      "id": "init-layout-config",
+      "source": "%%{init: {\"radar\": {\"width\": 520, \"height\": 480, \"marginTop\": 30, \"marginBottom\": 40, \"marginLeft\": 25, \"marginRight\": 35, \"axisScaleFactor\": 0.9, \"axisLabelFactor\": 1.1}}}%%\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+    },
+    {
+      "id": "front-matter-layout-config",
+      "source": "---\nconfig:\n  radar:\n    width: 440\n    height: 420\n    axisScaleFactor: 0.8\n---\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
     }
   ]
 }

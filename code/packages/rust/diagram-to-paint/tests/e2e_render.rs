@@ -2360,10 +2360,11 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_radar_to_png() {
         let chart = parse_radar(
-            "radar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"], support[\"Support\"]\ncurve alpha[\"Alpha\"]{80,\n65,\n45,\n90}, beta[\"Beta\"]{55, 85, 75, 60}\nticks 4\nmin 20\nmax 100\ngraticule polygon\nshowLegend true",
+            "%%{init: {\"radar\": {\"width\": 520, \"height\": 480, \"marginTop\": 30, \"marginBottom\": 40, \"marginLeft\": 25, \"marginRight\": 35, \"axisScaleFactor\": 0.9, \"axisLabelFactor\": 1.1}}}%%\nradar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"], support[\"Support\"]\ncurve alpha[\"Alpha\"]{80,\n65,\n45,\n90}, beta[\"Beta\"]{55, 85, 75, 60}\nticks 4\nmin 20\nmax 100\ngraticule polygon\nshowLegend true",
         )
         .expect("radar parse failed");
         let layout = layout_chart_diagram(&chart, 640.0, 560.0);
+        assert_eq!((layout.width, layout.height), (580.0, 550.0));
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

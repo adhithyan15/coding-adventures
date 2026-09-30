@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.130.0";
+pub const VERSION: &str = "0.131.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -5017,6 +5017,42 @@ fn parse_radar_number(raw: &str, token: &Token) -> Result<f64, ParseError> {
     Ok(value)
 }
 
+fn parse_radar_config(source: &str) -> RadarConfig {
+    let front_matter = mermaid_front_matter_section(source, &["config", "radar"]);
+    let radar_source = mermaid_directive_object(source, "radar")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = |key| {
+        quadrant_directive_value(radar_source, key).or_else(|| {
+            radar_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key).then(|| value.trim().to_string())
+            })
+        })
+    };
+    let positive = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value > 0.0)
+    };
+    let non_negative = |key| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 0.0)
+    };
+    RadarConfig {
+        width: positive("width"),
+        height: positive("height"),
+        margin_top: non_negative("marginTop"),
+        margin_bottom: non_negative("marginBottom"),
+        margin_left: non_negative("marginLeft"),
+        margin_right: non_negative("marginRight"),
+        axis_scale_factor: positive("axisScaleFactor"),
+        axis_label_factor: positive("axisLabelFactor"),
+        ..RadarConfig::default()
+    }
+}
+
 fn parse_radar_curve_specs<'a>(
     raw: &'a str,
     token: &Token,
@@ -5152,7 +5188,7 @@ pub fn parse_radar(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut axis_ids = Vec::<String>::new();
     let mut axis_labels = Vec::<String>::new();
     let mut series = Vec::<ChartSeries>::new();
-    let mut radar_config = RadarConfig::default();
+    let mut radar_config = parse_radar_config(source);
 
     for token in &tokens {
         match token_name(token) {
@@ -13590,7 +13626,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.130.0");
+        assert_eq!(crate::VERSION, "0.131.0");
     }
 
     #[test]

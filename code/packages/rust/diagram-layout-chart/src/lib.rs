@@ -17,7 +17,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.19.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -1384,6 +1384,14 @@ fn radar_point(cx: f64, cy: f64, radius: f64, index: usize, count: usize) -> Poi
 }
 
 fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let margin_top = diagram.radar_config.margin_top.unwrap_or(0.0);
+    let margin_bottom = diagram.radar_config.margin_bottom.unwrap_or(0.0);
+    let margin_left = diagram.radar_config.margin_left.unwrap_or(0.0);
+    let margin_right = diagram.radar_config.margin_right.unwrap_or(0.0);
+    let plot_width = diagram.radar_config.width.unwrap_or(cw);
+    let plot_height = diagram.radar_config.height.unwrap_or(ch);
+    let width = plot_width + margin_left + margin_right;
+    let height = plot_height + margin_top + margin_bottom;
     let categories = diagram
         .x_axis
         .as_ref()
@@ -1395,9 +1403,9 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     } else {
         LEGEND_H
     };
-    let cx = cw / 2.0;
-    let cy = title_height + (ch - title_height - legend_height) / 2.0;
-    let radius = ((cw.min(ch - title_height - legend_height) / 2.0) - 58.0).max(20.0);
+    let cx = margin_left + plot_width / 2.0;
+    let cy = margin_top + title_height + (plot_height - title_height - legend_height) / 2.0;
+    let radius = ((plot_width.min(plot_height - title_height - legend_height) / 2.0) - 58.0).max(20.0);
     let count = categories.len().max(1);
     let mut items = Vec::new();
 
@@ -1420,8 +1428,20 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     }
 
     for (index, label) in categories.iter().enumerate() {
-        let outer = radar_point(cx, cy, radius, index, count);
-        let label_point = radar_point(cx, cy, radius + 24.0, index, count);
+        let outer = radar_point(
+            cx,
+            cy,
+            radius * diagram.radar_config.axis_scale_factor.unwrap_or(1.0),
+            index,
+            count,
+        );
+        let label_point = radar_point(
+            cx,
+            cy,
+            radius * diagram.radar_config.axis_label_factor.unwrap_or(1.0) + 24.0,
+            index,
+            count,
+        );
         items.push(LayoutedChartItem::GridLine {
             x1: cx,
             y1: cy,
@@ -1470,7 +1490,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     if !diagram.series.is_empty() && diagram.radar_config.show_legend {
         items.push(LayoutedChartItem::Legend {
             x: MARGIN,
-            y: ch - LEGEND_H,
+            y: height - margin_bottom - LEGEND_H,
             entries: diagram
                 .series
                 .iter()
@@ -1488,8 +1508,8 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     }
 
     LayoutedChartDiagram {
-        width: cw,
-        height: ch,
+        width,
+        height,
         background_color: None,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
@@ -1498,7 +1518,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
             .as_ref()
             .map(|text| diagram_ir::LayoutedLabel {
                 x: cx,
-                y: MARGIN,
+                y: margin_top + MARGIN,
                 text: text.clone(),
             }),
         items,
@@ -1575,7 +1595,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.18.0");
+        assert_eq!(crate::VERSION, "0.19.0");
     }
 
     #[test]
@@ -2259,6 +2279,14 @@ mod tests {
             min: 10.0,
             max: Some(90.0),
             graticule: RadarGraticule::Polygon,
+            width: None,
+            height: None,
+            margin_top: None,
+            margin_bottom: None,
+            margin_left: None,
+            margin_right: None,
+            axis_scale_factor: None,
+            axis_label_factor: None,
         };
 
         let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
@@ -2277,5 +2305,46 @@ mod tests {
             .items
             .iter()
             .any(|item| matches!(item, LayoutedChartItem::Legend { .. })));
+    }
+
+    #[test]
+    fn radar_layout_honors_authored_dimensions_margins_and_axis_factors() {
+        let mut diagram = xy_diagram();
+        diagram.kind = ChartKind::Radar;
+        diagram.title = None;
+        diagram.x_axis = Some(Axis {
+            kind: AxisKind::Categorical,
+            title: None,
+            categories: vec!["A".into(), "B".into(), "C".into()],
+            min: 0.0,
+            max: 3.0,
+        });
+        diagram.series.clear();
+        diagram.radar_config.show_legend = false;
+        diagram.radar_config.width = Some(400.0);
+        diagram.radar_config.height = Some(300.0);
+        diagram.radar_config.margin_top = Some(20.0);
+        diagram.radar_config.margin_bottom = Some(30.0);
+        diagram.radar_config.margin_left = Some(20.0);
+        diagram.radar_config.margin_right = Some(30.0);
+        diagram.radar_config.axis_scale_factor = Some(0.5);
+        diagram.radar_config.axis_label_factor = Some(1.2);
+
+        let layout = layout_chart_diagram(&diagram, 640.0, 560.0);
+        assert_eq!((layout.width, layout.height), (450.0, 350.0));
+
+        let first_axis = layout.items.iter().find_map(|item| match item {
+            LayoutedChartItem::GridLine { x1, y1, x2, y2 } => Some((*x1, *y1, *x2, *y2)),
+            _ => None,
+        });
+        assert_eq!(first_axis, Some((220.0, 170.0, 220.0, 124.0)));
+
+        let first_label = layout.items.iter().find_map(|item| match item {
+            LayoutedChartItem::DataLabel { x, y, text, .. } if text == "A" => Some((*x, *y)),
+            _ => None,
+        });
+        let (label_x, label_y) = first_label.expect("first radar axis label");
+        assert!((label_x - 220.0).abs() < f64::EPSILON);
+        assert!((label_y - 35.6).abs() < 1e-10);
     }
 }
