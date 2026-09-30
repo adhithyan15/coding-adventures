@@ -222,7 +222,8 @@ ordinary local snapshots, including snapshots that evolve through another
 supported recurrence in the graph, recursively through their own supported
 recurrence, or through an exact mutually recursive selector cycle. The same
 selector recurrence may itself contain a conditional expression selected by
-an exact snapshot in that graph. The same exact snapshots may select
+an exact snapshot in that graph, including a direct self-reference in one of
+the selected leaves. The same exact snapshots may select
 conditional statement branches containing recurrence-cycle writes. Those changing
 selector-cycle assignments may themselves appear in statically selected
 conditional statement branches while still resolving dependencies across the

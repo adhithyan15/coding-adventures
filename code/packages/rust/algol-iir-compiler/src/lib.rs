@@ -6825,7 +6825,7 @@ impl Compiler {
                             let contains_conditional =
                                 self.contains_conditional_expression(assignment.expression);
                             if contains_conditional
-                                && !Self::static_body_actions_name_is_in_dependency_cycle(
+                                && !self.static_body_actions_name_is_in_dependency_cycle(
                                     all_actions,
                                     &assignment.name,
                                 )
@@ -6877,10 +6877,11 @@ impl Compiler {
     }
 
     fn static_body_actions_name_is_in_dependency_cycle(
+        &self,
         actions: &[StaticBodyAction<'_>],
         name: &str,
     ) -> bool {
-        Self::static_body_actions_dependency_path(
+        self.static_body_actions_dependency_path(
             actions,
             actions,
             name,
@@ -6890,6 +6891,7 @@ impl Compiler {
     }
 
     fn static_body_actions_dependency_path(
+        &self,
         actions: &[StaticBodyAction<'_>],
         all_actions: &[StaticBodyAction<'_>],
         current: &str,
@@ -6907,17 +6909,23 @@ impl Compiler {
                     current,
                     &mut dependencies,
                 );
-                dependencies.into_iter().any(|dependency| {
-                    dependency == goal
-                        || (Self::static_body_actions_write_name(all_actions, &dependency)
-                            && Self::static_body_actions_dependency_path(
-                                all_actions,
-                                all_actions,
-                                &dependency,
-                                goal,
-                                visiting,
-                            ))
-                })
+                (current == goal
+                    && self.selected_conditional_path_has_stable_self_reference(
+                        assignment.expression,
+                        current,
+                        all_actions,
+                    ))
+                    || dependencies.into_iter().any(|dependency| {
+                        dependency == goal
+                            || (Self::static_body_actions_write_name(all_actions, &dependency)
+                                && self.static_body_actions_dependency_path(
+                                    all_actions,
+                                    all_actions,
+                                    &dependency,
+                                    goal,
+                                    visiting,
+                                ))
+                    })
             }
             StaticBodyAction::Conditional {
                 condition,
@@ -6936,7 +6944,7 @@ impl Compiler {
                     dependencies.into_iter().any(|dependency| {
                         dependency == goal
                             || (Self::static_body_actions_write_name(all_actions, &dependency)
-                                && Self::static_body_actions_dependency_path(
+                                && self.static_body_actions_dependency_path(
                                     all_actions,
                                     all_actions,
                                     &dependency,
@@ -6946,14 +6954,14 @@ impl Compiler {
                     })
                 };
                 condition_closes_cycle
-                    || Self::static_body_actions_dependency_path(
+                    || self.static_body_actions_dependency_path(
                         then_actions,
                         all_actions,
                         current,
                         goal,
                         visiting,
                     )
-                    || Self::static_body_actions_dependency_path(
+                    || self.static_body_actions_dependency_path(
                         else_actions,
                         all_actions,
                         current,
@@ -6965,6 +6973,38 @@ impl Compiler {
         });
         visiting.remove(current);
         found
+    }
+
+    fn selected_conditional_path_has_stable_self_reference(
+        &self,
+        expression: &GrammarASTNode,
+        name: &str,
+        actions: &[StaticBodyAction<'_>],
+    ) -> bool {
+        if let Some((condition, then_node, else_node)) =
+            self.conditional_expression_parts(expression)
+        {
+            let mut selectors = HashSet::new();
+            collect_expression_dependency_names(condition, "", &mut selectors);
+            if selectors
+                .iter()
+                .any(|selector| Self::static_body_actions_write_name(actions, selector))
+            {
+                return false;
+            }
+            return match self.static_boolean_value(condition) {
+                Some(true) => self.selected_conditional_path_has_stable_self_reference(
+                    then_node, name, actions,
+                ),
+                Some(false) => self.selected_conditional_path_has_stable_self_reference(
+                    else_node, name, actions,
+                ),
+                None => false,
+            };
+        }
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(expression, "", &mut dependencies);
+        dependencies.contains(name)
     }
 
     fn static_body_actions_write_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
@@ -14986,6 +15026,48 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_conditional_self_recursive_selector_tracks_recurrence_cycle_source_order() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional self-recursive selector may drive a recurrence cycle");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_conditional_self_recursive_selector_selects_recurrence_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact conditional self-recursive selector may select a recurrence-cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "1.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unknown_conditional_self_recursive_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; for i := i + 1 while i <= n do begin n := n - delta; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown conditional selector must keep self-recursion conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
