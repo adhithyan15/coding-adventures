@@ -6839,7 +6839,14 @@ impl Compiler {
                                     "",
                                     &mut dependencies,
                                 );
-                                if dependencies.contains(&assignment.name) {
+                                if dependencies.contains(&assignment.name)
+                                    && !self
+                                        .conditional_expression_selectors_have_exact_acyclic_recurrence(
+                                        assignment.expression,
+                                        all_actions,
+                                        &assignment.name,
+                                    )
+                                {
                                     return None;
                                 }
                             }
@@ -7026,6 +7033,107 @@ impl Compiler {
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(expression, "", &mut dependencies);
         dependencies.contains(name)
+    }
+
+    fn conditional_expression_selectors_have_exact_acyclic_recurrence(
+        &self,
+        expression: &GrammarASTNode,
+        actions: &[StaticBodyAction<'_>],
+        target_name: &str,
+    ) -> bool {
+        if let Some((condition, then_node, else_node)) =
+            self.conditional_expression_parts(expression)
+        {
+            if !self.recurrence_selector_is_cycle_exact(
+                condition,
+                actions,
+                target_name,
+                &mut HashSet::new(),
+            ) {
+                return false;
+            }
+            let mut dependencies = HashSet::new();
+            collect_expression_dependency_names(condition, target_name, &mut dependencies);
+            if !dependencies.iter().any(|name| {
+                self.static_body_actions_name_has_acyclic_conditional_assignment(
+                    actions,
+                    actions,
+                    name,
+                )
+            })
+            {
+                return false;
+            }
+            if dependencies.iter().any(|name| {
+                self.static_body_actions_dependency_path(
+                    actions,
+                    actions,
+                    name,
+                    target_name,
+                    &mut HashSet::new(),
+                )
+            }) {
+                return false;
+            }
+            return self.conditional_expression_selectors_have_exact_acyclic_recurrence(
+                then_node,
+                actions,
+                target_name,
+            ) && self.conditional_expression_selectors_have_exact_acyclic_recurrence(
+                else_node,
+                actions,
+                target_name,
+            );
+        }
+        direct_nodes(expression).into_iter().all(|child| {
+            self.conditional_expression_selectors_have_exact_acyclic_recurrence(
+                child,
+                actions,
+                target_name,
+            )
+        })
+    }
+
+    fn static_body_actions_name_has_acyclic_conditional_assignment(
+        &self,
+        actions: &[StaticBodyAction<'_>],
+        all_actions: &[StaticBodyAction<'_>],
+        name: &str,
+    ) -> bool {
+        actions.iter().any(|action| match action {
+            StaticBodyAction::Assignment(assignment) => {
+                if assignment.name != name
+                    || !self.contains_conditional_expression(assignment.expression)
+                {
+                    return false;
+                }
+                let mut dependencies = HashSet::new();
+                collect_expression_dependency_names(
+                    assignment.expression,
+                    name,
+                    &mut dependencies,
+                );
+                !dependencies.is_empty()
+                    && dependencies.iter().all(|dependency| {
+                        !Self::static_body_actions_write_name(all_actions, dependency)
+                    })
+            }
+            StaticBodyAction::Conditional {
+                then_actions,
+                else_actions,
+                ..
+            } => {
+                self.static_body_actions_name_has_acyclic_conditional_assignment(
+                    then_actions,
+                    all_actions,
+                    name,
+                ) || self.static_body_actions_name_has_acyclic_conditional_assignment(
+                    else_actions,
+                    all_actions,
+                    name,
+                )
+            }
+        })
     }
 
     fn static_body_actions_write_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
@@ -15129,7 +15237,7 @@ mod tests {
             "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
             "test",
         )
-        .expect_err("a dynamic branch without self-reference must remain conservative");
+        .expect_err("a non-conditional partial self-recursive selector remains conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
@@ -15172,6 +15280,48 @@ mod tests {
             "test",
         )
         .expect_err("an unknown acyclic conditional selector must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_exact_partial_self_recursive_selector_tracks_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact evolving selector may choose a partial self-recursive update");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_exact_partial_self_recursive_selector_selects_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; choose := if flag then not choose else false; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("an exact partial self-recursive selector may choose a cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unknown_partial_self_recursive_selector_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, other; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if other then true else false; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an unknown partial self-recursive selector must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
