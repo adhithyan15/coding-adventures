@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "A heartbeat, Breath, An itch, A burning feeling, A swelling",
+  "label": "ch:hi-a-heartbeat-breath-an-itch-a-burning-feeling-a-swelling",
+  "canDo": "I can say a heartbeat, breath, an itch, a burning feeling and a swelling.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C274-sujan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: i can say a heartbeat, breath, an itch, a burning feeling and a swelling.",
+    "assesses": [
+      "HI-LEX-C274-THG274-03",
+      "HI-LEX-C274-THG274-04",
+      "HI-LEX-C274-THG274-05"
+    ]
+  }
+}

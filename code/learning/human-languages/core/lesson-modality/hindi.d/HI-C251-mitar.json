@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C251-mitar",
+    "language": "hindi",
+    "chapter": 251,
+    "sequence": 13500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3e4191153c24617"
+  },
+  "findings": []
+}

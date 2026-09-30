@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:5eb04364a3507441",
+  "lessonIds": [
+    "HI-C227-phatna",
+    "HI-C227-pharna",
+    "HI-C227-palna",
+    "HI-C227-cirna",
+    "HI-C227-bona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch227.txt",
+  "json": "hindi/narration/ch227.json",
+  "textHash": "fnv1a64:b115e0bdb93d817a",
+  "jsonHash": "fnv1a64:046ce81c2b239462",
+  "findings": []
+}

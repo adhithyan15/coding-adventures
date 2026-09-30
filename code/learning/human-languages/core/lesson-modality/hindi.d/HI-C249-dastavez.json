@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C249-dastavez",
+    "language": "hindi",
+    "chapter": 249,
+    "sequence": 13400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eb6b661f3a52f38"
+  },
+  "findings": []
+}

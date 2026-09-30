@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:47ce05276572c720",
+  "lessonIds": [
+    "HI-C266-citkani",
+    "HI-C266-ari",
+    "HI-C266-kudal",
+    "HI-C266-phavra",
+    "HI-C266-gadda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch266.txt",
+  "json": "hindi/narration/ch266.json",
+  "textHash": "fnv1a64:5628cb381a5ce787",
+  "jsonHash": "fnv1a64:116e5ecca1f31e92",
+  "findings": []
+}

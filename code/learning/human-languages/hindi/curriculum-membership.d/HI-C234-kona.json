@@ -1,0 +1,11 @@
+{
+  "id": "HI-C234-kona",
+  "pathSegment": "HI-PATH-234-LOC234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-234-LOC234",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C253-purus",
+    "language": "hindi",
+    "chapter": 253,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae7076436ebb4aa9"
+  },
+  "findings": []
+}

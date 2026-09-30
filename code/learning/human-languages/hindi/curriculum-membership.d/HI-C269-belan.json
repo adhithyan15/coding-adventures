@@ -1,0 +1,11 @@
+{
+  "id": "HI-C269-belan",
+  "pathSegment": "HI-PATH-269-THG269",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-269-THG269",
+      "order": 3
+    }
+  ]
+}

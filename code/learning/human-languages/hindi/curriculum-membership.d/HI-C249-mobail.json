@@ -1,0 +1,11 @@
+{
+  "id": "HI-C249-mobail",
+  "pathSegment": "HI-PATH-249-THG249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-249-THG249",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "A file, A safe, A stamp, A discount, Retail",
+  "label": "ch:hi-a-file-a-safe-a-stamp-a-discount-retail",
+  "canDo": "I can say a file, a safe, a stamp, a discount and retail.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C250-khudra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: i can say a file, a safe, a stamp, a discount and retail.",
+    "assesses": [
+      "HI-LEX-C250-THG250-03",
+      "HI-LEX-C250-THG250-04",
+      "HI-LEX-C250-THG250-05"
+    ]
+  }
+}

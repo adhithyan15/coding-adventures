@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:9698da77400fd36f",
+  "lessonIds": [
+    "HI-C253-indradhanus",
+    "HI-C253-bhukamp",
+    "HI-C253-barh",
+    "HI-C253-purus",
+    "HI-C253-sisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch253.txt",
+  "json": "hindi/narration/ch253.json",
+  "textHash": "fnv1a64:93aa05621cac395d",
+  "jsonHash": "fnv1a64:af9f7441d9959820",
+  "findings": []
+}

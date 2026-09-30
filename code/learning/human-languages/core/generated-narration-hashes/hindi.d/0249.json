@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:263ce5906ddbc3e6",
+  "lessonIds": [
+    "HI-C249-sath",
+    "HI-C249-eksath",
+    "HI-C249-kampyutar",
+    "HI-C249-mobail",
+    "HI-C249-dastavez"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch249.txt",
+  "json": "hindi/narration/ch249.json",
+  "textHash": "fnv1a64:787efd89639d8f8e",
+  "jsonHash": "fnv1a64:d648d0968cd2cf9b",
+  "findings": []
+}

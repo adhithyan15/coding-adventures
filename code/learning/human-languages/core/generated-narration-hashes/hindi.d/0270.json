@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:25aecae11b7cf336",
+  "lessonIds": [
+    "HI-C270-kaddukas",
+    "HI-C270-dhakkan",
+    "HI-C270-jag",
+    "HI-C270-surahi",
+    "HI-C270-matka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch270.txt",
+  "json": "hindi/narration/ch270.json",
+  "textHash": "fnv1a64:1ad975ed409b7848",
+  "jsonHash": "fnv1a64:f204ffbaadde9798",
+  "findings": []
+}

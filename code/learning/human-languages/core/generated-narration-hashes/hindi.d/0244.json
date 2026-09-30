@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:2d89ca4779f5e9ce",
+  "lessonIds": [
+    "HI-C244-hazar",
+    "HI-C244-lakh",
+    "HI-C244-karor",
+    "HI-C244-kai",
+    "HI-C244-dono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch244.txt",
+  "json": "hindi/narration/ch244.json",
+  "textHash": "fnv1a64:6f6a830df2310c30",
+  "jsonHash": "fnv1a64:63832c8a17daf17f",
+  "findings": []
+}

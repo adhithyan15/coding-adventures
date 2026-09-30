@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C236-adha",
+    "language": "hindi",
+    "chapter": 236,
+    "sequence": 12520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c536e7430cbabf71"
+  },
+  "findings": []
+}

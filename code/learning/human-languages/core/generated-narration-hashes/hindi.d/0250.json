@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:8df4887e5ed5cbd9",
+  "lessonIds": [
+    "HI-C250-fail",
+    "HI-C250-tijori",
+    "HI-C250-mohar",
+    "HI-C250-chut",
+    "HI-C250-khudra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch250.txt",
+  "json": "hindi/narration/ch250.json",
+  "textHash": "fnv1a64:f1cc98712e51e311",
+  "jsonHash": "fnv1a64:3babc8e07fd29fd8",
+  "findings": []
+}

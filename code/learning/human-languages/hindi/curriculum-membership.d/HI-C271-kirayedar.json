@@ -1,0 +1,11 @@
+{
+  "id": "HI-C271-kirayedar",
+  "pathSegment": "HI-PATH-271-THG271",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-271-THG271",
+      "order": 3
+    }
+  ]
+}

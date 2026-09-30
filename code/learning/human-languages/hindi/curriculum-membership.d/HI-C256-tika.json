@@ -1,0 +1,11 @@
+{
+  "id": "HI-C256-tika",
+  "pathSegment": "HI-PATH-256-THG256",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-256-THG256",
+      "order": 3
+    }
+  ]
+}

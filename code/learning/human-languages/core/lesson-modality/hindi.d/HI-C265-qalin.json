@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C265-qalin",
+    "language": "hindi",
+    "chapter": 265,
+    "sequence": 14580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f78b09ac71f4e8c0"
+  },
+  "findings": []
+}

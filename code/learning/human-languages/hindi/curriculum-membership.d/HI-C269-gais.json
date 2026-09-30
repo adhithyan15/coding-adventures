@@ -1,0 +1,11 @@
+{
+  "id": "HI-C269-gais",
+  "pathSegment": "HI-PATH-269-THG269",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-269-THG269",
+      "order": 1
+    }
+  ]
+}

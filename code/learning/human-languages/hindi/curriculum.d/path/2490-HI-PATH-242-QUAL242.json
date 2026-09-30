@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-242-QUAL242",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "HI-EXT-242-QUAL242"
+  ],
+  "after": []
+}

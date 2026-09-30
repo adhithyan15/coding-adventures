@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C228-dabana",
+    "language": "hindi",
+    "chapter": 228,
+    "sequence": 11960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00fc02a9eafa17f1"
+  },
+  "findings": []
+}

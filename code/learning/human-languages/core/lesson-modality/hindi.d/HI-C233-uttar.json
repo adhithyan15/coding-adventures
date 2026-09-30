@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C233-uttar",
+    "language": "hindi",
+    "chapter": 233,
+    "sequence": 12180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:971840a9d7380097"
+  },
+  "findings": []
+}

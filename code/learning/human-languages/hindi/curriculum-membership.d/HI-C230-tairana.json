@@ -1,0 +1,11 @@
+{
+  "id": "HI-C230-tairana",
+  "pathSegment": "HI-PATH-230-ACT230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-230-ACT230",
+      "order": 3
+    }
+  ]
+}

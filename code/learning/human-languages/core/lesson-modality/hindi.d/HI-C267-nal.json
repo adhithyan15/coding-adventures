@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C267-nal",
+    "language": "hindi",
+    "chapter": 267,
+    "sequence": 14660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b79b953bca22ef8"
+  },
+  "findings": []
+}

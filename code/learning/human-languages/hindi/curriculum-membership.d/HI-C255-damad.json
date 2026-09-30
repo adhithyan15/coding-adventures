@@ -1,0 +1,11 @@
+{
+  "id": "HI-C255-damad",
+  "pathSegment": "HI-PATH-255-THG255",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-255-THG255",
+      "order": 1
+    }
+  ]
+}

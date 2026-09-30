@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:1018bb9d5b4e7950",
+  "lessonIds": [
+    "HI-C268-kura",
+    "HI-C268-kuredan",
+    "HI-C268-dhua",
+    "HI-C268-ag",
+    "HI-C268-rakh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch268.txt",
+  "json": "hindi/narration/ch268.json",
+  "textHash": "fnv1a64:cb48e990bd6efc07",
+  "jsonHash": "fnv1a64:e8aad3eff3bc54d6",
+  "findings": []
+}

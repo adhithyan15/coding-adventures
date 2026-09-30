@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:c81566635b344e2f",
+  "lessonIds": [
+    "HI-C257-nabz",
+    "HI-C257-irsya",
+    "HI-C257-ghrna",
+    "HI-C257-samman",
+    "HI-C257-garv"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch257.txt",
+  "json": "hindi/narration/ch257.json",
+  "textHash": "fnv1a64:ee13fc887cf36e38",
+  "jsonHash": "fnv1a64:6cc27697d3d4358f",
+  "findings": []
+}

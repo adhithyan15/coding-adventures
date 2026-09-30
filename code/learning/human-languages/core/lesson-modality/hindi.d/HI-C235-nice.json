@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C235-nice",
+    "language": "hindi",
+    "chapter": 235,
+    "sequence": 12480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:457300bb85c214da"
+  },
+  "findings": []
+}

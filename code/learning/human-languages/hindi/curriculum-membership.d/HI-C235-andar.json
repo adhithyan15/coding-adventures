@@ -1,0 +1,11 @@
+{
+  "id": "HI-C235-andar",
+  "pathSegment": "HI-PATH-235-LOC235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-235-LOC235",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:468b90a9413b5f6b",
+  "lessonIds": [
+    "HI-C225-safkarna",
+    "HI-C225-jharna",
+    "HI-C225-pochna",
+    "HI-C225-nicorna",
+    "HI-C225-sukhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch225.txt",
+  "json": "hindi/narration/ch225.json",
+  "textHash": "fnv1a64:3be4c35b369fcdfe",
+  "jsonHash": "fnv1a64:7c652063c0d62ffa",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C262-mochi",
+  "pathSegment": "HI-PATH-262-THG262",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-262-THG262",
+      "order": 1
+    }
+  ]
+}

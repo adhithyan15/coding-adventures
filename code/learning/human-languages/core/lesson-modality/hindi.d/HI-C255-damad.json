@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C255-damad",
+    "language": "hindi",
+    "chapter": 255,
+    "sequence": 13860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:156cf99c0f448e3d"
+  },
+  "findings": []
+}

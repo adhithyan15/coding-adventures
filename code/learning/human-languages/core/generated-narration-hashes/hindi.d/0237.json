@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:25b15b4b684eaf9e",
+  "lessonIds": [
+    "HI-C237-caukor",
+    "HI-C237-tikona",
+    "HI-C237-sankara",
+    "HI-C237-uthla",
+    "HI-C237-basi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch237.txt",
+  "json": "hindi/narration/ch237.json",
+  "textHash": "fnv1a64:0f1a54040b74857a",
+  "jsonHash": "fnv1a64:8e15bc4129e79a98",
+  "findings": []
+}

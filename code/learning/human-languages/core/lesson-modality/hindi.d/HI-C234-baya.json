@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C234-baya",
+    "language": "hindi",
+    "chapter": 234,
+    "sequence": 12420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33c009e89d32c8b4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Raw, Lukewarm, Dry, Sticky, Rough",
+  "label": "ch:hi-raw-lukewarm-dry-sticky-rough",
+  "canDo": "I can say raw, lukewarm, dry, sticky and rough.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C238-khurdura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: i can say raw, lukewarm, dry, sticky and rough.",
+    "assesses": [
+      "HI-LEX-C238-QUAL238-03",
+      "HI-LEX-C238-QUAL238-04",
+      "HI-LEX-C238-QUAL238-05"
+    ]
+  }
+}

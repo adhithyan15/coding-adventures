@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:c8e17471499b45a3",
+  "lessonIds": [
+    "HI-C245-har",
+    "HI-C245-sab",
+    "HI-C245-kuch",
+    "HI-C245-darjan",
+    "HI-C245-jora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch245.txt",
+  "json": "hindi/narration/ch245.json",
+  "textHash": "fnv1a64:2bc72a4203afe741",
+  "jsonHash": "fnv1a64:fc9b7adcc906d812",
+  "findings": []
+}
