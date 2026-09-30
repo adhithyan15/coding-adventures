@@ -94,6 +94,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S130-letter-tha",
+      "sourceHash": "fnv1a64:e5b00a4328520d54",
+      "svgHash": "fnv1a64:5e804f4f7a9f6b63",
+      "svg": "telugu/book/figures/TE-S130-letter-tha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S132-letter-nya",
       "sourceHash": "fnv1a64:0f444a06550d60cf",
       "svgHash": "fnv1a64:087e972f99811d04",
