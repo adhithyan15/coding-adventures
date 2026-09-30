@@ -192,9 +192,7 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Qt, "color"),
     (Backend::Qt, "font-family"),
     //
-    // Qt lowers font size only where a primitive has native typography
-    // (`has_native_font_size`); other parts drop it.
-    (Backend::Qt, "font-size"),
+    // #15277 teaches Qt host controls to preserve state-layer font sizes.
     //
     // #15247 -- longhand padding is still lost on the affected non-Text
     // primitives. Generic padding no longer belongs here: #15276 gives
