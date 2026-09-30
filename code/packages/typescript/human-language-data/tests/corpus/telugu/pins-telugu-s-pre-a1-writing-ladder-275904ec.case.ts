@@ -29,12 +29,12 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
   // whose rungs are in the wrong order and therefore prove nothing.
   //
-  // TE-S152 is the earlier vocabulary-first observe-and-trace rung for tta.
-  // TE-S123 follows with dda, another vocabulary-first retroflex letter.
-  // TE-S116 now gives familiar-word da the same source-backed rung. TE-S155
-  // revisits the stage for the aspirated partner ttha after the first complete
-  // ladder. TE-S130 and TE-S132 later revisit it for newly introduced tha and
-  // nya.
+  // TE-S151 now opens the source-backed ladder with the thank-you word's dha.
+  // TE-S152 follows with tta, then TE-S123 with dda, another vocabulary-first
+  // retroflex letter. TE-S116 gives familiar-word da the same source-backed
+  // rung. TE-S155 revisits the stage for the aspirated partner ttha after the
+  // first complete ladder. TE-S130 and TE-S132 later revisit it for newly
+  // introduced tha and nya.
   // The next rung is a SECOND dictation, roughly 1,150 sequence steps after the
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
@@ -45,6 +45,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   // a timed production check. A rung may repeat; the ORDER assertion below
   // still forbids one arriving before its prerequisite stages.
   expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
+    ["TE-S151-letter-dha", "observe-trace"],
     ["TE-S152-letter-tta", "observe-trace"],
     ["TE-S123-letter-dda", "observe-trace"],
     ["TE-S01-letter-ta", "observe-trace"],

@@ -52,17 +52,18 @@ single sound made at the teeth with a puff of breath after it, not the English
 *th* of *this*. More words with ధ arrive as the book goes on; this is where the
 shape gets into your eye.
 
-## Writing: ధ — copy what you see
+## Writing: ధ — six deliberate movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-151] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ధ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Watch the numbered filmstrip once before your pen moves. Movements 1–4 build
+the round body in four short curves: upper left, lower left, lower right, then
+upper right. Lift between each curve. Movement 5 adds the rising top flourish.
+Lift once more for movement 6, the short lower stem.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+Trace the same route slowly. This is one attested school-style order fitted to
+the printed shape here; Telugu handwriting varies, so preserve the six clear
+movements rather than trying to join the gaps.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-151, TE-SCRIPT-RECOG-150] -->
