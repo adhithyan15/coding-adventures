@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 12,
-  "sourceHash": "fnv1a64:a6ef90070ce4b493",
+  "sourceHash": "fnv1a64:8940e6a7738ae0e3",
   "lessonIds": [
     "TE-C12-kutumbam",
     "TE-S116-letter-da",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch12.txt",
   "json": "telugu/narration/ch12.json",
-  "textHash": "fnv1a64:b0e5709e361cc42b",
-  "jsonHash": "fnv1a64:be639c521f7bd06e",
+  "textHash": "fnv1a64:f1b45754a3213d42",
+  "jsonHash": "fnv1a64:fd637438a743be25",
   "findings": []
 }
