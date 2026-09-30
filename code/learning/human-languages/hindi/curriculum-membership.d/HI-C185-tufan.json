@@ -1,0 +1,11 @@
+{
+  "id": "HI-C185-tufan",
+  "pathSegment": "HI-PATH-185-THG185",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-185-THG185",
+      "order": 3
+    }
+  ]
+}

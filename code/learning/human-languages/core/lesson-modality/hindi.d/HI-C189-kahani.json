@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C189-kahani",
+    "language": "hindi",
+    "chapter": 189,
+    "sequence": 9220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:225c71973d6a0c2d"
+  },
+  "findings": []
+}

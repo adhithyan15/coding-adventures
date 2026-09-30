@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:1c9395c37fd0bffb",
+  "lessonIds": [
+    "HI-C178-bunna",
+    "HI-C178-maarnaa",
+    "HI-C178-larna",
+    "HI-C178-darna",
+    "HI-C178-cillana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch178.txt",
+  "json": "hindi/narration/ch178.json",
+  "textHash": "fnv1a64:bbbbd5b12fb01b10",
+  "jsonHash": "fnv1a64:a7c3e8280bfe49fe",
+  "findings": []
+}

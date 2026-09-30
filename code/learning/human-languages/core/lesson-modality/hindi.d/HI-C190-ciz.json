@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C190-ciz",
+    "language": "hindi",
+    "chapter": 190,
+    "sequence": 9290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c17f9b6ba3a90d08"
+  },
+  "findings": []
+}

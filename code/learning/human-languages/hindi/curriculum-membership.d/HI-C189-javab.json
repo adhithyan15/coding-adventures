@@ -1,0 +1,11 @@
+{
+  "id": "HI-C189-javab",
+  "pathSegment": "HI-PATH-189-THG189",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-189-THG189",
+      "order": 3
+    }
+  ]
+}

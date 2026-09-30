@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:8361486a4677b602",
+  "lessonIds": [
+    "HI-C192-roz",
+    "HI-C192-kabhi",
+    "HI-C192-hamesa",
+    "HI-C192-aksar",
+    "HI-C192-kabhinahi",
+    "HI-R192-first-pass-the-house-weather-and-feelings",
+    "HI-R192-second-pass-town-talk-and-time"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch192.txt",
+  "json": "hindi/narration/ch192.json",
+  "textHash": "fnv1a64:89766363b6ee6c98",
+  "jsonHash": "fnv1a64:b117e2b9dea3374a",
+  "findings": []
+}

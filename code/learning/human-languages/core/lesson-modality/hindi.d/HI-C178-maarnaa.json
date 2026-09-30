@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C178-maarnaa",
+    "language": "hindi",
+    "chapter": 178,
+    "sequence": 8570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea32a77af1f0b367"
+  },
+  "findings": []
+}

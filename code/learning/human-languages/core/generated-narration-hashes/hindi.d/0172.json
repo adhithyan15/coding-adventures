@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:508ae5f1fc212251",
+  "lessonIds": [
+    "HI-C172-rokna",
+    "HI-C172-bhagna",
+    "HI-C172-carhna",
+    "HI-C172-utarna",
+    "HI-C172-ghumna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch172.txt",
+  "json": "hindi/narration/ch172.json",
+  "textHash": "fnv1a64:11ae2de43b5681f8",
+  "jsonHash": "fnv1a64:05a77d7d56966166",
+  "findings": []
+}

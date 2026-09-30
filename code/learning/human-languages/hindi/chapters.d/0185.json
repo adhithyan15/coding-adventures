@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Sunshine, Cold, Heat, A storm, A leaf",
+  "label": "ch:hi-sunshine-cold-heat-a-storm-a-leaf",
+  "canDo": "I can say sunshine, cold, heat, a storm and a leaf.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C185-patta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: i can say sunshine, cold, heat, a storm and a leaf.",
+    "assesses": [
+      "HI-LEX-C185-THG185-03",
+      "HI-LEX-C185-THG185-04",
+      "HI-LEX-C185-THG185-05"
+    ]
+  }
+}

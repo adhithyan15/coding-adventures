@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:efbcfe522314e219",
+  "lessonIds": [
+    "HI-C173-dhakna",
+    "HI-C173-bharna",
+    "HI-C173-batna",
+    "HI-C173-cunna",
+    "HI-C173-magna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch173.txt",
+  "json": "hindi/narration/ch173.json",
+  "textHash": "fnv1a64:07b3206049689039",
+  "jsonHash": "fnv1a64:e2f300c9b2286dad",
+  "findings": []
+}

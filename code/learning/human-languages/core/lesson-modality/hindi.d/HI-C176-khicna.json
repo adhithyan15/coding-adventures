@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C176-khicna",
+    "language": "hindi",
+    "chapter": 176,
+    "sequence": 8470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d721c82df7967698"
+  },
+  "findings": []
+}

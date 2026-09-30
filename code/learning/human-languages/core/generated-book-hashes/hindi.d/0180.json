@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:38b256b214e4ff28",
+  "lessonIds": [
+    "HI-C180-dava",
+    "HI-C180-mariz",
+    "HI-C180-ilaj",
+    "HI-C180-yatra",
+    "HI-C180-saman"
+  ],
+  "tex": "hindi/book/chapters/ch180-medicine-a-patient-treatment-a-journey-luggage.tex"
+}

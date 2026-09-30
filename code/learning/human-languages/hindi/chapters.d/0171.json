@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "To show, To be seen, To hide (something), To hide (oneself), To stop",
+  "label": "ch:hi-to-show-to-be-seen-to-hide-something-to-hide-oneself-to-stop",
+  "canDo": "I can say to show, to be seen, to hide (something), to hide (oneself) and to stop.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C171-rukna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: i can say to show, to be seen, to hide (something), to hide (oneself) and to stop.",
+    "assesses": [
+      "HI-LEX-C171-ACT171-03",
+      "HI-LEX-C171-ACT171-04",
+      "HI-LEX-C171-ACT171-05"
+    ]
+  }
+}

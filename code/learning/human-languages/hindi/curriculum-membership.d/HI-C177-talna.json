@@ -1,0 +1,11 @@
+{
+  "id": "HI-C177-talna",
+  "pathSegment": "HI-PATH-177-ACT177",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-177-ACT177",
+      "order": 4
+    }
+  ]
+}

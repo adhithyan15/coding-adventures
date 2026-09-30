@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:76871a5b33eb308f",
+  "lessonIds": [
+    "HI-C177-sughna",
+    "HI-C177-manana",
+    "HI-C177-pisna",
+    "HI-C177-ubalna",
+    "HI-C177-talna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch177.txt",
+  "json": "hindi/narration/ch177.json",
+  "textHash": "fnv1a64:16d980a80ca828dc",
+  "jsonHash": "fnv1a64:1d7bda4e0af79a91",
+  "findings": []
+}

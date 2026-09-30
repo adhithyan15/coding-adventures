@@ -1,0 +1,11 @@
+{
+  "id": "HI-C178-darna",
+  "pathSegment": "HI-PATH-178-ACT178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-178-ACT178",
+      "order": 3
+    }
+  ]
+}

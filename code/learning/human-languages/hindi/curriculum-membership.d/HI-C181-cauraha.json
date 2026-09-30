@@ -1,0 +1,11 @@
+{
+  "id": "HI-C181-cauraha",
+  "pathSegment": "HI-PATH-181-THG181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-181-THG181",
+      "order": 3
+    }
+  ]
+}

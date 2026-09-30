@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-192-FREQ192",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "HI-EXT-192-FREQ192"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C168-badalna",
+  "pathSegment": "HI-PATH-168-ACT168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-168-ACT168",
+      "order": 2
+    }
+  ]
+}

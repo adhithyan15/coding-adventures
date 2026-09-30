@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C175-napna",
+    "language": "hindi",
+    "chapter": 175,
+    "sequence": 8310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d493483c4303578"
+  },
+  "findings": []
+}
