@@ -5104,6 +5104,32 @@ fn host_control_style_qml_lines(
     }
 
     let mut lines = Vec::new();
+    // Host controls participate in Qt Quick Layouts directly, so authored
+    // scalar geometry belongs on the control just as it does on a styled box.
+    // Keep the implicit size and the layout hint in sync; either property on
+    // its own is insufficient when the same control is emitted inside and
+    // outside a Layout. Percentages and intrinsic CSS keywords remain
+    // deliberate degradations because `qml_px_or_none` rejects them.
+    let width = conditional_px_expr(
+        style_prop(base, "width").and_then(qml_px_or_none),
+        &state_layers,
+        "width",
+        "0",
+    );
+    if let Some(width) = width {
+        lines.push(format!("implicitWidth: {width}"));
+        lines.push(format!("Layout.preferredWidth: {width}"));
+    }
+    let height = conditional_px_expr(
+        style_prop(base, "height").and_then(qml_px_or_none),
+        &state_layers,
+        "height",
+        "0",
+    );
+    if let Some(height) = height {
+        lines.push(format!("implicitHeight: {height}"));
+        lines.push(format!("Layout.preferredHeight: {height}"));
+    }
     // #16223 -- Controls expose one property per edge. Reuse the container
     // resolver so longhands override the shorthand with the same CSS rules.
     for (edge, property) in [
@@ -16084,7 +16110,7 @@ mod tests {
     }
 
     #[test]
-    fn a_host_control_size_variant_drives_padding_and_typography() {
+    fn a_host_control_size_variant_drives_geometry_padding_and_typography() {
         let model = component(
             "SizedButton",
             vec![slot(
@@ -16108,6 +16134,8 @@ mod tests {
             parts: vec![PartStyle {
                 name: "button".to_string(),
                 base: vec![
+                    sp("width", "150px"),
+                    sp("height", "40px"),
                     sp("padding", "8px"),
                     sp("font-family", "Inter"),
                     sp("font-size", "14px"),
@@ -16119,6 +16147,8 @@ mod tests {
                     state: "sm".to_string(),
                     transitions: vec![],
                     props: vec![
+                        sp("width", "120px"),
+                        sp("height", "32px"),
                         sp("padding", "4px"),
                         sp("padding-left", "5px"),
                         sp("font-family", "monospace"),
@@ -16130,6 +16160,10 @@ mod tests {
 
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
         for expected in [
+            "implicitWidth: ( (size === \"sm\") ) ? 120 : 150",
+            "Layout.preferredWidth: ( (size === \"sm\") ) ? 120 : 150",
+            "implicitHeight: ( (size === \"sm\") ) ? 32 : 40",
+            "Layout.preferredHeight: ( (size === \"sm\") ) ? 32 : 40",
             "leftPadding: ( (size === \"sm\") ) ? 5 : 8",
             "rightPadding: ( (size === \"sm\") ) ? 4 : 8",
             "topPadding: ( (size === \"sm\") ) ? 4 : 8",
