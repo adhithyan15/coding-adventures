@@ -71,21 +71,10 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // already conditional, and the border was not. The 44 below are real, and
     // each points at the issue that will retire it.
     //
-    // #15276 — a `Text` part cannot paint. `background`, `border-color`,
-    // `border-width` and `padding` on `$style.tabs-panel`,
-    // `$style.input-group-prefix`/`-suffix` and `$style.accordion-body` reach
-    // a bare QML `Text`, which has no fill, no `border.*` and no padding.
-    // Its comment thread also covers Badge's `font-weight`, dropped because a
-    // `Rectangle` has no font group and nothing carries the value to the
-    // `Text` inside it.
-    (Backend::Qt, "background"),
-    (Backend::Qt, "border-color"),
-    (Backend::Qt, "border-width"),
-    (Backend::Qt, "font-weight"),
-    // #15276 and #15277 both — `padding` is dropped on Text parts (Accordion,
-    // InputGroup, Tabs) AND on host controls (Button, Field, Input, Navbar).
-    // It takes both fixes to retire this one entry, which is an argument for
-    // the finer-grained pin this list does not yet have.
+    // #15276 is fixed: paint/padding on Text parts now reaches a conditional
+    // Rectangle wrapper, and a Box part's font-weight reaches its descendant
+    // Text. `padding` stays pinned for the unrelated host-control cases in
+    // #15277 (Button, Field, Input, Navbar).
     (Backend::Qt, "padding"),
     // #15277 — state-layer overrides are ignored outside the Rectangle
     // builders. Spinner authors `width`/`height` per size variant and renders

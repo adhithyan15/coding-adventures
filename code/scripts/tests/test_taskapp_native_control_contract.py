@@ -88,7 +88,7 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 77,
         "swiftui": 142,
         "compose": 89,
-        "qt": 251,
+        "qt": 193,
         "flutter": 240,
     }
 
