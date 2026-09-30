@@ -15170,6 +15170,12 @@ Rust ALGOL and photo-picker roots. The branch rebased cleanly; no package-root
 identity changed, so the collision-clean inventory counts remain valid and its
 exact revision is refreshed.
 
+Ready-for-review PR #16315 publishes the tranche from
+`codex/parity-python-neural-fronts-20260930`. GitHub reports the branch
+mergeable; initial CI, CodeQL language detection, and human-language change
+detection are queued. Guarded auto-merge remains disabled until every required
+check reaches a terminal acceptable state and the branch remains conflict-free.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

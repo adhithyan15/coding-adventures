@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16315,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16315",
+    "item_id": "python-activation-matrix-loss-perceptron-build-front-coverage",
+    "branch": "codex/parity-python-neural-fronts-20260930",
+    "head_revision": "f961c9b8cde6ad7dabbe0311ce95c6ebd61c1e2c",
+    "status": "pr-open"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-30T20:57:39Z",
-    "pr_number": 16310,
-    "status": "merged",
-    "notes": "Final head f18c1e78f8e4297b4a40cad9191e782bdc22def4 completed every required check acceptably after the focused changelog-shard heading repair. GitHub reported MERGEABLE and CLEAN; guarded squash auto-merge was enabled only then, and GitHub merged PR #16310 automatically as c6685aa8d882b061ef810f32027331b40898eebd without a plain manual merge command."
+    "observed_at": "2026-09-30T21:29:19Z",
+    "pr_number": 16315,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16315 is open and GitHub reports MERGEABLE. Initial CI detect, CodeQL language detection, and human-language change detection are queued; auto-merge remains disabled until every required check is terminal and acceptable and GitHub reports no merge conflict."
   },
   "last_inventory": {
     "revision": "6c0273d68563c8d3b2babdda66636daa848ad4ad",
@@ -11048,10 +11055,10 @@
     {
       "id": "python-activation-matrix-loss-perceptron-build-front-coverage",
       "title": "Add tested BUILD fronts for Python activation-functions, matrix, loss-functions, and perceptron",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-python-neural-fronts-20260930",
-      "pr_number": null,
+      "pr_number": 16315,
       "selected_at": "2026-09-30T21:03:05Z",
       "selection_revision": "c6685aa8d882b061ef810f32027331b40898eebd",
       "selection_notes": "Selected only after PR #16310 completed every final-head check acceptably and merged through guarded squash auto-merge as c6685aa8d882b061ef810f32027331b40898eebd. The exact-main schema-3 refresh is collision-clean at 15 established lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The only identity delta is the already-owned TypeScript forme-plugin-runner-ts singleton from merged PR #16296, so no new owner is required. This dependency-free four-package Python chain closes four reviewed orphan roots, exercises five direct downstream consumers, and has no overlap with current open PRs. The fresh clean branch starts from exact current main.",
