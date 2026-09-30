@@ -1262,6 +1262,20 @@ pub struct EventModelNote {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct EventModelGwtStatement {
+    pub kind: EventModelEntityKind,
+    pub entity_id: String,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct EventModelGwt {
+    pub source_frame: String,
+    pub given: Vec<EventModelGwtStatement>,
+    pub when: Vec<EventModelGwtStatement>,
+    pub then: Vec<EventModelGwtStatement>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct EventModelFrame {
     pub id: String,
     pub entity_id: String,
@@ -1282,6 +1296,7 @@ pub struct EventModelDiagram {
     pub accessibility_description: Option<String>,
     pub data_blocks: Vec<EventModelDataBlock>,
     pub notes: Vec<EventModelNote>,
+    pub gwt: Vec<EventModelGwt>,
     pub frames: Vec<EventModelFrame>,
 }
 
@@ -1319,6 +1334,7 @@ pub struct LayoutedEventModelDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub notes: Vec<EventModelNote>,
+    pub gwt: Vec<EventModelGwt>,
     pub items: Vec<LayoutedEventModelItem>,
 }
 
