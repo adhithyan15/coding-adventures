@@ -7159,6 +7159,20 @@ impl Compiler {
         )
     }
 
+    fn exact_boolean_identity_expression_name(
+        &self,
+        expression: &GrammarASTNode,
+    ) -> Option<String> {
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(expression, "", &mut dependencies);
+        if dependencies.len() != 1 {
+            return None;
+        }
+        let dependency = dependencies.into_iter().next()?;
+        self.boolean_identity_expression_preserves_name(expression, &dependency)
+            .then_some(dependency)
+    }
+
     fn static_body_actions_name_has_acyclic_copy_path(
         &self,
         actions: &[StaticBodyAction<'_>],
@@ -7168,7 +7182,7 @@ impl Compiler {
     ) -> bool {
         actions.iter().any(|action| match action {
             StaticBodyAction::Assignment(assignment) if assignment.name == name => {
-                exact_bare_variable_expression_name(assignment.expression).is_some_and(
+                self.exact_boolean_identity_expression_name(assignment.expression).is_some_and(
                     |dependency| {
                         self.static_body_actions_name_has_acyclic_conditional_assignment_or_copies(
                             all_actions,
@@ -15433,6 +15447,42 @@ mod tests {
             "test",
         )
         .expect_err("a selector copy cycle without an exact source must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_boolean_identity_partial_self_recursive_selector_copy_chain_tracks_cycle_statements() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate, key; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; key := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and true; key := not not gate; choose := if key then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("exact boolean identity selector copies may choose a partial self-recursive update");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_boolean_identity_partial_self_recursive_selector_copy_cycle_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := gate and true; gate := flag or false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a boolean identity selector copy cycle without an exact source must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_changing_boolean_selector_copy_expression_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := flag and false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a changing boolean selector copy expression must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

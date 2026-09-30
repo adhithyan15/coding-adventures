@@ -1069,9 +1069,11 @@ backend immediately) come before the enabler-dependent items.
   expression to choose different values on successive passes before selecting
   recurrence-cycle statements or expressions. Such an exact evolving selector
   may choose between a directly self-recursive boolean leaf and a non-recursive
-  exact leaf. A finite chain of distinct exact bare-variable copies may sit
-  between that selector recurrence and the partial self-recursive assignment;
-  copy cycles and unknown conditional inputs remain conservative.
+  exact leaf. A finite chain of distinct exact boolean identity copies may sit
+  between that selector recurrence and the partial self-recursive assignment,
+  including bare variables, neutral boolean operations, and even `not` chains;
+  copy cycles, changing expressions, and unknown conditional inputs remain
+  conservative.
   The recurrence assignment may instead occur in one or both branches of a
   conditional statement selected by those exact snapshots. A branch without
   the assignment preserves the dependency for that pass; unknown selectors
