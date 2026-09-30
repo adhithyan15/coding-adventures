@@ -15102,6 +15102,40 @@ tranche. The branch rebased conflict-free onto
 `e8a0bc47780645f9281fbd3ac2a695a1c4d85208`, and the collision-checked
 inventory remains unchanged.
 
+### PR #16310 merge and Python neural-primitives build-front coverage
+
+The first final-head metadata run exposed one invalid changelog-shard heading.
+The focused one-line level-3 heading repair passed the TypeScript build and
+doc-shard reconstruction locally. Every replacement check then completed
+acceptably on final head `f18c1e78f8e4297b4a40cad9191e782bdc22def4`.
+GitHub reported the PR mergeable and clean, guarded squash auto-merge was
+enabled only then, and PR #16310 merged automatically at
+`2026-09-30T20:57:39Z` as
+`c6685aa8d882b061ef810f32027331b40898eebd`; no plain manual merge command was
+used.
+
+The exact-main schema-3 inventory is collision-clean at 15 established lanes,
+1,473 implementation identities, 4,740 package slots, 1,515 all-reported
+identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805
+Rust singletons, five emerging OCaml packages, zero canonical collisions, and
+zero unknown buckets. Its only identity delta is the TypeScript
+`forme-plugin-runner-ts` singleton from merged PR #16296. The existing
+`forme-plugin-runner-wire-lifecycle-portable-conformance` owner already covers
+that process-free boundary, so no new backlog item is required; its temporary
+live-PR block is removed while its existing family-classification dependency
+remains.
+
+The dependency/leverage refresh selects
+`python-activation-matrix-loss-perceptron-build-front-coverage`. These four
+dependency-ordered Python roots have no repository BUILD fronts, already have
+reviewed orphan-ledger entries, and feed five direct downstream programs. The
+bounded tranche adds discoverable fail-closed fronts, fills direct test and
+documentation gaps, removes exactly the resolved exemptions, and validates the
+affected downstream closure without changing the separately owned loss
+semantics or widening authority. Current open PRs have no exact overlap with
+its package, state, roadmap, or documentation paths. The fresh clean branch
+`codex/parity-python-neural-fronts-20260930` starts from the exact merge above.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
