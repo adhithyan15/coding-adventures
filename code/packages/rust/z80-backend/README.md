@@ -6,7 +6,7 @@ Zilog Z80 backend for `jit-core` / `aot-core`. Seventh lane of the
 source/binary-compatible superset of the 8080, sharing the same
 `LD A, n` / `HALT` (`MVI A, n` / `HLT`) return convention).
 
-## Scope (WORD02)
+## Scope (WORD03)
 
 | CIR family | Status |
 |------------|--------|
@@ -15,6 +15,8 @@ source/binary-compatible superset of the 8080, sharing the same
 | matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HALT` (entry-function exit) |
 | `add`, `sub`, `and`, `or`, `xor` on `u8` and `u16` | two live values, wrapping result |
 | `not_u8`, `not_u16` | width-masked complement, preserving another live value |
+| `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | normalized `bool` (`0` or `1`) |
+| `label`, `jmp`, `jmp_if_true`, `jmp_if_false` | byte-addressed `JP` fixups |
 | Other operations | `None` / `BackendError::UnsupportedOp` |
 
 The historical `const_i64`/`ret_i64` byte-sized smoke path remains for
@@ -23,6 +25,10 @@ occupy `A`/`D`; word values occupy `HL`/`DE`. The liveness pass reuses a dead
 slot for each result and explicitly rejects a third live value or simultaneous
 byte/word values. Word addition uses `ADD HL,DE` when that pair layout applies;
 the other word operations propagate carry/borrow across low and high bytes.
+The liveness fixed point follows branch targets and loop back edges. Labels are
+resolved only after final instruction sizing, so CIR indices are never mistaken
+for byte addresses. Unsigned word comparisons test the high byte first and the
+low byte only on equality.
 Typed returns must match the value's width. The observable result ABI remains
 `A` for `u8`/`bool` and `HL` for `u16`.
 

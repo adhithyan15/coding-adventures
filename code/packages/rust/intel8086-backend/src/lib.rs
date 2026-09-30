@@ -12,7 +12,7 @@
 //! following the pattern documented in
 //! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 //!
-//! ## Scope (WORD02)
+//! ## Scope (WORD03)
 //!
 //! Minimal viable backend — covers the trivial-ROM case (`const_*`
 //! immediate + `ret_*`) needed by the `lang-aot` Intel 8086 e2e smoke
@@ -24,12 +24,15 @@
 //! | `const_u16` | `MOV AX, #imm16` |
 //! | matching typed returns, `ret_void` | `HLT` (a genuine hardware halt — see below) |
 //! | two-live `add/sub/and/or/xor` on `u8`/`u16` | register ALU |
+//! | unsigned comparisons, labels, branches, loops | normalized bool + `Jcc`/`JMP` |
 //! | Anything else | returns `None` |
 //!
 //! Reverse liveness allocates at most two same-width values in `AX`/`BX`
 //! (or `AL`/`BL`) and uses `CX`/`CL` as a transient scratch. A third
-//! value, simultaneous byte and word values, and control flow are
-//! explicit future increments. Returns copy the selected value to `AX`.
+//! value and simultaneous byte and word values remain explicit future
+//! increments. Control-flow-aware liveness preserves the bounded allocation
+//! through forward branches and back edges. Returns copy the selected value
+//! to `AX`.
 //!
 //! Per the migration spec, this is acceptable: the architectural
 //! correctness win (IIR → CIR via `Backend` trait) is delivered as soon
@@ -99,7 +102,7 @@ use intel8086_encoder::{
 };
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt;
 use vm_core::value::Value;
 
@@ -117,6 +120,9 @@ pub enum BackendError {
     UnsupportedOp(String),
     InvalidOperand(String),
     UndefinedVariable(String),
+    UndefinedLabel(String),
+    DuplicateLabel(String),
+    BranchOutOfRange(String),
     ImmediateOutOfRange(i64),
 }
 
@@ -127,6 +133,11 @@ impl fmt::Display for BackendError {
             Self::InvalidOperand(d) => write!(f, "intel8086-backend: invalid operand: {d}"),
             Self::UndefinedVariable(n) => {
                 write!(f, "intel8086-backend: undefined variable {n:?}")
+            }
+            Self::UndefinedLabel(n) => write!(f, "intel8086-backend: undefined label {n:?}"),
+            Self::DuplicateLabel(n) => write!(f, "intel8086-backend: duplicate label {n:?}"),
+            Self::BranchOutOfRange(n) => {
+                write!(f, "intel8086-backend: branch to {n:?} is out of range")
             }
             Self::ImmediateOutOfRange(n) => write!(
                 f,
@@ -154,6 +165,8 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     // expression scratch and never stores a source-visible value.
     let mut slots: [Option<CurrentValue>; 2] = [None, None];
     let (live_before, live_after) = liveness(cir)?;
+    let mut labels = HashMap::new();
+    let mut fixups: Vec<(usize, String)> = Vec::new();
 
     // Tracks "has a genuine halt-convention instruction (HLT) already
     // been pushed?" -- an explicit boolean, NOT a trailing-byte-value
@@ -172,6 +185,64 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             }
         }
         let op = instr.op.as_str();
+
+        if op == "label" {
+            let name = control_label(instr, 0, op)?;
+            if instr.srcs.len() != 1 {
+                return Err(BackendError::InvalidOperand(
+                    "label requires one source".into(),
+                ));
+            }
+            if labels.insert(name.clone(), bytes.len()).is_some() {
+                return Err(BackendError::DuplicateLabel(name));
+            }
+            continue;
+        }
+
+        if op == "jmp" {
+            let target = control_label(instr, 0, op)?;
+            if instr.srcs.len() != 1 {
+                return Err(BackendError::InvalidOperand(
+                    "jmp requires one source".into(),
+                ));
+            }
+            bytes.push(0xE9); // JMP near rel16
+            let patch = bytes.len();
+            bytes.extend_from_slice(&[0, 0]);
+            fixups.push((patch, target));
+            terminated = false;
+            continue;
+        }
+
+        if matches!(op, "jmp_if_true" | "jmp_if_false") {
+            if instr.dest.is_some() || instr.srcs.len() != 2 || instr.ty != "void" {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires condition and label sources, no dest, and void type"
+                )));
+            }
+            let condition = parse_var_src(instr, 0, op)?;
+            let target = control_label(instr, 1, op)?;
+            let slot = find_slot(&slots, &condition)
+                .ok_or_else(|| BackendError::UndefinedVariable(condition.clone()))?;
+            let value = slots[slot].as_ref().expect("located slot");
+            if value.ty != "bool" || value.width != ResultWidth::Byte {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} condition must be bool"
+                )));
+            }
+            if slot == 0 {
+                bytes.extend_from_slice(&[0x3C, 0x00]); // CMP AL,0
+            } else {
+                bytes.extend_from_slice(&[0x80, 0xFB, 0x00]); // CMP BL,0
+            }
+            // Invert the condition over an arbitrary-range near jump.
+            bytes.extend_from_slice(&[if op == "jmp_if_true" { 0x74 } else { 0x75 }, 0x03, 0xE9]);
+            let patch = bytes.len();
+            bytes.extend_from_slice(&[0, 0]);
+            fixups.push((patch, target));
+            terminated = false;
+            continue;
+        }
 
         if op == "ret_void" {
             if instr.dest.is_some() || !instr.srcs.is_empty() || instr.ty != "void" {
@@ -421,6 +492,56 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             continue;
         }
 
+        if let Some((relation, width)) = comparison(op) {
+            let dest = require_dest(instr, op)?;
+            if instr.ty != "bool" || instr.srcs.len() != 2 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires two variables and bool result type"
+                )));
+            }
+            let left = parse_var_src(instr, 0, op)?;
+            let right = parse_var_src(instr, 1, op)?;
+            let left_slot = find_slot(&slots, &left)
+                .ok_or_else(|| BackendError::UndefinedVariable(left.clone()))?;
+            let right_slot = find_slot(&slots, &right)
+                .ok_or_else(|| BackendError::UndefinedVariable(right.clone()))?;
+            for slot in [left_slot, right_slot] {
+                let value = slots[slot].as_ref().expect("located slot");
+                if value.width != width || value.ty != width.name() {
+                    return Err(BackendError::InvalidOperand(format!(
+                        "{op} source width mismatch or source type mismatch"
+                    )));
+                }
+            }
+            let target = slots
+                .iter()
+                .position(|slot| {
+                    slot.as_ref().is_none_or(|value| {
+                        value.name == dest || !live_after[index].contains(&value.name)
+                    })
+                })
+                .ok_or_else(|| {
+                    BackendError::UnsupportedOp("WORD03 comparison needs a free result slot".into())
+                })?;
+            emit_comparison(&mut bytes, relation, width, left_slot, right_slot, target);
+            slots[target] = Some(CurrentValue {
+                name: dest.into(),
+                width: ResultWidth::Byte,
+                ty: "bool".into(),
+            });
+            for (slot_index, slot) in slots.iter_mut().enumerate() {
+                if slot_index != target
+                    && slot
+                        .as_ref()
+                        .is_some_and(|value| !live_after[index].contains(&value.name))
+                {
+                    *slot = None;
+                }
+            }
+            terminated = false;
+            continue;
+        }
+
         return Err(BackendError::UnsupportedOp(op.to_string()));
     }
 
@@ -432,6 +553,16 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     // tests/test_backend.rs.
     if !terminated {
         bytes.extend_from_slice(&encode_hlt());
+    }
+    for (patch, target) in fixups {
+        let address = *labels
+            .get(&target)
+            .ok_or_else(|| BackendError::UndefinedLabel(target.clone()))?;
+        let next = patch + 2;
+        let displacement = address as i64 - next as i64;
+        let displacement = i16::try_from(displacement)
+            .map_err(|_| BackendError::BranchOutOfRange(target.clone()))?;
+        bytes[patch..patch + 2].copy_from_slice(&displacement.to_le_bytes());
     }
     Ok(bytes)
 }
@@ -452,30 +583,96 @@ fn parse_var_src(instr: &CIRInstr, idx: usize, op: &str) -> Result<String, Backe
     }
 }
 
+fn control_label(instr: &CIRInstr, idx: usize, op: &str) -> Result<String, BackendError> {
+    if instr.dest.is_some() || instr.ty != "void" {
+        return Err(BackendError::InvalidOperand(format!(
+            "{op} requires no dest and void type"
+        )));
+    }
+    parse_var_src(instr, idx, op)
+}
+
 type LiveSets = (Vec<HashSet<String>>, Vec<HashSet<String>>);
 
 fn liveness(cir: &[CIRInstr]) -> Result<LiveSets, BackendError> {
-    let mut before = vec![HashSet::new(); cir.len()];
-    let mut after = before.clone();
-    let mut live = HashSet::new();
-    for (index, instr) in cir.iter().enumerate().rev() {
-        after[index] = live.clone();
-        if let Some(dest) = &instr.dest {
-            live.remove(dest);
-        }
-        for source in &instr.srcs {
-            if let CIROperand::Var(name) = source {
-                live.insert(name.clone());
+    let mut label_indices = HashMap::new();
+    for (index, instr) in cir.iter().enumerate() {
+        if instr.op == "label" {
+            let name = instr
+                .srcs
+                .first()
+                .and_then(CIROperand::as_var)
+                .ok_or_else(|| BackendError::InvalidOperand("label srcs[0] must be Var".into()))?;
+            if label_indices.insert(name.to_string(), index).is_some() {
+                return Err(BackendError::DuplicateLabel(name.to_string()));
             }
         }
-        if live.len() > 2 {
-            return Err(BackendError::UnsupportedOp(
-                "WORD02 requires a third live value; spilling is deferred".into(),
-            ));
+    }
+    let mut before = vec![HashSet::new(); cir.len()];
+    let mut after = before.clone();
+    loop {
+        let old_before = before.clone();
+        for index in (0..cir.len()).rev() {
+            let instr = &cir[index];
+            let mut successors = Vec::new();
+            match instr.op.as_str() {
+                op if op.starts_with("ret_") => {}
+                "jmp" => successors.push(branch_target_index(instr, 0, &label_indices)?),
+                "jmp_if_true" | "jmp_if_false" => {
+                    successors.push(branch_target_index(instr, 1, &label_indices)?);
+                    if index + 1 < cir.len() {
+                        successors.push(index + 1);
+                    }
+                }
+                _ if index + 1 < cir.len() => successors.push(index + 1),
+                _ => {}
+            }
+            after[index] = successors
+                .into_iter()
+                .flat_map(|successor| before[successor].iter().cloned())
+                .collect();
+            let mut live = after[index].clone();
+            if let Some(dest) = &instr.dest {
+                live.remove(dest);
+            }
+            let value_sources = match instr.op.as_str() {
+                "label" | "jmp" => 0,
+                "jmp_if_true" | "jmp_if_false" => 1,
+                _ => instr.srcs.len(),
+            };
+            for source in instr.srcs.iter().take(value_sources) {
+                if let CIROperand::Var(name) = source {
+                    live.insert(name.clone());
+                }
+            }
+            if live.len() > 2 {
+                return Err(BackendError::UnsupportedOp(
+                    "WORD03 requires a third live value; spilling is deferred".into(),
+                ));
+            }
+            before[index] = live;
         }
-        before[index] = live.clone();
+        if before == old_before {
+            break;
+        }
     }
     Ok((before, after))
+}
+
+fn branch_target_index(
+    instr: &CIRInstr,
+    source: usize,
+    labels: &HashMap<String, usize>,
+) -> Result<usize, BackendError> {
+    let target = instr
+        .srcs
+        .get(source)
+        .and_then(CIROperand::as_var)
+        .ok_or_else(|| BackendError::InvalidOperand(format!("{} target must be Var", instr.op)))?;
+    labels
+        .get(target)
+        .copied()
+        .ok_or_else(|| BackendError::UndefinedLabel(target.to_string()))
 }
 
 fn find_slot(slots: &[Option<CurrentValue>; 2], name: &str) -> Option<usize> {
@@ -508,6 +705,72 @@ fn unary_not_width(op: &str) -> Option<ResultWidth> {
         "not_u16" => Some(ResultWidth::Word),
         _ => None,
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Comparison {
+    Eq,
+    Ne,
+    Lt,
+    Le,
+    Gt,
+    Ge,
+}
+
+fn comparison(op: &str) -> Option<(Comparison, ResultWidth)> {
+    let suffix = op.strip_prefix("cmp_")?;
+    let (relation, width) = suffix.rsplit_once('_')?;
+    let relation = match relation {
+        "eq" => Comparison::Eq,
+        "ne" => Comparison::Ne,
+        "lt" => Comparison::Lt,
+        "le" => Comparison::Le,
+        "gt" => Comparison::Gt,
+        "ge" => Comparison::Ge,
+        _ => return None,
+    };
+    let width = match width {
+        "u8" => ResultWidth::Byte,
+        "u16" => ResultWidth::Word,
+        _ => return None,
+    };
+    Some((relation, width))
+}
+
+fn emit_comparison(
+    bytes: &mut Vec<u8>,
+    relation: Comparison,
+    width: ResultWidth,
+    left: usize,
+    right: usize,
+    target: usize,
+) {
+    let word = width == ResultWidth::Word;
+    let left_reg = if word {
+        [REG_AX, REG_BX][left]
+    } else {
+        [REG_AL, REG_BL][left]
+    };
+    let right_reg = if word {
+        [REG_AX, REG_BX][right]
+    } else {
+        [REG_AL, REG_BL][right]
+    };
+    bytes.extend_from_slice(&encode_alu_reg_reg(7, word, left_reg, right_reg)); // CMP
+
+    let target_word = [REG_AX, REG_BX][target];
+    let target_byte = [REG_AL, REG_BL][target];
+    bytes.extend_from_slice(&encode_mov_reg_imm16(target_word, 0));
+    let inverse = match relation {
+        Comparison::Eq => 0x75, // JNZ
+        Comparison::Ne => 0x74, // JZ
+        Comparison::Lt => 0x73, // JNB
+        Comparison::Le => 0x77, // JA
+        Comparison::Gt => 0x76, // JBE
+        Comparison::Ge => 0x72, // JB
+    };
+    bytes.extend_from_slice(&[inverse, 0x02]);
+    bytes.extend_from_slice(&encode_mov_reg_imm8(target_byte, 1));
 }
 
 /// Width-preserving materialization through `MOV AX,#imm16`. Byte values are

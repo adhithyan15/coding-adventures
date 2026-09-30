@@ -1,5 +1,13 @@
 # Changelog — intel8086-backend
 
+## Unreleased — WORD03 comparisons and structured control
+
+- Normalize all six unsigned `u8`/`u16` comparisons to Boolean `0` or `1`.
+- Lower labels and conditional/unconditional jumps with final byte-displacement
+  fixups, using an inverted short branch over a near jump for full rel16 reach.
+- Compute liveness across control-flow edges and execute a backward loop with
+  both taken and untaken branch outcomes in `intel8086-simulator`.
+
 ## Unreleased — WORD02b unary complement
 
 - Execute typed `not_u8`/`not_u16` through a width mask in `CX` while

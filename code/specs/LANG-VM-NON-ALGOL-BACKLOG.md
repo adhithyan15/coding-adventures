@@ -26,24 +26,24 @@ Go build tool made the package uncompilable before the gate tests could run.
 The repair kept portable B07 probes cross-platform and placed the FIFO security
 regression behind a platform build tag.
 
-VM-073 is the next priority. The ets-backed `array_set` path ignores the
-declared `[Table | Length]` extent, while BEAM11 `array_get` and the
-integer-array `:atomics` store enforce it. Direct IIR can write an arbitrary
-ETS key. Dartmouth BASIC emits `array_set` after subscript flattening for
-`LET A(i)` and `READ A(i)` without an independent range guard. BEAM12
-specifies a shared-backend guard and a real-Erlang regression for both ets
-element types.
+VM-073 was delivered by PR #16247 and merged as
+`367db90189900c411931b0963a967240e5246171`. The shared BEAM backend now
+enforces integer, nonnegative, and declared-length bounds before ETS-backed
+string and float stores, including when the index originates in `x0` across a
+heap reservation. Real-Erlang regressions cover both ETS element types.
+
+WORD03 / VM-072 is now selected. The two target backends have bounded
+two-value arithmetic but no normalized comparisons or control-flow fixups.
+The next proof keeps that capacity bound, resolves labels after instruction
+sizing, and executes the same taken/untaken loop on both behavioral simulators.
 
 The current queue is:
 
-1. **VM-073 (selected):** enforce integer and declared-extent checks for
-   ets-backed `array_set`; execute in-range, overwrite, negative, upper-bound,
-   and fractional cases on real Erlang.
-2. **WORD03 / VM-072:** add normalized comparisons and structured control on
+1. **WORD03 / VM-072 (selected):** add normalized comparisons and structured control on
    both target backends.
-3. **VM-069 / PREP01:** continue expansion-definition provenance and
+2. **VM-069 / PREP01:** continue expansion-definition provenance and
    `defined()` operand expansion.
-4. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
+3. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
    claims recorded below.
 
 The following run records the first VM-067 selection.

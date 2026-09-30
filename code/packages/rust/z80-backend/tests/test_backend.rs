@@ -47,6 +47,154 @@ fn word02_binary(op: &str, width: &str, left: i64, right: i64) -> Vec<CIRInstr> 
     ]
 }
 
+fn word03_loop() -> Vec<CIRInstr> {
+    vec![
+        ci("const_u16", Some("x"), vec![CIROperand::Int(3)], "u16"),
+        ci("label", None, vec![CIROperand::Var("loop".into())], "void"),
+        ci("const_u16", Some("zero"), vec![CIROperand::Int(0)], "u16"),
+        ci(
+            "cmp_gt_u16",
+            Some("condition"),
+            vec![CIROperand::Var("x".into()), CIROperand::Var("zero".into())],
+            "bool",
+        ),
+        ci(
+            "jmp_if_false",
+            None,
+            vec![
+                CIROperand::Var("condition".into()),
+                CIROperand::Var("done".into()),
+            ],
+            "void",
+        ),
+        ci("const_u16", Some("one"), vec![CIROperand::Int(1)], "u16"),
+        ci(
+            "sub_u16",
+            Some("x"),
+            vec![CIROperand::Var("x".into()), CIROperand::Var("one".into())],
+            "u16",
+        ),
+        ci("jmp", None, vec![CIROperand::Var("loop".into())], "void"),
+        ci("label", None, vec![CIROperand::Var("done".into())], "void"),
+        ci("ret_u16", None, vec![CIROperand::Var("x".into())], "u16"),
+    ]
+}
+
+#[test]
+fn word03_normalizes_all_unsigned_comparisons() {
+    for width in ["u8", "u16"] {
+        for (relation, left, right, expected) in [
+            ("eq", 7, 7, 1),
+            ("ne", 7, 8, 1),
+            ("lt", 7, 8, 1),
+            ("le", 8, 8, 1),
+            ("gt", 9, 8, 1),
+            ("ge", 8, 8, 1),
+            ("eq", 7, 8, 0),
+            ("ne", 7, 7, 0),
+            ("lt", 8, 7, 0),
+            ("le", 9, 8, 0),
+            ("gt", 8, 8, 0),
+            ("ge", 7, 8, 0),
+        ] {
+            let cir = vec![
+                ci(
+                    &format!("const_{width}"),
+                    Some("left"),
+                    vec![CIROperand::Int(left)],
+                    width,
+                ),
+                ci(
+                    &format!("const_{width}"),
+                    Some("right"),
+                    vec![CIROperand::Int(right)],
+                    width,
+                ),
+                ci(
+                    &format!("cmp_{relation}_{width}"),
+                    Some("result"),
+                    vec![
+                        CIROperand::Var("left".into()),
+                        CIROperand::Var("right".into()),
+                    ],
+                    "bool",
+                ),
+                ci(
+                    "ret_bool",
+                    None,
+                    vec![CIROperand::Var("result".into())],
+                    "bool",
+                ),
+            ];
+            let bytes = compile(&ctx("comparison", &[], "bool"), &cir).unwrap();
+            let mut sim = Z80Simulator::new(65536);
+            sim.load_program(&bytes).unwrap();
+            assert!(sim.run_loaded_with_limit(100).unwrap().halted);
+            assert_eq!(
+                sim.regs.a, expected,
+                "cmp_{relation}_{width}({left},{right})"
+            );
+        }
+    }
+}
+
+#[test]
+fn word03_executes_taken_and_untaken_loop_branches() {
+    let bytes = compile(&ctx("loop", &[], "u16"), &word03_loop()).unwrap();
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    assert!(sim.run_loaded_with_limit(200).unwrap().halted);
+    assert_eq!(u16::from_be_bytes([sim.regs.h, sim.regs.l]), 0);
+    assert!(bytes
+        .windows(3)
+        .any(|window| window[0] == 0xC3 && u16::from_le_bytes([window[1], window[2]]) < 8));
+}
+
+#[test]
+fn word03_executes_a_forward_jmp_if_true() {
+    let cir = vec![
+        ci(
+            "const_bool",
+            Some("condition"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci(
+            "jmp_if_true",
+            None,
+            vec![
+                CIROperand::Var("condition".into()),
+                CIROperand::Var("taken".into()),
+            ],
+            "void",
+        ),
+        ci("const_u8", Some("value"), vec![CIROperand::Int(9)], "u8"),
+        ci("ret_u8", None, vec![CIROperand::Var("value".into())], "u8"),
+        ci("label", None, vec![CIROperand::Var("taken".into())], "void"),
+        ci("const_u8", Some("value"), vec![CIROperand::Int(7)], "u8"),
+        ci("ret_u8", None, vec![CIROperand::Var("value".into())], "u8"),
+    ];
+    let bytes = compile(&ctx("if_true", &[], "u8"), &cir).unwrap();
+    let mut sim = Z80Simulator::new(65536);
+    sim.load_program(&bytes).unwrap();
+    assert!(sim.run_loaded_with_limit(100).unwrap().halted);
+    assert_eq!(sim.regs.a, 7);
+}
+
+#[test]
+fn word03_rejects_an_undefined_branch_label() {
+    let cir = vec![ci(
+        "jmp",
+        None,
+        vec![CIROperand::Var("missing".into())],
+        "void",
+    )];
+    assert_eq!(
+        compile(&ctx("bad", &[], "void"), &cir),
+        Err(BackendError::UndefinedLabel("missing".into()))
+    );
+}
+
 #[test]
 fn word02b_complement_executes_and_preserves_other_live_value() {
     for (width, value, expected) in [("u8", 0, 0xff), ("u16", 0x1234, 0xedcb)] {

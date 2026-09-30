@@ -1,5 +1,12 @@
 # Changelog — z80-backend
 
+## Unreleased — WORD03 comparisons and structured control
+
+- Normalize all six unsigned `u8`/`u16` comparisons to Boolean `0` or `1`.
+- Lower labels and conditional/unconditional jumps with byte-address fixups.
+- Compute liveness across control-flow edges and execute a backward loop with
+  both taken and untaken branch outcomes in `z80-simulator`.
+
 ## Unreleased — WORD02b unary complement
 
 - Execute typed `not_u8`/`not_u16` with `CPL` on each required byte while
