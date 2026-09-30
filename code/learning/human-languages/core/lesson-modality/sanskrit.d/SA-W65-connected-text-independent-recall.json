@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W65-connected-text-independent-recall",
+    "language": "sanskrit",
+    "chapter": 65,
+    "sequence": 3016,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8a2da8ee8e4e31c9",
+    "detachableSegments": [
+      "Writing — independent connected-text recall"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

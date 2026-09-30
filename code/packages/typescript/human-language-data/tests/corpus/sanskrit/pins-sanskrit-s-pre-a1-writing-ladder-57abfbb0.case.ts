@@ -37,6 +37,8 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
     ["SA-W10-asti-guided-copy", "guided-copy"],
     ["SA-W10-asti-delayed-copy", "delayed-copy"],
     ["SA-W10-asti-dictation", "dictation-transcription"],
+    ["SA-W65-connected-text-guided-copy", "guided-copy"],
+    ["SA-W65-connected-text-delayed-copy", "delayed-copy"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({
@@ -46,7 +48,7 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
   });
 });
 
-it("extends the sourced single-letter ladder through words, marks, and a conjunct", () => {
+it("extends the sourced single-letter ladder through independently recalled connected text", () => {
   const ids = [
     "SA-W03-mama-guided-copy",
     "SA-W03-mama-delayed-copy",
@@ -64,6 +66,9 @@ it("extends the sourced single-letter ladder through words, marks, and a conjunc
     "SA-W10-asti-guided-copy",
     "SA-W10-asti-delayed-copy",
     "SA-W10-asti-dictation",
+    "SA-W65-connected-text-guided-copy",
+    "SA-W65-connected-text-delayed-copy",
+    "SA-W65-connected-text-independent-recall",
   ];
   const lessons = loadTrackLessons("sanskrit")
     .sort(readingOrder)
@@ -72,9 +77,9 @@ it("extends the sourced single-letter ladder through words, marks, and a conjunc
   expect(lessons.map((lesson) => lesson.realization.lessonId)).toEqual(ids);
   expect(lessons.map((lesson) => Number(lesson.frontmatter["duration.max_seconds"]))).toEqual([
     150, 120, 120, 180, 150, 150, 150, 120, 120, 150, 120, 120,
-    150, 150, 120, 120,
+    150, 150, 120, 120, 180, 150, 150,
   ]);
-  for (const [start, end] of [[0, 8], [9, 11], [12, 15]]) {
+  for (const [start, end] of [[0, 8], [9, 11], [12, 15], [16, 18]]) {
     for (let index = start + 1; index <= end; index += 1) {
       expect(lessons[index]?.frontmatter.prerequisites).toContain(ids[index - 1]);
     }
@@ -88,6 +93,14 @@ it("extends the sourced single-letter ladder through words, marks, and a conjunc
     "SA-S107-letter-ta",
     "SA-S108-letter-sa",
     "SA-S109-vowel-sign-i",
+  ]));
+  expect(lessons[16]?.frontmatter.prerequisites).toEqual(expect.arrayContaining([
+    "SA-R65-letters-second-pass",
+    "SA-C64-prathama-pathanam",
+    "SA-C60-danda",
+    "SA-C01-namaste",
+    "SA-C05-aham-samskritam-vadami",
+    "SA-W10-asti-dictation",
   ]));
 
   const markdown = lessons.map((lesson) =>
@@ -114,4 +127,11 @@ it("extends the sourced single-letter ladder through words, marks, and a conjunc
   expect(markdown[14]).toContain("no visible answer");
   expect(markdown[15]).toContain("no visible Devanagari model and no romanized answer");
   expect(markdown[15]).toContain("Connected text and broader");
+  expect(markdown[16]).toContain("There is no new vocabulary here");
+  expect(markdown[16]).toContain("romanization is not an answer");
+  expect(markdown[17]).toContain("There is no visible answer");
+  expect(markdown[17]).toContain("two danda marks");
+  expect(markdown[18]).toContain("meanings only");
+  expect(markdown[18]).toContain("visible Devanagari model or a romanized cue");
+  expect(markdown[18]).toContain("A complete two-sentence Devanagari text from meaning alone");
 });

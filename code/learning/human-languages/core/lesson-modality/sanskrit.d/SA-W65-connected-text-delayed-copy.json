@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "SA-W65-connected-text-delayed-copy",
+    "language": "sanskrit",
+    "chapter": 65,
+    "sequence": 3014,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b6d1e11eae4fc4ef",
+    "detachableSegments": [
+      "Writing — delayed copy of the whole text"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
