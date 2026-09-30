@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f147066d227eec9e",
+  "sourceHash": "fnv1a64:f5268b793d4c3204",
   "lessons": [
     {
       "id": "TE-C17-madhyaahnam-ardharaatri",
@@ -320,7 +320,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:66821ee5a34d127b",
+      "sourceHash": "fnv1a64:8b4871b8e36c5f82",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -392,15 +392,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ఠ — copy what you see",
+          "title": "Writing: ఠ — three deliberate movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ఠ (ṭha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write ట beside it and look at the two."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps around the broad circular body. Movement 2 curls upward through the separate top flourish. Finish by placing the inner dot as movement 3. Then write ట beside it and look at the two."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the three movements distinct and let the round shape grow from them."
             }
           ]
         },
@@ -431,11 +431,20 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ఠ three times, saying ṭha as you finish each one",
+              "instruction": "ఠ (ṭha) once, following all three numbered movements",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU TRACE: ఠ three times, saying *ṭha* as you finish each one]"
+              "source": "[YOU TRACE: ఠ once, following all three numbered movements]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "ఠ twice without tracing, saying ṭha as you finish each one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: ఠ twice without tracing, saying *ṭha* as you finish each one]"
             },
             {
               "kind": "prompt",
