@@ -2,6 +2,13 @@
 
 ## 2026-09-30
 
+- Added a closed `orphan_package_root_snapshot`, four independent validation
+  cases, package-root-specific diagnostics, and exact 8,192-root,
+  16,384-BUILD, and 2,000,000-byte ceilings without changing the legacy Cargo
+  snapshot limits. The process-free corpus now contains 166 cases.
+- Registered the merged `forme-plugin-installer-core` TypeScript base-config
+  consumer and refreshed the canonical repository-boundary digest to
+  `af6ae391a86167eb453bb4f5c2bed97cfb885039ce3ca0fce6cf2984ee5b4be7`.
 - Removed ten Haskell packages with local `cabal.project` files from the shared
   workspace source boundary. Refreshed its digest in ten conformance cases and
   the canonical summary test, which now pins 479 scopes and 482 authorizations.

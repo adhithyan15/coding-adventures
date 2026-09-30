@@ -664,12 +664,13 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		// reporting one at a time would mean two round-trips through CI to see
 		// the full punch list.
 		//
-		// ValidateBuildFiles can only ever inspect packages the tool DISCOVERED,
-		// and discovery means "has a BUILD file" — so by construction it is blind
-		// to a crate that has none. ValidateNoOrphanCrates scans the filesystem
-		// instead, and is the only check that can see that gap.
+		// ValidateBuildFiles can only inspect packages the tool DISCOVERED, and
+		// discovery means "has a BUILD file". The two orphan gates independently
+		// scan Cargo manifests and direct established-lane roots so missing fronts
+		// cannot remain structurally invisible.
 		buildErr := validator.ValidateBuildFiles(packages, graph)
 		orphanErr := validator.ValidateNoOrphanCrates(repoRoot)
+		packageRootErr := validator.ValidateNoOrphanPackageRoots(repoRoot)
 		artifactErr := validator.ValidateNoTrackedNodeModules(repoRoot)
 
 		if buildErr != nil {
@@ -678,15 +679,19 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		if orphanErr != nil {
 			fmt.Fprintln(os.Stderr, orphanErr)
 		}
+		if packageRootErr != nil {
+			fmt.Fprintln(os.Stderr, packageRootErr)
+		}
 		if artifactErr != nil {
 			fmt.Fprintln(os.Stderr, artifactErr)
 		}
-		if buildErr != nil || orphanErr != nil || artifactErr != nil {
+		if buildErr != nil || orphanErr != nil || packageRootErr != nil || artifactErr != nil {
 			return 1
 		}
 
-		if pending := validator.PendingExemptionCount(repoRoot); pending > 0 {
-			fmt.Printf("Orphan-crate check: OK (%d crates still on the BUILD backlog in %s)\n",
+		pending := validator.PendingExemptionCount(repoRoot)
+		if pending > 0 {
+			fmt.Printf("Orphan checks: OK (%d pending BUILD exemptions across both gates in %s)\n",
 				pending, validator.ExemptionsFile)
 		}
 	}

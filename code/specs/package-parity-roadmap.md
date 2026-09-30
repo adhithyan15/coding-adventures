@@ -14988,6 +14988,73 @@ blib dependency is now recorded. That owner must introduce a distinct bounded
 `orphan_package_root_snapshot` contract and streaming Go discovery rather than
 raising the legacy orphan-crate snapshot ceiling.
 
+### PR #16257 merge and generalized orphan package-root validation
+
+PR #16257 completed every final-head check acceptably at
+`27ec7e25349b2fb4dbc68e8248d39fa2558cb148`. GitHub reported the branch clean
+and mergeable, guarded squash auto-merge was enabled only after every check was
+terminal, and GitHub merged it automatically at `2026-09-30T16:00:37Z` as
+`9e3c76378499464c1ab5a0d1a7e2187d614ff58f`; no plain manual merge command was
+used. The final branch also made the Haskell package index readiness explicit
+and enabled Cabal test components in the two aggregate projects whose CI plans
+had omitted them.
+
+The collision-checked schema-3 inventory from that exact merged main remains
+identity-neutral at 15 established lanes, 1,471 implementation identities,
+4,738 implementation slots, 1,513 all-reported identities, completion bands
+178/265, 123/934, 181/2,282, and 989/13,846, 805 Rust singletons, five emerging
+OCaml packages, zero canonical collisions, and zero unknown language buckets.
+
+Parallel read-only audits added three dependency-shaped owners before the next
+selection. `haskell-cabal-project-test-component-enablement` owns the 112
+reviewed aggregate Cabal projects whose BUILD fronts invoke `cabal test`, with
+snapshot digest
+`83ff3d114ad85710d5811a2ff1d989d1ddd46f8d0c0b717ac6a4318261d9afbb`, and now
+precedes the separate arc2d front owner. Perl source hashing now depends on
+declared-source metadata plumbing after exact `_build` Discovery and Hasher
+evidence, followed by an explicit selection-blocked native snapshot stability
+owner. The reconciled 930-owner, 1,795-edge graph is unique,
+dependency-complete, and acyclic.
+
+The dependency/leverage refresh selects
+`build-tool-orphan-package-root-validation-corpus-and-go-adoption`. It closes
+the repository gate's Cargo-only structural blind spot across all established
+lanes, while leaving implementation of the 40 currently owned missing fronts
+to their dependency-shaped children. A fresh collision scan across twelve open
+PRs found no exact implementation or specification overlap after excluding the
+merged blib PR, and this tranche requires no CI workflow edit. The clean branch
+`codex/parity-orphan-package-root-20260930` starts from the exact merge revision
+above.
+
+Before implementation publication, unrelated preprocessor, Mermaid, Forme, and
+Sanskrit work advanced `origin/main` to
+`290170573666eafc1c3d30dfa34fd3c159ff617d`. The selected branch rebased
+cleanly. The refreshed collision-checked inventory now contains 1,472
+implementation identities, 4,739 implementation slots, 1,514 all-reported
+identities, completion bands 178/265, 123/934, 181/2,282, and 990/13,860, 805
+Rust singletons, five emerging OCaml packages, zero collisions, and zero
+unknown buckets. The sole new identity is TypeScript
+`forme-plugin-installer-core`. Its deterministic snapshot planner is registered
+under `forme-plugin-installer-snapshot-portable-conformance`, dependent on the
+existing Forme family classifier; effectful installation remains a reviewed
+native-host/security boundary and is excluded from autonomous selection.
+
+The main advance also made the checked-in TypeScript workspace-source boundary
+stale. A later independent repair, merged as PR #16285, registered the new root
+and refreshed the dependent fixtures and language projections to digest
+`af6ae391a86167eb453bb4f5c2bed97cfb885039ce3ca0fce6cf2984ee5b4be7`.
+The parity branch rebased onto that repair instead of duplicating it.
+
+A final pre-push refresh rebased the completed tranche onto exact `origin/main`
+`9fc12ead72cbd04c8689cfbae425fb20251c7209` after additional Mermaid, ALGOL,
+Telugu, Sanskrit, TaskApp, and boundary-repair merges. The exact-main inventory
+remains structurally unchanged at 15 established lanes, 1,472 implementation
+identities, 4,739 slots, 1,514 all-reported identities, completion bands
+178/265, 123/934, 181/2,282, and 990/13,860, 805 Rust singletons, five emerging
+OCaml packages, zero collisions, and zero unknown buckets. None of those
+intervening changes creates an unowned eligible gap or overlaps the orphan-root
+contract now carried by this branch.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

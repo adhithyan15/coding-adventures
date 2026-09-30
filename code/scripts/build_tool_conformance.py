@@ -194,6 +194,7 @@ ORPHAN_BUILD_NAMES = (
     "BUILD_linux",
     "BUILD_mac_and_linux",
 )
+ORPHAN_PACKAGE_ROOT_SNAPSHOT_MAX_BYTES = 2_000_000
 ORPHAN_SKIP_COMPONENTS = frozenset(
     {
         ".git",
@@ -2394,6 +2395,151 @@ def _validate_orphan_snapshot(snapshot: dict[str, Any]) -> None:
         )
 
 
+def _package_root_source_evidence_matches(
+    registry: dict[str, Any], root: dict[str, Any]
+) -> bool:
+    package_root = root["path"]
+    evidence = root["source_evidence"]
+    if not evidence.startswith(f"{package_root}/"):
+        return False
+    relative = evidence[len(package_root) + 1 :]
+    if not relative or any(
+        component in set(registry["universal_inputs"]["generated_directory_components"])
+        for component in relative.split("/")
+    ):
+        return False
+    language = _source_input_entry(registry, root["language"])
+    universal = registry["universal_inputs"]
+    basename = posixpath.basename(relative)
+    if basename in set(universal["build_filenames"]):
+        return False
+    is_root = "/" not in relative
+    if is_root and basename in set(universal["root_exact_basenames"]):
+        return True
+    if is_root and basename in set(language["root_exact_basenames"]):
+        return True
+    if is_root and any(
+        basename.endswith(suffix) for suffix in language["root_variable_suffixes"]
+    ):
+        return True
+    if relative in set(language["root_exact_relative_paths"]):
+        return True
+    if any(
+        item["package_root"] == package_root and relative in set(item["paths"])
+        for item in language["package_exact_inputs"]
+    ):
+        return True
+    if basename in set(language["recursive_exact_basenames"]):
+        return True
+    if any(basename.endswith(suffix) for suffix in language["recursive_suffixes"]):
+        return True
+    return any(
+        _scoped_source_input_matches(rule, relative)
+        for rule in language["scoped_inputs"]
+    )
+
+
+def _package_root_shape(path: str, language: str) -> bool:
+    parts = path.split("/")
+    return (
+        len(parts) == 4
+        and parts[0] == "code"
+        and parts[1] == "packages"
+        and parts[2] == language
+        and bool(parts[3])
+    )
+
+
+def _validate_orphan_package_root_snapshot(
+    snapshot: dict[str, Any], source_input_registry: dict[str, Any] | None
+) -> None:
+    registry = source_input_registry or _default_source_input_registry()
+    if snapshot["registry_sha256"] != source_input_registry_digest(registry):
+        raise ConformanceError(
+            "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
+            "orphan package-root snapshot does not pin the validated registry",
+        )
+    canonical_bytes = len(
+        json.dumps(
+            snapshot, ensure_ascii=False, separators=(",", ":"), sort_keys=True
+        ).encode("utf-8")
+    )
+    if canonical_bytes > ORPHAN_PACKAGE_ROOT_SNAPSHOT_MAX_BYTES:
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_LIMIT_EXCEEDED",
+            "orphan package-root snapshot exceeds the UTF-8 byte ceiling",
+        )
+
+    roots = snapshot["roots"]
+    root_paths = [root["path"] for root in roots]
+    if root_paths != sorted(root_paths):
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            "orphan package roots must be sorted",
+        )
+    identities: set[str] = set()
+    established = set(ESTABLISHED_LANGUAGES)
+    for root in roots:
+        path = root["path"]
+        language = root["language"]
+        evidence = root["source_evidence"]
+        if (
+            language not in established
+            or portable_path_error(path)
+            or portable_path_error(evidence)
+            or not _package_root_shape(path, language)
+        ):
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"invalid established-lane package root: {path}",
+            )
+        identity = _path_identity(path)
+        if identity in identities:
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"duplicate normalized package root: {path}",
+            )
+        identities.add(identity)
+        if not _package_root_source_evidence_matches(registry, root):
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"package root has no governed source evidence: {path}",
+            )
+
+    build_files = snapshot["build_files"]
+    build_paths = [entry["path"] for entry in build_files]
+    if build_paths != sorted(build_paths):
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            "orphan package-root BUILD paths must be sorted",
+        )
+    build_identities: set[str] = set()
+    for path in build_paths:
+        if (
+            portable_path_error(path)
+            or not _is_under_orphan_scan_root(path)
+            or posixpath.basename(path) not in ORPHAN_BUILD_NAMES
+        ):
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"invalid orphan package-root BUILD path: {path}",
+            )
+        identity = _path_identity(path)
+        if identity in build_identities:
+            raise ConformanceError(
+                "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+                f"duplicate normalized orphan package-root BUILD path: {path}",
+            )
+        build_identities.add(identity)
+
+    lines = [entry["line"] for entry in snapshot["exemptions"]]
+    if lines != sorted(lines) or len(lines) != len(set(lines)):
+        raise ConformanceError(
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+            "orphan package-root exemption lines must be strictly increasing and unique",
+        )
+
+
 def _normalize_tracked_artifact_path(path: str) -> tuple[str | None, str | None]:
     normalized = path.replace("\\", "/")
     if not normalized:
@@ -2680,6 +2826,10 @@ def _validate_pure_case_semantics(
         starlark_declarations = "starlark_declarations" in checks
         if "orphan_crate_coverage" in checks:
             _validate_orphan_snapshot(options["orphan_snapshot"])
+        if "orphan_package_root_coverage" in checks:
+            _validate_orphan_package_root_snapshot(
+                options["orphan_package_root_snapshot"], source_input_registry
+            )
         if "tracked_artifact_absence" in checks:
             _validate_tracked_artifact_snapshot(options["tracked_artifact_snapshot"])
         _validate_unique_paths(
@@ -3511,7 +3661,7 @@ def _expected_shards(options: dict[str, Any]) -> list[dict[str, Any]]:
 
 def _expected_orphan_validation(
     options: dict[str, Any],
-) -> tuple[list[dict[str, Any]], int]:
+) -> tuple[list[dict[str, Any]], int, set[str]]:
     snapshot = options["orphan_snapshot"]
     manifests = [
         manifest
@@ -3606,7 +3756,7 @@ def _expected_orphan_validation(
         valid_exemptions.append(exemption)
 
     active_exemptions: dict[str, dict[str, Any]] = {}
-    pending_exemption_count = 0
+    pending_exemption_paths: set[str] = set()
     for exemption in valid_exemptions:
         exemption_path = exemption["path"]
         stale_problem: str | None = None
@@ -3633,7 +3783,7 @@ def _expected_orphan_validation(
             continue
         active_exemptions[exemption_path] = exemption
         if exemption["kind"] == "PENDING":
-            pending_exemption_count += 1
+            pending_exemption_paths.add(exemption_path)
 
     for manifest in manifests:
         manifest_path = manifest["path"]
@@ -3670,7 +3820,157 @@ def _expected_orphan_validation(
             json.dumps(item.get("details", {}), sort_keys=True),
         )
     )
-    return diagnostics, pending_exemption_count
+    return diagnostics, len(pending_exemption_paths), pending_exemption_paths
+
+
+def _expected_orphan_package_root_validation(
+    options: dict[str, Any],
+    source_input_registry: dict[str, Any] | None = None,
+) -> tuple[list[dict[str, Any]], int, set[str]]:
+    registry = source_input_registry or _default_source_input_registry()
+    snapshot = options["orphan_package_root_snapshot"]
+    generated = set(registry["universal_inputs"]["generated_directory_components"])
+    roots = [
+        root
+        for root in snapshot["roots"]
+        if root["kind"] == "package"
+        and not any(component in generated for component in root["path"].split("/"))
+    ]
+    roots_by_path = {root["path"]: root for root in roots}
+    build_files = snapshot["build_files"]
+    build_name_rank = {name: index for index, name in enumerate(ORPHAN_BUILD_NAMES)}
+
+    def covering_builds(root_path: str, state: str) -> list[dict[str, Any]]:
+        candidates = []
+        for build_file in build_files:
+            if build_file["state"] != state:
+                continue
+            parent = posixpath.dirname(build_file["path"])
+            if root_path != parent and not root_path.startswith(f"{parent}/"):
+                continue
+            candidates.append(build_file)
+        return sorted(
+            candidates,
+            key=lambda item: (
+                -len(posixpath.dirname(item["path"]).split("/")),
+                build_name_rank[posixpath.basename(item["path"])],
+                item["path"],
+            ),
+        )
+
+    coverage: dict[str, dict[str, Any] | None] = {}
+    empty_builds: dict[str, dict[str, Any] | None] = {}
+    for root in roots:
+        runnable = covering_builds(root["path"], "runnable")
+        empty = covering_builds(root["path"], "empty")
+        coverage[root["path"]] = runnable[0] if runnable else None
+        empty_builds[root["path"]] = empty[0] if empty else None
+
+    diagnostics: list[dict[str, Any]] = []
+    seen_exemption_paths: set[str] = set()
+    valid_exemptions: list[dict[str, Any]] = []
+    for exemption in snapshot["exemptions"]:
+        path = exemption["path"]
+        identity: str | None = None
+        path_problem: str | None = None
+        if portable_path_error(path) is not None:
+            path_problem = "PATH_UNSAFE"
+        else:
+            identity = _path_identity(path)
+            parts = path.split("/")
+            if (
+                len(parts) != 4
+                or parts[0] != "code"
+                or parts[1] != "packages"
+                or parts[2] not in set(ESTABLISHED_LANGUAGES)
+            ):
+                path_problem = "PATH_OUTSIDE_SCAN"
+            elif any(component in generated for component in parts):
+                path_problem = "PATH_ARTIFACT"
+
+        duplicate = identity is not None and identity in seen_exemption_paths
+        if identity is not None and not duplicate:
+            seen_exemption_paths.add(identity)
+        if exemption["kind"] not in {"EXCLUDED", "PENDING"}:
+            problem = "UNKNOWN_KIND"
+        elif not exemption["reason"].strip():
+            problem = "REASON_MISSING"
+        elif duplicate:
+            problem = "DUPLICATE_PATH"
+        else:
+            problem = path_problem
+        if problem is not None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_EXEMPTION_INVALID",
+                    "severity": "error",
+                    "path": ORPHAN_LEDGER_PATH,
+                    "details": {"line": exemption["line"], "problem": problem},
+                }
+            )
+            continue
+        valid_exemptions.append(exemption)
+
+    active_exemptions: dict[str, dict[str, Any]] = {}
+    pending_exemption_paths: set[str] = set()
+    for exemption in valid_exemptions:
+        path = exemption["path"]
+        stale_problem: str | None = None
+        if path not in roots_by_path:
+            stale_problem = "MISSING_ROOT"
+        elif coverage[path] is not None:
+            stale_problem = "COVERED"
+        if stale_problem is not None:
+            diagnostics.append(
+                {
+                    "code": "ORPHAN_EXEMPTION_STALE",
+                    "severity": "error",
+                    "path": ORPHAN_LEDGER_PATH,
+                    "details": {
+                        "entry_path": path,
+                        "kind": exemption["kind"],
+                        "line": exemption["line"],
+                        "problem": stale_problem,
+                    },
+                }
+            )
+            continue
+        active_exemptions[path] = exemption
+        if exemption["kind"] == "PENDING":
+            pending_exemption_paths.add(path)
+
+    for root in roots:
+        path = root["path"]
+        if coverage[path] is not None or path in active_exemptions:
+            continue
+        details = {
+            "language": root["language"],
+            "source_evidence": root["source_evidence"],
+        }
+        empty_build = empty_builds[path]
+        if empty_build is None:
+            code = "ORPHAN_PACKAGE_ROOT_UNLISTED"
+        else:
+            code = "ORPHAN_PACKAGE_ROOT_EMPTY_BUILD"
+            details["build_path"] = empty_build["path"]
+        diagnostics.append(
+            {
+                "code": code,
+                "severity": "error",
+                "path": path,
+                "details": details,
+            }
+        )
+
+    diagnostics.sort(
+        key=lambda item: (
+            item["code"],
+            item.get("path", ""),
+            item.get("package", ""),
+            json.dumps(item.get("details", {}), sort_keys=True),
+        )
+    )
+    return diagnostics, len(pending_exemption_paths), pending_exemption_paths
 
 
 def _expected_tracked_artifact_validation(
@@ -3725,6 +4025,7 @@ def _expected_tracked_artifact_validation(
 
 def _expected_validation_diagnostics(
     options: dict[str, Any],
+    source_input_registry: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     checks = set(options["checks"])
     packages = _package_index(options["packages"])
@@ -3917,8 +4218,13 @@ def _expected_validation_diagnostics(
                 }
             )
     if "orphan_crate_coverage" in checks:
-        orphan_diagnostics, _ = _expected_orphan_validation(options)
+        orphan_diagnostics, _, _ = _expected_orphan_validation(options)
         diagnostics.extend(orphan_diagnostics)
+    if "orphan_package_root_coverage" in checks:
+        package_root_diagnostics, _, _ = _expected_orphan_package_root_validation(
+            options, source_input_registry
+        )
+        diagnostics.extend(package_root_diagnostics)
     if "tracked_artifact_absence" in checks:
         diagnostics.extend(_expected_tracked_artifact_validation(options))
     return sorted(
@@ -4165,12 +4471,26 @@ def _validate_pure_result_semantics(
     elif domain == "validation":
         codes = payload.get("diagnostic_codes", [])
         valid = payload.get("valid")
-        expected_diagnostics = _expected_validation_diagnostics(options)
+        expected_diagnostics = _expected_validation_diagnostics(
+            options, source_input_registry
+        )
         expected_codes = sorted(
             {diagnostic["code"] for diagnostic in expected_diagnostics}
         )
-        if "orphan_crate_coverage" in set(options["checks"]):
-            _, expected_pending_count = _expected_orphan_validation(options)
+        checks = set(options["checks"])
+        if checks & {"orphan_crate_coverage", "orphan_package_root_coverage"}:
+            expected_pending_paths: set[str] = set()
+            if "orphan_crate_coverage" in checks:
+                _, _, orphan_pending_paths = _expected_orphan_validation(options)
+                expected_pending_paths.update(orphan_pending_paths)
+            if "orphan_package_root_coverage" in checks:
+                _, _, package_root_pending_paths = (
+                    _expected_orphan_package_root_validation(
+                        options, source_input_registry
+                    )
+                )
+                expected_pending_paths.update(package_root_pending_paths)
+            expected_pending_count = len(expected_pending_paths)
             if payload.get("pending_exemption_count") != expected_pending_count:
                 raise ConformanceError(
                     f"{prefix}_VALIDATION_INCONSISTENT",

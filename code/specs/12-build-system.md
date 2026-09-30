@@ -171,6 +171,20 @@ ledger records as inert data. It performs no filesystem walk, Git query,
 process launch, environment lookup, or network access; native enumeration and
 file reading stay outside the process-free oracle.
 
+The generalized `orphan_package_root_coverage` contract is distinct from the
+Cargo gate. It enumerates only direct `code/packages/<established-lane>/<name>`
+roots, pins one compact source witness selected by the governed language-source
+registry, and ignores virtual roots plus exact generated components from that
+registry. Its closed snapshot is capped at 8,192 roots, 16,384 BUILD fronts,
+8,192 exemptions, and 2,000,000 canonical compact-JSON UTF-8 bytes. It shares
+the five exact BUILD names, component-wise ancestor coverage, ledger grammar,
+stale-entry behavior, collision rules, and deterministic ordering above while
+using package-root-specific unlisted and empty-front diagnostics. Native Go
+discovery streams and bounds caller-selected filesystem data without invoking
+Git or acquiring process, environment, or network authority. OCaml remains an
+emerging lane until its promotion gates pass and is therefore not in this
+fifteen-lane denominator.
+
 Tracked dependency artifacts are a separate validation boundary. The closed
 `tracked_artifact_absence` snapshot supplies bounded path and entry-kind
 records as inert data and declares the exact Unicode `17.0.0` data version.

@@ -1529,14 +1529,15 @@ Validation v1 uses the stable diagnostic registry
 `STANDALONE_PREREQUISITE_MISSING`, `STARLARK_SOURCE_INVALID`,
 `STARLARK_DEPENDENCY_INVALID`, `IDENTITY_AMBIGUOUS`, `MANIFEST_AMBIGUOUS`,
 `TOOLCHAIN_UNSUPPORTED`, `PATH_UNSAFE`, `ORPHAN_CRATE_UNLISTED`,
-`ORPHAN_CRATE_EMPTY_BUILD`, `ORPHAN_EXEMPTION_INVALID`, and
+`ORPHAN_CRATE_EMPTY_BUILD`, `ORPHAN_PACKAGE_ROOT_UNLISTED`,
+`ORPHAN_PACKAGE_ROOT_EMPTY_BUILD`, `ORPHAN_EXEMPTION_INVALID`,
 `ORPHAN_EXEMPTION_STALE`, `TRACKED_ARTIFACT_FORBIDDEN`, and
 `TRACKED_ARTIFACT_PATH_INVALID`. The closed check registry is
 `build_file_presence`, `local_dependency_declarations`,
 `standalone_prerequisites`, `starlark_declarations`, `identity_uniqueness`,
 `manifest_uniqueness`, `toolchain_support`, `path_safety`, and
 `lua_windows_sibling_parity`, plus `orphan_crate_coverage` and
-`tracked_artifact_absence`.
+`orphan_package_root_coverage`, plus `tracked_artifact_absence`.
 
 Every validation package carries one normalized snapshot: canonical package
 identity and root, implementation language, selected BUILD state and local
@@ -1643,6 +1644,41 @@ even when there are no diagnostics. Diagnostics are independently derived,
 retain only safe paths, and sort by the normal validation ordering. The snapshot and
 expected result provide no filesystem, Git, process, environment, or network
 authority.
+
+The separate process-free `orphan_package_root_coverage` check consumes one
+closed `orphan_package_root_snapshot`; it does not enlarge or reinterpret the
+Cargo-specific snapshot above. `roots` contains at most 8,192 direct children
+of `code/packages/<language>/` where `<language>` is one of the fifteen
+established implementation lanes. Each record carries the root, its exact
+lane, `package` or `virtual` kind, and one compact governed source witness.
+The witness must be a descendant matched by the pinned
+`language-source-input-registry.json`; a BUILD filename is never sufficient
+evidence. Exact generated-directory components from that registry and all
+`virtual` roots are retained as auditable data but excluded from enforcement.
+OCaml remains emerging and is not inferred into this denominator.
+
+The snapshot pins the validated source-input-registry digest, contains at most
+16,384 recognized BUILD-front records and 8,192 ledger records, and its
+canonical compact sorted-key JSON encoding is at most 2,000,000 UTF-8 bytes.
+Roots and BUILD paths are bytewise sorted. Root, BUILD, and exemption
+identities use NFC plus full default case folding for collision rejection;
+raw unsafe values remain redacted. The exact five BUILD names, component-wise
+ancestor coverage, runnable-versus-empty precedence, exemption grammar, stale
+entry behavior, diagnostic ordering, and fixed redacted ledger path are the
+same as the Cargo check. An uncovered root reports
+`ORPHAN_PACKAGE_ROOT_UNLISTED`; when only an empty front covers it, the result
+is `ORPHAN_PACKAGE_ROOT_EMPTY_BUILD`. Exemption diagnostics remain shared.
+
+When both orphan checks run, `pending_exemption_count` is the path-deduplicated
+union of their active PENDING entries and is bounded by 12,288. Native
+discovery must stream the direct established-lane
+roots and enforce all count and byte ceilings before retaining unbounded input.
+It may inspect only the caller-selected repository tree under the build
+tool's existing filesystem authority; it must not invoke Git or another
+process, consult the environment or network, follow generated trees, or treat
+the expected result as evidence. Every engine/front-door adoption consumes the
+neutral snapshot through a language-native inert adapter before claiming this
+check.
 
 The process-free `tracked_artifact_absence` check consumes one closed
 `tracked_artifact_snapshot`. Its required `unicode_version` is exactly
