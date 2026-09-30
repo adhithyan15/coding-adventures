@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-141-FUT141",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "FR-EXT-141-FUT141"
+  ],
+  "after": []
+}

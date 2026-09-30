@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:2f3cde9ab88ce6e0",
+  "lessonIds": [
+    "FR-C139-rien",
+    "FR-C139-aucun",
+    "FR-C139-non-plus",
+    "FR-C139-lequel",
+    "FR-C139-nimporte-quoi"
+  ],
+  "tex": "french/book/chapters/ch139-nothing-none-neither-which-one-anything-at-all.tex"
+}

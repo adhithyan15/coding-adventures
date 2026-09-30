@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Already, Recently, the Day before Yesterday, Formerly, To Happen",
+  "label": "ch:fr-already-recently-the-day-before-yesterday-formerly-to-happen",
+  "canDo": "I can say what happened, and when: already, recently, the day before yesterday.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "FR-C140-se-produire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: I can say what happened, and when: already, recently, the day before yesterday.",
+    "assesses": [
+      "FR-LEX-C140-PAS140-03",
+      "FR-LEX-C140-PAS140-04",
+      "FR-LEX-C140-PAS140-05"
+    ]
+  }
+}

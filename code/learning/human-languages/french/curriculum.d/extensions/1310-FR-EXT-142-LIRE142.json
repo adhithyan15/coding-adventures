@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-142-LIRE142",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read opening hours, a notice, an advert and a bill, and act on what they say.",
+  "prerequisites": []
+}

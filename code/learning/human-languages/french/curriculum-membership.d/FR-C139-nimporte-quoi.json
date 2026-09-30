@@ -1,0 +1,11 @@
+{
+  "id": "FR-C139-nimporte-quoi",
+  "pathSegment": "FR-PATH-139-NEG139",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-139-NEG139",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C141-prevoir",
+  "pathSegment": "FR-PATH-141-FUT141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-141-FUT141",
+      "order": 3
+    }
+  ]
+}

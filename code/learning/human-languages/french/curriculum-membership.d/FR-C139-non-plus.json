@@ -1,0 +1,11 @@
+{
+  "id": "FR-C139-non-plus",
+  "pathSegment": "FR-PATH-139-NEG139",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-139-NEG139",
+      "order": 2
+    }
+  ]
+}

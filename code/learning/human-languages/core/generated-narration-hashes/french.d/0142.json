@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:7e28105316445474",
+  "lessonIds": [
+    "FR-C142-lhoraire",
+    "FR-C142-lavis",
+    "FR-C142-le-loyer",
+    "FR-C142-lannonce",
+    "FR-C142-la-facture",
+    "FR-R142-first-pass-saying-no-and-looking-back",
+    "FR-R142-second-pass-looking-ahead-and-reading-notices"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch142.txt",
+  "json": "french/narration/ch142.json",
+  "textHash": "fnv1a64:ce9cf57f10a30415",
+  "jsonHash": "fnv1a64:cd6bf9266ede5c5d",
+  "findings": []
+}
