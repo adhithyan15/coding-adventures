@@ -1,5 +1,10 @@
 # Changelog — intel8086-encoder
 
+## Unreleased — WORD03a
+
+- Re-export short conditional-jump encoding for normalized comparison
+  results.
+
 ## Unreleased — WORD02
 
 - Re-export byte register moves and typed register ALU encoding plus the

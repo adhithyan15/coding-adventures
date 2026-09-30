@@ -62,6 +62,13 @@ pub fn encode_alu_reg_reg(operation: u8, word: bool, dest: u8, src: u8) -> Vec<u
     ]
 }
 
+/// Short conditional jump: architectural condition nibble plus signed byte
+/// displacement measured from the end of the instruction.
+pub fn encode_jcc_short(condition: u8, displacement: i8) -> Vec<u8> {
+    assert!(condition < 16, "8086 condition must fit four bits");
+    vec![0x70 | condition, displacement as u8]
+}
+
 /// `INC reg16` — `[0x40+reg]`.
 pub fn encode_inc_reg16(reg: u8) -> Vec<u8> {
     vec![opcodes::INC_REG16_BASE + reg]

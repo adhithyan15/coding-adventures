@@ -6,7 +6,7 @@ Zilog Z80 backend for `jit-core` / `aot-core`. Seventh lane of the
 source/binary-compatible superset of the 8080, sharing the same
 `LD A, n` / `HALT` (`MVI A, n` / `HLT`) return convention).
 
-## Scope (WORD02)
+## Scope (WORD03a)
 
 | CIR family | Status |
 |------------|--------|
@@ -15,6 +15,7 @@ source/binary-compatible superset of the 8080, sharing the same
 | matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HALT` (entry-function exit) |
 | `add`, `sub`, `and`, `or`, `xor` on `u8` and `u16` | two live values, wrapping result |
 | `not_u8`, `not_u16` | width-masked complement, preserving another live value |
+| `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | unsigned comparison, normalized `bool` result |
 | Other operations | `None` / `BackendError::UnsupportedOp` |
 
 The historical `const_i64`/`ret_i64` byte-sized smoke path remains for
@@ -25,6 +26,8 @@ byte/word values. Word addition uses `ADD HL,DE` when that pair layout applies;
 the other word operations propagate carry/borrow across low and high bytes.
 Typed returns must match the value's width. The observable result ABI remains
 `A` for `u8`/`bool` and `HL` for `u16`.
+WORD03a compares the declared width and returns exactly `0` or `1`; CIR
+labels, branches, and loops remain for WORD03b.
 
 `Backend::run` panics — this backend is emit-only. Load the emitted
 bytes into `z80-simulator` to execute them.

@@ -47,8 +47,8 @@
 
 pub use intel8086_simulator::encoding::{
     assemble, encode_add_ax_imm16, encode_alu_reg_reg, encode_dec_reg16, encode_hlt,
-    encode_inc_reg16, encode_mov_reg_imm16, encode_mov_reg_imm8, encode_mov_reg_reg16,
-    encode_mov_reg_reg8, encode_nop, encode_sub_ax_imm16,
+    encode_inc_reg16, encode_jcc_short, encode_mov_reg_imm16, encode_mov_reg_imm8,
+    encode_mov_reg_reg16, encode_mov_reg_reg8, encode_nop, encode_sub_ax_imm16,
 };
 
 /// The accumulator register index (`AX`) — re-exported so

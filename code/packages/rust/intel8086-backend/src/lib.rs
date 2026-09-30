@@ -12,7 +12,7 @@
 //! following the pattern documented in
 //! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 //!
-//! ## Scope (WORD02)
+//! ## Scope (WORD03a)
 //!
 //! Minimal viable backend — covers the trivial-ROM case (`const_*`
 //! immediate + `ret_*`) needed by the `lang-aot` Intel 8086 e2e smoke
@@ -24,12 +24,13 @@
 //! | `const_u16` | `MOV AX, #imm16` |
 //! | matching typed returns, `ret_void` | `HLT` (a genuine hardware halt — see below) |
 //! | two-live `add/sub/and/or/xor` on `u8`/`u16` | register ALU |
+//! | typed unsigned `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | normalized `bool` |
 //! | Anything else | returns `None` |
 //!
 //! Reverse liveness allocates at most two same-width values in `AX`/`BX`
 //! (or `AL`/`BL`) and uses `CX`/`CL` as a transient scratch. A third
-//! value, simultaneous byte and word values, and control flow are
-//! explicit future increments. Returns copy the selected value to `AX`.
+//! value and simultaneous byte and word values remain explicit errors.
+//! Control-flow CIR waits for WORD03b. Returns copy the selected value to `AX`.
 //!
 //! Per the migration spec, this is acceptable: the architectural
 //! correctness win (IIR → CIR via `Backend` trait) is delivered as soon
@@ -93,7 +94,7 @@
 //! `intel8086-simulator`.
 
 use intel8086_encoder::{
-    encode_alu_reg_reg, encode_hlt, encode_mov_reg_imm16, encode_mov_reg_imm8,
+    encode_alu_reg_reg, encode_hlt, encode_jcc_short, encode_mov_reg_imm16, encode_mov_reg_imm8,
     encode_mov_reg_reg16, encode_mov_reg_reg8, REG_AH, REG_AL, REG_AX, REG_BH, REG_BL, REG_BX,
     REG_CL, REG_CX,
 };
@@ -346,6 +347,58 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             continue;
         }
 
+        if let Some((relation, width)) = comparison_operation(op) {
+            let dest = require_dest(instr, op)?;
+            if instr.ty != "bool" || instr.srcs.len() != 2 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires two variables and bool result type"
+                )));
+            }
+            let left = parse_var_src(instr, 0, op)?;
+            let right = parse_var_src(instr, 1, op)?;
+            let left_slot = find_slot(&slots, &left)
+                .ok_or_else(|| BackendError::UndefinedVariable(left.clone()))?;
+            let right_slot = find_slot(&slots, &right)
+                .ok_or_else(|| BackendError::UndefinedVariable(right.clone()))?;
+            if [left_slot, right_slot].iter().any(|&slot| {
+                let value = slots[slot].as_ref().expect("located slot");
+                value.width != width || value.ty != width.name()
+            }) {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source width or type mismatch"
+                )));
+            }
+            let target = slots
+                .iter()
+                .position(|slot| {
+                    slot.as_ref().is_none_or(|value| {
+                        value.name == dest || !live_after[index].contains(&value.name)
+                    })
+                })
+                .ok_or_else(|| {
+                    BackendError::UnsupportedOp(
+                        "WORD03a requires a third live value; spilling is deferred".into(),
+                    )
+                })?;
+            emit_comparison_bool(&mut bytes, relation, width, left_slot, right_slot, target);
+            slots[target] = Some(CurrentValue {
+                name: dest.into(),
+                width: ResultWidth::Byte,
+                ty: "bool".into(),
+            });
+            for (slot_index, slot) in slots.iter_mut().enumerate() {
+                if slot_index != target
+                    && slot
+                        .as_ref()
+                        .is_some_and(|value| !live_after[index].contains(&value.name))
+                {
+                    *slot = None;
+                }
+            }
+            terminated = false;
+            continue;
+        }
+
         if let Some(width) = unary_not_width(op) {
             let dest = require_dest(instr, op)?;
             if instr.ty != width.name() || instr.srcs.len() != 1 {
@@ -508,6 +561,51 @@ fn unary_not_width(op: &str) -> Option<ResultWidth> {
         "not_u16" => Some(ResultWidth::Word),
         _ => None,
     }
+}
+
+fn comparison_operation(op: &str) -> Option<(&str, ResultWidth)> {
+    let (name, width) = op.rsplit_once('_')?;
+    let width = match width {
+        "u8" => ResultWidth::Byte,
+        "u16" => ResultWidth::Word,
+        _ => return None,
+    };
+    let relation = name.strip_prefix("cmp_")?;
+    matches!(relation, "eq" | "ne" | "lt" | "le" | "gt" | "ge").then_some((relation, width))
+}
+
+fn emit_comparison_bool(
+    bytes: &mut Vec<u8>,
+    relation: &str,
+    width: ResultWidth,
+    left: usize,
+    right: usize,
+    target: usize,
+) {
+    let regs = if width == ResultWidth::Word {
+        [REG_AX, REG_BX]
+    } else {
+        [REG_AL, REG_BL]
+    };
+    bytes.extend_from_slice(&encode_alu_reg_reg(
+        7,
+        width == ResultWidth::Word,
+        regs[left],
+        regs[right],
+    ));
+    // MOV leaves CMP flags intact; the inverted short jump skips MOV 1.
+    bytes.extend_from_slice(&encode_mov_reg_imm16([REG_AX, REG_BX][target], 0));
+    let inverse_condition = match relation {
+        "eq" => 5, // JNE
+        "ne" => 4, // JE
+        "lt" => 3, // JAE
+        "le" => 7, // JA
+        "gt" => 6, // JBE
+        "ge" => 2, // JB
+        _ => unreachable!(),
+    };
+    bytes.extend_from_slice(&encode_jcc_short(inverse_condition, 3));
+    bytes.extend_from_slice(&encode_mov_reg_imm16([REG_AX, REG_BX][target], 1));
 }
 
 /// Width-preserving materialization through `MOV AX,#imm16`. Byte values are
