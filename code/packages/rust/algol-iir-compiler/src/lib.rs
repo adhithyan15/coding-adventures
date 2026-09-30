@@ -7919,19 +7919,22 @@ impl Compiler {
             .is_ok_and(|binding| binding.ty == ScalarType::Boolean);
         let then_value = literal_boolean_value(then_node);
         let else_value = literal_boolean_value(else_node);
+        let then_preserves =
+            self.selector_expression_unconditionally_preserves_name(then_node, name);
+        let else_preserves =
+            self.selector_expression_unconditionally_preserves_name(else_node, name);
         if is_boolean
             && ((self.boolean_identity_expression_preserves_name(condition, name)
-                && then_value == Some(true)
-                && else_value == Some(false))
+                && (then_value == Some(true) || then_preserves)
+                && (else_value == Some(false) || else_preserves))
                 || (self.boolean_identity_expression_preserves_name_with_negation(
                     condition, name, true,
-                ) && then_value == Some(false)
-                    && else_value == Some(true)))
+                ) && (then_value == Some(false) || then_preserves)
+                    && (else_value == Some(true) || else_preserves)))
         {
             return true;
         }
-        self.selector_expression_unconditionally_preserves_name(then_node, name)
-            && self.selector_expression_unconditionally_preserves_name(else_node, name)
+        then_preserves && else_preserves
     }
 
     fn selector_expression_intrinsically_preserves_name(
@@ -15540,6 +15543,32 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_guarded_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then flag else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a one-sided guarded conditional projection may forward its selector");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_mismatched_guarded_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then false else flag; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a mismatched guarded projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
