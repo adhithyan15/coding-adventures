@@ -218,6 +218,12 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.gwt[0].then[0].entity_id, "ItemAdded");
             assert_eq!(diagram.gwt[1].source_frame, "03");
             assert!(diagram.gwt[1].when.is_empty());
+        } else if id == "standalone-entities" {
+            assert_eq!(diagram.entities.len(), 3);
+            assert_eq!(diagram.entities[0].id, "Sales.CartUI");
+            assert_eq!(diagram.entities[0].namespace.as_deref(), Some("Sales"));
+            assert_eq!(diagram.entities[1].id, "AddItem");
+            assert_eq!(diagram.entities[1].namespace, None);
         }
     }
     assert!(parse_event_modeling(

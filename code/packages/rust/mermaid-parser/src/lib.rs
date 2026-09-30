@@ -572,7 +572,7 @@ use diagram_ir::{
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    EventModelDataBlock, EventModelDiagram, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, GitDiagram, GitEvent, JourneyConfig,
+    EventModelDataBlock, EventModelDiagram, EventModelEntity, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RadarConfig, RadarGraticule, RelKind,
     RequirementElementMetadata, RequirementKind,
@@ -4021,6 +4021,7 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        entities: Vec::new(),
         data_blocks: Vec::new(),
         notes: Vec::new(),
         gwt: Vec::new(),
@@ -4062,6 +4063,11 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                 let close = token.value.rfind('}').expect("grammar requires '}'");
                 diagram.accessibility_description =
                     Some(token.value[open + 1..close].trim().to_string());
+            }
+            "ENTITY_STATEMENT" => {
+                let id = token.value["entity".len()..].trim().to_string();
+                let namespace = id.rsplit_once('.').map(|(prefix, _)| prefix.to_string());
+                diagram.entities.push(EventModelEntity { id, namespace });
             }
             "FRAME_STATEMENT" => {
                 let data_start = [

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, titles, and accessibility metadata.",
+  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, standalone entity declarations, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, titles, and accessibility metadata.",
   "fixtures": [
     {
       "id": "state-change",
@@ -39,6 +39,10 @@
     {
       "id": "given-when-then",
       "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\ntf 03 evt ItemAdded\ngwt 02\n  given\n    evt CartCreated\n    rmo CartItems\n  when\n    ui CartUI\n    cmd AddItem\n  then\n    evt ItemAdded\ngwt 03 given evt CartCreated then evt ItemAdded"
+    },
+    {
+      "id": "standalone-entities",
+      "source": "eventmodeling\nentity Sales.CartUI\nentity AddItem\nentity Sales.ItemAdded\ntf 01 ui Sales.CartUI\ntf 02 cmd AddItem\ntf 03 evt Sales.ItemAdded"
     }
   ]
 }
