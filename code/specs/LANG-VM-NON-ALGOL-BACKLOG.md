@@ -51,12 +51,19 @@ PR #16273 delivered VM-069 expansion provenance and merged as
 metadata gate passed. The fresh non-ALGOL audit selected the remaining
 `defined()` operand contract as exactly one next PREP01 item.
 
+PR #16283 delivered that contract and merged as
+`84f70494c4e17226d86fe7fc0bd27191da3b6be7` after Linux, macOS, Windows,
+metadata, grammar, and final CI gates passed. The next fresh audit selected
+VM-075's bounded Intel 8086 documentation reconciliation; VM-076's separate Z80
+wording audit remains next and is not part of this item.
+
 The current queue is:
 
-1. **VM-069 / PREP01 `defined()` operand handling (selected):** specify and implement the
-   no-expansion operand rule before the C dialect.
-2. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
-   claims recorded below.
+1. **VM-075 (selected):** reconcile `intel8086-backend.md` with the completed
+   Rust simulator, its 461-vector full-state differential suite, and the
+   backend's landed WORD02/WORD03 surface.
+2. **VM-076:** narrow the Z80 simulator README's 8080-compatibility claim to
+   byte compatibility where applicable and account explicitly for flags.
 
 The following run records the first VM-067 selection.
 
