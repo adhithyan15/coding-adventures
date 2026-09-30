@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "A Notice, a Message, Opening Times, an Advert, a Repair",
+  "label": "ch:hi-a-notice-a-message-opening-times-an-advert-a-repair",
+  "canDo": "I can read a notice, a short message, opening times, an advert and a repair note, and act on what they say.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C166-marammat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: i can read a notice, a short message, opening times, an advert and a repair note, and act on what they say.",
+    "assesses": [
+      "HI-LEX-C166-READ166-03",
+      "HI-LEX-C166-READ166-04",
+      "HI-LEX-C166-READ166-05"
+    ]
+  }
+}

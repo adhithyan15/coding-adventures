@@ -1,0 +1,11 @@
+{
+  "id": "HI-C166-vijnapan",
+  "pathSegment": "HI-PATH-166-READ166",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-166-READ166",
+      "order": 3
+    }
+  ]
+}
