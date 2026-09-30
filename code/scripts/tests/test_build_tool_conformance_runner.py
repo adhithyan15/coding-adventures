@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 162)
+        self.assertEqual(summary["case_count"], 166)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -2578,13 +2578,151 @@ class PureDomainValidationTests(unittest.TestCase):
             )
         self.assertEqual(raised.exception.code, "RESULT_VALIDATION_INCONSISTENT")
 
+        combined = load_case("validation-orphan-package-roots-clean.json")
+        crate_case = load_case("validation-orphan-crates-clean.json")
+        combined["input"]["options"]["checks"] = [
+            "orphan_crate_coverage",
+            "orphan_package_root_coverage",
+        ]
+        combined["input"]["options"]["orphan_snapshot"] = copy.deepcopy(
+            crate_case["input"]["options"]["orphan_snapshot"]
+        )
+        combined_result = copy.deepcopy(combined["expected"])
+        combined_result["result"]["pending_exemption_count"] = 2
+        combined["expected"] = copy.deepcopy(combined_result)
+        runner.validate_case_document(combined, **schema_args)
+        runner.assert_result_matches(
+            combined,
+            combined_result,
+            pure_domain_schema=schema_args["pure_domain_schema"],
+        )
+
+        overlap = copy.deepcopy(combined)
+        package_snapshot = overlap["input"]["options"][
+            "orphan_package_root_snapshot"
+        ]
+        package_snapshot["roots"] = [
+            {
+                "path": "code/packages/rust/pending",
+                "language": "rust",
+                "kind": "package",
+                "source_evidence": "code/packages/rust/pending/Cargo.toml",
+            }
+        ]
+        package_snapshot["build_files"] = []
+        package_snapshot["exemptions"] = [
+            {
+                "line": 20,
+                "kind": "PENDING",
+                "path": "code/packages/rust/pending",
+                "reason": "shared pending debt",
+            }
+        ]
+        overlap_result = copy.deepcopy(overlap["expected"])
+        overlap_result["result"]["pending_exemption_count"] = 1
+        overlap["expected"] = copy.deepcopy(overlap_result)
+        runner.validate_case_document(overlap, **schema_args)
+        runner.assert_result_matches(
+            overlap,
+            overlap_result,
+            pure_domain_schema=schema_args["pure_domain_schema"],
+        )
+
+    def test_orphan_package_root_coverage_is_derived_from_closed_snapshots(
+        self,
+    ) -> None:
+        schema_args = self._schema_args()
+        for filename in (
+            "validation-orphan-package-roots-clean.json",
+            "validation-orphan-package-roots-unlisted.json",
+            "validation-orphan-package-root-exemptions-invalid.json",
+            "validation-orphan-package-root-exemptions-stale.json",
+        ):
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                runner.validate_case_document(case, **schema_args)
+                runner.assert_result_matches(
+                    case,
+                    copy.deepcopy(case["expected"]),
+                    pure_domain_schema=schema_args["pure_domain_schema"],
+                )
+
+        wrong_registry = load_case("validation-orphan-package-roots-clean.json")
+        wrong_registry["input"]["options"]["orphan_package_root_snapshot"][
+            "registry_sha256"
+        ] = "0" * 64
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(wrong_registry, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_SOURCE_REGISTRY_DIGEST_MISMATCH",
+        )
+
+        wrong_evidence = load_case("validation-orphan-package-roots-clean.json")
+        wrong_evidence["input"]["options"]["orphan_package_root_snapshot"][
+            "roots"
+        ][0]["source_evidence"] = "code/packages/csharp/alpha/BUILD"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(wrong_evidence, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+        )
+
+        wrong_count = load_case("validation-orphan-package-roots-clean.json")
+        wrong_result = copy.deepcopy(wrong_count["expected"])
+        wrong_result["result"]["pending_exemption_count"] = 2
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(
+                wrong_count,
+                wrong_result,
+                pure_domain_schema=schema_args["pure_domain_schema"],
+            )
+        self.assertEqual(raised.exception.code, "RESULT_VALIDATION_INCONSISTENT")
+
+    def test_orphan_package_root_snapshot_rejects_collisions_and_limits(self) -> None:
+        schema_args = self._schema_args()
+        collision = load_case("validation-orphan-package-roots-clean.json")
+        roots = collision["input"]["options"]["orphan_package_root_snapshot"][
+            "roots"
+        ]
+        alias = copy.deepcopy(roots[0])
+        alias["path"] = "code/packages/csharp/ALPHA"
+        alias["source_evidence"] = "code/packages/csharp/ALPHA/Program.cs"
+        roots.append(alias)
+        roots.sort(key=lambda item: item["path"])
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(collision, **schema_args)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_INCONSISTENT",
+        )
+
+        oversized = load_case("validation-orphan-package-roots-clean.json")
+        snapshot = oversized["input"]["options"]["orphan_package_root_snapshot"]
+        snapshot["exemptions"] = [
+            {
+                "line": line,
+                "kind": "PENDING",
+                "path": f"code/packages/python/p{line:04d}",
+                "reason": "x" * 400,
+            }
+            for line in range(1, 8193)
+        ]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner._validate_orphan_package_root_snapshot(snapshot, None)
+        self.assertEqual(
+            raised.exception.code,
+            "CASE_VALIDATION_SNAPSHOT_LIMIT_EXCEEDED",
+        )
+
     def test_orphan_snapshot_joins_use_exact_portable_paths(self) -> None:
         schema_args = self._schema_args()
         case_variant = load_case("validation-orphan-crates-clean.json")
         case_variant["input"]["options"]["orphan_snapshot"]["exemptions"][0]["path"] = (
             "code/packages/rust/Compile-only"
         )
-        diagnostics, pending_count = runner._expected_orphan_validation(
+        diagnostics, pending_count, _ = runner._expected_orphan_validation(
             case_variant["input"]["options"]
         )
         self.assertEqual(pending_count, 1)
@@ -4119,7 +4257,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 162)
+        self.assertEqual(summary["case_count"], 166)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

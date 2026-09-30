@@ -10,6 +10,8 @@ All notable changes to the Go build tool will be documented in this file.
   for the new `forme-plugin-installer-core` TypeScript root (#16274) to
   `af6ae391a86167eb453bb4f5c2bed97cfb885039ce3ca0fce6cf2984ee5b4be7`.
 
+- Adopted the generalized established-lane orphan package validator without
+  widening the legacy Cargo snapshot contract.
 - Regenerated the canonical source-input projection for the exact lowercase
   `blib` exclusion and advanced its language-registry digest and dependent
   repository-boundary digest pins.

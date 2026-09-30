@@ -12,33 +12,34 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16257,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16257",
-    "branch": "codex/parity-perl-blib-registry-20260927",
-    "implementation_revision": "51ccaa3c23067acd59663e6a66438b4f955b4614",
-    "status": "checks-pending"
+    "number": 16298,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16298",
+    "item_id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
+    "branch": "codex/parity-orphan-package-root-20260930",
+    "head_revision": "839f4c3dc090024c2443f4f1c2e4d086be93a859",
+    "status": "pr-open"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-30T12:21:46Z",
-    "pr_number": 16257,
+    "observed_at": "2026-09-30T18:18:17Z",
+    "pr_number": 16298,
     "status": "checks-pending",
-    "notes": "Ready-for-review parity PR #16257 is open from the current rebased branch. GitHub reports MERGEABLE with queued and in-progress checks, so auto-merge remains disabled and the implementation will not be changed merely to create activity."
+    "notes": "Ready-for-review PR #16298 is open and mergeable. Initial CI, CodeQL language detection, and human-language change detection are queued; auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "9240d08f6c6af840e9378cdb90420c53b1821e2d",
+    "revision": "9fc12ead72cbd04c8689cfbae425fb20251c7209",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1471,
-    "implementation_package_slots": 4738,
-    "all_reported_identities": 1513,
+    "implementation_identities": 1472,
+    "implementation_package_slots": 4739,
+    "all_reported_identities": 1514,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 989,
-    "singleton_missing_slots": 13846,
+    "singleton_packages": 990,
+    "singleton_missing_slots": 13860,
     "rust_singletons": 805,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
@@ -1438,7 +1439,7 @@
     {
       "id": "build-tool-perl-blib-generated-directory-registry-repair",
       "title": "Resolve Perl blib generated-directory registry authority",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
       "branch": "codex/parity-perl-blib-registry-20260927",
       "pr_number": 16257,
@@ -1450,18 +1451,32 @@
       "collision_refresh_notes": "PR #16204 is terminal and merged. The regenerated collision-checked schema-3 inventory on its exact merge contains 15 established lanes, 1,471 implementation identities, 4,738 implementation slots, 1,513 all-reported identities, 178 high-consensus packages with 265 missing slots, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Parallel audits were incorporated before publication.",
       "implementation_revision": "51ccaa3c23067acd59663e6a66438b4f955b4614",
       "validation_revision": "2aebeec176a816b9c7aef472a7fb474e52257a30",
+      "final_revision": "27ec7e25349b2fb4dbc68e8248d39fa2558cb148",
+      "merge_revision": "9e3c76378499464c1ab5a0d1a7e2187d614ff58f",
+      "merged_at": "2026-09-30T16:00:37Z",
       "validation_notes": "The language-neutral corpus validates all 162 cases and 285 staged files with registry digest 9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823 and post-Forme repository-boundary digest 95a30543f60bebeda68e77813f37154cc4431f511a37da8de11d4266d378903c. The focused post-rebase semantic runner passes all 86 tests and diff hygiene is clean. The pre-rebase full validation remains applicable to the preserved blib implementation: Perl 149 top-level tests; Python 523 passed, four skipped, 91.95% coverage; Ruby 376 runs, 923 assertions, four skips, 91.48% line coverage; Rust 176 unit plus three CLI tests; TypeScript 361 tests and 91.45% statement coverage; Haskell 79 examples; Swift 86 tests; C# 82 tests; F# 18 tests; affected Go packages, vet, trimpath build, all five projection generators, real Go diff selection, Rust Clippy, TypeScript typecheck, targeted Python Ruff, Perl MakeMaker, package-parity reporting, state graph validation, credential scanning, and npm audit all pass. The unrelated Windows-only full Go test remains blocked by its pre-existing syscall.Mkfifo compile, while repository-wide Ruff, Rustfmt, Perl::Critic, and cpan-audit expose only pre-existing broad drift or installed/core advisories without dependency-manifest changes.",
       "review_notes": "Three parallel read-only reviews confirmed canonical ordering, exact case-sensitive pruning, zero open-PR or main-path collisions, complete digest propagation, deterministic C#/Swift projection catch-up, and no new dependency edge or backlog owner. Review findings for missing Haskell documentation, root changelog metadata, roadmap metadata, and introduced long lines were resolved before publication.",
+      "publication_notes": "After the initial Haskell build legs exposed Cabal plans that omitted test components, the same branch added a package-index readiness probe and explicit tests: True settings to the two affected aggregate Cabal projects. Local Haskell graph and complete build-tool workspace tests passed, the repaired final head completed every required GitHub check acceptably, and guarded squash auto-merge merged PR #16257 without a manual merge.",
       "notes": "Add exact lowercase blib to the canonical generated-component registry; update generated-directory and source-collection fixtures, registry digest, repository-boundary digest/pin, every checked projection, and equality tests while preserving case and near-name behavior. Do not retain an engine-only selector or broad exception."
     },
     {
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-perl-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-perl-declared-source-metadata-plumbing"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
+    },
+    {
+      "id": "build-tool-perl-native-source-snapshot-stability-hardening",
+      "title": "Harden native source snapshot stability in the Perl build tool",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-perl-portable-source-hashing-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked follow-up proving stable native source snapshots after portable Perl source hashing lands."
     },
     {
       "id": "haskell-sha256-incremental-streaming-api",
@@ -1701,7 +1716,7 @@
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-perl-native-source-snapshot-stability-hardening", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
@@ -1728,7 +1743,7 @@
       "id": "build-tool-perl-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-perl-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-perl-native-source-snapshot-stability-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Perl concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche."
@@ -1850,10 +1865,19 @@
       "id": "build-tool-perl-dune-build-discovery-fixture-adoption",
       "title": "Make Perl consume the Dune discovery fixture",
       "status": "pending",
-      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-generated-directory-hashing-conformance-corpus"],
       "branch": null,
       "pr_number": null,
-      "notes": "Perl already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
+      "notes": "Perl already prunes exact _build but does not consume the shared language-registry fixture. Add independent exact _build evidence through both Discovery and Hasher, consuming the shared generated-directory hashing corpus, and change behavior only if that evidence exposes a real divergence."
+    },
+    {
+      "id": "build-tool-perl-declared-source-metadata-plumbing",
+      "title": "Plumb declared-source metadata through the Perl build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-perl-dune-build-discovery-fixture-adoption"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Carry declared-source metadata from Perl discovery into hashing after the Dune fixture owner proves exact generated-directory behavior."
     },
     {
       "id": "build-tool-typescript-dist-newstyle-discovery-exclusion",
@@ -3159,6 +3183,7 @@
         "build-tool-perl-diff-selection-match-work-ceiling-adoption",
         "build-tool-perl-blib-generated-directory-registry-repair",
         "build-tool-perl-portable-source-hashing-conformance",
+        "build-tool-perl-native-source-snapshot-stability-hardening",
         "build-tool-perl-portable-dependency-hashing-conformance",
         "build-tool-perl-hashing-cache-front-door-integration",
         "build-tool-perl-dune-build-discovery-fixture-adoption",
@@ -9570,7 +9595,7 @@
       "id": "build-tool-perl-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Perl",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-perl-portable-source-hashing-conformance", "build-tool-perl-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-perl-native-source-snapshot-stability-hardening", "build-tool-perl-diff-selection-match-work-ceiling-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Perl build tool after portable source hashing lands."
@@ -10817,10 +10842,19 @@
       "notes": "Discovered after merged PRs #16013, #16037, and #16040 added Rust `v8-test262`. Audit the bounded header parser, classification, list comparison, parse budgets, and deterministic report core for a possible neutral fixture contract, while keeping corpus provenance, filesystem enumeration, environment access, baseline writes, stdout, and the Rust JavaScript-parser execution path in an explicit host-authority and applicability review. Do not treat the complete runner as an immediate fifteen-lane package gap."
     },
     {
+      "id": "haskell-cabal-project-test-component-enablement",
+      "title": "Enable Cabal test components across Haskell multi-package projects",
+      "status": "pending",
+      "depends_on": ["build-tool-perl-blib-generated-directory-registry-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Enable tests: True across the audited Haskell multi-package Cabal projects whose BUILD fronts invoke cabal test. The first two aggregate-project fixes were reviewed in PR #16257; arc2d remains separately owned. The sorted 112-path snapshot digest is 83ff3d114ad85710d5811a2ff1d989d1ddd46f8d0c0b717ac6a4318261d9afbb."
+    },
+    {
       "id": "haskell-arc2d-build-front-coverage",
       "title": "Restore Haskell arc2d build-front discovery and Windows coverage",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": ["haskell-cabal-project-test-component-enablement"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-PR #16127 collision-checked Haskell front audit. `arc2d` is the only Cabal package without either BUILD front and is therefore absent from BUILD-root discovery. Add fail-closed BUILD and BUILD_windows recipes that run `cabal test all`, preserve its existing bezier2d, point2d, and trig package graph, and add a repository regression that makes undiscoverable Haskell packages impossible."
@@ -11076,11 +11110,28 @@
     {
       "id": "build-tool-orphan-package-root-validation-corpus-and-go-adoption",
       "title": "Generalize orphan package-root validation and adopt it in Go",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-orphan-crate-validation-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-perl-blib-generated-directory-registry-repair"],
+      "branch": "codex/parity-orphan-package-root-20260930",
+      "pr_number": 16298,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16298",
+      "opened_at": "2026-09-30T18:17:56Z",
+      "opened_revision": "839f4c3dc090024c2443f4f1c2e4d086be93a859",
+      "selected_at": "2026-09-30T16:02:00Z",
+      "selection_revision": "9e3c76378499464c1ab5a0d1a7e2187d614ff58f",
+      "selection_notes": "Selected only after PR #16257 completed every final-head check acceptably and merged through guarded squash auto-merge. The regenerated exact-main schema-3 inventory remains collision-clean and identity-neutral at 15 established lanes, 1,471 implementation identities, 4,738 implementation slots, 1,513 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 989/13,846, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown language buckets. Parallel audits added the Haskell Cabal test-component and Perl source-metadata/native-stability owners before ranking. This owner remains the highest-leverage ready item because the production gate is structurally blind outside Cargo and it supplies bounded repository-wide enforcement for the 51 reviewed established-lane roots without absorbing implementation of their missing fronts. Twelve live open PRs have zero exact overlap after excluding the merged blib PR, and this tranche requires no CI workflow edit.",
+      "rebase_notes": "Before implementation publication, origin/main first advanced through unrelated preprocessor, Mermaid, Forme, and Sanskrit merges, and the branch rebased cleanly onto 290170573666eafc1c3d30dfa34fd3c159ff617d. A final pre-push refresh then rebased onto exact current main 9fc12ead72cbd04c8689cfbae425fb20251c7209 after Mermaid, ALGOL, Telugu, Sanskrit, TaskApp, and the independent Forme boundary repair merged. The refreshed collision-clean inventory remains 15 established lanes, 1,472 implementation identities, 4,739 slots, 1,514 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 990/13,860, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The TypeScript forme-plugin-installer-core singleton remains owned by its deterministic snapshot planner, while native installation authority remains excluded from autonomous selection. Upstream PR #16285 now owns the repository-source boundary registration, so this tranche preserves that exact digest without duplicating its projection changes.",
+      "publication_notes": "Opened ready-for-review PR #16298 from validated clean head 839f4c3dc090024c2443f4f1c2e4d086be93a859. The neutral corpus validates 166 cases across 285 files, the Python suite passes 114 tests, Go test and vet passed on the final implementation, the production gate evaluated 45 BUILD files and 5,264 packages with all missing roots represented as owned pending debt, C# and Swift conformance passed, Ruff source lint, Bandit, diff hygiene, inventory collision checks, and the state DAG passed, and independent correctness and security reviews found no actionable issue. A final redundant focused Go validator relink was prevented by local disk exhaustion after the post-rebase full suite had already passed. Thirteen live open PRs had zero path overlap and no other parity PR was active immediately before publication. GitHub reports the PR non-draft and mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable.",
+      "notes": "Discovered when the post-PR #16133 audit found tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define a distinct orphan_package_root_snapshot contract with at most 8,192 roots, at most 16,384 aggregate BUILD fronts, at most 2,000,000 UTF-8 bytes, compact source evidence, and streaming Go discovery over the reviewed package-root and source-input registries. Validate every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics without raising the legacy orphan-crate snapshot ceiling. This validator owns discovery enforcement, not implementation of missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary."
+    },
+    {
+      "id": "forme-plugin-installer-snapshot-portable-conformance",
+      "title": "Classify and fixture the portable Forme plugin-install snapshot planner",
+      "status": "pending",
+      "depends_on": ["forme-portable-core-family-classification"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered when the post-PR #16133 audit found tracked established-lane package roots without BUILD fronts while the current gate scans only Cargo crates. Define a distinct orphan_package_root_snapshot contract with at most 8,192 roots, at most 16,384 aggregate BUILD fronts, at most 2,000,000 UTF-8 bytes, compact source evidence, and streaming Go discovery over the reviewed package-root and source-input registries. Validate every platform front, ancestor coverage, generated and virtual exclusions, exemptions, collisions, stale entries, and deterministic diagnostics without raising the legacy orphan-crate snapshot ceiling. This validator owns discovery enforcement, not implementation of missing fronts, and adds no filesystem authority beyond the existing caller-supplied repository snapshot boundary."
+      "notes": "Discovered by the exact-main inventory after merged PR #16274 added the TypeScript-only forme-plugin-installer-core identity. Inventory forme-capability, forme-manifest, forme-plugin-host, and the installer core; freeze language-neutral fixtures for the deterministic preparePluginInstallSnapshot boundary, including FM02 section 4.2 limits, validation order, stable failures, reviewed-grant closure, canonical grants bytes, destination, and result, then derive applicable-lane children or narrow reviewed exceptions. Keep installPreparedPlugin, filesystem traversal and mutation, ownership and ACL identity, links, locks, staging, randomness, fsync and chmod, rename and rollback, cancellation, registry, network, prompt, CLI, and sandbox behavior outside autonomous parity delivery as native-host and security authority."
     },
     {
       "id": "assembler-lua-arm-prerequisite-classification",

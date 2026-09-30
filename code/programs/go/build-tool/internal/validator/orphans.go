@@ -200,9 +200,10 @@ func ValidateNoOrphanCrates(repoRoot string) error {
 	return fmt.Errorf("orphan-crate validation failed:\n  - %s", strings.Join(problems, "\n  - "))
 }
 
-// PendingExemptionCount reports how many crates are on the backlog, so callers
-// can print the number and watch it fall. Errors are reported as zero: this is a
-// reporting helper, not a gate — ValidateNoOrphanCrates is the gate.
+// PendingExemptionCount reports the de-duplicated shared-ledger backlog. One
+// direct Rust root can participate in both orphan gates, but its single ledger
+// record is reported once. Errors are zero: validators, not this formatter,
+// remain authoritative.
 func PendingExemptionCount(repoRoot string) int {
 	exemptions, _, err := loadExemptions(repoRoot)
 	if err != nil {
@@ -245,12 +246,12 @@ func (o orphan) describe() string {
 // rather than stopping at the first.
 func loadExemptions(repoRoot string) ([]exemption, []string, error) {
 	path := filepath.Join(repoRoot, filepath.FromSlash(ExemptionsFile))
-	data, err := os.ReadFile(path)
+	data, exists, err := readStableRegularFile(path, maxOrphanPackageInputFileBytes)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, nil, nil
-		}
 		return nil, nil, fmt.Errorf("reading %s: %w", ExemptionsFile, err)
+	}
+	if !exists {
+		return nil, nil, nil
 	}
 
 	var (

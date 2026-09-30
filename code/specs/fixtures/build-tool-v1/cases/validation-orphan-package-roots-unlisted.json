@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-package-roots-unlisted",
+  "domain": "validation",
+  "summary": "Empty, missing, sibling-only, and near-generated package roots remain visible while exact generated and virtual roots are excluded.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_package_root_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_package_root_snapshot": {
+        "registry_sha256": "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823",
+        "roots": [
+          {"path": "code/packages/python/comment-only", "language": "python", "kind": "package", "source_evidence": "code/packages/python/comment-only/demo.py"},
+          {"path": "code/packages/python/missing", "language": "python", "kind": "package", "source_evidence": "code/packages/python/missing/demo.py"},
+          {"path": "code/packages/python/target", "language": "python", "kind": "package", "source_evidence": "code/packages/python/target/generated.py"},
+          {"path": "code/packages/python/target-demo", "language": "python", "kind": "package", "source_evidence": "code/packages/python/target-demo/demo.py"},
+          {"path": "code/packages/rust/workspace", "language": "rust", "kind": "virtual", "source_evidence": "code/packages/rust/workspace/Cargo.toml"}
+        ],
+        "build_files": [
+          {"path": "code/packages/python/comment-only/BUILD", "state": "empty"},
+          {"path": "code/packages/python/sibling/BUILD", "state": "runnable"}
+        ],
+        "exemptions": []
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-package-roots-unlisted",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["ORPHAN_PACKAGE_ROOT_EMPTY_BUILD", "ORPHAN_PACKAGE_ROOT_UNLISTED"], "pending_exemption_count": 0},
+    "diagnostics": [
+      {"code": "ORPHAN_PACKAGE_ROOT_EMPTY_BUILD", "severity": "error", "path": "code/packages/python/comment-only", "details": {"build_path": "code/packages/python/comment-only/BUILD", "language": "python", "source_evidence": "code/packages/python/comment-only/demo.py"}},
+      {"code": "ORPHAN_PACKAGE_ROOT_UNLISTED", "severity": "error", "path": "code/packages/python/missing", "details": {"language": "python", "source_evidence": "code/packages/python/missing/demo.py"}},
+      {"code": "ORPHAN_PACKAGE_ROOT_UNLISTED", "severity": "error", "path": "code/packages/python/target-demo", "details": {"language": "python", "source_evidence": "code/packages/python/target-demo/demo.py"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

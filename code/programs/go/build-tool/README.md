@@ -169,7 +169,7 @@ On Windows, use the compiled `.exe`:
 | `-language` | all | Filter to any canonical discovery bucket, or `all` |
 | `-diff-base` | origin/main | Git ref to diff against for change detection |
 | `-cache-file` | .build-cache.json | Path to the build cache file |
-| `-validate-build-files` | true | Validate BUILD dependency metadata, crate coverage, and tracked artifacts |
+| `-validate-build-files` | true | Validate BUILD dependency metadata, established-lane package-root coverage, crate coverage, and tracked artifacts |
 | `-ci-gates` | code/specs/data/ci-gates.json | CI gate registry used to decide which Actions jobs this change needs; empty disables gating |
 
 For strict Starlark packages with declared sources, diff selection recognizes
@@ -181,6 +181,15 @@ declared source glob matches.
 `-validate-build-files` also fails closed when Git tracks any `node_modules`
 path. Dependency directories are machine-local build products; committing one
 can hide an absolute symlink that works only in its author's checkout.
+
+The same gate streams direct roots under each of the fifteen established
+`code/packages/<language>/` lanes. A root is eligible only when the governed
+language-source registry supplies a compact source witness; exact generated
+components and reviewed virtual roots stay excluded. A runnable one of the
+five canonical BUILD fronts in the root or a component-wise ancestor covers
+it. Remaining reviewed gaps must carry a reasoned `EXCLUDED` or `PENDING`
+entry in `code/BUILD-EXEMPTIONS`, and stale entries fail the gate. Discovery is
+bounded before retention and never shells out to Git.
 
 ## Deciding which CI jobs to run
 

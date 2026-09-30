@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-package-roots-clean",
+  "domain": "validation",
+  "summary": "Every established lane supplies governed source evidence while direct, ancestor, platform, exemption, generated, and virtual-root behavior remains explicit.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_package_root_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_package_root_snapshot": {
+        "registry_sha256": "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823",
+        "roots": [
+          {"path": "code/packages/csharp/alpha", "language": "csharp", "kind": "package", "source_evidence": "code/packages/csharp/alpha/Program.cs"},
+          {"path": "code/packages/dart/alpha", "language": "dart", "kind": "package", "source_evidence": "code/packages/dart/alpha/lib/main.dart"},
+          {"path": "code/packages/elixir/alpha", "language": "elixir", "kind": "package", "source_evidence": "code/packages/elixir/alpha/lib/alpha.ex"},
+          {"path": "code/packages/fsharp/alpha", "language": "fsharp", "kind": "package", "source_evidence": "code/packages/fsharp/alpha/Alpha.fs"},
+          {"path": "code/packages/go/alpha", "language": "go", "kind": "package", "source_evidence": "code/packages/go/alpha/main.go"},
+          {"path": "code/packages/haskell/alpha", "language": "haskell", "kind": "package", "source_evidence": "code/packages/haskell/alpha/Alpha.hs"},
+          {"path": "code/packages/java/alpha", "language": "java", "kind": "package", "source_evidence": "code/packages/java/alpha/src/Alpha.java"},
+          {"path": "code/packages/kotlin/alpha", "language": "kotlin", "kind": "package", "source_evidence": "code/packages/kotlin/alpha/src/Alpha.kt"},
+          {"path": "code/packages/lua/alpha", "language": "lua", "kind": "package", "source_evidence": "code/packages/lua/alpha/alpha.lua"},
+          {"path": "code/packages/perl/alpha", "language": "perl", "kind": "package", "source_evidence": "code/packages/perl/alpha/lib/Alpha.pm"},
+          {"path": "code/packages/python/alpha", "language": "python", "kind": "package", "source_evidence": "code/packages/python/alpha/pyproject.toml"},
+          {"path": "code/packages/python/target", "language": "python", "kind": "package", "source_evidence": "code/packages/python/target/generated.py"},
+          {"path": "code/packages/ruby/alpha", "language": "ruby", "kind": "package", "source_evidence": "code/packages/ruby/alpha/lib/alpha.rb"},
+          {"path": "code/packages/rust/alpha", "language": "rust", "kind": "package", "source_evidence": "code/packages/rust/alpha/Cargo.toml"},
+          {"path": "code/packages/rust/workspace", "language": "rust", "kind": "virtual", "source_evidence": "code/packages/rust/workspace/Cargo.toml"},
+          {"path": "code/packages/swift/alpha", "language": "swift", "kind": "package", "source_evidence": "code/packages/swift/alpha/Sources/Alpha.swift"},
+          {"path": "code/packages/typescript/alpha", "language": "typescript", "kind": "package", "source_evidence": "code/packages/typescript/alpha/src/index.ts"}
+        ],
+        "build_files": [
+          {"path": "code/packages/csharp/alpha/BUILD", "state": "runnable"},
+          {"path": "code/packages/dart/alpha/BUILD_windows", "state": "runnable"},
+          {"path": "code/packages/elixir/alpha/BUILD_linux", "state": "runnable"},
+          {"path": "code/packages/fsharp/alpha/BUILD_mac", "state": "runnable"},
+          {"path": "code/packages/go/alpha/BUILD_mac_and_linux", "state": "runnable"},
+          {"path": "code/packages/haskell/alpha/BUILD", "state": "runnable"},
+          {"path": "code/packages/java/alpha/BUILD", "state": "runnable"},
+          {"path": "code/packages/kotlin/alpha/BUILD", "state": "runnable"},
+          {"path": "code/packages/lua/alpha/BUILD", "state": "runnable"},
+          {"path": "code/packages/perl/alpha/BUILD", "state": "runnable"},
+          {"path": "code/packages/python/BUILD", "state": "runnable"},
+          {"path": "code/packages/ruby/alpha/BUILD", "state": "runnable"},
+          {"path": "code/packages/rust/alpha/BUILD", "state": "runnable"}
+        ],
+        "exemptions": [
+          {"line": 20, "kind": "EXCLUDED", "path": "code/packages/swift/alpha", "reason": "foreign Xcode-only fixture reviewed outside the portable front"},
+          {"line": 21, "kind": "PENDING", "path": "code/packages/typescript/alpha", "reason": "awaiting a reviewed TypeScript BUILD front"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-package-roots-clean",
+    "domain": "validation",
+    "outcome": "ok",
+    "result": {"valid": true, "diagnostic_codes": [], "pending_exemption_count": 1},
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

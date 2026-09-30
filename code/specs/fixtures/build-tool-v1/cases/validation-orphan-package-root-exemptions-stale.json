@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-package-root-exemptions-stale",
+  "domain": "validation",
+  "summary": "Missing, generated, virtual, and newly covered package-root exemptions are stale while a live pending root remains counted.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_package_root_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_package_root_snapshot": {
+        "registry_sha256": "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823",
+        "roots": [
+          {"path": "code/packages/python/covered", "language": "python", "kind": "package", "source_evidence": "code/packages/python/covered/demo.py"},
+          {"path": "code/packages/python/pending", "language": "python", "kind": "package", "source_evidence": "code/packages/python/pending/demo.py"},
+          {"path": "code/packages/rust/workspace", "language": "rust", "kind": "virtual", "source_evidence": "code/packages/rust/workspace/Cargo.toml"}
+        ],
+        "build_files": [
+          {"path": "code/packages/python/covered/BUILD", "state": "runnable"}
+        ],
+        "exemptions": [
+          {"line": 40, "kind": "PENDING", "path": "code/packages/python/covered", "reason": "the BUILD has now landed"},
+          {"line": 41, "kind": "PENDING", "path": "code/packages/python/ghost", "reason": "the root was removed"},
+          {"line": 42, "kind": "PENDING", "path": "code/packages/python/pending", "reason": "awaiting a reviewed BUILD front"},
+          {"line": 43, "kind": "EXCLUDED", "path": "code/packages/rust/workspace", "reason": "virtual workspace roots are excluded structurally"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-package-root-exemptions-stale",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["ORPHAN_EXEMPTION_STALE"], "pending_exemption_count": 1},
+    "diagnostics": [
+      {"code": "ORPHAN_EXEMPTION_STALE", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"entry_path": "code/packages/python/covered", "kind": "PENDING", "line": 40, "problem": "COVERED"}},
+      {"code": "ORPHAN_EXEMPTION_STALE", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"entry_path": "code/packages/python/ghost", "kind": "PENDING", "line": 41, "problem": "MISSING_ROOT"}},
+      {"code": "ORPHAN_EXEMPTION_STALE", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"entry_path": "code/packages/rust/workspace", "kind": "EXCLUDED", "line": 43, "problem": "MISSING_ROOT"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

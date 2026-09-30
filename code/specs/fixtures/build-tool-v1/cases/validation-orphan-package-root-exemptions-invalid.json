@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "validation/orphan-package-root-exemptions-invalid",
+  "domain": "validation",
+  "summary": "Unsafe, duplicate, out-of-scope, artifact, unknown, and reasonless package-root exemptions fail closed without suppressing real gaps.",
+  "platforms": ["linux"],
+  "capabilities": ["validation"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "validation",
+    "options": {
+      "platform": "linux",
+      "checks": ["orphan_package_root_coverage"],
+      "packages": [],
+      "dependency_edges": [],
+      "orphan_package_root_snapshot": {
+        "registry_sha256": "9bc672eac5d5ffc8e2d7d9ff94709a80bdcf0c2de01e7984d9cf8671d3dfa823",
+        "roots": [
+          {"path": "code/packages/python/demo", "language": "python", "kind": "package", "source_evidence": "code/packages/python/demo/demo.py"},
+          {"path": "code/packages/python/reasonless", "language": "python", "kind": "package", "source_evidence": "code/packages/python/reasonless/demo.py"}
+        ],
+        "build_files": [],
+        "exemptions": [
+          {"line": 30, "kind": "EXCLUDED", "path": "code/packages/python/demo", "reason": "compile-only bridge covered by a reviewed consumer"},
+          {"line": 31, "kind": "PENDING", "path": "CODE/PACKAGES/PYTHON/DEMO", "reason": "case-folded duplicate"},
+          {"line": 32, "kind": "UNKNOWN", "path": "code/packages/python/other", "reason": "unknown policy kind"},
+          {"line": 33, "kind": "PENDING", "path": "code/packages/python/reasonless", "reason": ""},
+          {"line": 34, "kind": "PENDING", "path": "C:/outside", "reason": "drive-qualified path"},
+          {"line": 35, "kind": "PENDING", "path": "code/programs/python/demo", "reason": "program roots are outside this contract"},
+          {"line": 36, "kind": "PENDING", "path": "code/packages/python/target", "reason": "generated root"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "validation/orphan-package-root-exemptions-invalid",
+    "domain": "validation",
+    "outcome": "error",
+    "result": {"valid": false, "diagnostic_codes": ["ORPHAN_EXEMPTION_INVALID", "ORPHAN_PACKAGE_ROOT_UNLISTED"], "pending_exemption_count": 0},
+    "diagnostics": [
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 31, "problem": "DUPLICATE_PATH"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 32, "problem": "UNKNOWN_KIND"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 33, "problem": "REASON_MISSING"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 34, "problem": "PATH_UNSAFE"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 35, "problem": "PATH_OUTSIDE_SCAN"}},
+      {"code": "ORPHAN_EXEMPTION_INVALID", "severity": "error", "path": "code/BUILD-EXEMPTIONS", "details": {"line": 36, "problem": "PATH_ARTIFACT"}},
+      {"code": "ORPHAN_PACKAGE_ROOT_UNLISTED", "severity": "error", "path": "code/packages/python/reasonless", "details": {"language": "python", "source_evidence": "code/packages/python/reasonless/demo.py"}}
+    ]
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}
