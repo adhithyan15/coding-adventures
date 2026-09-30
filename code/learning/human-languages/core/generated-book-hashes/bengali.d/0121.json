@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:24cafcd141551518",
+  "lessonIds": [
+    "BN-C121-pyacha",
+    "BN-C121-tiya",
+    "BN-C121-kobutor",
+    "BN-C121-chorui",
+    "BN-C121-bok"
+  ],
+  "tex": "bengali/book/chapters/ch121-owl-parrot-pigeon-sparrow-heron.tex"
+}

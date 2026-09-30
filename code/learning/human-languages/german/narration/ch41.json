@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Coffee, Tea, and Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f6ff27f20d5fa116",
+  "sourceHash": "fnv1a64:acc38b2445aef366",
   "lessons": [
     {
       "id": "GE-C28-kaffee",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c23adc45982e412",
+      "sourceHash": "fnv1a64:f4c62dd576a6f513",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "The last chapter ended by closing a hand. Now open the day with something to drink — and a new use for a request pattern you already own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two false friends before the café: bekommen is to receive, not to become; gehören is to belong, not to hear."
             }
           ]
         },

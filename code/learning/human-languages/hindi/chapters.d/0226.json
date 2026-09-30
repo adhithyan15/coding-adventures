@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "To dry, To go wrong, To make, To be made, To break",
+  "label": "ch:hi-to-dry-to-go-wrong-to-make-to-be-made-to-break",
+  "canDo": "I can say to dry, to go wrong, to make, to be made and to break.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C226-tutna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: i can say to dry, to go wrong, to make, to be made and to break.",
+    "assesses": [
+      "HI-LEX-C226-ACT226-03",
+      "HI-LEX-C226-ACT226-04",
+      "HI-LEX-C226-ACT226-05"
+    ]
+  }
+}

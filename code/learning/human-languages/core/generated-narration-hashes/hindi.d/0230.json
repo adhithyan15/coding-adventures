@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:f03534834f8e7f31",
+  "lessonIds": [
+    "HI-C230-jhukna",
+    "HI-C230-latakna",
+    "HI-C230-latkana",
+    "HI-C230-tairana",
+    "HI-C230-dubna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch230.txt",
+  "json": "hindi/narration/ch230.json",
+  "textHash": "fnv1a64:ae29746b9925f6c4",
+  "jsonHash": "fnv1a64:0081de2043b7ca1f",
+  "findings": []
+}

@@ -60,8 +60,8 @@ curls back for, and the two make different words.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-QAMIZ-LETTERS, UR-SCRIPT-TE-VS-TTE, UR-SCRIPT-GAF-LETTER, UR-SCRIPT-READ-MEETING-01] -->
 
-- [YOU LOOK: at **قمیض** and name its four letters from the right edge]
-- [YOU LOOK: at **جوتا** and say which of its letters is the plain dental *t*]
+- [YOU LOOK: at **ق**, the letter *qamīz* opens with, and name the letter it is easiest to confuse with]
+- [YOU LOOK: at **تا**, the last two letters of *jūtā*, and say whether that *t* is the plain dental or the retroflex]
 - [YOU LOOK: at **گرمی** and name the letter that opens it]
 - [YOU READ: the first-meeting page again, aloud, without the romanization]
 

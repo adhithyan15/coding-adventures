@@ -10,6 +10,32 @@ roadmap is reconciled.
 
 ## Prioritization run — 2026-09-28
 
+PR #16202 delivered WORD02b on both simulators and merged as
+`5f42bcf0f16b28ac94de265f23fa1dcdf85dfbba`. The next priority is the
+missing Rust compiled-grammar regeneration guard, VM-067. MacroOct already
+tests that its compiled token definitions match `macrooct.tokens`; regenerating
+its `_grammar.rs` with the Rust grammar-tools CLI on current main also produced
+no diff. That makes it a reconciled first lane for a byte-for-byte CI check.
+The wider Rust sweep remains blocked by issue #14202's stale baseline.
+
+The current queue is:
+
+1. **VM-067 (selected):** add a dedicated, gated CI job that regenerates only
+   MacroOct's Rust `_grammar.rs` and fails on a diff. Trigger it for the
+   MacroOct grammar, lexer, and Rust grammar-tools sources, and include it in
+   the required CI gate. Prove the gate fires for each input and skips an
+   unrelated change.
+2. **VM-073:** audit ets-backed `array_set` extent checks and execute a
+   real-Erlang regression if an out-of-range insertion is reachable.
+3. **WORD03 / VM-072:** add normalized comparisons and structured control on
+   both target backends.
+4. **VM-069 / PREP01:** continue expansion-definition provenance and
+   `defined()` operand expansion.
+5. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
+   claims recorded below.
+
+The following run records the prior WORD02b selection.
+
 PR #16196 delivered the bounded two-live WORD02 add/sub/and/or/xor proof and
 merged as `ae8a418726475025343e430816429311302713b5` after Linux, macOS,
 and Windows CI passed. A parallel WORD02 PR #16197 conflicted with the merge
@@ -511,9 +537,14 @@ whose check looks present and is absent.** Worth noting the class explicitly,
 because it has now appeared in three unrelated mechanisms — target lists,
 name filters, and code generation.
 
-macrooct's own artifact was verified correct at slice 1: regenerated with the
-Rust `grammar-tools` binary directly and diffed byte-identical against the
-committed file.
+macrooct's own artifact was verified correct at slice 1 and again before the
+VM-067 gate: regenerated with the Rust `grammar-tools` binary directly and
+diffed byte-identical against the committed file. Its lexer already tests the
+full compiled token definitions against the `.tokens` file; adding only a
+token-name test would duplicate weaker existing protection. The selected
+first slice is an explicit, byte-for-byte MacroOct CI regeneration job with
+source and generator triggers. Issue #14202 tracks reconciliation of the
+other Rust grammars before widening this gate.
 
 *A trap for whoever picks this up:* the full `generate-compiled-grammars` run
 exits 1 early on a Windows dev box (dies at the css/python step with

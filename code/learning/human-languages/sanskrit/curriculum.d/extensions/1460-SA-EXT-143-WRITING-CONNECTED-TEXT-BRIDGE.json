@@ -1,0 +1,12 @@
+{
+  "id": "SA-EXT-143-WRITING-CONNECTED-TEXT-BRIDGE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can copy a short two-sentence Sanskrit text, reproduce it after a delay, and then write it independently from meaning alone, with Devanagari and danda required for credit.",
+  "prerequisites": [
+    "SA-EXT-142-WRITING-CONJUNCT-BRIDGE",
+    "SA-EXT-065-LETTERS-LAST",
+    "SA-EXT-060-DANDA"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:f3978eed55d368ac",
+  "lessonIds": [
+    "HI-C255-bahu",
+    "HI-C255-damad",
+    "HI-C255-devar",
+    "HI-C255-nanad",
+    "HI-C255-jija"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch255.txt",
+  "json": "hindi/narration/ch255.json",
+  "textHash": "fnv1a64:ff3d33d343ae22e9",
+  "jsonHash": "fnv1a64:9c88c57ba1b56d70",
+  "findings": []
+}

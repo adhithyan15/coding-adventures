@@ -1,0 +1,11 @@
+{
+  "id": "HI-C166-marammat",
+  "pathSegment": "HI-PATH-166-READ166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-166-READ166",
+      "order": 4
+    }
+  ]
+}

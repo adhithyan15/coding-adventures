@@ -1,8 +1,8 @@
 Sanskrit, chapter 65: The Last Letter You Read.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 6.
 ङ (ṅa) — the nasal before ख in सङ्ख्या.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ङ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 Which letter is this — ङ? (ṅa, ṅ.) Which word did it come from? (सङ्ख्या, saṅkhyā, "number".)
 
 
-Lesson 2 of 3.
+Lesson 2 of 6.
 (one letter) (ekam akṣaram) — From the letter to the word — a first pass.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -59,7 +59,7 @@ Wrap-up Recall.
 Which word did each letter come from? (ङ (ṅa) from सङ्ख्या.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 6.
 (one letter) (ekam akṣaram) — From the word back to the letter — a second pass.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -79,3 +79,58 @@ letter: ङ. name: ṅa. the word it came from: सङ्ख्या saṅkhyā
 Wrap-up Recall.
 [pause 3 seconds]
 Say each word in the table once more, and name the letter you took from it.
+
+
+Lesson 4 of 6.
+नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) — two known sentences, one tiny text.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Read the whole text once: नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) It says only two things you already know: “Hello. I speak Sanskrit.” Every word, sign, conjunct, and danda has already been taught. There is no new vocabulary here.
+
+Writing — guided copy of connected text.
+Keep the model visible. Copy नमस्ते। once. Leave one clear word space, then copy अहं संस्कृतं वदामि। Read each word as your hand reaches it.
+Copy the complete two-sentence text once more on a fresh line:
+नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.)
+Check the two danda marks, the space after the first one, both anusvāra dots, the vocalic-ṛ sign in संस्कृतं, and the joined स्त inside नमस्ते. Credit requires the connected Devanagari text; romanization is not an answer.
+
+Wrap-up recall.
+How many sentences and how many danda marks did you write? (Two and two.)
+
+
+Lesson 5 of 6.
+Two sentences after the model closes — copy the known two-sentence introduction after a short delay.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Read नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) once. Say its two meanings: “Hello. I speak Sanskrit.” Notice where each sentence ends.
+
+Writing — delayed copy of the whole text.
+Cover the model now. Wait ten seconds without writing. Then write both sentences from memory, with a danda after each one. There is no visible answer and no romanization while you write.
+Uncover and compare only after one complete attempt:
+नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.)
+Check in this order: two complete sentences; two danda marks; word spaces; both anusvāra dots; ◌ृ; joined स्त. Repair only the first difference, then read the repaired text aloud. A Latin-letter version earns no Devanagari writing credit.
+
+Wrap-up recall.
+What support disappeared? (The visible model; the meaning and the text stayed the same.)
+
+
+Lesson 6 of 6.
+Meanings only — recall the complete Devanagari text.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Put every Sanskrit model away. The prompt below gives meanings only. Nothing new is being composed or translated: these are the same two old sentences in the same order.
+
+Writing — independent connected-text recall.
+Write in Devanagari:
+“Hello.” Literally, “a bow to you.”
+“I speak Sanskrit.”
+Put a danda after each sentence. Stop after one complete attempt; do not use a visible Devanagari model or a romanized cue.
+Now uncover the answer: नमस्ते। अहं संस्कृतं वदामि। (namaste. ahaṁ saṁskṛtaṁ vadāmi.) Award credit only if both known sentences are complete, ordered, separated, and closed with danda marks in Devanagari. Romanization earns no credit. If one feature differs, repair that feature and write the whole two-sentence text once more from memory.
+
+Wrap-up recall.
+The runway began with one traced न. What can you now produce without a model? (A complete two-sentence Devanagari text from meaning alone.)

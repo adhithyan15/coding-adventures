@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C249-kampyutar",
+    "language": "hindi",
+    "chapter": 249,
+    "sequence": 13380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83834225917b3ac2"
+  },
+  "findings": []
+}

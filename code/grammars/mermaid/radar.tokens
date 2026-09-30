@@ -2,8 +2,7 @@
 # @case_insensitive true
 #
 # Mermaid 11.16.1 radar token grammar. This native slice covers axes,
-# curves, titles, and accessibility metadata; chart options remain explicit
-# compatibility gaps.
+# curves, titles, accessibility metadata, and core chart options.
 
 case_sensitive: false
 
@@ -20,3 +19,4 @@ ACC_DESCR_STATEMENT   = /accDescr[ \t]*:[^\r\n;%]+/
 TITLE_STATEMENT       = /title[ \t]+[^\r\n;%]+/
 AXIS_STATEMENT        = /axis[ \t]+[^\r\n;%]+/
 CURVE_STATEMENT       = /curve[ \t]+[^{}\r\n;%]+\{[^}]+\}/
+OPTION_STATEMENT      = /(showLegend[ \t]+(?:true|false)|ticks[ \t]+[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)|max[ \t]+[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)|min[ \t]+[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)|graticule[ \t]+(?:circle|polygon))(?:[ \t]*,[ \t]*(?:showLegend[ \t]+(?:true|false)|ticks[ \t]+[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)|max[ \t]+[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)|min[ \t]+[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)|graticule[ \t]+(?:circle|polygon)))*/

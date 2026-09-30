@@ -151,7 +151,7 @@ Left to right: ಇ, ಲ್ಲ = i-lla, which gives:
 ಇಲ್ಲ = illa.
 
 The word, taken apart.
-ಇಲ್ಲ (illa) is built on the old Dravidian root il, "not-being, absence" — so, like Tamil illai, it is really the statement "[it] is not, [there] is not," doing duty as the everyday "no." Its positive twin is ಇದೆ (ide), "there is."
+ಇಲ್ಲ (illa) is built on the old Dravidian root il, "not-being, absence" — so, like Tamil illai, it is really the statement "[it] is not, [there] is not," doing duty as the everyday "no." Its positive twin is ide, "there is."
 
 Grammar Lens: Dravidian negates by being, not with a "not"-word.
 English inserts not / no to make a sentence negative. Kannada — exactly like Tamil — instead swaps in the negative verb of existence:
@@ -314,14 +314,14 @@ Warm-up.
 Five words, and with them a first handful of Kannada letters read straight off the page. Let's gather only what you have already learned and make it feel easy.
 
 Guided Practice: Read them back.
-Sound each out, left to right, before checking:
+Sound out the three written in Kannada, left to right, before checking. The other two stay in romanization until their letters arrive in later chapters:
 [a table of 5 rows, read aloud]
 Read: ನಮಸ್ಕಾರ namaskāra. Meaning: hello / greetings. Native or borrowed: Sanskrit.
 Read: ಧನ್ಯವಾದ dhanyavāda. Meaning: thank you. Native or borrowed: Sanskrit.
 Read: ಹೌದು haudu. Meaning: yes. Native or borrowed: native.
-Read: ಇಲ್ಲ illa. Meaning: no / there isn't. Native or borrowed: native (= Tamil illai).
-Read: ಸರಿ sari. Meaning: okay / correct. Native or borrowed: native (= Tamil sari).
-The letters that did it: consonants carry a built-in "a"; a vowel sign swaps that vowel (ಾ for "ā," ಿ for "i," ು for "u," ೌ for "au"); a virama strips the vowel so a consonant can stack under the next as a conjunct (ottakṣara — ಸ್ಕ, ನ್ಯ, ಲ್ಲ); and a word-initial vowel gets a full letter (ಇ).
+Read: illa. Meaning: no / there isn't. Native or borrowed: native (= Tamil illai).
+Read: sari. Meaning: okay / correct. Native or borrowed: native (= Tamil sari).
+The letters that did it: consonants carry a built-in "a"; a vowel sign swaps that vowel (ಾ for "ā," ು for "u," ೌ for "au"); a virama strips the vowel so a consonant can stack under the next as a conjunct (ottakṣara — ಸ್ಕ, ನ್ಯ); and a word-initial vowel gets a full letter of its own, which the next chapters begin to teach.
 Notice the pattern already: the two greeting/politeness words are Sanskrit loans; the three everyday grammar words are native Dravidian — and two of them (illa, sari) are shared almost unchanged with Tamil.
 
 You'll want to know: A promise for later.

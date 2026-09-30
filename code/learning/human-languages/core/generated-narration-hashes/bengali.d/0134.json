@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:2b57808ce718018d",
+  "lessonIds": [
+    "BN-C134-bete",
+    "BN-C134-jhal",
+    "BN-C134-nonta",
+    "BN-C134-shokto",
+    "BN-C134-norom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch134.txt",
+  "json": "bengali/narration/ch134.json",
+  "textHash": "fnv1a64:4302ca53926e7f05",
+  "jsonHash": "fnv1a64:819ec93b2186ff57",
+  "findings": []
+}

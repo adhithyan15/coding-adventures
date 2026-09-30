@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.25.0
+
+- Resolve Mermaid Architecture padding configuration into group insets as well as outer canvas margins.
+
 ## 0.24.0
 
 - Route orthogonal structural relationships around unrelated group bounds as well as node bounds.

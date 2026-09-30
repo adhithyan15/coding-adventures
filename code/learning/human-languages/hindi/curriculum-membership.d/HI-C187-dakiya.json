@@ -1,0 +1,11 @@
+{
+  "id": "HI-C187-dakiya",
+  "pathSegment": "HI-PATH-187-THG187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-187-THG187",
+      "order": 2
+    }
+  ]
+}

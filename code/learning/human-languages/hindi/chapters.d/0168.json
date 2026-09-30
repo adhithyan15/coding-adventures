@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "To accept, To mix, To change, To drive, To leave",
+  "label": "ch:hi-to-accept-to-mix-to-change-to-drive-to-leave",
+  "canDo": "I can say to accept, to mix, to change, to drive and to leave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C168-chorna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: i can say to accept, to mix, to change, to drive and to leave.",
+    "assesses": [
+      "HI-LEX-C168-ACT168-03",
+      "HI-LEX-C168-ACT168-04",
+      "HI-LEX-C168-ACT168-05"
+    ]
+  }
+}

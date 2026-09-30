@@ -21,13 +21,13 @@ Sounds you'll need: the letters in these two verbs.
 अ is a, a short neutral vowel; ति is ti. Inside अस्ति the s and t stack into one joined shape, स्ति — Devanagari fuses a consonant cluster into a single letter. भवति needs no fusing: भ bha, व va, ति ti.
 
 Grammar Lens: the dhātu and its gaṇa.
-Sanskrit files a verb under its धातु (dhātu), its root — the bare syllable a dictionary lists. Asti is filed under अस् (as), bhavati under भू (bhū).
-A root is not yet a word. To reach the present it joins one of ten गण (gaṇa) classes, and the class decides what happens between root and ending. Class 2 adds nothing: as + ti becomes asti. Class 1 strengthens the root and adds a vowel: bhū becomes bhava + ti becomes bhavati.
+Sanskrit files a verb under its dhātu, its root — the bare syllable a dictionary lists. Asti is filed under अस् (as), bhavati under bhū.
+A root is not yet a word. To reach the present it joins one of ten gaṇa classes, and the class decides what happens between root and ending. Class 2 adds nothing: as + ti becomes asti. Class 1 strengthens the root and adds a vowel: bhū becomes bhava + ti becomes bhavati.
 Root, then class, then ending. Every verb in this chapter is built that way.
 
 The word, taken apart — English melted the two together.
 अस् is PIE es-: English is, Latin est, German ist, barely worn.
-भू is PIE bheu-, "to grow, to come to be": English be and been, Latin futūrus behind future, Greek phusis behind physics.
+bhū is PIE bheu-, "to grow, to come to be": English be and been, Latin futūrus behind future, Greek phusis behind physics.
 Now the surprise. English "to be" is stitched from both — am, is, are from es-; be, been, being from bheu-. English fused two verbs into one ragged paradigm. Sanskrit left them side by side.
 
 Guided Practice.
@@ -43,7 +43,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which two roots stand behind asti and bhavati? (अस् as and भू bhū.) What does a गण class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed.
+Which two roots stand behind asti and bhavati? (अस् as and bhū.) What does a gaṇa class do? (Turns a root into a present stem — nothing added for as, a vowel added for bhū.) Which English words descend from each? (Is from as; be and been from bhū.) Next: a root whose present stem you could never have guessed.
 
 
 Lesson 2 of 9.
@@ -148,12 +148,12 @@ Sounds you'll need: the letters in आगच्छति.
 Everything after the first letter is last lesson's word, unchanged. The new piece is आ, the long ā — the same vowel as अ a but held roughly twice as long. Length alone carries meaning in Sanskrit, so give it its time: aa-gach-cha-ti.
 
 Grammar Lens: the upasarga, Sanskrit's aiming device.
-आ is an उपसर्ग (upasarga), a preverb. Sanskrit has about twenty, and any of them may ride in front of a root to re-aim it:
+आ is an upasarga, a preverb. Sanskrit has about twenty, and any of them may ride in front of a root to re-aim it:
 [a table of 3 rows, read aloud]
 prefix: आ ā. sense: toward. on गम्: āgacchati, comes.
 prefix: सम् sam. sense: together. on गम्: saṁgacchati, goes together.
 prefix: नि ni. sense: down. on गम्: nigacchati, goes down.
-A handful of roots plus a handful of prefixes covers an enormous amount of vocabulary. You have met the trick already without being told: संस्कृत (saṁskṛta, "Sanskrit") is sam "together" on the root कृ kṛ "make" — put-together, and so perfected.
+A handful of roots plus a handful of prefixes covers an enormous amount of vocabulary. You have met the trick already without being told: saṁskṛta ("Sanskrit") is sam "together" on the root kṛ "make" — put-together, and so perfected.
 
 The word, taken apart — Latin does the same thing.
 Latin aims venīre "come" with the same kind of prefix: ad- "toward" gives advent, con- "with" gives convene, inter- "between" gives intervene. English does it natively too — come becomes become, overcome, income.
@@ -170,7 +170,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Sanskrit say "comes"? (आगच्छति (āgacchati) — ā "toward" on "goes.") What is such a prefix called? (An उपसर्ग, upasarga.) Which Sanskrit word you already knew is built the same way? (संस्कृत — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English.
+How does Sanskrit say "comes"? (आगच्छति (āgacchati) — ā "toward" on "goes.") What is such a prefix called? (An upasarga.) Which Sanskrit word you already knew is built the same way? (saṁskṛta — sam plus kṛ.) Next: a verb whose everyday form is not the one related to English.
 
 
 Lesson 5 of 9.
@@ -377,4 +377,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the root of jānāti, and what does its class insert? (ज्ञा jñā; the syllable -ना-.) Give the six verbs of this chapter. (Asti, gacchati, āgacchati, khādati, paśyati, jānāti.) Which two are one root plus a prefix? (गच्छति and आगच्छति.) Which Sanskrit root is English know? (ज्ञा.) And which English words carry gam, ad, paś, and bhū? (Come, eat, inspect, be — four roots you now own in two languages.)
+What is the root of jānāti, and what does its class insert? (ज्ञा jñā; the syllable -ना-.) Give the six verbs of this chapter. (Asti, gacchati, āgacchati, khādati, paśyati, jānāti.) Which two are one root plus a prefix? (gacchati and āgacchati.) Which Sanskrit root is English know? (ज्ञा.) And which English words carry gam, ad, paś, and bhū? (Come, eat, inspect, be — four roots you now own in two languages.)

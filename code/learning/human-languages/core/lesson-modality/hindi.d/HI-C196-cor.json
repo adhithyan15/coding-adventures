@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C196-cor",
+    "language": "hindi",
+    "chapter": 196,
+    "sequence": 9710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e5726f404fa50c9"
+  },
+  "findings": []
+}

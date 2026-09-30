@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:267f1623ea439c6e",
+  "lessonIds": [
+    "HI-C199-itihas",
+    "HI-C199-ganit",
+    "HI-C199-kauva",
+    "HI-C199-dil",
+    "HI-C199-haddi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch199.txt",
+  "json": "hindi/narration/ch199.json",
+  "textHash": "fnv1a64:b6524e047133b811",
+  "jsonHash": "fnv1a64:92c7979f4946b1fd",
+  "findings": []
+}

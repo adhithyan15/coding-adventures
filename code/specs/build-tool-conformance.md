@@ -981,6 +981,12 @@ Applicability contains three canonical arrays:
   only to package roots strictly below them; and
 - `excluded_roots` removes reviewed exact descendants from those broad roots.
 
+The Haskell shared `cabal.project` boundary applies only to packages that
+actually inherit that file. A package-local `cabal.project` replaces the shared
+project for that package, so its root MUST be removed from the shared boundary
+when the local project is introduced. The checked-in boundary, its digest users,
+and the canonical-root test MUST be updated together.
+
 At least one exact or descendant root is required. Every listed input applies
 to every selected root in that boundary, so inputs with different consumer
 sets MUST be split into separate boundaries. An exact root already covered by

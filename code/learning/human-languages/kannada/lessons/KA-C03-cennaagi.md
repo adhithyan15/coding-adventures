@@ -55,7 +55,7 @@ European cousin.
 ## You'll want to know: The reply
 <!-- hl-knowledge: introduces=[KA-LEX-C03-CENNAAGI-03]; assesses=[] -->
 
-Fuse it with the *iru* verb: **ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ** (*nānu cennāgiddēne*) — "**I
+Fuse it with the *iru* verb: *nānu cennāgiddēne* — "**I
 am well**" (*cennāgi* + *iddēne*, "I am"). The whole exchange:
 
 > — *nīvu hēgiddīrā?* ("How are you?")

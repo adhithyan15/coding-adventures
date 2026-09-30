@@ -8,17 +8,17 @@ type: word
 headword: la página web
 gloss: web page — Latin pagina, a column of writing fastened to a frame, plus English web; the oldest word for a written surface carrying the newest one
 concept_tag: ES-THING-PAGINA-WEB
-prerequisites: [ES-C393-internet, ES-C393-ordenador, ES-C393-correo-electronico]
+prerequisites: [ES-C393-internet, ES-C393-ordenador, ES-C393-correo-electronico, ES-W02-cuatro-lineas-ayer]
 sounds: [vowel-a, g-soft, stress-antepenultimate]
 roots: [pangere-latin]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-INTERNET, ES-LEX-ORDENADOR, ES-LEX-CORREO-ELECTRONICO]
+  knowledge: [ES-LEX-INTERNET, ES-LEX-ORDENADOR, ES-LEX-CORREO-ELECTRONICO, ES-WRITING-CONNECTED-COMPOSITION]
 introduces:
   knowledge: [ES-LEX-C422-TECH-01]
 practises:
-  knowledge: [ES-LEX-C422-TECH-01, ES-LEX-INTERNET, ES-LEX-ORDENADOR, ES-LEX-CORREO-ELECTRONICO]
+  knowledge: [ES-LEX-C422-TECH-01, ES-LEX-INTERNET, ES-LEX-ORDENADOR, ES-LEX-CORREO-ELECTRONICO, ES-WRITING-CONNECTED-COMPOSITION]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,10 +30,12 @@ reviews_of: [ES-C393-internet, ES-C393-ordenador, ES-C393-correo-electronico]
 # la página web — a two-thousand-year-old word doing a thirty-year-old job
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-INTERNET, ES-LEX-ORDENADOR] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-INTERNET, ES-LEX-ORDENADOR, ES-WRITING-CONNECTED-COMPOSITION] -->
 
 [PAUSE 2s] Say *internet* and *el ordenador*. You have the network and you have
 the machine. Say what is missing: the thing you actually look at.
+
+[PAUSE 3s] Write two lines about yesterday where the second needs the first, joined by *y*: *Ayer fui a la tienda y comí pan.*
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

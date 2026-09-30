@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C259-bhir",
+    "language": "hindi",
+    "chapter": 259,
+    "sequence": 14060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23598eb308e2296b"
+  },
+  "findings": []
+}

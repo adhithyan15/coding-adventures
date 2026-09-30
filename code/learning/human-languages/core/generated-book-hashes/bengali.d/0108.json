@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:285cc99cf6d28f09",
+  "lessonIds": [
+    "BN-C108-jhata",
+    "BN-C108-balish",
+    "BN-C108-chador",
+    "BN-C108-lep",
+    "BN-C108-madur"
+  ],
+  "tex": "bengali/book/chapters/ch108-broom-pillow-sheet-quilt-mat.tex"
+}

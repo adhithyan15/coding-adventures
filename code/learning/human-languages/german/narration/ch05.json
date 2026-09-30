@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 15,
-  "sourceHash": "fnv1a64:6212f78d65355c08",
+  "sourceHash": "fnv1a64:4c56cb67d28901bc",
   "lessons": [
     {
       "id": "GE-C05-wohnen",
@@ -464,7 +464,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd70edbfd3711a1a",
+      "sourceHash": "fnv1a64:9801acf327d5b742",
       "notice": null,
       "blocks": [
         {
@@ -481,6 +481,16 @@
             {
               "kind": "speech",
               "text": "Three singular people down. Now the plural — and the first one is nearly free."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say wohnen: the w is an English v, and the h only stretches the o. VOH-nen."
             }
           ]
         },
@@ -1006,7 +1016,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fea43438aca9c4a8",
+      "sourceHash": "fnv1a64:8d550f7cc53e514e",
       "notice": null,
       "blocks": [
         {
@@ -1023,6 +1033,16 @@
             {
               "kind": "speech",
               "text": "You can say where you live. To ask it, you need the question word — and it belongs to a family you have already started."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In: the same spelling and meaning as English, with a short i as in bit."
             }
           ]
         },

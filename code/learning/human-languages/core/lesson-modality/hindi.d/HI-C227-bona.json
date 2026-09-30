@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C227-bona",
+    "language": "hindi",
+    "chapter": 227,
+    "sequence": 11920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28f205d8272f98e1"
+  },
+  "findings": []
+}

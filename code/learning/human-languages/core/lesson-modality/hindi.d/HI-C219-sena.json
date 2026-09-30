@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C219-sena",
+    "language": "hindi",
+    "chapter": 219,
+    "sequence": 11410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d01ba4d8e1e81606"
+  },
+  "findings": []
+}

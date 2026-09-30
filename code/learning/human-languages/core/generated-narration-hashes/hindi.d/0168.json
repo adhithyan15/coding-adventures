@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:0f71f6f174616983",
+  "lessonIds": [
+    "HI-C168-manna",
+    "HI-C168-milana",
+    "HI-C168-badalna",
+    "HI-C168-calana",
+    "HI-C168-chorna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch168.txt",
+  "json": "hindi/narration/ch168.json",
+  "textHash": "fnv1a64:72920b3103b5a04b",
+  "jsonHash": "fnv1a64:fe2cbfb7367892bd",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C95-dupurbela",
+  "pathSegment": "BN-PATH-95-TIME95",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-95-TIME95",
+      "order": 3
+    }
+  ]
+}

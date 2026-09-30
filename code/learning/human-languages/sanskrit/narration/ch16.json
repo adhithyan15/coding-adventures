@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Places --- and the Two Noun Families",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e5b10614efdf42cd",
+  "sourceHash": "fnv1a64:85fd24bd81660e07",
   "lessons": [
     {
       "id": "SA-C16-house",
@@ -604,7 +604,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffdcdef42c571946",
+      "sourceHash": "fnv1a64:dee02e88c4a2764a",
       "notice": null,
       "blocks": [
         {
@@ -635,11 +635,11 @@
             },
             {
               "kind": "speech",
-              "text": "In the older literature it carries a weight that \"forest\" does not quite catch: वनम् (vanam) is where the settled world stops. To go to the वनम् (vanam) is to leave the ग्रामः (grāmaḥ) behind, and a great deal of Sanskrit narrative turns on somebody doing exactly that."
+              "text": "In the older literature it carries a weight that \"forest\" does not quite catch: वनम् (vanam) is where the settled world stops. To go to the वनम् (vanam) is to leave the grāmaḥ behind, and a great deal of Sanskrit narrative turns on somebody doing exactly that."
             },
             {
               "kind": "speech",
-              "text": "Its ending is -am, so it belongs with गृहम् (gṛham) — which gives the chapter a neat symmetry: the two -am words so far are the house you live inside and the wild you do not."
+              "text": "Its ending is -am, so it belongs with gṛham — which gives the chapter a neat symmetry: the two -am words so far are the house you live inside and the wild you do not."
             }
           ]
         },
@@ -707,7 +707,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does वनम् (vanam) mean beyond \"forest\"? (Where the settled world stops.) Which other word shares its ending? (गृहम् (gṛham).)"
+              "text": "What does वनम् (vanam) mean beyond \"forest\"? (Where the settled world stops.) Which other word shares its ending? (gṛham.)"
             }
           ]
         }

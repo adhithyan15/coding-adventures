@@ -1,0 +1,11 @@
+{
+  "id": "BN-C112-tak",
+  "pathSegment": "BN-PATH-112-THINGS112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-112-THINGS112",
+      "order": 1
+    }
+  ]
+}

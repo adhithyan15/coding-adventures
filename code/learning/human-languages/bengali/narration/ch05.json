@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:afb9696826b6f2b7",
+  "sourceHash": "fnv1a64:8830a2395f25179c",
   "lessons": [
     {
       "id": "BN-C03-ami",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:029a4f862a96eb66",
+      "sourceHash": "fnv1a64:b29a78bb41f9d3d2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -312,7 +312,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The new word is আছো (āchho, \"are you\"), from the verb আছা (āchhā, \"to be, to exist, to have\") + the familiar-you ending -ও (-o). Note the ছ (chh) — a breathy ch."
+              "text": "The new word is আছো (āchho, \"are you\"), from the verb আছা (āchhā, \"to be, to exist, to have\") + the familiar-you ending -o. Note the ছ (chh) — a breathy ch."
             }
           ]
         },
@@ -338,7 +338,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In Chapter 3, Bengali dropped \"is\": āmār nām Arun (\"my name Arun\"). That zero copula works for equations (X is Y). But \"how are you?\" asks about a state — how you exist — and for that Bengali uses a real verb, আছা (āchhā). So: no verb for \"my name is Arun,\" a real verb for \"how are you.\" Respectful form: আপনি কেমন আছেন? (āpni kēmon āchhen? — āchhen for āpni). Match the \"you\" to the verb-ending."
+              "text": "In Chapter 3, Bengali dropped \"is\": āmār nām Arun (\"my name Arun\"). That zero copula works for equations (X is Y). But \"how are you?\" asks about a state — how you exist — and for that Bengali uses a real verb, আছা (āchhā). So: no verb for \"my name is Arun,\" a real verb for \"how are you.\" Respectful form: āpni kēmon āchhen? (āchhen for āpni). Match the \"you\" to the verb-ending."
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fff5083682d25ebe",
+      "sourceHash": "fnv1a64:87bd197d37081fec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -472,7 +472,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With the āchhā verb: আমি ভালো আছি (āmi bhālo āchhi) — \"I am well\" (āchhi = \"I am/exist\"). The whole exchange:"
+              "text": "With the āchhā verb: āmi bhālo āchhi — \"I am well\" (āchhi = \"I am/exist\"). The whole exchange:"
             },
             {
               "kind": "speech",

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C07-khana-tone",
+  "pathSegment": "PA-PATH-011-C",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-011-C-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

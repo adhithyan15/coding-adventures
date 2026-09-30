@@ -1,0 +1,11 @@
+{
+  "id": "HI-C273-rog",
+  "pathSegment": "HI-PATH-273-THG273",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-273-THG273",
+      "order": 3
+    }
+  ]
+}

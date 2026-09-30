@@ -1,0 +1,11 @@
+{
+  "id": "HI-C200-rajya",
+  "pathSegment": "HI-PATH-200-THG200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-200-THG200",
+      "order": 1
+    }
+  ]
+}

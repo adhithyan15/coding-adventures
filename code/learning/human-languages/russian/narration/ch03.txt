@@ -1,8 +1,8 @@
 Russian, chapter 3: Six Verbs, and the One You Never Say.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 быть (byt') — "to be".
 
 Warm-up.
@@ -42,7 +42,7 @@ Wrap-up Recall.
 Say "to be." (Быть.) Now say "I am a student." (Я студент — two words, and no verb.) Is the verb gone from the language? (No — был returns in the past; only the present drops it.) Which English word is быть (byt')? (Be — same root, bʰuH-.) And which English word is есть? (Is.) Next: жить (zhit'), "to live."
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 жить (zhit') — "to live".
 
 Warm-up.
@@ -81,7 +81,7 @@ Wrap-up Recall.
 Say "to live." (Жить.) Say "I live." (Я живу — and the -у is doing the work.) What did English quick once mean? (Alive — as in the quick and the dead.) Name two Latin cousins. (Vivid, survive — from vīvere.) Next: знать (znat'), "to know."
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 знать (znat') — "to know".
 
 Warm-up.
@@ -120,7 +120,7 @@ Wrap-up Recall.
 Say "to know." (Знать.) Say "I don't know." (Я не знаю.) What does Russian add to negate a verb, besides не? (Nothing — no helper verb at all.) Which English word is знать (znat')? (Know — and its silent k is the sound Russian kept.) Next: говорить (govorít'), "to speak."
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 говорить (govorít') — "to speak".
 
 Warm-up.
@@ -139,10 +139,6 @@ The I ending is the same -ю you put on знаю. Every Russian verb in the pres
 ты говоришь — ty gavarísh — you speak.
 An -е- against an -и-. That one vowel is the whole difference, and it is why you learn the you form alongside the dictionary form: it names the family, and the remaining endings follow from it.
 
-The word, taken apart — and a false friend.
-говорить (govorít') is built on the old Slavic noun govorъ, "a murmur, a din, the noise of many voices." Russian still keeps говор for the buzz of a crowd or a regional way of talking. Most etymologists read the root as imitative — the word sounds like what it names — which is honest but means there is no tidy English cousin to hand you. Where a root is uncertain, this book says so.
-What there is to hand you is a trap. Govern is not related. That is Latin gubernāre, "to steer a ship," from Greek kybernân — the same word that gave English cybernetics and every cyber- since. A governor steers; a говор is a noise. Two roots that never met.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: the new letter — "г is gamma, and says g as in go"]
@@ -156,10 +152,31 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What sound is г? (A hard g, from Greek gamma.) Say "I speak." (Я говорю.) Which vowel separates the two verb families in the you form? (-е- in знаешь against -и- in говоришь.) Is говорить (govorít') related to English govern? (No — govern is Greek kybernân, "to steer.") Next: видеть (vídet'), "to see."
+What sound is г? (A hard g, from Greek gamma.) Say "I speak." (Я говорю.) Which vowel separates the two verb families in the you form? (-е- in знаешь against -и- in говоришь.) Next: why говорить (govorít') is not English govern.
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
+(говорить, continued) ((govorít', continued)) — The word, taken apart — and a false friend.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: say говорить (govorít') again, and what it means.
+
+The word, taken apart — and a false friend.
+говорить (govorít') is built on the old Slavic noun govorъ, "a murmur, a din, the noise of many voices." Russian still keeps говор for the buzz of a crowd or a regional way of talking. Most etymologists read the root as imitative — the word sounds like what it names — which is honest but means there is no tidy English cousin to hand you. Where a root is uncertain, this book says so.
+What there is to hand you is a trap. Govern is not related. That is Latin gubernāre, "to steer a ship," from Greek kybernân — the same word that gave English cybernetics and every cyber- since. A governor steers; a говор is a noise. Two roots that never met.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "говорить (govorít')" — and "not govern"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is говорить (govorít') related to English govern? (No — govern is Greek kybernân, "to steer.") Next: видеть (vídet'), "to see."
+
+
+Lesson 6 of 7.
 видеть (vídet') — "to see".
 
 Warm-up.
@@ -203,7 +220,7 @@ Wrap-up Recall.
 Say "to see." (Видеть.) Say "I see." (Я вижу — the д swapped to ж.) Does that swap happen anywhere else in the present? (No — the I form only.) What second meaning did weid- carry? (To know — hence wit, wise, Veda.) Next: идти (idtí), "to go."
 
 
-Lesson 6 of 6.
+Lesson 7 of 7.
 идти (idtí) — "to go".
 
 Warm-up.

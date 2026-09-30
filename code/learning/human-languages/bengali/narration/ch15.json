@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3cb876ae42f6c197",
+  "sourceHash": "fnv1a64:7628e4f948212eca",
   "lessons": [
     {
       "id": "BN-C09-neowa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:11882cfbf566d9d6",
+      "sourceHash": "fnv1a64:3cb580799acd50f2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -378,7 +378,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab125e9ee0527304",
+      "sourceHash": "fnv1a64:06bcedeb80874908",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -470,7 +470,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Another noun + করা, like জিজ্ঞাসা করা (jijñāsā kôrā). The respect sits where Chapter 13 put it — in করা’s ending:"
+              "text": "Another noun + করা, like jijñāsā kôrā. The respect sits where Chapter 13 put it — in করা’s ending:"
             },
             {
               "kind": "table",

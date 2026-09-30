@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:23225c04987563cc",
+  "lessonIds": [
+    "HI-C222-patjhar",
+    "HI-C222-karan",
+    "HI-C222-natija",
+    "HI-C222-samasya",
+    "HI-C222-upay"
+  ],
+  "tex": "hindi/book/chapters/ch222-autumn-a-reason-a-result-a-problem-a-remedy.tex"
+}

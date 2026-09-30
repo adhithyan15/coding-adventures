@@ -8,21 +8,21 @@ type: word
 headword: eins
 gloss: one — and the ei that is always the English word "eye"
 concept_tag: GE-NUM-ONE
-prerequisites: [GE-C05-practice, GE-C01-der-die-das]
+prerequisites: [GE-C05-practice, GE-C01-der-die-das, GE-C05-deutsch]
 sounds: [diphthong-ei]
 roots: [oinos-germanic]
 etymology_hook: "eins is English one, and the German ei is always said like the English word eye, so every ei word you meet from here is already half learned"
 duration:
   max_seconds: 180
 requires:
-  knowledge: [GE-LEX-DER-DIE-DAS-02]
+  knowledge: [GE-LEX-DER-DIE-DAS-02, GE-SOUND-DEUTSCH-01]
 introduces:
   knowledge: [GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01, GE-ETYMON-EINS-ONE-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-EINS-01, GE-LEX-DER-DIE-DAS-02, GE-SOUND-EI-AS-EYE-01, GE-ETYMON-EINS-ONE-02]
+  knowledge: [GE-LEX-EINS-01, GE-LEX-DER-DIE-DAS-02, GE-SOUND-EI-AS-EYE-01, GE-ETYMON-EINS-ONE-02, GE-SOUND-DEUTSCH-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,11 +34,13 @@ reviews_of: [GE-C05-practice]
 # eins — "one," and the German *ei*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-SOUND-DEUTSCH-01] -->
 
 [PAUSE 2s] Here is where German is closer to English than any Romance language
 gets. Its numbers are not borrowed from Latin — they are German's own, and they
 are the near-twins of the English ones. Start with the first.
+
+[PAUSE 2s] *Deutsch*: *eu* is the *oy* of *boy*, *tsch* the *tch* of *match*. One syllable.
 
 ## You'll want to know: eins
 <!-- hl-knowledge: introduces=[GE-LEX-EINS-01]; assesses=[] -->

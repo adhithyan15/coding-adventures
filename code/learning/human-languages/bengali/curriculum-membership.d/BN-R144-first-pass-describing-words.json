@@ -1,0 +1,11 @@
+{
+  "id": "BN-R144-first-pass-describing-words",
+  "pathSegment": "BN-PATH-144-QUAL144",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "BN-EXT-144-QUAL144",
+      "order": 5
+    }
+  ]
+}

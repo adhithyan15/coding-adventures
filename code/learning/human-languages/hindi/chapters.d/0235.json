@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Up, Down, Ahead, Behind, Inside",
+  "label": "ch:hi-up-down-ahead-behind-inside",
+  "canDo": "I can say up, down, ahead, behind and inside.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "HI-C235-andar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: i can say up, down, ahead, behind and inside.",
+    "assesses": [
+      "HI-LEX-C235-LOC235-03",
+      "HI-LEX-C235-LOC235-04",
+      "HI-LEX-C235-LOC235-05"
+    ]
+  }
+}

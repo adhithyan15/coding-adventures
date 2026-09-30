@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C250-mohar",
+    "language": "hindi",
+    "chapter": 250,
+    "sequence": 13430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1806a3b71e38283a"
+  },
+  "findings": []
+}

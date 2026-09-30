@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind and the Palm Leaf",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0a4f860630d13fa6",
+  "sourceHash": "fnv1a64:c8f58aacdd373c78",
   "lessons": [
     {
       "id": "SA-C08-cintayati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f84f7ce1d1b46169",
+      "sourceHash": "fnv1a64:9273a10ddd3d69f5",
       "notice": null,
       "blocks": [
         {
@@ -45,7 +45,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"it knows.\" (Jānāti, root ज्ञा — the root English know is made of.) Here is what you do before you know."
+              "text": "Say \"it knows.\" (Jānāti, root jñā — the root English know is made of.) Here is what you do before you know."
             }
           ]
         },
@@ -92,7 +92,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three ways a गण class has turned a root into a present stem: add nothing (as-ti), add a vowel (bhava-ti), plant a syllable inside (jā-nā-ti). Here is the fourth."
+              "text": "Three ways a gaṇa class has turned a root into a present stem: add nothing (as-ti), add a vowel (bhava-ti), plant a syllable inside (jā-nā-ti). Here is the fourth."
             },
             {
               "kind": "speech",
@@ -172,7 +172,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does class 10 put between root and ending, and what is cintayati's root? (-अय-; चिन्त्, the root of na cintā.) Why does the word begin with c and not k? (A rounded PIE k, merged and then palatalised — the numbers' rule.) Which verb of knowing came just before this one, and does cint have an English cousin? (जानाति; no — this root left English nothing.)"
+              "text": "What does class 10 put between root and ending, and what is cintayati's root? (-अय-; चिन्त्, the root of na cintā.) Why does the word begin with c and not k? (A rounded PIE k, merged and then palatalised — the numbers' rule.) Which verb of knowing came just before this one, and does cint have an English cousin? (jānāti; no — this root left English nothing.)"
             }
           ]
         }
@@ -356,7 +356,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d0b5f15bc4a15d5",
+      "sourceHash": "fnv1a64:a3f8d9cd470788e5",
       "notice": null,
       "blocks": [
         {
@@ -372,7 +372,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"it goes,\" then \"it comes.\" (Gacchati, āgacchati — one उपसर्ग prefix apart.) And say \"it thinks.\" (Cintayati.) One more prefix, and thinking turns into understanding."
+              "text": "Say \"it goes,\" then \"it comes.\" (Gacchati, āgacchati — one upasarga prefix apart.) And say \"it thinks.\" (Cintayati.) One more prefix, and thinking turns into understanding."
             }
           ]
         },
@@ -516,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67f853087f410558",
+      "sourceHash": "fnv1a64:e8d79c2e99eda276",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +579,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the verb four living languages still read with — Hindi and Urdu paṛhnā, Bengali poṛa, Marathi paḍhṇe. The change is regular: that curled-back ठ softens between vowels, and the old ending drops off. A word reshaped by centuries of ordinary speech is तद्भव (tadbhava), \"become from that.\""
+              "text": "This is the verb four living languages still read with — Hindi and Urdu paṛhnā, Bengali poṛa, Marathi paḍhṇe. The change is regular: that curled-back ठ softens between vowels, and the old ending drops off. A word reshaped by centuries of ordinary speech is tadbhava, \"become from that.\""
             },
             {
               "kind": "speech",
@@ -594,7 +594,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The usual account runs back through प्रथ् (prath), \"to spread, to become widely known\" — reciting as broadcasting — and behind that a root that also gives पृथिवी (pṛthivī), \"the earth, the wide one.\""
+              "text": "The usual account runs back through prath, \"to spread, to become widely known\" — reciting as broadcasting — and behind that a root that also gives pṛthivī, \"the earth, the wide one.\""
             },
             {
               "kind": "speech",
@@ -655,7 +655,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did paṭhati mean before \"read,\" and which class builds it? (Recite aloud; class 1.) Name the two ways a Sanskrit word reaches a modern language. (तद्भव, worn down through speech; तत्सम, carried over whole.) Which is paṛhnā, which is cintā, and what label belongs on paṭhati's own ancestry? (Tadbhava; tatsama; a common account, not settled — the caution you kept on punch.)"
+              "text": "What did paṭhati mean before \"read,\" and which class builds it? (Recite aloud; class 1.) Name the two ways a Sanskrit word reaches a modern language. (tadbhava, worn down through speech; तत्सम, carried over whole.) Which is paṛhnā, which is cintā, and what label belongs on paṭhati's own ancestry? (Tadbhava; tatsama; a common account, not settled — the caution you kept on punch.)"
             }
           ]
         }
@@ -863,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c47668f655ba6d6c",
+      "sourceHash": "fnv1a64:cb2b16528d0a0ee2",
       "notice": null,
       "blocks": [
         {
@@ -909,7 +909,7 @@
               "rowCount": 2,
               "utterances": [
                 "Sanskrit: लिखति. sound: likhati. meaning: he, she, or it writes.",
-                "Sanskrit: लेखनी. sound: lekhanī. meaning: a pen."
+                "Sanskrit: —. sound: lekhanī. meaning: a pen."
               ]
             },
             {
@@ -955,7 +955,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cintayati, avagacchati, paṭhati, likhati. Thinking plants -अय-; understanding is \"goes\" with अव in front, or बुध्यते, waking; reading and writing take a plain -a-, class 1 and class 6."
+              "text": "Cintayati, avagacchati, paṭhati, likhati. Thinking plants -अय-; understanding is \"goes\" with अव in front, or budhyate, waking; reading and writing take a plain -a-, class 1 and class 6."
             }
           ]
         },
@@ -1012,7 +1012,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did लिख् mean before \"write,\" and what are the chapter's four verbs? (To scratch; cintayati, avagacchati, paṭhati, likhati.) Which plants -अय-, and which is a prefix on a verb you already had? (Cintayati; avagacchati.) Which verb of understanding means \"wakes,\" and what title comes from its root? (बुध्यते; बुद्ध.) Is Bengali lekhā tatsama or tadbhava, and which two word-histories here needed a label rather than a claim? (Tadbhava; paṭhati's ancestry and likh's English kin — the punch caution, twice.)"
+              "text": "What did लिख् mean before \"write,\" and what are the chapter's four verbs? (To scratch; cintayati, avagacchati, paṭhati, likhati.) Which plants -अय-, and which is a prefix on a verb you already had? (Cintayati; avagacchati.) Which verb of understanding means \"wakes,\" and what title comes from its root? (budhyate; buddha.) Is Bengali lekhā tatsama or tadbhava, and which two word-histories here needed a label rather than a claim? (Tadbhava; paṭhati's ancestry and likh's English kin — the punch caution, twice.)"
             }
           ]
         }

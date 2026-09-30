@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:c83e4ca6b7aae67e",
+  "lessonIds": [
+    "HI-C234-baya",
+    "HI-C234-sidha",
+    "HI-C234-ulta",
+    "HI-C234-bic",
+    "HI-C234-kona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch234.txt",
+  "json": "hindi/narration/ch234.json",
+  "textHash": "fnv1a64:6b98f86841c09566",
+  "jsonHash": "fnv1a64:0cc1a24767c16d78",
+  "findings": []
+}

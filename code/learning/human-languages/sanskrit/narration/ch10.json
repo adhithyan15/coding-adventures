@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "What You'd Ask For",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7f28b98738721dbe",
+  "sourceHash": "fnv1a64:fe1a80a1874549e0",
   "lessons": [
     {
       "id": "SA-C10-paniyam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3e23560ee2418a95",
+      "sourceHash": "fnv1a64:339f02a239849b05",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -64,7 +64,7 @@
               "rowCount": 2,
               "utterances": [
                 "Sanskrit: पानीयम्. sound: pānīyam. meaning: water.",
-                "Sanskrit: पिबति. sound: pibati. meaning: he, she, or it drinks."
+                "Sanskrit: —. sound: pibati. meaning: he, she, or it drinks."
               ]
             },
             {
@@ -99,7 +99,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eastward, पानीयम् (pānīyam) wore down through Prakrit pāṇīya into the everyday water-word of the daughter languages: Hindi पानी (pānī), Gujarati pāṇī, and, in the Bangladesh register of Bengali, pani — every one तद्भव, worn down by ordinary speech, not carried over whole. Sanskrit's own oldest water-words, जल and उदक, took a different road entirely; this is not that word."
+              "text": "Eastward, पानीयम् (pānīyam) wore down through Prakrit pāṇīya into the everyday water-word of the daughter languages: Hindi पानी (pānī), Gujarati pāṇī, and, in the Bangladesh register of Bengali, pani — every one तद्भव, worn down by ordinary speech, not carried over whole. Sanskrit's own oldest water-words, jala and udaka, took a different road entirely; this is not that word."
             }
           ]
         },

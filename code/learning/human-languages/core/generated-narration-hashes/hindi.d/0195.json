@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:82ad1cc7370be76f",
+  "lessonIds": [
+    "HI-C195-kavi",
+    "HI-C195-citrakar",
+    "HI-C195-gayak",
+    "HI-C195-khilari",
+    "HI-C195-neta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch195.txt",
+  "json": "hindi/narration/ch195.json",
+  "textHash": "fnv1a64:4ba893f29051006d",
+  "jsonHash": "fnv1a64:c5759976a2904dae",
+  "findings": []
+}

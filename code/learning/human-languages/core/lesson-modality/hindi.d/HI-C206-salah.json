@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C206-salah",
+    "language": "hindi",
+    "chapter": 206,
+    "sequence": 10360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d13c8bb0f58f1c65"
+  },
+  "findings": []
+}

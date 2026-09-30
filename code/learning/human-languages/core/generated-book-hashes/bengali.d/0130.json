@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:7fa5ef5b21d40055",
+  "lessonIds": [
+    "BN-C130-manibyag",
+    "BN-C130-poysa",
+    "BN-C130-kham",
+    "BN-C130-daktikit",
+    "BN-C130-putul"
+  ],
+  "tex": "bengali/book/chapters/ch130-wallet-coin-envelope-stamp-doll.tex"
+}

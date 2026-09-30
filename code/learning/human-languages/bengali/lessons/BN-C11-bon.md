@@ -9,7 +9,7 @@ headword: বোন
 romanization: bon
 gloss: sister — not built on the root behind English "sister" at all, but on the very root that named this book's rice two lessons ago
 concept_tag: BN-PEOPLE-SISTER
-prerequisites: [BN-C11-bhai]
+prerequisites: [BN-C11-bhai, BN-C06-numbers-1-5-dui]
 sounds: [silent-final-vowel]
 roots: [bhaga-share]
 etymology_hook: "বোন is not built on PIE swesor, the root behind English sister — it is a tadbhava through Magadhi Prakrit *bahiṇī, from Old Indo-Aryan *baghinī, a doublet of Sanskrit's own bhaginī, 'one with a share,' from bhaga, 'a share, a portion,' the same √bhaj that named ভাত two lessons ago. Bengali's 'sister' and 'rice' are cousins; its 'sister' and English 'sister' are not"

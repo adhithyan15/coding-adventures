@@ -1,0 +1,11 @@
+{
+  "id": "HI-C193-sipahi",
+  "pathSegment": "HI-PATH-193-THG193",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-193-THG193",
+      "order": 2
+    }
+  ]
+}

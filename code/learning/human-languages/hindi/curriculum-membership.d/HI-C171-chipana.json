@@ -1,0 +1,11 @@
+{
+  "id": "HI-C171-chipana",
+  "pathSegment": "HI-PATH-171-ACT171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-171-ACT171",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C237-uthla",
+    "language": "hindi",
+    "chapter": 237,
+    "sequence": 12600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af4cbd4910c46018"
+  },
+  "findings": []
+}

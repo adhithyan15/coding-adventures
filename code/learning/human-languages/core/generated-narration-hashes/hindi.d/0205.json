@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:3e58717399559b8b",
+  "lessonIds": [
+    "HI-C205-patra",
+    "HI-C205-lifafa",
+    "HI-C205-tikatghar",
+    "HI-C205-sandesa",
+    "HI-C205-batcit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch205.txt",
+  "json": "hindi/narration/ch205.json",
+  "textHash": "fnv1a64:b9ba979d1671cc44",
+  "jsonHash": "fnv1a64:d82da52cdb457b97",
+  "findings": []
+}

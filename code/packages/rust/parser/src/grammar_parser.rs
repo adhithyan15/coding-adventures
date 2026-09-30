@@ -45,9 +45,10 @@
 //!    | Literal       | Match if current token has the right value  |
 
 use lexer::token::{Token, TokenType, string_to_token_type};
-use grammar_tools::parser_grammar::{GrammarElement, ParserGrammar, GrammarRule};
+use grammar_tools::parser_grammar::{GrammarElement, ParserGrammar};
 use std::collections::HashMap;
 use std::fmt;
+use std::rc::Rc;
 
 // ===========================================================================
 // AST types for grammar-driven parsing
@@ -139,12 +140,60 @@ impl std::error::Error for GrammarParseError {}
 /// essential for grammars with ~40 rules that would otherwise cause
 /// exponential backtracking.
 struct MemoEntry {
-    /// The matched children, or None if the rule failed.
-    children: Option<Vec<ASTNodeOrToken>>,
+    /// The matched node, or `None` if the rule failed here. Shared with the
+    /// tree being built (see [`BuiltNode`]), so caching it copies a pointer.
+    node: Option<Rc<BuiltNode>>,
     /// The position after the match (or where we gave up).
     end_pos: usize,
-    /// Whether the match succeeded.
-    ok: bool,
+}
+
+// ===========================================================================
+// The tree while it is being built
+// ===========================================================================
+
+/// A rule match as the parser holds it *during* the parse.
+///
+/// Why not build [`GrammarASTNode`]s directly? Because the memo keeps every
+/// successful `(rule, position)` result, and a `GrammarASTNode` owns its
+/// whole subtree. Caching one meant copying the subtree, and a hit meant
+/// copying it again, so each node was stored once for every rule above it
+/// that matched: an expression like `x`, wrapped by a dozen precedence rules
+/// (`assignment` → `conditional` → … → `primary`), was copied a dozen times,
+/// each copy bigger than the last.
+///
+/// ```text
+///   owned nodes (before)                 shared nodes (now)
+///
+///   memo[assignment] ─▶ assignment        memo[assignment] ──┐
+///                        └ conditional                        ▼
+///                           └ … └ x       tree ─────────▶ assignment
+///   memo[conditional] ─▶ conditional                         └ conditional ◀── memo[conditional]
+///                         └ … └ x                               └ … └ x
+///   …one copy per level                  one node, several pointers
+/// ```
+///
+/// A 3 MB JavaScript file needed about 30 GB that way. A `BuiltNode` is
+/// shared instead (`Rc`): the memo and the parent point at the same node, so
+/// a cache store or hit costs a reference count. [`GrammarParser::parse`]
+/// converts the finished tree into the public owned form once, at the end.
+struct BuiltNode {
+    rule_name: Rc<str>,
+    children: Vec<Built>,
+}
+
+/// A child of a [`BuiltNode`]: the building-time twin of [`ASTNodeOrToken`].
+enum Built {
+    Node(Rc<BuiltNode>),
+    Token(Token),
+}
+
+/// A grammar rule as the parser looks it up: shared, so entering a rule
+/// does not copy its whole grammar-element tree, and carrying the rule's
+/// memo index and its name, ready to share with every node it produces.
+struct RuleInfo {
+    body: GrammarElement,
+    name: Rc<str>,
+    index: usize,
 }
 
 // ===========================================================================
@@ -187,10 +236,8 @@ pub struct GrammarParser {
     tokens: Vec<Token>,
     grammar: ParserGrammar,
     pos: usize,
-    rules: HashMap<String, GrammarRule>,
-
-    /// Index of each rule name for memo key generation.
-    rule_index: HashMap<String, usize>,
+    /// Each rule by name, with its memo index (see [`RuleInfo`]).
+    rules: HashMap<String, Rc<RuleInfo>>,
 
     /// Whether newlines are significant in this grammar.
     newlines_significant: bool,
@@ -386,11 +433,16 @@ impl GrammarParser {
     /// ```
     pub fn new_with_trace(tokens: Vec<Token>, grammar: ParserGrammar, trace: bool) -> Self {
         let mut rules = HashMap::new();
-        let mut rule_index = HashMap::new();
 
         for (i, rule) in grammar.rules.iter().enumerate() {
-            rules.insert(rule.name.clone(), rule.clone());
-            rule_index.insert(rule.name.clone(), i);
+            rules.insert(
+                rule.name.clone(),
+                Rc::new(RuleInfo {
+                    body: rule.body.clone(),
+                    name: Rc::from(rule.name.as_str()),
+                    index: i,
+                }),
+            );
         }
 
         let newlines_significant = grammar_references_newline(&grammar);
@@ -400,7 +452,6 @@ impl GrammarParser {
             grammar,
             pos: 0,
             rules,
-            rule_index,
             newlines_significant,
             memo: HashMap::new(),
             furthest_pos: 0,
@@ -590,7 +641,7 @@ impl GrammarParser {
                 }
 
                 // Post-parse hooks: transform the AST after parsing completes.
-                let mut result = node;
+                let mut result = to_grammar_node(&node);
                 for hook in &self.post_parse_hooks {
                     result = hook(result);
                 }
@@ -619,7 +670,7 @@ impl GrammarParser {
     /// rather than panicking keeps the whole thing recoverable — it unwinds
     /// back through the recursive-descent stack exactly like an ordinary
     /// no-match, and `parse()` turns it into a clean `GrammarParseError`.
-    fn parse_rule(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
+    fn parse_rule(&mut self, rule_name: &str) -> Option<Rc<BuiltNode>> {
         if self.depth >= self.max_depth {
             // Refuse to descend further. Mark the refusal so `parse()` can
             // emit a precise message, and record a failure at the current
@@ -733,45 +784,26 @@ impl GrammarParser {
 
     /// Try to match a named grammar rule with memoization. The depth guard
     /// lives in the [`Self::parse_rule`] wrapper; do not call this directly.
-    fn parse_rule_inner(&mut self, rule_name: &str) -> Option<GrammarASTNode> {
-        let rule = {
-            let r = self.rules.get(rule_name)?;
-            r.clone()
-        };
+    fn parse_rule_inner(&mut self, rule_name: &str) -> Option<Rc<BuiltNode>> {
+        let rule = Rc::clone(self.rules.get(rule_name)?);
+        let key = (rule.index, self.pos);
 
         // Check memo cache.
-        if let Some(&idx) = self.rule_index.get(rule_name) {
-            let key = (idx, self.pos);
-            if let Some(entry) = self.memo.get(&key) {
-                let end_pos = entry.end_pos;
-                let ok = entry.ok;
-                let children = entry.children.clone();
-                self.pos = end_pos;
-                if !ok {
-                    return None;
-                }
-                let c = children.unwrap();
-                let (sl, sc, el, ec) = compute_node_position(&c);
-                return Some(GrammarASTNode {
-                    rule_name: rule_name.to_string(),
-                    children: c,
-                    start_line: sl,
-                    start_column: sc,
-                    end_line: el,
-                    end_column: ec,
-                });
-            }
+        if let Some(entry) = self.memo.get(&key) {
+            let node = entry.node.clone();
+            self.pos = entry.end_pos;
+            return node;
+        }
 
-            // Left-recursion guard: if we're already trying to parse this
-            // rule at this position (but haven't finished and cached the
-            // result yet), then we've hit left recursion. Return None to
-            // break the cycle. This handles grammars with rules like:
-            //   primary = ... | primary LBRACKET expression RBRACKET
-            // where `primary` appears as the first element of an alternative.
-            if !self.in_progress.insert(key) {
-                // key was already present — left recursion detected
-                return None;
-            }
+        // Left-recursion guard: if we're already trying to parse this
+        // rule at this position (but haven't finished and cached the
+        // result yet), then we've hit left recursion. Return None to
+        // break the cycle. This handles grammars with rules like:
+        //   primary = ... | primary LBRACKET expression RBRACKET
+        // where `primary` appears as the first element of an alternative.
+        if !self.in_progress.insert(key) {
+            // key was already present — left recursion detected
+            return None;
         }
 
         let start_checkpoint = self.checkpoint();
@@ -811,49 +843,30 @@ impl GrammarParser {
         }
 
         // Cache result and remove from in_progress set.
-        if let Some(&idx) = self.rule_index.get(rule_name) {
-            let key = (idx, start_pos);
-            self.in_progress.remove(&key);
-            if let Some(ref result) = children {
-                self.memo.insert(key, MemoEntry {
-                    children: Some(result.clone()),
-                    end_pos: self.pos,
-                    ok: true,
-                });
-            } else {
-                self.memo.insert(key, MemoEntry {
-                    children: None,
-                    end_pos: self.pos,
-                    ok: false,
-                });
-            }
-        }
+        self.in_progress.remove(&key);
+        let node = children.map(|children| {
+            Rc::new(BuiltNode {
+                rule_name: Rc::clone(&rule.name),
+                children,
+            })
+        });
+        self.memo.insert(key, MemoEntry {
+            node: node.clone(),
+            end_pos: self.pos,
+        });
 
-        match children {
-            Some(c) => {
-                let (sl, sc, el, ec) = compute_node_position(&c);
-                Some(GrammarASTNode {
-                    rule_name: rule_name.to_string(),
-                    children: c,
-                    start_line: sl,
-                    start_column: sc,
-                    end_line: el,
-                    end_column: ec,
-                })
-            }
-            None => {
-                self.restore_to(start_checkpoint);
-                self.record_failure(rule_name);
-                None
-            }
+        if node.is_none() {
+            self.restore_to(start_checkpoint);
+            self.record_failure(rule_name);
         }
+        node
     }
 
     // =========================================================================
     // Element matching
     // =========================================================================
 
-    fn match_element(&mut self, element: &GrammarElement) -> Option<Vec<ASTNodeOrToken>> {
+    fn match_element(&mut self, element: &GrammarElement) -> Option<Vec<Built>> {
         let checkpoint = self.checkpoint();
 
         match element {
@@ -916,7 +929,7 @@ impl GrammarParser {
                     self.match_token_reference(name)
                 } else {
                     match self.parse_rule(name) {
-                        Some(node) => Some(vec![ASTNodeOrToken::Node(node)]),
+                        Some(node) => Some(vec![Built::Node(node)]),
                         None => {
                             self.restore_to(checkpoint);
                             None
@@ -962,7 +975,7 @@ impl GrammarParser {
                 if self.current().type_ != TokenType::String && self.current().value == *value {
                     let tok = self.current().clone();
                     self.pos += 1;
-                    Some(vec![ASTNodeOrToken::Token(tok)])
+                    Some(vec![Built::Token(tok)])
                 } else {
                     self.record_failure(&format!("\"{}\"", value));
                     None
@@ -1069,7 +1082,7 @@ impl GrammarParser {
 
     /// Match a token reference, handling string-based type names and
     /// newline skipping.
-    fn match_token_reference(&mut self, expected_type: &str) -> Option<Vec<ASTNodeOrToken>> {
+    fn match_token_reference(&mut self, expected_type: &str) -> Option<Vec<Built>> {
         // Skip newlines when matching non-NEWLINE tokens (if insignificant).
         if !self.newlines_significant && expected_type != "NEWLINE" {
             while self.current().type_ == TokenType::Newline {
@@ -1084,7 +1097,7 @@ impl GrammarParser {
             if type_name == expected_type {
                 let tok = token.clone();
                 self.pos += 1;
-                return Some(vec![ASTNodeOrToken::Token(tok)]);
+                return Some(vec![Built::Token(tok)]);
             }
             // Contextual token-splitting for nested generic-argument-list
             // closers (`Map<String, List<Integer>>`, `Box<Box<Box<T>>>`)
@@ -1129,7 +1142,7 @@ impl GrammarParser {
                     // silently corrupting an otherwise-unrelated parse.
                     self.split_undo_log.push((split_pos, original));
                     self.set_token_and_invalidate_memo(split_pos, remainder);
-                    return Some(vec![ASTNodeOrToken::Token(consumed)]);
+                    return Some(vec![Built::Token(consumed)]);
                 }
             }
         }
@@ -1179,7 +1192,7 @@ impl GrammarParser {
         if token.type_ == expected {
             let tok = token.clone();
             self.pos += 1;
-            Some(vec![ASTNodeOrToken::Token(tok)])
+            Some(vec![Built::Token(tok)])
         } else {
             self.record_failure(expected_type);
             None
@@ -1286,48 +1299,39 @@ fn split_angle_bracket_run(token: &Token, expected_type: &str) -> Option<(Token,
 // AST position computation
 // ===========================================================================
 
-/// Compute position info for a GrammarASTNode from its children.
+/// Convert a finished [`BuiltNode`] tree into the public, owned
+/// [`GrammarASTNode`] form. Runs once per parse, after the memo has done its
+/// work, so each node is copied exactly once.
 ///
-/// Walks the children to find the first and last leaf tokens, then uses
-/// their line/column as the node's span. Returns `(None, None, None, None)`
-/// if there are no tokens (e.g., empty repetition).
-fn compute_node_position(
-    children: &[ASTNodeOrToken],
-) -> (Option<usize>, Option<usize>, Option<usize>, Option<usize>) {
-    let first = find_first_token(children);
-    let last = find_last_token(children);
-    match (first, last) {
-        (Some(f), Some(l)) => (Some(f.line), Some(f.column), Some(l.line), Some(l.column)),
-        _ => (None, None, None, None),
+/// Positions are computed bottom-up on the way: a node starts where its
+/// first child that holds a token starts, and ends where its last one ends.
+/// Children are converted first, so each child already knows its own span,
+/// and no subtree is walked twice.
+fn to_grammar_node(node: &BuiltNode) -> GrammarASTNode {
+    let children: Vec<ASTNodeOrToken> = node
+        .children
+        .iter()
+        .map(|child| match child {
+            Built::Node(inner) => ASTNodeOrToken::Node(to_grammar_node(inner)),
+            Built::Token(token) => ASTNodeOrToken::Token(token.clone()),
+        })
+        .collect();
+    let start = children.iter().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) => Some((token.line, token.column)),
+        ASTNodeOrToken::Node(inner) => inner.start_line.zip(inner.start_column),
+    });
+    let end = children.iter().rev().find_map(|child| match child {
+        ASTNodeOrToken::Token(token) => Some((token.line, token.column)),
+        ASTNodeOrToken::Node(inner) => inner.end_line.zip(inner.end_column),
+    });
+    GrammarASTNode {
+        rule_name: node.rule_name.to_string(),
+        children,
+        start_line: start.map(|(line, _)| line),
+        start_column: start.map(|(_, column)| column),
+        end_line: end.map(|(line, _)| line),
+        end_column: end.map(|(_, column)| column),
     }
-}
-
-fn find_first_token(children: &[ASTNodeOrToken]) -> Option<&Token> {
-    for child in children {
-        match child {
-            ASTNodeOrToken::Token(tok) => return Some(tok),
-            ASTNodeOrToken::Node(node) => {
-                if let Some(tok) = find_first_token(&node.children) {
-                    return Some(tok);
-                }
-            }
-        }
-    }
-    None
-}
-
-fn find_last_token(children: &[ASTNodeOrToken]) -> Option<&Token> {
-    for child in children.iter().rev() {
-        match child {
-            ASTNodeOrToken::Token(tok) => return Some(tok),
-            ASTNodeOrToken::Node(node) => {
-                if let Some(tok) = find_last_token(&node.children) {
-                    return Some(tok);
-                }
-            }
-        }
-    }
-    None
 }
 
 // ===========================================================================
@@ -2620,5 +2624,61 @@ term       = NUMBER | NAME ;
         let r2 = p2.parse().unwrap();
         assert_eq!(r1.rule_name, r2.rule_name);
         assert_eq!(r1.children.len(), r2.children.len());
+    }
+
+    // -----------------------------------------------------------------------
+    // Shared memo nodes: a memo hit and bottom-up positions
+    // -----------------------------------------------------------------------
+
+    fn tok_at(type_: TokenType, value: &str, line: usize, column: usize) -> Token {
+        Token { cv: None, type_, value: value.to_string(), line, column, type_name: None, flags: None }
+    }
+
+    #[test]
+    fn memo_hit_yields_the_same_tree_as_a_fresh_parse() {
+        // `start`'s first choice parses `item` at 0, then fails on the
+        // missing `+`; the second choice finds `item` at 0 in the memo.
+        let grammar = grammar_tools::parser_grammar::parse_parser_grammar(
+            "start = item PLUS | item ; item = NUMBER ;",
+        )
+        .unwrap();
+        let tokens = vec![tok_at(TokenType::Number, "7", 2, 3), tok_at(TokenType::Eof, "", 2, 4)];
+        let mut parser = GrammarParser::new(tokens, grammar);
+        let tree = parser.parse().unwrap();
+
+        assert_eq!(tree.rule_name, "start");
+        let [ASTNodeOrToken::Node(item)] = tree.children.as_slice() else {
+            panic!("start should hold one item: {tree:?}");
+        };
+        assert_eq!(item.rule_name, "item");
+        assert_eq!(item.token().map(|token| token.value.as_str()), Some("7"));
+        assert_eq!((tree.start_line, tree.start_column), (Some(2), Some(3)));
+        assert_eq!((tree.end_line, tree.end_column), (Some(2), Some(3)));
+        let item_index = parser.rules["item"].index;
+        assert!(parser.memo[&(item_index, 0)].node.is_some(), "item at 0 is memoised");
+    }
+
+    #[test]
+    fn positions_skip_children_that_hold_no_token() {
+        // `gap` matches nothing, so it has no position, and `start` takes its
+        // span from the tokens on either side of it.
+        let grammar = grammar_tools::parser_grammar::parse_parser_grammar(
+            "start = gap NUMBER gap NAME gap ; gap = [ PLUS ] ;",
+        )
+        .unwrap();
+        let tokens = vec![
+            tok_at(TokenType::Number, "1", 1, 5),
+            tok_at(TokenType::Name, "x", 3, 9),
+            tok_at(TokenType::Eof, "", 3, 10),
+        ];
+        let tree = GrammarParser::new(tokens, grammar).parse().unwrap();
+
+        let ASTNodeOrToken::Node(gap) = &tree.children[0] else {
+            panic!("first child is the empty gap");
+        };
+        assert!(gap.children.is_empty());
+        assert_eq!((gap.start_line, gap.end_line), (None, None));
+        assert_eq!((tree.start_line, tree.start_column), (Some(1), Some(5)));
+        assert_eq!((tree.end_line, tree.end_column), (Some(3), Some(9)));
     }
 }

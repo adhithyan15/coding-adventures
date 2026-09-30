@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C211-haldi",
+    "language": "hindi",
+    "chapter": 211,
+    "sequence": 10810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab9190817d944dc5"
+  },
+  "findings": []
+}

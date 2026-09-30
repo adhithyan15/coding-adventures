@@ -17,7 +17,7 @@ Grammar Lens: a color that never agrees.
 لال ends in a consonant, not in ا. That matters: it stays لال whether the thing it describes is masculine or feminine, singular or plural. merā kamīz lāl hai, merī ṭopī lāl hai — same word, no change. Not every color in this book will be this simple.
 
 The word, taken apart — Persian, and it stops there.
-لال (lāl) is borrowed from Classical Persian لَال, "red." No further ancestor is documented for the Persian word itself — the trail stops, the same honest kind of dead end roṭī's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one.
+لال is borrowed from Classical Persian lāl, "red." No further ancestor is documented for the Persian word itself — the trail stops, the same honest kind of dead end roṭī's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one.
 
 Guided Practice.
 [your turn — say: lāl — red; then merā koṭ lāl hai]
@@ -78,7 +78,7 @@ You'll want to know first — one word.
 merā koṭ kālā hai. — "My coat is black."
 merī ṭopī kālī hai. — "My cap is black."
 
-Grammar Lens: a color that agrees like مِیرا.
+Grammar Lens: a color that agrees like میرا.
 کالا (kālā) ends in ا — and a color ending in ا changes with the noun it describes, exactly the way merā/merī changed for gender back in the family chapter. Masculine stays کالا (kālā); feminine becomes کالی. لال (lāl) and safed never had to make this choice, because neither one ends in ا. Watch for it again on the last color of this chapter.
 
 The word, taken apart — inherited, but borrowed further back.

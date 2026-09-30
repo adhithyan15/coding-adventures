@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C217-amrud",
+    "language": "hindi",
+    "chapter": 217,
+    "sequence": 11100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fa16592a71292b3"
+  },
+  "findings": []
+}

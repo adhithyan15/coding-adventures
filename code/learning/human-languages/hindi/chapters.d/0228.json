@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "To grow, To grow, To hand over, To press, To turn",
+  "label": "ch:hi-to-grow-to-grow-to-hand-over-to-press-to-turn",
+  "canDo": "I can say to grow, to grow, to hand over, to press and to turn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C228-ghumana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: i can say to grow, to grow, to hand over, to press and to turn.",
+    "assesses": [
+      "HI-LEX-C228-ACT228-03",
+      "HI-LEX-C228-ACT228-04",
+      "HI-LEX-C228-ACT228-05"
+    ]
+  }
+}

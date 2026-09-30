@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "A letter, A story, A question, An answer, A mistake",
+  "label": "ch:hi-a-letter-a-story-a-question-an-answer-a-mistake",
+  "canDo": "I can say a letter, a story, a question, an answer and a mistake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C189-galti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: i can say a letter, a story, a question, an answer and a mistake.",
+    "assesses": [
+      "HI-LEX-C189-THG189-03",
+      "HI-LEX-C189-THG189-04",
+      "HI-LEX-C189-THG189-05"
+    ]
+  }
+}

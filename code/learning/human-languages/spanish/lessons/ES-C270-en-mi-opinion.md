@@ -8,17 +8,17 @@ type: phrase
 headword: en mi opinión
 gloss: in my opinion
 concept_tag: ARGUMENT-CLAIM
-prerequisites: [ES-C269-durante]
+prerequisites: [ES-C269-durante, ES-C267-pregunta-si-no, ES-C267-verdad-no]
 sounds: [vowel-e, vowel-o]
 roots: [opinari]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-DURANTE]
+  knowledge: [ES-LEX-DURANTE, ES-GRAMMAR-C267-PREGUNTASINO-01, ES-GRAMMAR-C267-VERDADNO-01]
 introduces:
   knowledge: [ES-LEX-EN-MI-OPINION, ES-SEMANTIC-CLAIM-MARKED]
 practises:
-  knowledge: [ES-LEX-EN-MI-OPINION, ES-SEMANTIC-CLAIM-MARKED]
+  knowledge: [ES-LEX-EN-MI-OPINION, ES-SEMANTIC-CLAIM-MARKED, ES-GRAMMAR-C267-PREGUNTASINO-01, ES-GRAMMAR-C267-VERDADNO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,9 +30,11 @@ reviews_of: [ES-C269-durante]
 # en mi opinión — marking a claim as yours
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-PREGUNTASINO-01, ES-GRAMMAR-C267-VERDADNO-01] -->
 
 [PAUSE 2s] You can say what happened and how it felt. This chapter is for saying what you THINK, and defending it.
+
+[PAUSE 2s] Before you give an opinion, ask for one. Plainly, with your voice alone: *¿Es bueno?* Or asking for agreement: *Es bueno, ¿no?*
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

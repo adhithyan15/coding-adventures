@@ -4,7 +4,7 @@
   "chapter": 423,
   "title": "Character, Not Mood",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:99097c9fb7b0912b",
+  "sourceHash": "fnv1a64:e91f2796796cca08",
   "lessons": [
     {
       "id": "ES-C423-antipatico",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:163724d2da4a1d31",
+      "sourceHash": "fnv1a64:15b564a17c2259fb",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Say simpático. Now say what you would expect its opposite to look like, before reading on. This is one of the times the obvious guess is right."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write one line with porque before the new words: Hablé con mi amiga porque tuve tiempo. Then write one of your own."
             }
           ]
         },

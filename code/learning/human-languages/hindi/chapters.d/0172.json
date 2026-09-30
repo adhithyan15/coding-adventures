@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "To stop (someone or something), To run away, To climb, To get down, To stroll",
+  "label": "ch:hi-to-stop-someone-or-something-to-run-away-to-climb-to-get-down-to-stroll",
+  "canDo": "I can say to stop (someone or something), to run away, to climb, to get down and to stroll.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C172-ghumna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: i can say to stop (someone or something), to run away, to climb, to get down and to stroll.",
+    "assesses": [
+      "HI-LEX-C172-ACT172-03",
+      "HI-LEX-C172-ACT172-04",
+      "HI-LEX-C172-ACT172-05"
+    ]
+  }
+}

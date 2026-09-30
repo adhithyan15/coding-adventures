@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:3dfbce107adf481c",
+  "lessonIds": [
+    "HI-C204-trak",
+    "HI-C204-riksa",
+    "HI-C204-havaijahaz",
+    "HI-C204-petrol",
+    "HI-C204-phon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch204.txt",
+  "json": "hindi/narration/ch204.json",
+  "textHash": "fnv1a64:10b5b3f3dda3fb40",
+  "jsonHash": "fnv1a64:d660a0ee6f78dfae",
+  "findings": []
+}

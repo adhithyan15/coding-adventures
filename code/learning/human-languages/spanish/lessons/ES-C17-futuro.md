@@ -8,18 +8,18 @@ type: grammar
 headword: hablaré
 gloss: the singular simple future of hablar — hablaré, hablarás, hablará
 concept_tag: ES-FUTURE
-prerequisites: [ES-C16-practice, ES-C10-ir-a-futuro, ES-C06-hablar]
+prerequisites: [ES-C16-practice, ES-C10-ir-a-futuro, ES-C06-hablar, ES-C49-sintesis-dos-orillas, ES-C49-participios-irregulares]
 sounds: [accent-acute, stress-final]
 roots: [latin-infinitive-habere]
 etymology_hook: "Spanish simple-future forms continue a Romance construction in which an infinitive combined with present forms of haber; repeated use helped the pieces become one written word"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT]
+  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT, ES-GRAMMAR-IRREGULAR-PARTICIPLES]
 introduces:
   knowledge: [ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL]
+  knowledge: [ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-GRAMMAR-AR-FUTURE-SINGULAR, ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT, ES-GRAMMAR-IRREGULAR-PARTICIPLES]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,12 +31,14 @@ reviews_of: [ES-C16-practice, ES-C10-ir-a-futuro, ES-C06-hablar]
 # hablaré — keep the infinitive, add the future
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-FUTURE-PREDICTION-INTENTION]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-FUTURE-PREDICTION-INTENTION]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE, ES-GRAMMAR-PERFECT-REGIONAL-SPLIT, ES-GRAMMAR-IRREGULAR-PARTICIPLES] -->
 
 [PAUSE 2s] **Voy a hablar español** uses the near-future frame you already
 know. Spanish also has a one-word future: **Hablaré español** — “I will speak
 Spanish.” It can present a future prediction or intention without adding a new
 subject or object.
+
+[PAUSE 2s] Two things from the perfect before the future. Something that happened today: *hoy he hablado con Ana* in Spain, *hoy hablé con Ana* in most of Latin America, and both are right. And the four participles that refused the ending: *he hecho, he dicho, he visto, he puesto*.
 
 ## Grammar Lens: three familiar persons
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-FUTURE-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-FUTURE-PREDICTION-INTENTION, ES-SOUND-WRITTEN-ACCENT] -->

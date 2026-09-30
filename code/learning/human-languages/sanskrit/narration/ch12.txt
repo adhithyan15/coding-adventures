@@ -14,15 +14,15 @@ Say "sister." (Bhaginī.) The people you would introduce are done. Now for the f
 You'll want to know: अक्षि.
 [a table of 2 rows, read aloud]
 Sanskrit: अक्षि. sound: akṣi. meaning: eye.
-Sanskrit: अक्षिणी. sound: akṣiṇī. meaning: the two eyes.
+Sanskrit: —. sound: akṣiṇī. meaning: the two eyes.
 Neuter, like most of this book's shortest nouns.
 
 The letters in this word.
 अ opens bare. क्षि is the same क्ष conjunct you sounded out in क्षीरम्, now carrying a short-i instead of a long one: a-kṣi.
 
 The word, taken apart — an eye older than Rome.
-अक्षि (akṣi) is PIE h3ekw-, and the descent runs almost as clean as bhrātā's: English eye, Latin oculus ( becomes ocular, monocle), Lithuanian akìs — one root, barely disguised anywhere. It carries straight into Hindi आँख and Gujarati āṅkh, both inherited, not borrowed back the way मित्र was.
-And eyes are exactly the reason Sanskrit keeps a dual number at all — the exactly-two form Chapter 6 built around द्वौ, "two," rather than an ordinary count word. A single eye is अक्षि (akṣi); the two you were born with are not a small plural, they are अक्षिणी — grammar built for a body that comes in pairs.
+अक्षि (akṣi) is PIE h3ekw-, and the descent runs almost as clean as bhrātā's: English eye, Latin oculus ( becomes ocular, monocle), Lithuanian akìs — one root, barely disguised anywhere. It carries straight into Hindi and Gujarati āṅkh, both inherited, not borrowed back the way मित्र was.
+And eyes are exactly the reason Sanskrit keeps a dual number at all — the exactly-two form Chapter 6 built around dvau, "two," rather than an ordinary count word. A single eye is अक्षि; the two you were born with are not a small plural, they are akṣiṇī — grammar built for a body that comes in pairs.
 
 Guided Practice.
 [pause 1 second]
@@ -35,7 +35,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name two English words from the same root as अक्षि (akṣi). (Eye, and, through Latin, ocular or monocle.) What is the dual form for "two eyes," and what grammatical number is that? (अक्षिणी; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)
+Name two English words from the same root as अक्षि. (Eye, and, through Latin, ocular or monocle.) What is the dual form for "two eyes," and what grammatical number is that? (akṣiṇī; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)
 
 
 Lesson 2 of 5.
@@ -50,14 +50,14 @@ Say "eye," and its dual form for two of them. (Akṣi; akṣiṇī.) The next se
 You'll want to know: कर्णः.
 [a table of 2 rows, read aloud]
 Sanskrit: कर्णः. sound: karṇaḥ. meaning: ear.
-Sanskrit: कर्णौ. sound: karṇau. meaning: the two ears — dual again.
-Masculine, unlike अक्षि (akṣi).
+Sanskrit: —. sound: karṇau. meaning: the two ears — dual again.
+Masculine, unlike akṣi.
 
 The letters in this word.
-कर् is kar, the r you have sounded since संस्कृत. ण is the curled-back retroflex n, familiar from गृह्णाति. The final ः, a visarga, breathes the word out on an echo of its own vowel: kar-ṇa-ḥ, the same puff first heard closing नमस्ते.
+कर् is kar, the r you have sounded since संस्कृत. ण is the curled-back retroflex n, familiar from gṛhṇāti. The final ः, a visarga, breathes the word out on an echo of its own vowel: kar-ṇa-ḥ, the same puff first heard closing नमस्ते.
 
 The word, taken apart — no agreed parent.
-Where अक्षि (akṣi)'s ancestry runs clean back to PIE, कर्णः (karṇaḥ)'s does not run anywhere agreed. Proposed roots mean "a defect," "a point," "a handle," and "to hear" — and no single account has won out over the others.
+Where akṣi's ancestry runs clean back to PIE, कर्णः (karṇaḥ)'s does not run anywhere agreed. Proposed roots mean "a defect," "a point," "a handle," and "to hear" — and no single account has won out over the others.
 What is certain is where it went. कर्णः (karṇaḥ) wore down through Prakrit kaṇṇa into Gujarati kān — and changed gender on the way: masculine in Sanskrit, feminine in Gujarati. A word can cross a language boundary and lose the very grammar that first classified it.
 
 Guided Practice.

@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Verbs That Break in the Middle --- the Stem Changers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b50b20396d3cd9cb",
+  "sourceHash": "fnv1a64:ca3824b2d379d6e4",
   "lessons": [
     {
       "id": "ES-C11-querer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fecf75d794ce8eb4",
+      "sourceHash": "fnv1a64:80df084c775eba0f",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You already say tienes and tiene, where the middle e opens into ie. Today, reuse that visible change in one useful verb and keep the same three-person frame you already own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A false friend from before: éxito obeys your rules and still lies. It means success, not exit."
             }
           ]
         },

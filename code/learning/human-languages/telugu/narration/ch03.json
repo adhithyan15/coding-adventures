@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5dd013ccecb3ab3a",
+  "sourceHash": "fnv1a64:3aa0a850bb84560d",
   "lessons": [
     {
       "id": "TE-S142-digit-3",
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6ac3bf7f69375e16",
+      "sourceHash": "fnv1a64:0303202fe50a7a7a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -329,7 +329,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The new word is ఉన్నారు (unnāru, \"you are/exist\"): from the verb ఉండు (uṇḍu, \"to be, to exist, to stay\") + the respectful-you ending -ారు (-āru). Note the doubled న్న (nn)."
+              "text": "The new word is ఉన్నారు (unnāru, \"you are/exist\"): from the verb uṇḍu ( \"to be, to exist, to stay\") + the respectful-you ending -ారు (-āru). Note the doubled న్న (nn)."
             }
           ]
         },
@@ -340,7 +340,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?) = మీరు (mīru, \"you,\" respectful) + ఎలా (elā, \"how\") + ఉన్నారు (unnāru, \"are\") — \"you how are?\", the verb last, as in every Telugu sentence. The verb is ఉండు (uṇḍu), \"to be / to exist / to stay\" — native Dravidian, and the workhorse behind \"how are you,\" \"I'm well,\" and (you'll see in Chapter 5) \"I live.\""
+              "text": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?) = మీరు (mīru, \"you,\" respectful) + ఎలా (elā, \"how\") + ఉన్నారు (unnāru, \"are\") — \"you how are?\", the verb last, as in every Telugu sentence. The verb is uṇḍu, \"to be / to exist / to stay\" — native Dravidian, and the workhorse behind \"how are you,\" \"I'm well,\" and (you'll see in Chapter 5) \"I live.\""
             }
           ]
         },

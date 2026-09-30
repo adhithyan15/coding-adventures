@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:60cb1b3b2fc2e9bd",
+  "lessonIds": [
+    "HI-C232-kapna",
+    "HI-C232-muskurana",
+    "HI-C232-cikhna",
+    "HI-C232-phusphusana",
+    "HI-C232-datna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch232.txt",
+  "json": "hindi/narration/ch232.json",
+  "textHash": "fnv1a64:9e5eb105ea2c83ab",
+  "jsonHash": "fnv1a64:912e90edf42bc20a",
+  "findings": []
+}

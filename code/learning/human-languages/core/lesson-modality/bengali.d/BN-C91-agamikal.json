@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C91-agamikal",
+    "language": "bengali",
+    "chapter": 91,
+    "sequence": 4750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1264b41c306b9ae"
+  },
+  "findings": []
+}

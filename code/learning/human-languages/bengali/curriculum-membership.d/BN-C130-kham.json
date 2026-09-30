@@ -1,0 +1,11 @@
+{
+  "id": "BN-C130-kham",
+  "pathSegment": "BN-PATH-130-THINGS130",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-130-THINGS130",
+      "order": 2
+    }
+  ]
+}

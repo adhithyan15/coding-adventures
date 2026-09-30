@@ -16,7 +16,6 @@ import re
 import unittest
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REGISTRY = REPO_ROOT / "code" / "specs" / "data" / "ci-gates.json"
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "ci.yml"
@@ -194,6 +193,17 @@ class CIGateRegistryTests(unittest.TestCase):
                 continue
             with self.subTest(gate=gate_id):
                 self.assertIn(gate_id, body, f"ci-gate does not depend on {gate_id}")
+
+    def test_macrooct_job_runs_generator_and_checks_the_committed_artifact(self) -> None:
+        # A wired gate that merely builds grammar-tools would still pass with
+        # a stale _grammar.rs. Pin the actual source-to-artifact assertion.
+        body = self._job_body("macrooct-grammar-regen-check")
+        self.assertIn("generate-rust-compiled-grammars macrooct", body)
+        self.assertIn(
+            "git diff --quiet -- code/packages/rust/macrooct-lexer/src/_grammar.rs",
+            body,
+        )
+        self.assertIn("exit 1", body)
 
     def _job_body(self, job_id: str) -> str:
         """Return the ci.yml text of one job, from its key to the next job key."""

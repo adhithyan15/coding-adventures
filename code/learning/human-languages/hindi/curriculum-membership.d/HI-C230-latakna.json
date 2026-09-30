@@ -1,0 +1,11 @@
+{
+  "id": "HI-C230-latakna",
+  "pathSegment": "HI-PATH-230-ACT230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-230-ACT230",
+      "order": 1
+    }
+  ]
+}

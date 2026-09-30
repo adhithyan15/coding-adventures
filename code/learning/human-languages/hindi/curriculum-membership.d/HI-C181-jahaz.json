@@ -1,0 +1,11 @@
+{
+  "id": "HI-C181-jahaz",
+  "pathSegment": "HI-PATH-181-THG181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-181-THG181",
+      "order": 4
+    }
+  ]
+}

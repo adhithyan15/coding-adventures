@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "A condition, A debt, Earnings, Savings, Expense",
+  "label": "ch:hi-a-condition-a-debt-earnings-savings-expense",
+  "canDo": "I can say a condition, a debt, earnings, savings and expense.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C207-kharc",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: i can say a condition, a debt, earnings, savings and expense.",
+    "assesses": [
+      "HI-LEX-C207-THG207-03",
+      "HI-LEX-C207-THG207-04",
+      "HI-LEX-C207-THG207-05"
+    ]
+  }
+}

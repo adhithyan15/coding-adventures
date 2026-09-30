@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Help, News, A newspaper, A thing, A colour",
+  "label": "ch:hi-help-news-a-newspaper-a-thing-a-colour",
+  "canDo": "I can say help, news, a newspaper, a thing and a colour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C190-rang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: i can say help, news, a newspaper, a thing and a colour.",
+    "assesses": [
+      "HI-LEX-C190-THG190-03",
+      "HI-LEX-C190-THG190-04",
+      "HI-LEX-C190-THG190-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Lately, All day, All night, Midday hours, Morning hours",
+  "label": "ch:bn-lately-all-day-all-night-midday-hours-morning-hours",
+  "canDo": "I can say lately, all day, all night, the midday hours and the morning hours.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "BN-C95-sokalbela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say lately, all day, all night, the midday hours and the morning hours.",
+    "assesses": [
+      "BN-LEX-C95-TIME95-03",
+      "BN-LEX-C95-TIME95-04",
+      "BN-LEX-C95-TIME95-05"
+    ]
+  }
+}

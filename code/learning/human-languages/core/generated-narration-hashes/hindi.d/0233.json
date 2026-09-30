@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:6a18cede1f1f5825",
+  "lessonIds": [
+    "HI-C233-uttar",
+    "HI-C233-daksin",
+    "HI-C233-purv",
+    "HI-C233-pascim",
+    "HI-C233-daya",
+    "HI-R233-first-pass-words-from-chapters-225-228",
+    "HI-R233-second-pass-words-from-chapters-229-233"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch233.txt",
+  "json": "hindi/narration/ch233.json",
+  "textHash": "fnv1a64:34b2bc72903c450d",
+  "jsonHash": "fnv1a64:89aa8a8832856fe1",
+  "findings": []
+}

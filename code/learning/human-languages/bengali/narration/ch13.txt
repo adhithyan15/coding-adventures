@@ -24,7 +24,7 @@ Grammar Lens: two be-verbs, and one of them is unfinished.
 what you mean: my name is Arun. what Bengali uses: no verb at all.
 what you mean: I have a book; it is here. what Bengali uses: আছে (āchhe).
 what you mean: he will be a teacher. what Bengali uses: হবে (hôbe).
-আছ-, the verb behind Chapter 5's kemon āchho, means being present. But it is unfinished: it has a present and a past, and nothing else at all. Push it into the future and it stops dead — so Bengali picks up হ- (hôbe), or Chapter 11's থাকা (āmi thākbo, "I'll be there"). One job, two verbs, split down the middle.
+আছ-, the verb behind Chapter 5's kemon āchho, means being present. But it is unfinished: it has a present and a past, and nothing else at all. Push it into the future and it stops dead — so Bengali picks up হ- (hôbe), or Chapter 11's thākā (āmi thākbo, "I'll be there"). One job, two verbs, split down the middle.
 
 Guided Practice.
 [pause 1 second]
@@ -37,7 +37,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which Sanskrit root is hôwā, and which two English words are its brothers? (√bhū, "to become" — be and been.) What can আছ- not do? (Anything past a present and a past — it has no future of its own.) So what does Bengali reach for instead? (হবে, or থাকা.) Next: one verb, three levels of respect.
+Which Sanskrit root is hôwā, and which two English words are its brothers? (√bhū, "to become" — be and been.) What can আছ- not do? (Anything past a present and a past — it has no future of its own.) So what does Bengali reach for instead? (হবে, or thākā.) Next: one verb, three levels of respect.
 
 
 Lesson 2 of 6.
@@ -139,7 +139,7 @@ Grammar Lens: Bengali eats its drinks.
 [a table of 3 rows, read aloud]
 জল খাওয়া (jôl khāwā) means to drink water — "water-eat".
 চা খাওয়া (chā khāwā) means to drink tea.
-ওষুধ খাওয়া (oshudh khāwā) means to take medicine.
+oshudh khāwā means to take medicine.
 Hindi keeps a second verb, pīnā, for drinking. Bengali's everyday speech does not bother: whatever goes in the mouth is khāwā. There is a drink-verb — পান করা (pān kôrā), noun-plus-kôrā in exactly Chapter 11's kāj kôrā shape, built on Sanskrit √pā ("to drink"), whose Latin cousin pōtāre gives English potion and potable. But it belongs to writing and ceremony. Ask for tea in a Kolkata kitchen and you eat it.
 
 Guided Practice.
@@ -210,8 +210,8 @@ You'll want to know: জানা.
 The word, taken apart.
 জানা (jānā) is Sanskrit √jñā ("to know"), the root under jñāna, "knowledge." Behind it stands PIE ǵneh₃-, and English is full of its children: know and knowledge by the direct Germanic road; notice, recognize and cognition through Latin nōscere; gnosis and diagnosis through Greek gignṓskein. Bengali jāni and English know are one verb, separated only by time.
 
-Sounds you'll need: জ্ঞ, the letter that lies.
-Sanskrit writes the root with জ্ঞ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is জা + না, jā-nā, and nothing more.
+Sounds you'll need: jñ, the letter that lies.
+Sanskrit writes the root with jñ, a knot of j and ñ. Bengali does not say jñ at all — it says gg, so jñāna comes out ggān. The plain verb spares you the knot: জানা (jānā) is জা + না, jā-nā, and nothing more.
 
 Grammar Lens: two knowings, and English has one word for both.
 [a table of 2 rows, read aloud]

@@ -4,7 +4,7 @@
   "chapter": 422,
   "title": "The Web Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:614cd773e0e2c97c",
+  "sourceHash": "fnv1a64:1ec55e0aa48588a1",
   "lessons": [
     {
       "id": "ES-C422-pagina-web",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:591e1e48fb8ba7a1",
+      "sourceHash": "fnv1a64:611ba47c5a39be3f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -43,6 +43,16 @@
             {
               "kind": "speech",
               "text": "Say internet and el ordenador. You have the network and you have the machine. Say what is missing: the thing you actually look at."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write two lines about yesterday where the second needs the first, joined by y: Ayer fui a la tienda y comí pan."
             }
           ]
         },

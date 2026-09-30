@@ -291,6 +291,9 @@ if [[ -n "$flutter_platform" ]] && has_command flutter; then
     cd "$output_root/flutter"
     flutter pub get
     flutter analyze lib
+    # RUST_BACKTRACE: a panic in the native bridge (it runs in-process under
+    # `flutter test`) otherwise reports only a message, with no location.
+    RUST_BACKTRACE=1 \
     VENTURE_BOOKMARKS_PATH="$flutter_bookmarks_path" \
     VENTURE_BROWSER_FLUTTER_LIBRARY="$output_root/flutter/$flutter_bridge_name" \
       flutter test test/venture_chrome_interaction_test.dart

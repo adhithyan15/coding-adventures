@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Lo Siento",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:24cf4cea611e1147",
+  "sourceHash": "fnv1a64:7457ea1333b4ebc1",
   "lessons": [
     {
       "id": "ES-C20-lo-siento",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bbdcd22effd0fc7",
+      "sourceHash": "fnv1a64:0a84d625217a0743",
       "notice": null,
       "blocks": [
         {
@@ -147,6 +147,16 @@
             {
               "kind": "speech",
               "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One from the commands before you apologise: to a friend, come; to a stranger, coma, por favor. Spanish spends its politeness on the choice of person, not on padding."
             }
           ]
         },

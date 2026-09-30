@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:ea45cccd08dffc6d",
+  "lessonIds": [
+    "HI-C211-catni",
+    "HI-C211-masala",
+    "HI-C211-haldi",
+    "HI-C211-dhaniya",
+    "HI-C211-nibu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch211.txt",
+  "json": "hindi/narration/ch211.json",
+  "textHash": "fnv1a64:bf4a174ee19f4873",
+  "jsonHash": "fnv1a64:101d86935a6cb20d",
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 131,
-  "sourceHash": "fnv1a64:6864c4c055fcd51d",
+  "sourceHash": "fnv1a64:2e63eeb5cc42a28e",
   "lessonIds": [
     "ES-C50-habla"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 0,
   "text": "spanish/narration/ch131.txt",
   "json": "spanish/narration/ch131.json",
-  "textHash": "fnv1a64:ed339550c905711f",
-  "jsonHash": "fnv1a64:dcbd335c119d7e08",
+  "textHash": "fnv1a64:7a9f94ad05eedc7f",
+  "jsonHash": "fnv1a64:aeca883cb0a488bf",
   "findings": []
 }

@@ -95,6 +95,6 @@ a syllable planted inside (*jā-nā-ti*). Prefix one and you aim it: *ā-gacchat
 [PAUSE 3s] What is the root of *jānāti*, and what does its class insert?
 (**ज्ञा** *jñā*; the syllable **-ना-**.) Give the six verbs of this chapter.
 (*Asti*, *gacchati*, *āgacchati*, *khādati*, *paśyati*, *jānāti*.) Which two are
-one root plus a prefix? (**गच्छति** and **आगच्छति**.) Which Sanskrit root is
+one root plus a prefix? (*gacchati* and *āgacchati*.) Which Sanskrit root is
 English *know*? (**ज्ञा**.) And which English words carry *gam*, *ad*, *paś*, and
 *bhū*? (*Come*, *eat*, *inspect*, *be* — four roots you now own in two languages.)

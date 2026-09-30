@@ -1,0 +1,11 @@
+{
+  "id": "HI-R167-second-pass-rent-dates-and-rooms",
+  "pathSegment": "HI-PATH-167-READ167",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-167-READ167",
+      "order": 6
+    }
+  ]
+}

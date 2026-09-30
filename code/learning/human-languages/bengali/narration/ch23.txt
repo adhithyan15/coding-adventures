@@ -34,7 +34,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What did লাল (lal) originally name, before it meant "red"? (A deep red gemstone.) Did Bengali and Hindi each invent this word separately? (No — both borrowed the identical Persian loan.) One more reach: give the polite excuse-me again, and its softening tense. (মাফ করবেন — the future, "you will do.")
+What did লাল (lal) originally name, before it meant "red"? (A deep red gemstone.) Did Bengali and Hindi each invent this word separately? (No — both borrowed the identical Persian loan.) One more reach: give the polite excuse-me again, and its softening tense. (maf korben — the future, "you will do.")
 
 
 Lesson 2 of 5.
@@ -125,7 +125,7 @@ The letters in this word.
 সাদা (shada) is স (sô, carrying its familiar tilt to sh) with the vowel sign া (ā), plus দ (dô) with the vowel sign া (ā) again: shā-dā.
 
 The word, taken apart.
-সাদা (shada) is usually traced to Sanskrit শ্বেত (śveta), "white," worn down through Middle Bengali into today's everyday word — a tadbhava, the same road মুখ's own twin travelled, only in reverse: here the tadbhava is the common word and the tatsama, শ্বেত (śveto), survives kept whole inside compounds, like শ্বেতাঙ্গ (śvetāngo), "pale-skinned."
+সাদা (shada) is usually traced to Sanskrit śveta, "white," worn down through Middle Bengali into today's everyday word — a tadbhava, the same road মুখ's own twin travelled, only in reverse: here the tadbhava is the common word and the tatsama, śveto, survives kept whole inside compounds, like śvetāngo, "pale-skinned."
 This is the one color where Bengali and Hindi genuinely part ways. Every other color word met so far — the borrowed gem-name, the indigo plant, the time-word — Bengali and Hindi share outright. For white, Hindi replaced its own Sanskrit-derived word with a Persian loan, safed. Bengali did not: it kept the native word as its everyday one, and the Persian loan never took hold here the way it did next door.
 
 Guided Practice.
@@ -141,7 +141,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is সাদা (shada) a tatsama, kept whole, or a tadbhava, worn down by sound change? (A tadbhava — its tatsama twin, শ্বেত, survives only in compounds, the same split মুখ's own twin showed.) Of the colors met so far, which one did Hindi replace with a Persian loan while Bengali kept the native word? (White — Hindi's safed against Bengali's সাদা (shada).)
+Is সাদা (shada) a tatsama, kept whole, or a tadbhava, worn down by sound change? (A tadbhava — its tatsama twin, śveto, survives only in compounds, the same split মুখ's own twin showed.) Of the colors met so far, which one did Hindi replace with a Persian loan while Bengali kept the native word? (White — Hindi's safed against Bengali's সাদা (shada).)
 
 
 Lesson 5 of 5.
@@ -162,7 +162,7 @@ The letters in this word.
 
 The word, taken apart.
 সবুজ (shobuj) is borrowed from Persian sabz, "green" — the very same Persian word that gave Hindi and Urdu their word for "vegetable," sabzī, literally "the green things." লাল (lal)'s own Persian gem-name arrived by the same route, from the same trading world, into a different corner of the vocabulary.
-Step back and count the five colors this small set has taught: two Persian loans (লাল (lal), সবুজ (shobuj)), two Sanskrit words kept recognizably close to their root (নীল (nil), কালো (kalo)), and one worn down by sound change (সাদা (shada)). A more even split between inherited and borrowed than the food words or the family words showed — color, it turns out, came into Bengali from everywhere at once.
+Step back and count the five colors this small set has taught: two Persian loans (লাল (lal), সবুজ (shobuj)), two Sanskrit words kept recognizably close to their root (nil, কালো (kalo)), and one worn down by sound change (সাদা (shada)). A more even split between inherited and borrowed than the food words or the family words showed — color, it turns out, came into Bengali from everywhere at once.
 
 Guided Practice.
 [pause 1 second]
@@ -177,4 +177,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Persian word gives both সবুজ (shobuj) and Hindi's word for "vegetable"? (sabz, "green" — Hindi's sabzī is literally "the green things.") Of the five colors, how many are Persian loans, how many are Sanskrit words, and how many are worn down by sound change? (Two, two, and one — লাল (lal) and সবুজ (shobuj); নীল (nil) and কালো (kalo); সাদা (shada).) Name all five colors, in order. (লাল (lal), নীল (nil), কালো (kalo), সাদা (shada), সবুজ (shobuj).)
+What Persian word gives both সবুজ (shobuj) and Hindi's word for "vegetable"? (sabz, "green" — Hindi's sabzī is literally "the green things.") Of the five colors, how many are Persian loans, how many are Sanskrit words, and how many are worn down by sound change? (Two, two, and one — লাল (lal) and সবুজ (shobuj); nil and কালো (kalo); সাদা (shada).) Name all five colors, in order. (লাল (lal), nil, কালো (kalo), সাদা (shada), সবুজ (shobuj).)

@@ -114,7 +114,7 @@ Grammar Lens: the harmony, on a third vowel.
 [a table of 2 rows, read aloud]
 Bengali: আমি পড়ি. said: poṛi — the -i lifts the vowel.
 Bengali: সে পড়ে. said: pôṛe — the open inherent vowel stands.
-Third verb, third pair, one law: the high -i of "I" pulls the stem vowel up after it. দেখি against দেখে, বুঝি against বোঝে, পড়ি against পড়ে.
+Third verb, third pair, one law: the high -i of "I" pulls the stem vowel up after it. দেখি against দেখে, bujhi against bojhe, পড়ি against পড়ে.
 
 Guided Practice.
 [pause 1 second]
@@ -141,7 +141,7 @@ Four chapters ago you said dækhā hôbe and were told it meant "a seeing will h
 
 You'll want to know: লেখা.
 লেখা — lekhā — to write.
-আমি লিখি (āmi likhi), "I write." সে লেখে (se lekhe), "he writes." The harmony, written down as in বুঝি: -i lifts ে to ি.
+আমি লিখি (āmi likhi), "I write." সে লেখে (se lekhe), "he writes." The harmony, written down as in bujhi: -i lifts ে to ি.
 
 The letters in this word.
 লেখা (lekhā) is লে (le) + খা (khā). ল is a clear l; খ the puffed kh you own from খাওয়া.
@@ -153,9 +153,9 @@ Ask English the same. Latin scrībere, behind scribe, also began as "to scratch"
 Grammar Lens: the dictionary form is also a noun.
 [a table of 3 rows, read aloud]
 the same word: লেখা (lekhā). as a verb: to write. as a noun: a piece of writing.
-the same word: পড়া (pôṛā). as a verb: to read. as a noun: study, homework.
+the same word: pôṛā. as a verb: to read. as a noun: study, homework.
 the same word: দেখা. as a verb: to see. as a noun: a seeing, a meeting.
-Every -া form you have met does this. That is what Chapter 7's দেখা হবে was: not "we will see" but "a seeing will happen." It also builds nouns straight out of verbs — লেখাপড়া (lekhāpôṛā), "writing-reading," is the ordinary word for education. And the causative from three lessons back still runs on top: লেখানো (lekhāno), "to get something written."
+Every -া form you have met does this. That is what Chapter 7's দেখা হবে was: not "we will see" but "a seeing will happen." It also builds nouns straight out of verbs — lekhāpôṛā, "writing-reading," is the ordinary word for education. And the causative from three lessons back still runs on top: লেখানো (lekhāno), "to get something written."
 
 Guided Practice.
 [pause 1 second]
@@ -163,7 +163,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the chapter's four — "bhābā, bojhā, pôṛā, lekhā"]
 [pause 8 seconds for the answer]
-[your turn — say: education, flapping the ড় — "lekhāpôṛā" — then "lekhāno," get it written]
+[your turn — say: education, flapping the ṛ — "lekhāpôṛā" — then "lekhāno," get it written]
 [pause 8 seconds for the answer]
 [your turn — say: the five you could already write — "ek, dui, tin, chār, pā̃ch" — and which one wears the chandrabindu]
 [pause 8 seconds for the answer]

@@ -42,7 +42,7 @@ two new letters.
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C01-NAMASKAR-01]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
-- [नमस्ते](./HI-C01-namaste.md) — you already know **न म स**, the *halant*,
+- [*namaste*](./HI-C01-namaste.md) — you already know **न म स**, the *halant*,
   and how consonants carry "a."
 
 ## The letters in this word
@@ -62,9 +62,9 @@ with the *halant* on स). Left to right: **न·म·स्·का·र** →
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASKAR-01] -->
 
-**नमस्कार** = **नमः** (*namaḥ*, "a bow," from root **नम्** *nam*, as in
+**नमस्कार** = *namaḥ* ("a bow," from root **नम्** *nam*, as in
 *namaste*) + **कार** (*kāra*, "the making or doing of" — from the Sanskrit root
-**कृ** *kṛ*, "to do, make"). So *namaskār* is literally **"the making of a
+*kṛ*, "to do, make"). So *namaskār* is literally **"the making of a
 bow," "the act of homage."** Where *namaste* says "bow to *you*," *namaskār*
 names the bow itself — a touch more formal and ceremonial.
 

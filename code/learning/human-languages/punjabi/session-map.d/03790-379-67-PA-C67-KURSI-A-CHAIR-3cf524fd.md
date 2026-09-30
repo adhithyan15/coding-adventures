@@ -1,0 +1,1 @@
+| 379 | 67 | PA-C67-kursi | a chair |

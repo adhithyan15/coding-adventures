@@ -54,11 +54,11 @@ again: *shā-dā*.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C12-MUKH-01] -->
 
-**সাদা** is usually traced to Sanskrit **শ্বেত** (*śveta*), "white," worn
+**সাদা** is usually traced to Sanskrit *śveta*, "white," worn
 down through Middle Bengali into today's everyday word — a **tadbhava**,
 the same road মুখ's own twin travelled, only in reverse: here the tadbhava
-is the common word and the **tatsama**, **শ্বেত** (*śveto*), survives kept
-whole inside compounds, like **শ্বেতাঙ্গ** (*śvetāngo*), "pale-skinned."
+is the common word and the **tatsama**, *śveto*, survives kept
+whole inside compounds, like *śvetāngo*, "pale-skinned."
 
 This is the one color where Bengali and Hindi genuinely part ways. Every
 other color word met so far — the borrowed gem-name, the indigo plant, the
@@ -80,7 +80,7 @@ took hold here the way it did next door.
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C14-SHADA-01, BN-LEX-C12-MUKH-01] -->
 
 [PAUSE 3s] Is সাদা a tatsama, kept whole, or a tadbhava, worn down by sound
-change? (**A tadbhava** — its tatsama twin, শ্বেত, survives only in
+change? (**A tadbhava** — its tatsama twin, *śveto*, survives only in
 compounds, the same split মুখ's own twin showed.) Of the colors met so far,
 which one did Hindi replace with a Persian loan while Bengali kept the
 native word? (**White** — Hindi's *safed* against Bengali's সাদা.)

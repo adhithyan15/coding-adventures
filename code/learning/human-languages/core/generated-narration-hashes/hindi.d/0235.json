@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:d5eb7100371639e5",
+  "lessonIds": [
+    "HI-C235-upar",
+    "HI-C235-nice",
+    "HI-C235-age",
+    "HI-C235-piche",
+    "HI-C235-andar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch235.txt",
+  "json": "hindi/narration/ch235.json",
+  "textHash": "fnv1a64:82fd309b9c6a9411",
+  "jsonHash": "fnv1a64:73a9104858b31c77",
+  "findings": []
+}

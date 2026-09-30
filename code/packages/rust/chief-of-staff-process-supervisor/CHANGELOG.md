@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Fix a race that masked a child exiting before `Ready` as a clean exit.  When
+  `refresh` saw the child had exited, it settled on `Exited` without waiting
+  for the stdout reader thread, so an end-of-stream failure the reader had not
+  yet queued was never read and `inspect` kept returning `Ok(Exited)`.  This
+  failed `wrong_ready_and_exit_before_ready_fail_closed` intermittently on
+  macOS CI.  `refresh` now joins the reader and drains its last events before
+  finishing the exit, so the failure surfaces (fail closed) every time.
 - Carry binding-authorized model-tool catalog discovery through the child stream
   helper and prove the seventh authenticated data-plane operation over the real
   signed-package child pipe.

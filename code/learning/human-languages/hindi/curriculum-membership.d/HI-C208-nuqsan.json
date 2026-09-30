@@ -1,0 +1,11 @@
+{
+  "id": "HI-C208-nuqsan",
+  "pathSegment": "HI-PATH-208-THG208",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-208-THG208",
+      "order": 0
+    }
+  ]
+}

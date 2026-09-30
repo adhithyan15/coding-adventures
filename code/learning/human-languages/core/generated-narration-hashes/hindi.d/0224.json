@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:5017253ec7a5ca03",
+  "lessonIds": [
+    "HI-C224-balla",
+    "HI-C224-jit",
+    "HI-C224-har",
+    "HI-C224-tim",
+    "HI-C224-daur",
+    "HI-R224-first-pass-words-from-chapters-218-220",
+    "HI-R224-second-pass-words-from-chapters-221-224"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch224.txt",
+  "json": "hindi/narration/ch224.json",
+  "textHash": "fnv1a64:90d16a298a4d6f28",
+  "jsonHash": "fnv1a64:79b3d1a616317b9e",
+  "findings": []
+}

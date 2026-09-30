@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-166-READ166",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a notice, a short message, opening times, an advert and a repair note, and act on what they say.",
+  "prerequisites": []
+}

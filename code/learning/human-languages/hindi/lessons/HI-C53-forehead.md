@@ -45,7 +45,7 @@ reviews_of: [HI-C53-knee]
 
 From Sanskrit मस्तक (*mastaka*), 'head'. The everyday word narrowed as it wore down: what meant the whole head now means the front of it.
 
-मस्तक itself is still in Hindi, unworn, in formal and literary registers. So you have another register doublet of the kind you met with सुबह beside प्रभात — the same ancestor arriving twice, once eroded and everyday, once intact and bookish.
+मस्तक itself is still in Hindi, unworn, in formal and literary registers. So you have another register doublet of the kind you met with सुबह beside *prabhāt* — the same ancestor arriving twice, once eroded and everyday, once intact and bookish.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

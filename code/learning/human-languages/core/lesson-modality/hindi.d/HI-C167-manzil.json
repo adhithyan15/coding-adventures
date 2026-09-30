@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C167-manzil",
+    "language": "hindi",
+    "chapter": 167,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06df04c69875cd77"
+  },
+  "findings": []
+}

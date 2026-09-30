@@ -1,0 +1,11 @@
+{
+  "id": "HI-C203-sangrahalay",
+  "pathSegment": "HI-PATH-203-THG203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-203-THG203",
+      "order": 1
+    }
+  ]
+}

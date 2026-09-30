@@ -73,14 +73,14 @@ Warm-up.
 The everyday "how are you?" — and the first time Bengali brings back a verb "to be."
 
 The letters in this word.
-The new word is আছো (āchho, "are you"), from the verb আছা (āchhā, "to be, to exist, to have") + the familiar-you ending -ও (-o). Note the ছ (chh) — a breathy ch.
+The new word is আছো (āchho, "are you"), from the verb আছা (āchhā, "to be, to exist, to have") + the familiar-you ending -o. Note the ছ (chh) — a breathy ch.
 
 The phrase, taken apart.
 তুমি কেমন আছো? (tumi kēmon āchho?) = তুমি (tumi, familiar "you") + কেমন (kēmon, "how").
 আছো (āchho, "are") — "you how are?", the verb last.
 
 Grammar Lens: now the copula returns.
-In Chapter 3, Bengali dropped "is": āmār nām Arun ("my name Arun"). That zero copula works for equations (X is Y). But "how are you?" asks about a state — how you exist — and for that Bengali uses a real verb, আছা (āchhā). So: no verb for "my name is Arun," a real verb for "how are you." Respectful form: আপনি কেমন আছেন? (āpni kēmon āchhen? — āchhen for āpni). Match the "you" to the verb-ending.
+In Chapter 3, Bengali dropped "is": āmār nām Arun ("my name Arun"). That zero copula works for equations (X is Y). But "how are you?" asks about a state — how you exist — and for that Bengali uses a real verb, আছা (āchhā). So: no verb for "my name is Arun," a real verb for "how are you." Respectful form: āpni kēmon āchhen? (āchhen for āpni). Match the "you" to the verb-ending.
 
 Guided Practice.
 [pause 1 second]
@@ -112,7 +112,7 @@ The word, taken apart.
 ভালো (bhālo, "good, well, fine") is the everyday Bengali "good" — likely from Sanskrit bhadra ("good, auspicious, gentle"), worn down over centuries into bhālo. It is one of the most-used words in the language: bhālo lāge ("[I] like it"), bhālobāsā ("love," literally "good-dwelling").
 
 The exchange — the reply.
-With the āchhā verb: আমি ভালো আছি (āmi bhālo āchhi) — "I am well" (āchhi = "I am/exist"). The whole exchange:
+With the āchhā verb: āmi bhālo āchhi — "I am well" (āchhi = "I am/exist"). The whole exchange:
 — tumi kēmon āchho? ("How are you?") — āmi bhālo āchhi, dhônnobad. ("I'm well, thank you.")
 
 Guided Practice.

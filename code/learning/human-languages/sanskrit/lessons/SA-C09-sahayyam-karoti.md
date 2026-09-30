@@ -68,7 +68,7 @@ written **-ं**: *sāhāyyaṁ karoti*.
 <!-- hl-knowledge: introduces=[SA-ETYMON-SAHAYA-GOES-WITH]; assesses=[SA-GRAMMAR-UPASARGA-PREFIX] -->
 
 **साहाय्य** is built on **सहाय** (*sahāya*), "a companion" — **सह** (*saha*),
-"with," plus **आय**, from the root **इ** (*i*), "to go." A helper is *one who
+"with," plus **आय**, from the root *i*, "to go." A helper is *one who
 goes along with you*. Sanskrit leaves such seams showing, the way **संस्कृत** is
 *sam* "together" on **कृ**.
 

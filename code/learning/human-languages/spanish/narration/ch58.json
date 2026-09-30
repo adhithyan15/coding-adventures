@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Grande --- the First Word for What a Thing Is Like",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f72039c5d3c00ef3",
+  "sourceHash": "fnv1a64:93a876997067aeb6",
   "lessons": [
     {
       "id": "ES-C09-grande",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55a0d7962c5affee",
+      "sourceHash": "fnv1a64:b0990fbc141a834f",
       "notice": null,
       "blocks": [
         {
@@ -46,6 +46,16 @@
             {
               "kind": "speech",
               "text": "You still cannot say what anything is like. That starts here."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Estáis: you all are, in Spain. The plain -ar ending, with the stress on it."
             }
           ]
         },

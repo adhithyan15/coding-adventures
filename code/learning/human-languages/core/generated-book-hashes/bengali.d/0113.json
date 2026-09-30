@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:79ac20a84a7b8f67",
+  "lessonIds": [
+    "BN-C113-kuyo",
+    "BN-C113-kada",
+    "BN-C113-dhulo",
+    "BN-C113-bojro",
+    "BN-C113-rongdhonu"
+  ],
+  "tex": "bengali/book/chapters/ch113-well-mud-dust-thunder-rainbow.tex"
+}

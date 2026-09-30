@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:5c277fc25a79d21d",
+  "lessonIds": [
+    "BN-C107-bati",
+    "BN-C107-hari",
+    "BN-C107-korai",
+    "BN-C107-kolsi",
+    "BN-C107-balti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch107.txt",
+  "json": "bengali/narration/ch107.json",
+  "textHash": "fnv1a64:71ab69a3199d6c40",
+  "jsonHash": "fnv1a64:ceda3d22cc818faf",
+  "findings": []
+}

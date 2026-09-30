@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C129-girja",
+    "language": "bengali",
+    "chapter": 129,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9228289ee5277286"
+  },
+  "findings": []
+}

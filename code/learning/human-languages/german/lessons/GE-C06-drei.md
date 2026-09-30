@@ -8,21 +8,21 @@ type: word
 headword: drei
 gloss: three — the same word, with th worn down to d
 concept_tag: GE-NUM-THREE
-prerequisites: [GE-C06-zwei, GE-C05-lernen]
+prerequisites: [GE-C06-zwei, GE-C05-lernen, GE-C05-was]
 sounds: [diphthong-ei, r-uvular-german]
 roots: [thrijiz-germanic]
 etymology_hook: "drei is English three with th flattened to d, the same swap behind the and der, that and das, thank and danke"
 duration:
   max_seconds: 180
 requires:
-  knowledge: [GE-LEX-ZWEI-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-LERNEN-01, GE-LEX-DER-DIE-DAS-02]
+  knowledge: [GE-LEX-ZWEI-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-LERNEN-01, GE-LEX-DER-DIE-DAS-02, GE-LEX-WAS-MACHST-DU-02]
 introduces:
   knowledge: [GE-LEX-DREI-01, GE-ETYMON-DREI-THREE-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-ZWEI-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-LERNEN-01, GE-LEX-DREI-01, GE-LEX-DER-DIE-DAS-02, GE-ETYMON-DREI-THREE-02]
+  knowledge: [GE-LEX-ZWEI-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-LERNEN-01, GE-LEX-DREI-01, GE-LEX-DER-DIE-DAS-02, GE-ETYMON-DREI-THREE-02, GE-LEX-WAS-MACHST-DU-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,11 +34,13 @@ reviews_of: [GE-C06-zwei, GE-C05-lernen]
 # drei — "three," and German's missing *th*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZWEI-01, GE-SOUND-EI-AS-EYE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ZWEI-01, GE-SOUND-EI-AS-EYE-01, GE-LEX-WAS-MACHST-DU-02] -->
 
 [PAUSE 2s] Third number, third *ei*. And it shows you something that will keep
 paying: German has no **th** sound at all, and you can predict what it uses
 instead.
+
+[PAUSE 2s] *Was machst du?* Question word, then verb, then subject, and no *do*.
 
 ## You'll want to know: drei
 <!-- hl-knowledge: introduces=[GE-LEX-DREI-01]; assesses=[GE-SOUND-EI-AS-EYE-01, GE-SOUND-LERNEN-01] -->

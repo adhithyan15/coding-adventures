@@ -67,7 +67,7 @@ warmth this book already located in **হৃদয়**, the heart.
 ## Grammar Lens: করা wears a new outfit
 <!-- hl-knowledge: introduces=[BN-GRAMMAR-C13-KORE-02]; assesses=[BN-GRAMMAR-C09-KORA-02] -->
 
-Noun plus করা already builds a verb — কাজ করা, "to work"; জিজ্ঞাসা করা, "to
+Noun plus করা already builds a verb — কাজ করা, "to work"; *jijñāsā kôrā*, "to
 ask." Here করা takes a different shape, **করে**, "having done": not a full
 sentence on its own, but a piece that leans on the next word.
 

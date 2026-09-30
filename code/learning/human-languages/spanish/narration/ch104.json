@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "The Regular Preterite",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4012f8d574efec0d",
+  "sourceHash": "fnv1a64:f403fc1b97fc4b35",
   "lessons": [
     {
       "id": "ES-C15-comer-preterite",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7ce09693fd0e560",
+      "sourceHash": "fnv1a64:e6010ff2e6abfa01",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "You know present como, comes, come and the singular -ar past. To make a completed past from comer, keep com- and learn three forms: comí, comiste, comió."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablé, hablaste, habló: the -ar past carries on the Latin perfect, amāvī, amāvistī, amāvit."
             }
           ]
         },

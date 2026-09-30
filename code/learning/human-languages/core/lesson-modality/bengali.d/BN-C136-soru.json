@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C136-soru",
+    "language": "bengali",
+    "chapter": 136,
+    "sequence": 7420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7987559fda03674"
+  },
+  "findings": []
+}

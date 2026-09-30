@@ -1,0 +1,11 @@
+{
+  "id": "HI-R167-first-pass-notices-and-messages",
+  "pathSegment": "HI-PATH-167-READ167",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-167-READ167",
+      "order": 5
+    }
+  ]
+}

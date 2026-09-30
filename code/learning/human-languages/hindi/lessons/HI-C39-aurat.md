@@ -52,7 +52,7 @@ Consonant ending, feminine — as **चाय**, **किताब** and **आ�
 spelling. Where you *can* hear the agreement is on the child: **मेरा बच्चा**,
 **मेरी बच्ची**, the yearling who takes the ending seriously.
 
-The family: **पिता**, **माता**, **भाई**, **बहन**, **बच्चा**, **आदमी**, **औरत**
+The family: **पिता**, **माता**, *bhāī*, **बहन**, **बच्चा**, **आदमी**, **औरत**
 — and the chosen one, **दोस्त**.
 
 ## The word, taken apart: औरत

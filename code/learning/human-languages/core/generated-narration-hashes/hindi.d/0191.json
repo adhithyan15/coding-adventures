@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:5d863a19ab642227",
+  "lessonIds": [
+    "HI-C191-hafta",
+    "HI-C191-sal",
+    "HI-C191-sadi",
+    "HI-C191-pal",
+    "HI-C191-minit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch191.txt",
+  "json": "hindi/narration/ch191.json",
+  "textHash": "fnv1a64:1c0b8315ba9acb32",
+  "jsonHash": "fnv1a64:ae3cf6ecd6182f46",
+  "findings": []
+}

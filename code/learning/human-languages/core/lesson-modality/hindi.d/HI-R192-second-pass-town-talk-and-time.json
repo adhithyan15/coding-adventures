@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R192-second-pass-town-talk-and-time",
+    "language": "hindi",
+    "chapter": 192,
+    "sequence": 9420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d540e20a0c6cc5a4"
+  },
+  "findings": []
+}

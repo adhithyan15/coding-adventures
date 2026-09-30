@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "The Imperfect --- What Used to Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:bf55ade65be42742",
+  "sourceHash": "fnv1a64:f602af152bf5f12b",
   "lessons": [
     {
       "id": "ES-C16-imperfecto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b58503e6d3db94ee",
+      "sourceHash": "fnv1a64:e3d575e4d506f34a",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Hablé español presents speaking as a completed past event. A different past, the imperfect, can leave the action open: Hablaba español — “I was speaking Spanish” or “I used to speak Spanish.” The sentence does not say where the action ended."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ayer hablé. The time frame comes first, and the verb follows it into the past."
             }
           ]
         },

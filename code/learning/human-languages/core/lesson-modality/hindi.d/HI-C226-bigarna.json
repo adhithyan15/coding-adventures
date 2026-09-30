@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C226-bigarna",
+    "language": "hindi",
+    "chapter": 226,
+    "sequence": 11840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22cec1843b8a1589"
+  },
+  "findings": []
+}

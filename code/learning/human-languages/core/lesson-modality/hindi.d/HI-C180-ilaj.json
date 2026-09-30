@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C180-ilaj",
+    "language": "hindi",
+    "chapter": 180,
+    "sequence": 8680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4ff7d28b485c7d6"
+  },
+  "findings": []
+}

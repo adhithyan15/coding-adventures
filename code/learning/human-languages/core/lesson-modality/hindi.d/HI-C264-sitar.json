@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C264-sitar",
+    "language": "hindi",
+    "chapter": 264,
+    "sequence": 14490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8422164430bc1cb1"
+  },
+  "findings": []
+}

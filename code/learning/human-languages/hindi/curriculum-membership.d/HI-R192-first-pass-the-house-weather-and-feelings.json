@@ -1,0 +1,11 @@
+{
+  "id": "HI-R192-first-pass-the-house-weather-and-feelings",
+  "pathSegment": "HI-PATH-192-FREQ192",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-192-FREQ192",
+      "order": 5
+    }
+  ]
+}

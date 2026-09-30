@@ -8,21 +8,21 @@ type: word
 headword: der Kopf
 gloss: the head — masculine, capitalised, with final pf
 concept_tag: GE-BODY-HEAD
-prerequisites: [GE-C01-der-die-das]
+prerequisites: [GE-C01-der-die-das, GE-C16-partizip-attributiv]
 sounds: [final-devoicing]
 roots: [latin-cuppa]
 etymology_hook: "Kopf first meant cup or bowl, from the same Late Latin cuppa source as English cup"
 duration:
   max_seconds: 175
 requires:
-  knowledge: []
+  knowledge: [GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01]
 introduces:
   knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04]
+  knowledge: [GE-LEX-KOPF-02, GE-SOUND-KOPF-03, GE-COMPOUND-KOPFSCHMERZEN-04, GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [GE-C01-der-die-das, GE-W03-capitalization]
 # Der Kopf — “the head”
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PARTIZIP-ATTRIBUTIV-01] -->
 
 [PAUSE 2s] Learn the first body part with its article and its characteristic
 final sound.
+
+[PAUSE 2s] In front of a noun, a participle takes an ending like an adjective: *der angekommene Zug*, *ein geschriebener Brief*.
 
 ## You'll want to know: der Kopf
 <!-- hl-knowledge: introduces=[GE-LEX-KOPF-02]; assesses=[] -->

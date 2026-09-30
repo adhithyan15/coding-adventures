@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Tener in the Plural, and the Stem-Change Rule",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:713fb61fe4a7123a",
+  "sourceHash": "fnv1a64:b4524fbcd0435a5f",
   "lessons": [
     {
       "id": "ES-C08-tenemos",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1162a7eedee699e5",
+      "sourceHash": "fnv1a64:1ebda245bcee2d39",
       "notice": null,
       "blocks": [
         {
@@ -185,6 +185,16 @@
             {
               "kind": "speech",
               "text": "Say \"we have\", then \"you have\" to a friend. (Tenemos, tienes.) Which one has the broken stem?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the break comes back: tenemos, tenéis. Plain e, because the stress sits on the ending."
             }
           ]
         },

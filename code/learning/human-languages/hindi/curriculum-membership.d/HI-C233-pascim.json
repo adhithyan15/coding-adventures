@@ -1,0 +1,11 @@
+{
+  "id": "HI-C233-pascim",
+  "pathSegment": "HI-PATH-233-LOC233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-233-LOC233",
+      "order": 3
+    }
+  ]
+}

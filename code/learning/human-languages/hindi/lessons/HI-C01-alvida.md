@@ -42,7 +42,7 @@ Arabic grammar you may have met from the other side.
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C01-ALVIDA-01]; assesses=[HI-CONCEPT-C01-SHUKRIYA-01] -->
 
-- [शुक्रिया](./HI-C01-shukriya.md) — Hindi's Persian/Arabic layer; here's
+- [*shukriyā*](./HI-C01-shukriya.md) — Hindi's Persian/Arabic layer; here's
   another word from it.
 
 ## The letters in this word

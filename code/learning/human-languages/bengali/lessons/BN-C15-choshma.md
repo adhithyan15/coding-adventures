@@ -61,7 +61,7 @@ eye lesson once named as চোখ's only named cousin outside the Indo-Aryan
 family, with no secure English descendant claimed for চোখ itself. চশমা
 takes that word and adds a suffix that turns "eye" into "eye-thing":
 **spectacles**, the thing that sits in front of your eyes. Bengali did not
-build this the way it built জিজ্ঞাসা করা or সাহায্য করা, by hanging করা on a
+build this the way it built *jijñāsā kôrā* or সাহায্য করা, by hanging করা on a
 noun; it took a ready-made South Asian coinage on a Persian root, the same
 formation Hindi and Urdu also use.
 

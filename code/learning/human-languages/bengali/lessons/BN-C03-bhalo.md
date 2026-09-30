@@ -52,7 +52,7 @@ lāge* ("[I] like it"), *bhālobāsā* ("love," literally "good-dwelling").
 ## The exchange — the reply
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
-With the *āchhā* verb: **আমি ভালো আছি** (*āmi bhālo āchhi*) — "**I am well**"
+With the *āchhā* verb: *āmi bhālo āchhi* — "**I am well**"
 (*āchhi* = "I am/exist"). The whole exchange:
 
 > — *tumi kēmon āchho?* ("How are you?")

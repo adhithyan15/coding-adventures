@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C100-soronjam",
+    "language": "bengali",
+    "chapter": 100,
+    "sequence": 5330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b134dc1ca501a0fd"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Profesor --- and the Article Spanish Leaves Out",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ecbed3cd4f8c48c3",
+  "sourceHash": "fnv1a64:76f325cc81ddd6dc",
   "lessons": [
     {
       "id": "ES-C09-profesor",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6e7239aa86895ea",
+      "sourceHash": "fnv1a64:2a21c8581c77ba5c",
       "notice": null,
       "blocks": [
         {
@@ -46,6 +46,16 @@
             {
               "kind": "speech",
               "text": "And then you had nothing to put after it. Today you do."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sois closes ser: soy, eres, es, somos, sois, son."
             }
           ]
         },

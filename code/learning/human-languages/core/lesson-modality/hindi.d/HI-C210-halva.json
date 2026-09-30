@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C210-halva",
+    "language": "hindi",
+    "chapter": 210,
+    "sequence": 10760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f282e25c93267df"
+  },
+  "findings": []
+}

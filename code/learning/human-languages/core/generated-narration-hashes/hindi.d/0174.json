@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:2f642a8a317ca88f",
+  "lessonIds": [
+    "HI-C174-lautana",
+    "HI-C174-sajana",
+    "HI-C174-sabhalna",
+    "HI-C174-sudharna",
+    "HI-C174-tolna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch174.txt",
+  "json": "hindi/narration/ch174.json",
+  "textHash": "fnv1a64:94e946876c6d453b",
+  "jsonHash": "fnv1a64:734d664429e2240d",
+  "findings": []
+}

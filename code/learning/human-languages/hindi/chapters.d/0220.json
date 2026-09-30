@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "A flag, Childhood, Youth, Old age, Life",
+  "label": "ch:hi-a-flag-childhood-youth-old-age-life",
+  "canDo": "I can say a flag, childhood, youth, old age and life.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C220-jivan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: i can say a flag, childhood, youth, old age and life.",
+    "assesses": [
+      "HI-LEX-C220-THG220-03",
+      "HI-LEX-C220-THG220-04",
+      "HI-LEX-C220-THG220-05"
+    ]
+  }
+}

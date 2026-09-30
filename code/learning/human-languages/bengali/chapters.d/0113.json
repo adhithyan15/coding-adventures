@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Well, Mud, Dust, Thunder, Rainbow",
+  "label": "ch:bn-well-mud-dust-thunder-rainbow",
+  "canDo": "I can say a well, mud, dust, thunder and a rainbow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C113-rongdhonu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a well, mud, dust, thunder and a rainbow.",
+    "assesses": [
+      "BN-LEX-C113-THINGS113-03",
+      "BN-LEX-C113-THINGS113-04",
+      "BN-LEX-C113-THINGS113-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C200-sima",
+  "pathSegment": "HI-PATH-200-THG200",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-200-THG200",
+      "order": 3
+    }
+  ]
+}

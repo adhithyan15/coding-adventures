@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:f508b2752eb5d523",
+  "lessonIds": [
+    "BN-C114-kuyasha",
+    "BN-C114-shishir",
+    "BN-C114-shikor",
+    "BN-C114-bij",
+    "BN-C114-kata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch114.txt",
+  "json": "bengali/narration/ch114.json",
+  "textHash": "fnv1a64:5eef00e6d6d560f3",
+  "jsonHash": "fnv1a64:9b07f5a743f3f075",
+  "findings": []
+}

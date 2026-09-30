@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C108-chador",
+    "language": "bengali",
+    "chapter": 108,
+    "sequence": 5720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a11fe4d9b167c09"
+  },
+  "findings": []
+}

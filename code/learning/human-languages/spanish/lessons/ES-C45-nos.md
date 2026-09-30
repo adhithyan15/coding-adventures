@@ -15,11 +15,11 @@ teaches_cells: []
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER]
+  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-GRAMMAR-PODER-PRESENT-PLURAL]
 introduces:
   knowledge: [ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]
 practises:
-  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-TE-QUIERO]
+  knowledge: [ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT, ES-LEX-TE-QUIERO, ES-GRAMMAR-PODER-PRESENT-PLURAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C42-me-objeto, ES-C42-te]
 # nos — "us"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-LEX-TE-QUIERO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-ME-DIRECT-OBJECT, ES-GRAMMAR-TE-DIRECT-OBJECT, ES-LEX-TE-QUIERO, ES-GRAMMAR-PODER-PRESENT-PLURAL] -->
 
 [PAUSE 2s] Say "you love me." (*Me quieres*.) And "I love you." (*Te quiero*.)
 Both of those are about **one** person on the receiving end. Here is more than
 one.
+
+[PAUSE 2s] *Podemos* keeps the plain stem; *pueden* breaks it again. Say both.
 
 ## Grammar Lens: the third person in the room
 <!-- hl-knowledge: introduces=[ES-LEX-NOS-OBJECT, ES-GRAMMAR-NOS-DIRECT-OBJECT]; assesses=[ES-GRAMMAR-QUERER-PRESENT-PLURAL, ES-LEX-QUERER, ES-GRAMMAR-ME-DIRECT-OBJECT] -->

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:ec3067cd3d0ff073",
+  "lessonIds": [
+    "HI-C221-maut",
+    "HI-C221-bhavisya",
+    "HI-C221-atit",
+    "HI-C221-vartaman",
+    "HI-C221-vasant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch221.txt",
+  "json": "hindi/narration/ch221.json",
+  "textHash": "fnv1a64:45f66808ec56efc5",
+  "jsonHash": "fnv1a64:9bb90bd94250d058",
+  "findings": []
+}

@@ -8,21 +8,21 @@ type: word
 headword: kommen
 gloss: to come — English come with one consonant shifted, and the second verb of the sein family
 concept_tag: GE-VERB-COME
-prerequisites: [GE-C16-perfekt-sein]
+prerequisites: [GE-C16-perfekt-sein, GE-C16-wir-waren]
 sounds: [vowel-o, ge-prefix]
 roots: [kwemana-germanic]
 etymology_hook: "kommen IS English come, both from Germanic *kwemaną — the qu- of Latin venire's cousins is still visible in the reconstructed form"
 duration:
   max_seconds: 165
 requires:
-  knowledge: [GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-VERB-ENDINGS-01, GE-GRAMMAR-SEIN-ICH-BIN-01]
+  knowledge: [GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-VERB-ENDINGS-01, GE-GRAMMAR-SEIN-ICH-BIN-01, GE-GRAMMAR-SEIN-WIR-WAREN-01]
 introduces:
   knowledge: [GE-LEX-KOMMEN-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-KOMMEN-01, GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-VERB-ENDINGS-01, GE-GRAMMAR-SEIN-ICH-BIN-01]
+  knowledge: [GE-LEX-KOMMEN-01, GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-VERB-ENDINGS-01, GE-GRAMMAR-SEIN-ICH-BIN-01, GE-GRAMMAR-SEIN-WIR-WAREN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [GE-C16-perfekt-sein, GE-C02-heissen-endungen]
 # kommen — "to come"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-SEIN-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-GRAMMAR-PERFEKT-SEIN-01, GE-GRAMMAR-SEIN-WIR-WAREN-01] -->
 
 [PAUSE 2s] Motion takes *sein*. Here is the motion verb you will use as often
 as *gehen*, and it is an English word you already own.
+
+[PAUSE 2s] *Wir waren*, we were. *Sie waren* and *Sie waren*, polite, use the same form.
 
 ## You'll want to know: kommen
 <!-- hl-knowledge: introduces=[GE-LEX-KOMMEN-01]; assesses=[GE-GRAMMAR-VERB-ENDINGS-01, GE-GRAMMAR-PERFEKT-SEIN-01] -->

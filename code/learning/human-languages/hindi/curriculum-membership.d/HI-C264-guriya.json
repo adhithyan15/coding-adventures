@@ -1,0 +1,11 @@
+{
+  "id": "HI-C264-guriya",
+  "pathSegment": "HI-PATH-264-THG264",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-264-THG264",
+      "order": 4
+    }
+  ]
+}

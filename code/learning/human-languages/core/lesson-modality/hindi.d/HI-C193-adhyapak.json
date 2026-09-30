@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C193-adhyapak",
+    "language": "hindi",
+    "chapter": 193,
+    "sequence": 9520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcbd68f0b30f2b24"
+  },
+  "findings": []
+}

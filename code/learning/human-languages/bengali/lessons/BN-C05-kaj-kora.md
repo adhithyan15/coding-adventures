@@ -53,7 +53,7 @@ do" is, at root, "*kṛ*-thing *kṛ*-do." Like Hindi, Bengali builds compound v
 as **noun + করা**:
 
 - **কাজ করা** (*kāj kôrā*) = "work-do" = "**to work**"
-- **কথা বলা** (*kôthā bôlā*) = "to converse" (using *bôlā* from earlier)
+- *kôthā bôlā* = "to converse" (using *bôlā* from earlier)
 
 So *āmi kāj kôri* = "I work" — the *-i* "I" ending, no gender.
 

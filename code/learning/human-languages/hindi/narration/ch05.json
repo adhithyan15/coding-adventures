@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:649075b12b74693b",
+  "sourceHash": "fnv1a64:96926aee2f59715d",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -174,7 +174,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:35dad878405c2735",
+      "sourceHash": "fnv1a64:82ac62ae38b683f5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -233,7 +233,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मैं दिल्ली में रहता हूँ (maiṁ Dillī meṁ rahtā hūṁ, \"I live in Delhi\"). The little word में (meṁ, \"in\") sits after Delhi, not before — Hindi uses postpositions where English uses prepositions. \"Delhi-in I live.\" The verb, as ever, is last."
+              "text": "maiṁ Dillī meṁ rahtā hūṁ (\"I live in Delhi\"). The little word में (meṁ, \"in\") sits after Delhi, not before — Hindi uses postpositions where English uses prepositions. \"Delhi-in I live.\" The verb, as ever, is last."
             }
           ]
         },
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:30a535dba5865445",
+      "sourceHash": "fnv1a64:d83bbc9fdf609c73",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -362,7 +362,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "करना (karnā, \"to do, to make\") is from Sanskrit √कृ (√kṛ, \"to do, make\") — one of the most productive roots in all of Sanskrit, and from Proto-Indo-European kʷer-. You have met its family already:"
+              "text": "करना (karnā, \"to do, to make\") is from Sanskrit √kṛ (\"to do, make\") — one of the most productive roots in all of Sanskrit, and from Proto-Indo-European kʷer-. You have met its family already:"
             },
             {
               "kind": "speech",
@@ -374,7 +374,7 @@
             },
             {
               "kind": "speech",
-              "text": "संस्कृत (saṃskṛta, \"Sanskrit\") = \"put together, perfected.\""
+              "text": "saṃskṛta (\"Sanskrit\") = \"put together, perfected.\""
             },
             {
               "kind": "speech",
@@ -397,15 +397,15 @@
             },
             {
               "kind": "speech",
-              "text": "बात करना (bāt karnā) = \"talk-do\" = \"to converse\"."
+              "text": "bāt karnā = \"talk-do\" = \"to converse\"."
             },
             {
               "kind": "speech",
-              "text": "इंतज़ार करना (intazār karnā) = \"to wait\"."
+              "text": "intazār karnā = \"to wait\"."
             },
             {
               "kind": "speech",
-              "text": "So मैं काम करता हूँ (maiṁ kām kartā hūṁ) = \"I work\" (lit. \"I work-do am\"). Learn karnā and you unlock a whole grammar of \"do-verbs.\""
+              "text": "So maiṁ kām kartā hūṁ = \"I work\" (lit. \"I work-do am\"). Learn karnā and you unlock a whole grammar of \"do-verbs.\""
             }
           ]
         },
@@ -443,11 +443,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I work\" (m./f.) — मैं काम करता हूँ / करती हूँ (maiṁ kām kartā hūṁ / kartī hūṁ)",
+              "instruction": "\"I work\" (m./f.) — maiṁ kām kartā hūṁ / kartī hūṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I work\" (m./f.) — **मैं काम करता हूँ / करती हूँ** (*maiṁ kām kartā hūṁ / kartī hūṁ*)]"
+              "source": "[YOU SAY: \"I work\" (m./f.) — *maiṁ kām kartā hūṁ / kartī hūṁ*]"
             },
             {
               "kind": "prompt",
@@ -492,7 +492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10babc69aa60e6ce",
+      "sourceHash": "fnv1a64:91718747fcea2c76",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +548,7 @@
               "utterances": [
                 "who: I (a man). the pieces: -ता -tā + हूँ hūṁ. the whole thing: बोलता हूँ boltā hūṁ.",
                 "who: I (a woman). the pieces: -ती -tī + हूँ hūṁ. the whole thing: बोलती हूँ boltī hūṁ.",
-                "who: आप āp (you, respectful). the pieces: -ते -te + हैं haiṁ. the whole thing: बोलते हैं bolte haiṁ."
+                "who: āp (you, respectful). the pieces: -ते -te + हैं haiṁ. the whole thing: बोलते हैं bolte haiṁ."
               ]
             },
             {

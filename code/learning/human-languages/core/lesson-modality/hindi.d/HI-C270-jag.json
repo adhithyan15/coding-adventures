@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C270-jag",
+    "language": "hindi",
+    "chapter": 270,
+    "sequence": 15000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:493aac9f582de6d9"
+  },
+  "findings": []
+}

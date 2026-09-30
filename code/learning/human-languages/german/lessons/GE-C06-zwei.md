@@ -8,21 +8,21 @@ type: word
 headword: zwei
 gloss: two — English two with its t turned into the ts of z
 concept_tag: GE-NUM-TWO
-prerequisites: [GE-C06-eins, GE-C05-wohnen]
+prerequisites: [GE-C06-eins, GE-C05-wohnen, GE-C05-lernen]
 sounds: [z-ts, diphthong-ei]
 roots: [twai-germanic]
 etymology_hook: "zwei is English two: German writes z for a ts sound, and the tw of two is the zw of zwei, which also explains twin and between"
 duration:
   max_seconds: 180
 requires:
-  knowledge: [GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-WOHNEN-01]
+  knowledge: [GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-WOHNEN-01, GE-SOUND-LERNEN-01]
 introduces:
   knowledge: [GE-LEX-ZWEI-01, GE-ETYMON-ZWEI-TWO-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-WOHNEN-01, GE-LEX-ZWEI-01, GE-ETYMON-ZWEI-TWO-02]
+  knowledge: [GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-WOHNEN-01, GE-LEX-ZWEI-01, GE-ETYMON-ZWEI-TWO-02, GE-SOUND-LERNEN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,11 +34,13 @@ reviews_of: [GE-C06-eins]
 # zwei — "two," and the *z* that is a *ts*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-EINS-01, GE-SOUND-EI-AS-EYE-01, GE-SOUND-LERNEN-01] -->
 
 [PAUSE 2s] One down. The second number has the same *ei* you met a moment ago,
 and
 one letter that does not say what an English reader expects.
+
+[PAUSE 2s] *Lernen*: the *r* is a soft scrape at the back of the throat. *LER-nen*.
 
 ## You'll want to know: zwei
 <!-- hl-knowledge: introduces=[GE-LEX-ZWEI-01]; assesses=[GE-SOUND-EI-AS-EYE-01, GE-SOUND-WOHNEN-01] -->

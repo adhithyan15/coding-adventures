@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C195-gayak",
+    "language": "hindi",
+    "chapter": 195,
+    "sequence": 9640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12e8f7b2f68d1be2"
+  },
+  "findings": []
+}

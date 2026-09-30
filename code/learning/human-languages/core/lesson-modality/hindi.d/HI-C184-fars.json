@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C184-fars",
+    "language": "hindi",
+    "chapter": 184,
+    "sequence": 8960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61a19e8b8cade97c"
+  },
+  "findings": []
+}

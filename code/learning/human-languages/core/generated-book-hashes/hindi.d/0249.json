@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:92f045a2b546c1c5",
+  "lessonIds": [
+    "HI-C249-sath",
+    "HI-C249-eksath",
+    "HI-C249-kampyutar",
+    "HI-C249-mobail",
+    "HI-C249-dastavez"
+  ],
+  "tex": "hindi/book/chapters/ch249-with-all-together-a-computer-a-mobile-phone-a-document.tex"
+}

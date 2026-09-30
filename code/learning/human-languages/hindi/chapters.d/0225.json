@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "To clean, To dust, To wipe, To wring, To dry",
+  "label": "ch:hi-to-clean-to-dust-to-wipe-to-wring-to-dry",
+  "canDo": "I can say to clean, to dust, to wipe, to wring and to dry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C225-sukhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: i can say to clean, to dust, to wipe, to wring and to dry.",
+    "assesses": [
+      "HI-LEX-C225-ACT225-03",
+      "HI-LEX-C225-ACT225-04",
+      "HI-LEX-C225-ACT225-05"
+    ]
+  }
+}

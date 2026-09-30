@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Cheese, Egg, Rice, and Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:969e56572ae76a56",
+  "sourceHash": "fnv1a64:95d1d1937758364d",
   "lessons": [
     {
       "id": "PT-C24-queijo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a62627cc95e6be1",
+      "sourceHash": "fnv1a64:46001ccc38e0eb64",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "New chapter, new table. This word is a rare thing in this book: an everyday Portuguese noun whose closest cousin is an everyday English one — not a \"learned\" borrowing like aquatic or annual, but the ordinary word you'd use every day."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Make the plan again: Encontramo-nos no sábado. The nos means each other; in Brazil, nós nos encontramos."
             }
           ]
         },
@@ -146,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06b4fb6e38db7b05",
+      "sourceHash": "fnv1a64:5d26a2ff2e1cfd87",
       "notice": null,
       "blocks": [
         {
@@ -163,6 +173,16 @@
             {
               "kind": "speech",
               "text": "After pão worn to a nasal hum and mão losing its -n- entirely, here is the opposite case: a word Latin handed Portuguese almost unchanged."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Compro o pão. And the trap from before: tenho comprado pão means I have been buying bread lately, not that I bought it once."
             }
           ]
         },

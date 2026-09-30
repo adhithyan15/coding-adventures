@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:4f51a1e05f1bb7ab",
+  "lessonIds": [
+    "BN-C137-golapi",
+    "BN-C137-dukhi",
+    "BN-C137-ragi",
+    "BN-C137-klanto",
+    "BN-C137-sustho",
+    "BN-R137-first-pass-the-body-and-people-at-work",
+    "BN-R137-second-pass-the-town-and-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch137.txt",
+  "json": "bengali/narration/ch137.json",
+  "textHash": "fnv1a64:2deeb97eb3f25056",
+  "jsonHash": "fnv1a64:1c13a25e9ccabdd8",
+  "findings": []
+}

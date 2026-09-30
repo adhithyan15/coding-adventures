@@ -1,0 +1,11 @@
+{
+  "id": "HI-C200-rajdhani",
+  "pathSegment": "HI-PATH-200-THG200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-200-THG200",
+      "order": 2
+    }
+  ]
+}

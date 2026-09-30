@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C124-kopal",
+    "language": "bengali",
+    "chapter": 124,
+    "sequence": 6720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:451a5195c5794220"
+  },
+  "findings": []
+}

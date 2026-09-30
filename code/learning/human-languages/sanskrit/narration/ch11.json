@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:68fcc12a0837104f",
+  "sourceHash": "fnv1a64:c9e59ef0cb892eff",
   "lessons": [
     {
       "id": "SA-C11-mitram",
@@ -689,7 +689,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc9ee0db2f373a6c",
+      "sourceHash": "fnv1a64:3ebbbce625d68b1e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -739,7 +739,7 @@
             },
             {
               "kind": "speech",
-              "text": "Feminine — marked by the -ई you can hear at the end."
+              "text": "Feminine — marked by the -ī you can hear at the end."
             }
           ]
         },
@@ -761,7 +761,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here the pattern breaks. भगिनी (bhaginī) is built on भग (bhaga), \"a share, good fortune,\" plus the feminine suffix -इनी: literally, \"one with a share.\""
+              "text": "Here the pattern breaks. भगिनी (bhaginī) is built on भग (bhaga), \"a share, good fortune,\" plus the feminine suffix -inī: literally, \"one with a share.\""
             },
             {
               "kind": "speech",

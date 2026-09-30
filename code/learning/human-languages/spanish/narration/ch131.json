@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Habla --- Telling Somebody To Do Something",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6864c4c055fcd51d",
+  "sourceHash": "fnv1a64:2e63eeb5cc42a28e",
   "lessons": [
     {
       "id": "ES-C50-habla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d7c8dd4b4abe30be",
+      "sourceHash": "fnv1a64:dc537e3a553a5d6c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -43,6 +43,16 @@
             {
               "kind": "speech",
               "text": "Say \"he speaks.\" (Habla.) Hold that word. You are about to be told it does a second job you have never been shown."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today, on two shores: Spain says hoy he hablado, most of Latin America says hoy hablé. Choose one and keep to it."
             }
           ]
         },

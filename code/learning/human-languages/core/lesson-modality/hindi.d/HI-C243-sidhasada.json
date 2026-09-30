@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C243-sidhasada",
+    "language": "hindi",
+    "chapter": 243,
+    "sequence": 13080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35702edfbfa3933a"
+  },
+  "findings": []
+}

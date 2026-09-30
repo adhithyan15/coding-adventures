@@ -87,5 +87,5 @@ piece by piece? (**"Good" plus "come" — a good arrival.**) Which prefix does
 it share with আসা, and on a different verb this time? (**আ-, "hither"** —
 on √gam here, not আসা's own uncertain stem.) Run this chapter's three other
 new words back: a kindness done, a word for sorrow, and a borrowed pardon.
-(**দয়া করে, দুঃখিত, মাফ করবেন.**) One more reach: what tense softened that
+(*doya kore*, *dukkhito*, *maf korben*.) One more reach: what tense softened that
 pardon into a request? (**Future** — করবেন, "you will do.")

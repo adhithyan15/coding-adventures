@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:db0a8ddb3d4650cf",
+  "lessonIds": [
+    "HI-C236-adha",
+    "HI-C236-pura",
+    "HI-C236-dugna",
+    "HI-C236-alag",
+    "HI-C236-gol"
+  ],
+  "tex": "hindi/book/chapters/ch236-half-whole-double-separate-round.tex"
+}

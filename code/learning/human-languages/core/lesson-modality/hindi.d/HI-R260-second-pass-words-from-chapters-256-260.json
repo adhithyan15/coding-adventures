@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R260-second-pass-words-from-chapters-256-260",
+    "language": "hindi",
+    "chapter": 260,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acf5152276501a69"
+  },
+  "findings": []
+}

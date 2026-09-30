@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:80032cd66d21d4af",
+  "sourceHash": "fnv1a64:2ae37cd55646b72f",
   "lessons": [
     {
       "id": "SA-C09-grhnati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a3d36ceb42838cc",
+      "sourceHash": "fnv1a64:fc89211f92cf8d48",
       "notice": null,
       "blocks": [
         {
@@ -60,7 +60,7 @@
             },
             {
               "kind": "speech",
-              "text": "The root is ग्रह् (grah), class 9 — jānāti's class. It plants the same syllable, and the syllable comes out -णा- rather than -ना-: a curled-back ऋ earlier in the word pulls the following n back to match it. Sanskrit tidies its consonants after the fact."
+              "text": "The root is ग्रह् (grah), class 9 — jānāti's class. It plants the same syllable, and the syllable comes out -णा- rather than -ना-: a curled-back ṛ earlier in the word pulls the following n back to match it. Sanskrit tidies its consonants after the fact."
             }
           ]
         },
@@ -71,7 +71,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "गृ is gṛ: the vowel ऋ is a vowel made of r itself, a short buzz between ri and ru — the same vowel inside संस्कृत. Then ह्णा, h and curled-back ṇ fused with a long ā: gṛh-ṇā-ti."
+              "text": "गृ is gṛ: the vowel ṛ is a vowel made of r itself, a short buzz between ri and ru — the same vowel inside saṁskṛta. Then ह्णा, h and curled-back ṇ fused with a long ā: gṛh-ṇā-ti."
             }
           ]
         },
@@ -90,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "Inside Sanskrit the root spreads out: ग्रह (graha) is a planet, named as the seizer that takes hold of a life. Eastward it wore down to Marathi घेणे (gheṇe), the ordinary verb for taking."
+              "text": "Inside Sanskrit the root spreads out: ग्रह (graha) is a planet, named as the seizer that takes hold of a life. Eastward it wore down to Marathi gheṇe, the ordinary verb for taking."
             }
           ]
         },
@@ -156,7 +156,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which class builds gṛhṇāti, and which earlier verb shares it? (Class 9; जानाति.) Why -णा- and not -ना-? (The curled-back ऋ pulls the n back to match.) Name three English words from the same root. (Grab, grip, grasp.) Are they the same word as gṛhṇāti or relatives of it? (Relatives — same root, different suffixes, like eka and one.) Is Marathi gheṇe tatsama or tadbhava? (Tadbhava.)"
+              "text": "Which class builds gṛhṇāti, and which earlier verb shares it? (Class 9; jānāti.) Why -णा- and not -ना-? (The curled-back ṛ pulls the n back to match.) Name three English words from the same root. (Grab, grip, grasp.) Are they the same word as gṛhṇāti or relatives of it? (Relatives — same root, different suffixes, like eka and one.) Is Marathi gheṇe tatsama or tadbhava? (Tadbhava.)"
             }
           ]
         }
@@ -376,7 +376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a89fcb801cdbcf6",
+      "sourceHash": "fnv1a64:ad867bb7f842b142",
       "notice": null,
       "blocks": [
         {
@@ -422,12 +422,12 @@
               "rowCount": 2,
               "utterances": [
                 "Sanskrit: पृच्छति. sound: pṛcchati. meaning: he, she, or it asks.",
-                "Sanskrit: प्रश्न. sound: praśna. meaning: a question."
+                "Sanskrit: —. sound: praśna. meaning: a question."
               ]
             },
             {
               "kind": "speech",
-              "text": "The root is प्रछ् (prach), class 6 — likhati's class, a plain -a- on an untouched root. The root's r turns into the vowel ऋ, and the ending fuses into the doubled च्छ you already met in gacchati."
+              "text": "The root is प्रछ् (prach), class 6 — likhati's class, a plain -a- on an untouched root. The root's r turns into the vowel ṛ, and the ending fuses into the doubled च्छ you already met in gacchati."
             }
           ]
         },
@@ -461,7 +461,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eastward it wore down: Hindi and Urdu पूछना (pūchnā), Marathi पुसणे (pusṇe) — tadbhava, with the r-vowel flattened to u."
+              "text": "Eastward it wore down: Hindi and Urdu pūchnā, Marathi pusṇe — tadbhava, with the r-vowel flattened to u."
             }
           ]
         },
@@ -527,7 +527,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which class builds pṛcchati, and which verb shares its doubled middle? (Class 6; गच्छति.) What did Latin precārī mean, and name two English words from it. (To entreat; pray, precarious.) Why does German say fragen with an f? (Grimm's law turned initial p into f — as in pañca and five.) And is Hindi pūchnā tatsama or tadbhava? (Tadbhava.)"
+              "text": "Which class builds pṛcchati, and which verb shares its doubled middle? (Class 6; gacchati.) What did Latin precārī mean, and name two English words from it. (To entreat; pray, precarious.) Why does German say fragen with an f? (Grimm's law turned initial p into f — as in pañca and five.) And is Hindi pūchnā tatsama or tadbhava? (Tadbhava.)"
             }
           ]
         }
@@ -546,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ab102d3ee66fdd8",
+      "sourceHash": "fnv1a64:619a062900b0fb78",
       "notice": null,
       "blocks": [
         {
@@ -623,7 +623,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "साहाय्य is built on सहाय (sahāya), \"a companion\" — सह (saha), \"with,\" plus आय, from the root इ (i), \"to go.\" A helper is one who goes along with you. Sanskrit leaves such seams showing, the way संस्कृत is sam \"together\" on कृ."
+              "text": "साहाय्य is built on सहाय (sahāya), \"a companion\" — सह (saha), \"with,\" plus आय, from the root i, \"to go.\" A helper is one who goes along with you. Sanskrit leaves such seams showing, the way संस्कृत is sam \"together\" on कृ."
             },
             {
               "kind": "speech",

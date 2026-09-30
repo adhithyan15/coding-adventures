@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:646675b2ff30ad04",
+  "sourceHash": "fnv1a64:4c10e4f4c3528ac6",
   "lessons": [
     {
       "id": "KA-C05-maatanaadu",
@@ -473,7 +473,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6a6ac601a53a4525",
+      "sourceHash": "fnv1a64:5a552b85e0849a19",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -520,7 +520,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಇರು (iru, \"to be, to exist, to stay, to live\") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā (\"how are you\") and cennāgiddēne (\"I'm well\"). It also means \"to reside\": ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಇದ್ದೇನೆ (nānu Beṅgaḷūrinalli iddēne, \"I live in Bangalore\"). One verb covers \"be,\" \"stay,\" and \"live.\""
+              "text": "ಇರು (iru, \"to be, to exist, to stay, to live\") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā (\"how are you\") and cennāgiddēne (\"I'm well\"). It also means \"to reside\": nānu Beṅgaḷūrinalli iddēne (\"I live in Bangalore\"). One verb covers \"be,\" \"stay,\" and \"live.\""
             }
           ]
         },
@@ -531,7 +531,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli) = Bengaḷūru + -ಅಲ್ಲಿ (-alli, \"in\"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: \"Bangalore-in I am,\" the verb last."
+              "text": "Beṅgaḷūrinalli = Bengaḷūru + -alli (\"in\"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: \"Bangalore-in I am,\" the verb last."
             }
           ]
         },
@@ -616,7 +616,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e46cfdc978d41eca",
+      "sourceHash": "fnv1a64:301a642824eb6c40",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -671,7 +671,7 @@
             },
             {
               "kind": "speech",
-              "text": "ಅಡುಗೆ ಮಾಡು (aḍuge māḍu) = \"to cook\"."
+              "text": "aḍuge māḍu = \"to cook\"."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:dc38528892a123df",
+  "sourceHash": "fnv1a64:1822ec09c4530b66",
   "lessons": [
     {
       "id": "BN-C27-ditiyo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f30e2e02610e981",
+      "sourceHash": "fnv1a64:eed736ed921ae9e5",
       "notice": null,
       "blocks": [
         {

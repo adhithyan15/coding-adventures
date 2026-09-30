@@ -1,0 +1,11 @@
+{
+  "id": "HI-C170-jina",
+  "pathSegment": "HI-PATH-170-ACT170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-170-ACT170",
+      "order": 1
+    }
+  ]
+}

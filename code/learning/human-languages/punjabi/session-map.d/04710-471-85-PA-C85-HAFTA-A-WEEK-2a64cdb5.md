@@ -1,0 +1,1 @@
+| 471 | 85 | PA-C85-hafta | a week |

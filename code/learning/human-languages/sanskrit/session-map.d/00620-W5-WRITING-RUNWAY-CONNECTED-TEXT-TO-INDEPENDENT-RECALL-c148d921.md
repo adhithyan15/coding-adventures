@@ -1,0 +1,1 @@
+| W5 | writing-runway | नमस्ते। अहं संस्कृतं वदामि। | visible two-sentence copy → delayed whole-text copy → meaning-only independent recall; every word, sign, conjunct, and danda is already taught, and romanization earns no credit |

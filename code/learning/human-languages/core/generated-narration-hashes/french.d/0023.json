@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 23,
-  "sourceHash": "fnv1a64:292b0fbd0695b25f",
+  "sourceHash": "fnv1a64:774f371e31d04c5c",
   "lessonIds": [
     "FR-C19-sil-vous-plait"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "french/narration/ch23.txt",
   "json": "french/narration/ch23.json",
-  "textHash": "fnv1a64:083f8237e40b7f6a",
-  "jsonHash": "fnv1a64:0235ece180bad5b1",
+  "textHash": "fnv1a64:426194bb5289c427",
+  "jsonHash": "fnv1a64:565dddfc2a6b10be",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:0f46adbc3ade021f",
+  "lessonIds": [
+    "HI-C273-pulis",
+    "HI-C273-davakhana",
+    "HI-C273-rogi",
+    "HI-C273-rog",
+    "HI-C273-bimari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch273.txt",
+  "json": "hindi/narration/ch273.json",
+  "textHash": "fnv1a64:eed1c5870299b0fc",
+  "jsonHash": "fnv1a64:4f5680c6b0b0217a",
+  "findings": []
+}

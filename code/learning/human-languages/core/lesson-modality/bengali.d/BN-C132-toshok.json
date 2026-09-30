@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C132-toshok",
+    "language": "bengali",
+    "chapter": 132,
+    "sequence": 7240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3613ab9fd46a9638"
+  },
+  "findings": []
+}

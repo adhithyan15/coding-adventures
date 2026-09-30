@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:f22988c9bd3e7b27",
+  "lessonIds": [
+    "BN-C94-dinkal",
+    "BN-C94-rattir",
+    "BN-C94-prayi",
+    "BN-C94-kokhono",
+    "BN-C94-shiggir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch94.txt",
+  "json": "bengali/narration/ch94.json",
+  "textHash": "fnv1a64:eb12b2479599c71f",
+  "jsonHash": "fnv1a64:29bdd2e5fd12b586",
+  "findings": []
+}

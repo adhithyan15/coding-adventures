@@ -1,0 +1,11 @@
+{
+  "id": "HI-C260-asuvidha",
+  "pathSegment": "HI-PATH-260-THG260",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-260-THG260",
+      "order": 1
+    }
+  ]
+}

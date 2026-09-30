@@ -1,0 +1,11 @@
+{
+  "id": "HI-C220-javani",
+  "pathSegment": "HI-PATH-220-THG220",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-220-THG220",
+      "order": 2
+    }
+  ]
+}

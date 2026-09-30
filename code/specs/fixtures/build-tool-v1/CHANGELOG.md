@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-30
+
+- Removed ten Haskell packages with local `cabal.project` files from the shared
+  workspace source boundary. Refreshed its digest in ten conformance cases and
+  the canonical summary test, which now pins 479 scopes and 482 authorizations.
+
 ## 2026-09-19
 
 - Made the CI-gate match-work boundary fixtures wildcard-bounded so they still

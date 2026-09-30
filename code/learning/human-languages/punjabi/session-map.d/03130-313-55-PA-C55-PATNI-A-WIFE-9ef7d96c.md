@@ -1,1 +1,0 @@
-| 313 | 55 | PA-C55-patni | a wife |

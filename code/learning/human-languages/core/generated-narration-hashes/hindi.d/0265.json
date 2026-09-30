@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:e133d591f10e7380",
+  "lessonIds": [
+    "HI-C265-patang",
+    "HI-C265-jhula",
+    "HI-C265-parda",
+    "HI-C265-dari",
+    "HI-C265-qalin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch265.txt",
+  "json": "hindi/narration/ch265.json",
+  "textHash": "fnv1a64:83dc8507a5d8322f",
+  "jsonHash": "fnv1a64:937f13aec28d9581",
+  "findings": []
+}

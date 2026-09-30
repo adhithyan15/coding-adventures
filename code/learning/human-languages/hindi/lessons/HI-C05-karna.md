@@ -48,14 +48,14 @@ enormous reach.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-KARNA-01] -->
 
-**करना** (*karnā*, "to do, to make") is from Sanskrit **√कृ** (*√kṛ*, "to do,
+**करना** (*karnā*, "to do, to make") is from Sanskrit *√kṛ* ("to do,
 make") — one of the most productive roots in all of Sanskrit, and from
 Proto-Indo-European **\*kʷer-**. You have met its family already:
 
 - **कर्म** (*karma*) = "a thing **done**," an action and its consequence.
 - **नमस्कार** (*namaskār*) = "the **making** of a bow" (*namas* + *kār*) — the
   greeting from Chapter 1.
-- **संस्कृत** (*saṃskṛta*, "Sanskrit") = "**put together**, perfected."
+- *saṃskṛta* ("Sanskrit") = "**put together**, perfected."
 
 So *karnā* is the everyday face of the root behind *karma*, *namaskār*, and the
 name *Sanskrit* itself.
@@ -66,10 +66,10 @@ name *Sanskrit* itself.
 Hindi builds countless verbs as **noun + करना**:
 
 - **काम करना** (*kām karnā*) = "work-do" = "**to work**" (*kām*, "work")
-- **बात करना** (*bāt karnā*) = "talk-do" = "to converse"
-- **इंतज़ार करना** (*intazār karnā*) = "to wait"
+- *bāt karnā* = "talk-do" = "to converse"
+- *intazār karnā* = "to wait"
 
-So **मैं काम करता हूँ** (*maiṁ kām kartā hūṁ*) = "I work" (lit. "I work-do
+So *maiṁ kām kartā hūṁ* = "I work" (lit. "I work-do
 am"). Learn *karnā* and you unlock a whole grammar of "do-verbs."
 
 ## Sounds you'll need
@@ -83,7 +83,7 @@ am"). Learn *karnā* and you unlock a whole grammar of "do-verbs."
 
 [PAUSE 1s]
 - [YOU SAY: "karnā"]
-- [YOU SAY: "I work" (m./f.) — **मैं काम करता हूँ / करती हूँ** (*maiṁ kām kartā hūṁ / kartī hūṁ*)]
+- [YOU SAY: "I work" (m./f.) — *maiṁ kām kartā hūṁ / kartī hūṁ*]
 - [YOU SAY: the Chapter 1 word that shares its root (*namaskār* — the "making" of a bow)]
 
 ## Wrap-up Recall

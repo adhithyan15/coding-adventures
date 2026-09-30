@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 26,
-  "sourceHash": "fnv1a64:303e00188ed3114e",
+  "sourceHash": "fnv1a64:44c205c8428f8c58",
   "lessonIds": [
     "PT-C26-olho",
     "PT-C26-orelha",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "portuguese/narration/ch26.txt",
   "json": "portuguese/narration/ch26.json",
-  "textHash": "fnv1a64:90f475fabfaa0cd2",
-  "jsonHash": "fnv1a64:8a5285b301cb4167",
+  "textHash": "fnv1a64:016fbe61481f8fb6",
+  "jsonHash": "fnv1a64:88e540363aab027b",
   "findings": []
 }

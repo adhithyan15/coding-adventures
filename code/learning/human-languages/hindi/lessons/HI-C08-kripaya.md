@@ -65,8 +65,8 @@ writes it on its own.
 Here's the catch a textbook often hides: **कृपया is formal and bookish.** You'll
 see it on signs and hear it in announcements ("*kṛpayā* mind the gap"), but in
 everyday speech Hindi speakers rarely say it. Real politeness usually rides on
-**the verb** instead — the respectful request ending **‑इए / ‑इएगा** (*-iye /
--iyegā*): *baiṭh**iye*** "please sit," *sun**iye*** "please listen." And very
+**the verb** instead — the respectful request ending *-iye* /
+*-iyegā*: *baiṭh**iye*** "please sit," *sun**iye*** "please listen." And very
 often, people simply say the English word **"please."**
 
 So learn *kṛpayā* to **read** it and to be formally polite — but know that the

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C258-akelapan",
+  "pathSegment": "HI-PATH-258-THG258",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-258-THG258",
+      "order": 4
+    }
+  ]
+}

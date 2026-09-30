@@ -1770,6 +1770,10 @@ line "Target" [35, 50, 68, 82]"##,
         let layout = layout_structural_diagram(&diagram);
         assert_eq!(layout.groups.len(), 2);
         assert!(layout.groups.iter().any(|group| group.icon_name.as_deref() == Some("cloud")));
+        let cache_group = layout.groups.iter().find(|group| group.id == "cachegroup").unwrap();
+        let cache = layout.nodes.iter().find(|node| node.id == "cache").unwrap();
+        assert_eq!(cache.x - cache_group.x, 48.0);
+        assert_eq!(cache_group.x + cache_group.width - (cache.x + cache.width), 48.0);
         assert_eq!(
             layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
             Some("reads and writes")
@@ -2356,7 +2360,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_radar_to_png() {
         let chart = parse_radar(
-            "radar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"], support[\"Support\"]\ncurve alpha[\"Alpha\"]{80, 65, 45, 90}\ncurve beta[\"Beta\"]{55, 85, 75, 60}",
+            "radar-beta\ntitle Product Comparison\naxis speed[\"Speed\"], quality[\"Quality\"], cost[\"Cost\"], support[\"Support\"]\ncurve alpha[\"Alpha\"]{80, 65, 45, 90}\ncurve beta[\"Beta\"]{55, 85, 75, 60}\nticks 4\nmin 20\nmax 100\ngraticule polygon\nshowLegend true",
         )
         .expect("radar parse failed");
         let layout = layout_chart_diagram(&chart, 640.0, 560.0);

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C192-kabhi",
+  "pathSegment": "HI-PATH-192-FREQ192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-192-FREQ192",
+      "order": 1
+    }
+  ]
+}

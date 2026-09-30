@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 8,
-  "sourceHash": "fnv1a64:dad3bdbeaf6275c4",
+  "sourceHash": "fnv1a64:52d74082171483cb",
   "lessonIds": [
     "PA-C08-sochna",
     "PA-S08-khakkha-jhajja-pairin",
@@ -15,6 +15,6 @@
   "text": "punjabi/narration/ch08.txt",
   "json": "punjabi/narration/ch08.json",
   "textHash": "fnv1a64:8ba50dd2789eb2a1",
-  "jsonHash": "fnv1a64:6bf9d4cb02d99213",
+  "jsonHash": "fnv1a64:2dbcd17ff6bcc52c",
   "findings": []
 }

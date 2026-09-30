@@ -8,17 +8,17 @@ type: word
 headword: quizás
 gloss: maybe, perhaps
 concept_tag: HEDGE-PROBABLY
-prerequisites: [ES-C270-aunque]
+prerequisites: [ES-C270-aunque, ES-C267-no-verbo, ES-C267-no-nada, ES-C267-negar-preguntar]
 sounds: [vowel-a, vowel-o]
 roots: [qui sapit]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-AUNQUE]
+  knowledge: [ES-LEX-AUNQUE, ES-GRAMMAR-C267-NOVERBO-01, ES-GRAMMAR-C267-NONADA-01, ES-GRAMMAR-C267-NEGARPREGUNTAR-01]
 introduces:
   knowledge: [ES-LEX-QUIZAS, ES-SEMANTIC-HEDGE-EPISTEMIC]
 practises:
-  knowledge: [ES-LEX-QUIZAS, ES-SEMANTIC-HEDGE-EPISTEMIC]
+  knowledge: [ES-LEX-QUIZAS, ES-SEMANTIC-HEDGE-EPISTEMIC, ES-GRAMMAR-C267-NOVERBO-01, ES-GRAMMAR-C267-NONADA-01, ES-GRAMMAR-C267-NEGARPREGUNTAR-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,9 +30,11 @@ reviews_of: [ES-C270-aunque]
 # quizás — saying it without claiming it
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-C267-NOVERBO-01, ES-GRAMMAR-C267-NONADA-01, ES-GRAMMAR-C267-NEGARPREGUNTAR-01] -->
 
 [PAUSE 2s] An argument needs one more thing: a way to put an idea forward while admitting you might be wrong.
+
+[PAUSE 2s] The sure answers first, then the unsure one. Asked *¿Vas?*, say *No, no voy.* Asked *¿Qué ves?*, say *No veo nada.* Both halves of the negative stay.
 
 ## You'll want to know first
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:c3861b6fdbd00183",
+  "lessonIds": [
+    "HI-C216-mugphali",
+    "HI-C216-muli",
+    "HI-C216-baigan",
+    "HI-C216-bhindi",
+    "HI-C216-papita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch216.txt",
+  "json": "hindi/narration/ch216.json",
+  "textHash": "fnv1a64:29d5a75239bbcdbb",
+  "jsonHash": "fnv1a64:441bbb8d967102d5",
+  "findings": []
+}

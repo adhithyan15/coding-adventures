@@ -1,0 +1,11 @@
+{
+  "id": "HI-C205-sandesa",
+  "pathSegment": "HI-PATH-205-THG205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-205-THG205",
+      "order": 3
+    }
+  ]
+}

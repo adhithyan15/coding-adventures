@@ -1,0 +1,11 @@
+{
+  "id": "BN-C135-druto",
+  "pathSegment": "BN-PATH-135-QUAL135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-135-QUAL135",
+      "order": 3
+    }
+  ]
+}

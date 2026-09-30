@@ -1,0 +1,11 @@
+{
+  "id": "BN-C123-konui",
+  "pathSegment": "BN-PATH-123-THINGS123",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-123-THINGS123",
+      "order": 1
+    }
+  ]
+}

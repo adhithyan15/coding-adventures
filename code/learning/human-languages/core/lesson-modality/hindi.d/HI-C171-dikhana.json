@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C171-dikhana",
+    "language": "hindi",
+    "chapter": 171,
+    "sequence": 8110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5933a0ae51ce98f3"
+  },
+  "findings": []
+}

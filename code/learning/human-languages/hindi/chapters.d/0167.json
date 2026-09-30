@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Rent, a Date, a Number, a Floor, a Receipt",
+  "label": "ch:hi-rent-a-date-a-number-a-floor-a-receipt",
+  "canDo": "I can read the rent, a date, a room number, a floor and a receipt in a short notice.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R167-second-pass-rent-dates-and-rooms",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: i can read the rent, a date, a room number, a floor and a receipt in a short notice.",
+    "assesses": [
+      "HI-LEX-C167-READ167-03",
+      "HI-LEX-C167-READ167-04",
+      "HI-LEX-C167-READ167-05"
+    ]
+  }
+}

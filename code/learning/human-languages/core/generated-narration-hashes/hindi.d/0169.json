@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:e2500c8cb80feab1",
+  "lessonIds": [
+    "HI-C169-jorna",
+    "HI-C169-ghatana",
+    "HI-C169-barhana",
+    "HI-C169-bacana",
+    "HI-C169-bacna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch169.txt",
+  "json": "hindi/narration/ch169.json",
+  "textHash": "fnv1a64:70edc0e60e78b71f",
+  "jsonHash": "fnv1a64:bd6a8664059385c6",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C127-rani",
+  "pathSegment": "BN-PATH-127-THINGS127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-127-THINGS127",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C210-khicri",
+  "pathSegment": "HI-PATH-210-THG210",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-210-THG210",
+      "order": 1
+    }
+  ]
+}

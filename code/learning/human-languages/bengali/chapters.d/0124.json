@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Fingernail, Cheek, Forehead, Eyebrow, Bone",
+  "label": "ch:bn-fingernail-cheek-forehead-eyebrow-bone",
+  "canDo": "I can say a fingernail, a cheek, the forehead, an eyebrow and a bone.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C124-har2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a fingernail, a cheek, the forehead, an eyebrow and a bone.",
+    "assesses": [
+      "BN-LEX-C124-THINGS124-03",
+      "BN-LEX-C124-THINGS124-04",
+      "BN-LEX-C124-THINGS124-05"
+    ]
+  }
+}

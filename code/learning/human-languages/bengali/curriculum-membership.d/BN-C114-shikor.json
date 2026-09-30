@@ -1,0 +1,11 @@
+{
+  "id": "BN-C114-shikor",
+  "pathSegment": "BN-PATH-114-THINGS114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-114-THINGS114",
+      "order": 2
+    }
+  ]
+}

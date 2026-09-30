@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C179-hatana",
+    "language": "hindi",
+    "chapter": 179,
+    "sequence": 8630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2a6cacf08773ead"
+  },
+  "findings": []
+}

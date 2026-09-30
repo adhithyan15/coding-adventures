@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:2e7280bd62c38c65",
+  "lessonIds": [
+    "HI-C210-paratha",
+    "HI-C210-khicri",
+    "HI-C210-halva",
+    "HI-C210-laddu",
+    "HI-C210-achar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch210.txt",
+  "json": "hindi/narration/ch210.json",
+  "textHash": "fnv1a64:37ff7b92114aef25",
+  "jsonHash": "fnv1a64:77e9de03e052ed56",
+  "findings": []
+}

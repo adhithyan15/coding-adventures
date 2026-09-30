@@ -11,17 +11,17 @@ type: word
 headword: "a perna"
 gloss: "a leg"
 concept_tag: PT-CORPO1-PERNA
-prerequisites: [PT-C28-decimo, PT-C30-braco]
+prerequisites: [PT-C28-decimo, PT-C30-braco, PT-C22-encontrar-meet]
 sounds: []
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [PT-LEX-DECIMO-02, PT-LEX-C30-CORPO1-01]
+  knowledge: [PT-LEX-DECIMO-02, PT-LEX-C30-CORPO1-01, PT-GRAMMAR-ENCONTRAR-MEET-04]
 introduces:
   knowledge: [PT-LEX-C30-CORPO1-02]
 practises:
-  knowledge: [PT-LEX-C30-CORPO1-02, PT-LEX-DECIMO-02, PT-LEX-C30-CORPO1-01]
+  knowledge: [PT-LEX-C30-CORPO1-02, PT-LEX-DECIMO-02, PT-LEX-C30-CORPO1-01, PT-GRAMMAR-ENCONTRAR-MEET-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -33,9 +33,11 @@ reviews_of: [PT-C30-braco]
 # a perna — a leg
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-DECIMO-02, PT-LEX-C30-CORPO1-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-DECIMO-02, PT-LEX-C30-CORPO1-01, PT-GRAMMAR-ENCONTRAR-MEET-04] -->
 
 [PAUSE 2s] Before the new one: say the Portuguese for tenth, then the Portuguese for an arm.
+
+[PAUSE 2s] *Encontramo-nos ao meio-dia* — we meet at midday. Say it as one unit.
 
 ## You'll want to know: a perna
 <!-- hl-knowledge: introduces=[PT-LEX-C30-CORPO1-02]; assesses=[] -->

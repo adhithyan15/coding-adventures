@@ -1,0 +1,11 @@
+{
+  "id": "HI-C241-kimti",
+  "pathSegment": "HI-PATH-241-QUAL241",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-241-QUAL241",
+      "order": 3
+    }
+  ]
+}

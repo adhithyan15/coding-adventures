@@ -1,0 +1,11 @@
+{
+  "id": "HI-R192-second-pass-town-talk-and-time",
+  "pathSegment": "HI-PATH-192-FREQ192",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-192-FREQ192",
+      "order": 6
+    }
+  ]
+}

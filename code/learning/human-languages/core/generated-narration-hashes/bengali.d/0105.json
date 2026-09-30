@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:50f94027517f235b",
+  "lessonIds": [
+    "BN-C105-jhara",
+    "BN-C105-gochhano",
+    "BN-C105-sajano",
+    "BN-C105-bhaja",
+    "BN-C105-meshano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch105.txt",
+  "json": "bengali/narration/ch105.json",
+  "textHash": "fnv1a64:1d36c8c5a6e2a700",
+  "jsonHash": "fnv1a64:653fc5ae564d4f30",
+  "findings": []
+}

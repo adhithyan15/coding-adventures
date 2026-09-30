@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-256-THG256",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say vomiting, a wound, a bandage, an injection and a pill.",
+  "prerequisites": []
+}

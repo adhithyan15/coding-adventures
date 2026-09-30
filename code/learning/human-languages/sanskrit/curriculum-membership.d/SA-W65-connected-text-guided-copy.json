@@ -1,0 +1,11 @@
+{
+  "id": "SA-W65-connected-text-guided-copy",
+  "pathSegment": "SA-PATH-065-LETTERS-LAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-143-WRITING-CONNECTED-TEXT-BRIDGE",
+      "order": 0
+    }
+  ]
+}

@@ -52,6 +52,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S132-letter-nya",
+      "sourceHash": "fnv1a64:0f444a06550d60cf",
+      "svgHash": "fnv1a64:087e972f99811d04",
+      "svg": "telugu/book/figures/TE-S132-letter-nya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S135-letter-i",
       "sourceHash": "fnv1a64:64de34822471aeb6",
       "svgHash": "fnv1a64:c5428c86b33d8ea6",
@@ -70,6 +77,13 @@
       "sourceHash": "fnv1a64:c23e7e98bcf790cf",
       "svgHash": "fnv1a64:4143804db44b8a19",
       "svg": "telugu/book/figures/TE-S138-letter-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S152-letter-tta",
+      "sourceHash": "fnv1a64:a7f35348b009149d",
+      "svgHash": "fnv1a64:31e5cb893d047c52",
+      "svg": "telugu/book/figures/TE-S152-letter-tta-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

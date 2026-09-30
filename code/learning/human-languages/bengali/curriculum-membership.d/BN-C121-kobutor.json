@@ -1,0 +1,11 @@
+{
+  "id": "BN-C121-kobutor",
+  "pathSegment": "BN-PATH-121-THINGS121",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-121-THINGS121",
+      "order": 2
+    }
+  ]
+}

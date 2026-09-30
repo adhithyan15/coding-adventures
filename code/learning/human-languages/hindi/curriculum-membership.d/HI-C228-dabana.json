@@ -1,0 +1,11 @@
+{
+  "id": "HI-C228-dabana",
+  "pathSegment": "HI-PATH-228-ACT228",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-228-ACT228",
+      "order": 3
+    }
+  ]
+}

@@ -121,10 +121,10 @@ The letters in this word.
 ಇ (independent i) + ರು (ru) becomes ಇರು (iru).
 
 The word, taken apart.
-ಇರು (iru, "to be, to exist, to stay, to live") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā ("how are you") and cennāgiddēne ("I'm well"). It also means "to reside": ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಇದ್ದೇನೆ (nānu Beṅgaḷūrinalli iddēne, "I live in Bangalore"). One verb covers "be," "stay," and "live."
+ಇರು (iru, "to be, to exist, to stay, to live") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā ("how are you") and cennāgiddēne ("I'm well"). It also means "to reside": nānu Beṅgaḷūrinalli iddēne ("I live in Bangalore"). One verb covers "be," "stay," and "live."
 
 Grammar Lens: "in" comes after the noun.
-ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli) = Bengaḷūru + -ಅಲ್ಲಿ (-alli, "in"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: "Bangalore-in I am," the verb last.
+Beṅgaḷūrinalli = Bengaḷūru + -alli ("in"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: "Bangalore-in I am," the verb last.
 
 Guided Practice.
 [pause 1 second]
@@ -157,7 +157,7 @@ The letters in this word.
 The word, taken apart.
 ಮಾಡು (māḍu, "to do, to make") is a core native Dravidian verb, and Kannada — like Hindi with karnā, Tamil with sey, and Telugu with cēyu — builds compound verbs by putting a noun in front of it:
 ಕೆಲಸ ಮಾಡು (kelasa māḍu) = "work-do" = "to work" (kelasa, "work").
-ಅಡುಗೆ ಮಾಡು (aḍuge māḍu) = "to cook".
+aḍuge māḍu = "to cook".
 ಸಹಾಯ ಮಾಡು (sahāya māḍu) = "to help" (sahāya from Sanskrit).
 So "I work" is ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ (nānu kelasa māḍuttēne). Notice sahāya māḍu ("to help") pairs a Sanskrit noun with the native māḍu — Kannada's two vocabularies working together in one verb.
 

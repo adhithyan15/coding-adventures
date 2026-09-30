@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Skin, Fisherman, Blacksmith, Potter, Weaver",
+  "label": "ch:bn-skin-fisherman-blacksmith-potter-weaver",
+  "canDo": "I can say skin, a fisherman, a blacksmith, a potter and a weaver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C125-tati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say skin, a fisherman, a blacksmith, a potter and a weaver.",
+    "assesses": [
+      "BN-LEX-C125-THINGS125-03",
+      "BN-LEX-C125-THINGS125-04",
+      "BN-LEX-C125-THINGS125-05"
+    ]
+  }
+}

@@ -1,0 +1,838 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 137,
+  "title": "Pink, Sad, Angry, Tired, Healthy",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:4f51a1e05f1bb7ab",
+  "lessons": [
+    {
+      "id": "BN-C137-golapi",
+      "sequence": 7450,
+      "title": "গোলাপি (golāpi) — pink",
+      "headword": "গোলাপি",
+      "romanization": "golāpi",
+      "gloss": "pink",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd5d51693e9ec41b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for round, then the Bengali for purple."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read without stopping: আমি ভাত আর দুধ খাই। চা বা জল।."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গোলাপি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গোলাপি — golāpi — \"pink\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "golāpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *golāpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "golāpi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *golāpi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say golāpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *golāpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for round, then the Bengali for purple, then say golāpi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for round, then the Bengali for purple, then say *golāpi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গোলাপি (golāpi) mean? (\"Pink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C137-dukhi",
+      "sequence": 7460,
+      "title": "দুঃখী (dukhi) — sad",
+      "headword": "দুঃখী",
+      "romanization": "dukhi",
+      "gloss": "sad",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62632b21d7e4225d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for purple, then the Bengali for pink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দুঃখী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুঃখী — dukhi — \"sad\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dukhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dukhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for purple, then the Bengali for pink, then say dukhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for purple, then the Bengali for pink, then say *dukhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দুঃখী (dukhi) mean? (\"Sad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C137-ragi",
+      "sequence": 7470,
+      "title": "রাগী (rāgi) — angry",
+      "headword": "রাগী",
+      "romanization": "rāgi",
+      "gloss": "angry",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:380bf0dc849ab05c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for pink, then the Bengali for sad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রাগী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রাগী — rāgi — \"angry\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāgi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāgi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rāgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rāgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for pink, then the Bengali for sad, then say rāgi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for pink, then the Bengali for sad, then say *rāgi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রাগী (rāgi) mean? (\"Angry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C137-klanto",
+      "sequence": 7480,
+      "title": "ক্লান্ত (klāntô) — tired",
+      "headword": "ক্লান্ত",
+      "romanization": "klāntô",
+      "gloss": "tired",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:572dcacd13f5c30e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for sad, then the Bengali for angry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ক্লান্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ক্লান্ত — klāntô — \"tired\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "klāntô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *klāntô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "klāntô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *klāntô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say klāntô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *klāntô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for sad, then the Bengali for angry, then say klāntô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for sad, then the Bengali for angry, then say *klāntô* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ক্লান্ত (klāntô) mean? (\"Tired\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C137-sustho",
+      "sequence": 7490,
+      "title": "সুস্থ (susthô) — healthy",
+      "headword": "সুস্থ",
+      "romanization": "susthô",
+      "gloss": "healthy",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d30b766c8b0314f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for angry, then the Bengali for tired."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সুস্থ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সুস্থ — susthô — \"healthy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "susthô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *susthô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "susthô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *susthô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say susthô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *susthô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for angry, then the Bengali for tired, then say susthô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for angry, then the Bengali for tired, then say *susthô* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সুস্থ (susthô) mean? (\"Healthy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R137-first-pass-the-body-and-people-at-work",
+      "sequence": 7500,
+      "title": "The body and people at work — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 130-133",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c404f82ae38b15a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for tired and healthy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wallet, a coin, an envelope, a stamp, a doll",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wallet, a coin, an envelope, a stamp, a doll]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ball, a flute, a tabla, a guitar, a camera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ball, a flute, a tabla, a guitar, a camera]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a phone, a radio, light, a bed, a mattress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a phone, a radio, light, a bed, a mattress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mosquito net, a blanket, a curtain, a vase, a cup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mosquito net, a blanket, a curtain, a vase, a cup]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A wallet? (মানিব্যাগ, mānibyāg.) A coin? (পয়সা, pôysā.) An envelope? (খাম, khām.) A stamp? (ডাকটিকিট, ḍākṭikiṭ.) A doll? (পুতুল, putul.) A ball? (বল, bôl.) A flute? (বাঁশি, bā̃shi.) A tabla? (তবলা, tôblā.) A guitar? (গিটার, giṭār.) A camera? (ক্যামেরা, kyāmerā.) A phone? (ফোন, phon.) A radio? (রেডিও, rediyo.) Light? (আলো, ālo.) A bed? (খাট, khāṭ.) A mattress? (তোশক, toshôk.) A mosquito net? (মশারি, môshāri.) A blanket? (কম্বল, kômbôl.) A curtain? (পর্দা, pôrdā.) A vase? (ফুলদানি, phuldāni.) A cup? (কাপ, kāp.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R137-second-pass-the-town-and-describing-words",
+      "sequence": 7510,
+      "title": "The town and describing words — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 134-137",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2418ff2c61f2119c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for short and spicy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "short, spicy, salty, hard, soft",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: short, spicy, salty, hard, soft]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wet, dry, full, fast, slow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wet, dry, full, fast, slow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deep, wide, narrow, round, purple",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: deep, wide, narrow, round, purple]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pink, sad, angry, tired, healthy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pink, sad, angry, tired, healthy]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Short? (বেঁটে, beṭe.) Spicy? (ঝাল, jhāl.) Salty? (নোনতা, nontā.) Hard? (শক্ত, shôktô.) Soft? (নরম, nôrôm.) Wet? (ভিজে, bhije.) Dry? (শুকনো, shukno.) Full? (ভরা, bhôrā.) Fast? (দ্রুত, drutô.) Slow? (ধীর, dhīr.) Deep? (গভীর, gôbhīr.) Wide? (চওড়া, chôoṛā.) Narrow? (সরু, sôru.) Round? (গোল, gol.) Purple? (বেগুনি, beguni.) Pink? (গোলাপি, golāpi.) Sad? (দুঃখী, dukhi.) Angry? (রাগী, rāgi.) Tired? (ক্লান্ত, klāntô.) Healthy? (সুস্থ, susthô.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -49,7 +49,7 @@ other half of literacy.
 | Sanskrit | sound | meaning |
 |---|---|---|
 | लिखति | *likhati* | he, she, or it **writes** |
-| लेखनी | *lekhanī* | a **pen** |
+| — | *lekhanī* | a **pen** |
 
 The root is **लिख्** (*likh*), class 6. Class 6 adds the same *-a-* class 1 does
 but leaves the root untouched: *likh* + *a* + *ti*. Two classes, one vowel, and
@@ -80,7 +80,7 @@ Eastward, a different story: Hindi and Urdu *likhnā*, Bengali *lekhā*, Marathi
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-CINTAYATI-THINK, SA-GRAMMAR-GANA-TEN-AYA, SA-LEX-AVAGACCHATI-UNDERSTAND, SA-ETYMON-BUDH-AWAKE-BUDDHA, SA-LEX-PATHATI-READ, SA-LEX-LIKHATI-WRITE, SA-GRAMMAR-DHATU-GANA] -->
 
 *Cintayati*, *avagacchati*, *paṭhati*, *likhati*. Thinking plants **-अय-**;
-understanding is "goes" with **अव** in front, or **बुध्यते**, waking; reading and
+understanding is "goes" with **अव** in front, or *budhyate*, waking; reading and
 writing take a plain *-a-*, class 1 and class 6.
 
 ## Guided Practice
@@ -98,7 +98,7 @@ writing take a plain *-a-*, class 1 and class 6.
 verbs? (**To scratch**; *cintayati, avagacchati, paṭhati, likhati*.) Which plants
 **-अय-**, and which is a prefix on a verb you already had? (*Cintayati*;
 *avagacchati*.) Which verb of understanding means "wakes," and what title comes
-from its root? (**बुध्यते**; **बुद्ध**.) Is Bengali *lekhā* tatsama or tadbhava,
+from its root? (*budhyate*; *buddha*.) Is Bengali *lekhā* tatsama or tadbhava,
 and which two word-histories here needed a label rather than a claim?
 (**Tadbhava**; ***paṭhati***'s ancestry and ***likh***'s English kin — the
 *punch* caution, twice.)

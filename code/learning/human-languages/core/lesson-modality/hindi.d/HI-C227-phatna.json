@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C227-phatna",
+    "language": "hindi",
+    "chapter": 227,
+    "sequence": 11880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4d231f8a9c81d9e"
+  },
+  "findings": []
+}

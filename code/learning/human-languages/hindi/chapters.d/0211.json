@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Chutney, Spice, Turmeric, Coriander, A lemon",
+  "label": "ch:hi-chutney-spice-turmeric-coriander-a-lemon",
+  "canDo": "I can say chutney, spice, turmeric, coriander and a lemon.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C211-nibu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: i can say chutney, spice, turmeric, coriander and a lemon.",
+    "assesses": [
+      "HI-LEX-C211-THG211-03",
+      "HI-LEX-C211-THG211-04",
+      "HI-LEX-C211-THG211-05"
+    ]
+  }
+}

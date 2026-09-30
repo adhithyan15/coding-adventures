@@ -41,7 +41,7 @@ once through as the exchange it was always for.
 |---|---|
 | నా పేరు మీరా. (*nā pēru Mira*) | My name is Mira. |
 | మీ పేరు ఏమిటి? (*mī pēru ēmiṭi*) | What's your name? |
-| నా పేరు అరుణ్. (*nā pēru Arun*) | My name is Arun. |
+| నా పేరు అను. (*nā pēru Anu*) | My name is Anu. |
 | సంతోషం. (*santōṣam*) | Pleased to meet you. |
 
 Every atom traced:

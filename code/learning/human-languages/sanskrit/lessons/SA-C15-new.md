@@ -46,7 +46,7 @@ reviews_of: [SA-C15-good]
 Put it in front of a word you already know and you have said something new.
 That is all an adjective does in this language.
 
-You met **उत्तम** *uttama* a moment ago. Put them side by side and nothing about either one changes.
+You met *uttama* a moment ago. Put them side by side and nothing about either one changes.
 
 The last lesson of this chapter gives the one rule that governs every
 adjective you will ever meet here.
