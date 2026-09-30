@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "A difficulty, Safety, Sense, A worry, A voice",
+  "label": "ch:ge-a-difficulty-safety-sense-a-worry-a-voice",
+  "canDo": "I can say a difficulty, safety, sense, a worry and a voice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C238-stimme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: i can say a difficulty, safety, sense, a worry and a voice.",
+    "assesses": [
+      "GE-LEX-C238-THING238-03",
+      "GE-LEX-C238-THING238-04",
+      "GE-LEX-C238-THING238-05"
+    ]
+  }
+}

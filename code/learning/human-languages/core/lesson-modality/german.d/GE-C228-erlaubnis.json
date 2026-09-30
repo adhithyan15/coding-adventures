@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C228-erlaubnis",
+    "language": "german",
+    "chapter": 228,
+    "sequence": 12260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5be2a5415f04f3d6"
+  },
+  "findings": []
+}

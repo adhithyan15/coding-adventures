@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "A role, Quiet, A thing, A shadow, A step",
+  "label": "ch:ge-a-role-quiet-a-thing-a-shadow-a-step",
+  "canDo": "I can say a role, quiet, a thing, a shadow and a step.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-R237-second-pass-words-from-chapters-233-237",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: i can say a role, quiet, a thing, a shadow and a step.",
+    "assesses": [
+      "GE-LEX-C237-THING237-03",
+      "GE-LEX-C237-THING237-04",
+      "GE-LEX-C237-THING237-05"
+    ]
+  }
+}

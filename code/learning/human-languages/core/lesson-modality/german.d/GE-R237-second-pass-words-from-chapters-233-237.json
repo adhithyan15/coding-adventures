@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R237-second-pass-words-from-chapters-233-237",
+    "language": "german",
+    "chapter": 237,
+    "sequence": 12940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e4f493116af7146"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:39db423c7f4de918",
+  "lessonIds": [
+    "GE-C215-gerecht",
+    "GE-C215-geschieden",
+    "GE-C215-gleichzeitig",
+    "GE-C215-grosszuegig",
+    "GE-C215-guenstig"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch215.txt",
+  "json": "german/narration/ch215.json",
+  "textHash": "fnv1a64:5ea6b3aa33c0a29b",
+  "jsonHash": "fnv1a64:ed648f088510c253",
+  "findings": []
+}

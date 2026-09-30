@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:bb7edb9026c2947a",
+  "lessonIds": [
+    "GE-C224-verliebt",
+    "GE-C224-verschieden",
+    "GE-C224-vorsichtig",
+    "GE-C224-windig",
+    "GE-C224-witzig"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch224.txt",
+  "json": "german/narration/ch224.json",
+  "textHash": "fnv1a64:bfb145b7d69e578f",
+  "jsonHash": "fnv1a64:92b9747fee2c54e0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Punctual, Rainy, Raw, Salty, Sour",
+  "label": "ch:ge-punctual-rainy-raw-salty-sour",
+  "canDo": "I can say punctual, rainy, raw, salty and sour.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C220-sauer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: i can say punctual, rainy, raw, salty and sour.",
+    "assesses": [
+      "GE-LEX-C220-QUAL220-03",
+      "GE-LEX-C220-QUAL220-04",
+      "GE-LEX-C220-QUAL220-05"
+    ]
+  }
+}

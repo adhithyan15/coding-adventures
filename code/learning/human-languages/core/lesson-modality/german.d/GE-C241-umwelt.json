@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C241-umwelt",
+    "language": "german",
+    "chapter": 241,
+    "sequence": 13270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c16e70b7678dcd06"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Pronunciation, A meaning, A greeting, A description, A visit",
+  "label": "ch:ge-pronunciation-a-meaning-a-greeting-a-description-a-visit",
+  "canDo": "I can say pronunciation, a meaning, a greeting, a description and a visit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C226-besuch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: i can say pronunciation, a meaning, a greeting, a description and a visit.",
+    "assesses": [
+      "GE-LEX-C226-THING226-03",
+      "GE-LEX-C226-THING226-04",
+      "GE-LEX-C226-THING226-05"
+    ]
+  }
+}

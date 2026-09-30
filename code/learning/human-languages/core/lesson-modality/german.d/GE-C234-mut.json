@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C234-mut",
+    "language": "german",
+    "chapter": 234,
+    "sequence": 12770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fab27e6f1e67e54"
+  },
+  "findings": []
+}

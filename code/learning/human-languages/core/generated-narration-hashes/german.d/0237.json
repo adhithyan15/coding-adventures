@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:28294ae363595115",
+  "lessonIds": [
+    "GE-C237-rolle",
+    "GE-C237-ruhe",
+    "GE-C237-sache",
+    "GE-C237-schatten",
+    "GE-C237-schritt",
+    "GE-R237-first-pass-words-from-chapters-229-232",
+    "GE-R237-second-pass-words-from-chapters-233-237"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch237.txt",
+  "json": "german/narration/ch237.json",
+  "textHash": "fnv1a64:73f57b438fe5d409",
+  "jsonHash": "fnv1a64:6a52ffd996cdb748",
+  "findings": []
+}

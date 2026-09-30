@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "In love, Different, Careful, Windy, Funny",
+  "label": "ch:ge-in-love-different-careful-windy-funny",
+  "canDo": "I can say in love, different, careful, windy and funny.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C224-witzig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: i can say in love, different, careful, windy and funny.",
+    "assesses": [
+      "GE-LEX-C224-QUAL224-03",
+      "GE-LEX-C224-QUAL224-04",
+      "GE-LEX-C224-QUAL224-05"
+    ]
+  }
+}

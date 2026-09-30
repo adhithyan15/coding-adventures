@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R228-second-pass-words-from-chapters-224-228",
+    "language": "german",
+    "chapter": 228,
+    "sequence": 12300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cc70e3482fb0318"
+  },
+  "findings": []
+}

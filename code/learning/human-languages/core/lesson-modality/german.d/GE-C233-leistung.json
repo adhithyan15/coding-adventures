@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C233-leistung",
+    "language": "german",
+    "chapter": 233,
+    "sequence": 12710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1be31f50fe38141d"
+  },
+  "findings": []
+}

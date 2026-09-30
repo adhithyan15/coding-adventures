@@ -1,0 +1,11 @@
+{
+  "id": "GE-C230-gewicht",
+  "pathSegment": "GE-PATH-230-THING230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-230-THING230",
+      "order": 3
+    }
+  ]
+}

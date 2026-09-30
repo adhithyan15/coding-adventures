@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:1e5d81c079cc8c99",
+  "lessonIds": [
+    "GE-C214-froehlich",
+    "GE-C214-furchtbar",
+    "GE-C214-geduldig",
+    "GE-C214-geizig",
+    "GE-C214-gemuetlich"
+  ],
+  "tex": "german/book/chapters/ch214-cheerful-terrible-patient-stingy-cosy.tex"
+}

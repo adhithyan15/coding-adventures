@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:2f189eb25204e526",
+  "lessonIds": [
+    "GE-C220-puenktlich",
+    "GE-C220-regnerisch",
+    "GE-C220-roh",
+    "GE-C220-salzig",
+    "GE-C220-sauer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch220.txt",
+  "json": "german/narration/ch220.json",
+  "textHash": "fnv1a64:c30c4e1e7b5842d5",
+  "jsonHash": "fnv1a64:e051ac7d3644fa22",
+  "findings": []
+}

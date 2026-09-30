@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:49705250699f5d4c",
+  "lessonIds": [
+    "GE-C248-einrichten",
+    "GE-C248-enden",
+    "GE-C248-entdecken",
+    "GE-C248-entschuldigen",
+    "GE-C248-erfahren"
+  ],
+  "tex": "german/book/chapters/ch248-to-furnish-to-end-to-discover-to-excuse-to-find-out.tex"
+}

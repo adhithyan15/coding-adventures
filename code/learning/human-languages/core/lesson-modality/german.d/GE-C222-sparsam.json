@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C222-sparsam",
+    "language": "german",
+    "chapter": 222,
+    "sequence": 11940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:195b14fa60b7b9b6"
+  },
+  "findings": []
+}

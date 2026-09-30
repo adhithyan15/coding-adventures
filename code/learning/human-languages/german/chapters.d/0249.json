@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "To complete, To get done, To appear, To produce, To demand",
+  "label": "ch:ge-to-complete-to-get-done-to-appear-to-produce-to-demand",
+  "canDo": "I can say to complete, to get done, to appear, to produce and to demand.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C249-fordern",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: i can say to complete, to get done, to appear, to produce and to demand.",
+    "assesses": [
+      "GE-LEX-C249-VERB249-03",
+      "GE-LEX-C249-VERB249-04",
+      "GE-LEX-C249-VERB249-05"
+    ]
+  }
+}

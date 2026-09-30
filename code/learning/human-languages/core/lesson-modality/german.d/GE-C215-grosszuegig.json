@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C215-grosszuegig",
+    "language": "german",
+    "chapter": 215,
+    "sequence": 11430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25b02e66ba9e03d7"
+  },
+  "findings": []
+}

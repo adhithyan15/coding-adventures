@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C230-geschichte",
+    "language": "german",
+    "chapter": 230,
+    "sequence": 12540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2c40c240c47b1c3"
+  },
+  "findings": []
+}

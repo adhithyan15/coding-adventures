@@ -1,0 +1,11 @@
+{
+  "id": "GE-C226-beschreibung",
+  "pathSegment": "GE-PATH-226-THING226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-226-THING226",
+      "order": 3
+    }
+  ]
+}

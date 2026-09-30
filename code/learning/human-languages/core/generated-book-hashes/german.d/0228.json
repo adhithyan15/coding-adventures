@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:2cd3d700cb6b83ae",
+  "lessonIds": [
+    "GE-C228-entscheidung",
+    "GE-C228-erinnerung",
+    "GE-C228-erlaubnis",
+    "GE-C228-ergebnis",
+    "GE-C228-erklaerung",
+    "GE-R228-first-pass-words-from-chapters-220-223",
+    "GE-R228-second-pass-words-from-chapters-224-228"
+  ],
+  "tex": "german/book/chapters/ch228-a-decision-a-memory-permission-a-result-an-explanation.tex"
+}

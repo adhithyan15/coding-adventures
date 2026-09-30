@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Curious, Useful, Public, Tidy, Personal",
+  "label": "ch:ge-curious-useful-public-tidy-personal",
+  "canDo": "I can say curious, useful, public, tidy and personal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-R219-second-pass-words-from-chapters-215-219",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: i can say curious, useful, public, tidy and personal.",
+    "assesses": [
+      "GE-LEX-C219-QUAL219-03",
+      "GE-LEX-C219-QUAL219-04",
+      "GE-LEX-C219-QUAL219-05"
+    ]
+  }
+}

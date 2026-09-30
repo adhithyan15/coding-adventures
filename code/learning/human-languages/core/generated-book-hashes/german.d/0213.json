@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:11f01f417b857ad9",
+  "lessonIds": [
+    "GE-C213-eifersuechtig",
+    "GE-C213-erfolgreich",
+    "GE-C213-erkaeltet",
+    "GE-C213-fantastisch",
+    "GE-C213-feucht"
+  ],
+  "tex": "german/book/chapters/ch213-jealous-successful-having-a-cold-fantastic-damp.tex"
+}

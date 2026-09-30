@@ -1,0 +1,11 @@
+{
+  "id": "GE-C240-umgebung",
+  "pathSegment": "GE-PATH-240-THING240",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-240-THING240",
+      "order": 4
+    }
+  ]
+}

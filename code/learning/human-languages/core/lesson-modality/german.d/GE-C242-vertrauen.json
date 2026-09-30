@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C242-vertrauen",
+    "language": "german",
+    "chapter": 242,
+    "sequence": 13330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2530933b88178008"
+  },
+  "findings": []
+}

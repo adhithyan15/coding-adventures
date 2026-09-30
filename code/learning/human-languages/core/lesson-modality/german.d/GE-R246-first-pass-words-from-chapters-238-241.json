@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R246-first-pass-words-from-chapters-238-241",
+    "language": "german",
+    "chapter": 246,
+    "sequence": 13570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9700a5757f7a690"
+  },
+  "findings": []
+}

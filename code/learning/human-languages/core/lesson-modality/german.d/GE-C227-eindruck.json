@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C227-eindruck",
+    "language": "german",
+    "chapter": 227,
+    "sequence": 12210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c87ba8e1803b2cc9"
+  },
+  "findings": []
+}

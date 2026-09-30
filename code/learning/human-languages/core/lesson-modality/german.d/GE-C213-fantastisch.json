@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C213-fantastisch",
+    "language": "german",
+    "chapter": 213,
+    "sequence": 11330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8601ee8e3118e6de"
+  },
+  "findings": []
+}

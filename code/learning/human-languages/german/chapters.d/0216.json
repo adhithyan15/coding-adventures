@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Thorough, Frequent, Wonderful, Helpful, Intelligent",
+  "label": "ch:ge-thorough-frequent-wonderful-helpful-intelligent",
+  "canDo": "I can say thorough, frequent, wonderful, helpful and intelligent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C216-intelligent",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: i can say thorough, frequent, wonderful, helpful and intelligent.",
+    "assesses": [
+      "GE-LEX-C216-QUAL216-03",
+      "GE-LEX-C216-QUAL216-04",
+      "GE-LEX-C216-QUAL216-05"
+    ]
+  }
+}

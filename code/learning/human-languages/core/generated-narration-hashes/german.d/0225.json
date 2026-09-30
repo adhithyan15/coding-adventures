@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:ffe845282d32f19e",
+  "lessonIds": [
+    "GE-C225-abenteuer",
+    "GE-C225-ahnung",
+    "GE-C225-alltag",
+    "GE-C225-ausbildung",
+    "GE-C225-ausstellung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch225.txt",
+  "json": "german/narration/ch225.json",
+  "textHash": "fnv1a64:6d83d5c7d2066e36",
+  "jsonHash": "fnv1a64:87e0115b0c2e3f48",
+  "findings": []
+}

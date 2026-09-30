@@ -1,0 +1,11 @@
+{
+  "id": "GE-C231-interesse",
+  "pathSegment": "GE-PATH-231-THING231",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-231-THING231",
+      "order": 3
+    }
+  ]
+}

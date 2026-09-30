@@ -1,0 +1,11 @@
+{
+  "id": "GE-C249-erzeugen",
+  "pathSegment": "GE-PATH-249-VERB249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-249-VERB249",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:1a68ed8640f1d29f",
+  "lessonIds": [
+    "GE-C223-treu",
+    "GE-C223-typisch",
+    "GE-C223-ungeduldig",
+    "GE-C223-ungluecklich",
+    "GE-C223-verheiratet"
+  ],
+  "tex": "german/book/chapters/ch223-faithful-typical-impatient-unhappy-married.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C229-erlebnis",
+    "language": "german",
+    "chapter": 229,
+    "sequence": 12480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78d488c5fe357323"
+  },
+  "findings": []
+}

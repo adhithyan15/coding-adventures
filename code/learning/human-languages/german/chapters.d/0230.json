@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "The opposite, A story, A conversation, Weight, A habit",
+  "label": "ch:ge-the-opposite-a-story-a-conversation-weight-a-habit",
+  "canDo": "I can say the opposite, a story, a conversation, weight and a habit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C230-gewohnheit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: i can say the opposite, a story, a conversation, weight and a habit.",
+    "assesses": [
+      "GE-LEX-C230-THING230-03",
+      "GE-LEX-C230-THING230-04",
+      "GE-LEX-C230-THING230-05"
+    ]
+  }
+}

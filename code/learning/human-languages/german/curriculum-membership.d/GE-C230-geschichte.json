@@ -1,0 +1,11 @@
+{
+  "id": "GE-C230-geschichte",
+  "pathSegment": "GE-PATH-230-THING230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-230-THING230",
+      "order": 1
+    }
+  ]
+}

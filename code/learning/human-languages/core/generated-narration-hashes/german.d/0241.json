@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:a3d9cbcebfdee96b",
+  "lessonIds": [
+    "GE-C241-umwelt",
+    "GE-C241-unterricht",
+    "GE-C241-unterschied",
+    "GE-C241-ursache",
+    "GE-C241-verhalten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch241.txt",
+  "json": "german/narration/ch241.json",
+  "textHash": "fnv1a64:405f1790a1073089",
+  "jsonHash": "fnv1a64:3be049ffa0e9d09d",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-228-THING228",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a decision, a memory, permission, a result and an explanation.",
+  "prerequisites": []
+}

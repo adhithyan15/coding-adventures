@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:74f90a5e8e6f61ce",
+  "lessonIds": [
+    "GE-C224-verliebt",
+    "GE-C224-verschieden",
+    "GE-C224-vorsichtig",
+    "GE-C224-windig",
+    "GE-C224-witzig"
+  ],
+  "tex": "german/book/chapters/ch224-in-love-different-careful-windy-funny.tex"
+}

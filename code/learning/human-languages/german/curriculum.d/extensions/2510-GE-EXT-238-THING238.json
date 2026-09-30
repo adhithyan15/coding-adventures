@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-238-THING238",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a difficulty, safety, sense, a worry and a voice.",
+  "prerequisites": []
+}

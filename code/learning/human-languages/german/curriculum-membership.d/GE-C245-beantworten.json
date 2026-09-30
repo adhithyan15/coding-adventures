@@ -1,0 +1,11 @@
+{
+  "id": "GE-C245-beantworten",
+  "pathSegment": "GE-PATH-245-VERB245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-245-VERB245",
+      "order": 3
+    }
+  ]
+}

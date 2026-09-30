@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Cloudy, Blond, Honest, Urgent, Lonely",
+  "label": "ch:ge-cloudy-blond-honest-urgent-lonely",
+  "canDo": "I can say cloudy, blond, honest, urgent and lonely.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C212-einsam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: i can say cloudy, blond, honest, urgent and lonely.",
+    "assesses": [
+      "GE-LEX-C212-QUAL212-03",
+      "GE-LEX-C212-QUAL212-04",
+      "GE-LEX-C212-QUAL212-05"
+    ]
+  }
+}

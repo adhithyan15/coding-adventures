@@ -265,6 +265,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // The count stays 22 when a track climbs a second rung: Hindi was the first to
     // attain A2, with chapters 166-275 (the practical-reading node, 540 headwords,
     // sixty verbs), which moved it from the A1 row of HELD to the A2 row.
+    // German followed as the second, with
+    // chapters 142-251 (the future and practical-reading nodes, 540 headwords,
+    // fifty verbs), which moved it from the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious

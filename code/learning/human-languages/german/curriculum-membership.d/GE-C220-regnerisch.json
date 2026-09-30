@@ -1,0 +1,11 @@
+{
+  "id": "GE-C220-regnerisch",
+  "pathSegment": "GE-PATH-220-QUAL220",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-220-QUAL220",
+      "order": 1
+    }
+  ]
+}

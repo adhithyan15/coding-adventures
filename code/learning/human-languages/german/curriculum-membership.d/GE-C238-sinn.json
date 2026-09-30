@@ -1,0 +1,11 @@
+{
+  "id": "GE-C238-sinn",
+  "pathSegment": "GE-PATH-238-THING238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-238-THING238",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C242-verkehr",
+    "language": "german",
+    "chapter": 242,
+    "sequence": 13320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e73e3ec4a6a5334a"
+  },
+  "findings": []
+}

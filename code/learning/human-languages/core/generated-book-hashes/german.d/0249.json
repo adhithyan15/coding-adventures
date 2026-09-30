@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:e4a81d87c7a44de2",
+  "lessonIds": [
+    "GE-C249-ergaenzen",
+    "GE-C249-erledigen",
+    "GE-C249-erscheinen",
+    "GE-C249-erzeugen",
+    "GE-C249-fordern"
+  ],
+  "tex": "german/book/chapters/ch249-to-complete-to-get-done-to-appear-to-produce-to-demand.tex"
+}

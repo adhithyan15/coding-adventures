@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "To pass, To prove, To bloom, To discuss, To pack",
+  "label": "ch:ge-to-pass-to-prove-to-bloom-to-discuss-to-pack",
+  "canDo": "I can say to pass, to prove, to bloom, to discuss and to pack.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C247-einpacken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: i can say to pass, to prove, to bloom, to discuss and to pack.",
+    "assesses": [
+      "GE-LEX-C247-VERB247-03",
+      "GE-LEX-C247-VERB247-04",
+      "GE-LEX-C247-VERB247-05"
+    ]
+  }
+}

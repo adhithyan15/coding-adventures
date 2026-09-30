@@ -1,0 +1,11 @@
+{
+  "id": "GE-C233-lektion",
+  "pathSegment": "GE-PATH-233-THING233",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-233-THING233",
+      "order": 4
+    }
+  ]
+}

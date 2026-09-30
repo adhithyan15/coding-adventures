@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:db3fc407675f1866",
+  "lessonIds": [
+    "GE-C231-hobby",
+    "GE-C231-hoffnung",
+    "GE-C231-humor",
+    "GE-C231-interesse",
+    "GE-C231-jugend"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch231.txt",
+  "json": "german/narration/ch231.json",
+  "textHash": "fnv1a64:57facda915e30799",
+  "jsonHash": "fnv1a64:8d5921b16df8bee2",
+  "findings": []
+}

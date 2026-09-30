@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C248-einrichten",
+    "language": "german",
+    "chapter": 248,
+    "sequence": 13810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69a1f5bb90a30fd9"
+  },
+  "findings": []
+}

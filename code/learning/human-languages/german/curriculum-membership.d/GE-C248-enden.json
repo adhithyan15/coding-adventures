@@ -1,0 +1,11 @@
+{
+  "id": "GE-C248-enden",
+  "pathSegment": "GE-PATH-248-VERB248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-248-VERB248",
+      "order": 1
+    }
+  ]
+}

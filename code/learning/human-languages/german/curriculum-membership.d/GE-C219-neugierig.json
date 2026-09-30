@@ -1,0 +1,11 @@
+{
+  "id": "GE-C219-neugierig",
+  "pathSegment": "GE-PATH-219-QUAL219",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-219-QUAL219",
+      "order": 0
+    }
+  ]
+}

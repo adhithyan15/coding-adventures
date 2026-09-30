@@ -1,0 +1,11 @@
+{
+  "id": "GE-C232-landschaft",
+  "pathSegment": "GE-PATH-232-THING232",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-232-THING232",
+      "order": 4
+    }
+  ]
+}

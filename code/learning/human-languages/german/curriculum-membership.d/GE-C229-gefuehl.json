@@ -1,0 +1,11 @@
+{
+  "id": "GE-C229-gefuehl",
+  "pathSegment": "GE-PATH-229-THING229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-229-THING229",
+      "order": 3
+    }
+  ]
+}

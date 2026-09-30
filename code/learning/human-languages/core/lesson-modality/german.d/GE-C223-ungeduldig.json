@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C223-ungeduldig",
+    "language": "german",
+    "chapter": 223,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:915656c2a822428e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C231-humor",
+    "language": "german",
+    "chapter": 231,
+    "sequence": 12600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4df37b6b62f854e1"
+  },
+  "findings": []
+}

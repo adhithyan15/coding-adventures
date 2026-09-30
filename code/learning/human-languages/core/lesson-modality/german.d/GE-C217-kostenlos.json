@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C217-kostenlos",
+    "language": "german",
+    "chapter": 217,
+    "sequence": 11520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f8350b8781814f6"
+  },
+  "findings": []
+}

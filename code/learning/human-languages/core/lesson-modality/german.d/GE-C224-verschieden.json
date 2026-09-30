@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C224-verschieden",
+    "language": "german",
+    "chapter": 224,
+    "sequence": 12050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3adddd2df9a252f3"
+  },
+  "findings": []
+}

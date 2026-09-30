@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Broken, Clever, Free of charge, Strong, Single",
+  "label": "ch:ge-broken-clever-free-of-charge-strong-single",
+  "canDo": "I can say broken, clever, free of charge, strong and single.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C217-ledig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: i can say broken, clever, free of charge, strong and single.",
+    "assesses": [
+      "GE-LEX-C217-QUAL217-03",
+      "GE-LEX-C217-QUAL217-04",
+      "GE-LEX-C217-QUAL217-05"
+    ]
+  }
+}

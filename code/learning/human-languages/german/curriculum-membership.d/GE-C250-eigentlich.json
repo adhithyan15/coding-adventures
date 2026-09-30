@@ -1,0 +1,11 @@
+{
+  "id": "GE-C250-eigentlich",
+  "pathSegment": "GE-PATH-250-LINK250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-250-LINK250",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C212-eilig",
+  "pathSegment": "GE-PATH-212-QUAL212",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-212-QUAL212",
+      "order": 3
+    }
+  ]
+}

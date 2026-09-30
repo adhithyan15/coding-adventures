@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C211-aengstlich",
+    "language": "german",
+    "chapter": 211,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdc5355d96552041"
+  },
+  "findings": []
+}

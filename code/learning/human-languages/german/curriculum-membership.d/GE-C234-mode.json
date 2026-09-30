@@ -1,0 +1,11 @@
+{
+  "id": "GE-C234-mode",
+  "pathSegment": "GE-PATH-234-THING234",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-234-THING234",
+      "order": 3
+    }
+  ]
+}

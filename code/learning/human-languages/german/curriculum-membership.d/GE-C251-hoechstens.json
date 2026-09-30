@@ -1,0 +1,11 @@
+{
+  "id": "GE-C251-hoechstens",
+  "pathSegment": "GE-PATH-251-LINK251",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-251-LINK251",
+      "order": 2
+    }
+  ]
+}

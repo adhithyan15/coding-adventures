@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:f675c7028626fd6b",
+  "lessonIds": [
+    "GE-C228-entscheidung",
+    "GE-C228-erinnerung",
+    "GE-C228-erlaubnis",
+    "GE-C228-ergebnis",
+    "GE-C228-erklaerung",
+    "GE-R228-first-pass-words-from-chapters-220-223",
+    "GE-R228-second-pass-words-from-chapters-224-228"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch228.txt",
+  "json": "german/narration/ch228.json",
+  "textHash": "fnv1a64:f698bb704087edcd",
+  "jsonHash": "fnv1a64:f265901d00157574",
+  "findings": []
+}

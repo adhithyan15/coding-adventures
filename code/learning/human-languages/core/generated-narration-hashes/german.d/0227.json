@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:7ebacdbaf0453471",
+  "lessonIds": [
+    "GE-C227-bewerbung",
+    "GE-C227-beziehung",
+    "GE-C227-eindruck",
+    "GE-C227-eintritt",
+    "GE-C227-eintrittskarte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch227.txt",
+  "json": "german/narration/ch227.json",
+  "textHash": "fnv1a64:a15a1d5399c2cb02",
+  "jsonHash": "fnv1a64:da01c4bb66807dd0",
+  "findings": []
+}

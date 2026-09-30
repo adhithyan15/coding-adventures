@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C239-stimmung",
+    "language": "german",
+    "chapter": 239,
+    "sequence": 13170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b8dfb43fadc9162"
+  },
+  "findings": []
+}

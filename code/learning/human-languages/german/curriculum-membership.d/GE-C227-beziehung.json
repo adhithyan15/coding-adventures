@@ -1,0 +1,11 @@
+{
+  "id": "GE-C227-beziehung",
+  "pathSegment": "GE-PATH-227-THING227",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-227-THING227",
+      "order": 1
+    }
+  ]
+}
