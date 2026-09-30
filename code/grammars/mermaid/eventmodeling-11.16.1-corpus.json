@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, standalone entity declarations, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, layout configuration, titles, and accessibility metadata.",
+  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, standalone entity declarations, explicit sources, typed or untyped inline object and quoted data, reusable multiline data blocks, frame notes, Given/When/Then scenarios, layout and entity-color theme configuration, titles, and accessibility metadata.",
   "fixtures": [
     {
       "id": "state-change",
@@ -51,6 +51,14 @@
     {
       "id": "front-matter-layout-config",
       "source": "---\nconfig:\n  eventmodeling:\n    padding: 22\n    rowHeight: 36\n    useMaxWidth: false\n---\neventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem"
+    },
+    {
+      "id": "init-theme-colors",
+      "source": "%%{init: {\"themeVariables\": {\"emUiFill\": \"#102030\", \"emUiStroke\": \"#203040\", \"emCommandFill\": \"#304050\", \"emCommandStroke\": \"#405060\", \"emEventFill\": \"#506070\", \"emEventStroke\": \"#607080\"}}}%%\neventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem\ntf 03 evt ItemAdded"
+    },
+    {
+      "id": "front-matter-theme-colors",
+      "source": "---\nthemeVariables:\n  emProcessorFill: '#112233'\n  emProcessorStroke: '#223344'\n  emReadModelFill: '#334455'\n  emReadModelStroke: '#445566'\n---\neventmodeling\ntf 01 pcr InventoryProcessor\ntf 02 rmo InventoryView"
     }
   ]
 }

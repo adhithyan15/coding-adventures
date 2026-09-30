@@ -505,10 +505,12 @@ same backend-neutral pipeline. Init directives and YAML front matter preserve
 the Event Modeling `padding`, `rowHeight`, and `useMaxWidth` configuration;
 padding affects native viewport geometry while the currently non-visual row
 height and responsive-width settings remain available in PaintScene metadata.
+All ten upstream `em*Fill` and `em*Stroke` theme variables resolve from init
+directives or YAML front matter into backend-neutral frame paint styles.
 Temporal
 swimlane layout lowers through backend-neutral PaintScene instructions and a
-native Metal-to-PNG fixture. Theme overrides and browser-only responsive
-behavior remain unsupported at the partial level.
+native Metal-to-PNG fixture. Browser-only responsive behavior and complete
+upstream validator parity remain unsupported at the partial level.
 
 ### Treemap Native Slice
 

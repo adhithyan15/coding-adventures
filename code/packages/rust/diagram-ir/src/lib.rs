@@ -1248,15 +1248,52 @@ pub enum EventModelEntityKind {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct EventModelStyles {
+    pub ui_fill: String,
+    pub ui_stroke: String,
+    pub processor_fill: String,
+    pub processor_stroke: String,
+    pub read_model_fill: String,
+    pub read_model_stroke: String,
+    pub command_fill: String,
+    pub command_stroke: String,
+    pub event_fill: String,
+    pub event_stroke: String,
+}
+
+impl Default for EventModelStyles {
+    fn default() -> Self {
+        Self {
+            ui_fill: "#ffffff".into(),
+            ui_stroke: "#dbdada".into(),
+            processor_fill: "#edb3f6".into(),
+            processor_stroke: "#b88cbf".into(),
+            read_model_fill: "#d3f1a2".into(),
+            read_model_stroke: "#a3b732".into(),
+            command_fill: "#bcd6fe".into(),
+            command_stroke: "#679ac3".into(),
+            event_fill: "#ffb778".into(),
+            event_stroke: "#c19a0f".into(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct EventModelConfig {
     pub padding: f64,
     pub row_height: f64,
     pub use_max_width: bool,
+    pub styles: EventModelStyles,
 }
 
 impl Default for EventModelConfig {
     fn default() -> Self {
-        Self { padding: 30.0, row_height: 32.0, use_max_width: true }
+        Self {
+            padding: 30.0,
+            row_height: 32.0,
+            use_max_width: true,
+            styles: EventModelStyles::default(),
+        }
     }
 }
 
@@ -1340,6 +1377,8 @@ pub enum LayoutedEventModelItem {
         data_reference: Option<String>,
         data_label: Option<String>,
         kind: EventModelEntityKind,
+        fill: String,
+        stroke: String,
     },
     Relation {
         from: Point,
