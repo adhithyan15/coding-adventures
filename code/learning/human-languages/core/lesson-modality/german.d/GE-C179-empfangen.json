@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C179-empfangen",
+    "language": "german",
+    "chapter": 179,
+    "sequence": 8770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1312ea2769f7f957"
+  },
+  "findings": []
+}

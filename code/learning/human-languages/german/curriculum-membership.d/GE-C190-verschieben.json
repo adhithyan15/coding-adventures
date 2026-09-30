@@ -1,0 +1,11 @@
+{
+  "id": "GE-C190-verschieben",
+  "pathSegment": "GE-PATH-190-VERB190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-190-VERB190",
+      "order": 3
+    }
+  ]
+}

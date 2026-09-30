@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.63.0";
+pub const VERSION: &str = "0.64.0";
 
 use std::collections::HashMap;
 
@@ -2108,6 +2108,38 @@ where
                 if points.len() >= 2 {
                     instructions.push(PaintInstruction::Path(line_path(points, color, 2.0)));
                 }
+            }
+            LayoutedChartItem::CubicPath {
+                start,
+                segments,
+                color,
+            } => {
+                let mut commands = Vec::with_capacity(segments.len() + 2);
+                commands.push(PathCommand::MoveTo {
+                    x: start.x,
+                    y: start.y,
+                });
+                commands.extend(segments.iter().map(|segment| PathCommand::CubicTo {
+                    cx1: segment.control1.x,
+                    cy1: segment.control1.y,
+                    cx2: segment.control2.x,
+                    cy2: segment.control2.y,
+                    x: segment.end.x,
+                    y: segment.end.y,
+                }));
+                commands.push(PathCommand::Close);
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands,
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some(color.clone()),
+                    stroke_width: Some(2.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
             }
             LayoutedChartItem::PointLabel {
                 x,
@@ -5360,7 +5392,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.63.0");
+        assert_eq!(crate::VERSION, "0.64.0");
     }
 
     #[test]

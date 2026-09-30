@@ -1,0 +1,11 @@
+{
+  "id": "GE-C183-messen",
+  "pathSegment": "GE-PATH-183-VERB183",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-183-VERB183",
+      "order": 1
+    }
+  ]
+}

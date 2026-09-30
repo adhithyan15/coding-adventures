@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Leather, Wood, Metal, Plastic, The body",
+  "label": "ch:ge-leather-wood-metal-plastic-the-body",
+  "canDo": "I can say leather, wood, metal, plastic and the body.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C204-koerper",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: i can say leather, wood, metal, plastic and the body.",
+    "assesses": [
+      "GE-LEX-C204-THING204-03",
+      "GE-LEX-C204-THING204-04",
+      "GE-LEX-C204-THING204-05"
+    ]
+  }
+}

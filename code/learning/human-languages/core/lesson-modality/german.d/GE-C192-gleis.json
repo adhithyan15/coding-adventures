@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C192-gleis",
+    "language": "german",
+    "chapter": 192,
+    "sequence": 9840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72eb640c2ba9ba84"
+  },
+  "findings": []
+}

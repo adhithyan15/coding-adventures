@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R191-first-pass-words-from-chapters-183-186",
+    "language": "german",
+    "chapter": 191,
+    "sequence": 9610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50654a86cc1c31fa"
+  },
+  "findings": []
+}

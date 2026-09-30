@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C187-steigen",
+    "language": "german",
+    "chapter": 187,
+    "sequence": 9400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8122d83f45127520"
+  },
+  "findings": []
+}

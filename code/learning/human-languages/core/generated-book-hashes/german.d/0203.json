@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:5209d62878112562",
+  "lessonIds": [
+    "GE-C203-portemonnaie",
+    "GE-C203-groesse",
+    "GE-C203-stoff",
+    "GE-C203-wolle",
+    "GE-C203-seide"
+  ],
+  "tex": "german/book/chapters/ch203-a-purse-a-size-material-wool-silk.tex"
+}

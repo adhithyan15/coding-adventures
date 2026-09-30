@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:be6c671930054ef0",
+  "lessonIds": [
+    "GE-C185-retten",
+    "GE-C185-rudern",
+    "GE-C185-schieben",
+    "GE-C185-schlagen",
+    "GE-C185-schmecken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch185.txt",
+  "json": "german/narration/ch185.json",
+  "textHash": "fnv1a64:582c43e977439ca2",
+  "jsonHash": "fnv1a64:9d90ab6064efa693",
+  "findings": []
+}

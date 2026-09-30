@@ -1,0 +1,11 @@
+{
+  "id": "GE-C184-parken",
+  "pathSegment": "GE-PATH-184-VERB184",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-184-VERB184",
+      "order": 0
+    }
+  ]
+}

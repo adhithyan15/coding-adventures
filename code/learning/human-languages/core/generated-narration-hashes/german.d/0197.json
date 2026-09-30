@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:e10073f939ac7409",
+  "lessonIds": [
+    "GE-C197-kueste",
+    "GE-C197-nebel",
+    "GE-C197-hitze",
+    "GE-C197-kaelte",
+    "GE-C197-blitz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch197.txt",
+  "json": "german/narration/ch197.json",
+  "textHash": "fnv1a64:ca66b412778ae394",
+  "jsonHash": "fnv1a64:4169a5539ed54980",
+  "findings": []
+}

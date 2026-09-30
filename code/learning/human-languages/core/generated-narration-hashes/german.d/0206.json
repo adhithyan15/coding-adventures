@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:9c31a02097921c87",
+  "lessonIds": [
+    "GE-C206-wunde",
+    "GE-C206-pflaster",
+    "GE-C206-salbe",
+    "GE-C206-spritze",
+    "GE-C206-notfall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch206.txt",
+  "json": "german/narration/ch206.json",
+  "textHash": "fnv1a64:b528a94e5655e077",
+  "jsonHash": "fnv1a64:3568884e91204b87",
+  "findings": []
+}

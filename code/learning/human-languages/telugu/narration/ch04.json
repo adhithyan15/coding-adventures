@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b59efc5a2f4b5a43",
+  "sourceHash": "fnv1a64:568f9427ffe24d75",
   "lessons": [
     {
       "id": "TE-C04-dappu",
@@ -126,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5fd338c6db5c918",
+      "sourceHash": "fnv1a64:4d607dc82b2b3555",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -193,15 +193,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: డ — copy what you see",
+          "title": "Writing: డ — five deliberate movements",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on డ (ḍa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts and sweeps right and upward around the lower-right bowl. Movement 4 curves left around the upper-right shoulder. Movement 5 finishes with the separate top flourish."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "This is one attested school-style order. Telugu handwriting varies, so keep the five movements distinct and let the round shape grow from them."
             }
           ]
         },

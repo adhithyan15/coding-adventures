@@ -1,0 +1,11 @@
+{
+  "id": "GE-C207-feuerwehr",
+  "pathSegment": "GE-PATH-207-THING207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-207-THING207",
+      "order": 1
+    }
+  ]
+}

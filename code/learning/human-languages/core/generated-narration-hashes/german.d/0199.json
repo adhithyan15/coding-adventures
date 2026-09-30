@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:764101ca135c5abd",
+  "lessonIds": [
+    "GE-C199-gras",
+    "GE-C199-frucht",
+    "GE-C199-karotte",
+    "GE-C199-haehnchen",
+    "GE-C199-torte"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch199.txt",
+  "json": "german/narration/ch199.json",
+  "textHash": "fnv1a64:71663253191561b6",
+  "jsonHash": "fnv1a64:5623aae9befb34ec",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C209-wirtschaft",
+  "pathSegment": "GE-PATH-209-THING209",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-209-THING209",
+      "order": 4
+    }
+  ]
+}

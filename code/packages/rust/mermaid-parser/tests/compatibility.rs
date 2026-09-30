@@ -227,6 +227,7 @@ fn pinned_radar_subset_corpus_parses_to_chart_ir() {
                 (Some(25.0), Some(35.0))
             );
             assert_eq!(chart.radar_config.axis_label_factor, Some(1.1));
+            assert_eq!(chart.radar_config.curve_tension, Some(0.25));
         } else if id == "front-matter-layout-config" {
             assert_eq!(chart.radar_config.width, Some(440.0));
             assert_eq!(chart.radar_config.axis_scale_factor, Some(0.8));

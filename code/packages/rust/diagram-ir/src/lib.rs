@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.70.0";
+pub const VERSION: &str = "0.71.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -944,6 +944,7 @@ pub struct RadarConfig {
     pub margin_right: Option<f64>,
     pub axis_scale_factor: Option<f64>,
     pub axis_label_factor: Option<f64>,
+    pub curve_tension: Option<f64>,
 }
 
 impl Default for RadarConfig {
@@ -962,6 +963,7 @@ impl Default for RadarConfig {
             margin_right: None,
             axis_scale_factor: None,
             axis_label_factor: None,
+            curve_tension: None,
         }
     }
 }
@@ -1007,6 +1009,13 @@ pub struct LayoutedLabel {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct CubicCurveSegment {
+    pub control1: Point,
+    pub control2: Point,
+    pub end: Point,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum LayoutedChartItem {
     AxisSpine {
         x1: f64,
@@ -1049,6 +1058,11 @@ pub enum LayoutedChartItem {
     },
     LinePath {
         points: Vec<Point>,
+        color: String,
+    },
+    CubicPath {
+        start: Point,
+        segments: Vec<CubicCurveSegment>,
         color: String,
     },
     PointLabel {
@@ -2281,7 +2295,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.70.0");
+        assert_eq!(VERSION, "0.71.0");
     }
     #[test]
     fn default_direction_is_tb() {

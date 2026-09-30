@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "A law, A punishment, The government, A state, The population",
+  "label": "ch:ge-a-law-a-punishment-the-government-a-state-the-population",
+  "canDo": "I can say a law, a punishment, the government, a state and the population.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C208-bevoelkerung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: i can say a law, a punishment, the government, a state and the population.",
+    "assesses": [
+      "GE-LEX-C208-THING208-03",
+      "GE-LEX-C208-THING208-04",
+      "GE-LEX-C208-THING208-05"
+    ]
+  }
+}

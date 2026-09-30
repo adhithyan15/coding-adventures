@@ -1,0 +1,11 @@
+{
+  "id": "GE-C175-bauen",
+  "pathSegment": "GE-PATH-175-VERB175",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-175-VERB175",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:928024544fe66ae9",
+  "lessonIds": [
+    "GE-C181-fotografieren",
+    "GE-C181-fruehstuecken",
+    "GE-C181-giessen",
+    "GE-C181-gruessen",
+    "GE-C181-informieren"
+  ],
+  "tex": "german/book/chapters/ch181-to-photograph-to-have-breakfast-to-pour-to-greet-to-inform.tex"
+}

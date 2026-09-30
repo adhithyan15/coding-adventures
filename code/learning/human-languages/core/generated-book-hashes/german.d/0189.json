@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:2d2ed75f3832d526",
+  "lessonIds": [
+    "GE-C189-uebersetzen",
+    "GE-C189-umarmen",
+    "GE-C189-verabreden",
+    "GE-C189-verbieten",
+    "GE-C189-verbinden"
+  ],
+  "tex": "german/book/chapters/ch189-to-translate-to-hug-to-arrange-to-forbid-to-connect.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C190-verwenden",
+  "pathSegment": "GE-PATH-190-VERB190",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-190-VERB190",
+      "order": 4
+    }
+  ]
+}

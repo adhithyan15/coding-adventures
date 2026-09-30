@@ -1,0 +1,11 @@
+{
+  "id": "GE-C179-ernaehren",
+  "pathSegment": "GE-PATH-179-VERB179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-179-VERB179",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C186-schneien",
+  "pathSegment": "GE-PATH-186-VERB186",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-186-VERB186",
+      "order": 0
+    }
+  ]
+}

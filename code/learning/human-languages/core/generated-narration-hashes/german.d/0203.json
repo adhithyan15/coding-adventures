@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:4667ae10636a1200",
+  "lessonIds": [
+    "GE-C203-portemonnaie",
+    "GE-C203-groesse",
+    "GE-C203-stoff",
+    "GE-C203-wolle",
+    "GE-C203-seide"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch203.txt",
+  "json": "german/narration/ch203.json",
+  "textHash": "fnv1a64:b4a24e8bbdc6372f",
+  "jsonHash": "fnv1a64:ac5caeb85648a48f",
+  "findings": []
+}

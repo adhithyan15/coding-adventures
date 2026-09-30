@@ -1,0 +1,11 @@
+{
+  "id": "GE-C179-erreichen",
+  "pathSegment": "GE-PATH-179-VERB179",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-179-VERB179",
+      "order": 4
+    }
+  ]
+}

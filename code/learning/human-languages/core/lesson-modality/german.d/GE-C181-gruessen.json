@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C181-gruessen",
+    "language": "german",
+    "chapter": 181,
+    "sequence": 8900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45f4bdae69c2569d"
+  },
+  "findings": []
+}

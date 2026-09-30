@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C203-groesse",
+    "language": "german",
+    "chapter": 203,
+    "sequence": 10550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5396ef0170dcd902"
+  },
+  "findings": []
+}

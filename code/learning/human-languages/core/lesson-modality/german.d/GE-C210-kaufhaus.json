@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C210-kaufhaus",
+    "language": "german",
+    "chapter": 210,
+    "sequence": 11080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c94d9e937d3cedb6"
+  },
+  "findings": []
+}

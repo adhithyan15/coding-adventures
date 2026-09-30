@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:3f46efe7c07601be",
+  "lessonIds": [
+    "GE-C199-gras",
+    "GE-C199-frucht",
+    "GE-C199-karotte",
+    "GE-C199-haehnchen",
+    "GE-C199-torte"
+  ],
+  "tex": "german/book/chapters/ch199-grass-a-fruit-a-carrot-a-chicken-a-gateau.tex"
+}

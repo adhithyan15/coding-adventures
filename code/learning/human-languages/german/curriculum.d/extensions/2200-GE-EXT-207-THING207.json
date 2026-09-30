@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-207-THING207",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an ambulance, the fire brigade, a thief, a theft and a court.",
+  "prerequisites": []
+}

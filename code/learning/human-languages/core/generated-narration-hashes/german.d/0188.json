@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:3f3dabdf38e4607f",
+  "lessonIds": [
+    "GE-C188-streichen",
+    "GE-C188-teilen",
+    "GE-C188-telefonieren",
+    "GE-C188-trennen",
+    "GE-C188-ueberqueren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch188.txt",
+  "json": "german/narration/ch188.json",
+  "textHash": "fnv1a64:2a520b6be6df0a02",
+  "jsonHash": "fnv1a64:0864a411eeca3e35",
+  "findings": []
+}

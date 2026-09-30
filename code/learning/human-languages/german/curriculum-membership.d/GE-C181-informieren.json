@@ -1,0 +1,11 @@
+{
+  "id": "GE-C181-informieren",
+  "pathSegment": "GE-PATH-181-VERB181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-181-VERB181",
+      "order": 4
+    }
+  ]
+}

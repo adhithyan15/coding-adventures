@@ -1,0 +1,11 @@
+{
+  "id": "GE-C204-metall",
+  "pathSegment": "GE-PATH-204-THING204",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-204-THING204",
+      "order": 2
+    }
+  ]
+}

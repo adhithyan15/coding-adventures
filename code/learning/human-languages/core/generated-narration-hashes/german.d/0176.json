@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:0628a719e21373f4",
+  "lessonIds": [
+    "GE-C176-bedeuten",
+    "GE-C176-beeilen",
+    "GE-C176-behalten",
+    "GE-C176-beschreiben",
+    "GE-C176-betreten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch176.txt",
+  "json": "german/narration/ch176.json",
+  "textHash": "fnv1a64:4507f47474581433",
+  "jsonHash": "fnv1a64:edec55aa2e362b66",
+  "findings": []
+}

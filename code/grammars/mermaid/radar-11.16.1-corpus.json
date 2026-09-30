@@ -30,7 +30,7 @@
     },
     {
       "id": "init-layout-config",
-      "source": "%%{init: {\"radar\": {\"width\": 520, \"height\": 480, \"marginTop\": 30, \"marginBottom\": 40, \"marginLeft\": 25, \"marginRight\": 35, \"axisScaleFactor\": 0.9, \"axisLabelFactor\": 1.1}}}%%\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+      "source": "%%{init: {\"radar\": {\"width\": 520, \"height\": 480, \"marginTop\": 30, \"marginBottom\": 40, \"marginLeft\": 25, \"marginRight\": 35, \"axisScaleFactor\": 0.9, \"axisLabelFactor\": 1.1, \"curveTension\": 0.25}}}%%\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
     },
     {
       "id": "front-matter-layout-config",

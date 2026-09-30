@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:6b4ebb84138d89de",
+  "lessonIds": [
+    "GE-C202-staubsauger",
+    "GE-C202-buegeleisen",
+    "GE-C202-shampoo",
+    "GE-C202-buerste",
+    "GE-C202-anzug"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch202.txt",
+  "json": "german/narration/ch202.json",
+  "textHash": "fnv1a64:61e25fb6f56f6335",
+  "jsonHash": "fnv1a64:c96f201cbf21b624",
+  "findings": []
+}

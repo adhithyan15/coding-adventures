@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:6d1858006a978e6c",
+  "lessonIds": [
+    "GE-C189-uebersetzen",
+    "GE-C189-umarmen",
+    "GE-C189-verabreden",
+    "GE-C189-verbieten",
+    "GE-C189-verbinden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch189.txt",
+  "json": "german/narration/ch189.json",
+  "textHash": "fnv1a64:1a84134e65f6d388",
+  "jsonHash": "fnv1a64:d7a3670877367b5f",
+  "findings": []
+}

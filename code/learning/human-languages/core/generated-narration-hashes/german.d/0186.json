@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:aa9f3009dc43d886",
+  "lessonIds": [
+    "GE-C186-schneien",
+    "GE-C186-schuetzen",
+    "GE-C186-segeln",
+    "GE-C186-senden",
+    "GE-C186-spazieren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch186.txt",
+  "json": "german/narration/ch186.json",
+  "textHash": "fnv1a64:376999873e7acc45",
+  "jsonHash": "fnv1a64:7396367115f9157d",
+  "findings": []
+}

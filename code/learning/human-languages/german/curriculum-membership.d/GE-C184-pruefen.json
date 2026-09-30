@@ -1,0 +1,11 @@
+{
+  "id": "GE-C184-pruefen",
+  "pathSegment": "GE-PATH-184-VERB184",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-184-VERB184",
+      "order": 3
+    }
+  ]
+}

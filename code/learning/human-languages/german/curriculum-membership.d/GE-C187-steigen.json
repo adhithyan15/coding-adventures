@@ -1,0 +1,11 @@
+{
+  "id": "GE-C187-steigen",
+  "pathSegment": "GE-PATH-187-VERB187",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-187-VERB187",
+      "order": 4
+    }
+  ]
+}

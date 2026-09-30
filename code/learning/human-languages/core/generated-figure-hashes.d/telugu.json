@@ -31,6 +31,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S123-letter-dda",
+      "sourceHash": "fnv1a64:1a588b2de2746cc2",
+      "svgHash": "fnv1a64:1c5c7db3c760d129",
+      "svg": "telugu/book/figures/TE-S123-letter-dda-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S124-letter-e",
       "sourceHash": "fnv1a64:e705b13c9aa4d541",
       "svgHash": "fnv1a64:3781327c48fe445d",

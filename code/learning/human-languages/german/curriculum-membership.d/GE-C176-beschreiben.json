@@ -1,0 +1,11 @@
+{
+  "id": "GE-C176-beschreiben",
+  "pathSegment": "GE-PATH-176-VERB176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-176-VERB176",
+      "order": 3
+    }
+  ]
+}

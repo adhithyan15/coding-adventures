@@ -1,0 +1,11 @@
+{
+  "id": "GE-C185-retten",
+  "pathSegment": "GE-PATH-185-VERB185",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-185-VERB185",
+      "order": 0
+    }
+  ]
+}

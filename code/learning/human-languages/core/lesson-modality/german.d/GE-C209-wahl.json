@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C209-wahl",
+    "language": "german",
+    "chapter": 209,
+    "sequence": 11000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03da47fe4e668b6e"
+  },
+  "findings": []
+}

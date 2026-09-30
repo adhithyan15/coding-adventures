@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C193-jugendherberge",
+    "language": "german",
+    "chapter": 193,
+    "sequence": 9880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:954f7be2f2bdafd4"
+  },
+  "findings": []
+}

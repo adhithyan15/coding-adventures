@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:5bae42158a233813",
+  "lessonIds": [
+    "GE-C180-erwarten",
+    "GE-C180-fangen",
+    "GE-C180-fernsehen",
+    "GE-C180-festhalten",
+    "GE-C180-fluestern"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch180.txt",
+  "json": "german/narration/ch180.json",
+  "textHash": "fnv1a64:4b9fdc436d44a37e",
+  "jsonHash": "fnv1a64:953e5f56464e9904",
+  "findings": []
+}

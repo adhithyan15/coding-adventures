@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:4794e4c134b0a8e4",
+  "lessonIds": [
+    "GE-C206-wunde",
+    "GE-C206-pflaster",
+    "GE-C206-salbe",
+    "GE-C206-spritze",
+    "GE-C206-notfall"
+  ],
+  "tex": "german/book/chapters/ch206-a-wound-a-plaster-an-ointment-an-injection-an-emergency.tex"
+}

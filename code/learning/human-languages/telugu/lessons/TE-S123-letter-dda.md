@@ -49,17 +49,18 @@ You met it on an earlier page, in the middle of a word you already say:
 
 - **మీరు ఎలా ఉన్నారు?** — how are you? (respectful)
 
-## Writing: డ — copy what you see
+## Writing: డ — five deliberate movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-123] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on డ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left
+curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts
+and sweeps right and upward around the lower-right bowl. Movement 4 curves
+left around the upper-right shoulder. Movement 5 finishes with the separate
+top flourish.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+This is one attested school-style order. Telugu handwriting varies, so keep
+the five movements distinct and let the round shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-123] -->

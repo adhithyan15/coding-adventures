@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:04767ec83ca520db",
+  "lessonIds": [
+    "GE-C197-kueste",
+    "GE-C197-nebel",
+    "GE-C197-hitze",
+    "GE-C197-kaelte",
+    "GE-C197-blitz"
+  ],
+  "tex": "german/book/chapters/ch197-a-coast-fog-heat-cold-lightning.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C188-ueberqueren",
+  "pathSegment": "GE-PATH-188-VERB188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-188-VERB188",
+      "order": 4
+    }
+  ]
+}

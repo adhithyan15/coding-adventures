@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:0a11d3f8f24a42b9",
+  "lessonIds": [
+    "GE-C191-vorbereiten",
+    "GE-C191-waehlen",
+    "GE-C191-wecken",
+    "GE-C191-wiegen",
+    "GE-C191-zeichnen",
+    "GE-R191-first-pass-words-from-chapters-183-186",
+    "GE-R191-second-pass-words-from-chapters-187-191"
+  ],
+  "tex": "german/book/chapters/ch191-to-prepare-to-choose-to-wake-to-weigh-to-draw.tex"
+}

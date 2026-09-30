@@ -1,0 +1,11 @@
+{
+  "id": "GE-C198-hase",
+  "pathSegment": "GE-PATH-198-THING198",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-198-THING198",
+      "order": 1
+    }
+  ]
+}
