@@ -1,5 +1,9 @@
 # Changelog — intel8086-encoder
 
+## Unreleased — WORD03b branch surface
+
+- Re-export signed near `JMP rel16` encoding for final backend label fixups.
+
 ## Unreleased — WORD03a
 
 - Re-export short conditional-jump encoding for normalized comparison

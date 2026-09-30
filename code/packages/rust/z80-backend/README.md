@@ -6,7 +6,7 @@ Zilog Z80 backend for `jit-core` / `aot-core`. Seventh lane of the
 source/binary-compatible superset of the 8080, sharing the same
 `LD A, n` / `HALT` (`MVI A, n` / `HLT`) return convention).
 
-## Scope (WORD03a)
+## Scope (WORD03b)
 
 | CIR family | Status |
 |------------|--------|
@@ -16,6 +16,7 @@ source/binary-compatible superset of the 8080, sharing the same
 | `add`, `sub`, `and`, `or`, `xor` on `u8` and `u16` | two live values, wrapping result |
 | `not_u8`, `not_u16` | width-masked complement, preserving another live value |
 | `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | unsigned comparison, normalized `bool` result |
+| `label`, `jmp`, `jmp_if_true`, `jmp_if_false` | byte-addressed `JP` fixups |
 | Other operations | `None` / `BackendError::UnsupportedOp` |
 
 The historical `const_i64`/`ret_i64` byte-sized smoke path remains for
@@ -26,8 +27,9 @@ byte/word values. Word addition uses `ADD HL,DE` when that pair layout applies;
 the other word operations propagate carry/borrow across low and high bytes.
 Typed returns must match the value's width. The observable result ABI remains
 `A` for `u8`/`bool` and `HL` for `u16`.
-WORD03a compares the declared width and returns exactly `0` or `1`; CIR
-labels, branches, and loops remain for WORD03b.
+WORD03a comparisons return exactly `0` or `1`. WORD03b computes liveness
+across branch targets and loop back edges, then resolves label byte addresses
+after final instruction sizing so CIR indices are never encoded as addresses.
 
 `Backend::run` panics — this backend is emit-only. Load the emitted
 bytes into `z80-simulator` to execute them.

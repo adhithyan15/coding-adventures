@@ -12,7 +12,7 @@
 //! following the pattern documented in
 //! [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 //!
-//! ## Scope (WORD03a)
+//! ## Scope (WORD03b)
 //!
 //! Minimal viable backend — covers the trivial-ROM case (`const_*`
 //! immediate + `ret_*`) needed by the `lang-aot` Intel 8086 e2e smoke
@@ -25,12 +25,14 @@
 //! | matching typed returns, `ret_void` | `HLT` (a genuine hardware halt — see below) |
 //! | two-live `add/sub/and/or/xor` on `u8`/`u16` | register ALU |
 //! | typed unsigned `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | normalized `bool` |
+//! | `label`, `jmp`, `jmp_if_true`, `jmp_if_false` | `Jcc` + near `JMP` fixups |
 //! | Anything else | returns `None` |
 //!
 //! Reverse liveness allocates at most two same-width values in `AX`/`BX`
 //! (or `AL`/`BL`) and uses `CX`/`CL` as a transient scratch. A third
 //! value and simultaneous byte and word values remain explicit errors.
-//! Control-flow CIR waits for WORD03b. Returns copy the selected value to `AX`.
+//! Control-flow-aware liveness follows forward branches and loop back edges.
+//! Returns copy the selected value to `AX`.
 //!
 //! Per the migration spec, this is acceptable: the architectural
 //! correctness win (IIR → CIR via `Backend` trait) is delivered as soon
@@ -94,13 +96,13 @@
 //! `intel8086-simulator`.
 
 use intel8086_encoder::{
-    encode_alu_reg_reg, encode_hlt, encode_jcc_short, encode_mov_reg_imm16, encode_mov_reg_imm8,
-    encode_mov_reg_reg16, encode_mov_reg_reg8, REG_AH, REG_AL, REG_AX, REG_BH, REG_BL, REG_BX,
-    REG_CL, REG_CX,
+    encode_alu_reg_reg, encode_hlt, encode_jcc_short, encode_jmp_near, encode_mov_reg_imm16,
+    encode_mov_reg_imm8, encode_mov_reg_reg16, encode_mov_reg_reg8, REG_AH, REG_AL, REG_AX, REG_BH,
+    REG_BL, REG_BX, REG_CL, REG_CX,
 };
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt;
 use vm_core::value::Value;
 
@@ -118,6 +120,9 @@ pub enum BackendError {
     UnsupportedOp(String),
     InvalidOperand(String),
     UndefinedVariable(String),
+    UndefinedLabel(String),
+    DuplicateLabel(String),
+    BranchOutOfRange(String),
     ImmediateOutOfRange(i64),
 }
 
@@ -128,6 +133,11 @@ impl fmt::Display for BackendError {
             Self::InvalidOperand(d) => write!(f, "intel8086-backend: invalid operand: {d}"),
             Self::UndefinedVariable(n) => {
                 write!(f, "intel8086-backend: undefined variable {n:?}")
+            }
+            Self::UndefinedLabel(n) => write!(f, "intel8086-backend: undefined label {n:?}"),
+            Self::DuplicateLabel(n) => write!(f, "intel8086-backend: duplicate label {n:?}"),
+            Self::BranchOutOfRange(n) => {
+                write!(f, "intel8086-backend: branch to {n:?} is out of range")
             }
             Self::ImmediateOutOfRange(n) => write!(
                 f,
@@ -155,6 +165,11 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     // expression scratch and never stores a source-visible value.
     let mut slots: [Option<CurrentValue>; 2] = [None, None];
     let (live_before, live_after) = liveness(cir)?;
+    let mut labels = HashMap::new();
+    let mut fixups: Vec<(usize, String)> = Vec::new();
+    let mut label_slots: HashMap<String, (HashSet<String>, [Option<CurrentValue>; 2])> =
+        HashMap::new();
+    let mut branch_slots: Vec<(String, [Option<CurrentValue>; 2])> = Vec::new();
 
     // Tracks "has a genuine halt-convention instruction (HLT) already
     // been pushed?" -- an explicit boolean, NOT a trailing-byte-value
@@ -173,6 +188,59 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             }
         }
         let op = instr.op.as_str();
+
+        if op == "label" {
+            require_control_shape(instr, op, 1)?;
+            let name = parse_var_src(instr, 0, op)?;
+            if labels.insert(name.clone(), bytes.len()).is_some() {
+                return Err(BackendError::DuplicateLabel(name));
+            }
+            label_slots.insert(name, (live_before[index].clone(), slots.clone()));
+            terminated = false;
+            continue;
+        }
+
+        if op == "jmp" {
+            require_control_shape(instr, op, 1)?;
+            let target = parse_var_src(instr, 0, op)?;
+            let patch = bytes.len() + 1;
+            bytes.extend_from_slice(&encode_jmp_near(0));
+            fixups.push((patch, target.clone()));
+            branch_slots.push((target, slots.clone()));
+            terminated = false;
+            continue;
+        }
+
+        if matches!(op, "jmp_if_true" | "jmp_if_false") {
+            require_control_shape(instr, op, 2)?;
+            let condition = parse_var_src(instr, 0, op)?;
+            let target = parse_var_src(instr, 1, op)?;
+            let slot = find_slot(&slots, &condition)
+                .ok_or_else(|| BackendError::UndefinedVariable(condition.clone()))?;
+            let value = slots[slot].as_ref().expect("located slot");
+            if value.ty != "bool" || value.width != ResultWidth::Byte {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} condition must be bool"
+                )));
+            }
+            bytes.extend_from_slice(&encode_mov_reg_imm8(REG_CL, 0));
+            bytes.extend_from_slice(&encode_alu_reg_reg(
+                7,
+                false,
+                [REG_AL, REG_BL][slot],
+                REG_CL,
+            ));
+            bytes.extend_from_slice(&encode_jcc_short(
+                if op == "jmp_if_true" { 4 } else { 5 },
+                3,
+            ));
+            let patch = bytes.len() + 1;
+            bytes.extend_from_slice(&encode_jmp_near(0));
+            fixups.push((patch, target.clone()));
+            branch_slots.push((target, slots.clone()));
+            terminated = false;
+            continue;
+        }
 
         if op == "ret_void" {
             if instr.dest.is_some() || !instr.srcs.is_empty() || instr.ty != "void" {
@@ -486,6 +554,17 @@ fn compile_to_bytes(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
     if !terminated {
         bytes.extend_from_slice(&encode_hlt());
     }
+    for (patch, target) in fixups {
+        let address = *labels
+            .get(&target)
+            .ok_or_else(|| BackendError::UndefinedLabel(target.clone()))?;
+        let next = patch + 2;
+        let displacement = address as i64 - next as i64;
+        let displacement = i16::try_from(displacement)
+            .map_err(|_| BackendError::BranchOutOfRange(target.clone()))?;
+        bytes[patch..patch + 2].copy_from_slice(&displacement.to_le_bytes());
+    }
+    validate_branch_slots(&label_slots, &branch_slots)?;
     Ok(bytes)
 }
 
@@ -505,30 +584,132 @@ fn parse_var_src(instr: &CIRInstr, idx: usize, op: &str) -> Result<String, Backe
     }
 }
 
+fn require_control_shape(
+    instr: &CIRInstr,
+    op: &str,
+    source_count: usize,
+) -> Result<(), BackendError> {
+    if instr.dest.is_some() || instr.srcs.len() != source_count || instr.ty != "void" {
+        return Err(BackendError::InvalidOperand(format!(
+            "{op} requires {source_count} source(s), no dest, and void type"
+        )));
+    }
+    Ok(())
+}
+
 type LiveSets = (Vec<HashSet<String>>, Vec<HashSet<String>>);
 
 fn liveness(cir: &[CIRInstr]) -> Result<LiveSets, BackendError> {
+    let mut label_indices = HashMap::new();
+    for (index, instr) in cir.iter().enumerate() {
+        if instr.op == "label" {
+            require_control_shape(instr, "label", 1)?;
+            let name = parse_var_src(instr, 0, "label")?;
+            if label_indices.insert(name.clone(), index).is_some() {
+                return Err(BackendError::DuplicateLabel(name));
+            }
+        }
+    }
+
+    let mut successors = vec![Vec::new(); cir.len()];
+    let mut predecessors = vec![Vec::new(); cir.len()];
+    for (index, instr) in cir.iter().enumerate() {
+        match instr.op.as_str() {
+            op if op.starts_with("ret_") => {}
+            "jmp" => successors[index].push(branch_target_index(instr, 0, &label_indices)?),
+            "jmp_if_true" | "jmp_if_false" => {
+                successors[index].push(branch_target_index(instr, 1, &label_indices)?);
+                if index + 1 < cir.len() {
+                    successors[index].push(index + 1);
+                }
+            }
+            _ if index + 1 < cir.len() => successors[index].push(index + 1),
+            _ => {}
+        }
+        for &next in &successors[index] {
+            predecessors[next].push(index);
+        }
+    }
     let mut before = vec![HashSet::new(); cir.len()];
     let mut after = before.clone();
-    let mut live = HashSet::new();
-    for (index, instr) in cir.iter().enumerate().rev() {
-        after[index] = live.clone();
+    let mut pending: VecDeque<usize> = (0..cir.len()).rev().collect();
+    let mut queued = vec![true; cir.len()];
+    while let Some(index) = pending.pop_front() {
+        queued[index] = false;
+        let instr = &cir[index];
+        after[index] = successors[index]
+            .iter()
+            .flat_map(|&next| before[next].iter().cloned())
+            .collect();
+        let mut live = after[index].clone();
         if let Some(dest) = &instr.dest {
             live.remove(dest);
         }
-        for source in &instr.srcs {
+        let value_sources = match instr.op.as_str() {
+            "label" | "jmp" => 0,
+            "jmp_if_true" | "jmp_if_false" => 1,
+            _ => instr.srcs.len(),
+        };
+        for source in instr.srcs.iter().take(value_sources) {
             if let CIROperand::Var(name) = source {
                 live.insert(name.clone());
             }
         }
         if live.len() > 2 {
             return Err(BackendError::UnsupportedOp(
-                "WORD02 requires a third live value; spilling is deferred".into(),
+                "WORD03b requires a third live value; spilling is deferred".into(),
             ));
         }
-        before[index] = live.clone();
+        if live != before[index] {
+            before[index] = live;
+            for &prior in &predecessors[index] {
+                if !queued[prior] {
+                    pending.push_back(prior);
+                    queued[prior] = true;
+                }
+            }
+        }
     }
     Ok((before, after))
+}
+
+fn branch_target_index(
+    instr: &CIRInstr,
+    source: usize,
+    labels: &HashMap<String, usize>,
+) -> Result<usize, BackendError> {
+    let target = instr
+        .srcs
+        .get(source)
+        .and_then(CIROperand::as_var)
+        .ok_or_else(|| BackendError::InvalidOperand(format!("{} target must be Var", instr.op)))?;
+    labels
+        .get(target)
+        .copied()
+        .ok_or_else(|| BackendError::UndefinedLabel(target.to_string()))
+}
+
+fn validate_branch_slots(
+    labels: &HashMap<String, (HashSet<String>, [Option<CurrentValue>; 2])>,
+    branches: &[(String, [Option<CurrentValue>; 2])],
+) -> Result<(), BackendError> {
+    for (target, source_slots) in branches {
+        let (live, target_slots) = labels
+            .get(target)
+            .ok_or_else(|| BackendError::UndefinedLabel(target.clone()))?;
+        for name in live {
+            let source = find_slot(source_slots, name);
+            let destination = find_slot(target_slots, name);
+            if source != destination
+                || source.is_none_or(|slot| source_slots[slot] != target_slots[slot])
+            {
+                return Err(BackendError::UnsupportedOp(format!(
+                    "WORD03b branch to {target:?} has divergent live register mapping"
+                )));
+            }
+        }
+    }
+    Ok(())
 }
 
 fn find_slot(slots: &[Option<CurrentValue>; 2], name: &str) -> Option<usize> {

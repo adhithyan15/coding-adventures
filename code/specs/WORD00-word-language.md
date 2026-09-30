@@ -212,7 +212,10 @@ third simultaneously live value. Do not accept labels or jumps in WORD03a.
 unconditional branches, and loops after comparison results are executable on
 both targets. Rework liveness for control-flow edges before reusing slots,
 resolve byte addresses after final instruction sizing, and execute a loop
-whose result depends on taken and untaken branches in both simulators.
+whose result depends on taken and untaken branches in both simulators. A
+branch join must preserve the same register mapping for every live value on
+each incoming path or refuse compilation. A reachable label after a return
+must still lead to a halt if control can branch to it.
 
 ### WORD04 — static memory, portable I/O, and direct calls
 

@@ -10,7 +10,7 @@ Lowers a `Vec<CIRInstr>` into Intel 8086 machine code bytes via
 to be loaded into `intel8086-simulator` (or any compatible external
 8086/8088 emulator).
 
-## Scope (WORD03a)
+## Scope (WORD03b)
 
 | CIR op | Lowering |
 |--------|----------|
@@ -20,6 +20,7 @@ to be loaded into `intel8086-simulator` (or any compatible external
 | `add`, `sub`, `and`, `or`, `xor` on `u8` and `u16` | register ALU with wrapping result |
 | `not_u8`, `not_u16` | XOR with the declared-width mask, preserving another live value |
 | `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | unsigned `CMP` and short branch, normalized `bool` result |
+| `label`, `jmp`, `jmp_if_true`, `jmp_if_false` | final-displacement `Jcc`/near `JMP` fixups |
 | Other operations | `None` (compile failure) |
 
 The historical `const_i64`/`ret_i64` 16-bit smoke path remains for
@@ -27,11 +28,13 @@ compatibility. Up to two values of the same width may be live in `AX`/`BX`
 or `AL`/`BL`. A reverse liveness pass reuses a dead operand's register for
 the result; `CX`/`CL` is only a transient calculation scratch. A third live
 value and simultaneous byte/word values are explicit errors; memory spills
-and control flow remain later rungs. Typed returns must match the value's
+remain a later rung. Typed returns must match the value's
 width. The result ABI remains `AL` with `AH = 0` for `u8`/`bool`, and `AX`
 for `u16`.
-WORD03a compares the declared width and returns exactly `0` or `1`; CIR
-labels, branches, and loops remain for WORD03b.
+WORD03a compares the declared width and returns exactly `0` or `1`. WORD03b
+follows forward and backward control-flow edges, patches displacements after
+final instruction sizing, and uses an inverted short branch over a near jump
+so target reach is not limited to the signed-byte range.
 
 ## Why `HLT`, not a pseudo-halt?
 
