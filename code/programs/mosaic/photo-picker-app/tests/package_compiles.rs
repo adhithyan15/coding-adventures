@@ -1,7 +1,7 @@
 //! Compile-check for the PhotoPickerApp Mosaic package: the interface
 //! (.mil), layout (.mll), and both style themes (.msl) must compile, and
 //! the manifest must declare the exported component and the
-//! XAML/Flutter `[host_effects]` handlers (Compose, SwiftUI and Qt answer
+//! Flutter `[host_effects]` handler (Compose, SwiftUI, Qt and XAML answer
 //! `files.open` from Mosaic's platform library, UI87 §7). Same shape of smoke
 //! test `task-app`/`engram-app` use.
 
@@ -38,7 +38,7 @@ fn photo_picker_app_sources_compile() {
 }
 
 #[test]
-fn manifest_declares_photo_picker_app_and_the_xaml_and_flutter_files_open_handlers() {
+fn manifest_declares_photo_picker_app_and_the_flutter_files_open_handler() {
     let manifest_src =
         fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"))
             .expect("mosaic-package.toml must exist");
@@ -47,33 +47,11 @@ fn manifest_declares_photo_picker_app_and_the_xaml_and_flutter_files_open_handle
     assert_eq!(package.package.name, "photo-picker-app");
     assert_eq!(package.components.exports, ["PhotoPickerApp"]);
 
-    let xaml_file = package
-        .host_effects
-        .files
-        .iter()
-        .find(|file| file.backend == "xaml")
-        .expect("must declare the XAML handler source file");
-    assert_eq!(xaml_file.source, "host/xaml/PhotoPickerEffects.cs");
-    assert_eq!(xaml_file.target, "PhotoPickerEffects.cs");
-
-    let xaml_handler = package
-        .host_effects
-        .handlers
-        .iter()
-        .find(|handler| handler.backend == "xaml")
-        .expect("must declare the XAML effect handler");
-    assert_eq!(xaml_handler.install, "PhotoPickerHost.PhotoPickerEffects.Install");
-    // No `include` for XAML -- the emitter refuses one outright (UI47
-    // §5.5.2, confirmed against `xaml_main_with_host_effects`'s own error
-    // message). A regression here would mean the manifest asks for
-    // something the build will hard-fail on.
-    assert_eq!(xaml_handler.include, None);
-
-    // No Compose, SwiftUI or Qt handler: Mosaic's platform library answers
+    // No Compose, SwiftUI, Qt or XAML handler: Mosaic's platform library answers
     // `files.open` on those backends (UI87 §7), and a package handler for a
     // backend would never be reached -- this app claims no kinds, so the
     // router sends the standard ones to the library (UI87 §7.2, §7.4).
-    for backend in ["compose", "swiftui", "qt"] {
+    for backend in ["compose", "swiftui", "qt", "xaml"] {
         assert!(
             package.host_effects.files.iter().all(|file| file.backend != backend),
             "no {backend} handler file: the platform library answers files.open"
@@ -130,21 +108,11 @@ fn manifest_declares_photo_picker_app_and_the_xaml_and_flutter_files_open_handle
     }
 }
 
+/// UI87 §7.4: the Compose, Qt and XAML copies are gone for good, not merely
+/// unwired.
 #[test]
-fn xaml_handler_source_exists_and_declares_install() {
-    let source = fs::read_to_string(
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("host/xaml/PhotoPickerEffects.cs"),
-    )
-    .expect("host/xaml/PhotoPickerEffects.cs must exist");
-    assert!(source.contains("public static void Install()"));
-    assert!(source.contains("MosaicRuntimeHost.EffectHandler"));
-    assert!(source.contains("\"files.open\""));
-}
-
-/// UI87 §7.4: the Compose and Qt copies are gone for good, not merely unwired.
-#[test]
-fn the_compose_and_qt_handlers_are_retired_for_the_platform_library() {
-    for backend in ["compose", "qt"] {
+fn the_compose_qt_and_xaml_handlers_are_retired_for_the_platform_library() {
+    for backend in ["compose", "qt", "xaml"] {
         assert!(
             !PathBuf::from(env!("CARGO_MANIFEST_DIR"))
                 .join("host")

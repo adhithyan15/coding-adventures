@@ -6,7 +6,9 @@ byte count — or why it didn't happen) renders back as text. That's the
 whole app. See `code/specs/UI59-files-open-effect.md` for the effect
 contract this exercises, and
 `code/programs/mosaic/photo-picker-app/` for the `.mil`/`.mll`/`.msl`
-UI sources plus the XAML handler that actually answers the effect.
+UI sources. The effect itself is answered by Mosaic's platform library on
+Compose, SwiftUI, Qt and XAML (UI87 §7) and by the app's own handler on
+Flutter.
 
 ## Why a whole application for one effect
 
@@ -27,7 +29,8 @@ PhotoPickerApp mints an effect id, pushes
   Effect { delivery: Await, kind: "files.open", payload: { accept: [image MIME types] } }
   │
   ▼
-host (XAML: PhotoPickerEffects.cs) opens its native picker,
+host (Mosaic's platform library, e.g. MosaicPlatformEffects.cs on XAML;
+      the app's handler on Flutter) opens its native picker,
 completes the effect with ok / cancelled / failed
   │  complete_effect(id, result)
   ▼

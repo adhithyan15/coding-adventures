@@ -6,7 +6,8 @@
 //! didn't happen) renders back. That's the whole app -- see
 //! `code/specs/UI59-files-open-effect.md` for the effect contract this
 //! exercises, and `code/programs/mosaic/photo-picker-app/` for the `.mil`/
-//! `.mll`/`.msl` UI sources and the XAML handler that answers the effect.
+//! `.mll`/`.msl` UI sources. Mosaic's platform library answers the effect on
+//! Compose, SwiftUI, Qt and XAML (UI87 §7); the app's handler on Flutter.
 //!
 //! # Why a whole application for one effect
 //!
