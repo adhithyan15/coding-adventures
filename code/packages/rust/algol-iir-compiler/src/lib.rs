@@ -7910,19 +7910,22 @@ impl Compiler {
         if preserves_name {
             return true;
         }
-        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
-            || !direct_tokens(node).iter().any(|token| token.value == "if")
-        {
+        let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node)
+        else {
             return false;
+        };
+        let is_boolean = self
+            .require_var(name)
+            .is_ok_and(|binding| binding.ty == ScalarType::Boolean);
+        if is_boolean
+            && self.boolean_identity_expression_preserves_name(condition, name)
+            && literal_boolean_value(then_node) == Some(true)
+            && literal_boolean_value(else_node) == Some(false)
+        {
+            return true;
         }
-        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
-            .into_iter()
-            .filter(|child| child.rule_name == node.rule_name)
-            .collect();
-        branches.len() == 2
-            && branches.into_iter().all(|branch| {
-                self.selector_expression_unconditionally_preserves_name(branch, name)
-            })
+        self.selector_expression_unconditionally_preserves_name(then_node, name)
+            && self.selector_expression_unconditionally_preserves_name(else_node, name)
     }
 
     fn selector_expression_intrinsically_preserves_name(
@@ -15499,6 +15502,32 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_conditional_projection_selector_copy_tracks_partial_self_recursion() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then true else false; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a conditional projection may forward its boolean selector");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_negated_conditional_projection_selector_copy_stays_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag, gate; i := 0; n := 4; delta := 2; choose := true; flag := true; gate := true; for i := i + 1 while i <= n do begin n := n - delta; flag := if i < 2 then true else false; gate := if flag then false else true; choose := if gate then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a negated conditional projection must remain conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
