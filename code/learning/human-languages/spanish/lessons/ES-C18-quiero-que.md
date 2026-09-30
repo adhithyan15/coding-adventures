@@ -8,18 +8,18 @@ type: grammar
 headword: Hablas español · Quiero que hables español
 gloss: an asserted event beside a wanted, not-yet-real event
 concept_tag: ES-SUBJUNCTIVE-WANT-CONTRAST
-prerequisites: [ES-C17-practice, ES-C11-querer, ES-C07-que, ES-C06-hablar]
+prerequisites: [ES-C17-practice, ES-C11-querer, ES-C07-que, ES-C06-hablar, ES-C17-irregulares, ES-C17-irregulares, ES-C17-irregulares]
 sounds: [vowel-a, vowel-e]
 roots: [quaerere-latin]
 etymology_hook: "Spanish contrasts the indicative form hablas, which can assert an event, with subjunctive hables after quiero que, where the second event is wanted rather than asserted"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUE, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR]
+  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUE, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR]
 introduces:
   knowledge: [ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST]
 practises:
-  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUE, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST]
+  knowledge: [ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUE, ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST, ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,13 +31,15 @@ reviews_of: [ES-C17-practice, ES-C11-querer, ES-C07-que, ES-C06-hablar]
 # Hablas español · Quiero que hables español — fact or wanted event?
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED]; assesses=[ES-LEX-HABLAR, ES-LEX-ESPANOL, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-HACER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-PODER-FUTURE-CONDITIONAL-SINGULAR, ES-GRAMMAR-TENER-FUTURE-CONDITIONAL-SINGULAR] -->
 
 [PAUSE 2s] **Hablas español** can assert “You speak Spanish.” Now compare
 **Quiero que hables español** — “I want you to speak Spanish.” **Hables** does
 not report what is true. It presents the speaking as wanted and not yet
 asserted. That meaning contrast is the first small doorway into the
 **subjunctive**.
+
+[PAUSE 2s] Three stems from the last chapter: *haré, tendré, podré*, and the same stems in *haría, tendría, podría*.
 
 ## Grammar Lens: count the doers
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST]; assesses=[ES-LEX-QUERER, ES-GRAMMAR-QUERER-PRESENT-SINGULAR, ES-LEX-QUE, ES-LEX-HABLAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED] -->

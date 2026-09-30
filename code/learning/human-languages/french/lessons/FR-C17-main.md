@@ -8,21 +8,21 @@ type: word
 headword: la main
 gloss: the hand — feminine despite ending in a consonant, and the root of half the words you know
 concept_tag: FR-BODY-HAND
-prerequisites: [FR-C17-tete, FR-C01-le-la, FR-C17-tete-more]
+prerequisites: [FR-C17-tete, FR-C01-le-la, FR-C17-tete-more, FR-C16-bascule]
 sounds: [nasal-in, silent-final]
 roots: [latin-manus]
 etymology_hook: "main ← Latin manus, the root behind MANUAL, MANUFACTURE ('made by hand'), MANUSCRIPT ('written by hand'), MAINTAIN ('hold in the hand') and MANAGE — one Latin hand is doing the work inside dozens of English words"
 duration:
   max_seconds: 216
 requires:
-  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
+  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05, FR-GRAM-ETRE-AVOIR-BASCULE-04]
 introduces:
   knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04]
+  knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04, FR-GRAM-ETRE-AVOIR-BASCULE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [FR-C17-tete, FR-C01-le-la]
 # la main — "the hand"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-ETRE-AVOIR-BASCULE-04] -->
 
 [PAUSE 2s] Where *tête* abandoned its Latin ancestor, this one kept it — and then
 lent it to English several dozen times over.
+
+[PAUSE 2s] *Je suis monté*, but *j'ai monté les valises*: a direct object flips the helper to *avoir*.
 
 ## You'll want to know: The word
 <!-- hl-knowledge: introduces=[FR-LEX-MAIN-02, FR-SOUND-MAIN-03]; assesses=[] -->

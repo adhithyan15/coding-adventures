@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Arm, Leg, Foot, Finger, Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:74bfafeaa07aedda",
+  "sourceHash": "fnv1a64:143c445d0f53b819",
   "lessons": [
     {
       "id": "IT-C37-braccio",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af7439467a94f2de",
+      "sourceHash": "fnv1a64:e053084607cad436",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: say the Italian for much, then the Italian for enough."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Un po' is poco with its last syllable cut off, and the apostrophe is compulsory: parlo un po'. Its opposite is molto."
             }
           ]
         },

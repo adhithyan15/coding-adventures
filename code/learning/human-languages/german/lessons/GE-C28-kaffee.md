@@ -8,21 +8,21 @@ type: word
 headword: der Kaffee
 gloss: coffee — a loanword that crossed from Arabic to German by way of Turkish and Italian, and the first word in a new polite request
 concept_tag: GE-FOOD-COFFEE
-prerequisites: [GE-C19-bitte-requests, GE-C27-schliessen]
+prerequisites: [GE-C19-bitte-requests, GE-C27-schliessen, GE-C25-nehmen, GE-C26-hoeren]
 sounds: [kaffee-stress]
 roots: [arabic-qahwa, turkish-kahve, italian-caffe]
 etymology_hook: "Kaffee travelled Arabic qahwa to Ottoman Turkish kahve to Italian caffè to German Kaffee — an overland-then-Mediterranean route, and der Kaffee is masculine despite being a word barely three centuries old in German"
 duration:
   max_seconds: 210
 requires:
-  knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-LEX-SCHLIESSEN-10, GE-ETYMON-SCHLIESSEN-11]
+  knowledge: [GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-LEX-SCHLIESSEN-10, GE-ETYMON-SCHLIESSEN-11, GE-FALSEFRIEND-BEKOMMEN-04, GE-FALSEFRIEND-GEHOEREN-11]
 introduces:
   knowledge: [GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04, GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-LEX-SCHLIESSEN-10, GE-ETYMON-SCHLIESSEN-11]
+  knowledge: [GE-LEX-KAFFEE-02, GE-SOUND-KAFFEE-03, GE-ETYMON-KAFFEE-04, GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03, GE-LEX-SCHLIESSEN-10, GE-ETYMON-SCHLIESSEN-11, GE-FALSEFRIEND-BEKOMMEN-04, GE-FALSEFRIEND-GEHOEREN-11]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [GE-C19-bitte-requests, GE-C27-schliessen]
 # der Kaffee — the drink that closes one chapter and opens another
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SCHLIESSEN-10] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SCHLIESSEN-10, GE-FALSEFRIEND-BEKOMMEN-04, GE-FALSEFRIEND-GEHOEREN-11] -->
 
 [PAUSE 2s] The last chapter ended by closing a hand. Now open the day with something
 to drink — and a new use for a request pattern you already own.
+
+[PAUSE 2s] Two false friends before the café: *bekommen* is to receive, not to become; *gehören* is to belong, not to hear.
 
 ## You'll want to know: der Kaffee
 <!-- hl-knowledge: introduces=[GE-LEX-KAFFEE-02]; assesses=[GE-LEX-BITTE-PLEASE-02, GE-PHRASE-WASSER-BITTE-03] -->

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 422,
-  "sourceHash": "fnv1a64:614cd773e0e2c97c",
+  "sourceHash": "fnv1a64:1ec55e0aa48588a1",
   "lessonIds": [
     "ES-C422-pagina-web",
     "ES-C422-repaso-red",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "spanish/narration/ch422.txt",
   "json": "spanish/narration/ch422.json",
-  "textHash": "fnv1a64:02e48864c2284650",
-  "jsonHash": "fnv1a64:50a04dc3703bc01b",
+  "textHash": "fnv1a64:25ac403118292b09",
+  "jsonHash": "fnv1a64:147f81a8c6d5dd56",
   "findings": []
 }

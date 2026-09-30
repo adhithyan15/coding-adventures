@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 175,
-  "sourceHash": "fnv1a64:395224041f0c23c7",
+  "sourceHash": "fnv1a64:bd219cd5807886cb",
   "lessonIds": [
     "ES-C41-creer",
     "ES-C41-asi-que",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "spanish/narration/ch175.txt",
   "json": "spanish/narration/ch175.json",
-  "textHash": "fnv1a64:59aaa43199c02480",
-  "jsonHash": "fnv1a64:c9c1d86e49434382",
+  "textHash": "fnv1a64:8df4c9d3dec2eb3e",
+  "jsonHash": "fnv1a64:42be0e063c54ecee",
   "findings": []
 }

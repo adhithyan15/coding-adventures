@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 68,
-  "sourceHash": "fnv1a64:a2df87f5bf916e10",
+  "sourceHash": "fnv1a64:4d4f29a3cb032b88",
   "lessonIds": [
     "ES-C10-vamos",
     "ES-C10-van"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "spanish/narration/ch68.txt",
   "json": "spanish/narration/ch68.json",
-  "textHash": "fnv1a64:dd5fe1ecdbc60bcb",
-  "jsonHash": "fnv1a64:06559d17efb2e35f",
+  "textHash": "fnv1a64:55a1ee41e96728b3",
+  "jsonHash": "fnv1a64:74788b77373f1cf7",
   "findings": []
 }

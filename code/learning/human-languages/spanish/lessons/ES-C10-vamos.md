@@ -16,11 +16,11 @@ etymology_hook: "vamos is Latin vādere 'to advance', not īre 'to go' — ir is
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1PL, ES-GRAMMAR-AR-PRESENT-2PL, ES-LEX-VOSOTROS, ES-ETYMON-IRE-VADERE]
+  knowledge: [ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1PL, ES-GRAMMAR-AR-PRESENT-2PL, ES-LEX-VOSOTROS, ES-ETYMON-IRE-VADERE, ES-GRAMMAR-TENER-PRESENT-3PL]
 introduces:
   knowledge: [ES-GRAMMAR-IR-VERB-PRESENT-1PL, ES-GRAMMAR-IR-VERB-PRESENT-2PL]
 practises:
-  knowledge: [ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1PL, ES-GRAMMAR-AR-PRESENT-2PL, ES-LEX-VOSOTROS, ES-ETYMON-IRE-VADERE, ES-GRAMMAR-IR-VERB-PRESENT-1PL, ES-GRAMMAR-IR-VERB-PRESENT-2PL]
+  knowledge: [ES-LEX-IR, ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1PL, ES-GRAMMAR-AR-PRESENT-2PL, ES-LEX-VOSOTROS, ES-ETYMON-IRE-VADERE, ES-GRAMMAR-IR-VERB-PRESENT-1PL, ES-GRAMMAR-IR-VERB-PRESENT-2PL, ES-GRAMMAR-TENER-PRESENT-3PL]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,9 +32,11 @@ reviews_of: [ES-C10-ir, ES-C09-repaso-ser]
 # vamos — from a verb that is not *ir*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1PL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-IR-VERB-PRESENT-SINGULAR, ES-GRAMMAR-AR-PRESENT-1PL, ES-GRAMMAR-TENER-PRESENT-3PL] -->
 
 [PAUSE 2s] Say "I go." (*Voy*.) And "we speak." (*Hablamos*.)
+
+[PAUSE 2s] *Tienen*: the stress is back on the stem, and so is the break.
 
 ## Grammar Lens: -amos and -áis, on a stem you have not seen
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-IR-VERB-PRESENT-1PL, ES-GRAMMAR-IR-VERB-PRESENT-2PL]; assesses=[ES-GRAMMAR-AR-PRESENT-1PL, ES-GRAMMAR-AR-PRESENT-2PL, ES-LEX-VOSOTROS] -->

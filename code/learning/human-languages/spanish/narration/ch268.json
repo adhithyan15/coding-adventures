@@ -4,7 +4,7 @@
   "chapter": 268,
   "title": "Travelling --- Asking, Boarding, Staying, and When It Goes Wrong",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:aa0b04d57df79a6d",
+  "sourceHash": "fnv1a64:6253208f7d5413cd",
   "lessons": [
     {
       "id": "ES-C268-donde-esta",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d941ba8d1b54ab5",
+      "sourceHash": "fnv1a64:ec5f5b6ac9558f1e",
       "notice": null,
       "blocks": [
         {
@@ -192,6 +192,16 @@
             {
               "kind": "speech",
               "text": "One word gets you onto the train. It also, confusingly and usefully, means the paper money you pay for it with."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A question needs no question word: ¿Hablas español? Nothing moves; only your voice rises. Then ask someone to agree: Hablas español, ¿verdad?"
             }
           ]
         },
@@ -660,7 +670,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29533e953cbc0bad",
+      "sourceHash": "fnv1a64:3d567b75c560e1c3",
       "notice": null,
       "blocks": [
         {
@@ -677,6 +687,16 @@
             {
               "kind": "speech",
               "text": "Travel goes wrong. This is the word that starts the conversation about it — and it hides a grammatical surprise you should meet on purpose rather than by accident."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Deny it the Spanish way: no goes before the verb, and it stays when a negative word follows. Asked ¿Qué ves?, answer No veo nada."
             }
           ]
         },

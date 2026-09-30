@@ -8,21 +8,21 @@ type: word
 headword: non
 gloss: no / not
 concept_tag: RESPONSE-NO
-prerequisites: [FR-C18-oui, FR-C18-oui-more]
+prerequisites: [FR-C18-oui, FR-C18-oui-more, FR-C16-pronominal-etre]
 sounds: [nasal-vowel-on]
 roots: [non]
 etymology_hook: "non is Latin nōn — Spanish dropped the n to make no, French kept it as a nasal vowel: the vowel itself carries the n"
 duration:
   max_seconds: 219
 requires:
-  knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
+  knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05, FR-GRAM-PRONOMINAL-ETRE-07]
 introduces:
   knowledge: [FR-LEX-NON-02, FR-SOUND-NON-03, FR-GRAMMAR-NEGATION-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-OUI-02, FR-LEX-NON-02, FR-SOUND-NON-03, FR-GRAMMAR-NEGATION-04]
+  knowledge: [FR-LEX-OUI-02, FR-LEX-NON-02, FR-SOUND-NON-03, FR-GRAMMAR-NEGATION-04, FR-GRAM-PRONOMINAL-ETRE-07]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [FR-C18-oui, FR-C01-bonjour]
 # non — no / not
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PRONOMINAL-ETRE-07] -->
 
 [PAUSE 2s] After French's home-grown *oui*, its **no** is the family word,
 shared straight with Spanish — but said the French way, through the nose.
+
+[PAUSE 2s] Every pronominal verb takes *être* in the past: *je me suis levé*, *elle s'est lavée*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-LEX-NON-02, FR-SOUND-NON-03]; assesses=[] -->

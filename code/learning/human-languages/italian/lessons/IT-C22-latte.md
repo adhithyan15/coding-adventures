@@ -8,21 +8,21 @@ type: word
 headword: il latte
 gloss: milk — the one drink here Italian never had to borrow
 concept_tag: IT-FOOD-MILK
-prerequisites: [IT-C22-te]
+prerequisites: [IT-C22-te, IT-C21-rispondere, IT-C21-rispondere]
 sounds: [double-tt, open-a]
 roots: [lac-latin]
 etymology_hook: "latte ← Latin lac, lactis → English lactic, lactate, lactose, and lettuce (← lactuca, 'the milky plant', for its white sap when cut) — inherited straight down, unlike this chapter's two borrowed drinks"
 duration:
   max_seconds: 231
 requires:
-  knowledge: [IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04]
+  knowledge: [IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04, IT-LEX-RISPONDERE-02, IT-NOTICE-RISPONDERE-04]
 introduces:
   knowledge: [IT-LEX-LATTE-02, IT-ETYMON-LATTE-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04, IT-LEX-LATTE-02, IT-ETYMON-LATTE-03]
+  knowledge: [IT-LEX-TE-02, IT-ETYMON-TE-03, IT-NOTICE-TE-04, IT-LEX-LATTE-02, IT-ETYMON-LATTE-03, IT-LEX-RISPONDERE-02, IT-NOTICE-RISPONDERE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,11 +33,13 @@ reviews_of: [IT-C22-te, IT-C22-caffe]
 # il latte — milk, the drink that never left home
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-TE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-TE-02, IT-LEX-RISPONDERE-02, IT-NOTICE-RISPONDERE-04] -->
 
 [PAUSE 2s] *Caffè* travelled from Arabic through Turkish. *Tè* travelled from
 Chinese by sea. This drink went nowhere at all — it has said the same thing in
 this family since before there was an Italy.
+
+[PAUSE 2s] *Chiedere* reaches out; *rispondere* is the return journey. And it wants an *a* where English wants none: *rispondo a Marco*.
 
 ## You'll want to know: the word
 <!-- hl-knowledge: introduces=[IT-LEX-LATTE-02]; assesses=[IT-NOTICE-TE-04] -->

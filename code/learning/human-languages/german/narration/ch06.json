@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "One, Two, Three",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fedc29916531bd14",
+  "sourceHash": "fnv1a64:ecbe9ce1863cc81e",
   "lessons": [
     {
       "id": "GE-C06-eins",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1532a9d1357089b8",
+      "sourceHash": "fnv1a64:00a606afbd447cea",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Here is where German is closer to English than any Romance language gets. Its numbers are not borrowed from Latin — they are German's own, and they are the near-twins of the English ones. Start with the first."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Deutsch: eu is the oy of boy, tsch the tch of match. One syllable."
             }
           ]
         },
@@ -156,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a97c779e3021e3b9",
+      "sourceHash": "fnv1a64:6487dc6b5ecf11ab",
       "notice": null,
       "blocks": [
         {
@@ -173,6 +183,16 @@
             {
               "kind": "speech",
               "text": "One down. The second number has the same ei you met a moment ago, and one letter that does not say what an English reader expects."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Lernen: the r is a soft scrape at the back of the throat. LER-nen."
             }
           ]
         },
@@ -290,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9fdabcaccadf659",
+      "sourceHash": "fnv1a64:25d7ab2cc6243ade",
       "notice": null,
       "blocks": [
         {
@@ -307,6 +327,16 @@
             {
               "kind": "speech",
               "text": "Third number, third ei. And it shows you something that will keep paying: German has no th sound at all, and you can predict what it uses instead."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Was machst du? Question word, then verb, then subject, and no do."
             }
           ]
         },

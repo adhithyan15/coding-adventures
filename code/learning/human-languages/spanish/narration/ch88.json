@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Nos --- Us, and the Word Inside -mos",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2359be63e3fff4da",
+  "sourceHash": "fnv1a64:1dbdf04b8d2d64c8",
   "lessons": [
     {
       "id": "ES-C45-nos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e463a675fdfeeda2",
+      "sourceHash": "fnv1a64:6ceaac0b43303e16",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Say \"you love me.\" (Me quieres.) And \"I love you.\" (Te quiero.) Both of those are about one person on the receiving end. Here is more than one."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Podemos keeps the plain stem; pueden breaks it again. Say both."
             }
           ]
         },

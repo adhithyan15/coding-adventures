@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Yes and No",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:22e8d453cf615a5b",
+  "sourceHash": "fnv1a64:e8fed1872e7f9146",
   "lessons": [
     {
       "id": "FR-C18-oui",
@@ -268,7 +268,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3696cc5ec4250d2a",
+      "sourceHash": "fnv1a64:3aff657029f39de6",
       "notice": null,
       "blocks": [
         {
@@ -285,6 +285,16 @@
             {
               "kind": "speech",
               "text": "After French's home-grown oui, its no is the family word, shared straight with Spanish — but said the French way, through the nose."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every pronominal verb takes être in the past: je me suis levé, elle s'est lavée."
             }
           ]
         },

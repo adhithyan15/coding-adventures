@@ -15,14 +15,14 @@ etymology_hook: "the face-to-face image in encontrar extends from finding to mee
 duration:
   max_seconds: 150
 requires:
-  knowledge: [PT-LEX-ENCONTRAR-02, PT-LEX-SABER-CONHECER-02, PT-ETYMON-DIAS-2-02, PT-ETYMON-MEIO-DIA-MEIA-NOITE-02]
+  knowledge: [PT-LEX-ENCONTRAR-02, PT-LEX-SABER-CONHECER-02, PT-ETYMON-DIAS-2-02, PT-ETYMON-MEIO-DIA-MEIA-NOITE-02, PT-GRAMMAR-ENCONTRAR-04]
 introduces:
   knowledge: [PT-GRAMMAR-ENCONTRAR-MEET-04]
 introduces_idioms: []
 introduces_senses: [PT-SENSE-ENCONTRAR-MEET-01]
 introduces_culture_claims: [PT-CULTURE-ENCONTRAR-CLITIC-PLACEMENT-01]
 practises:
-  knowledge: [PT-LEX-ENCONTRAR-02, PT-LEX-SABER-CONHECER-02, PT-ETYMON-DIAS-2-02, PT-ETYMON-MEIO-DIA-MEIA-NOITE-02, PT-GRAMMAR-ENCONTRAR-MEET-04]
+  knowledge: [PT-LEX-ENCONTRAR-02, PT-LEX-SABER-CONHECER-02, PT-ETYMON-DIAS-2-02, PT-ETYMON-MEIO-DIA-MEIA-NOITE-02, PT-GRAMMAR-ENCONTRAR-MEET-04, PT-GRAMMAR-ENCONTRAR-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [PT-C22-encontrar, PT-C18-saber-conhecer, PT-C07-dias-2, PT-C08-meio
 # encontrar-se — to meet up
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-GRAMMAR-ENCONTRAR-04] -->
 
 [PAUSE 2s] You know **encontrar**, “to find.” With people, it can also describe
 meeting up.
+
+[PAUSE 2s] First the finding: *encontro o livro*, *encontramos o café*. The object comes straight after the verb.
 
 ## You'll want to know: Make one plan
 <!-- hl-knowledge: introduces=[PT-GRAMMAR-ENCONTRAR-MEET-04]; assesses=[] -->

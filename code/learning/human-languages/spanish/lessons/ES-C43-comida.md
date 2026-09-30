@@ -8,7 +8,7 @@ type: word
 headword: la comida
 gloss: food, a meal — a noun you can build yourself out of a verb you already own
 concept_tag: ES-FOOD-MEAL
-prerequisites: [ES-C43-libro, ES-C12-hacer]
+prerequisites: [ES-C43-libro, ES-C12-hacer, ES-C13-plurales-cambio, ES-C13-plurales-yo-go]
 sounds: [d-soft]
 roots: [comedere-latin]
 teaches_cells: []
@@ -16,11 +16,11 @@ etymology_hook: "comida is comer with an ending — literally 'the eaten thing';
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-COMER, ES-LEX-CASA, ES-LEX-LIBRO, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-HACER-PRESENT-SINGULAR]
+  knowledge: [ES-LEX-COMER, ES-LEX-CASA, ES-LEX-LIBRO, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-GRAMMAR-PODER-PRESENT-PLURAL, ES-GRAMMAR-YO-GO-PLURAL-REGULAR]
 introduces:
   knowledge: [ES-LEX-COMIDA, ES-GRAMMAR-NOUN-FROM-VERB-IDA]
 practises:
-  knowledge: [ES-LEX-COMER, ES-LEX-CASA, ES-LEX-LIBRO, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-COMIDA, ES-GRAMMAR-NOUN-FROM-VERB-IDA]
+  knowledge: [ES-LEX-COMER, ES-LEX-CASA, ES-LEX-LIBRO, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-HACER-PRESENT-SINGULAR, ES-LEX-COMIDA, ES-GRAMMAR-NOUN-FROM-VERB-IDA, ES-GRAMMAR-PODER-PRESENT-PLURAL, ES-GRAMMAR-YO-GO-PLURAL-REGULAR]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,12 @@ reviews_of: [ES-C07-comer, ES-C43-libro]
 # la comida — "food," built from a verb you have
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMER, ES-GRAMMAR-PODER-PRESENT-PLURAL, ES-GRAMMAR-YO-GO-PLURAL-REGULAR] -->
 
 [PAUSE 2s] Say "to eat." (*Comer*.) Keep it in mind — this chapter's noun is
 made out of it, in front of you.
+
+[PAUSE 2s] Derive the plurals: *podemos*, but *pueden*, because the stem breaks only where it is stressed. And *hacemos*, *hacen*: the *-go* lives in the *yo* form and nowhere else.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

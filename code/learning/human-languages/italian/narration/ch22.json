@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Coffee, Tea, Milk, and Sugar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:cd7d1bc70c3e1f9d",
+  "sourceHash": "fnv1a64:332f877f10eb3114",
   "lessons": [
     {
       "id": "IT-C22-caffe",
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4063751002911c0",
+      "sourceHash": "fnv1a64:8d471a2b3618c49c",
       "notice": null,
       "blocks": [
         {
@@ -309,6 +309,16 @@
             {
               "kind": "speech",
               "text": "Caffè travelled from Arabic through Turkish. Tè travelled from Chinese by sea. This drink went nowhere at all — it has said the same thing in this family since before there was an Italy."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chiedere reaches out; rispondere is the return journey. And it wants an a where English wants none: rispondo a Marco."
             }
           ]
         },

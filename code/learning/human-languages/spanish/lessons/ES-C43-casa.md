@@ -8,7 +8,7 @@ type: word
 headword: la casa
 gloss: house, home — and a word French wore down so far it stopped looking like a noun
 concept_tag: ES-PLACE-HOUSE
-prerequisites: [ES-C09-repaso-ser-estar, ES-C02-una]
+prerequisites: [ES-C09-repaso-ser-estar, ES-C02-una, ES-C09-ista]
 sounds: [s-sound]
 roots: [casa-latin]
 teaches_cells: []
@@ -16,11 +16,11 @@ etymology_hook: "casa ← Latin casa 'hut' — French wore the same word down to
 duration:
   max_seconds: 230
 requires:
-  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE]
+  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE, ES-LEX-ARTISTA]
 introduces:
   knowledge: [ES-LEX-CASA, ES-ETYMON-CASA]
 practises:
-  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE, ES-LEX-CASA, ES-ETYMON-CASA]
+  knowledge: [ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE, ES-LEX-CASA, ES-ETYMON-CASA, ES-LEX-ARTISTA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,11 +32,13 @@ reviews_of: [ES-C01-el-la, ES-C08-tener]
 # la casa — "house," and "home"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-ARTICLES, ES-GRAMMAR-NOUN-GENDER, ES-LEX-ARTISTA] -->
 
 [PAUSE 2s] You have spent a long time learning what to **do** with nouns —
 their gender, their articles, their agreement. This chapter and the next few
 hand you some nouns to do it with.
+
+[PAUSE 2s] *Él es artista. Ella es artista.* The *-a* stays either way; only the article moves.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

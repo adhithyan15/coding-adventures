@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-WO-01, GE-ETYMON-WO-WHERE-02, GE-LEX-ICH-WOHNE-IN-02, GE-LEX-WIE-02, GE-SOUND-WIE-01, GE-GRAMMAR-WEAK-SINGULAR-02]
+  knowledge: [GE-LEX-WO-01, GE-ETYMON-WO-WHERE-02, GE-LEX-ICH-WOHNE-IN-02, GE-LEX-WIE-02, GE-SOUND-WIE-01, GE-GRAMMAR-WEAK-SINGULAR-02, GE-LEX-IN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,10 +34,12 @@ reviews_of: [GE-C05-in, GE-C02-wie]
 # wo — "where," and the German w-questions
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-WOHNE-IN-02, GE-LEX-WIE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ICH-WOHNE-IN-02, GE-LEX-WIE-02, GE-LEX-IN-01] -->
 
 [PAUSE 2s] You can say where you live. To *ask* it, you need the question word —
 and it belongs to a family you have already started.
+
+[PAUSE 2s] *In*: the same spelling and meaning as English, with a short *i* as in *bit*.
 
 ## You'll want to know: wo
 <!-- hl-knowledge: introduces=[GE-LEX-WO-01]; assesses=[GE-SOUND-WIE-01, GE-GRAMMAR-WEAK-SINGULAR-02] -->

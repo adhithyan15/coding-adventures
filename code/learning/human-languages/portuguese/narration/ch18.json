@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Verbs at the Core",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:22f3d96d6ef63beb",
+  "sourceHash": "fnv1a64:50cd8fc5636a744c",
   "lessons": [
     {
       "id": "PT-C18-ser-estar",
@@ -531,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba2f544f704e9d6d",
+      "sourceHash": "fnv1a64:a8a75d9f58d678a6",
       "notice": null,
       "blocks": [
         {
@@ -548,6 +548,16 @@
             {
               "kind": "speech",
               "text": "Portuguese's verb for \"to go\" is two letters long, and no two of its rows resemble one another. There is a reason for that."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Há três anos, three years ago. Há stays fixed and the amount moves: há dois dias."
             }
           ]
         },
@@ -688,7 +698,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ceae8093bd38d17",
+      "sourceHash": "fnv1a64:09ae7b9b2add6c3c",
       "notice": null,
       "blocks": [
         {
@@ -705,6 +715,16 @@
             {
               "kind": "speech",
               "text": "The opposite of ir is vir, and it is short for exactly the reason mão is short."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tenho que falar. Only ter changes with the person: temos que falar."
             }
           ]
         },

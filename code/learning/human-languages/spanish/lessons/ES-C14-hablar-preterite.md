@@ -8,18 +8,18 @@ type: grammar
 headword: hablé
 gloss: the regular singular -ar preterite — hablé, hablaste, habló
 concept_tag: ES-PRETERITE-AR
-prerequisites: [ES-C14-ser-ir-preterite, ES-C06-hablar, ES-C06-ar-presente, ES-C06-hablo-espanol]
+prerequisites: [ES-C14-ser-ir-preterite, ES-C06-hablar, ES-C06-ar-presente, ES-C06-hablo-espanol, ES-C14-ayer, ES-C14-ayer]
 sounds: [stress-final, accent-acute]
 roots: [latin-perfect-avi]
 etymology_hook: "the regular -ar preterite continues Latin first-conjugation perfect material, reshaped by sound change and analogy into Spanish -é, -aste, and -ó"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE, ES-LEX-AYER, ES-SEMANTIC-PAST-TIME-FRAME]
 introduces:
   knowledge: [ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-GRAMMAR-AR-PRETERITE-SINGULAR, ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS, ES-HISTORY-AR-PRETERITE-LATIN-PERFECT, ES-LEX-HABLO-ESPANOL, ES-GRAMMAR-BARE-LANGUAGE, ES-LEX-AYER, ES-SEMANTIC-PAST-TIME-FRAME]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C14-ser-ir-preterite, ES-C06-hablar, ES-C06-ar-presente, ES-C06-
 # hablé — a regular singular past from a known verb
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-LEX-ESPANOL, ES-SOUND-WRITTEN-ACCENT, ES-LEX-AYER, ES-SEMANTIC-PAST-TIME-FRAME] -->
 
 [PAUSE 2s] You know **hablar** and its present singular **hablo, hablas,
 habla**. To say that the speaking was completed, keep **habl-** and learn three
 new endings: **hablé, hablaste, habló**.
+
+[PAUSE 2s] Start from *ayer*. It tells the listener *when* before the verb arrives, and the verb has to follow it backwards.
 
 ## Grammar Lens: present beside completed past
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-PRETERITE-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR] -->

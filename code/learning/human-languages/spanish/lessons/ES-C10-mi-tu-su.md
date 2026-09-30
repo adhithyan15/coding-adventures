@@ -8,18 +8,18 @@ type: word
 headword: mi, tu, su
 gloss: my, your informal, and your formal or his or her — before a singular noun
 concept_tag: ES-POSSESSIVE
-prerequisites: [ES-C10-ir-a-futuro, ES-C06-cafe, ES-C03-tu-usted]
+prerequisites: [ES-C10-ir-a-futuro, ES-C06-cafe, ES-C03-tu-usted, ES-C10-futuro-simple]
 sounds: [vowel-i, vowel-u]
 roots: [meus-tuus-suus-latin]
 etymology_hook: "mi, tu, and su continue Latin meus, tuus, and suus; English my and archaic thy make the first two relationships easy to remember"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED]
+  knowledge: [ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-SEMANTIC-MOTION-TOWARD-FUTURE]
 introduces:
   knowledge: [ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-ETYMON-MEUS-TUUS-SUUS]
 practises:
-  knowledge: [ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-ETYMON-MEUS-TUUS-SUUS]
+  knowledge: [ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-LEX-POSSESSIVES-MI-TU-SU, ES-GRAMMAR-POSSESSIVE-BEFORE-NOUN, ES-ETYMON-MEUS-TUUS-SUUS, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-SEMANTIC-MOTION-TOWARD-FUTURE]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,10 +31,12 @@ reviews_of: [ES-C06-cafe, ES-C03-tu-usted, ES-C03-tu-usted-register]
 # mi, tu, su — whose café?
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-CAFE, ES-LEX-TU, ES-LEX-USTED, ES-REGISTER-TU-USTED, ES-GRAMMAR-SIMPLE-FUTURE-SINGULAR, ES-SEMANTIC-MOTION-TOWARD-FUTURE] -->
 
 [PAUSE 2s] You already know **café**, and you distinguish informal **tú** from
 formal **usted**. Now put one small ownership word before that one known noun.
+
+[PAUSE 2s] Two futures: *voy a hablar*, where the *a* is motion toward, and *hablaré*, the endings riding on the whole infinitive. Then *comeré*, *viviré*.
 
 ## The words, taken apart
 <!-- hl-knowledge: introduces=[ES-LEX-POSSESSIVES-MI-TU-SU, ES-ETYMON-MEUS-TUUS-SUUS]; assesses=[ES-LEX-TU, ES-LEX-USTED] -->
