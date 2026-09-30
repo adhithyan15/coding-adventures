@@ -181,6 +181,14 @@ therefore keep their defining file/line/column while diagnostics can walk from
 the innermost expansion out through nested object-like and function-argument
 expansions. `lexer::token::Token` remains unchanged.
 
+Function-argument forwarding must preserve an argument's existing inner macro
+chain. If `H` is pre-expanded inside `OUTER(x)` and its result passes through
+`F(x)`, the emitted token's chain is `H → F → OUTER`. Insert `F` by copying and
+memoizing the affected prefix; expansion records are shared, so changing an
+existing parent in place would corrupt other tokens. Cap both substitutions
+and copied provenance nodes before allocation under the expansion-round
+limit.
+
 **Known limitation, stated deliberately:** the per-token `Locus` vector is
 positional, so it is valid only for a consumer that does not reorder or
 synthesise tokens between the engine and the parser. That holds for the intended
