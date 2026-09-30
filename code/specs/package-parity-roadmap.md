@@ -15203,6 +15203,15 @@ follow-up. Second, Celsius imports the separately unfronted Python
 `xor-classifier` has always been metadata-only; it should be classified or
 removed rather than given a fabricated passing front.
 
+The dependency/leverage refresh selects
+`python-neural-primitive-spec-vector-test-coverage`. The broader predictor
+successor is blocked on its newly recorded gradient-descent prerequisite,
+while this bounded regression-proofing slice is dependency-ready and directly
+closes a just-confirmed neutral-contract evidence gap. It adds no package
+identity or runtime authority. The fresh clean sparse worktree branch
+`codex/parity-python-neural-spec-tests-v2-20260930` starts from exact main
+`7a91de5ceb0eb36079e011557ae3028d9d1fb5f8`.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -11065,10 +11065,13 @@
     {
       "id": "python-neural-primitive-spec-vector-test-coverage",
       "title": "Complete Python activation and loss neutral-spec vector coverage",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage"],
-      "branch": null,
+      "branch": "codex/parity-python-neural-spec-tests-v2-20260930",
       "pr_number": null,
+      "selected_at": "2026-09-30T21:42:12Z",
+      "selection_revision": "890a9cf309e8532f57f53cfc309aa67b2663eb9e",
+      "selection_notes": "Selected after PR #16315 completed every final-head check acceptably and merged through guarded squash auto-merge as 7a91de5ceb0eb36079e011557ae3028d9d1fb5f8. The exact-main schema-3 inventory remains collision-clean and identity-neutral at 15 established lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits found the predictor-front successor blocked on the separately owned gradient-descent front, ranked barcode-layout neutral conformance and Haskell ITF Windows fronts as the next broad alternatives, and identified this smaller newly eligible neutral-spec regression gap on the just-merged Python primitives. The bounded tests-only follow-up is dependency-ready, changes no package identity or authority, and starts from exact main in a fresh clean sparse worktree after a collision-free backlog refresh.",
       "notes": "Discovered by the final read-only review of PR #16315. The activation suite omits mandatory nonzero ML04 derivative vectors plus specified symmetry, idempotence, and derivative properties, so constant derivative regressions could pass. The loss boundary test asserts only finiteness and does not prove ML01's exact [1e-7, 1-1e-7] clamp for BCE/CCE values and derivatives. Add exact language-neutral vector and property coverage without changing already-correct package behavior, then rerun direct coverage, BUILD fronts, downstream smokes, metadata, parity, diff, and security checks."
     },
     {
