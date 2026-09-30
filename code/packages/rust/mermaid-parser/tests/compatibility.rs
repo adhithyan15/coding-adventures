@@ -194,7 +194,17 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
 }
 
 #[test]
-fn pinned_radar_subset_corpus_parses_to_chart_ir() {
+fn radar_full_status_is_backed_by_the_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let radar = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "radar")
+        .expect("radar family");
+    assert_eq!(radar["status"].as_str(), Some("full"));
+
     let corpus: Value = serde_json::from_str(RADAR_CORPUS).expect("radar corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
     for fixture in corpus["fixtures"].as_array().expect("fixture array") {

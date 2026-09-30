@@ -460,9 +460,9 @@ service typography, deterministic spacing, alignment-hint distances, group inset
 and outer canvas margins. Randomized layout and the remaining fcose-specific tuning controls remain
 unsupported at the partial level.
 
-### Radar Native Slice
+### Radar Compatibility
 
-The initial Mermaid 11.16.1 Radar slice uses dedicated portable grammars and
+The Mermaid 11.16.1 Radar family uses dedicated portable grammars and
 maps labeled axes plus positional or axis-keyed curves into chart semantic IR.
 The chart layout emits deterministic polygonal or circular graticules, radial
 spokes, axis labels, closed series paths, and legends using backend-neutral PaintScene
@@ -482,7 +482,10 @@ carry angle-derived horizontal anchors and vertical baselines into backend-neutr
 text layout so text extends away from the chart center. The native layout also
 matches the upstream 600-pixel plot, 50-pixel margins, default series palette,
 top title, and vertical overlaid legend, including sparse authored `cScaleN`
-overrides. Backend font rasterization and SVG overflow behavior remain partial.
+overrides. The pinned syntax corpus and native Metal-to-PNG fixture pass, so
+Radar is recorded at the `full` compatibility level. Backend font rasterization
+and SVG overflow behavior can differ without creating a Radar semantic
+compatibility gap.
 
 ### Event Modeling Native Slice
 
