@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-165-COSE165",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a rule, permission, a ban, danger and safety.",
+  "prerequisites": []
+}

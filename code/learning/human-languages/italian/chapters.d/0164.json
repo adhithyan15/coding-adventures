@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "Girlfriend, Bridegroom, Bride, Widower, Failure",
+  "label": "ch:it-girlfriend-bridegroom-bride-widower-failure",
+  "canDo": "I can say a girlfriend, a bridegroom, a bride, a widower and failure.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C164-fallimento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can say a girlfriend, a bridegroom, a bride, a widower and failure.",
+    "assesses": [
+      "IT-LEX-C164-COSE164-03",
+      "IT-LEX-C164-COSE164-04",
+      "IT-LEX-C164-COSE164-05"
+    ]
+  }
+}

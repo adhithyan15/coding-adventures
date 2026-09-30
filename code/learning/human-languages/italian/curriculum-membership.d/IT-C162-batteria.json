@@ -1,0 +1,11 @@
+{
+  "id": "IT-C162-batteria",
+  "pathSegment": "IT-PATH-162-COSE162",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-162-COSE162",
+      "order": 3
+    }
+  ]
+}

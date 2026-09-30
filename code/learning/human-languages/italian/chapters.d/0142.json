@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "To win, To break, To hide, To show, To look at",
+  "label": "ch:it-to-win-to-break-to-hide-to-show-to-look-at",
+  "canDo": "I can say to win, to break, to hide, to show and to look at.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C142-guardare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: I can say to win, to break, to hide, to show and to look at.",
+    "assesses": [
+      "IT-LEX-C142-VERBI142-03",
+      "IT-LEX-C142-VERBI142-04",
+      "IT-LEX-C142-VERBI142-05"
+    ]
+  }
+}

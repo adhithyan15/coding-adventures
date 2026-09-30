@@ -1,0 +1,11 @@
+{
+  "id": "IT-C143-litigare",
+  "pathSegment": "IT-PATH-143-VERBI143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-143-VERBI143",
+      "order": 2
+    }
+  ]
+}

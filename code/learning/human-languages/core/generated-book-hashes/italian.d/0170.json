@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:c1ae300bf9331c05",
+  "lessonIds": [
+    "IT-C170-chitarra",
+    "IT-C170-pianoforte",
+    "IT-C170-violino",
+    "IT-C170-tamburo",
+    "IT-C170-pallone"
+  ],
+  "tex": "italian/book/chapters/ch170-guitar-piano-violin-drum-ball.tex"
+}

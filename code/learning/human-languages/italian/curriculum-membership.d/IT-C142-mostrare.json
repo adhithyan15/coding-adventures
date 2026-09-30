@@ -1,0 +1,11 @@
+{
+  "id": "IT-C142-mostrare",
+  "pathSegment": "IT-PATH-142-VERBI142",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-142-VERBI142",
+      "order": 3
+    }
+  ]
+}

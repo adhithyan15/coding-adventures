@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C149-frenare",
+    "language": "italian",
+    "chapter": 149,
+    "sequence": 7750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a286c310186829c0"
+  },
+  "findings": []
+}

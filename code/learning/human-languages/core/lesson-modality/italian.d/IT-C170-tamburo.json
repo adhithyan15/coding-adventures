@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C170-tamburo",
+    "language": "italian",
+    "chapter": 170,
+    "sequence": 9190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c61bc008f9b67f17"
+  },
+  "findings": []
+}

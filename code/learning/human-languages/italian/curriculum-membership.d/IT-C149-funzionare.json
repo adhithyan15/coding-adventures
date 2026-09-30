@@ -1,0 +1,11 @@
+{
+  "id": "IT-C149-funzionare",
+  "pathSegment": "IT-PATH-149-VERBI149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-149-VERBI149",
+      "order": 3
+    }
+  ]
+}

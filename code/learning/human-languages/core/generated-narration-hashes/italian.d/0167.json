@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:3086c32090f482e1",
+  "lessonIds": [
+    "IT-C167-pedaggio",
+    "IT-C167-autostrada",
+    "IT-C167-traffico",
+    "IT-C167-multa",
+    "IT-C167-patente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch167.txt",
+  "json": "italian/narration/ch167.json",
+  "textHash": "fnv1a64:eda6aa060815ea93",
+  "jsonHash": "fnv1a64:2ad29549181d1740",
+  "findings": []
+}

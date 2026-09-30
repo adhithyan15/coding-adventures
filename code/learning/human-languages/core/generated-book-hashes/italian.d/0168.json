@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:020983e004254954",
+  "lessonIds": [
+    "IT-C168-soffitta",
+    "IT-C168-orto",
+    "IT-C168-pianta",
+    "IT-C168-seme",
+    "IT-C168-radice"
+  ],
+  "tex": "italian/book/chapters/ch168-attic-vegetable-garden-plant-seed-root.tex"
+}

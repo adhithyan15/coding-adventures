@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:0a8c350ebf270e57",
+  "lessonIds": [
+    "IT-C146-meritare",
+    "IT-C146-migliorare",
+    "IT-C146-peggiorare",
+    "IT-C146-nuocere",
+    "IT-C146-offrire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch146.txt",
+  "json": "italian/narration/ch146.json",
+  "textHash": "fnv1a64:f4fbe13fa74013b0",
+  "jsonHash": "fnv1a64:7da07ed088da2811",
+  "findings": []
+}

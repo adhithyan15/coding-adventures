@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:99e016df575afe91",
+  "lessonIds": [
+    "IT-C151-cervello",
+    "IT-C151-polmone",
+    "IT-C151-fegato",
+    "IT-C151-rene",
+    "IT-C151-osso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch151.txt",
+  "json": "italian/narration/ch151.json",
+  "textHash": "fnv1a64:2ea4248907423c9d",
+  "jsonHash": "fnv1a64:95717049e77b9979",
+  "findings": []
+}

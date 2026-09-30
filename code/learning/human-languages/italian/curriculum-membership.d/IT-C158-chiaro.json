@@ -1,0 +1,11 @@
+{
+  "id": "IT-C158-chiaro",
+  "pathSegment": "IT-PATH-158-QUAL158",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-158-QUAL158",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C149-galleggiare",
+  "pathSegment": "IT-PATH-149-VERBI149",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-149-VERBI149",
+      "order": 4
+    }
+  ]
+}

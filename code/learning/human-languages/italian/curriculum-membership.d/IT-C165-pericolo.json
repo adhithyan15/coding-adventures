@@ -1,0 +1,11 @@
+{
+  "id": "IT-C165-pericolo",
+  "pathSegment": "IT-PATH-165-COSE165",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-165-COSE165",
+      "order": 3
+    }
+  ]
+}

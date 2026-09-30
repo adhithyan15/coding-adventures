@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-168-COSE168",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an attic, a vegetable garden, a plant, a seed and a root.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C156-scomodo",
+    "language": "italian",
+    "chapter": 156,
+    "sequence": 8090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79beecf1196400ca"
+  },
+  "findings": []
+}

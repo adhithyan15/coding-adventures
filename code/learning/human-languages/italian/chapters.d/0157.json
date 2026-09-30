@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Simple, Complicated, Possible, Impossible, Necessary",
+  "label": "ch:it-simple-complicated-possible-impossible-necessary",
+  "canDo": "I can say simple, complicated, possible, impossible and necessary.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-R157-second-pass-words-from-chapters-153-157",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say simple, complicated, possible, impossible and necessary.",
+    "assesses": [
+      "IT-LEX-C157-QUAL157-03",
+      "IT-LEX-C157-QUAL157-04",
+      "IT-LEX-C157-QUAL157-05"
+    ]
+  }
+}

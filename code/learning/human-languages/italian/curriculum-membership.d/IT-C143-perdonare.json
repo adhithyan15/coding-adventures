@@ -1,0 +1,11 @@
+{
+  "id": "IT-C143-perdonare",
+  "pathSegment": "IT-PATH-143-VERBI143",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-143-VERBI143",
+      "order": 4
+    }
+  ]
+}

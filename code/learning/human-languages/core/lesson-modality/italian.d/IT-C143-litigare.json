@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C143-litigare",
+    "language": "italian",
+    "chapter": 143,
+    "sequence": 7260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c3d08b820f668a0"
+  },
+  "findings": []
+}

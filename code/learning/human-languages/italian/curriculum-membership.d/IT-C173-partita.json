@@ -1,0 +1,11 @@
+{
+  "id": "IT-C173-partita",
+  "pathSegment": "IT-PATH-173-LAV173",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-173-LAV173",
+      "order": 4
+    }
+  ]
+}

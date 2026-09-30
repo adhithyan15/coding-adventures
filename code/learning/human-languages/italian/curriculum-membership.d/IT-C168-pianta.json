@@ -1,0 +1,11 @@
+{
+  "id": "IT-C168-pianta",
+  "pathSegment": "IT-PATH-168-COSE168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-168-COSE168",
+      "order": 2
+    }
+  ]
+}

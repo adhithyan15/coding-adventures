@@ -1,0 +1,11 @@
+{
+  "id": "IT-C145-criticare",
+  "pathSegment": "IT-PATH-145-VERBI145",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-145-VERBI145",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-167-COSE167",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a toll, a motorway, traffic, a fine and a driving licence.",
+  "prerequisites": []
+}

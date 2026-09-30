@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "To celebrate, To fix, To brake, To function, To float",
+  "label": "ch:it-to-celebrate-to-fix-to-brake-to-function-to-float",
+  "canDo": "I can say to celebrate, to fix, to brake, to function and to float.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C149-galleggiare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say to celebrate, to fix, to brake, to function and to float.",
+    "assesses": [
+      "IT-LEX-C149-VERBI149-03",
+      "IT-LEX-C149-VERBI149-04",
+      "IT-LEX-C149-VERBI149-05"
+    ]
+  }
+}

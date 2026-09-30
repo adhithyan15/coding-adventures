@@ -1,0 +1,11 @@
+{
+  "id": "IT-C159-parete",
+  "pathSegment": "IT-PATH-159-COSE159",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-159-COSE159",
+      "order": 4
+    }
+  ]
+}

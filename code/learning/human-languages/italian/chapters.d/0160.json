@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Bill, Tip, Pizzeria, Hamlet, Pavement",
+  "label": "ch:it-bill-tip-pizzeria-hamlet-pavement",
+  "canDo": "I can say the bill, a tip, a pizzeria, a hamlet and a pavement.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C160-marciapiede",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say the bill, a tip, a pizzeria, a hamlet and a pavement.",
+    "assesses": [
+      "IT-LEX-C160-COSE160-03",
+      "IT-LEX-C160-COSE160-04",
+      "IT-LEX-C160-COSE160-05"
+    ]
+  }
+}

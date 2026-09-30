@@ -1,0 +1,11 @@
+{
+  "id": "IT-C157-impossibile",
+  "pathSegment": "IT-PATH-157-QUAL157",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-157-QUAL157",
+      "order": 3
+    }
+  ]
+}

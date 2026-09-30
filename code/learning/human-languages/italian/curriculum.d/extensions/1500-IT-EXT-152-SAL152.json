@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-152-SAL152",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a medical visit, a diet, rest, sleep and a dream.",
+  "prerequisites": []
+}

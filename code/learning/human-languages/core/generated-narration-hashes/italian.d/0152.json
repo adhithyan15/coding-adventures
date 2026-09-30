@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:427f0b97181cb41b",
+  "lessonIds": [
+    "IT-C152-visita",
+    "IT-C152-dieta",
+    "IT-C152-riposo",
+    "IT-C152-sonno",
+    "IT-C152-sogno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch152.txt",
+  "json": "italian/narration/ch152.json",
+  "textHash": "fnv1a64:c44cf1d9636342ac",
+  "jsonHash": "fnv1a64:99c8b208af1ba858",
+  "findings": []
+}

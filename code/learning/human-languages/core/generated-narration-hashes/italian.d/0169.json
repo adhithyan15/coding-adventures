@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:7904ac80fcab7baf",
+  "lessonIds": [
+    "IT-C169-ambiente",
+    "IT-C169-inquinamento",
+    "IT-C169-rifiuto",
+    "IT-C169-riciclaggio",
+    "IT-C169-energia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch169.txt",
+  "json": "italian/narration/ch169.json",
+  "textHash": "fnv1a64:2665c4bdfbdba9cd",
+  "jsonHash": "fnv1a64:ea2ff2ece0a4cd0a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Court, Judge, Mayor, Town council, Elections",
+  "label": "ch:it-court-judge-mayor-town-council-elections",
+  "canDo": "I can say a court, a judge, a mayor, the town council and elections.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C161-elezioni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say a court, a judge, a mayor, the town council and elections.",
+    "assesses": [
+      "IT-LEX-C161-COSE161-03",
+      "IT-LEX-C161-COSE161-04",
+      "IT-LEX-C161-COSE161-05"
+    ]
+  }
+}

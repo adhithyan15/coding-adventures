@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C168-radice",
+    "language": "italian",
+    "chapter": 168,
+    "sequence": 9100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d87c003eabf19ac6"
+  },
+  "findings": []
+}

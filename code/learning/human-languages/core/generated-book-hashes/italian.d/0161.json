@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:1aed6c382c9cd220",
+  "lessonIds": [
+    "IT-C161-tribunale",
+    "IT-C161-giudice",
+    "IT-C161-sindaco",
+    "IT-C161-comune",
+    "IT-C161-elezioni"
+  ],
+  "tex": "italian/book/chapters/ch161-court-judge-mayor-town-council-elections.tex"
+}

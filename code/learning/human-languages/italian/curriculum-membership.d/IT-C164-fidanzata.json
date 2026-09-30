@@ -1,0 +1,11 @@
+{
+  "id": "IT-C164-fidanzata",
+  "pathSegment": "IT-PATH-164-COSE164",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-164-COSE164",
+      "order": 0
+    }
+  ]
+}

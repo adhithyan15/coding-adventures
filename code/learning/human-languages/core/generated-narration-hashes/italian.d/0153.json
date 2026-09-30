@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:c7808aeb188815f7",
+  "lessonIds": [
+    "IT-C153-raramente",
+    "IT-C153-subito",
+    "IT-C153-infine",
+    "IT-C153-intanto",
+    "IT-C153-ormai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch153.txt",
+  "json": "italian/narration/ch153.json",
+  "textHash": "fnv1a64:97261092c509037c",
+  "jsonHash": "fnv1a64:26a3d24433c3059a",
+  "findings": []
+}

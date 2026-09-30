@@ -1,0 +1,11 @@
+{
+  "id": "IT-C164-fallimento",
+  "pathSegment": "IT-PATH-164-COSE164",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-164-COSE164",
+      "order": 4
+    }
+  ]
+}

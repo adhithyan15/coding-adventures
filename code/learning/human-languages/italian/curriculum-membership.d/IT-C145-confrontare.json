@@ -1,0 +1,11 @@
+{
+  "id": "IT-C145-confrontare",
+  "pathSegment": "IT-PATH-145-VERBI145",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-145-VERBI145",
+      "order": 0
+    }
+  ]
+}

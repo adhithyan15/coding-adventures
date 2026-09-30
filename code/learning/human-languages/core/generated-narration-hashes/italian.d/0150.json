@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:0b52e0904da48b47",
+  "lessonIds": [
+    "IT-C150-salvarsi",
+    "IT-C150-sbagliare",
+    "IT-C150-scambiare",
+    "IT-C150-scaricare",
+    "IT-C150-sciare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch150.txt",
+  "json": "italian/narration/ch150.json",
+  "textHash": "fnv1a64:28804c06735b6d4b",
+  "jsonHash": "fnv1a64:e245a1dc18af5fd3",
+  "findings": []
+}

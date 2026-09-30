@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-162-COSE162",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a website, a screen, a keyboard, a battery and a charger.",
+  "prerequisites": []
+}

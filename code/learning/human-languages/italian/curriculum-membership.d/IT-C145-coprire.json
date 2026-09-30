@@ -1,0 +1,11 @@
+{
+  "id": "IT-C145-coprire",
+  "pathSegment": "IT-PATH-145-VERBI145",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-145-VERBI145",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C166-cartolina",
+  "pathSegment": "IT-PATH-166-COSE166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-166-COSE166",
+      "order": 4
+    }
+  ]
+}

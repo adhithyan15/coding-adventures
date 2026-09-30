@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "So, Well then, However, Instead, Anyway",
+  "label": "ch:it-so-well-then-however-instead-anyway",
+  "canDo": "I can say so, well then, however, instead and anyway.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "IT-C155-comunque",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say so, well then, however, instead and anyway.",
+    "assesses": [
+      "IT-LEX-C155-PERCHE155-03",
+      "IT-LEX-C155-PERCHE155-04",
+      "IT-LEX-C155-PERCHE155-05"
+    ]
+  }
+}

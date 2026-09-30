@@ -1,0 +1,11 @@
+{
+  "id": "IT-C164-sposa",
+  "pathSegment": "IT-PATH-164-COSE164",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-164-COSE164",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C163-elettricista",
+  "pathSegment": "IT-PATH-163-COSE163",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-163-COSE163",
+      "order": 1
+    }
+  ]
+}

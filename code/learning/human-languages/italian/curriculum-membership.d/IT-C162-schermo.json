@@ -1,0 +1,11 @@
+{
+  "id": "IT-C162-schermo",
+  "pathSegment": "IT-PATH-162-COSE162",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-162-COSE162",
+      "order": 1
+    }
+  ]
+}

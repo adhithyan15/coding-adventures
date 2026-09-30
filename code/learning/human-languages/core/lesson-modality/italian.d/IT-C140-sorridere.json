@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C140-sorridere",
+    "language": "italian",
+    "chapter": 140,
+    "sequence": 7120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad1d8016e12714b2"
+  },
+  "findings": []
+}

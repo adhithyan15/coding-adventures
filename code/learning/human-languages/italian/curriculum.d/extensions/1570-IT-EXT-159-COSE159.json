@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-159-COSE159",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a flat, a living room, a corridor, a balcony and an inner wall.",
+  "prerequisites": []
+}

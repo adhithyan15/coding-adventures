@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Around, Everywhere, Nowhere, Elsewhere, Down there",
+  "label": "ch:it-around-everywhere-nowhere-elsewhere-down-there",
+  "canDo": "I can say around, everywhere, nowhere, elsewhere and down there.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C154-laggiu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can say around, everywhere, nowhere, elsewhere and down there.",
+    "assesses": [
+      "IT-LEX-C154-LUOGO154-03",
+      "IT-LEX-C154-LUOGO154-04",
+      "IT-LEX-C154-LUOGO154-05"
+    ]
+  }
+}

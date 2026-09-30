@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C164-vedovo",
+    "language": "italian",
+    "chapter": 164,
+    "sequence": 8700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa9e27c1adb100a4"
+  },
+  "findings": []
+}

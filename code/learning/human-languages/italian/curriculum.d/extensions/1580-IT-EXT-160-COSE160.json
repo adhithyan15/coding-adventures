@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-160-COSE160",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the bill, a tip, a pizzeria, a hamlet and a pavement.",
+  "prerequisites": []
+}

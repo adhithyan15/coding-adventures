@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:626d105fd09889b3",
+  "lessonIds": [
+    "IT-C168-soffitta",
+    "IT-C168-orto",
+    "IT-C168-pianta",
+    "IT-C168-seme",
+    "IT-C168-radice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch168.txt",
+  "json": "italian/narration/ch168.json",
+  "textHash": "fnv1a64:3de346e53b197929",
+  "jsonHash": "fnv1a64:4775ac332b65dca3",
+  "findings": []
+}

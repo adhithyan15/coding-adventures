@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C150-sbagliare",
+    "language": "italian",
+    "chapter": 150,
+    "sequence": 7790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:637d77980a3961a1"
+  },
+  "findings": []
+}

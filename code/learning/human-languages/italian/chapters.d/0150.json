@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "To save oneself, To make a mistake, To exchange, To download, To ski",
+  "label": "ch:it-to-save-oneself-to-make-a-mistake-to-exchange-to-download-to-ski",
+  "canDo": "I can say to save oneself, to make a mistake, to exchange, to download and to ski.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C150-sciare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: I can say to save oneself, to make a mistake, to exchange, to download and to ski.",
+    "assesses": [
+      "IT-LEX-C150-VERBI150-03",
+      "IT-LEX-C150-VERBI150-04",
+      "IT-LEX-C150-VERBI150-05"
+    ]
+  }
+}

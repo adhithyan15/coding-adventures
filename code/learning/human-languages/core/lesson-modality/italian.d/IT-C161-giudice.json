@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C161-giudice",
+    "language": "italian",
+    "chapter": 161,
+    "sequence": 8530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d65148abb6d2d521"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C157-possibile",
+    "language": "italian",
+    "chapter": 157,
+    "sequence": 8150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7acf5ced74fa644d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C147-rimanere",
+  "pathSegment": "IT-PATH-147-VERBI147",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-147-VERBI147",
+      "order": 2
+    }
+  ]
+}

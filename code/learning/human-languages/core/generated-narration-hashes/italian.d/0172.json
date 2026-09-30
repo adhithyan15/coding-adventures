@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:765688465b7fe1bd",
+  "lessonIds": [
+    "IT-C172-ditta",
+    "IT-C172-azienda",
+    "IT-C172-collega",
+    "IT-C172-stipendio",
+    "IT-C172-riunione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch172.txt",
+  "json": "italian/narration/ch172.json",
+  "textHash": "fnv1a64:14d8861200f559e4",
+  "jsonHash": "fnv1a64:9203a1ac72d000bd",
+  "findings": []
+}
