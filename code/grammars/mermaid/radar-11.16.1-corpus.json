@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: titles, accessibility metadata, labeled axes with angular text anchoring, positional and axis-keyed curves, curve lists, multiline curve bodies, core chart options, layout configuration, curve tension, core Radar theme variables, sparse series palettes, and upstream default frame, palette, title, and legend geometry.",
+  "scope": "Pinned full compatibility scope: titles, accessibility metadata, labeled axes with angular text anchoring, positional and axis-keyed curves, curve lists, multiline curve bodies, core chart options, layout configuration, curve tension, core Radar theme variables, sparse series palettes, and upstream default frame, palette, title, and legend geometry.",
   "fixtures": [
     {
       "id": "basic",
