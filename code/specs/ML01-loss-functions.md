@@ -39,7 +39,7 @@ For Backpropagation (Gradient Descent), implementations must provide the partial
 
 ### Epsilon Clamping
 
-To prevent mathematical undefined behavior when calculating logarithms in BCE and CCE (`log(0) = -infinity`), implementations must clamp predictions $\hat{y}$ to the range $[\epsilon, 1-\epsilon]$, where $\epsilon$ is typically `1e-7`.
+To prevent mathematical undefined behavior when calculating logarithms in BCE and CCE (`log(0) = -infinity`), implementations must clamp predictions $\hat{y}$ to the range $[\epsilon, 1-\epsilon]$. The canonical cross-language value is exactly $\epsilon = 10^{-7}$ (`1e-7`). Implementations must apply the same clamp to both loss and derivative calculations.
 
 ## Public API
 
@@ -99,3 +99,26 @@ Loss functions are tested for exact mathematical parity using a hardcoded sequen
 - `y_true`: `[1.0, 0.0, 0.0]`
 - `y_pred`: `[0.8, 0.1, 0.1]`
 - Expected: `0.07438118`
+
+### Epsilon-Boundary Vectors
+
+These vectors make the canonical clamp observable rather than checking only
+that the result is finite. Let $\epsilon = 10^{-7}$.
+
+**BCE at exact zero and one**
+- `y_true`: `[1.0, 0.0]`
+- `y_pred`: `[1.0, 0.0]`
+- Expected loss: $-\log(1-\epsilon)$
+- Expected derivative: $[-1/(2(1-\epsilon)), 1/(2(1-\epsilon))]$
+
+**CCE lower boundary**
+- `y_true`: `[1.0, 0.0]`
+- `y_pred`: `[0.0, 1.0]`
+- Expected loss: $-\log(\epsilon)/2$
+- Expected derivative: $[-1/(2\epsilon), 0]$
+
+**CCE upper boundary**
+- `y_true`: `[0.0, 1.0]`
+- `y_pred`: `[0.0, 1.0]`
+- Expected loss: $-\log(1-\epsilon)/2$
+- Expected derivative: $[0, -1/(2(1-\epsilon))]$
