@@ -31,9 +31,10 @@ it("pins Telugu's pre-A1 writing ladder", () => {
   //
   // TE-S152 is the earlier vocabulary-first observe-and-trace rung for tta.
   // TE-S123 follows with dda, another vocabulary-first retroflex letter.
-  // TE-S155 revisits the stage for the aspirated partner ttha after the first
-  // complete ladder. TE-S130 and TE-S132 later revisit it for newly introduced
-  // tha and nya.
+  // TE-S116 now gives familiar-word da the same source-backed rung. TE-S155
+  // revisits the stage for the aspirated partner ttha after the first complete
+  // ladder. TE-S130 and TE-S132 later revisit it for newly introduced tha and
+  // nya.
   // The next rung is a SECOND dictation, roughly 1,150 sequence steps after the
   // first. It is here because the ladder proves the stages are reachable, not
   // that each is practised once: `TE-S170` asks the hand to turn *gau* and
@@ -50,6 +51,7 @@ it("pins Telugu's pre-A1 writing ladder", () => {
     ["TE-S01-copy-in-a-word", "guided-copy"],
     ["TE-S01-delayed-copy", "delayed-copy"],
     ["TE-S01-dictation", "dictation-transcription"],
+    ["TE-S116-letter-da", "observe-trace"],
     ["TE-S155-letter-ttha", "observe-trace"],
     ["TE-S139-letter-ddha", "observe-trace"],
     ["TE-S126-letter-nna", "observe-trace"],
