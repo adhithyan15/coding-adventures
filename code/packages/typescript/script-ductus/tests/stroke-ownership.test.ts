@@ -249,7 +249,7 @@ describe("stroke ownership migration baseline", () => {
       keyHash:
         "5d496564b1a58b504a206f93986b7f23c9f3a56d2af3a084782627712e56ab20",
       nonTamilDataHash:
-        "b4e65212517c1eafc14d9d9d52f25fdaa4a6f8f8878c3cc20c4dcd9587875a68",
+        "6db44377835df467b77d9c7b746420b867bea9a4c9838e5cb9e566a22e42bd5e",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",

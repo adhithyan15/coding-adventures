@@ -62,19 +62,16 @@ describe("handwriting ductus", () => {
       ఛ: 0.92,
       డ: 0.32,
       ఢ: 0.32,
-      // The packaged ణ guide follows the five broad curves rather than the
-      // squared inner joins in Noto Sans Telugu, so those attested centerlines
-      // necessarily spend substantial distance outside the font's ink.
-      ణ: 0.18,
       ఝ: 0.75,
       ఐ: 0.59,
       ఒ: 0.84,
       ఋ: 0.84,
     },
     {
-      // The same guide omits Noto's long inner joining shelves while still
-      // tracing every sourced curve; retain a bounded glyph-specific ceiling.
-      ణ: 0.12,
+      // The packaged ణ guide has five curves but no counterpart for Noto
+      // Sans Telugu's short horizontal shelf inside the left bowl. Keep the
+      // source-faithful filmstrip and bound that known font-only remainder.
+      ణ: 0.05,
     },
   );
 
