@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-256-WRK256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say training, a conference, a decision, a thought and an opinion.",
+  "prerequisites": []
+}

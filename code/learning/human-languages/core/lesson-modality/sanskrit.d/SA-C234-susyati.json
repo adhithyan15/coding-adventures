@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C234-susyati",
+    "language": "sanskrit",
+    "chapter": 234,
+    "sequence": 13870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7b1b7e87eba7956"
+  },
+  "findings": []
+}

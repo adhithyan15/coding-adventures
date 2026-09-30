@@ -1,0 +1,11 @@
+{
+  "id": "SA-C247-khadgah",
+  "pathSegment": "SA-PATH-247-THG247",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-247-THG247",
+      "order": 1
+    }
+  ]
+}

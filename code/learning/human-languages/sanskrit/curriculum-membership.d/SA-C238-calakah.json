@@ -1,0 +1,11 @@
+{
+  "id": "SA-C238-calakah",
+  "pathSegment": "SA-PATH-238-PPL238",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-238-PPL238",
+      "order": 4
+    }
+  ]
+}

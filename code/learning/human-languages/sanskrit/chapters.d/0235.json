@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Covers, Plants, Drives, Embraces, Kisses",
+  "label": "ch:sa-covers-plants-drives-embraces-kisses",
+  "canDo": "I can say covers, plants, drives, embraces and kisses.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C235-cumbati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say covers, plants, drives, embraces and kisses.",
+    "assesses": [
+      "SA-LEX-C235-ACT235-03",
+      "SA-LEX-C235-ACT235-04",
+      "SA-LEX-C235-ACT235-05"
+    ]
+  }
+}

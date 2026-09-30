@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C241-yena",
+    "language": "sanskrit",
+    "chapter": 241,
+    "sequence": 14420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4382e94ccac4c71a"
+  },
+  "findings": []
+}

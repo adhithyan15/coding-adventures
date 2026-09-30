@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-257-TRV257",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a border, a bus, a car, arrival and departure.",
+  "prerequisites": []
+}

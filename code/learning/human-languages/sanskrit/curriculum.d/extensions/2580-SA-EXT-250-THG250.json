@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-250-THG250",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fort, a palace, a hut, a building and lodging.",
+  "prerequisites": []
+}

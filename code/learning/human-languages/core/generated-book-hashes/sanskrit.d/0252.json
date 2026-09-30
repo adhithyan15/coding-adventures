@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:feacc937155c695f",
+  "lessonIds": [
+    "SA-C252-valli",
+    "SA-C252-kantakah",
+    "SA-C252-kalika",
+    "SA-C252-mallika",
+    "SA-C252-tulasi"
+  ],
+  "tex": "sanskrit/book/chapters/ch252-vine-thorn-bud-jasmine-holy-basil.tex"
+}

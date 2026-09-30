@@ -1,0 +1,11 @@
+{
+  "id": "SA-C256-vicarah",
+  "pathSegment": "SA-PATH-256-WRK256",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-256-WRK256",
+      "order": 3
+    }
+  ]
+}

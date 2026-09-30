@@ -1,0 +1,11 @@
+{
+  "id": "SA-C248-panah",
+  "pathSegment": "SA-PATH-248-THG248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-248-THG248",
+      "order": 3
+    }
+  ]
+}

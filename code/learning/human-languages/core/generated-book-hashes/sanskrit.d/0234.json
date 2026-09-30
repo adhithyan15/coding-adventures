@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:aeed293036c4714e",
+  "lessonIds": [
+    "SA-C234-susyati",
+    "SA-C234-plavate",
+    "SA-C234-arabhate",
+    "SA-C234-samapayati",
+    "SA-C234-prayacchati"
+  ],
+  "tex": "sanskrit/book/chapters/ch234-dries-up-floats-begins-finishes-hands-over.tex"
+}

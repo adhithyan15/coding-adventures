@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C233-pratiksate",
+    "language": "sanskrit",
+    "chapter": 233,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd63044a5d7b5c36"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-244-QUAL244",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say proper, improper, necessary, other and alone.",
+  "prerequisites": []
+}

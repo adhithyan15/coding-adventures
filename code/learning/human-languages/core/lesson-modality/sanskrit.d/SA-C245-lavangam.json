@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C245-lavangam",
+    "language": "sanskrit",
+    "chapter": 245,
+    "sequence": 14640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb5b0e4845801c3a"
+  },
+  "findings": []
+}

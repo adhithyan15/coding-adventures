@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Tube, Buttermilk, Fruit juice, Clove, Cardamom",
+  "label": "ch:sa-tube-buttermilk-fruit-juice-clove-cardamom",
+  "canDo": "I can say a tube, buttermilk, fruit juice, a clove and cardamom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C245-ela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can say a tube, buttermilk, fruit juice, a clove and cardamom.",
+    "assesses": [
+      "SA-LEX-C245-THG245-03",
+      "SA-LEX-C245-THG245-04",
+      "SA-LEX-C245-THG245-05"
+    ]
+  }
+}

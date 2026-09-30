@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:f46fd4f68eac28bc",
+  "lessonIds": [
+    "SA-C256-prasiksanam",
+    "SA-C256-sammelanam",
+    "SA-C256-nirnayah",
+    "SA-C256-vicarah",
+    "SA-C256-matam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch256.txt",
+  "json": "sanskrit/narration/ch256.json",
+  "textHash": "fnv1a64:c58f1295de90799e",
+  "jsonHash": "fnv1a64:98a4902a2fd86080",
+  "findings": []
+}

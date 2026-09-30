@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Potter, Goldsmith, Blacksmith, Weaver, Washerman",
+  "label": "ch:sa-potter-goldsmith-blacksmith-weaver-washerman",
+  "canDo": "I can say a potter, a goldsmith, a blacksmith, a weaver and a washerman.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C237-rajakah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say a potter, a goldsmith, a blacksmith, a weaver and a washerman.",
+    "assesses": [
+      "SA-LEX-C237-PPL237-03",
+      "SA-LEX-C237-PPL237-04",
+      "SA-LEX-C237-PPL237-05"
+    ]
+  }
+}

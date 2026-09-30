@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:25a9eb23fa06a23b",
+  "lessonIds": [
+    "SA-C251-prthivi",
+    "SA-C251-jagat",
+    "SA-C251-lokah",
+    "SA-C251-prakrtih",
+    "SA-C251-pankah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch251.txt",
+  "json": "sanskrit/narration/ch251.json",
+  "textHash": "fnv1a64:8f33f47b39c8cd42",
+  "jsonHash": "fnv1a64:dd0e63ab88ae4ff6",
+  "findings": []
+}

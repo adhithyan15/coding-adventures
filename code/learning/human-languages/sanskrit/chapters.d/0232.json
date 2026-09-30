@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Is present, Is born, Dies, Is lost, Gets angry",
+  "label": "ch:sa-is-present-is-born-dies-is-lost-gets-angry",
+  "canDo": "I can say is present, is born, dies, is lost and gets angry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C232-kupyati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say is present, is born, dies, is lost and gets angry.",
+    "assesses": [
+      "SA-LEX-C232-ACT232-03",
+      "SA-LEX-C232-ACT232-04",
+      "SA-LEX-C232-ACT232-05"
+    ]
+  }
+}

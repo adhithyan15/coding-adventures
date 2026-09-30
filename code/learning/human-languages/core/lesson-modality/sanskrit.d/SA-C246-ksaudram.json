@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C246-ksaudram",
+    "language": "sanskrit",
+    "chapter": 246,
+    "sequence": 14690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ad428dca30b594b"
+  },
+  "findings": []
+}

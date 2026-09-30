@@ -1,0 +1,11 @@
+{
+  "id": "SA-C257-lokayanam",
+  "pathSegment": "SA-PATH-257-TRV257",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-257-TRV257",
+      "order": 1
+    }
+  ]
+}

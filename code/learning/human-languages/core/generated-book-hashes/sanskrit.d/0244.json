@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:cbe5d8e42282feb1",
+  "lessonIds": [
+    "SA-C244-ucitah",
+    "SA-C244-anucitah",
+    "SA-C244-avasyakah",
+    "SA-C244-anyah",
+    "SA-C244-ekaki"
+  ],
+  "tex": "sanskrit/book/chapters/ch244-proper-improper-necessary-other-alone.tex"
+}

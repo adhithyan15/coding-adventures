@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:2bf9c3973b0c8316",
+  "lessonIds": [
+    "SA-C243-balavan",
+    "SA-C243-rugnah",
+    "SA-C243-svasthah",
+    "SA-C243-sukhi",
+    "SA-C243-duhkhi"
+  ],
+  "tex": "sanskrit/book/chapters/ch243-mighty-sick-healthy-happy-unhappy.tex"
+}

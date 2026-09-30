@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:0dd27820ca0ec6fa",
+  "lessonIds": [
+    "SA-C242-sulabhah",
+    "SA-C242-durlabhah",
+    "SA-C242-jatilah",
+    "SA-C242-sukarah",
+    "SA-C242-duskarah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch242.txt",
+  "json": "sanskrit/narration/ch242.json",
+  "textHash": "fnv1a64:a5a4544e83b685a0",
+  "jsonHash": "fnv1a64:77e572003d331fdd",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C238-abhiyanta",
+    "language": "sanskrit",
+    "chapter": 238,
+    "sequence": 14080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60ab10af64c59d50"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C235-cumbati",
+    "language": "sanskrit",
+    "chapter": 235,
+    "sequence": 13960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c59af732d807a34"
+  },
+  "findings": []
+}

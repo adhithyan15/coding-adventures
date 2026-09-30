@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Proper, Improper, Necessary, Other, Alone",
+  "label": "ch:sa-proper-improper-necessary-other-alone",
+  "canDo": "I can say proper, improper, necessary, other and alone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "SA-C244-ekaki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can say proper, improper, necessary, other and alone.",
+    "assesses": [
+      "SA-LEX-C244-QUAL244-03",
+      "SA-LEX-C244-QUAL244-04",
+      "SA-LEX-C244-QUAL244-05"
+    ]
+  }
+}

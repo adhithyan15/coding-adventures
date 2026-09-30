@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C251-prthivi",
+    "language": "sanskrit",
+    "chapter": 251,
+    "sequence": 15100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71af4bc89e0f13f3"
+  },
+  "findings": []
+}

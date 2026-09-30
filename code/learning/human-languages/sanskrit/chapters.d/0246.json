@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Puffed rice, Grain, Barley flour, Wild honey, Sweet dish",
+  "label": "ch:sa-puffed-rice-grain-barley-flour-wild-honey-sweet-dish",
+  "canDo": "I can say puffed rice, grain, barley flour, wild honey and a sweet dish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C246-mistannam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can say puffed rice, grain, barley flour, wild honey and a sweet dish.",
+    "assesses": [
+      "SA-LEX-C246-THG246-03",
+      "SA-LEX-C246-THG246-04",
+      "SA-LEX-C246-THG246-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Arrow, Sword, Armour, Flag, Drum",
+  "label": "ch:sa-arrow-sword-armour-flag-drum",
+  "canDo": "I can say an arrow, a sword, armour, a flag and a drum.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C247-patahah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can say an arrow, a sword, armour, a flag and a drum.",
+    "assesses": [
+      "SA-LEX-C247-THG247-03",
+      "SA-LEX-C247-THG247-04",
+      "SA-LEX-C247-THG247-05"
+    ]
+  }
+}

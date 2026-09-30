@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C257-karayanam",
+    "language": "sanskrit",
+    "chapter": 257,
+    "sequence": 15420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a847584d88586b63"
+  },
+  "findings": []
+}

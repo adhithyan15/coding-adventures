@@ -1,0 +1,11 @@
+{
+  "id": "SA-C248-rupyakam",
+  "pathSegment": "SA-PATH-248-THG248",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-248-THG248",
+      "order": 2
+    }
+  ]
+}

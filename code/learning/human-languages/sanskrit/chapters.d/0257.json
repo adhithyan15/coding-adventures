@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Border, Bus, Car, Arrival, Departure",
+  "label": "ch:sa-border-bus-car-arrival-departure",
+  "canDo": "I can say a border, a bus, a car, arrival and departure.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-R257-second-pass-words-from-chapters-254-257",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say a border, a bus, a car, arrival and departure.",
+    "assesses": [
+      "SA-LEX-C257-TRV257-03",
+      "SA-LEX-C257-TRV257-04",
+      "SA-LEX-C257-TRV257-05"
+    ]
+  }
+}

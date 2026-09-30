@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:e712cc17887fd6d0",
+  "lessonIds": [
+    "SA-C247-banah",
+    "SA-C247-khadgah",
+    "SA-C247-kavacam",
+    "SA-C247-dhvajah",
+    "SA-C247-patahah"
+  ],
+  "tex": "sanskrit/book/chapters/ch247-arrow-sword-armour-flag-drum.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:e74adb0f41c4a9ba",
+  "lessonIds": [
+    "SA-C257-simantah",
+    "SA-C257-lokayanam",
+    "SA-C257-karayanam",
+    "SA-C257-agamanam",
+    "SA-C257-prasthanam",
+    "SA-R257-first-pass-words-from-chapters-250-253",
+    "SA-R257-second-pass-words-from-chapters-254-257"
+  ],
+  "tex": "sanskrit/book/chapters/ch257-border-bus-car-arrival-departure.tex"
+}

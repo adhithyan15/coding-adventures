@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:13c038e095e0c48e",
+  "lessonIds": [
+    "SA-C242-sulabhah",
+    "SA-C242-durlabhah",
+    "SA-C242-jatilah",
+    "SA-C242-sukarah",
+    "SA-C242-duskarah"
+  ],
+  "tex": "sanskrit/book/chapters/ch242-easy-to-get-hard-to-get-complicated-easy-to-do-hard-to-do.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C236-yuvatih",
+  "pathSegment": "SA-PATH-236-PPL236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-236-PPL236",
+      "order": 3
+    }
+  ]
+}

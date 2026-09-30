@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C252-tulasi",
+    "language": "sanskrit",
+    "chapter": 252,
+    "sequence": 15190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8482f6fa5dda6e6"
+  },
+  "findings": []
+}

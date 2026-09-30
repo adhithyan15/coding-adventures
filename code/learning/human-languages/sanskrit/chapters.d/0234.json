@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Dries up, Floats, Begins, Finishes, Hands over",
+  "label": "ch:sa-dries-up-floats-begins-finishes-hands-over",
+  "canDo": "I can say dries up, floats, begins, finishes and hands over.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C234-prayacchati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say dries up, floats, begins, finishes and hands over.",
+    "assesses": [
+      "SA-LEX-C234-ACT234-03",
+      "SA-LEX-C234-ACT234-04",
+      "SA-LEX-C234-ACT234-05"
+    ]
+  }
+}

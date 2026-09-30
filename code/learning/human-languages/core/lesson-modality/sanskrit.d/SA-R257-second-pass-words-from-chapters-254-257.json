@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R257-second-pass-words-from-chapters-254-257",
+    "language": "sanskrit",
+    "chapter": 257,
+    "sequence": 15460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40ca6d0879e070c1"
+  },
+  "findings": []
+}

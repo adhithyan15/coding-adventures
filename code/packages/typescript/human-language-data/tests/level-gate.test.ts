@@ -268,6 +268,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // German followed as the second, with
     // chapters 142-251 (the future and practical-reading nodes, 540 headwords,
     // fifty verbs), which moved it from the A1 row of HELD to the A2 row.
+    // Sanskrit followed as the third, with chapters 139-257 (the future and
+    // practical-reading nodes, 595 headwords, ninety-five verbs), which moved it
+    // from the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious

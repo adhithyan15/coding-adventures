@@ -1,0 +1,11 @@
+{
+  "id": "SA-C235-pidadhati",
+  "pathSegment": "SA-PATH-235-ACT235",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-235-ACT235",
+      "order": 0
+    }
+  ]
+}

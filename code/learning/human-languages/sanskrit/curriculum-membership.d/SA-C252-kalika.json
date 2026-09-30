@@ -1,0 +1,11 @@
+{
+  "id": "SA-C252-kalika",
+  "pathSegment": "SA-PATH-252-THG252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-252-THG252",
+      "order": 2
+    }
+  ]
+}

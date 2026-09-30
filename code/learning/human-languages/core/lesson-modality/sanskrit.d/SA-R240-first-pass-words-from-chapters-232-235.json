@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R240-first-pass-words-from-chapters-232-235",
+    "language": "sanskrit",
+    "chapter": 240,
+    "sequence": 14220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a91cd03611f19abb"
+  },
+  "findings": []
+}

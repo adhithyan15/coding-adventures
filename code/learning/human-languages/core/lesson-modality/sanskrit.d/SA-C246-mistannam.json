@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C246-mistannam",
+    "language": "sanskrit",
+    "chapter": 246,
+    "sequence": 14700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d55ab5fc40b8df78"
+  },
+  "findings": []
+}

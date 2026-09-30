@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:9c6f6ffa0765ebb4",
+  "lessonIds": [
+    "SA-C233-varsati",
+    "SA-C233-rohati",
+    "SA-C233-pratiksate",
+    "SA-C233-anugacchati",
+    "SA-C233-nirgacchati"
+  ],
+  "tex": "sanskrit/book/chapters/ch233-rains-sprouts-waits-follows-goes-out.tex"
+}

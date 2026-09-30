@@ -1,0 +1,11 @@
+{
+  "id": "SA-C254-cakravakah",
+  "pathSegment": "SA-PATH-254-THG254",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-254-THG254",
+      "order": 0
+    }
+  ]
+}

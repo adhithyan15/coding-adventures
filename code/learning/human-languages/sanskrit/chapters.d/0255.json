@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "Education, Knowledge, Practice, Homework, Answer",
+  "label": "ch:sa-education-knowledge-practice-homework-answer",
+  "canDo": "I can say education, knowledge, practice, homework and an answer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "SA-C255-uttaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can say education, knowledge, practice, homework and an answer.",
+    "assesses": [
+      "SA-LEX-C255-SCH255-03",
+      "SA-LEX-C255-SCH255-04",
+      "SA-LEX-C255-SCH255-05"
+    ]
+  }
+}

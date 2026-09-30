@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C257-lokayanam",
+    "language": "sanskrit",
+    "chapter": 257,
+    "sequence": 15410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:905ade014b8a1366"
+  },
+  "findings": []
+}

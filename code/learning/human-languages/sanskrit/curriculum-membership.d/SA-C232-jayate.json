@@ -1,0 +1,11 @@
+{
+  "id": "SA-C232-jayate",
+  "pathSegment": "SA-PATH-232-ACT232",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-232-ACT232",
+      "order": 1
+    }
+  ]
+}

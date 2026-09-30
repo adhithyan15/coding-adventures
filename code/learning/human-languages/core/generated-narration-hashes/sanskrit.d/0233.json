@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:13a8463c4e816620",
+  "lessonIds": [
+    "SA-C233-varsati",
+    "SA-C233-rohati",
+    "SA-C233-pratiksate",
+    "SA-C233-anugacchati",
+    "SA-C233-nirgacchati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch233.txt",
+  "json": "sanskrit/narration/ch233.json",
+  "textHash": "fnv1a64:96db5e41f344064c",
+  "jsonHash": "fnv1a64:ea17abd5bf2f14a9",
+  "findings": []
+}

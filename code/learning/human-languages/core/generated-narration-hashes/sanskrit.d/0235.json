@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:0cc97e4799a26092",
+  "lessonIds": [
+    "SA-C235-pidadhati",
+    "SA-C235-aropayati",
+    "SA-C235-calayati",
+    "SA-C235-alingati",
+    "SA-C235-cumbati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch235.txt",
+  "json": "sanskrit/narration/ch235.json",
+  "textHash": "fnv1a64:ee9ca472d593adbd",
+  "jsonHash": "fnv1a64:7084c0d72b07a2a4",
+  "findings": []
+}

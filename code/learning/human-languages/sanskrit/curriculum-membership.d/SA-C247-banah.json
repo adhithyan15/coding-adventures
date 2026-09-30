@@ -1,0 +1,11 @@
+{
+  "id": "SA-C247-banah",
+  "pathSegment": "SA-PATH-247-THG247",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-247-THG247",
+      "order": 0
+    }
+  ]
+}
