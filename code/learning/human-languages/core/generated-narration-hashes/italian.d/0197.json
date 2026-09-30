@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:1cb58f99eb908d6b",
+  "lessonIds": [
+    "IT-C197-consiglio",
+    "IT-C197-promessa",
+    "IT-C197-sconto",
+    "IT-C197-saldi",
+    "IT-C197-fila",
+    "IT-R197-first-pass-words-from-chapters-192-194",
+    "IT-R197-second-pass-words-from-chapters-195-197"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch197.txt",
+  "json": "italian/narration/ch197.json",
+  "textHash": "fnv1a64:024691da7b42aa8d",
+  "jsonHash": "fnv1a64:e952e364aec03212",
+  "findings": []
+}

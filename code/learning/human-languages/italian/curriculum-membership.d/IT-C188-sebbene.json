@@ -1,0 +1,11 @@
+{
+  "id": "IT-C188-sebbene",
+  "pathSegment": "IT-PATH-188-PERCHE188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-188-PERCHE188",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C185-cicatrice",
+    "language": "italian",
+    "chapter": 185,
+    "sequence": 10300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9644a7dddad92ee"
+  },
+  "findings": []
+}

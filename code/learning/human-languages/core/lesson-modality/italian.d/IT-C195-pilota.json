@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C195-pilota",
+    "language": "italian",
+    "chapter": 195,
+    "sequence": 10960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9cac81543bb6ce5"
+  },
+  "findings": []
+}

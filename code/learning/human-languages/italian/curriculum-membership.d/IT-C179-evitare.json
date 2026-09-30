@@ -1,0 +1,11 @@
+{
+  "id": "IT-C179-evitare",
+  "pathSegment": "IT-PATH-179-VERBI179",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-179-VERBI179",
+      "order": 3
+    }
+  ]
+}

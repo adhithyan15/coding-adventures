@@ -1,0 +1,11 @@
+{
+  "id": "IT-C178-aggiungere",
+  "pathSegment": "IT-PATH-178-VERBI178",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-178-VERBI178",
+      "order": 2
+    }
+  ]
+}

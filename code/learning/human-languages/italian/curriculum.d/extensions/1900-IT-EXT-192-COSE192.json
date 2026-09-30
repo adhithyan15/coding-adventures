@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-192-COSE192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a platform, a passport, a border, customs and a booking.",
+  "prerequisites": []
+}

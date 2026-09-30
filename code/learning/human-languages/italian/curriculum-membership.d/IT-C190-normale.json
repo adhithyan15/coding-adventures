@@ -1,0 +1,11 @@
+{
+  "id": "IT-C190-normale",
+  "pathSegment": "IT-PATH-190-QUAL190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-190-QUAL190",
+      "order": 3
+    }
+  ]
+}

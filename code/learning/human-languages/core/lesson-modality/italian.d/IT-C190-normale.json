@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C190-normale",
+    "language": "italian",
+    "chapter": 190,
+    "sequence": 10550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c63ead9d9b81f90"
+  },
+  "findings": []
+}

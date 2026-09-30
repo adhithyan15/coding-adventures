@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Anxiety, Calmness, Love, Friendship, Hope",
+  "label": "ch:it-anxiety-calmness-love-friendship-hope",
+  "canDo": "I can say anxiety, calmness, love, friendship and hope.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C186-speranza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can say anxiety, calmness, love, friendship and hope.",
+    "assesses": [
+      "IT-LEX-C186-SAL186-03",
+      "IT-LEX-C186-SAL186-04",
+      "IT-LEX-C186-SAL186-05"
+    ]
+  }
+}

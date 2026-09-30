@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C196-scelta",
+    "language": "italian",
+    "chapter": 196,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:527f12fcbec71dc3"
+  },
+  "findings": []
+}

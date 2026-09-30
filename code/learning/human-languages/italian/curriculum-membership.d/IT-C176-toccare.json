@@ -1,0 +1,11 @@
+{
+  "id": "IT-C176-toccare",
+  "pathSegment": "IT-PATH-176-VERBI176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-176-VERBI176",
+      "order": 1
+    }
+  ]
+}

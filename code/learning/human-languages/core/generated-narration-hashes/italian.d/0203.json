@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:3436c0a8eaa11c36",
+  "lessonIds": [
+    "IT-C203-contratto",
+    "IT-C203-colloquio",
+    "IT-C203-carriera",
+    "IT-C203-stampante",
+    "IT-C203-indirizzo",
+    "IT-R203-first-pass-words-from-chapters-198-200",
+    "IT-R203-second-pass-words-from-chapters-201-203"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch203.txt",
+  "json": "italian/narration/ch203.json",
+  "textHash": "fnv1a64:75bdc5f423efeb4c",
+  "jsonHash": "fnv1a64:1e98e7fa5e10566c",
+  "findings": []
+}

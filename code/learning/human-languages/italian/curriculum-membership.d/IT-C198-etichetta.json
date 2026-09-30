@@ -1,0 +1,11 @@
+{
+  "id": "IT-C198-etichetta",
+  "pathSegment": "IT-PATH-198-COSE198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-198-COSE198",
+      "order": 2
+    }
+  ]
+}

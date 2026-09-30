@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:1247792c85ca8c6d",
+  "lessonIds": [
+    "IT-C190-utile",
+    "IT-C190-inutile",
+    "IT-C190-strano",
+    "IT-C190-normale",
+    "IT-C190-diverso"
+  ],
+  "tex": "italian/book/chapters/ch190-useful-useless-strange-normal-different.tex"
+}

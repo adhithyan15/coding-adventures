@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C181-rubare",
+    "language": "italian",
+    "chapter": 181,
+    "sequence": 9900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df2e73998451ccf1"
+  },
+  "findings": []
+}

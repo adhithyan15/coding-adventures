@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C185-pollice",
+    "language": "italian",
+    "chapter": 185,
+    "sequence": 10280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4f104d047a97813"
+  },
+  "findings": []
+}

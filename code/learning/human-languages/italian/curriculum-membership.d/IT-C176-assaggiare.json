@@ -1,0 +1,11 @@
+{
+  "id": "IT-C176-assaggiare",
+  "pathSegment": "IT-PATH-176-VERBI176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-176-VERBI176",
+      "order": 3
+    }
+  ]
+}

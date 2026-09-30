@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C181-rischiare",
+    "language": "italian",
+    "chapter": 181,
+    "sequence": 9880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5372518350821a5"
+  },
+  "findings": []
+}

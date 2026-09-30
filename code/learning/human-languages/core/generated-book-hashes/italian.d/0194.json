@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:afa77f993fb819ca",
+  "lessonIds": [
+    "IT-C194-cantante",
+    "IT-C194-spettacolo",
+    "IT-C194-attore",
+    "IT-C194-attrice",
+    "IT-C194-romanzo"
+  ],
+  "tex": "italian/book/chapters/ch194-singer-performance-actor-actress-novel.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Contract, Interview, Career, Printer, Address",
+  "label": "ch:it-contract-interview-career-printer-address",
+  "canDo": "I can say a contract, an interview, a career, a printer and an address.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R203-second-pass-words-from-chapters-201-203",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say a contract, an interview, a career, a printer and an address.",
+    "assesses": [
+      "IT-LEX-C203-LAV203-03",
+      "IT-LEX-C203-LAV203-04",
+      "IT-LEX-C203-LAV203-05"
+    ]
+  }
+}

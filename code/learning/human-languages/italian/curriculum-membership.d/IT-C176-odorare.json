@@ -1,0 +1,11 @@
+{
+  "id": "IT-C176-odorare",
+  "pathSegment": "IT-PATH-176-VERBI176",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-176-VERBI176",
+      "order": 2
+    }
+  ]
+}

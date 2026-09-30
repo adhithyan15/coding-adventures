@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C182-valere",
+    "language": "italian",
+    "chapter": 182,
+    "sequence": 9940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:156f84db784f14b6"
+  },
+  "findings": []
+}

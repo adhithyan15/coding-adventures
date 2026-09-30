@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "Useful, Useless, Strange, Normal, Different",
+  "label": "ch:it-useful-useless-strange-normal-different",
+  "canDo": "I can say useful, useless, strange, normal and different.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C190-diverso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can say useful, useless, strange, normal and different.",
+    "assesses": [
+      "IT-LEX-C190-QUAL190-03",
+      "IT-LEX-C190-QUAL190-04",
+      "IT-LEX-C190-QUAL190-05"
+    ]
+  }
+}

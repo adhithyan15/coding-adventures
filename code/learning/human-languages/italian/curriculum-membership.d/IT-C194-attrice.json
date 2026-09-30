@@ -1,0 +1,11 @@
+{
+  "id": "IT-C194-attrice",
+  "pathSegment": "IT-PATH-194-COSE194",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-194-COSE194",
+      "order": 3
+    }
+  ]
+}

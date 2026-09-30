@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:1836a7f1929efff6",
+  "lessonIds": [
+    "IT-C186-ansia",
+    "IT-C186-calma",
+    "IT-C186-amore",
+    "IT-C186-amicizia",
+    "IT-C186-speranza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch186.txt",
+  "json": "italian/narration/ch186.json",
+  "textHash": "fnv1a64:fa36e3e2f9dc0b04",
+  "jsonHash": "fnv1a64:04d0457bdb2e06f3",
+  "findings": []
+}

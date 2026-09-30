@@ -1,0 +1,11 @@
+{
+  "id": "IT-C177-permettere",
+  "pathSegment": "IT-PATH-177-VERBI177",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-177-VERBI177",
+      "order": 1
+    }
+  ]
+}

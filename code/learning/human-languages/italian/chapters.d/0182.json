@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "To kill, To be worth, To fly, To get used to, To notice",
+  "label": "ch:it-to-kill-to-be-worth-to-fly-to-get-used-to-to-notice",
+  "canDo": "I can say to kill, to be worth, to fly, to get used to and to notice.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R182-second-pass-words-from-chapters-178-182",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can say to kill, to be worth, to fly, to get used to and to notice.",
+    "assesses": [
+      "IT-LEX-C182-VERBI182-03",
+      "IT-LEX-C182-VERBI182-04",
+      "IT-LEX-C182-VERBI182-05"
+    ]
+  }
+}

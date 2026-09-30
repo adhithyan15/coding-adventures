@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-195-COSE195",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pilot, an accountant, a scientist, a researcher and a tourist.",
+  "prerequisites": []
+}

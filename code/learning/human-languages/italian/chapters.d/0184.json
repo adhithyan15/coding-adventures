@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "To slip, To lift, To surprise, To suspect, To squeeze",
+  "label": "ch:it-to-slip-to-lift-to-surprise-to-suspect-to-squeeze",
+  "canDo": "I can say to slip, to lift, to surprise, to suspect and to squeeze.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C184-stringere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can say to slip, to lift, to surprise, to suspect and to squeeze.",
+    "assesses": [
+      "IT-LEX-C184-VERBI184-03",
+      "IT-LEX-C184-VERBI184-04",
+      "IT-LEX-C184-VERBI184-05"
+    ]
+  }
+}

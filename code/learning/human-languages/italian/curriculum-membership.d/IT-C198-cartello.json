@@ -1,0 +1,11 @@
+{
+  "id": "IT-C198-cartello",
+  "pathSegment": "IT-PATH-198-COSE198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-198-COSE198",
+      "order": 3
+    }
+  ]
+}

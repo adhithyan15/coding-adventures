@@ -1,0 +1,11 @@
+{
+  "id": "IT-C183-lanciare",
+  "pathSegment": "IT-PATH-183-VERBI183",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-183-VERBI183",
+      "order": 3
+    }
+  ]
+}

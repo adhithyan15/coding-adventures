@@ -1,0 +1,11 @@
+{
+  "id": "IT-C183-interrompere",
+  "pathSegment": "IT-PATH-183-VERBI183",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-183-VERBI183",
+      "order": 2
+    }
+  ]
+}

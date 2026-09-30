@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:585a75be3b436699",
+  "lessonIds": [
+    "IT-C176-ascoltare",
+    "IT-C176-toccare",
+    "IT-C176-odorare",
+    "IT-C176-assaggiare",
+    "IT-C176-scaldare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch176.txt",
+  "json": "italian/narration/ch176.json",
+  "textHash": "fnv1a64:38cd2fa7dfe699db",
+  "jsonHash": "fnv1a64:4504ddb54743fd60",
+  "findings": []
+}

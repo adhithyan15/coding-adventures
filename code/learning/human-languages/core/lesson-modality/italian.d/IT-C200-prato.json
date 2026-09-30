@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C200-prato",
+    "language": "italian",
+    "chapter": 200,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0af6137b127e340"
+  },
+  "findings": []
+}

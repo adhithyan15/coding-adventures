@@ -1,0 +1,11 @@
+{
+  "id": "IT-C180-osservare",
+  "pathSegment": "IT-PATH-180-VERBI180",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-180-VERBI180",
+      "order": 0
+    }
+  ]
+}

@@ -36,7 +36,9 @@ it("pins Italian lesson-content budgets", () =>
     // 682 -> 860: the first Italian A2 vocabulary tranche, chapters 140-173.
     // 170 word lessons (fifty-five verbs) and two reviews per run of at most
     // nine chapters. No idiom, sense or culture claim.
-    lessons: 860,
+    // 860 -> 1018: the second tranche, chapters 174-203: 150 word lessons and
+    // two reviews per run.
+    lessons: 1018,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

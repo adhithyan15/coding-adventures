@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C196-soluzione",
+    "language": "italian",
+    "chapter": 196,
+    "sequence": 11040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b611cacf77314529"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C184-sollevare",
+    "language": "italian",
+    "chapter": 184,
+    "sequence": 10230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6615643ff1518c3d"
+  },
+  "findings": []
+}

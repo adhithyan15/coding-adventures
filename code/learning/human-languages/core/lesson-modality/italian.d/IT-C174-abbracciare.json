@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C174-abbracciare",
+    "language": "italian",
+    "chapter": 174,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c932bebd9f0eee0"
+  },
+  "findings": []
+}

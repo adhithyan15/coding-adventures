@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C200-spina",
+    "language": "italian",
+    "chapter": 200,
+    "sequence": 11390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ca22bc0a165380a"
+  },
+  "findings": []
+}

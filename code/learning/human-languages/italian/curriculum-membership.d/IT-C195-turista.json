@@ -1,0 +1,11 @@
+{
+  "id": "IT-C195-turista",
+  "pathSegment": "IT-PATH-195-COSE195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-195-COSE195",
+      "order": 4
+    }
+  ]
+}

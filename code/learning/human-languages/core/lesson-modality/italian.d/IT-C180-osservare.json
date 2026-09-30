@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C180-osservare",
+    "language": "italian",
+    "chapter": 180,
+    "sequence": 9830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bdaa6a262d2f8ee"
+  },
+  "findings": []
+}

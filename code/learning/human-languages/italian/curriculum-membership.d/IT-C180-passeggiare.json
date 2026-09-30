@@ -1,0 +1,11 @@
+{
+  "id": "IT-C180-passeggiare",
+  "pathSegment": "IT-PATH-180-VERBI180",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-180-VERBI180",
+      "order": 2
+    }
+  ]
+}

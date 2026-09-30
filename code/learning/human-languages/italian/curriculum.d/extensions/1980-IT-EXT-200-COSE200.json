@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-200-COSE200",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a branch, a trunk, a thorn, a lawn and a path.",
+  "prerequisites": []
+}

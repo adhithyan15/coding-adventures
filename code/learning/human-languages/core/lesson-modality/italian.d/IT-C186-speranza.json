@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C186-speranza",
+    "language": "italian",
+    "chapter": 186,
+    "sequence": 10360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac3063ae10b9b237"
+  },
+  "findings": []
+}

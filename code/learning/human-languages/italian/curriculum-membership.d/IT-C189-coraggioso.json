@@ -1,0 +1,11 @@
+{
+  "id": "IT-C189-coraggioso",
+  "pathSegment": "IT-PATH-189-QUAL189",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-189-QUAL189",
+      "order": 2
+    }
+  ]
+}

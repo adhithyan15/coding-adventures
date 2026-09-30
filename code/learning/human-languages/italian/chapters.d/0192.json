@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Platform, Passport, Border, Customs, Booking",
+  "label": "ch:it-platform-passport-border-customs-booking",
+  "canDo": "I can say a platform, a passport, a border, customs and a booking.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C192-prenotazione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can say a platform, a passport, a border, customs and a booking.",
+    "assesses": [
+      "IT-LEX-C192-COSE192-03",
+      "IT-LEX-C192-COSE192-04",
+      "IT-LEX-C192-COSE192-05"
+    ]
+  }
+}

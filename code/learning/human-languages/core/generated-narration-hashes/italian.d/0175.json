@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:76ec1b9b1aeba629",
+  "lessonIds": [
+    "IT-C175-tradurre",
+    "IT-C175-dimenticare",
+    "IT-C175-ricordare",
+    "IT-C175-decidere",
+    "IT-C175-scegliere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch175.txt",
+  "json": "italian/narration/ch175.json",
+  "textHash": "fnv1a64:db434e1551e1ae88",
+  "jsonHash": "fnv1a64:2a4ddd8b0058dc0e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C188-anzi",
+    "language": "italian",
+    "chapter": 188,
+    "sequence": 10420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2a251fedb28fd3e"
+  },
+  "findings": []
+}

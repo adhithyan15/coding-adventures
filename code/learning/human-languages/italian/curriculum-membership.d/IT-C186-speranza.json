@@ -1,0 +1,11 @@
+{
+  "id": "IT-C186-speranza",
+  "pathSegment": "IT-PATH-186-SAL186",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-186-SAL186",
+      "order": 4
+    }
+  ]
+}

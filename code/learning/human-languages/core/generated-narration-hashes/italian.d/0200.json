@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:2bdc8020f4791970",
+  "lessonIds": [
+    "IT-C200-ramo",
+    "IT-C200-tronco",
+    "IT-C200-spina",
+    "IT-C200-prato",
+    "IT-C200-sentiero"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch200.txt",
+  "json": "italian/narration/ch200.json",
+  "textHash": "fnv1a64:9944aa029ffdbfb2",
+  "jsonHash": "fnv1a64:2fa6791872df7d35",
+  "findings": []
+}

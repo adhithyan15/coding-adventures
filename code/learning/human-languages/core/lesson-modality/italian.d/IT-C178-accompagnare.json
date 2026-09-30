@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C178-accompagnare",
+    "language": "italian",
+    "chapter": 178,
+    "sequence": 9740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b1e02e9755443e5"
+  },
+  "findings": []
+}

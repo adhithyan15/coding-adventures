@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:49caa74dbf0141b1",
+  "lessonIds": [
+    "IT-C195-pilota",
+    "IT-C195-commercialista",
+    "IT-C195-scienziato",
+    "IT-C195-ricercatore",
+    "IT-C195-turista"
+  ],
+  "tex": "italian/book/chapters/ch195-pilot-accountant-scientist-researcher-tourist.tex"
+}

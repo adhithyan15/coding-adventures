@@ -1,0 +1,11 @@
+{
+  "id": "IT-C185-pollice",
+  "pathSegment": "IT-PATH-185-SAL185",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-185-SAL185",
+      "order": 1
+    }
+  ]
+}

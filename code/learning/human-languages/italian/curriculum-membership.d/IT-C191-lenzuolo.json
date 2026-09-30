@@ -1,0 +1,11 @@
+{
+  "id": "IT-C191-lenzuolo",
+  "pathSegment": "IT-PATH-191-COSE191",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-191-COSE191",
+      "order": 3
+    }
+  ]
+}

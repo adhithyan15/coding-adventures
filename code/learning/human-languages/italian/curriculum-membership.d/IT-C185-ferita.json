@@ -1,0 +1,11 @@
+{
+  "id": "IT-C185-ferita",
+  "pathSegment": "IT-PATH-185-SAL185",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-185-SAL185",
+      "order": 2
+    }
+  ]
+}

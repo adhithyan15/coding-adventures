@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:a3525d23cecddd1c",
+  "lessonIds": [
+    "IT-C192-binario",
+    "IT-C192-passaporto",
+    "IT-C192-frontiera",
+    "IT-C192-dogana",
+    "IT-C192-prenotazione"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch192.txt",
+  "json": "italian/narration/ch192.json",
+  "textHash": "fnv1a64:618c2fe73f613bf7",
+  "jsonHash": "fnv1a64:9e988f4522f10c30",
+  "findings": []
+}

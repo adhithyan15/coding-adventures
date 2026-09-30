@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:d8108af6e9f045f8",
+  "lessonIds": [
+    "IT-C179-dimostrare",
+    "IT-C179-dipendere",
+    "IT-C179-dividere",
+    "IT-C179-evitare",
+    "IT-C179-fidarsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch179.txt",
+  "json": "italian/narration/ch179.json",
+  "textHash": "fnv1a64:e0d6e5b50aaae7c3",
+  "jsonHash": "fnv1a64:8840575e0def0f61",
+  "findings": []
+}
