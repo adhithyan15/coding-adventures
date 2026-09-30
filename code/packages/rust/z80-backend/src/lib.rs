@@ -7,7 +7,7 @@
 //! directly (unlike MIPS/ARM1, which needed different return-mechanism
 //! handling).
 //!
-//! ## WORD02 scope — bounded arithmetic
+//! ## WORD03a scope — bounded arithmetic and comparisons
 //!
 //! Same scope as `intel8080-backend` v0.1.0: just enough to compile the
 //! trivial IIR program `const 42; ret` to real Zilog Z80 machine code
@@ -22,6 +22,7 @@
 //! | `const_u16` (single-var case) | ✓ → `LD HL, nn` |
 //! | matching typed returns, `ret_void` | ✓ → `HALT` (entry-function exit) |
 //! | two-live `add/sub/and/or/xor` on `u8`/`u16` | ✓ → register ALU |
+//! | typed unsigned `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | ✓ → normalized `bool` |
 //! | Anything else | returns `None` |
 //!
 //! Per the GUIDING CONSTRAINT (see
@@ -30,8 +31,8 @@
 //! regardless of op-set parity. Future increments to `z80-backend` can
 //! port richer op coverage (`LD r,r'`/`ADD`/`SUB`/`CP`/branches/calls/
 //! the alternate register bank/`CB`-prefixed bit ops/IX-IY addressing)
-//! using the fuller ISA `z80-simulator` already implements. WORD02 explicitly
-//! limits live values to two of one width; WORD03+ will grow that contract.
+//! using the fuller ISA `z80-simulator` already implements. WORD03a retains
+//! the two-slot allocator; WORD03b will add control-flow liveness.
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
@@ -39,9 +40,10 @@ use std::collections::HashSet;
 use std::fmt;
 use vm_core::value::Value;
 use z80_encoder::{
-    encode_add_hl_rp, encode_alu_reg, encode_ld_a_n, encode_ld_r_n, encode_ld_r_r, encode_ld_rp_nn,
-    ALU_ADC, ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, LD_A_N_MAX, PAIR_DE,
-    PAIR_HL, REG_A, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L,
+    encode_add_hl_rp, encode_alu_reg, encode_jr_c, encode_jr_nc, encode_jr_nz, encode_jr_z,
+    encode_ld_a_n, encode_ld_r_n, encode_ld_r_r, encode_ld_rp_nn, ALU_ADC, ALU_ADD, ALU_AND,
+    ALU_CP, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, LD_A_N_MAX, PAIR_DE, PAIR_HL, REG_A,
+    REG_B, REG_C, REG_D, REG_E, REG_H, REG_L,
 };
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -263,6 +265,58 @@ fn compile_single_function(cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
             continue;
         }
 
+        if let Some((relation, width)) = comparison_operation(op) {
+            let dest = require_dest(instr, op)?;
+            if instr.ty != "bool" || instr.srcs.len() != 2 {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires two variables and bool result type"
+                )));
+            }
+            let left = parse_var_src(instr, 0, op)?;
+            let right = parse_var_src(instr, 1, op)?;
+            let left_slot = find_slot(&slots, &left)
+                .ok_or_else(|| BackendError::UndefinedVariable(left.clone()))?;
+            let right_slot = find_slot(&slots, &right)
+                .ok_or_else(|| BackendError::UndefinedVariable(right.clone()))?;
+            if [left_slot, right_slot].iter().any(|&slot| {
+                let value = slots[slot].as_ref().expect("located slot");
+                value.width != width || value.ty != width.name()
+            }) {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} source width or type mismatch"
+                )));
+            }
+            let target = slots
+                .iter()
+                .position(|slot| {
+                    slot.as_ref().is_none_or(|value| {
+                        value.name == dest || !live_after[index].contains(&value.name)
+                    })
+                })
+                .ok_or_else(|| {
+                    BackendError::UnsupportedOp(
+                        "WORD03a requires a third live value; spilling is deferred".into(),
+                    )
+                })?;
+            emit_comparison_bool(&mut bytes, relation, width, left_slot, right_slot, target);
+            slots[target] = Some(CurrentValue {
+                name: dest.into(),
+                width: ResultWidth::Byte,
+                ty: "bool".into(),
+            });
+            for (slot_index, slot) in slots.iter_mut().enumerate() {
+                if slot_index != target
+                    && slot
+                        .as_ref()
+                        .is_some_and(|value| !live_after[index].contains(&value.name))
+                {
+                    *slot = None;
+                }
+            }
+            terminated = false;
+            continue;
+        }
+
         if let Some(width) = unary_not_width(op) {
             let dest = require_dest(instr, op)?;
             if instr.ty != width.name() || instr.srcs.len() != 1 {
@@ -420,6 +474,82 @@ fn unary_not_width(op: &str) -> Option<ResultWidth> {
         "not_u8" => Some(ResultWidth::Byte),
         "not_u16" => Some(ResultWidth::Word),
         _ => None,
+    }
+}
+
+fn comparison_operation(op: &str) -> Option<(&str, ResultWidth)> {
+    let (name, width) = op.rsplit_once('_')?;
+    let width = match width {
+        "u8" => ResultWidth::Byte,
+        "u16" => ResultWidth::Word,
+        _ => return None,
+    };
+    let relation = name.strip_prefix("cmp_")?;
+    matches!(relation, "eq" | "ne" | "lt" | "le" | "gt" | "ge").then_some((relation, width))
+}
+
+fn emit_comparison_bool(
+    bytes: &mut Vec<u8>,
+    relation: &str,
+    width: ResultWidth,
+    left: usize,
+    right: usize,
+    target: usize,
+) {
+    if width == ResultWidth::Byte {
+        // A is slot zero; C keeps it intact if the result occupies D.
+        bytes.push(encode_ld_r_r(REG_C, REG_A));
+        if left == 1 {
+            bytes.push(encode_ld_r_r(REG_A, REG_D));
+        }
+        bytes.push(encode_alu_reg(
+            ALU_CP,
+            if right == 0 { REG_C } else { REG_D },
+        ));
+    } else {
+        let (left_high, left_low) = if left == 0 {
+            (REG_H, REG_L)
+        } else {
+            (REG_D, REG_E)
+        };
+        let (right_high, right_low) = if right == 0 {
+            (REG_H, REG_L)
+        } else {
+            (REG_D, REG_E)
+        };
+        bytes.push(encode_ld_r_r(REG_A, left_high));
+        bytes.push(encode_alu_reg(ALU_CP, right_high));
+        bytes.extend_from_slice(&encode_jr_nz(2));
+        bytes.push(encode_ld_r_r(REG_A, left_low));
+        bytes.push(encode_alu_reg(ALU_CP, right_low));
+    }
+    // LD and JR leave the CP flags intact. All paths produce exactly 0 or 1.
+    match relation {
+        "eq" | "ne" | "lt" | "ge" => {
+            bytes.extend_from_slice(&encode_ld_a_n(0));
+            let skip = match relation {
+                "eq" => encode_jr_nz(2),
+                "ne" => encode_jr_z(2),
+                "lt" => encode_jr_nc(2),
+                "ge" => encode_jr_c(2),
+                _ => unreachable!(),
+            };
+            bytes.extend_from_slice(&skip);
+            bytes.extend_from_slice(&encode_ld_a_n(1));
+        }
+        "le" | "gt" => {
+            bytes.extend_from_slice(&encode_ld_a_n(if relation == "le" { 1 } else { 0 }));
+            bytes.extend_from_slice(&encode_jr_c(4));
+            bytes.extend_from_slice(&encode_jr_z(2));
+            bytes.extend_from_slice(&encode_ld_a_n(if relation == "le" { 0 } else { 1 }));
+        }
+        _ => unreachable!(),
+    }
+    if target == 1 {
+        bytes.push(encode_ld_r_r(REG_D, REG_A));
+        if width == ResultWidth::Byte {
+            bytes.push(encode_ld_r_r(REG_A, REG_C));
+        }
     }
 }
 

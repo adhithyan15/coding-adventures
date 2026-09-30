@@ -48,6 +48,140 @@ fn word02_binary(op: &str, width: &str, left: i64, right: i64) -> Vec<CIRInstr> 
 }
 
 #[test]
+fn word03a_comparisons_execute_as_normalized_unsigned_booleans() {
+    let cases = [
+        ("eq", 7, 7, 1),
+        ("eq", 7, 8, 0),
+        ("ne", 7, 8, 1),
+        ("ne", 7, 7, 0),
+        ("lt", 1, 2, 1),
+        ("le", 2, 2, 1),
+        ("le", 3, 2, 0),
+        ("gt", 2, 1, 1),
+        ("gt", 2, 2, 0),
+        ("ge", 1, 2, 0),
+        ("ge", 2, 2, 1),
+        ("gt", 0xffff, 1, 1),
+        ("lt", 0xffff, 1, 0),
+        ("lt", 0x1201, 0x12ff, 1),
+        ("gt", 0x1300, 0x12ff, 1),
+    ];
+    for width in ["u8", "u16"] {
+        for (relation, left, right, expected) in cases {
+            if width == "u8" && left > 0xff {
+                continue;
+            }
+            let cir = vec![
+                ci(
+                    &format!("const_{width}"),
+                    Some("left"),
+                    vec![CIROperand::Int(left)],
+                    width,
+                ),
+                ci(
+                    &format!("const_{width}"),
+                    Some("right"),
+                    vec![CIROperand::Int(right)],
+                    width,
+                ),
+                ci(
+                    &format!("cmp_{relation}_{width}"),
+                    Some("result"),
+                    vec![
+                        CIROperand::Var("left".into()),
+                        CIROperand::Var("right".into()),
+                    ],
+                    "bool",
+                ),
+                ci(
+                    "ret_bool",
+                    None,
+                    vec![CIROperand::Var("result".into())],
+                    "bool",
+                ),
+            ];
+            let bytes = compile(&ctx("compare", &[], "bool"), &cir).unwrap();
+            let mut sim = Intel8086Simulator::new(65536);
+            sim.load_program(&bytes);
+            assert!(sim.run_loaded_with_limit(100).halted);
+            assert_eq!(
+                i64::from(sim.ax),
+                expected,
+                "{width} {relation} {left} {right}"
+            );
+        }
+    }
+}
+
+#[test]
+fn word03a_comparison_preserves_other_live_value_and_rejects_bad_types() {
+    for (width, keep, compare) in [("u8", 9, 7), ("u16", 0x1234, 0x5678)] {
+        let cir = vec![
+            ci(
+                &format!("const_{width}"),
+                Some("keep"),
+                vec![CIROperand::Int(keep)],
+                width,
+            ),
+            ci(
+                &format!("const_{width}"),
+                Some("compare"),
+                vec![CIROperand::Int(compare)],
+                width,
+            ),
+            ci(
+                &format!("cmp_gt_{width}"),
+                Some("flag"),
+                vec![
+                    CIROperand::Var("compare".into()),
+                    CIROperand::Var("keep".into()),
+                ],
+                "bool",
+            ),
+            ci(
+                &format!("ret_{width}"),
+                None,
+                vec![CIROperand::Var("keep".into())],
+                width,
+            ),
+        ];
+        let bytes = compile(&ctx("preserve", &[], width), &cir).unwrap();
+        let mut sim = Intel8086Simulator::new(65536);
+        sim.load_program(&bytes);
+        assert!(sim.run_loaded_with_limit(100).halted);
+        assert_eq!(sim.ax, keep as u16);
+    }
+    let bad = vec![
+        ci(
+            "const_bool",
+            Some("left"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci("const_u8", Some("right"), vec![CIROperand::Int(1)], "u8"),
+        ci(
+            "cmp_eq_u8",
+            Some("flag"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "bool",
+        ),
+        ci(
+            "ret_bool",
+            None,
+            vec![CIROperand::Var("flag".into())],
+            "bool",
+        ),
+    ];
+    assert!(matches!(
+        compile(&ctx("bad", &[], "bool"), &bad),
+        Err(BackendError::InvalidOperand(_))
+    ));
+}
+
+#[test]
 fn word02b_complement_executes_and_preserves_other_live_value() {
     for (width, value, expected) in [("u8", 0, 0xff), ("u16", 0x1234, 0xedcb)] {
         let cir = vec![

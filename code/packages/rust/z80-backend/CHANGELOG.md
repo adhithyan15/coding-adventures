@@ -1,5 +1,13 @@
 # Changelog — z80-backend
 
+## Unreleased — WORD03a normalized comparisons
+
+- Execute unsigned `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` as normalized Boolean
+  results, comparing both bytes of word values and preserving the other live
+  register when its slot survives.
+- Reject malformed comparison sources and result types before emission; keep
+  labels, branches, and loops for WORD03b.
+
 ## Unreleased — WORD02b unary complement
 
 - Execute typed `not_u8`/`not_u16` with `CPL` on each required byte while

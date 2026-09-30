@@ -1,5 +1,10 @@
 # Changelog — z80-encoder
 
+## Unreleased — WORD03a
+
+- Re-export `CP` and short Z/C condition encoders for the Word comparison
+  backend.
+
 ## Unreleased — WORD02b
 
 - Re-export the canonical Z80 `CPL` opcode for typed unary complement.

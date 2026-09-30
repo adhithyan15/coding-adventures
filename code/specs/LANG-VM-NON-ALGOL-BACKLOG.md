@@ -26,27 +26,35 @@ Go build tool made the package uncompilable before the gate tests could run.
 The repair kept portable B07 probes cross-platform and placed the FIFO security
 regression behind a platform build tag.
 
-VM-073 is the next priority. The ets-backed `array_set` path ignores the
-declared `[Table | Length]` extent, while BEAM11 `array_get` and the
+PR #16247 delivered VM-073 and merged as
+`367db90189900c411931b0963a967240e5246171`. The ets-backed `array_set`
+path had ignored the declared `[Table | Length]` extent, while BEAM11 `array_get` and the
 integer-array `:atomics` store enforce it. Direct IIR can write an arbitrary
 ETS key. Dartmouth BASIC emits `array_set` after subscript flattening for
 `LET A(i)` and `READ A(i)` without an independent range guard. BEAM12
-specifies a shared-backend guard and a real-Erlang regression for both ets
-element types.
+now specifies the shared-backend guard; direct-IIR real-Erlang tests cover
+both ets element types and the index in `x0`.
+
+WORD03 is next. The current two-slot backends lower typed constants,
+arithmetic, bitwise operations, unary complement, and return, but reject
+comparisons and control-flow instructions. Select WORD03a's normalized
+unsigned comparisons as a bounded first slice on both targets; WORD03b adds
+control-flow edges, liveness, and byte-address resolution after that proof.
 
 The current queue is:
 
-1. **VM-073 (selected):** enforce integer and declared-extent checks for
-   ets-backed `array_set`; execute in-range, overwrite, negative, upper-bound,
-   and fractional cases on real Erlang.
-2. **WORD03 / VM-072:** add normalized comparisons and structured control on
-   both target backends.
+1. **WORD03a / VM-072 (selected):** lower normalized unsigned `u8`/`u16`
+   comparisons to Boolean results on Z80 and 8086; execute both emitted byte
+   streams in their simulators.
+2. **WORD03b / VM-072:** add structured branches and loops with control-flow
+   liveness and final byte-address resolution on both target backends.
 3. **VM-069 / PREP01:** continue expansion-definition provenance and
    `defined()` operand expansion.
 4. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
    claims recorded below.
 
 The following run records the first VM-067 selection.
+
 ## Prioritization run — 2026-09-28
 
 PR #16202 delivered WORD02b on both simulators and merged as

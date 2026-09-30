@@ -198,6 +198,22 @@ and loops. Execute a loop whose result depends on both a taken and untaken
 branch. Resolve branch addresses after final instruction sizing; do not encode
 source instruction indices as byte offsets.
 
+**WORD03a contract — normalized comparisons:** before admitting branches,
+accept typed CIR `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` with two same-width
+`Var` sources and a `bool` result. Compare unsigned values at the declared
+width and materialize exactly `0` or `1`, including when the result is returned
+through the existing `ret_bool` ABI. Execute equal, unequal, less-than,
+greater-than, and boundary cases in both simulators; distinguish unsigned
+`0xffff > 1` from signed ordering. Preserve any other live value that fits the
+two-slot allocation contract. Reject malformed source/result types and a
+third simultaneously live value. Do not accept labels or jumps in WORD03a.
+
+**WORD03b contract — structured control:** add labels, conditional and
+unconditional branches, and loops after comparison results are executable on
+both targets. Rework liveness for control-flow edges before reusing slots,
+resolve byte addresses after final instruction sizing, and execute a loop
+whose result depends on taken and untaken branches in both simulators.
+
 ### WORD04 — static memory, portable I/O, and direct calls
 
 Add fixed byte arrays, checked `u16` indices, `in8`/`out8`, direct calls, and
