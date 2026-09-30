@@ -475,8 +475,10 @@ series through the same grammar-backed path. Radar width, height, four margins,
 axis scale, axis-label factors, and curve tension from init directives or YAML
 front matter survive typed semantic configuration and control deterministic
 native geometry. Circular graticules lower Radar series through backend-neutral
-cubic Paint paths. Theme-exact styling and filled curve styling remain
-unsupported at the partial level.
+cubic Paint paths. Core Radar theme variables control axis and graticule
+strokes, label and legend sizing, series palettes, translucent curve fills, and
+stroke widths through the same semantic layout and Paint pipeline. Pixel-exact
+default-theme matching and upstream text anchoring remain partial.
 
 ### Event Modeling Native Slice
 

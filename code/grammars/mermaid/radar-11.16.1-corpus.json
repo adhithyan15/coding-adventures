@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: titles, accessibility metadata, labeled axes, positional and axis-keyed curves, curve lists, multiline curve bodies, and core chart options.",
+  "scope": "Native partial slice: titles, accessibility metadata, labeled axes, positional and axis-keyed curves, curve lists, multiline curve bodies, core chart options, layout configuration, curve tension, and core Radar theme variables.",
   "fixtures": [
     {
       "id": "basic",
@@ -35,6 +35,14 @@
     {
       "id": "front-matter-layout-config",
       "source": "---\nconfig:\n  radar:\n    width: 440\n    height: 420\n    axisScaleFactor: 0.8\n---\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+    },
+    {
+      "id": "init-theme-style",
+      "source": "%%{init: {\"themeVariables\": {\"cScale0\": \"#102030\", \"radar\": {\"axisColor\": \"#203040\", \"axisStrokeWidth\": 3, \"axisLabelFontSize\": 15, \"curveOpacity\": 0.4, \"curveStrokeWidth\": 4, \"graticuleColor\": \"#304050\", \"graticuleStrokeWidth\": 2, \"graticuleOpacity\": 0.2, \"legendFontSize\": 14}}}}%%\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
+    },
+    {
+      "id": "front-matter-theme-style",
+      "source": "---\nthemeVariables:\n  cScale0: '#405060'\n  radar:\n    axisColor: '#506070'\n    curveOpacity: 0.35\n    graticuleColor: '#607080'\n---\nradar-beta\naxis A, B, C\ncurve scores{20, 50, 80}"
     }
   ]
 }

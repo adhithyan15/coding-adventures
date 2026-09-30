@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.64.0";
+pub const VERSION: &str = "0.65.0";
 
 use std::collections::HashMap;
 
@@ -2113,6 +2113,9 @@ where
                 start,
                 segments,
                 color,
+                fill,
+                fill_opacity,
+                stroke_width,
             } => {
                 let mut commands = Vec::with_capacity(segments.len() + 2);
                 commands.push(PathCommand::MoveTo {
@@ -2131,15 +2134,63 @@ where
                 instructions.push(PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(),
                     commands,
-                    fill: Some("none".into()),
+                    fill: fill.as_ref().map(|fill| {
+                        fill_opacity.map_or_else(|| fill.clone(), |opacity| with_opacity(fill, opacity))
+                    }),
                     fill_rule: None,
                     stroke: Some(color.clone()),
-                    stroke_width: Some(2.0),
+                    stroke_width: Some(*stroke_width),
                     stroke_cap: Some(StrokeCap::Round),
                     stroke_join: Some(StrokeJoin::Round),
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
+            }
+            LayoutedChartItem::FilledLinePath {
+                points,
+                fill,
+                fill_opacity,
+                stroke,
+                stroke_width,
+            } => {
+                if let Some(first) = points.first() {
+                    let mut commands = Vec::with_capacity(points.len() + 1);
+                    commands.push(PathCommand::MoveTo {
+                        x: first.x,
+                        y: first.y,
+                    });
+                    commands.extend(points[1..].iter().map(|point| PathCommand::LineTo {
+                        x: point.x,
+                        y: point.y,
+                    }));
+                    commands.push(PathCommand::Close);
+                    instructions.push(PaintInstruction::Path(PaintPath {
+                        base: PaintBase::default(),
+                        commands,
+                        fill: Some(with_opacity(fill, *fill_opacity)),
+                        fill_rule: None,
+                        stroke: Some(stroke.clone()),
+                        stroke_width: Some(*stroke_width),
+                        stroke_cap: Some(StrokeCap::Round),
+                        stroke_join: Some(StrokeJoin::Round),
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                }
+            }
+            LayoutedChartItem::StyledLine {
+                x1,
+                y1,
+                x2,
+                y2,
+                color,
+                stroke_width,
+            } => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
+                    color,
+                    *stroke_width,
+                )));
             }
             LayoutedChartItem::PointLabel {
                 x,
@@ -5392,7 +5443,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.64.0");
+        assert_eq!(crate::VERSION, "0.65.0");
     }
 
     #[test]

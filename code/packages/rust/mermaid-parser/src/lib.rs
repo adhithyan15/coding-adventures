@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.132.0";
+pub const VERSION: &str = "0.133.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -5045,6 +5045,38 @@ fn parse_radar_config(source: &str) -> RadarConfig {
             .and_then(|value| value.parse::<f64>().ok())
             .filter(|value| value.is_finite())
     };
+    let theme_root_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_root = mermaid_directive_object(source, "themeVariables")
+        .or(theme_root_front.as_deref())
+        .unwrap_or("");
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables", "radar"]);
+    let theme_source = mermaid_directive_object(theme_root, "radar")
+        .or(theme_front.as_deref())
+        .unwrap_or("");
+    let theme_value = |key: &str| {
+        quadrant_directive_value(theme_source, key).or_else(|| {
+            theme_source.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key)
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
+    let theme_number = |key| {
+        theme_value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= 0.0)
+    };
+    let opacity = |key| theme_number(key).filter(|value| *value <= 1.0);
+    let root_value = |key: &str| {
+        quadrant_directive_value(theme_root, key).or_else(|| {
+            theme_root.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == key)
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+    };
     RadarConfig {
         width: positive("width"),
         height: positive("height"),
@@ -5055,6 +5087,18 @@ fn parse_radar_config(source: &str) -> RadarConfig {
         axis_scale_factor: positive("axisScaleFactor"),
         axis_label_factor: positive("axisLabelFactor"),
         curve_tension: finite("curveTension"),
+        axis_color: theme_value("axisColor"),
+        axis_stroke_width: theme_number("axisStrokeWidth"),
+        axis_label_font_size: theme_number("axisLabelFontSize"),
+        curve_opacity: opacity("curveOpacity"),
+        curve_stroke_width: theme_number("curveStrokeWidth"),
+        graticule_color: theme_value("graticuleColor"),
+        graticule_stroke_width: theme_number("graticuleStrokeWidth"),
+        graticule_opacity: opacity("graticuleOpacity"),
+        legend_font_size: theme_number("legendFontSize"),
+        series_colors: (0..12)
+            .filter_map(|index| root_value(&format!("cScale{index}")))
+            .collect(),
         ..RadarConfig::default()
     }
 }
@@ -13632,7 +13676,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.132.0");
+        assert_eq!(crate::VERSION, "0.133.0");
     }
 
     #[test]
