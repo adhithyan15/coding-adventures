@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-30 (host-control geometry)
+
+- Qt host controls now lower expressible numeric `width` and `height` styles to matching `implicit*` and `Layout.preferred*` bindings, including state-layer overrides. Percentage and intrinsic keyword sizes remain reported degradations rather than being presented as native coverage.
+
 ## 2026-09-27 (the window reports its environment)
 
 - **ENV4 on Qt (UI48 §7.6).** Every `main.cpp` with a host defines `mosaicObserveEnvironment(view, host)` and calls it before the window is shown: one report, then another on each width or height change and (Qt 6.5+) colour scheme change, through `MosaicHost::environmentReport`. An answer with props is applied with `applyMosaicResponse`; a refusal is logged and never applied. A report arriving while effects settle (a resize behind a modal file dialog) retries on one restartable 100 ms timer instead of dispatching mid-settle.

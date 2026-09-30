@@ -1501,16 +1501,39 @@ fn qt_drop_reason(name: &str) -> &'static str {
 /// Find the first prop named `name` in a base/state prop list.
 ///
 ///
-/// EVERY style read in this emitter funnels through here -- `style_prop_any`
-/// delegates to it rather than searching itself -- which is what lets a
-/// single recording point at the top of this function see all of them,
-/// including ones added later.
+/// Almost every style read in this emitter funnels through here --
+/// `style_prop_any` delegates to it rather than searching itself -- which is
+/// what lets a single recording point see new lowering work automatically.
+/// Value-sensitive lowerings use [`lowered_style_prop`] instead: a property
+/// with an unsupported value must remain unread so the degradation reporter
+/// does not mistake a rejected value for native coverage.
 fn style_prop<'p>(props: &'p [StyleProp], name: &str) -> Option<&'p str> {
     record_style_read(props, name);
     props
         .iter()
         .find(|p| p.name == name)
         .map(|p| p.value.as_str())
+}
+
+/// Find and convert one property, recording support only when conversion
+/// succeeds.
+///
+/// This is deliberately distinct from `style_prop(...).and_then(convert)`.
+/// The latter records the lookup before learning that (for example) `100%`
+/// cannot become a scalar QML length, which would erase a real degradation
+/// even though the generated control still lacks that geometry.
+fn lowered_style_prop(
+    props: &[StyleProp],
+    name: &str,
+    convert: fn(&str) -> Option<String>,
+) -> Option<String> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == name)
+        .map(|prop| prop.value.as_str())?;
+    let lowered = convert(raw)?;
+    record_style_read(props, name);
+    Some(lowered)
 }
 
 /// One active style layer and the QML predicate that selects it.
@@ -1628,6 +1651,36 @@ fn conditional_px_expr(
     default: &str,
 ) -> Option<String> {
     conditional_scalar_expr(base, layers, name, default, qml_px_or_none)
+}
+
+/// A px-valued conditional whose degradation accounting is value-sensitive.
+///
+/// Use this where accepting one spelling (a scalar or `px`) must not claim
+/// support for other spellings of the same property (`100%`, `max-content`,
+/// `calc(...)`).
+fn conditional_lowered_px_expr(
+    base_props: &[StyleProp],
+    layers: &[StateLayer<'_>],
+    name: &str,
+    default: &str,
+) -> Option<String> {
+    let base = lowered_style_prop(base_props, name, qml_px_or_none);
+    let overrides: Vec<(&str, String)> = layers
+        .iter()
+        .filter_map(|layer| {
+            lowered_style_prop(layer.props, name, qml_px_or_none)
+                .map(|value| (layer.cond_expr.as_str(), value))
+        })
+        .collect();
+    if base.is_none() && overrides.is_empty() {
+        return None;
+    }
+
+    let mut expr = base.unwrap_or_else(|| default.to_string());
+    for (condition, value) in overrides {
+        expr = format!("( {condition} ) ? {value} : {expr}");
+    }
+    Some(expr)
 }
 
 /// Shared body of the two scalar builders above. `convert` is the whole
@@ -5104,6 +5157,22 @@ fn host_control_style_qml_lines(
     }
 
     let mut lines = Vec::new();
+    // Host controls participate in Qt Quick Layouts directly, so authored
+    // scalar geometry belongs on the control just as it does on a styled box.
+    // Keep the implicit size and the layout hint in sync; either property on
+    // its own is insufficient when the same control is emitted inside and
+    // outside a Layout. Percentages and intrinsic CSS keywords remain
+    // deliberate degradations because `qml_px_or_none` rejects them.
+    let width = conditional_lowered_px_expr(base, &state_layers, "width", "0");
+    if let Some(width) = width {
+        lines.push(format!("implicitWidth: {width}"));
+        lines.push(format!("Layout.preferredWidth: {width}"));
+    }
+    let height = conditional_lowered_px_expr(base, &state_layers, "height", "0");
+    if let Some(height) = height {
+        lines.push(format!("implicitHeight: {height}"));
+        lines.push(format!("Layout.preferredHeight: {height}"));
+    }
     // #16223 -- Controls expose one property per edge. Reuse the container
     // resolver so longhands override the shorthand with the same CSS rules.
     for (edge, property) in [
@@ -16084,7 +16153,7 @@ mod tests {
     }
 
     #[test]
-    fn a_host_control_size_variant_drives_padding_and_typography() {
+    fn a_host_control_size_variant_drives_geometry_padding_and_typography() {
         let model = component(
             "SizedButton",
             vec![slot(
@@ -16108,6 +16177,8 @@ mod tests {
             parts: vec![PartStyle {
                 name: "button".to_string(),
                 base: vec![
+                    sp("width", "150px"),
+                    sp("height", "40px"),
                     sp("padding", "8px"),
                     sp("font-family", "Inter"),
                     sp("font-size", "14px"),
@@ -16119,6 +16190,8 @@ mod tests {
                     state: "sm".to_string(),
                     transitions: vec![],
                     props: vec![
+                        sp("width", "120px"),
+                        sp("height", "32px"),
                         sp("padding", "4px"),
                         sp("padding-left", "5px"),
                         sp("font-family", "monospace"),
@@ -16130,6 +16203,10 @@ mod tests {
 
         let out = from_pipeline(&model, &layout, &style).unwrap().output;
         for expected in [
+            "implicitWidth: ( (size === \"sm\") ) ? 120 : 150",
+            "Layout.preferredWidth: ( (size === \"sm\") ) ? 120 : 150",
+            "implicitHeight: ( (size === \"sm\") ) ? 32 : 40",
+            "Layout.preferredHeight: ( (size === \"sm\") ) ? 32 : 40",
             "leftPadding: ( (size === \"sm\") ) ? 5 : 8",
             "rightPadding: ( (size === \"sm\") ) ? 4 : 8",
             "topPadding: ( (size === \"sm\") ) ? 4 : 8",
@@ -16139,6 +16216,43 @@ mod tests {
         ] {
             assert!(out.contains(expected), "missing {expected:?}:\n{out}");
         }
+    }
+
+    #[test]
+    fn unsupported_host_control_geometry_remains_a_reported_drop() {
+        let model = component("FluidButton", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "FluidButton".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: Some("button".to_string()),
+                props: vec![lp("label", LayoutPropValue::String("Save".to_string()))],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "FluidButton".to_string(),
+            parts: vec![PartStyle {
+                name: "button".to_string(),
+                base: vec![
+                    sp("width", "100%"),
+                    sp("height", "max-content"),
+                    sp("padding", "8px"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("implicitWidth: 100"), "got:\n{out}");
+        assert!(!out.contains("implicitHeight: max-content"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        let names: HashSet<&str> = dropped.iter().map(|drop| drop.name.as_str()).collect();
+        assert!(names.contains("width"), "missing width drop: {dropped:?}");
+        assert!(names.contains("height"), "missing height drop: {dropped:?}");
+        assert!(!names.contains("padding"), "padding must lower: {dropped:?}");
     }
 
     /// The `For` delegate `Item` sizes to its children so the styled cell
