@@ -507,10 +507,13 @@ padding affects native viewport geometry while the currently non-visual row
 height and responsive-width settings remain available in PaintScene metadata.
 All ten upstream `em*Fill` and `em*Stroke` theme variables resolve from init
 directives or YAML front matter into backend-neutral frame paint styles.
+Explicit frame sources enforce Mermaid's entity flow rules for UI, processor,
+command, event, and read-model frames, including every source in a multi-source
+declaration.
 Temporal
 swimlane layout lowers through backend-neutral PaintScene instructions and a
 native Metal-to-PNG fixture. Browser-only responsive behavior and complete
-upstream validator parity remain unsupported at the partial level.
+upstream corpus coverage remain unsupported at the partial level.
 
 ### Treemap Native Slice
 

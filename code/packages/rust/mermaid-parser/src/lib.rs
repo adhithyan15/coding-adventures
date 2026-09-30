@@ -4116,6 +4116,13 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
         diagram.data_blocks.push(block);
     }
     let mut frame_ids = HashSet::new();
+    let mut frame_authored_kinds = HashMap::<String, String>::new();
+    let mut explicit_source_checks = Vec::<(
+        usize,
+        usize,
+        EventModelEntityKind,
+        Vec<String>,
+    )>::new();
     let mut previous_id: Option<String> = None;
 
     for token in &tokens {
@@ -4173,18 +4180,28 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                     return Err(token_error(token, format!("duplicate event-model frame {id:?}")));
                 }
                 let kind = event_model_entity_kind(fields[2]);
+                frame_authored_kinds.insert(id.clone(), fields[2].to_string());
                 let entity = fields[3];
                 let namespace = entity.rsplit_once('.').map(|(prefix, _)| prefix.to_string());
-                let mut source_frames = fields[4..]
+                let explicit_source_frames = fields[4..]
                     .iter()
                     .skip(1)
                     .step_by(2)
                     .map(|source| (*source).to_string())
                     .collect::<Vec<_>>();
+                let mut source_frames = explicit_source_frames.clone();
                 if source_frames.is_empty() && !reset {
                     if let Some(previous) = &previous_id {
                         source_frames.push(previous.clone());
                     }
+                }
+                if !explicit_source_frames.is_empty() {
+                    explicit_source_checks.push((
+                        token.line,
+                        token.column,
+                        kind.clone(),
+                        explicit_source_frames,
+                    ));
                 }
                 diagram.frames.push(EventModelFrame {
                     id: id.clone(),
@@ -4264,6 +4281,50 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                 });
             }
         }
+    }
+    let mut source_type_errors = Vec::new();
+    let mut first_source_type_location = None;
+    for (line, col, target_kind, source_ids) in explicit_source_checks {
+        let (target_label, expected_source_label) = match target_kind {
+            EventModelEntityKind::Command => ("command", "ui or processor"),
+            EventModelEntityKind::Event => ("event", "command"),
+            EventModelEntityKind::ReadModel => ("read model", "event"),
+            EventModelEntityKind::Processor => ("processor", "read model"),
+            EventModelEntityKind::Ui => ("ui", "read model"),
+        };
+        for source_id in source_ids {
+            let Some(source_kind) = frame_authored_kinds.get(&source_id) else {
+                continue;
+            };
+            let allowed = match target_kind {
+                EventModelEntityKind::Command => matches!(
+                    source_kind.as_str(),
+                    "ui" | "pcr" | "processor"
+                ),
+                EventModelEntityKind::Event => {
+                    matches!(source_kind.as_str(), "cmd" | "command")
+                }
+                EventModelEntityKind::ReadModel => {
+                    matches!(source_kind.as_str(), "evt" | "event")
+                }
+                EventModelEntityKind::Processor | EventModelEntityKind::Ui => {
+                    matches!(source_kind.as_str(), "rmo" | "readmodel")
+                }
+            };
+            if !allowed {
+                first_source_type_location.get_or_insert((line, col));
+                source_type_errors.push(format!(
+                    "A {target_label} can only receive input from a {expected_source_label}, not from '{source_kind}'."
+                ));
+            }
+        }
+    }
+    if let Some((line, col)) = first_source_type_location {
+        return Err(ParseError {
+            message: source_type_errors.join("\n"),
+            line,
+            col,
+        });
     }
     for note in &diagram.notes {
         if !frame_ids.contains(&note.source_frame) {
