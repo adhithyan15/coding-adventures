@@ -1,5 +1,13 @@
 # Changelog
 
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 98 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
 ## Chapters 109-160: 260 headwords, can, want and why, and Latin attains A1
 
 Latin had three A1 gaps. It was 247 headwords short. Six A1 spine nodes had no

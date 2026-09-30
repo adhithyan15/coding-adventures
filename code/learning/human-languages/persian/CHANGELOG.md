@@ -1,5 +1,13 @@
 # Changelog
 
+## Chapter payoffs say "I can", not "i can"
+
+The payoff line under each chapter's goal lowercased the goal's first letter,
+so 114 chapters printed "Complete the last lesson of chapter N: i can say …".
+Every one now keeps the capital: "…: I can say …", and a new test
+(`payoff-summary-case.test.ts`) fails if the lowercase pronoun comes back. Only
+the payoff summary changed; no lesson, word or atom moved.
+
 ## Chapters 79-135: 285 headwords, eight spine nodes, and Persian attains A1
 
 Persian had three A1 gaps. It was 276 headwords and 8 verbs short. Eight A1
