@@ -1192,6 +1192,85 @@ fn is_xcframework(path: &Path) -> bool {
         .is_some_and(|extension| extension.eq_ignore_ascii_case("xcframework"))
 }
 
+/// The ABIs an Android runtime directory may hold (UI89 §3.6): what
+/// `build-mosaic-android-libs.sh` writes, under Android's own ABI names.
+const ANDROID_ABIS: &[&str] = &["arm64-v8a", "armeabi-v7a", "x86_64", "x86"];
+
+/// A `--runtime-library` that is a real directory (not an `.xcframework`) is a
+/// set of per-ABI Android libraries, laid out as jniLibs expects.
+fn is_android_jni_libs(path: &Path) -> bool {
+    !is_xcframework(path) && fs::symlink_metadata(path).is_ok_and(|meta| meta.is_dir())
+}
+
+/// The libraries in an Android runtime directory, as (ABI, library) pairs.
+///
+/// Strict, because these files are copied into an APK that runs them: every
+/// entry must be a known ABI directory holding exactly one regular
+/// `libmosaic_app.so`, nothing is followed through a link, and at least one
+/// ABI must be present.
+fn android_jni_libs(path: &Path) -> Result<Vec<(&'static str, PathBuf)>, BuildError> {
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: path.to_path_buf(),
+        reason,
+    };
+    let entries = fs::read_dir(path).map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
+    let mut libraries = Vec::new();
+    for entry in entries {
+        let entry = entry.map_err(|error| refuse(format!("cannot read the directory: {error}")))?;
+        let name = entry.file_name();
+        let Some(abi) = name.to_str().and_then(|name| ANDROID_ABIS.iter().find(|abi| **abi == name)) else {
+            return Err(refuse(format!(
+                "{} is not an Android ABI directory (expected {})",
+                name.to_string_lossy(),
+                ANDROID_ABIS.join(", ")
+            )));
+        };
+        let abi_dir = entry.path();
+        if !fs::symlink_metadata(&abi_dir).is_ok_and(|meta| meta.is_dir()) {
+            return Err(refuse(format!("{abi} must be a directory, not a link or a file")));
+        }
+        let contents: Vec<_> = fs::read_dir(&abi_dir)
+            .map_err(|error| refuse(format!("cannot read {abi}: {error}")))?
+            .collect::<Result<_, _>>()
+            .map_err(|error| refuse(format!("cannot read {abi}: {error}")))?;
+        let library = abi_dir.join("libmosaic_app.so");
+        if contents.len() != 1
+            || contents[0].file_name() != "libmosaic_app.so"
+            || !fs::symlink_metadata(&library).is_ok_and(|meta| meta.is_file())
+        {
+            return Err(refuse(format!(
+                "{abi} must hold exactly one regular file, libmosaic_app.so (build-mosaic-android-libs.sh)"
+            )));
+        }
+        libraries.push((*abi, library));
+    }
+    if libraries.is_empty() {
+        return Err(refuse(format!("no Android ABI directory ({})", ANDROID_ABIS.join(", "))));
+    }
+    libraries.sort_by_key(|(abi, _)| *abi);
+    Ok(libraries)
+}
+
+/// Copy an Android runtime directory into the Android project's jniLibs, where
+/// Gradle packages each ABI's library into the APK and JNA finds it by name.
+fn install_android_runtime_libraries(source: &Path, backend_dir: &Path) -> Result<Vec<PathBuf>, BuildError> {
+    let mut written = Vec::new();
+    for (abi, library) in android_jni_libs(source)? {
+        let bytes = fs::read(&library).map_err(|error| BuildError::InvalidRuntimeLibrary {
+            path: library.clone(),
+            reason: format!("cannot read selected file: {error}"),
+        })?;
+        let target = backend_dir
+            .join(ANDROID_PROJECT_DIR)
+            .join("src/main/jniLibs")
+            .join(abi)
+            .join("libmosaic_app.so");
+        write_file(&target, &bytes)?;
+        written.push(target);
+    }
+    Ok(written)
+}
+
 fn validate_runtime_library_selection(
     opts: &BuildOptions,
     runtime_library: Option<&Path>,
@@ -1225,6 +1304,22 @@ fn validate_runtime_library_selection(
             });
         }
         return Ok(());
+    }
+    if is_android_jni_libs(path) {
+        if opts.backend != Backend::Compose {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "a directory of per-ABI libraries is the Android runtime, which only the Compose backend packages"
+                    .to_string(),
+            });
+        }
+        if !opts.emit_project {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "--runtime-library requires --emit-project".to_string(),
+            });
+        }
+        return android_jni_libs(path).map(|_| ());
     }
     if !matches!(
         opts.backend,
@@ -2839,6 +2934,8 @@ fn build_package_inner(
     // the runtime the caller chose at the packaging boundary.
     if let Some(source) = runtime_library {
         let target = match opts.backend {
+            // Android's libraries go into the Android project, written below.
+            Backend::Compose if is_android_jni_libs(source) => source.to_path_buf(),
             Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
             Backend::Flutter => install_flutter_runtime_library(source, &backend_dir)?,
             Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
@@ -2849,7 +2946,9 @@ fn build_package_inner(
             Backend::Xaml => install_xaml_runtime_library(source, &backend_dir)?,
             _ => unreachable!("runtime library selection was validated before emission"),
         };
-        artifacts.push(target);
+        if !(opts.backend == Backend::Compose && is_android_jni_libs(source)) {
+            artifacts.push(target);
+        }
     }
 
     // An .xcframework runtime means iOS / iPadOS: add the app target Xcode
@@ -2878,6 +2977,10 @@ fn build_package_inner(
                 components: &components_built,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
             })?);
+            // A per-ABI runtime (UI89 §3.6) is the Android app's engine.
+            if let Some(source) = runtime_library.filter(|source| is_android_jni_libs(source)) {
+                artifacts.extend(install_android_runtime_libraries(source, &backend_dir)?);
+            }
         }
     }
 
@@ -4405,7 +4508,9 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         }
         Backend::Compose => {
             let require_runtime = project_shell_requires_runtime(profile, runtime_library);
-            let bundle_runtime = runtime_library.is_some();
+            // An Android runtime (UI89 §3.6) is not the desktop app's: the
+            // desktop project bundles nothing then.
+            let bundle_runtime = runtime_library.is_some_and(|source| !is_android_jni_libs(source));
             let flat: [(&str, String); 3] = [
                 (
                     "settings.gradle.kts",
@@ -12156,6 +12261,99 @@ layout NativeEvents {
             ),
             "{strings}"
         );
+    }
+
+    fn android_runtime_dir(root: &Path, abis: &[&str]) -> PathBuf {
+        let dir = root.join("jniLibs");
+        for abi in abis {
+            fs::create_dir_all(dir.join(abi)).unwrap();
+            fs::write(dir.join(abi).join("libmosaic_app.so"), format!("elf-{abi}")).unwrap();
+        }
+        dir
+    }
+
+    #[test]
+    fn a_per_abi_runtime_goes_into_the_android_project() {
+        let pkg = card_package();
+        let runtime = android_runtime_dir(pkg.path(), &["arm64-v8a", "armeabi-v7a", "x86_64", "x86"]);
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&runtime),
+        )
+        .expect("Compose shell with an Android runtime");
+        let jni = out.path().join("compose/android/src/main/jniLibs");
+        for abi in ["arm64-v8a", "armeabi-v7a", "x86_64", "x86"] {
+            assert_eq!(
+                fs::read_to_string(jni.join(abi).join("libmosaic_app.so")).unwrap(),
+                format!("elf-{abi}")
+            );
+        }
+        // The desktop project bundles nothing: this runtime is not its own.
+        assert!(!out.path().join("compose/app-resources").exists());
+        let gradle = fs::read_to_string(out.path().join("compose/build.gradle.kts")).unwrap();
+        assert!(!gradle.contains("appResourcesRootDir"), "{gradle}");
+        // The runtime is required, so the activity starts strictly.
+        let activity = fs::read_to_string(
+            out.path().join("compose/android/src/main/kotlin/mosaic/android/MosaicActivity.kt"),
+        )
+        .unwrap();
+        assert!(activity.contains("MosaicStartup(::loadMosaicHost)"), "{activity}");
+    }
+
+    #[test]
+    fn an_android_runtime_directory_is_refused_unless_it_is_exactly_per_abi_libraries() {
+        let build = |pkg: &TempDir, runtime: &Path, backend: Backend| {
+            let out = TempDir::new().unwrap();
+            build_package_with_profile_and_runtime(
+                &swiftui_options(pkg, &out, backend),
+                BuildProfile::NativeComplete,
+                Some(runtime),
+            )
+            .expect_err("refused")
+            .to_string()
+        };
+        let pkg = card_package();
+        let empty = pkg.path().join("empty");
+        fs::create_dir_all(&empty).unwrap();
+        assert!(build(&pkg, &empty, Backend::Compose).contains("no Android ABI directory"));
+
+        let unknown = android_runtime_dir(&pkg.path().join("u"), &["arm64-v8a"]);
+        fs::create_dir_all(unknown.join("mips")).unwrap();
+        assert!(build(&pkg, &unknown, Backend::Compose).contains("mips is not an Android ABI directory"));
+
+        let extra = android_runtime_dir(&pkg.path().join("e"), &["x86_64"]);
+        fs::write(extra.join("x86_64/libother.so"), "x").unwrap();
+        assert!(build(&pkg, &extra, Backend::Compose).contains("exactly one regular file"));
+
+        let not_a_library = pkg.path().join("n/jniLibs");
+        fs::create_dir_all(not_a_library.join("x86_64/libmosaic_app.so")).unwrap();
+        assert!(build(&pkg, &not_a_library, Backend::Compose).contains("exactly one regular file"));
+
+        #[cfg(unix)]
+        {
+            let linked = android_runtime_dir(&pkg.path().join("l"), &[]);
+            fs::create_dir_all(&linked).unwrap();
+            let elsewhere = android_runtime_dir(&pkg.path().join("elsewhere"), &["x86_64"]);
+            std::os::unix::fs::symlink(elsewhere.join("x86_64"), linked.join("x86_64")).unwrap();
+            assert!(build(&pkg, &linked, Backend::Compose).contains("must be a directory, not a link"));
+            let file_link = android_runtime_dir(&pkg.path().join("f"), &[]);
+            fs::create_dir_all(file_link.join("x86")).unwrap();
+            std::os::unix::fs::symlink(elsewhere.join("x86_64/libmosaic_app.so"), file_link.join("x86/libmosaic_app.so"))
+                .unwrap();
+            assert!(build(&pkg, &file_link, Backend::Compose).contains("exactly one regular file"));
+        }
+
+        let good = android_runtime_dir(&pkg.path().join("g"), &["x86_64"]);
+        assert!(build(&pkg, &good, Backend::Qt).contains("only the Compose backend"));
+        let out = TempDir::new().unwrap();
+        let mut opts = swiftui_options(&pkg, &out, Backend::Compose);
+        opts.emit_project = false;
+        let error = build_package_with_profile_and_runtime(&opts, BuildProfile::NativeComplete, Some(&good))
+            .expect_err("needs a project")
+            .to_string();
+        assert!(error.contains("requires --emit-project"), "{error}");
     }
 
     #[test]
