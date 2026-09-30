@@ -87,6 +87,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S139-letter-ddha",
+      "sourceHash": "fnv1a64:41a6e39611e3a1a2",
+      "svgHash": "fnv1a64:77cda2fe0ef18ce9",
+      "svg": "telugu/book/figures/TE-S139-letter-ddha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S152-letter-tta",
       "sourceHash": "fnv1a64:a7f35348b009149d",
       "svgHash": "fnv1a64:31e5cb893d047c52",

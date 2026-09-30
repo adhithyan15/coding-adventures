@@ -164,10 +164,15 @@ That is about 380 filmstrips that could print today.
   literary word before extracting ఝ. Its five separately numbered movements
   trace three rounded bowls, the upper flourish and the downward stem from the
   packaged `dot_stroke_c_2_4_jha.png` guide, fitted to Noto Sans Telugu.
-- **Next priority: Telugu ఢ already has a word-first owner.** `TE-S139` takes
-  ఢ from **ఆషాఢం**, already taught in the month lesson, so no new vocabulary
-  tranche blocks it. The packaged source provides
-  `dot_stroke_c_3_4_dha.png`; verify its numbered movements and replace the
+- **Telugu ఢ now follows its existing word-first owner.** `TE-S139` takes ఢ
+  from **ఆషాఢం**, already taught in the month lesson. Its six separately
+  numbered movements trace four sections of the rounded body, the upper
+  flourish and the lower stem from the packaged `dot_stroke_c_3_4_dha.png`
+  guide, fitted to Noto Sans Telugu.
+- **Next priority: Telugu ణ already has a word-first owner.** `TE-S126` takes
+  ణ from **వాతావరణం**, **శ్రావణం** and **ఫాల్గుణం**, all already taught before
+  the letter lesson. The packaged source provides
+  `dot_stroke_c_3_5_na.png`; verify its numbered movements and replace the
   lesson's unsourced copy-only instruction with the source-backed route.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
