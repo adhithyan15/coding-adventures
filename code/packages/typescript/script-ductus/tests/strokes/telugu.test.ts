@@ -28,6 +28,7 @@ const TELUGU_NYA = DUCTUS[ductusKey("telugu", "ఞ")];
 const TELUGU_TTA = DUCTUS[ductusKey("telugu", "ట")];
 const TELUGU_TTHA = DUCTUS[ductusKey("telugu", "ఠ")];
 const TELUGU_DDA = DUCTUS[ductusKey("telugu", "డ")];
+const TELUGU_DDHA = DUCTUS[ductusKey("telugu", "ఢ")];
 const TELUGU_AA = DUCTUS[ductusKey("telugu", "ఆ")];
 const TELUGU_I = DUCTUS[ductusKey("telugu", "ఇ")];
 const TELUGU_U = DUCTUS[ductusKey("telugu", "ఉ")];
@@ -43,7 +44,7 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట and డ routes and five-run pedagogical ఐ route cross
+  // The sourced క, ఙ, ఛ, ఝ, ఞ, ట, డ and ఢ routes and five-run pedagogical ఐ route cross
   // narrow printed counter transitions while still covering their complete
   // outlines. ట's six separately numbered source movements cut across the
   // broad printed bowl most strongly. డ's separately numbered arcs likewise
@@ -57,6 +58,7 @@ describe("handwriting ductus", () => {
     ట: 0.55,
     ఛ: 0.92,
     డ: 0.32,
+    ఢ: 0.32,
     ఝ: 0.75,
     ఐ: 0.59,
     ఒ: 0.84,
@@ -101,6 +103,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("డ", TELUGU_DDA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఢ", TELUGU_DDHA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("అ", TELUGU_A.source.url)).toBe(
@@ -336,6 +341,21 @@ describe("handwriting ductus", () => {
       "sweep right and upward around the lower-right bowl",
       "curve left around the upper-right shoulder",
       "curl upward through the separate top flourish",
+    ]);
+  });
+
+  it("Telugu ఢ preserves all six source-verified pen-down runs", () => {
+    expect(penLifts(TELUGU_DDHA)).toBe(5);
+    expect(TELUGU_DDHA.strokes).toHaveLength(6);
+    expect(
+      TELUGU_DDHA.strokes.map((stroke) => stroke.segments[0]!.label),
+    ).toEqual([
+      "sweep down around the upper-left curve",
+      "turn right around the lower-left bowl",
+      "sweep right and upward around the lower-right bowl",
+      "curve left around the upper-right shoulder",
+      "curl upward through the separate top flourish",
+      "draw the separate lower stem downward",
     ]);
   });
 

@@ -56,17 +56,18 @@ You already say this one, and the breathed letter is inside it:
 
 - **ఆషాఢం** *Āṣāḍhaṁ* — the fourth of the twelve months
 
-## Writing: ఢ — copy what you see
+## Writing: ఢ — six deliberate movements
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-139] -->
+<!-- hl-writing-stage: observe-trace -->
 
-Put your pen on ఢ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the filmstrip slowly. Movement 1 sweeps down around the upper-left
+curve. Movement 2 turns right around the lower-left bowl. Movement 3 restarts
+and sweeps right and upward around the lower-right bowl. Movement 4 curves
+left around the upper-right shoulder. Movement 5 draws the separate top
+flourish. Movement 6 finishes with the separate lower stem.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+This is one attested school-style order. Telugu handwriting varies, so keep
+the six movements distinct and let the round shape grow from them.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-139] -->
