@@ -176,6 +176,21 @@
         "code/programs/rust/grammar-tools/**"
       ]
     },
+    "macrooct-grammar-regen-check": {
+      "scope": "job",
+      "description": "Regenerates MacroOct's reconciled Rust _grammar.rs from macrooct.tokens and rejects stale committed output (#14202).",
+      "packages": [
+        "rust/grammar-tools",
+        "rust/programs/grammar-tools",
+        "rust/macrooct-lexer"
+      ],
+      "paths": [
+        "code/grammars/macrooct/**",
+        "code/packages/rust/grammar-tools/**",
+        "code/programs/rust/grammar-tools/**",
+        "code/packages/rust/macrooct-lexer/src/_grammar.rs"
+      ]
+    },
     "unicode17-elixir-conformance": {
       "scope": "job",
       "description": "Generated Elixir Unicode 17 tables against every official normalization/casing vector.",

@@ -446,13 +446,13 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 18,
                 "input_count": 21,
-                "scope_count": 489,
-                "authorization_count": 492,
+                "scope_count": 479,
+                "authorization_count": 482,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "252845441c83ddece72e81504bf59319bb0c469e0e0d48b567c3eb1a4c1225b3",
+            "4b1830332a5e4510d8195ceb8266e0bfec1610ff680d8a319b6c4513a8bd466e",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
@@ -967,7 +967,7 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(raised.exception.code, expected_code)
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 480),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_SCOPES", 478),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
@@ -978,7 +978,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(raised.exception.code, "REPOSITORY_SOURCE_SCOPE_LIMIT")
 
         with (
-            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 483),
+            mock.patch.object(runner, "MAX_REPOSITORY_SOURCE_AUTHORIZATIONS", 481),
             self.assertRaises(runner.ConformanceError) as raised,
         ):
             runner._validate_repository_source_input_boundary(
