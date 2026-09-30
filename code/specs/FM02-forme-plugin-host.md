@@ -1,7 +1,8 @@
 # FM02 — Forme Plugin Host: Manifest, Sandboxing, Wire Protocol, Capability Mediation
 
-> **Status:** Host/wire boundary implemented in FM-B014; runtime adapters,
-> installation, grants persistence, and OS sandboxes active in FM-B015.
+> **Status:** Host/wire boundary implemented in FM-B014; bounded authority
+> persistence implemented in FM-B048; installation, runtime adapters, and OS
+> sandboxes tracked in FM-B049–FM-B052 and the FM-B015 completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
 > safely and run them under a strong isolation boundary. The packages
@@ -20,9 +21,10 @@
 | Manifest parser | Implemented | `forme-manifest` validates the current first-party manifest shape. |
 | Plugin discovery and handshake | Implemented | FM-B014 ships deterministic discovery, manifest-authored proxies, negotiation, and typed streaming. |
 | Capability mediation and crash isolation | Implemented | FM-B014 proves denial, cancellation escalation, malformed-wire isolation, process failure, and cleanup boundaries. |
-| TypeScript/Python/Rust runners | Active | FM-B015 follows the implemented host wire protocol. |
-| OS sandbox profiles | Active | FM-B015 owns macOS, Linux, and Windows enforcement. |
-| Install/trust CLI | Blocked | FM07 exposes it only after FM-B014/FM-B015 land. |
+| Trust and grant persistence | Implemented | FM-B048 provides bounded exact codecs, manifest-bound stale-grant denial, safe reads, and atomic restrictive writes. |
+| TypeScript/Python/Rust runners | Active | FM-B050/FM-B051 follow the implemented host wire protocol. |
+| OS sandbox profiles | Blocked | FM-B052 follows atomic installation and runner conformance. |
+| Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
 
 ---
 
@@ -342,7 +344,7 @@ maxConcurrentRpcs  = 64
 # Optional: signature. Verified third-party plugins SHOULD ship one.
 [signature]
 algorithm = "ed25519"
-publicKey = "MCowBQYDK2VwAyEA..."          # base64 SPKI
+publicKey = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" # base64 raw 32-byte key
 signature = "MEUCIQD..."                   # base64 signature over canonical manifest + entry hash
 signedAt  = "2026-05-16T12:00:00Z"
 ```
@@ -497,7 +499,7 @@ User-wide trust store: `~/.forme/trust.toml`.
 ```toml
 [[trustedKeys]]
 algorithm = "ed25519"
-publicKey = "MCowBQYDK2VwAyEA..."
+publicKey = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
 addedAt   = "2026-05-16T12:00:00Z"
 note      = "Alice's signing key — from her keybase"
 ```
@@ -507,12 +509,21 @@ Plugins signed by any key in the trust store load at the
 first time but skips it on subsequent installs by the same
 publisher.
 
+FM-B048 makes this format normative. `publicKey` is the canonical padded
+Base64 encoding of the raw 32-byte Ed25519 public key used by `[signature]`;
+it is not an SPKI wrapper. Readers accept canonical Base64
+only, require `algorithm = "ed25519"`, an RFC 3339 UTC `addedAt`, and a unique
+public key. Unknown or duplicate fields and table rows are errors rather than
+forward-compatible guesses. A trust store is bounded to 1 MiB and 4,096 keys.
+An absent file means an empty store; a malformed or unsafe existing file never
+falls back to empty.
+
 ### 4.4 Grants file
 
 Per-plugin grants: `<project>/forme-plugins/<name>/grants.toml`.
 
 ```toml
-manifestHash = "blake2b:abcdef..."         # hash at time of grant; mismatch → re-prompt
+manifestHash = "blake2b:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
 [[granted]]
 capability = "storage:read"
@@ -527,6 +538,23 @@ grantedAt  = "2026-05-16T12:00:00Z"
 If `manifestHash` no longer matches the plugin's current manifest
 (the publisher updated the plugin), the host re-prompts for any
 new or changed capability and updates the grants file.
+
+FM-B048 makes the grants format normative. `manifestHash` is the exact
+lowercase `blake2b:<64 hex>` identity returned by `computeManifestHash`; every
+`capability` is a canonical FM01 capability string; `grantedAt` is RFC 3339
+UTC; capabilities are unique and serialized in code-point order. Unknown or
+duplicate fields and rows are errors. A grants file is bounded to 1 MiB and
+4,096 decisions. Loading for a different manifest hash returns a typed
+"stale" result with no effective grants, never the old authority.
+
+Both files are written as deterministic UTF-8 TOML with mode `0600` where the
+platform supports POSIX permissions. Publication uses an exclusive temporary
+regular file in the same real parent directory, flushes it before an atomic
+rename, and rejects symlink or multiply-linked existing targets. Reads use a
+no-follow regular-file descriptor, enforce the byte bound while reading, and
+recheck the opened identity before accepting bytes. Concurrent same-user
+replacement of a parent directory remains outside the single-user threat
+model; callers must supply a host-owned parent.
 
 ### 4.5 Resolving `StageRef`
 
@@ -1617,8 +1645,8 @@ the `PluginHost` interface FM03 §12 declared.
 - `src/wire.ts` — Content-Length framing + JSON-RPC plumbing
 - `src/capability-mediator.ts` — handlers for every `ctx.*` method
 - `src/build-context.ts` — builds the wire-backed `StageContext`
-- `src/grants.ts` — read/write `grants.toml`
-- `src/trust-store.ts` — read `~/.forme/trust.toml`
+- `src/persistent-authority.ts` — strict codecs and safe filesystem helpers for
+  `grants.toml` and `~/.forme/trust.toml`
 - `src/resources.ts` — rlimit/Job-Object setup
 - `src/lifecycle.ts` — state machine, kill timers
 - `src/types.ts` — public API
@@ -1859,8 +1887,9 @@ FM-B014 (host and wire protocol) is complete when:
    cancellation escalation, crash isolation, and cleanup invariants pass
    cross-process contract tests.
 3. Production loading fails closed when no isolation-establishing launcher is
-   installed. The TypeScript/Python/Rust runners, install UX, grants
-   persistence, and OS sandbox launchers remain FM-B015.
+   installed. FM-B048 adds bounded manifest-bound grant and trust persistence;
+   the TypeScript/Python/Rust runners, install UX, and OS sandbox launchers
+   remain FM-B049–FM-B052 under the FM-B015 milestone.
 
 FM02 as a whole is complete when:
 

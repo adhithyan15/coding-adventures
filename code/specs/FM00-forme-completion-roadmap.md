@@ -1,6 +1,6 @@
 # Forme Completion Roadmap
 
-> **Status:** Living delivery backlog, last prioritized 2026-09-27.
+> **Status:** Living delivery backlog, last prioritized 2026-09-30.
 > This roadmap turns the north-star in [FM00](FM00-forme-vision.md) into
 > merge-sized work. Update it whenever implementation work discovers a new
 > gap, and reprioritize it after every merged Forme pull request.
@@ -153,12 +153,17 @@ Statuses are `done`, `active`, `ready`, `blocked`, and `later`. Only one item is
 | 38 | FM-B047 | done | Compose `forme deploy` and dogfood it | Depends on completed FM-B045 and FM-B046. Add the command through the repository CLI builder, implement directory/bundle/inline content-store selection and scoped capabilities, explicitly bootstrap the two legacy sites' existing target ownership from verified identities, then make both live Pages workflows deploy through it with clean-checkout, dry-run, rollback, and availability assertions. |
 | 39 | FM-B012 | done | Complete the deploy runner | Depends on FM-B044–FM-B047. Close the FM08 implementation ledger after the core, filesystem and GitHub Pages adapters, deterministic reporting, `forme deploy` composition, and both live product paths are merged. |
 | 40 | FM-B014 | done | Implement the plugin host and wire protocol | Depends on completed FM-B011 and the existing manifest parser. Stage discovery, handshake, typed streaming, capability mediation, diagnostics, cancellation, and crash isolation pass cross-process contract tests. |
-| 41 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
-| 42 | FM-B015 | active | Ship plugin installation, runtimes, and sandboxes | Depends on completed FM-B014. Signed/trusted install flow, grants persistence, TypeScript/Python/Rust runners, and macOS/Linux/Windows sandbox profiles pass adversarial filesystem/network/process tests. |
-| 43 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
-| 44 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
-| 45 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
-| 46 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
+| 41 | FM-B048 | active | Persist bounded plugin trust and capability decisions | Depends on completed FM-B014. Strict trust-store and grants-file codecs reject unknown, duplicate, malformed, non-canonical, oversized, and over-count inputs; Ed25519 keys use the manifest's canonical raw-key encoding; grants bind exact manifest hashes; atomic restrictive writes reject linked targets and round-trip deterministic bytes. |
+| 42 | FM-B049 | blocked | Stage signed plugin installations atomically | Depends on FM-B048. A registry-independent install core validates a complete bounded package snapshot, assigns the trust tier, records reviewed grants, publishes an immutable host-owned directory by atomic rename, and never exposes a partial or mutable discovery root. |
+| 43 | FM-B050 | ready | Implement the TypeScript plugin runner | Depends on completed FM-B014. The SDK mirrors the bounded wire protocol, exposes a wire-backed `StageContext`, passes the runner conformance suite including streaming and cancellation, and replaces the hand-written host fixture in an end-to-end test. |
+| 44 | FM-B051 | blocked | Implement Python and Rust plugin runners | Depends on FM-B050's conformance harness. Both SDKs pass the same handshake, value, capability, stream, cancellation, error, and bounded-resource vectors as the TypeScript runner. |
+| 45 | FM-B052 | blocked | Implement production OS sandbox launchers | Depends on FM-B049–FM-B051. Linux, macOS, and Windows launchers stage exact verified snapshots, attest their identities, and block ungranted filesystem, network, environment, process, descriptor, memory, and CPU access in platform CI. |
+| 46 | FM-B015 | blocked | Complete plugin installation, runtimes, and sandboxes | Depends on FM-B048–FM-B052. `forme install`, persistent grants, all supported runners, production sandbox profiles, and mixed first-/third-party product integration close the Extensible v1 runtime path. |
+| 47 | FM-B013 | ready | Specify and implement Interactivity IR | Define the behavior/event/state schema and validator, integrate per-page island tracking, and prove a progressively enhanced interactive component with a no-JS fallback. |
+| 48 | FM-B016 | blocked | Build the authoring shell | Depends on FM-B009, FM-B013, and FM-B015. A non-developer can create, edit, preview, configure, and publish a site without hand-editing source or config files. |
+| 49 | FM-B017 | blocked | Prove the backend boundary | Depends on FM-B005 and FM-B013. The same content and theme compile through HTML plus at least one of terminal, PDF/print, or email with explicit degradation tests. |
+| 50 | FM-B018 | blocked | Close release-quality gates | Depends on the v1 product path. Add 1,000-page clean/incremental benchmarks, Lighthouse/accessibility budgets, package/API versioning, migration docs, security review, and supported-platform CI. |
+| 51 | FM-B029 | later | Make duplicate PR CI cancellation and merge state unambiguous | One commit has one authoritative required CI suite; branch updates cancel obsolete runs completely; cancelling a redundant push suite cannot leave a stale final gate or misleading failed rollup; babysitting tooling identifies required checks and the current head. |
 
 ## Dependency path
 
@@ -170,8 +175,9 @@ The completed dependency path to Headless v0 was:
 FM-B020 retires the temporary compatibility path after the routed product DAG
 is proven, but it does not block FM-B004.
 
-Headless v0 is complete. The shortest path to Extensible v1 is now FM-B015;
-FM-B013 can proceed independently before joining the
+Headless v0 is complete. The shortest path to Extensible v1 is now FM-B048 →
+FM-B049/FM-B050 → FM-B051 → FM-B052 → FM-B015. FM-B013 can proceed
+independently before joining the
 authoring path at FM-B016 and the backend proof at FM-B017.
 
 ## Discovery log
@@ -254,6 +260,7 @@ work.
 | 2026-09-27 | The merged root and blog workflows both built, dry-ran, published through Forme, and passed their live availability checks; the duplicate push suite also completed successfully. | Close FM-B047 and the FM-B012 deploy milestone. Headless v0 is complete; reprioritize FM-B014 as the Extensible v1 critical path ahead of independent FM-B013 interactivity work. |
 | 2026-09-27 | FM02 required typed streaming but the manifest grammar admitted only bare kind names, while its storage wire examples used stale `readFile`/`filesystem:read` names instead of the kernel's `read`/`storage:read` contract. | Resolved in FM-B014 by adding validated `Stream<Kind>` references, rejecting nested/unknown stream kinds, and reconciling storage methods and capability names with FM01. |
 | 2026-09-27 | A plugin host cannot safely ship an ambient subprocess fallback before the per-OS sandbox launchers exist, but deferring all process integration would leave FM-B014 untestable. | Resolved in FM-B014 with an injected launcher boundary that must attest sandbox isolation, fails closed when absent or false, and supports cross-process contract fixtures; production runners and sandbox profiles remain the now-active FM-B015. |
+| 2026-09-30 | FM-B015 combined persistent authority decisions, atomic package installation, three language SDKs, three operating-system sandboxes, and product integration in one security-sensitive item. The host still accepts ephemeral injected grants, so installation cannot yet establish a durable least-authority boundary. | Split FM-B015 into FM-B048–FM-B052 and retain it as the completion milestone. Start with strict bounded trust/grants persistence, then allow atomic installation and the TypeScript runner to proceed on independent reviewed boundaries before shared conformance and OS enforcement converge. |
 
 ## Loop protocol
 
