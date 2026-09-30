@@ -55,10 +55,39 @@ async function fixture(entry = "export const value = 1;\n") {
   return { parent, installRoot, prepared };
 }
 
+function installForTest(options: Parameters<typeof installPreparedPlugin>[0]) {
+  return installPreparedPlugin({
+    ...options,
+    // The production contract requires the native host to verify Windows ACLs.
+    // These filesystem tests supply that already-reviewed host decision explicitly.
+    verifyWindowsAcl: async () => true,
+  });
+}
+
 describe("installPreparedPlugin", () => {
+  it.runIf(process.platform === "win32")(
+    "fails closed without an ACL verifier and checks both protected scopes",
+    async () => {
+      const { prepared } = await fixture();
+      await expect(installPreparedPlugin({ prepared }))
+        .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
+      await expect(installPreparedPlugin({ prepared, verifyWindowsAcl: async () => false }))
+        .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
+
+      const scopes: string[] = [];
+      const verifyWindowsAcl = async (_path: string, scope: "install-root" | "existing-target-tree") => {
+        scopes.push(scope);
+        return true;
+      };
+      await installPreparedPlugin({ prepared, verifyWindowsAcl });
+      await installPreparedPlugin({ prepared, verifyWindowsAcl });
+      expect(scopes).toEqual(["install-root", "install-root", "existing-target-tree"]);
+    },
+  );
+
   it("publishes a complete prepared snapshot and leaves no transaction artifacts", async () => {
     const { installRoot, prepared } = await fixture();
-    await expect(installPreparedPlugin({ prepared })).resolves.toMatchObject({
+    await expect(installForTest({ prepared })).resolves.toMatchObject({
       status: "installed",
       pluginName: "@example/install",
     });
@@ -72,22 +101,22 @@ describe("installPreparedPlugin", () => {
 
   it("reports an exact reinstall as unchanged", async () => {
     const { prepared } = await fixture();
-    await installPreparedPlugin({ prepared });
-    await expect(installPreparedPlugin({ prepared })).resolves.toMatchObject({ status: "unchanged" });
+    await installForTest({ prepared });
+    await expect(installForTest({ prepared })).resolves.toMatchObject({ status: "unchanged" });
   });
 
   it("installs from the private immutable snapshot when returned bytes are mutated", async () => {
     const { prepared } = await fixture();
     const exposed = prepared.files.find(file => file.path === "plugin.mjs")!;
     exposed.bytes.fill(0x78);
-    await installPreparedPlugin({ prepared });
+    await installForTest({ prepared });
     await expect(readFile(join(prepared.destinationPath, "plugin.mjs"), "utf8"))
       .resolves.toBe("export const value = 1;\n");
   });
 
   it("atomically replaces a changed install unless immutable mode is requested", async () => {
     const first = await fixture("export const value = 1;\n");
-    await installPreparedPlugin({ prepared: first.prepared });
+    await installForTest({ prepared: first.prepared });
     const changed = preparePluginInstallSnapshot({
       installRoot: first.installRoot,
       files: [
@@ -98,9 +127,9 @@ describe("installPreparedPlugin", () => {
       reviewedGrants: [{ capability: "storage:read", grantedAt: WHEN }],
       capabilityEnvironment: { storageRoot: join(first.parent, "content"), cacheDir: null },
     });
-    await expect(installPreparedPlugin({ prepared: changed, mode: "immutable" }))
+    await expect(installForTest({ prepared: changed, mode: "immutable" }))
       .rejects.toMatchObject({ code: "TARGET_EXISTS" });
-    await expect(installPreparedPlugin({ prepared: changed })).resolves.toMatchObject({ status: "updated" });
+    await expect(installForTest({ prepared: changed })).resolves.toMatchObject({ status: "updated" });
     await expect(readFile(join(changed.destinationPath, "plugin.mjs"), "utf8"))
       .resolves.toBe("export const value = 2;\n");
   });
@@ -109,7 +138,7 @@ describe("installPreparedPlugin", () => {
     const symlinkCase = await fixture();
     await mkdir(symlinkCase.prepared.destinationPath);
     await symlink("../outside", join(symlinkCase.prepared.destinationPath, "plugin.mjs"));
-    await expect(installPreparedPlugin({ prepared: symlinkCase.prepared }))
+    await expect(installForTest({ prepared: symlinkCase.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
 
     const hardlinkCase = await fixture();
@@ -117,7 +146,7 @@ describe("installPreparedPlugin", () => {
     const outside = join(hardlinkCase.parent, "outside");
     await writeFile(outside, "outside");
     await link(outside, join(hardlinkCase.prepared.destinationPath, "plugin.mjs"));
-    await expect(installPreparedPlugin({ prepared: hardlinkCase.prepared }))
+    await expect(installForTest({ prepared: hardlinkCase.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
   });
 
@@ -127,18 +156,18 @@ describe("installPreparedPlugin", () => {
     const { rename, rm } = await import("node:fs/promises");
     await rename(rootCase.installRoot, movedRoot);
     await symlink(movedRoot, rootCase.installRoot);
-    await expect(installPreparedPlugin({ prepared: rootCase.prepared }))
+    await expect(installForTest({ prepared: rootCase.prepared }))
       .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
     await rm(rootCase.installRoot);
 
     const targetCase = await fixture();
     await writeFile(targetCase.prepared.destinationPath, "not a directory");
-    await expect(installPreparedPlugin({ prepared: targetCase.prepared }))
+    await expect(installForTest({ prepared: targetCase.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
 
     const lockCase = await fixture();
     await mkdir(join(lockCase.installRoot, `.${lockCase.prepared.destinationName}.forme-lock`));
-    await expect(installPreparedPlugin({ prepared: lockCase.prepared }))
+    await expect(installForTest({ prepared: lockCase.prepared }))
       .rejects.toMatchObject({ code: "TARGET_BUSY" });
   });
 
@@ -146,7 +175,7 @@ describe("installPreparedPlugin", () => {
     const { installRoot, prepared } = await fixture();
     const controller = new AbortController();
     controller.abort(new Error("cancelled"));
-    await expect(installPreparedPlugin({ prepared, signal: controller.signal }))
+    await expect(installForTest({ prepared, signal: controller.signal }))
       .rejects.toBeInstanceOf(PluginInstallError);
     expect((await readdir(installRoot)).filter(name => name.startsWith("."))).toEqual([]);
   });
@@ -158,12 +187,12 @@ describe("installPreparedPlugin", () => {
       get aborted() { checks += 1; return checks === 3; },
       reason: new Error("cancel stage"),
     } as AbortSignal;
-    await expect(installPreparedPlugin({ prepared: staged.prepared, signal: stageSignal }))
+    await expect(installForTest({ prepared: staged.prepared, signal: stageSignal }))
       .rejects.toMatchObject({ code: "ABORTED" });
     expect((await readdir(staged.installRoot)).filter(name => name.startsWith("."))).toEqual([]);
 
     const replacing = await fixture("export const value = 1;\n");
-    await installPreparedPlugin({ prepared: replacing.prepared });
+    await installForTest({ prepared: replacing.prepared });
     const changed = preparePluginInstallSnapshot({
       installRoot: replacing.installRoot,
       files: [
@@ -179,7 +208,7 @@ describe("installPreparedPlugin", () => {
       get aborted() { checks += 1; return checks === 15; },
       reason: new Error("cancel commit"),
     } as AbortSignal;
-    await expect(installPreparedPlugin({ prepared: changed, signal: commitSignal }))
+    await expect(installForTest({ prepared: changed, signal: commitSignal }))
       .rejects.toMatchObject({ code: "ABORTED" });
     await expect(readFile(join(changed.destinationPath, "plugin.mjs"), "utf8"))
       .resolves.toBe("export const value = 1;\n");
@@ -199,44 +228,44 @@ describe("installPreparedPlugin", () => {
       reviewedGrants: [{ capability: "storage:read", grantedAt: WHEN }],
       capabilityEnvironment: { storageRoot: join(parent, "content"), cacheDir: null },
     });
-    await installPreparedPlugin({ prepared });
+    await installForTest({ prepared });
     await expect(readFile(join(prepared.destinationPath, "nested/plugin.mjs"), "utf8")).resolves.toBe("nested");
-    await expect(installPreparedPlugin({ prepared })).resolves.toMatchObject({ status: "unchanged" });
+    await expect(installForTest({ prepared })).resolves.toMatchObject({ status: "unchanged" });
   });
 
   it("detects extra, missing, size-mismatched, content-mismatched, and invalid target files", async () => {
     const extra = await fixture();
-    await installPreparedPlugin({ prepared: extra.prepared });
+    await installForTest({ prepared: extra.prepared });
     await writeFile(join(extra.prepared.destinationPath, "extra"), "x");
-    await expect(installPreparedPlugin({ prepared: extra.prepared, mode: "immutable" }))
+    await expect(installForTest({ prepared: extra.prepared, mode: "immutable" }))
       .rejects.toMatchObject({ code: "TARGET_EXISTS" });
 
     const missing = await fixture();
-    await installPreparedPlugin({ prepared: missing.prepared });
+    await installForTest({ prepared: missing.prepared });
     const { rm } = await import("node:fs/promises");
     await rm(join(missing.prepared.destinationPath, "plugin.mjs"));
-    await expect(installPreparedPlugin({ prepared: missing.prepared, mode: "immutable" }))
+    await expect(installForTest({ prepared: missing.prepared, mode: "immutable" }))
       .rejects.toMatchObject({ code: "TARGET_EXISTS" });
 
     const sized = await fixture();
-    await installPreparedPlugin({ prepared: sized.prepared });
+    await installForTest({ prepared: sized.prepared });
     await chmod(join(sized.prepared.destinationPath, "plugin.mjs"), 0o600);
     await writeFile(join(sized.prepared.destinationPath, "plugin.mjs"), "short");
-    await expect(installPreparedPlugin({ prepared: sized.prepared, mode: "immutable" }))
+    await expect(installForTest({ prepared: sized.prepared, mode: "immutable" }))
       .rejects.toMatchObject({ code: "TARGET_EXISTS" });
 
     const content = await fixture();
-    await installPreparedPlugin({ prepared: content.prepared });
+    await installForTest({ prepared: content.prepared });
     const original = await readFile(join(content.prepared.destinationPath, "plugin.mjs"));
     await chmod(join(content.prepared.destinationPath, "plugin.mjs"), 0o600);
     await writeFile(join(content.prepared.destinationPath, "plugin.mjs"), Buffer.alloc(original.length, 0x78));
-    await expect(installPreparedPlugin({ prepared: content.prepared, mode: "immutable" }))
+    await expect(installForTest({ prepared: content.prepared, mode: "immutable" }))
       .rejects.toMatchObject({ code: "TARGET_EXISTS" });
 
     const invalid = await fixture();
     await mkdir(invalid.prepared.destinationPath);
     await writeFile(join(invalid.prepared.destinationPath, "bad name"), "x");
-    await expect(installPreparedPlugin({ prepared: invalid.prepared }))
+    await expect(installForTest({ prepared: invalid.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
   });
 
@@ -244,65 +273,65 @@ describe("installPreparedPlugin", () => {
     const missing = await fixture();
     const { rm } = await import("node:fs/promises");
     await rm(missing.installRoot, { recursive: true });
-    await expect(installPreparedPlugin({ prepared: missing.prepared }))
+    await expect(installForTest({ prepared: missing.prepared }))
       .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
 
     const fileRoot = await fixture();
     await rm(fileRoot.installRoot, { recursive: true });
     await writeFile(fileRoot.installRoot, "file");
-    await expect(installPreparedPlugin({ prepared: fileRoot.prepared }))
+    await expect(installForTest({ prepared: fileRoot.prepared }))
       .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
   });
 
   it.runIf(process.platform !== "win32")("rejects a group- or world-writable install root", async () => {
     const unsafe = await fixture();
     await chmod(unsafe.installRoot, 0o777);
-    await expect(installPreparedPlugin({ prepared: unsafe.prepared }))
+    await expect(installForTest({ prepared: unsafe.prepared }))
       .rejects.toMatchObject({ code: "ROOT_UNSAFE" });
   });
 
   it.runIf(process.platform !== "win32")("rejects shared-writable existing target content", async () => {
     const root = await fixture();
-    await installPreparedPlugin({ prepared: root.prepared });
+    await installForTest({ prepared: root.prepared });
     await chmod(root.prepared.destinationPath, 0o770);
-    await expect(installPreparedPlugin({ prepared: root.prepared }))
+    await expect(installForTest({ prepared: root.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
 
     const nested = await fixture();
-    await installPreparedPlugin({ prepared: nested.prepared });
+    await installForTest({ prepared: nested.prepared });
     await chmod(join(nested.prepared.destinationPath, "plugin.mjs"), 0o420);
-    await expect(installPreparedPlugin({ prepared: nested.prepared }))
+    await expect(installForTest({ prepared: nested.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
   });
 
   it("bounds cancellation, target depth, and target entry scans", async () => {
     const cancelled = await fixture();
-    await installPreparedPlugin({ prepared: cancelled.prepared });
+    await installForTest({ prepared: cancelled.prepared });
     let checks = 0;
     const signal = {
       get aborted() { checks += 1; return checks === 3; },
       reason: new Error("cancel scan"),
     } as AbortSignal;
-    await expect(installPreparedPlugin({ prepared: cancelled.prepared, signal }))
+    await expect(installForTest({ prepared: cancelled.prepared, signal }))
       .rejects.toMatchObject({ code: "ABORTED" });
 
     const deep = await fixture();
     await mkdir(join(deep.prepared.destinationPath, ...Array.from({ length: 258 }, () => "a")), { recursive: true });
-    await expect(installPreparedPlugin({ prepared: deep.prepared }))
+    await expect(installForTest({ prepared: deep.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
 
     const crowded = await fixture();
     await mkdir(crowded.prepared.destinationPath);
     await Promise.all(Array.from({ length: 4_098 }, (_, index) =>
       writeFile(join(crowded.prepared.destinationPath, `f-${index}`), "")));
-    await expect(installPreparedPlugin({ prepared: crowded.prepared }))
+    await expect(installForTest({ prepared: crowded.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
 
     const directoryCrowd = await fixture();
     await mkdir(directoryCrowd.prepared.destinationPath);
     await Promise.all(Array.from({ length: 4_097 }, (_, index) =>
       mkdir(join(directoryCrowd.prepared.destinationPath, `d-${index}`))));
-    await expect(installPreparedPlugin({ prepared: directoryCrowd.prepared }))
+    await expect(installForTest({ prepared: directoryCrowd.prepared }))
       .rejects.toMatchObject({ code: "TARGET_UNSAFE" });
   });
 });

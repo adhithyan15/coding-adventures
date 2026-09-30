@@ -27,6 +27,7 @@ set -e
 #     sha512                  ← Ed25519 hash primitive
 #     ed25519                 ← manifest signature verification
 #     forme-manifest          ← plugin manifest parser and verifier
+#     forme-plugin-runner-ts  ← plugin-side FM02 runner SDK
 #     forme-plugin-host       ← sandboxed StageRef plugin loading
 #     forme-identity          ← LogicalId + RevisionId
 #     forme-cache             ← orchestrator cache backend
@@ -62,6 +63,7 @@ cd ../../../packages/typescript/blake2b && npm install --silent
 cd ../../../packages/typescript/sha512 && npm install --silent
 cd ../../../packages/typescript/ed25519 && npm install --silent
 cd ../../../packages/typescript/forme-manifest && npm install --silent
+cd ../../../packages/typescript/forme-plugin-runner-ts && npm install --silent
 cd ../../../packages/typescript/forme-plugin-host && npm install --silent
 cd ../../../packages/typescript/forme-identity && npm install --silent
 cd ../../../packages/typescript/forme-cache && npm install --silent

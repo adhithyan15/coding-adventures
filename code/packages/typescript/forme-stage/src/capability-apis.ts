@@ -104,8 +104,8 @@ export function deniedNetworkApi(): NetworkApi {
 // ─── EnvApi ───────────────────────────────────────────────────────────────
 
 export interface EnvApi {
-  get(name: string): string | undefined;
-  getOrThrow(name: string): string;
+  get(name: string): Promise<string | undefined>;
+  getOrThrow(name: string): Promise<string>;
 }
 
 /**
@@ -117,12 +117,8 @@ export interface EnvApi {
  */
 export function deniedEnvApi(): EnvApi {
   return {
-    get: (name) => {
-      throw capabilityError(`env:${name}`, `env.get(${JSON.stringify(name)})`);
-    },
-    getOrThrow: (name) => {
-      throw capabilityError(`env:${name}`, `env.getOrThrow(${JSON.stringify(name)})`);
-    },
+    get: (name) => deny(`env:${name}`, `env.get(${JSON.stringify(name)})`),
+    getOrThrow: (name) => deny(`env:${name}`, `env.getOrThrow(${JSON.stringify(name)})`),
   };
 }
 
@@ -136,8 +132,8 @@ export interface FilesystemApi {
    */
   readAbsoluteBounded(path: string, maxBytes: number): Promise<Uint8Array>;
   writeAbsolute(path: string, bytes: Uint8Array): Promise<void>;
-  homeDir(): string;
-  tempDir(): string;
+  homeDir(): Promise<string>;
+  tempDir(): Promise<string>;
 }
 
 export function deniedFilesystemApi(): FilesystemApi {
@@ -148,12 +144,8 @@ export function deniedFilesystemApi(): FilesystemApi {
       `readAbsoluteBounded(${JSON.stringify(path)})`,
     ),
     writeAbsolute: (path) => deny("filesystem:user", `writeAbsolute(${JSON.stringify(path)})`),
-    homeDir: () => {
-      throw capabilityError("filesystem:user", "homeDir()");
-    },
-    tempDir: () => {
-      throw capabilityError("filesystem:user", "tempDir()");
-    },
+    homeDir: () => deny("filesystem:user", "homeDir()"),
+    tempDir: () => deny("filesystem:user", "tempDir()"),
   };
 }
 

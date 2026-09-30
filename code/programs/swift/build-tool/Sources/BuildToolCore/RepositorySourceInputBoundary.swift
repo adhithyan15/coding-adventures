@@ -683,6 +683,7 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/typescript/forme-pipeline-config",
                   "code/packages/typescript/forme-plugin-host",
                   "code/packages/typescript/forme-plugin-installer-core",
+                  "code/packages/typescript/forme-plugin-runner-ts",
                   "code/packages/typescript/forme-render-static",
                   "code/packages/typescript/forme-resolve-asset-refs-fs",
                   "code/packages/typescript/forme-router",

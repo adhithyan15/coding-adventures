@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { access, mkdtemp, mkdir, writeFile } from "node:fs/promises";
+import { access, cp, mkdtemp, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -30,6 +30,7 @@ import {
 } from "../src/index.js";
 
 const fixtureRoot = fileURLToPath(new URL("./fixtures", import.meta.url));
+const runnerRoot = fileURLToPath(new URL("../../forme-plugin-runner-ts", import.meta.url));
 
 function processFactory(
   mismatch = false,
@@ -47,9 +48,24 @@ function processFactory(
         await mkdir(dirname(stagedSchema), { recursive: true });
         await writeFile(stagedSchema, request.configSchema.bytes);
       }
+      if (request.plugin.manifest.plugin.name === "@example/sdk") {
+        await cp(join(runnerRoot, "dist"), join(request.workingDirectory, "runner"), { recursive: true });
+        const packagesRoot = dirname(runnerRoot);
+        for (const packageName of ["forme-types", "forme-errors", "forme-stage"]) {
+          const target = join(request.workingDirectory, "node_modules", "@coding-adventures", packageName);
+          await mkdir(target, { recursive: true });
+          await cp(join(packagesRoot, packageName, "dist"), join(target, "dist"), { recursive: true });
+          await writeFile(join(target, "package.json"), JSON.stringify({
+            name: `@coding-adventures/${packageName}`,
+            type: "module",
+            main: "dist/index.js",
+          }));
+        }
+      }
       const child = spawn(process.execPath, [
         stagedEntry,
         request.stage.id,
+        request.configSchema?.hash ?? "-",
         ...(mismatch ? ["--mismatch"] : []),
         ...flags,
       ], {
@@ -138,6 +154,24 @@ async function makeHost(factory: PluginProcessFactory | undefined = processFacto
 }
 
 describe("plugin host cross-process contract", () => {
+  it("runs a real TypeScript SDK stage end to end", async () => {
+    const host = await createPluginHost({
+      roots: [fixtureRoot],
+      grants: { "@example/sdk": ["storage:read"] },
+      capabilityApis: { storage },
+      processFactory: processFactory(),
+    });
+    const stage = await host.loadStage({
+      kind: "stage-ref", packageName: "@example/sdk", export: "echo",
+    }, "sdk-e2e");
+    const result = await stage.run({ readPath: "posts/sdk.md" } as never, {}, context()) as {
+      bytes: Uint8Array;
+    };
+    expect(result.bytes).toEqual(new TextEncoder().encode("read:posts/sdk.md"));
+    await stage.dispose?.(initContext());
+    await host.dispose();
+  });
+
   it("validates roots, limits, stage identities, and disposed hosts", async () => {
     await expect(createPluginHost({ roots: [] })).rejects.toThrow(/at least one/);
     await expect(createPluginHost({ roots: [fixtureRoot], requestTimeoutMs: 0 }))

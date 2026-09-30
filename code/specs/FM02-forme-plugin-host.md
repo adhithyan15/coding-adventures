@@ -1,8 +1,9 @@
 # FM02 — Forme Plugin Host: Manifest, Sandboxing, Wire Protocol, Capability Mediation
 
 > **Status:** Host/wire boundary implemented in FM-B014; bounded authority
-> persistence implemented in FM-B048; atomic installation active in FM-B049;
-> runtime adapters and OS sandboxes tracked in FM-B050–FM-B052 and the FM-B015
+> persistence implemented in FM-B048; atomic installation implemented in FM-B049;
+> the TypeScript runtime adapter active in FM-B050; remaining runtimes and OS
+> sandboxes tracked in FM-B051–FM-B052 and the FM-B015
 > completion milestone.
 > Read alongside FM00 (vision), FM01 (kernel), and FM03 (orchestrator).
 > **Scope:** Everything required to load third-party Forme plugins
@@ -23,8 +24,9 @@
 | Plugin discovery and handshake | Implemented | FM-B014 ships deterministic discovery, manifest-authored proxies, negotiation, and typed streaming. |
 | Capability mediation and crash isolation | Implemented | FM-B014 proves denial, cancellation escalation, malformed-wire isolation, process failure, and cleanup boundaries. |
 | Trust and grant persistence | Implemented | FM-B048 provides bounded exact codecs, manifest-bound stale-grant denial, safe reads, and atomic restrictive writes. |
-| Atomic plugin installation | Active | FM-B049 consumes registry-independent immutable snapshots and publishes one complete host-owned plugin directory. |
-| TypeScript/Python/Rust runners | Active | FM-B050/FM-B051 follow the implemented host wire protocol. |
+| Atomic plugin installation | Implemented | FM-B049 consumes registry-independent immutable snapshots and publishes one complete host-owned plugin directory. |
+| TypeScript runner | Implemented | FM-B050 supplies the bounded reference SDK and host-launched end-to-end fixture. |
+| Python/Rust runners | Blocked | FM-B051 follows the TypeScript runner's conformance harness. |
 | OS sandbox profiles | Blocked | FM-B052 follows atomic installation and runner conformance. |
 | Install/trust CLI | Blocked | FM-B049 owns the install core; FM07 exposes it after the FM-B015 milestone. |
 
@@ -1607,7 +1609,9 @@ await runPlugin(stage);
 ```
 
 `runPlugin`:
-- Reads `argv[1]` for the handshake token.
+- Reads the selected stage id and optional config-schema identity from the
+  sandbox launcher's bounded bootstrap arguments. Authentication of the exact
+  staged entry remains the launcher's attested responsibility.
 - Reads Content-Length-framed JSON from stdin.
 - Writes Content-Length-framed JSON to stdout.
 - Constructs a `StageContext` whose APIs send RPCs.
@@ -1615,6 +1619,12 @@ await runPlugin(stage);
   AsyncIterable) into the appropriate response shape.
 - Translates user-thrown `StageError`s into wire errors.
 - Hooks `SIGINT`/`SIGTERM` to dispose cleanly.
+
+Host-mediated APIs are asynchronous all the way through the SDK. In
+particular, wall-clock, environment, and host-directory getters return
+promises; a runner must never emulate a synchronous RPC by blocking the
+JavaScript event loop. Monotonic time and cancellation observation remain
+local synchronous operations because neither requires host authority.
 
 ### 13.2 Python SDK — `forme-plugin-runner-py`
 

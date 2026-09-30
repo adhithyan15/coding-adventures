@@ -86,16 +86,16 @@ describe("deniedNetworkApi", () => {
 describe("deniedEnvApi", () => {
   const api = deniedEnvApi();
 
-  it("get throws synchronously with env:<NAME>", () => {
-    expect(() => api.get("GITHUB_TOKEN")).toThrow(CapabilityError);
-    try { api.get("GITHUB_TOKEN"); }
+  it("get rejects with env:<NAME>", async () => {
+    await expect(api.get("GITHUB_TOKEN")).rejects.toThrow(CapabilityError);
+    try { await api.get("GITHUB_TOKEN"); }
     catch (e) {
       expect((e as CapabilityError).capability).toBe("env:GITHUB_TOKEN");
     }
   });
 
-  it("getOrThrow also throws CapabilityError (not the missing-var error)", () => {
-    expect(() => api.getOrThrow("ANY")).toThrow(CapabilityError);
+  it("getOrThrow also rejects with CapabilityError (not the missing-var error)", async () => {
+    await expect(api.getOrThrow("ANY")).rejects.toThrow(CapabilityError);
   });
 });
 
@@ -117,9 +117,9 @@ describe("deniedFilesystemApi", () => {
     });
   });
 
-  it("homeDir/tempDir throw synchronously with filesystem:user", () => {
-    expect(() => api.homeDir()).toThrow(CapabilityError);
-    expect(() => api.tempDir()).toThrow(CapabilityError);
+  it("homeDir/tempDir reject with filesystem:user", async () => {
+    await expect(api.homeDir()).rejects.toThrow(CapabilityError);
+    await expect(api.tempDir()).rejects.toThrow(CapabilityError);
   });
 });
 
