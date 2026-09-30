@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C151-chhaya",
+    "language": "telugu",
+    "chapter": 151,
+    "sequence": 6560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:840075c534669996"
+  },
+  "findings": []
+}

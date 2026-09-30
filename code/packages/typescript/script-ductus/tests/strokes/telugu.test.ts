@@ -21,6 +21,7 @@ const TELUGU_GA = DUCTUS[ductusKey("telugu", "గ")];
 const TELUGU_GHA = DUCTUS[ductusKey("telugu", "ఘ")];
 const TELUGU_NGA = DUCTUS[ductusKey("telugu", "ఙ")];
 const TELUGU_CA = DUCTUS[ductusKey("telugu", "చ")];
+const TELUGU_CHHA = DUCTUS[ductusKey("telugu", "ఛ")];
 const TELUGU_JA = DUCTUS[ductusKey("telugu", "జ")];
 const TELUGU_NYA = DUCTUS[ductusKey("telugu", "ఞ")];
 const TELUGU_TTA = DUCTUS[ductusKey("telugu", "ట")];
@@ -40,7 +41,7 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
 );
 
 describe("handwriting ductus", () => {
-  // The sourced క, ఙ, ఞ and ట routes and five-run pedagogical ఐ route cross
+  // The sourced క, ఙ, ఛ, ఞ, and ట routes and five-run pedagogical ఐ route cross
   // narrow printed counter transitions while still covering their complete
   // outlines. ట's six separately numbered source movements cut across the
   // broad printed bowl most strongly.
@@ -51,6 +52,7 @@ describe("handwriting ductus", () => {
     ఙ: 0.9,
     ఞ: 0.86,
     ట: 0.55,
+    ఛ: 0.92,
     ఐ: 0.59,
     ఒ: 0.84,
     ఋ: 0.84,
@@ -73,6 +75,9 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("చ", TELUGU_CA.source.url)).toBe(
+      "_fonts/NotoSansTelugu-Static.ttf",
+    );
+    expect(verifiedLetterFont("ఛ", TELUGU_CHHA.source.url)).toBe(
       "_fonts/NotoSansTelugu-Static.ttf",
     );
     expect(verifiedLetterFont("జ", TELUGU_JA.source.url)).toBe(
@@ -199,6 +204,24 @@ describe("handwriting ductus", () => {
         "sweep right and up around the outer bowl",
       ],
       ["restart and cup through the upper flourish"],
+    ]);
+  });
+
+  it("Telugu ఛ groups five source-verified movements into two pen-down runs", () => {
+    expect(penLifts(TELUGU_CHHA)).toBe(1);
+    expect(TELUGU_CHHA.strokes).toHaveLength(2);
+    expect(
+      TELUGU_CHHA.strokes.map((stroke) =>
+        stroke.segments.map((segment) => segment.label),
+      ),
+    ).toEqual([
+      [
+        "draw the upper bar from left to right",
+        "continue down and around the left bowl",
+        "sweep right and up around the outer bowl",
+        "continue through the upper flourish",
+      ],
+      ["restart and draw the separate downward stem"],
     ]);
   });
 

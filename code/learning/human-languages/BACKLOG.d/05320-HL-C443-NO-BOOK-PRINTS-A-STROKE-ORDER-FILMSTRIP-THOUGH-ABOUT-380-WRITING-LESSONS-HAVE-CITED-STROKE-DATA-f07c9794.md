@@ -131,16 +131,21 @@ That is about 380 filmstrips that could print today.
   The order comes from the packaged `dot_stroke_c_1_5_nya.png` tracing guide
   and is fitted to Noto Sans Telugu. This closes the earlier vocabulary-first
   dependency instead of teaching the inventory shape cold.
-- **Telugu జ is the next ready consonant.** The intervening `ఛ` also remains
-  in the measured inventory-without-a-word debt, while `TE-S127` already owns
+- **Telugu జ follows as the next ready consonant.** The existing `TE-S127` owns
   `జ` after `రోజు`. Its four separately numbered movements draw the upper-left
   arch, the two lower bowls, and the upper-right flourish, using the same
   packaged tracing guide and Noto Sans Telugu fit.
-- **Telugu ఞ is the next consonant with a word-first owner.** Both `ఛ` and `ఝ`
-  still need vocabulary before they can enter the writing ramp, while
-  `TE-S132` already extracts `ఞ` from `కృతజ్ఞత`. Its eight separately numbered
-  movements trace the two upper loops, lower body, right bar and upper stem,
-  again following the packaged tracing guide and Noto Sans Telugu fit.
+- **Telugu ఛ now gets the word first.** Chapter 151 introduces **ఛాయ**
+  (*chāya*, shade or shadow) before `TE-S172` extracts the uncommon aspirated
+  letter from the word. Its five-movement filmstrip keeps movements 1–4 joined
+  across the main body and upper flourish, then restarts for the downward stem.
+  The order comes from the packaged `dot_stroke_c_2_2_chha.png` tracing guide
+  and is fitted to Noto Sans Telugu, closing another vocabulary-first gap
+  without turning the alphabet into a cold chart.
+- **Telugu ఞ is the next consonant with a word-first owner.** `TE-S132`
+  already extracts `ఞ` from `కృతజ్ఞత`. Its eight separately numbered movements
+  trace the two upper loops, lower body, right bar and upper stem, again
+  following the packaged tracing guide and Noto Sans Telugu fit.
 - **Telugu ట begins the retroflex row.** `TE-S152` already extracts the letter
   from `ఏమిటి`, so no vocabulary debt blocks it. Its six separately numbered
   movements trace the inner shoulder, the rounded outer body in four sections,
@@ -150,6 +155,11 @@ That is about 380 filmstrips that could print today.
   the aspirated retroflex from `జ్యేష్ఠం`, already taught in the previous
   chapter. Its three movements draw the circular body, upper flourish and inner
   dot from the packaged tracing guide, fitted to Noto Sans Telugu.
+- **Next priority: Telugu ఝ needs its word first.** No existing lesson owns the
+  base letter or teaches a word containing it, so the next tranche must verify
+  an authentic, useful lexical anchor before adding a writing lesson. The same
+  packaged source does contain `dot_stroke_c_2_4_jha.png`; stroke extraction is
+  ready only after that vocabulary dependency is satisfied.
 
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
