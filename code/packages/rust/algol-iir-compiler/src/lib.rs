@@ -6910,7 +6910,7 @@ impl Compiler {
                     &mut dependencies,
                 );
                 (current == goal
-                    && self.selected_conditional_path_has_stable_self_reference(
+                    && self.conditional_paths_have_supported_self_reference(
                         assignment.expression,
                         current,
                         all_actions,
@@ -6975,7 +6975,7 @@ impl Compiler {
         found
     }
 
-    fn selected_conditional_path_has_stable_self_reference(
+    fn conditional_paths_have_supported_self_reference(
         &self,
         expression: &GrammarASTNode,
         name: &str,
@@ -6986,21 +6986,31 @@ impl Compiler {
         {
             let mut selectors = HashSet::new();
             collect_expression_dependency_names(condition, "", &mut selectors);
-            if selectors
+            let selector_is_written = selectors
                 .iter()
-                .any(|selector| Self::static_body_actions_write_name(actions, selector))
-            {
-                return false;
+                .any(|selector| Self::static_body_actions_write_name(actions, selector));
+            // A stable selector needs only its selected path. An evolving or
+            // unknown selector must retain the recurrence edge on both paths.
+            if !selector_is_written {
+                match self.static_boolean_value(condition) {
+                    Some(true) => {
+                        return self.conditional_paths_have_supported_self_reference(
+                            then_node, name, actions,
+                        );
+                    }
+                    Some(false) => {
+                        return self.conditional_paths_have_supported_self_reference(
+                            else_node, name, actions,
+                        );
+                    }
+                    None => {}
+                }
             }
-            return match self.static_boolean_value(condition) {
-                Some(true) => self.selected_conditional_path_has_stable_self_reference(
-                    then_node, name, actions,
-                ),
-                Some(false) => self.selected_conditional_path_has_stable_self_reference(
-                    else_node, name, actions,
-                ),
-                None => false,
-            };
+            return self.conditional_paths_have_supported_self_reference(
+                then_node, name, actions,
+            ) && self.conditional_paths_have_supported_self_reference(
+                else_node, name, actions,
+            );
         }
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(expression, "", &mut dependencies);
@@ -15067,6 +15077,48 @@ mod tests {
             "test",
         )
         .expect_err("an unknown conditional selector must keep self-recursion conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_dynamic_all_branch_self_recursive_selector_tracks_recurrence_cycle() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else choose; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a dynamic conditional may retain self-recursion through every branch");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_all_branch_self_recursive_selector_selects_cycle_expression() {
+        let module = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else choose; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+            "test",
+        )
+        .expect("a dynamic all-branch self-recursive selector may choose a cycle expression");
+        let main = module.get_function("main").expect("has main");
+        for expected in ["3.25", "1.5", "0.25"] {
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_partial_self_recursive_selector_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, delta; boolean choose, flag; i := 0; n := 4; delta := 2; choose := true; flag := true; for i := i + 1 while i <= n do begin n := n - delta; flag := i < 2; choose := if flag then not choose else false; if choose then delta := n else delta := n - 1 end; print(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a dynamic branch without self-reference must remain conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
