@@ -52,26 +52,36 @@ if [[ -z "${ANDROID_NDK_HOME:-}" || ! -d "$ANDROID_NDK_HOME" ]]; then
   echo "ANDROID_NDK_HOME must name an installed Android NDK" >&2
   exit 2
 fi
+# Absolute for the same reason as the staging directory below.
+ANDROID_NDK_HOME="$(CDPATH='' cd -P -- "$ANDROID_NDK_HOME" > /dev/null && pwd -P)"
+export ANDROID_NDK_HOME
 
-here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-manifest="$here/../packages/rust/Cargo.toml"
+here="$(CDPATH='' cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" > /dev/null && pwd -P)"
+workspace="$here/../packages/rust"
 library="lib${package//-/_}.so"
 # The minimum SDK the generated Android project declares (UI89 §3.5).
 api_level=26
 abis=(arm64-v8a armeabi-v7a x86_64 x86)
 
+# Absolute, because cargo-ndk runs from the workspace below: a relative
+# TMPDIR would otherwise put its output somewhere this script never looks.
 staging="$(mktemp -d)"
+staging="$(CDPATH='' cd -P -- "$staging" > /dev/null && pwd -P)"
 trap 'rm -rf -- "$staging"' EXIT
 
 ndk_args=()
 for abi in "${abis[@]}"; do
   ndk_args+=(-t "$abi")
 done
-cargo_args=(build --manifest-path "$manifest" -p "$package")
+cargo_args=(build -p "$package")
 if [[ "$release" == "--release" ]]; then
   cargo_args+=(--release)
 fi
-cargo ndk "${ndk_args[@]}" --platform "$api_level" -o "$staging" "${cargo_args[@]}" >&2
+# From inside the workspace: cargo-ndk runs its own `cargo metadata` in the
+# current directory before it hands the build to cargo, and ignores a
+# `--manifest-path` meant for that build -- so called from anywhere else it
+# stops at "could not find `Cargo.toml`". Staging and the NDK are absolute.
+(CDPATH='' cd -P -- "$workspace" && cargo ndk "${ndk_args[@]}" --platform "$api_level" -o "$staging" "${cargo_args[@]}") >&2
 
 # Replace only the four ABI directories, never the directory the caller
 # named: a wrong path costs nothing but four stray folders, and anything else
