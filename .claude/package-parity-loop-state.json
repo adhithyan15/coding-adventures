@@ -11055,7 +11055,16 @@
       "selected_at": "2026-09-30T21:03:05Z",
       "selection_revision": "c6685aa8d882b061ef810f32027331b40898eebd",
       "selection_notes": "Selected only after PR #16310 completed every final-head check acceptably and merged through guarded squash auto-merge as c6685aa8d882b061ef810f32027331b40898eebd. The exact-main schema-3 refresh is collision-clean at 15 established lanes, 1,473 implementation identities, 4,740 package slots, 1,515 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 991/13,874, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. The only identity delta is the already-owned TypeScript forme-plugin-runner-ts singleton from merged PR #16296, so no new owner is required. This dependency-free four-package Python chain closes four reviewed orphan roots, exercises five direct downstream consumers, and has no overlap with current open PRs. The fresh clean branch starts from exact current main.",
-      "notes": "Add fail-closed cross-platform fronts and direct tests for the Python neural-primitives dependency chain without changing the separately owned loss semantics."
+      "notes": "Implemented four fail-closed cross-platform BUILD fronts with explicit activation-functions, matrix, and loss-functions edges into perceptron; direct ML01/ML03/ML04 and AND-learning coverage; package documentation; publishable Hatch metadata; and four exact orphan-ledger retirements. Activation-functions now exports the canonical ML04 tanh name with its compatibility alias, while matrix construction deep-copies and validates rectangular numeric grids. Local validation covers 97 direct tests at 99-100% package coverage, Ruff check/format, four wheel and sdist builds plus clean wheel imports, four executable downstream program smokes, the Go build-tool suite, a production four-package build with all internal edges and orphan validation, capability review, and diff checks. The read-only downstream audit discovered that the five dependent Python predictor programs have no BUILD fronts and xor-classifier is metadata-only with incorrect matrix/loss distribution names; that separate coherent follow-up is now owned by python-neural-predictor-program-front-and-metadata-coverage."
+    },
+    {
+      "id": "python-neural-predictor-program-front-and-metadata-coverage",
+      "title": "Add tested BUILD fronts and corrected dependency metadata for Python neural predictor programs",
+      "status": "pending",
+      "depends_on": ["python-activation-matrix-loss-perceptron-build-front-coverage"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the bounded downstream audit for the Python neural-primitives tranche. celsius-to-fahrenheit-predictor, house-price-predictor, mansion-classifier, space-launch-predictor, and xor-classifier have no BUILD fronts. The first four have executable mains and validated smoke closures; xor-classifier is metadata-only and incorrectly requests matrix and loss-functions instead of the actual coding-adventures-matrix and coding-adventures-loss-functions distributions. Add program fronts in dependency order, repair or complete the XOR program contract without fabricating runtime coverage, and validate build-tool edges plus all executable downstream smokes as a separate item."
     },
     {
       "id": "python-gradient-descent-build-front-coverage",

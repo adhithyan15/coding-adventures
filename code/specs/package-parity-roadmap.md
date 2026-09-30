@@ -15136,6 +15136,34 @@ semantics or widening authority. Current open PRs have no exact overlap with
 its package, state, roadmap, or documentation paths. The fresh clean branch
 `codex/parity-python-neural-fronts-20260930` starts from the exact merge above.
 
+### Python neural-primitives implementation and downstream discovery
+
+The bounded tranche now supplies cross-platform BUILD fronts for Python
+`activation-functions`, `matrix`, `loss-functions`, and `perceptron`. The
+perceptron front declares all three leaf packages as exact build-tool edges.
+Direct suites cover the ML01 loss vectors and clamps, ML03 construction and
+extension invariants, ML04 activations and overflow boundaries, and a learned
+AND gate. The activation package exposes the canonical `tanh` surface while
+preserving `tanh_func`; matrix construction now deep-copies numeric grids and
+rejects ragged or invalid values. All four packages have documented Hatch
+metadata, measured coverage, Ruff gates, Windows overrides, and exactly their
+four resolved orphan-ledger records removed.
+
+Local evidence includes 97 direct tests with 99-100% coverage, four clean
+wheel/sdist builds and wheel imports, all four executable predictor smokes,
+the complete Go build-tool suite, and a production build-tool run that selects
+exactly the four changed packages, validates the 38 remaining exemption records,
+and orders the three leaf packages before perceptron. The capability profiles
+remain empty pure-computation declarations.
+
+The downstream audit also found a separate coherent gap. None of the five
+Python predictor program roots has a BUILD front, and metadata-only
+`xor-classifier` requests the nonexistent distribution names `matrix` and
+`loss-functions` instead of the repository package names. Pending owner
+`python-neural-predictor-program-front-and-metadata-coverage` now records this
+work and depends on the four-package tranche; it is not absorbed into the
+current implementation PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
