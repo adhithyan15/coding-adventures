@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — docs name the platform library as the effect's handler
+
+The README and crate docs no longer say photo-picker-app's own XAML handler
+answers `files.open`: Mosaic's platform library does on Compose, SwiftUI, Qt
+and XAML (UI87 §7), and the app's handler only on Flutter.
+
 ### Fixed
 
 - **The "Pick a Photo" button did nothing, on every shipped backend.**

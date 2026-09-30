@@ -14,7 +14,11 @@ entries are gone. Mosaic's XAML platform library (UI87 §7.6) answers
 `files.open` for every WinUI app, and this app claims no effect kinds, so the
 router sent `files.open` to the library and the handler was never reached.
 The generated native-complete `MainWindow` now installs only
-`MosaicPlatformEffects`. Flutter keeps the app's handler until its library
+`MosaicPlatformEffects`. Two visible differences: the picker opens in
+Documents rather than Pictures (the library's default start location), and a
+picked file with no local path fails with "the file dialog failed" instead of
+being read through its stream; the library's failure messages are generic.
+Flutter keeps the app's handler until its library
 lands. The smoke test asserts there is no Compose, SwiftUI, Qt or XAML handler
 and that `host/xaml/` is gone; UI59 §4 is marked retired.
 

@@ -2,6 +2,10 @@
 
 ## Status
 
+> Since superseded for Compose, Qt and XAML: those per-app handlers were
+> retired for Mosaic's platform libraries (UI87 §7.4), which answer this
+> contract for every app. Flutter's handler remains until its library lands.
+
 XAML shipped (PR #15218, merged); Qt shipped (PR #15252, merged);
 Compose shipped (PR #15329, merged); Flutter shipped in this
 revision — the last backend this environment can build. Depends on
@@ -106,7 +110,9 @@ nature of every target platform's real picker API.
 > **Retired (UI87 §7.4).** This XAML handler no longer exists: Mosaic's
 > XAML platform library (UI87 §7.6) answers `files.open` for every app,
 > and `photo-picker-app` claims no effect kinds, so the router sends it
-> there. The section is kept as the design record the library follows.
+> there. The section is kept as a design record; the library replaced it
+> (UI87 §7.6 describes what it does instead, e.g. the window's own handle as
+> the picker's owner).
 
 ### 4.1 Where the handler lives
 

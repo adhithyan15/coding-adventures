@@ -40,9 +40,11 @@ app used to carry (`host/compose/PhotoPickerEffects.kt`,
 `host/qt/PhotoPickerEffects.{h,cpp}`, `host/xaml/PhotoPickerEffects.cs`) were
 retired for it (UI87 §7.4): the app claims no effect kinds, so the router
 sends `files.open` to the library and a package handler would never be
-reached. The XAML handler's design notes (the namespace choice, the owner
-window, the MIME mapping) live on in UI59 §4, which the library follows. The
-Flutter handler follows when that backend's library lands.
+reached. The XAML handler's design is kept as a record in UI59 §4; the
+library replaced it (UI87 §7.6 describes what it does instead -- the window's
+own handle as the picker's owner rather than the foreground window, the
+picker started after the settle). The Flutter handler follows when that
+backend's library lands.
 
 ## The Flutter handler
 
