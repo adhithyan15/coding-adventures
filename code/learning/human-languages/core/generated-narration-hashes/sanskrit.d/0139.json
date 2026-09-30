@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:a3f2cb2ada81f68d",
+  "lessonIds": [
+    "SA-C139-bhavisyat",
+    "SA-C139-svah",
+    "SA-C139-agami",
+    "SA-C139-bhavisyati",
+    "SA-C139-gamisyati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch139.txt",
+  "json": "sanskrit/narration/ch139.json",
+  "textHash": "fnv1a64:da499fd08c73132f",
+  "jsonHash": "fnv1a64:ac91d6b0e43a8b21",
+  "findings": []
+}

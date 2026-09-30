@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C139-gamisyati",
+    "language": "sanskrit",
+    "chapter": 139,
+    "sequence": 6930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2daa08f2815ec80"
+  },
+  "findings": []
+}
