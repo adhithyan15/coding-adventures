@@ -8,21 +8,21 @@ type: word
 headword: le nez
 gloss: nose — masculine, a silent final z, and another genuine cousin of its English counterpart
 concept_tag: FR-BODY-NEZ
-prerequisites: [FR-C31-oeil]
+prerequisites: [FR-C31-oeil, FR-C25-comprendre]
 sounds: [silent-final]
 roots: [nasus-latin]
 etymology_hook: "nez ← Latin nasus, from PIE *nas- — the SAME root as English nose, inherited down the Germanic branch, the same relationship as sel/salt and œuf/egg; English nasal is instead a LEARNED borrowing of the Latin word itself, sitting beside native nose the way lactic sits beside milk"
 duration:
   max_seconds: 240
 requires:
-  knowledge: [FR-LEX-OEIL-01, FR-ETYMON-OEIL-02]
+  knowledge: [FR-LEX-OEIL-01, FR-ETYMON-OEIL-02, FR-GRAMMAR-COMPRENDRE-STEM-03]
 introduces:
   knowledge: [FR-LEX-NEZ-03, FR-ETYMON-NEZ-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-NEZ-03, FR-ETYMON-NEZ-04, FR-LEX-OEIL-01, FR-ETYMON-OEIL-02]
+  knowledge: [FR-LEX-NEZ-03, FR-ETYMON-NEZ-04, FR-LEX-OEIL-01, FR-ETYMON-OEIL-02, FR-GRAMMAR-COMPRENDRE-STEM-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [FR-C31-oeil]
 # le nez — the nose, another real cousin
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OEIL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OEIL-01, FR-GRAMMAR-COMPRENDRE-STEM-03] -->
 
 [PAUSE 2s] Below the eye, the nose — and a third pair of true cousins, joining
 *sel*/*salt* and *œuf*/*egg*.
+
+[PAUSE 2s] *Comprendre* is *prendre* with a prefix, so it breaks in the same places: *je comprends*, *nous comprenons*.
 
 ## You'll want to know: the word
 <!-- hl-knowledge: introduces=[FR-LEX-NEZ-03]; assesses=[] -->

@@ -8,21 +8,21 @@ type: word
 headword: a boca
 gloss: mouth — Vulgar Latin's word for "cheek," promoted to cover the whole mouth
 concept_tag: PT-BODY-MOUTH
-prerequisites: [PT-C26-orelha, PT-C02-mais-ou-menos]
+prerequisites: [PT-C26-orelha, PT-C02-mais-ou-menos, PT-C22-jogar-brincar-tocar, PT-C22-jogar-brincar-tocar]
 sounds: []
 roots: [bucca-latin]
 etymology_hook: "boca <- Latin bucca, which in Classical Latin meant specifically 'cheek' (puffed out, as for blowing) -- Vulgar Latin generalised it to the whole mouth and pushed the old word for mouth, os/oris, into the background everywhere except learned compounds like oral; English buccal keeps bucca's original cheek sense"
 duration:
   max_seconds: 214
 requires:
-  knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03]
+  knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03, PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04]
 introduces:
   knowledge: [PT-LEX-BOCA-02, PT-ETYMON-BOCA-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03, PT-LEX-BOCA-02, PT-ETYMON-BOCA-03, PT-GRAMMAR-MAIS-OU-MENOS-04, PT-SOUND-MAIS-OU-MENOS-02]
+  knowledge: [PT-LEX-ORELHA-02, PT-ETYMON-ORELHA-03, PT-LEX-BOCA-02, PT-ETYMON-BOCA-03, PT-GRAMMAR-MAIS-OU-MENOS-04, PT-SOUND-MAIS-OU-MENOS-02, PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [PT-C26-orelha, PT-C02-mais-ou-menos]
 # a boca — the cheek that took over the mouth
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-JOGAR-BRINCAR-TOCAR-02, PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04] -->
 
 [PAUSE 2s] The word for what all this talking has been coming out of — and
 it started life meaning something narrower.
+
+[PAUSE 2s] Three ways to play: *jogo futebol*, *o meu irmão brinca*, *toco piano*. Portugal says *jogar à bola*; Brazil says *jogar bola*.
 
 ## You'll want to know: The word
 <!-- hl-knowledge: introduces=[PT-LEX-BOCA-02]; assesses=[] -->

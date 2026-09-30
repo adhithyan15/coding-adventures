@@ -8,21 +8,21 @@ type: word
 headword: deux
 gloss: two
 concept_tag: FR-NUM-2
-prerequisites: [FR-C06-un]
+prerequisites: [FR-C06-un, FR-C05-travailler]
 sounds: [vowel-eu, silent-final]
 roots: [duo-latin]
 etymology_hook: "deux ← Latin duo → English duo, dual, duet, double; Spanish dos is the same duo worn shorter"
 duration:
   max_seconds: 170
 requires:
-  knowledge: [FR-LEX-UN-01]
+  knowledge: [FR-LEX-UN-01, FR-CULTURE-TRAVAILLER-08]
 introduces:
   knowledge: [FR-LEX-DEUX-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-UN-01, FR-LEX-DEUX-03]
+  knowledge: [FR-LEX-UN-01, FR-LEX-DEUX-03, FR-CULTURE-TRAVAILLER-08]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [FR-C06-un]
 # deux — two
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-CULTURE-TRAVAILLER-08] -->
 
 [PAUSE 2s] One down. The second number brings a vowel your mouth has to be
 taught, and a final letter you must **not** say.
+
+[PAUSE 2s] *Travailler* and Spanish *trabajar* are twins from one Latin word: French kept the *-al-*, Spanish softened it to *-aj-*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[FR-LEX-DEUX-03]; assesses=[] -->

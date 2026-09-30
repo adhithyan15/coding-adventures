@@ -8,21 +8,21 @@ type: phrase
 headword: s'il vous plaît
 gloss: please (literally "if it pleases you")
 concept_tag: COURTESY-PLEASE
-prerequisites: [FR-C01-bonjour]
+prerequisites: [FR-C01-bonjour, FR-C16-pronominal-seul]
 sounds: [liaison, nasal-vowel, silent-final-t]
 roots: [placere]
 etymology_hook: "s'il vous plaît is literally 'if it pleases you' — plaît ← Latin placēre, root of English please, pleasure, placid"
 duration:
   max_seconds: 194
 requires:
-  knowledge: []
+  knowledge: [FR-GRAM-PRONOMINAL-SEUL-09]
 introduces:
   knowledge: [FR-LEX-PLEASE-02, FR-ETYMON-PLAIRE-03, FR-GRAMMAR-PLEASE-REGISTER-04]
 introduces_idioms: [FR-IDIOM-SIL-VOUS-PLAIT-PLEASE-01]
 introduces_senses: []
 introduces_culture_claims: [FR-CULTURE-PLEASE-REGISTER-01]
 practises:
-  knowledge: [FR-LEX-PLEASE-02, FR-ETYMON-PLAIRE-03, FR-GRAMMAR-PLEASE-REGISTER-04]
+  knowledge: [FR-LEX-PLEASE-02, FR-ETYMON-PLAIRE-03, FR-GRAMMAR-PLEASE-REGISTER-04, FR-GRAM-PRONOMINAL-SEUL-09]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [FR-C01-bonjour]
 # s'il vous plaît — please
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-PRONOMINAL-SEUL-09] -->
 
 [PAUSE 2s] French doesn't order you to do things — it asks, very politely, *if
 it would please you.*
+
+[PAUSE 2s] Some verbs exist only with *se*: *se souvenir*, to remember. *Elles se sont souvenues.*
 
 ## The phrase, taken apart
 <!-- hl-knowledge: introduces=[FR-LEX-PLEASE-02, FR-ETYMON-PLAIRE-03]; assesses=[] -->

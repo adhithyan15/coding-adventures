@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:292b0fbd0695b25f",
+  "sourceHash": "fnv1a64:774f371e31d04c5c",
   "lessons": [
     {
       "id": "FR-C19-sil-vous-plait",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c1501e241afb67d",
+      "sourceHash": "fnv1a64:1549ea1e9fe979fe",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "French doesn't order you to do things — it asks, very politely, if it would please you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Some verbs exist only with se: se souvenir, to remember. Elles se sont souvenues."
             }
           ]
         },

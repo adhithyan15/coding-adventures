@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:9b91cd772ebaa6c8",
+  "sourceHash": "fnv1a64:28af1eb4fb9d164d",
   "lessons": [
     {
       "id": "FR-C06-un",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1503e66946cc0ae8",
+      "sourceHash": "fnv1a64:a621c48810779ad6",
       "notice": null,
       "blocks": [
         {
@@ -193,6 +193,16 @@
             {
               "kind": "speech",
               "text": "One down. The second number brings a vowel your mouth has to be taught, and a final letter you must not say."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Travailler and Spanish trabajar are twins from one Latin word: French kept the -al-, Spanish softened it to -aj-."
             }
           ]
         },

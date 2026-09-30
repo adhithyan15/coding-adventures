@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 41,
-  "sourceHash": "fnv1a64:f6ff27f20d5fa116",
+  "sourceHash": "fnv1a64:acc38b2445aef366",
   "lessonIds": [
     "GE-C28-kaffee",
     "GE-C28-tee",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "german/narration/ch41.txt",
   "json": "german/narration/ch41.json",
-  "textHash": "fnv1a64:b54db887f1baf66f",
-  "jsonHash": "fnv1a64:d4fc25564b684471",
+  "textHash": "fnv1a64:0c8af7419edb3046",
+  "jsonHash": "fnv1a64:f5a694dbe8862249",
   "findings": []
 }

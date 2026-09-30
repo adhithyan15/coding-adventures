@@ -8,21 +8,21 @@ type: grammar
 headword: est-ce que
 gloss: "the phrase that announces a question before it starts"
 concept_tag: FR-QUESTION-MARKER
-prerequisites: [FR-C32-intonation]
+prerequisites: [FR-C32-intonation, FR-C24-aider]
 sounds: []
 roots: []
 etymology_hook: "French asks a question three ways -- voice, est-ce que, inversion -- and they differ in register rather than in meaning."
 duration:
   max_seconds: 240
 requires:
-  knowledge: [FR-GRAMMAR-INTONATION-01]
+  knowledge: [FR-GRAMMAR-INTONATION-01, FR-LEX-AIDER-07]
 introduces:
   knowledge: [FR-GRAMMAR-ESTCEQUE-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [FR-CULTURE-EST-CE-QUE-NEUTRAL-WRITING-01]
 practises:
-  knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02]
+  knowledge: [FR-GRAMMAR-INTONATION-01, FR-GRAMMAR-ESTCEQUE-02, FR-LEX-AIDER-07]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,9 +33,11 @@ reviews_of: [FR-C32-intonation]
 # est-ce que — the phrase that announces a question before it starts
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAMMAR-INTONATION-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-GRAMMAR-INTONATION-01, FR-LEX-AIDER-07] -->
 
 [PAUSE 2s] Recall the previous piece before adding another.
+
+[PAUSE 2s] *Vous m'aidez.* An ordinary *-er* verb: *j'aide*, *nous aidons*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[FR-GRAMMAR-ESTCEQUE-02]; assesses=[FR-GRAMMAR-INTONATION-01] -->

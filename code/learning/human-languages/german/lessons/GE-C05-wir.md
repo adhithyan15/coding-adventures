@@ -15,14 +15,14 @@ etymology_hook: "wir is English we with the German w said as v, and its ending -
 duration:
   max_seconds: 180
 requires:
-  knowledge: [GE-LEX-ER-01, GE-GRAMMAR-VERB-STEM-01, GE-SOUND-WIE-01, GE-LEX-WOHNEN-01]
+  knowledge: [GE-LEX-ER-01, GE-GRAMMAR-VERB-STEM-01, GE-SOUND-WIE-01, GE-LEX-WOHNEN-01, GE-SOUND-WOHNEN-01]
 introduces:
   knowledge: [GE-LEX-WIR-01, GE-GRAMMAR-WIR-EN-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-WIR-01, GE-GRAMMAR-WIR-EN-02, GE-LEX-ER-01, GE-GRAMMAR-VERB-STEM-01, GE-SOUND-WIE-01, GE-LEX-WOHNEN-01]
+  knowledge: [GE-LEX-WIR-01, GE-GRAMMAR-WIR-EN-02, GE-LEX-ER-01, GE-GRAMMAR-VERB-STEM-01, GE-SOUND-WIE-01, GE-LEX-WOHNEN-01, GE-SOUND-WOHNEN-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [GE-C05-er-sie-es]
 # wir — "we," and an ending you have already been saying
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ER-01, GE-GRAMMAR-VERB-STEM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ER-01, GE-GRAMMAR-VERB-STEM-01, GE-SOUND-WOHNEN-01] -->
 
 [PAUSE 2s] Three singular people down. Now the plural — and the first one is
 nearly free.
+
+[PAUSE 2s] Say *wohnen*: the *w* is an English *v*, and the *h* only stretches the *o*. *VOH-nen*.
 
 ## You'll want to know: wir
 <!-- hl-knowledge: introduces=[GE-LEX-WIR-01]; assesses=[GE-SOUND-WIE-01] -->

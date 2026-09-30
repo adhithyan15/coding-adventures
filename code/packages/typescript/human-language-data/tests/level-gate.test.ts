@@ -719,18 +719,62 @@ describe("etymology is a hook, not a skill", () => {
     // assertion. A pinned integer on one track's unfinished work serialises every
     // parallel authoring tranche behind this file, and it names a number that is
     // supposed to fall to zero. What is checked now is the waiver itself.
-    const gate = realReport().levelGate!;
-    const waiving = gate.tracks.filter((track) =>
-      track.blockers.some(
-        (b) => b.criterion === "reinforcement" && /etymology hook\(s\) waived/.test(b.detail),
-      ),
-    );
+    const e = loadEverything();
+    const base = measureContinuity(e.lessons);
+    const gateInputs = {
+      lessons: e.lessons,
+      levels: summarizeLevels(e.lessons, e.curricula, e.spine),
+      curricula: e.curricula,
+      spine: e.spine,
+      ramp: measureRamp(e.lessons, loadChapterPolicy()),
+    };
+
     // The waiver must be VISIBLE. A silently loosened gate is worse than a strict one.
-    expect(waiving.length).toBeGreaterThan(0);
-    for (const track of waiving) {
-      const reinforcement = track.blockers.find((b) => b.criterion === "reinforcement")!;
-      expect(reinforcement.detail).toContain(`atom(s) at or below ${track.inProgressAt} are rev`);
-    }
+    //
+    // This used to read the waiver off whichever real track still had a reinforcement
+    // blocker. The A2 reinforcement tranches closed the last of them, so the corpus no
+    // longer holds one, and the witness is built instead: take a track that has
+    // waived etymology atoms at or below the level it is working on, add ONE
+    // non-etymology atom there that nothing revisits, and read the blocker that
+    // produces. The detail must name the level and the number of hooks waived.
+    const baseline = runLevelGate({ ...gateInputs, continuity: base });
+    const stageOf = new Map(e.spine.nodes.map((node) => [node.id, node.stage]));
+    const nodeOf = lessonSpineNodes(e.curricula);
+    const atOrBelow = (lessonId: string, level: CefrLevel) => {
+      const stage = stageOf.get(nodeOf.get(lessonId) ?? "");
+      return stage !== undefined && levelRank(stage as CefrLevel) <= levelRank(level);
+    };
+    const witness = baseline.tracks
+      .filter((t) => t.inProgressAt !== null)
+      .sort((a, b) => a.language.localeCompare(b.language))
+      .find((t) =>
+        base.reinforcement.some(
+          (d) => d.language === t.language && isEtymologyAtom(d.atom) && atOrBelow(d.introducedBy, t.inProgressAt!),
+        ),
+      )!;
+    expect(witness).toBeDefined();
+    const level = witness.inProgressAt!;
+    const host = e.lessons
+      .filter((l) => l.language === witness.language)
+      .map((l) => l.realization.lessonId)
+      .sort()
+      .find((id) => stageOf.get(nodeOf.get(id) ?? "") === level)!;
+    const thinAtom = {
+      atom: "SYNTHETIC-GRAMMAR-UNREVISITED-01",
+      language: witness.language,
+      introducedBy: host,
+      introducedAt: 0,
+      missed: ["R1", "R2", "R3", "R4"],
+      revisits: 0,
+    } as ContinuityReport["reinforcement"][number];
+    const withThin = runLevelGate({
+      ...gateInputs,
+      continuity: { ...base, reinforcement: [...base.reinforcement, thinAtom] },
+    }).tracks.find((t) => t.language === witness.language)!;
+    const reinforcement = withThin.blockers.find((b) => b.criterion === "reinforcement")!;
+    expect(reinforcement).toBeDefined();
+    expect(reinforcement.detail).toContain(`atom(s) at or below ${level} are rev`);
+    expect(reinforcement.detail).toMatch(/\(\d+ etymology hook\(s\) waived\)/);
 
     // And it must BITE. Two earlier versions of this assertion did not: `shortfall <
     // shortfall + waived` is true of any number, and comparing against a whole-track
@@ -743,15 +787,6 @@ describe("etymology is a hook, not a skill", () => {
     // waived and some track's reinforcement shortfall must rise; with the waiver
     // deleted the rename changes nothing at all and this fails. No corpus figure is
     // pinned, so no authoring tranche has to edit it.
-    const e = loadEverything();
-    const base = measureContinuity(e.lessons);
-    const gateInputs = {
-      lessons: e.lessons,
-      levels: summarizeLevels(e.lessons, e.curricula, e.spine),
-      curricula: e.curricula,
-      spine: e.spine,
-      ramp: measureRamp(e.lessons, loadChapterPolicy()),
-    };
     const renamed: ContinuityReport = {
       ...base,
       reinforcement: base.reinforcement.map((defect) =>

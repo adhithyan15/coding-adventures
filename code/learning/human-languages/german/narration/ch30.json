@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Head and Hand",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e4fcf3d81fefd049",
+  "sourceHash": "fnv1a64:ae4f4645456b81a5",
   "lessons": [
     {
       "id": "GE-C17-kopf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58a02f849545e5dc",
+      "sourceHash": "fnv1a64:ebb8bddc5527f4a6",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Learn the first body part with its article and its characteristic final sound."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In front of a noun, a participle takes an ending like an adjective: der angekommene Zug, ein geschriebener Brief."
             }
           ]
         },

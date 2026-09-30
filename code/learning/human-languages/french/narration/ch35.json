@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Eyes, Nose, Mouth, Stomach",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:18edd6c5c63171d5",
+  "sourceHash": "fnv1a64:6b1c64462d01d57b",
   "lessons": [
     {
       "id": "FR-C31-oeil",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19f24245d7a066ff",
+      "sourceHash": "fnv1a64:3a7563f94bfd6fc4",
       "notice": null,
       "blocks": [
         {
@@ -178,6 +178,16 @@
             {
               "kind": "speech",
               "text": "Below the eye, the nose — and a third pair of true cousins, joining sel/salt and œuf/egg."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Comprendre is prendre with a prefix, so it breaks in the same places: je comprends, nous comprenons."
             }
           ]
         },

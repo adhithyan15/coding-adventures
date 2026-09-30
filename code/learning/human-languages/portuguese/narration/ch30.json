@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Arm, Leg, Foot, Finger",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:25b11cc69e5a707f",
+  "sourceHash": "fnv1a64:7660fc1fefca1870",
   "lessons": [
     {
       "id": "PT-C30-braco",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:060583695a2b7033",
+      "sourceHash": "fnv1a64:92159cdf155688f2",
       "notice": null,
       "blocks": [
         {
@@ -159,6 +159,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: say the Portuguese for tenth, then the Portuguese for an arm."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Encontramo-nos ao meio-dia — we meet at midday. Say it as one unit."
             }
           ]
         },
@@ -388,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e69aff258329b66",
+      "sourceHash": "fnv1a64:68a8ea6489a7a4a2",
       "notice": null,
       "blocks": [
         {
@@ -405,6 +415,16 @@
             {
               "kind": "speech",
               "text": "Before the new one: say the Portuguese for a leg, then the Portuguese for a foot."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tocar also means to touch. You touch with a mão, and a piano wants as duas mãos: duas, because mão is feminine."
             }
           ]
         },

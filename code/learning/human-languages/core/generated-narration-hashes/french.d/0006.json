@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 6,
-  "sourceHash": "fnv1a64:9b91cd772ebaa6c8",
+  "sourceHash": "fnv1a64:28af1eb4fb9d164d",
   "lessonIds": [
     "FR-C06-un",
     "FR-C06-deux",
@@ -20,7 +20,7 @@
   "drivablePrefix": 12,
   "text": "french/narration/ch06.txt",
   "json": "french/narration/ch06.json",
-  "textHash": "fnv1a64:95705f94dcbe9ab6",
-  "jsonHash": "fnv1a64:d9b1a3892a59dc56",
+  "textHash": "fnv1a64:bb55672083ee7d8b",
+  "jsonHash": "fnv1a64:e1401035a00390c7",
   "findings": []
 }
