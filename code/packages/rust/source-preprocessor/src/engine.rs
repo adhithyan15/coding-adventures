@@ -300,6 +300,45 @@ fn apply_directive(
                 // pathological argument list before any work is done on it.
                 check_group_depth(&condition, bounds.condition_depth, here)?;
 
+                // Give the dialect one non-growing rewrite pass before macro
+                // expansion. This is the seam required by operators such as
+                // C's `defined(NAME)`: the dialect resolves the operator from
+                // the table while NAME is still spelled as written, then the
+                // generic engine expands everything that remains.
+                let raw_token_count = condition.len();
+                let raw_text_bytes = condition.iter().fold(0_u64, |sum, token| {
+                    sum.saturating_add(token.value.len() as u64)
+                });
+                let condition = dialect.prepare_condition(condition, macros).map_err(|error| {
+                    let position = error.position().or(Some(here));
+                    error.at_opt(position)
+                })?;
+                if condition.len() > raw_token_count {
+                    return Err(PpError::new(
+                        "dialect condition preparation must not increase the token count",
+                    )
+                    .at(here));
+                }
+                let prepared_text_bytes = condition.iter().fold(0_u64, |sum, token| {
+                    sum.saturating_add(token.value.len() as u64)
+                });
+                if prepared_text_bytes > raw_text_bytes {
+                    return Err(PpError::new(
+                        "dialect condition preparation must not increase the text bytes",
+                    )
+                    .at(here));
+                }
+                if condition
+                    .iter()
+                    .any(|token| token.value.len() as u64 > bounds.token_spelling_bytes)
+                {
+                    return Err(PpError::new(format!(
+                        "a token's spelling exceeds {} bytes",
+                        bounds.token_spelling_bytes
+                    ))
+                    .at(here));
+                }
+
                 // Expand macros in the controlling expression before handing it
                 // to the dialect.
                 //
@@ -310,12 +349,12 @@ fn apply_directive(
                 // example (§7) is exactly that shape, so the canonical
                 // illustration was broken until this line existed.
                 //
-                // It has to happen HERE rather than in a dialect: a dialect
-                // receives only `&[Token]` and has no access to the macro
-                // table, so no dialect could do better however it were
-                // written. Pushing a table into each dialect would make every
-                // dialect stateful and duplicate `macros::expand` per
-                // language — the duplication this crate exists to remove.
+                // It has to happen HERE rather than in a dialect. The
+                // preparation hook can inspect the table only to resolve
+                // protected operators; it deliberately does not own ordinary
+                // expansion. That keeps each dialect stateless and avoids
+                // duplicating `macros::expand` per language — the duplication
+                // this crate exists to remove.
                 let condition = if macros.is_empty() {
                     condition
                 } else {

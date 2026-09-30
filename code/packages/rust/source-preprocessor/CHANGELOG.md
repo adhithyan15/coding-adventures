@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — VM-069 conditional operand protection
+
+- `Dialect::prepare_condition` now runs after the raw grouping-depth check and
+  before ordinary macro expansion. A dialect can resolve an operator such as
+  C's `defined(NAME)` through `MacroTable::is_defined`, so the operand remains
+  unexpanded while macros elsewhere in the expression still expand normally.
+- The default hook is an identity transform, preserving MacroOct and every
+  dialect without a protected condition operator. The engine rejects a hook
+  that increases the token count or total spelling bytes, and attaches the
+  controlling directive's location to otherwise unlocated hook errors.
+- Integration coverage proves parenthesized and bare defined-style operands,
+  expansion of the rest of the condition, malformed syntax, skipped groups,
+  and the non-growing contract.
+
 ## Unreleased — VM-069 expansion provenance
 
 - Expanded tokens now retain the physical position of their macro-body

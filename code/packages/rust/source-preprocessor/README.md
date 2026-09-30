@@ -109,6 +109,14 @@ sees them, so `@if LED_PORT == 1` takes the true branch after
 `@define LED_PORT 1`. A name that *survives* expansion is genuinely undefined
 and still reads as 0, which is C's rule.
 
+Operators whose operands must not expand have a deliberately narrower seam.
+`Dialect::prepare_condition` runs before ordinary condition expansion and can
+query `MacroTable::is_defined`; a C dialect can therefore reduce
+`defined(NAME)` to a truth-value token before `NAME` becomes an expansion
+candidate. The engine then expands the rest of the expression itself. The
+default hook changes nothing, and the engine rejects a result with more tokens
+than the source expression so preparation cannot bypass the production budget.
+
 That was broken when `@define` first landed and is worth recording for where it
 had to be fixed: `eval_condition` receives a bare `&[Token]` with no table and
 no expansion applied, so *no dialect could have fixed it* — it was an engine
@@ -126,9 +134,9 @@ prefixes are memoized and capped by the expansion-round limit.
 
 One implementation limitation remains recorded rather than papered over:
 argument pre-expansion is the one place the expander recurses natively; it is
-bounded by `macro_depth`, which assumes roughly 1 MiB of stack. The separate
-`defined()` operand rule for C controlling expressions also remains a later
-VM-069 slice.
+bounded by `macro_depth`, which assumes roughly 1 MiB of stack. The generic
+`defined()` operand contract is now ready; recognizing C's exact tokens belongs
+to the later C dialect slice.
 
 **Slice 3**: MacroNib, a second dialect in a third syntax. **Slice 4**: C.
 **Slice 5**: COBOL `COPY`.

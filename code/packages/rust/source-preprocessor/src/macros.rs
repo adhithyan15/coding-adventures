@@ -142,6 +142,15 @@ impl MacroTable {
         self.defs.get(name)
     }
 
+    /// Whether `name` currently has a macro definition.
+    ///
+    /// Conditional-expression syntax such as C's `defined(name)` needs this
+    /// answer without exposing the stored definition or expanding `name`.
+    #[must_use]
+    pub fn is_defined(&self, name: &str) -> bool {
+        self.defs.contains_key(name)
+    }
+
     #[must_use]
     pub fn is_empty(&self) -> bool {
         self.defs.is_empty()

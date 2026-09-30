@@ -204,11 +204,15 @@ something to guess at now.
 /// what a directive means.
 pub trait Dialect {
     /// Recognise a logical line as a directive. `None` = ordinary source.
-    fn directive_of(&self, line: &[Token]) -> Option<Directive>;
+    fn classify(&self, line: &[Token]) -> Option<Result<Directive, PpError>>;
+
+    /// Resolve operators whose operands must remain unexpanded. Called after
+    /// the raw depth check and before the engine expands the rest.
+    fn prepare_condition(&self, toks: Vec<Token>, macros: &MacroTable)
+        -> Result<Vec<Token>, PpError> { Ok(toks) }
 
     /// Evaluate a conditional's controlling expression.
-    fn eval_condition(&self, toks: &[Token], macros: &MacroTable)
-        -> Result<bool, PpError>;
+    fn eval_condition(&self, toks: &[Token]) -> Result<bool, PpError>;
 
     /// Lex an included unit's text. The engine calls this, never a lexer
     /// directly, so each language keeps its own grammar.
@@ -236,6 +240,17 @@ pub trait SourceFs {
     fn read(&self, file: FileId) -> Result<SourceText, PpError>;
 }
 ```
+
+`prepare_condition` is the contract for C's exceptional `defined` rule. A C
+dialect recognizes `defined NAME` or `defined(NAME)`, queries
+`MacroTable::is_defined`, and replaces the whole operator with a truth-value
+token. The operand consequently never enters ordinary macro expansion, while
+the engine still expands every remaining macro before `eval_condition`. The
+default identity implementation keeps dialects without such an operator
+unchanged. Preparation must not increase the token count or total token text
+bytes; the engine rejects a growing result and any token exceeding the spelling
+limit. An unlocated preparation error receives the controlling directive's
+source position.
 
 **`FileId` names a retained open handle, and that is load-bearing.** Splitting
 the operation across two calls would otherwise reopen the very TOCTOU the rules
