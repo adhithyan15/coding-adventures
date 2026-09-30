@@ -572,7 +572,7 @@ use diagram_ir::{
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
+    EventModelDataBlock, EventModelDiagram, EventModelEntityKind, EventModelFrame, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RadarConfig, RadarGraticule, RelKind,
     RequirementElementMetadata, RequirementKind,
@@ -4010,8 +4010,26 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
         title: None,
         accessibility_title: None,
         accessibility_description: None,
+        data_blocks: Vec::new(),
         frames: Vec::new(),
     };
+    let mut data_blocks = HashMap::<String, EventModelDataBlock>::new();
+    for token in tokens.iter().filter(|token| token_name(token) == "DATA_BLOCK") {
+        let open = token.value.find('{').expect("grammar requires data block to open");
+        let close = token.value.rfind('}').expect("grammar requires data block to close");
+        let fields = token.value[..open].split_whitespace().collect::<Vec<_>>();
+        let id = fields[1].to_string();
+        let data_type = fields.get(2).map(|value| value.trim_matches('`').to_string());
+        let block = EventModelDataBlock {
+            id: id.clone(),
+            data_type,
+            data: token.value[open + 1..close].trim().to_string(),
+        };
+        if data_blocks.insert(id.clone(), block.clone()).is_some() {
+            return Err(token_error(token, format!("duplicate event-model data block {id:?}")));
+        }
+        diagram.data_blocks.push(block);
+    }
     let mut frame_ids = HashSet::new();
     let mut previous_id: Option<String> = None;
 
@@ -4034,7 +4052,7 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
             }
             "FRAME_STATEMENT" => {
                 let inline_open = token.value.find('{');
-                let data = inline_open.map(|open| {
+                let inline_data = inline_open.map(|open| {
                     let close = token.value.rfind('}').expect("grammar requires inline data to close");
                     token.value[open + 1..close].trim().to_string()
                 });
@@ -4083,10 +4101,21 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                     kind,
                     reset,
                     source_frames,
+                    data_reference: None,
                     data_type,
-                    data,
+                    data: inline_data,
                 });
                 previous_id = Some(id);
+            }
+            "DATA_REFERENCE" => {
+                let reference = token.value[2..token.value.len() - 2].to_string();
+                let block = data_blocks.get(&reference).ok_or_else(|| {
+                    token_error(token, format!("unknown event-model data block {reference:?}"))
+                })?;
+                let frame = diagram.frames.last_mut().expect("grammar attaches data references to frames");
+                frame.data_reference = Some(reference);
+                frame.data_type = block.data_type.clone();
+                frame.data = Some(block.data.clone());
             }
             _ => {}
         }

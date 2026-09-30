@@ -1290,6 +1290,7 @@ pub fn layout_event_model_diagram(
             width: frame_width,
             height: frame_height,
             label: frame.label.clone(),
+            data_reference: frame.data_reference.clone(),
             data_label: frame.data.as_ref().map(|data| match &frame.data_type {
                 Some(data_type) => format!("{data_type}: {data}"),
                 None => data.clone(),
@@ -2406,6 +2407,11 @@ mod tests {
             title: Some("Checkout".into()),
             accessibility_title: None,
             accessibility_description: None,
+            data_blocks: vec![EventModelDataBlock {
+                id: "OrderData".into(),
+                data_type: Some("json".into()),
+                data: "\"total\": 42".into(),
+            }],
             frames: vec![
                 EventModelFrame {
                     id: "01".into(),
@@ -2415,6 +2421,7 @@ mod tests {
                     kind: EventModelEntityKind::Ui,
                     reset: true,
                     source_frames: Vec::new(),
+                    data_reference: None,
                     data_type: None,
                     data: None,
                 },
@@ -2426,6 +2433,7 @@ mod tests {
                     kind: EventModelEntityKind::Command,
                     reset: false,
                     source_frames: vec!["01".into()],
+                    data_reference: Some("OrderData".into()),
                     data_type: Some("json".into()),
                     data: Some("\"total\": 42".into()),
                 },
@@ -2440,8 +2448,13 @@ mod tests {
         )).count(), 1);
         assert!(layout.items.iter().any(|item| matches!(
             item,
-            LayoutedEventModelItem::Frame { data_label: Some(data), .. }
-                if data == "json: \"total\": 42"
+            LayoutedEventModelItem::Frame {
+                data_reference: Some(reference),
+                data_label: Some(data),
+                ..
+            }
+                if reference == "OrderData"
+                    && data == "json: \"total\": 42"
         )));
     }
 }

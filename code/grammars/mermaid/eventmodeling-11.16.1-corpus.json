@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, explicit sources, typed or untyped inline data, titles, and accessibility metadata.",
+  "scope": "Native partial slice: timeline/reset frames, entity aliases, qualified names, explicit sources, typed or untyped inline data, reusable multiline data blocks, titles, and accessibility metadata.",
   "fixtures": [
     {
       "id": "state-change",
@@ -23,6 +23,10 @@
     {
       "id": "inline-data",
       "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem { description: string }\ntf 03 evt ItemAdded `json`{ \"description\": \"book\" }"
+    },
+    {
+      "id": "data-blocks",
+      "source": "eventmodeling\ntf 01 ui CartUI\ntf 02 cmd AddItem [[AddItemData]]\ntf 03 evt ItemAdded [[ItemAddedData]]\ndata AddItemData `json`{\n  \"description\": \"book\",\n  \"quantity\": 2\n}\ndata ItemAddedData {\n  description: string\n  quantity: number\n}"
     }
   ]
 }
