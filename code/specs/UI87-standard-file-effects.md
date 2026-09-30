@@ -315,7 +315,10 @@ shape the rest:
   sticky) applied to the temporary through the open handle. Unverified:
   `FileSavePicker` may create an empty placeholder at the chosen path before
   returning (UWP's did); if it does, the save takes the `File.Replace` path
-  over that placeholder, whose ACL is the folder's anyway.
+  over that placeholder, whose ACL is the folder's anyway. A chosen path
+  that is a symlink or junction is written through to its target by
+  `File.Replace` (the move replaced the link itself); the person picked that
+  path, so this is the file they chose.
   .NET has no `O_NONBLOCK`, so unlike SwiftUI and Qt a Unix FIFO cannot be
   refused without blocking; the WinUI picker shows only the Windows file
   system, which has none. `Convert.FromBase64String` skips whitespace, so the
