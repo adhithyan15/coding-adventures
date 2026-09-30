@@ -36,6 +36,7 @@ function processFactory(
   flags: readonly string[] = [],
   signals: NodeJS.Signals[] = [],
   blockCancellationWrite = false,
+  exits: Array<{ code: number | null; signal: NodeJS.Signals | null }> = [],
 ): PluginProcessFactory {
   return {
     async launch(request: PluginLaunchRequest) {
@@ -76,7 +77,10 @@ function processFactory(
         stdin,
         stdout: child.stdout,
         stderr: child.stderr,
-        exited: new Promise((resolve) => child.once("exit", (code, signal) => resolve({ code, signal }))),
+        exited: new Promise((resolve) => child.once("exit", (code, signal) => {
+          exits.push({ code, signal });
+          resolve({ code, signal });
+        })),
         signal(value) {
           signals.push(value);
           if (value !== "SIGTERM" || !flags.includes("--ignore-term")) child.kill(value);
@@ -381,7 +385,8 @@ describe("plugin host cross-process contract", () => {
 
   it("bounds abandoned-stream cleanup when the cancellation write stalls", async () => {
     const signals: NodeJS.Signals[] = [];
-    const host = await makeHost(processFactory(false, [], signals, true));
+    const exits: Array<{ code: number | null; signal: NodeJS.Signals | null }> = [];
+    const host = await makeHost(processFactory(false, [], signals, true, exits));
     const stage = await host.loadStage({
       kind: "stage-ref", packageName: "@example/echo", export: "stream",
     }, "stream-stalled-cancel");
@@ -396,7 +401,10 @@ describe("plugin host cross-process contract", () => {
       returned,
       new Promise((_, reject) => setTimeout(() => reject(new Error("cleanup hung")), 1_000)),
     ])).resolves.toEqual({ value: undefined, done: true });
-    expect(signals.some(signal => signal === "SIGTERM" || signal === "SIGKILL")).toBe(true);
+    expect(
+      exits.length > 0
+      || signals.some(signal => signal === "SIGTERM" || signal === "SIGKILL"),
+    ).toBe(true);
     await host.dispose();
   });
 

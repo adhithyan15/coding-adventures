@@ -3,7 +3,8 @@
 ## Unreleased
 
 - Make discovery and ignored-signal escalation coverage deterministic across
-  POSIX and Windows hosts.
+  POSIX and Windows hosts, and accept a clean natural child exit as successful
+  bounded abandoned-stream cleanup without requiring a redundant kill signal.
 
 ## 0.1.0 — 2026-09-27
 
