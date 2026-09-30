@@ -65,12 +65,12 @@
 // subset `z80-backend` actually uses.
 
 pub use z80_simulator::encoding::{
-    assemble, encode_add_hl_rp, encode_alu_reg, encode_ld_a_n, encode_ld_r_n, encode_ld_r_r,
-    encode_ld_rp_nn,
+    assemble, encode_add_hl_rp, encode_alu_reg, encode_jr_c, encode_jr_nc, encode_jr_nz,
+    encode_jr_z, encode_ld_a_n, encode_ld_r_n, encode_ld_r_r, encode_ld_rp_nn,
 };
 pub use z80_simulator::opcodes::{
-    ALU_ADC, ALU_ADD, ALU_AND, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, PAIR_DE, PAIR_HL,
-    REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, RET,
+    ALU_ADC, ALU_ADD, ALU_AND, ALU_CP, ALU_OR, ALU_SBC, ALU_SUB, ALU_XOR, CPL, HALT, PAIR_DE,
+    PAIR_HL, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, RET,
 };
 
 // ===========================================================================

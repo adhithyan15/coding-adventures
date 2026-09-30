@@ -10,7 +10,7 @@ Lowers a `Vec<CIRInstr>` into Intel 8086 machine code bytes via
 to be loaded into `intel8086-simulator` (or any compatible external
 8086/8088 emulator).
 
-## Scope (WORD02)
+## Scope (WORD03a)
 
 | CIR op | Lowering |
 |--------|----------|
@@ -19,6 +19,7 @@ to be loaded into `intel8086-simulator` (or any compatible external
 | matching `ret_u8`, `ret_bool`, `ret_u16`; `ret_void` | `HLT` |
 | `add`, `sub`, `and`, `or`, `xor` on `u8` and `u16` | register ALU with wrapping result |
 | `not_u8`, `not_u16` | XOR with the declared-width mask, preserving another live value |
+| `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` | unsigned `CMP` and short branch, normalized `bool` result |
 | Other operations | `None` (compile failure) |
 
 The historical `const_i64`/`ret_i64` 16-bit smoke path remains for
@@ -29,6 +30,8 @@ value and simultaneous byte/word values are explicit errors; memory spills
 and control flow remain later rungs. Typed returns must match the value's
 width. The result ABI remains `AL` with `AH = 0` for `u8`/`bool`, and `AX`
 for `u16`.
+WORD03a compares the declared width and returns exactly `0` or `1`; CIR
+labels, branches, and loops remain for WORD03b.
 
 ## Why `HLT`, not a pseudo-halt?
 

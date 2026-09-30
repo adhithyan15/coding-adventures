@@ -1,5 +1,12 @@
 # Changelog — intel8086-backend
 
+## Unreleased — WORD03a normalized comparisons
+
+- Execute unsigned `cmp_{eq,ne,lt,le,gt,ge}_{u8,u16}` with `CMP` and short
+  conditional jumps, materializing exactly zero or one in the result slot.
+- Preserve the other live register and reject malformed comparison operands;
+  control-flow CIR remains deferred to WORD03b.
+
 ## Unreleased — WORD02b unary complement
 
 - Execute typed `not_u8`/`not_u16` through a width mask in `CX` while

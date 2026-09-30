@@ -196,9 +196,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // (`has_native_font_size`); other parts drop it.
     (Backend::Qt, "font-size"),
     //
-    // #15247 -- `qml_padding` reads ONE value and fans it to all four
-    // edges, so any longhand beyond the one it picks is lost.
-    (Backend::Qt, "padding"),
+    // #15247 -- longhand padding is still lost on the affected non-Text
+    // primitives. Generic padding no longer belongs here: #15276 gives
+    // painted Text parts a Rectangle surface that owns the inset.
     (Backend::Qt, "padding-bottom"),
     (Backend::Qt, "padding-top"),
     //

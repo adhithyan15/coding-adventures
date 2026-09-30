@@ -1,5 +1,10 @@
 # Changelog — intel8086-simulator
 
+## Unreleased — WORD03a encoder helper
+
+- Add the pure short conditional-jump encoder used by both-width Word
+  comparisons; the full simulator already executes these jumps.
+
 ## Unreleased — WORD02 encoder helpers
 
 - Add pure encoding helpers for byte register moves and byte/word register

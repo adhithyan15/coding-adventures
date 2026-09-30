@@ -62,6 +62,22 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — Text parts own a native surface when they paint (#15276)
+
+A `Text [ part ]` that authors background, border, radius, or padding now keeps
+the semantic and accessibility properties on an inner QML `Text` while a
+conditional `Rectangle` owns paint and box geometry. Text-only styling retains
+the previous bare `Text` shape. Padding resolves per edge with longhand
+precedence, state paint remains conditional, and fixed dimensions stay on the
+outer layout item. A `Box` part's `font-weight` also reaches its descendant
+text, covering the mirror case where a Rectangle cannot own typography.
+
+Fresh native-complete TaskApp generation reduces Qt style drops from 251 to
+193: background 8 to 0, border-radius 8 to 0, all 33 padding drops to 0, width
+33 to 25, and height 3 to 2. The toolkit inverse ratchet also confirms that
+Text-part background, border colour, border width, and Box font weight are no
+longer licensed drops.
+
 ### Fixed — host controls preserve directional padding (#16223)
 
 `HostButton`, `HostCheckbox`, `HostRadio`, `HostInput`, `HostSlider`, and
