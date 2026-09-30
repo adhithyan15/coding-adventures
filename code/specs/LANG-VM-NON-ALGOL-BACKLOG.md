@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-30
+Status date: 2026-09-30 — complete
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -64,11 +64,19 @@ simulator, its 461-vector full-state differential, and the landed WORD02/WORD03
 surface. A fresh overlap and backlog audit selected VM-076 as the remaining
 bounded non-ALGOL item.
 
+PR #16299 delivered VM-076 and merged as
+`7b311ceb8af6593ced494336bf3de2722f7a5412` after required branch protection
+passed. The Z80 README, crate rustdoc, opcode docs, changelog, and normative 07k
+spec now distinguish shared 8080 instruction bytes and core operations from the
+architectures' different packed flags and arithmetic parity/overflow behavior.
+
 The current queue is:
 
-1. **VM-076 (selected):** narrow the Z80 simulator's 8080-compatibility claim
-   to byte and core-operation compatibility where applicable, and account
-   explicitly for the architectures' different flag state.
+**Empty.** A fresh audit of current `main`, open issues, open pull requests, and
+the corrected compatibility claims found no actionable non-ALGOL LANG VM item.
+PR #16295 is a separately authored, conflicting duplicate of merged VM-075 PR
+#16294 and does not represent remaining backlog. The separately owned ALGOL
+campaign remains outside this backlog.
 
 The following run records the first VM-067 selection.
 
