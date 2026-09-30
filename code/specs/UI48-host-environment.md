@@ -780,7 +780,14 @@ the other hosts, the resize-and-assert gate lands with ENV-last.
   `mosaic-emit-flutter`'s `variant_widget_name` with the same rule as Compose
   and SwiftUI. A variant whose widget would take a name the default file
   declares (`Card.event-tap.mll` → `CardEventTap`, the `onTap` event) is
-  refused.
+  refused, and so is one that would take a public name of the shell's own
+  files, which `main.dart` imports beside it (`Mosaic.host.mll` →
+  `MosaicHost`; the list, `SHELL_RESERVED_NAMES`, is pinned by tests against
+  the generated `main.dart` and the binding templates).
+- Known gap, shared with Compose and SwiftUI: a variant widget can still
+  collide with *another exported component* of the same package (`Card`'s
+  `touch` variant and an exported `CardTouch`). Neither backend checks this
+  yet.
 - A variant file carries only what differs: its widget and the private
   helpers its own tree uses. A leading `_` makes a Dart name private to its
   file, so those may repeat. The interface — the `<C>Event` sealed class and
@@ -806,8 +813,10 @@ the other hosts, the resize-and-assert gate lands with ENV-last.
   passed to the emitter as `EmitOptions::layout_variants`: one
   `LayoutChoice` per rule, in rule order, each condition keyed by its wire
   name (`EnvironmentAxis::wire_name`). The emitter checks them again before
-  writing Dart: a usable variant chosen once, camelCase axis names, lowercase
-  values. A rule for a variant with no `.mll` fails the build.
+  writing Dart: a usable variant whose widget is chosen once (keyed on the
+  widget, so `touch` and `Touch`, or `task-list` and `task_list`, which name
+  one class, are refused together) and is not a shell name, camelCase axis
+  names, lowercase values. A rule for a variant with no `.mll` fails the build.
 - `main.dart` carries them as data, `mosaicLayoutRules`, a `const` list of
   `(variant, conditions)` records, and a public
   `mosaicLayoutVariant(environment)` that returns the first variant whose

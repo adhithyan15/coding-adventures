@@ -9,8 +9,10 @@
   and takes the default widget's constructor arguments. Its private helpers
   are file-scoped in Dart, so they may repeat. A variant whose widget would
   take one of the default file's public names (`event-tap` → `CardEventTap`)
-  is refused. Before this, a variant file repeated the whole event union, so
-  two layouts could never be imported into one app.
+  is refused, and so is one that would take a public name of the shell's
+  own files (`SHELL_RESERVED_NAMES`: `MosaicApp`, `MosaicHost`, ...;
+  component `Mosaic` + variant `host`). Before this, a variant file repeated
+  the whole event union, so two layouts could never be imported into one app.
 - `EmitOptions::layout_variants` (`LayoutChoice { variant, conditions }`, in
   rule order, conditions keyed by `mosaic-app-runtime`'s wire names) makes
   both project shells select their root at run time. `main.dart` imports each
@@ -21,7 +23,9 @@
   reduces them with `MosaicHost.environmentReport`, and switches on the
   selector, so a resize across a threshold swaps the root on that frame. The
   choices are validated before any Dart is written (new
-  `ProjectShellError::InvalidLayoutChoice`). The sample shell's placeholder
+  `ProjectShellError::InvalidLayoutChoice`); each widget may be chosen once,
+  so `touch` and `Touch`, or `task-list` and `task_list`, are refused
+  together, and none may be a shell name. The sample shell's placeholder
   host gains `environmentReport` when the shell selects.
 - With no layout variants every generated file is byte-for-byte unchanged.
 - Fixture `fixtures/layout-variants` and its widget test
@@ -29,7 +33,9 @@
   resized across 600 logical pixels and the test asserts the root swaps
   (the §7 resize gate), run by CI's Linux Flutter lane.
 - Tests: variant widget names and refusals, a variant reusing the default's
-  interface with the same constructor, name collisions with event classes,
+  interface with the same constructor, name collisions with event classes
+  and shell names (every public class in `main.dart` pinned as reserved),
+  two variant spellings naming one widget,
   both shells' imports, `Builder`, `switch`, rules and selector, rule order
   and unconditional rules, the placeholder host, refused choices, and the
   plain shell equal to the variant shell minus the selector.

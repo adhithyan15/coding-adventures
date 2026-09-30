@@ -12457,6 +12457,50 @@ layout NativeEvents {
         }
     }
 
+    /// Every PascalCase top-level name in the Dart files the builder puts
+    /// beside a Flutter shell's variants -- the runtime binding and the
+    /// platform library `main.dart` imports -- is one a variant widget may
+    /// not take (UI48 §7.9), so a new public class there fails this test
+    /// until the emitter reserves it.
+    #[test]
+    fn every_public_class_the_flutter_shell_imports_is_reserved() {
+        let platform = mosaic_app_bindings::flutter_platform_effects();
+        for source in [
+            mosaic_app_bindings::flutter_runtime_binding_for_application("card", false),
+            mosaic_app_bindings::flutter_runtime_binding_for_application("card", true),
+            platform.library,
+            platform.core,
+        ] {
+            for line in source.lines() {
+                let mut words = line.split_whitespace().peekable();
+                // Skip modifiers: `abstract interface class`, `final class`, ...
+                while matches!(
+                    words.peek(),
+                    Some(&("abstract" | "interface" | "final" | "sealed" | "base"))
+                ) {
+                    words.next();
+                }
+                if !matches!(words.next(), Some("class" | "typedef" | "enum" | "mixin")) {
+                    continue;
+                }
+                let name: String = words
+                    .next()
+                    .unwrap_or_default()
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                if line.starts_with(|c: char| !c.is_whitespace())
+                    && name.starts_with(|c: char| c.is_ascii_uppercase())
+                {
+                    assert!(
+                        mosaic_emit_flutter::pipeline::SHELL_RESERVED_NAMES.contains(&name.as_str()),
+                        "{name} is public in the Flutter shell but a variant widget may take it"
+                    );
+                }
+            }
+        }
+    }
+
     /// The native-complete shell with a variant both reports (ENV4) and
     /// selects (ENV3), from the same MediaQuery aspects.
     #[test]

@@ -13,5 +13,6 @@
 - A package without variants produces the same files as before.
 - Tests: convention, declared rules under wire names, a rule for a missing
   variant refused, no variants → no selector, the native-complete shell
-  observing and selecting, and every rule axis present in the Flutter
-  binding's `environmentReport`.
+  observing and selecting, every rule axis present in the Flutter
+  binding's `environmentReport`, and every public class in the binding and
+  platform-library templates reserved from variant widget names.

@@ -386,10 +386,16 @@ fn build_flutter_project_files(
 /// (UI48 §7.9). The variant becomes a widget class name and a string
 /// literal, each condition a map entry `'<axis>': '<value>'`, so each must
 /// be exactly the shape the manifest produces: a variant
-/// [`variant_widget_name`] accepts, chosen once (a repeated `case` is a Dart
-/// error), an axis that is a camelCase wire name (ASCII letters only) and a
-/// value of lowercase letters and `-`. Nothing here can carry a quote, a
-/// backslash or a `$`.
+/// [`variant_widget_name`] accepts, whose widget is chosen once and is not
+/// a shell name, an axis that is a camelCase wire name (ASCII letters only)
+/// and a value of lowercase letters and `-`. Nothing here can carry a
+/// quote, a backslash or a `$`.
+///
+/// "Chosen once" is keyed on the WIDGET, not the variant string: `touch`
+/// and `Touch`, or `task-list` and `task_list`, are two strings but one
+/// class (`CardTouch`, `CardTaskList`), which two imports would make
+/// ambiguous. (`discover_variants` refuses such pairs of files; this is the
+/// same guard for a caller that builds the options itself.)
 fn validate_layout_choices(
     component: &str,
     choices: &[LayoutChoice],
@@ -401,8 +407,11 @@ fn validate_layout_choices(
         let value_ok = |value: &str| {
             !value.is_empty() && value.chars().all(|c| c.is_ascii_lowercase() || c == '-')
         };
-        if variant_widget_name(component, &choice.variant).is_none()
-            || !seen.insert(choice.variant.as_str())
+        let widget_ok = match variant_widget_name(component, &choice.variant) {
+            Some(widget) => !SHELL_RESERVED_NAMES.contains(&widget.as_str()) && seen.insert(widget),
+            None => false,
+        };
+        if !widget_ok
             || !choice
                 .conditions
                 .iter()
@@ -1816,13 +1825,49 @@ pub fn from_pipeline_variant(
     emit_component(interface, layout, style, Some(variant))
 }
 
-/// The public Dart names the default layout's file declares: the widget,
-/// the sealed `<C>Event` and one `<C>Event<Case>` per emit. A variant's
-/// widget must not take one of them -- `Card.event-tap.mll` would name
-/// `CardEventTap`, which is the `onTap` event -- or the variant file would
-/// declare a name its own import already brings in.
+/// The PascalCase public names a generated Flutter project's shell already
+/// declares, in the files `main.dart` imports beside the variants:
+///
+/// | file                               | names                                   |
+/// |------------------------------------|-----------------------------------------|
+/// | `main.dart`                        | `MosaicApp`, `MosaicHostLoader`, `MosaicValueDecoder` |
+/// | `mosaic_host.dart`                 | `MosaicHost`, `MosaicRuntimeException`, `MosaicEffectHandler`, `MosaicOpenFlags` |
+/// | `mosaic_platform_effects(_core).dart` | `MosaicFileDialogs`, `MosaicFileSelectorDialogs`, `MosaicPlatformEffectHost`, `MosaicHostEffects`, `MosaicPlatformRouter` |
+///
+/// A layout variant's widget must not take one (component `Mosaic` +
+/// variant `host` would name `MosaicHost`): `main.dart` imports both, so
+/// the name would be ambiguous there. The shell names are pinned here by
+/// an emitter test against the generated `main.dart`, and the binding's by
+/// a builder test against `mosaic-app-bindings`' templates, so a new public
+/// class in either fails a test until it is listed.
+pub const SHELL_RESERVED_NAMES: &[&str] = &[
+    "MosaicApp",
+    "MosaicHostLoader",
+    "MosaicValueDecoder",
+    "MosaicHost",
+    "MosaicRuntimeException",
+    "MosaicEffectHandler",
+    "MosaicOpenFlags",
+    "MosaicFileDialogs",
+    "MosaicFileSelectorDialogs",
+    "MosaicPlatformEffectHost",
+    "MosaicHostEffects",
+    "MosaicPlatformRouter",
+];
+
+/// The public Dart names a variant's widget must not take: the shell's
+/// ([`SHELL_RESERVED_NAMES`]) and the ones the default layout's file
+/// declares -- the widget, the sealed `<C>Event` and one `<C>Event<Case>`
+/// per emit. `Card.event-tap.mll` would name `CardEventTap`, which is the
+/// `onTap` event, so the variant file would declare a name its own import
+/// already brings in.
 fn interface_type_names(component: &str, emits: &[EmitDecl]) -> Vec<String> {
-    let mut names = vec![component.to_string(), format!("{component}Event")];
+    let mut names: Vec<String> = SHELL_RESERVED_NAMES
+        .iter()
+        .map(|name| name.to_string())
+        .collect();
+    names.push(component.to_string());
+    names.push(format!("{component}Event"));
     for emit in emits {
         names.push(format!(
             "{component}Event{}",
@@ -1863,7 +1908,7 @@ fn emit_component(
             if interface_type_names(name, &interface.emits).contains(&widget) {
                 return Err(PipelineEmitError::UnsafeSlotName(format!(
                     "layout variant `{variant}` would name its widget `{widget}`, which \
-                     {name}'s default layout already declares"
+                     {name}'s default layout or the Flutter shell already declares"
                 )));
             }
             widget
@@ -18321,6 +18366,67 @@ mod layout_variant_tests {
             refused(vec![touch(), touch()]),
             "a variant chosen twice would repeat a `case`"
         );
+        // Two strings, one widget class: `CardTouch`, `CardTaskList`.
+        let bare = |variant: &str| LayoutChoice {
+            variant: variant.to_string(),
+            conditions: vec![],
+        };
+        assert!(refused(vec![touch(), choice("Touch", "pointer", "coarse")]));
+        assert!(refused(vec![bare("task-list"), bare("task_list")]));
+        assert!(!refused(vec![bare("task-list"), bare("tasks")]));
+    }
+
+    /// A variant's widget may not take a name the shell's own files
+    /// declare: `main.dart` imports them beside the variant.
+    #[test]
+    fn a_variant_may_not_take_a_shell_name() {
+        let (model, layout, style) = compile(
+            "component Mosaic { slot label : text ; }",
+            "layout Mosaic { Text [ root ] ( content : slot: label ) }",
+        );
+        for variant in ["host", "app", "host-loader", "platform-router"] {
+            let error = from_pipeline_variant(&model, &layout, &style, variant).unwrap_err();
+            assert!(
+                error.to_string().contains("Flutter shell"),
+                "{variant}: {error}"
+            );
+            let options = EmitOptions {
+                emit_project: true,
+                layout_variants: vec![LayoutChoice {
+                    variant: variant.to_string(),
+                    conditions: vec![],
+                }],
+                ..EmitOptions::default()
+            };
+            assert!(
+                from_pipeline_with_options(&model, &layout, &style, &options).is_err(),
+                "{variant}"
+            );
+        }
+        assert!(from_pipeline_variant(&model, &layout, &style, "touch").is_ok());
+    }
+
+    /// Every PascalCase top-level name either generated `main.dart`
+    /// declares is reserved, so a new public class there cannot silently
+    /// become a name a variant may take.
+    #[test]
+    fn every_public_shell_class_is_reserved() {
+        for require_runtime in [false, true] {
+            let main = project(require_runtime, vec![touch()]).main_dart;
+            for line in main.lines() {
+                let declared = ["class ", "typedef ", "enum ", "mixin "]
+                    .iter()
+                    .find_map(|keyword| line.strip_prefix(keyword));
+                let Some(rest) = declared else { continue };
+                let name: String = rest
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                    .collect();
+                if name.starts_with(|c: char| c.is_ascii_uppercase()) {
+                    assert!(SHELL_RESERVED_NAMES.contains(&name.as_str()), "{name}");
+                }
+            }
+        }
     }
 
     /// A package without variants gets exactly the shell it always had: take
