@@ -11,12 +11,19 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16310,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16310",
+    "item_id": "go-activation-matrix-perceptron-build-front-coverage",
+    "branch": "codex/parity-go-neural-fronts-20260930",
+    "head_revision": "c6de090d62824e384827dcf0dbac8633819261f4",
+    "status": "pr-open"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-30T19:39:08Z",
-    "pr_number": 16298,
-    "status": "merged",
-    "notes": "All 51 final-head checks reached terminal acceptable conclusions: 44 successes and seven expected skips or neutral results. GitHub reported MERGEABLE and CLEAN; guarded squash auto-merge was enabled only then, and GitHub merged PR #16298 automatically as 25b464472ca66cc71d20911bff02115ffdcc7c87 without a plain manual merge command."
+    "observed_at": "2026-09-30T20:17:16Z",
+    "pr_number": 16310,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16310 is open and GitHub reports the branch mergeable. Initial CI, CodeQL language detection, and human-language change detection are queued; auto-merge remains disabled until every required final-head check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "e8a0bc47780645f9281fbd3ac2a695a1c4d85208",
@@ -11014,10 +11021,13 @@
     {
       "id": "go-activation-matrix-perceptron-build-front-coverage",
       "title": "Add tested BUILD fronts for Go activation-functions, matrix, and perceptron",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-go-neural-fronts-20260930",
-      "pr_number": null,
+      "pr_number": 16310,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16310",
+      "opened_at": "2026-09-30T20:17:11Z",
+      "opened_revision": "c6de090d62824e384827dcf0dbac8633819261f4",
       "selected_at": "2026-09-30T19:49:16Z",
       "selection_revision": "3334094dd159cd4e37de9d4ce6246b52b3032781",
       "selection_notes": "Selected only after PR #16298 completed all 51 final-head checks acceptably and merged through guarded squash auto-merge as 25b464472ca66cc71d20911bff02115ffdcc7c87. Exact current main is 3334094dd159cd4e37de9d4ce6246b52b3032781; the regenerated schema-3 inventory remains collision-clean at 15 established lanes, 1,472 implementation identities, 4,739 implementation slots, 1,514 all-reported identities, completion bands 178/265, 123/934, 181/2,282, and 990/13,860, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. Before ranking, parallel audits split Lua portable hashing from unreviewed native snapshot/cache authority, recorded the barcode-layout neutral and existing-lane prerequisites, blocked the duplicate .NET repository-boundary diff owner, expanded the OCaml documentation repair, and registered the Forme plugin-runner portable boundary behind live PR #16296. This dependency-free three-module Go chain removes three reviewed orphan-ledger entries with existing package/downstream coverage and no new runtime authority. Twelve live open PRs have zero exact overlap with its state, roadmap, package, and documentation paths.",
@@ -11026,6 +11036,7 @@
       "final_review_revision": "9367693548914a1c2618cbb1d831d992ce953af1",
       "final_review_notes": "Independent security review passed with no actionable finding and confirmed offline dependency resolution, unchanged capabilities, test-only BUILD commands, clean downstream compilation, and no secret exposure. Independent correctness review found one stale dependency from the .NET adapter closure to the now-superseded repository-boundary fixture owner; commit 9367693548914a1c2618cbb1d831d992ce953af1 removed that edge. JSON parsing, dependency completeness, acyclicity, focused tests, and diff hygiene pass after the repair.",
       "rebase_notes": "Before publication, origin/main advanced through Mermaid event-modeling coverage and the non-ALGOL VM backlog closeout to e8a0bc47780645f9281fbd3ac2a695a1c4d85208. Those grammar, Rust Mermaid, Mermaid-spec, and VM-roadmap paths have zero exact overlap with this tranche. The three commits rebased conflict-free, and the schema-3 inventory remains unchanged and collision-clean.",
+      "publication_notes": "Opened ready-for-review PR #16310 from clean validated head c6de090d62824e384827dcf0dbac8633819261f4 after a normal first push from exact origin/main e8a0bc47780645f9281fbd3ac2a695a1c4d85208. Immediately before publication, the target branch and any prior PR were absent, twelve live PRs had zero exact path overlap, the production Go build tool executed all four selected fronts successfully, focused packages and downstream programs passed offline test/vet validation, the collision inventory and 938-owner/1,808-edge state graph were clean, and independent correctness and security reviews passed after the duplicate .NET edge repair. GitHub reports the PR non-draft and mergeable with initial checks queued, so auto-merge remains disabled until every final-head check is terminal and acceptable and no merge conflict exists.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. The tracked Go modules `activation-functions`, `matrix`, and `perceptron` have no BUILD front, so repository discovery cannot schedule the neural-primitives chain. Add fail-closed cross-platform fronts, preserve the module dependency order, run the existing activation-functions and matrix suites, add direct perceptron package coverage and missing package documentation, and validate the affected downstream closure."
     },
     {
