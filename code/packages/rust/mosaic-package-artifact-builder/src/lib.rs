@@ -4474,6 +4474,10 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 } else {
                     mosaic_app_bindings::flutter_pubspec_with_runtime_binding(&proj.pubspec_yaml)
                 };
+                // The platform library's dialogs (`file_selector`, pinned),
+                // before the package's own dependencies so a package that
+                // declares the same one is not written twice (UI87 §7.7).
+                let pubspec = mosaic_app_bindings::flutter_pubspec_with_platform_effects(&pubspec);
                 // Dependencies this package's `[host_assets]` declared. The
                 // emitter cannot know what a replacement host file imports, so
                 // without this the emitted project does not resolve.
@@ -4535,6 +4539,17 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 );
                 write_file(&host, runtime_binding.as_bytes())?;
                 written.push(host);
+                // Mosaic's platform library (UI87 §7.7) beside the host, in
+                // every project: `main.dart` imports and installs it.
+                let platform = mosaic_app_bindings::flutter_platform_effects();
+                for (file, body) in [
+                    (FLUTTER_PLATFORM_EFFECTS_FILE, &platform.library),
+                    (FLUTTER_PLATFORM_EFFECTS_CORE_FILE, &platform.core),
+                ] {
+                    let path = backend_dir.join("lib").join(file);
+                    write_file(&path, body.as_bytes())?;
+                    written.push(path);
+                }
                 if let Some(source) = runtime_library {
                     let hook = backend_dir.join("hook/build.dart");
                     write_file(&hook, build_flutter_runtime_hook(source)?.as_bytes())?;
@@ -6095,7 +6110,8 @@ fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>)
     out
 }
 
-/// Install a package's effect handler in the generated Flutter entry point.
+/// Install a package's effect handler, and Mosaic's platform library, in the
+/// generated Flutter entry point.
 ///
 /// Flutter needs an `include` where Compose and SwiftUI refuse one, and that is
 /// a language difference rather than a style choice: Dart resolves nothing
@@ -6105,8 +6121,8 @@ fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>)
 /// a field silently dropped. Qt is the same shape as this one for the same
 /// reason -- C++ has no cross-file visibility either.
 ///
-/// The call goes immediately after the host is assigned, and its shape depends
-/// on which generated shell is being wired.
+/// The calls go immediately after the host is assigned, and their shape
+/// depends on which generated shell is being wired.
 ///
 /// The permissive project declares `late final MosaicHost? _mosaicHost`, so the
 /// call needs a null check, and that check has to be on a LOCAL: Dart does not
@@ -6117,26 +6133,40 @@ fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>)
 /// handler is installed on that local before the first props read. Reading the
 /// nullable field instead would require a pointless guard and would make an
 /// install failure harder to associate with the startup attempt.
+///
+/// Every Flutter app also gets the platform library (UI87 §7.7): after the
+/// package's handler, if any, `installMosaicPlatformEffects(host, appKinds:
+/// ...)` wraps it and routes each effect by kind -- the router wraps whatever
+/// handler is set when it installs, so that order is what lets the app's
+/// kinds reach the app. The handler's `kinds` become a `const <String>[...]`
+/// the router checks; without `kinds`, `null` keeps the original meaning. A
+/// retried start runs the same lines on its new host, so it gets a new router
+/// along with the package handler. An entry point with neither anchor and no
+/// declared handler is left as it is: nothing was declared, so there is
+/// nothing to refuse.
 fn flutter_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
 ) -> Result<String, BuildError> {
-    let Some(handler) = host_effects
+    let handler = host_effects
         .handlers
         .iter()
-        .find(|handler| handler.backend == "flutter")
-    else {
-        return Ok(generated.to_string());
-    };
+        .find(|handler| handler.backend == "flutter");
 
-    let Some(include) = handler.include.as_deref() else {
-        return Err(BuildError::Io(format!(
-            "`[host_effects]` declares a Flutter handler `{}` with no `include`, \
-             but Dart resolves nothing across files without an import -- the \
-             handler would be copied, compiled and never reachable. Set \
-             `include` to the file's path relative to `lib/`.",
-            handler.install
-        )));
+    let include = match handler {
+        None => None,
+        Some(handler) => match handler.include.as_deref() {
+            Some(include) => Some(include),
+            None => {
+                return Err(BuildError::Io(format!(
+                    "`[host_effects]` declares a Flutter handler `{}` with no `include`, \
+                     but Dart resolves nothing across files without an import -- the \
+                     handler would be copied, compiled and never reachable. Set \
+                     `include` to the file's path relative to `lib/`.",
+                    handler.install
+                )))
+            }
+        },
     };
 
     const STRICT_ANCHOR: &str = "_mosaicHost = host;";
@@ -6146,6 +6176,9 @@ fn flutter_main_with_host_effects(
     } else if let Some(at) = line_anchored_find(generated, PERMISSIVE_ANCHOR) {
         (at, false)
     } else {
+        let Some(handler) = handler else {
+            return Ok(generated.to_string());
+        };
         // Loud, as on every other backend: Flutter compiles everything under
         // `lib/`, so an uninstalled handler still compiles and ships, and the
         // first symptom is an `Await` going unanswered at runtime.
@@ -6156,6 +6189,11 @@ fn flutter_main_with_host_effects(
             handler.install
         )));
     };
+
+    // Checked before anything is written: a kind that cannot be a Dart string
+    // literal is a build error, never generated code.
+    let app_kinds =
+        flutter_platform_app_kinds(handler.and_then(|handler| handler.kinds.as_deref()))?;
 
     let line_start = generated[..at].rfind('\n').map_or(0, |index| index + 1);
     let indent: String = generated[line_start..at].to_string();
@@ -6170,40 +6208,105 @@ fn flutter_main_with_host_effects(
     // this line with it rather than leaving a guard that no longer type-checks.
     let host_is_nullable = generated.contains("late final MosaicHost? _mosaicHost;");
 
-    let mut out = String::with_capacity(generated.len() + 256);
+    // Each install is one statement over the host, in the shell's own shape.
+    let call = |function: &str, arguments: &str| -> String {
+        if strict_startup {
+            format!("{indent}{function}(host{arguments});")
+        } else if host_is_nullable {
+            format!(
+                "{indent}if (mosaicEffectHost != null) {{ {function}(mosaicEffectHost{arguments}); }}"
+            )
+        } else {
+            format!("{indent}{function}(_mosaicHost{arguments});")
+        }
+    };
+
+    let mut out = String::with_capacity(generated.len() + 512);
     out.push_str(&generated[..line_end]);
-    writeln!(
-        out,
-        "{indent}// Package-declared effect handler, from `[host_effects]`."
-    )
-    .expect("write Flutter host-effect comment");
-    if strict_startup {
-        writeln!(out, "{indent}{}(host);", handler.install)
-    } else if host_is_nullable {
+    if !strict_startup && host_is_nullable {
+        writeln!(out, "{indent}final mosaicEffectHost = _mosaicHost;")
+            .expect("write Flutter effect-host local");
+    }
+    if let Some(handler) = handler {
         writeln!(
             out,
-            "{indent}final mosaicEffectHost = _mosaicHost;\n\
-             {indent}if (mosaicEffectHost != null) {{ {}(mosaicEffectHost); }}",
-            handler.install
+            "{indent}// Package-declared effect handler, from `[host_effects]`.\n{}",
+            call(&handler.install, "")
         )
-    } else {
-        writeln!(out, "{indent}{}(_mosaicHost);", handler.install)
+        .expect("write Flutter host-effect install");
     }
-    .expect("write Flutter host-effect install");
+    // After the package's handler: the router wraps whatever handler is set
+    // when it is installed (UI87 §7.2).
+    writeln!(
+        out,
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n{}",
+        call(
+            "installMosaicPlatformEffects",
+            &format!(", appKinds: {app_kinds}")
+        )
+    )
+    .expect("write Flutter platform-effects install");
     out.push_str(&generated[line_end..]);
 
-    // The import goes at the top, after the last existing one so it cannot land
-    // between a directive and its own comment.
-    let import = format!("import '{include}';\n");
+    if let Some(include) = include {
+        insert_dart_import(&mut out, include);
+    }
+    insert_dart_import(&mut out, FLUTTER_PLATFORM_EFFECTS_FILE);
+    Ok(out)
+}
+
+/// The file the Flutter platform library's entry point is written to, under
+/// `lib/`, and imported by `main.dart` (UI87 §7.7).
+const FLUTTER_PLATFORM_EFFECTS_FILE: &str = "mosaic_platform_effects.dart";
+
+/// The platform library's plain-Dart core, beside it under `lib/`.
+const FLUTTER_PLATFORM_EFFECTS_CORE_FILE: &str = "mosaic_platform_effects_core.dart";
+
+/// Add `import '<path>';` to a Dart file, after its last import so it cannot
+/// land between a directive and its own comment. Nothing when it is present.
+fn insert_dart_import(out: &mut String, path: &str) {
+    let import = format!("import '{path}';\n");
     if out.contains(&import) {
-        return Ok(out);
+        return;
     }
     let insert_at = out
         .rfind("\nimport ")
         .and_then(|start| out[start + 1..].find('\n').map(|end| start + 1 + end + 1))
         .unwrap_or(0);
     out.insert_str(insert_at, &import);
-    Ok(out)
+}
+
+/// The `appKinds:` argument for `installMosaicPlatformEffects` (UI87 §7.7):
+/// the package handler's `kinds` as a Dart `const` list, or `null` without
+/// them.
+///
+/// Each kind is spliced into a Dart string literal. The manifest already
+/// refuses any kind outside the dotted-name shape, but this is the line that
+/// would turn a quote, a backslash or a `$` (Dart interpolation) into
+/// generated code, so it checks the shape again itself rather than trusting a
+/// validation it cannot see: a `HostEffectsSection` built some other way (a
+/// test, a future caller) gets a build error, never injected code. An empty
+/// list -- also refused by the manifest -- is `const <String>[]`, which claims
+/// nothing.
+fn flutter_platform_app_kinds(kinds: Option<&[String]>) -> Result<String, BuildError> {
+    let Some(kinds) = kinds else {
+        return Ok("null".to_string());
+    };
+    if let Some(bad) = kinds.iter().find(|kind| !is_host_effect_kind_shape(kind)) {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` Flutter handler kind {bad:?} is not a dotted name \
+             (letters, digits and `_`, segments starting with a letter, \
+             joined by `.`), so it cannot be written into main.dart"
+        )));
+    }
+    Ok(format!(
+        "const <String>[{}]",
+        kinds
+            .iter()
+            .map(|kind| format!("'{kind}'"))
+            .collect::<Vec<_>>()
+            .join(", ")
+    ))
 }
 
 /// Install a package's `[host_effects]` handler into the generated WinUI window.
@@ -11739,7 +11842,30 @@ layout NativeEvents {
         assert!(host.contains("static const bool _hasBundledRuntime = true;"));
         assert!(host.contains("@Native<_CreateNative>(symbol: 'mosaic_app_create')"));
 
+        // UI87 §7.7: the platform library sits beside the host, byte for
+        // byte as mosaic-app-bindings emits it, and the shell installs it on
+        // each started host, after the assignment and before the first props.
+        let platform = mosaic_app_bindings::flutter_platform_effects();
+        for (file, body) in [
+            ("flutter/lib/mosaic_platform_effects.dart", &platform.library),
+            ("flutter/lib/mosaic_platform_effects_core.dart", &platform.core),
+        ] {
+            let path = out.path().join(file);
+            assert!(result.artifacts.contains(&path), "{file}");
+            assert_eq!(&fs::read_to_string(path).unwrap(), body, "{file}");
+        }
+        assert!(main.contains("import 'mosaic_platform_effects.dart';"));
+        let assign = main.find("_mosaicHost = host;").expect("assignment");
+        let install = main
+            .find("installMosaicPlatformEffects(host, appKinds: null);")
+            .expect("the platform library is installed");
+        let props = main
+            .find("host.setPropsChangedHandler")
+            .expect("props handler");
+        assert!(assign < install && install < props, "{main}");
+
         let pubspec = fs::read_to_string(out.path().join("flutter/pubspec.yaml")).unwrap();
+        assert!(pubspec.contains("\n  file_selector: 1.0.4\n"), "{pubspec}");
         assert!(pubspec.contains("sdk: '>=3.10.0 <4.0.0'"));
         assert!(pubspec.contains("flutter: '>=3.38.0 <4.0.0'"));
         assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
@@ -15508,6 +15634,8 @@ version = "1"
                     "lib/main.dart",
                     "lib/Grid.dart",
                     "lib/mosaic_host.dart",
+                    "lib/mosaic_platform_effects.dart",
+                    "lib/mosaic_platform_effects_core.dart",
                 ],
             ),
             (
@@ -17865,11 +17993,182 @@ handlers = [
     );
 
     #[test]
-    fn a_package_with_no_flutter_handler_is_untouched() {
+    fn a_package_with_no_flutter_handler_gets_only_the_platform_library() {
+        // UI87 §7.7: every Flutter app gets the platform library, installed
+        // right after the host is assigned, with no claimed kinds -- and
+        // imported, since Dart sees nothing across files without an import.
         let empty = section("");
+        let expected = MAIN_DART
+            .replacen(
+                "import 'mosaic_host.dart';\n",
+                "import 'mosaic_host.dart';\nimport 'mosaic_platform_effects.dart';\n",
+                1,
+            )
+            .replacen(
+                "    _mosaicHost = widget.mosaicHost ?? MosaicHost.load();\n",
+                "    _mosaicHost = widget.mosaicHost ?? MosaicHost.load();\n    \
+                 final mosaicEffectHost = _mosaicHost;\n    \
+                 // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n    \
+                 if (mosaicEffectHost != null) { installMosaicPlatformEffects(mosaicEffectHost, appKinds: null); }\n",
+                1,
+            );
         assert_eq!(
             flutter_main_with_host_effects(MAIN_DART, &empty).expect("wiring must succeed"),
-            MAIN_DART
+            expected
+        );
+    }
+
+    /// An entry point with no host to install onto, and nothing declared, is
+    /// left as it is: there is nothing to refuse.
+    #[test]
+    fn an_entry_point_without_a_host_is_untouched_without_a_handler() {
+        let bare = "void main() {}\n";
+        assert_eq!(
+            flutter_main_with_host_effects(bare, &section("")).expect("bare"),
+            bare
+        );
+    }
+
+    /// After the package's handler, which the router wraps; the handler's
+    /// kinds reach the router as a Dart const list, and the one effect-host
+    /// local serves both installs.
+    #[test]
+    fn the_flutter_platform_library_wraps_the_package_handler_with_its_kinds() {
+        let wired = flutter_main_with_host_effects(MAIN_DART, &handler()).expect("wiring");
+        let host = wired
+            .find("_mosaicHost = widget.mosaicHost")
+            .expect("host assignment");
+        let package = wired
+            .find("installProbeEffects(mosaicEffectHost);")
+            .expect("package install");
+        let platform = wired
+            .find("installMosaicPlatformEffects(mosaicEffectHost, appKinds: null);")
+            .expect("platform install without kinds");
+        let props = wired.find("setPropsChangedHandler").expect("props handler");
+        assert!(
+            host < package && package < platform && platform < props,
+            "{wired}"
+        );
+        assert_eq!(
+            wired.matches("final mosaicEffectHost = _mosaicHost;").count(),
+            1,
+            "one local, or the second declaration does not compile:\n{wired}"
+        );
+        // Both imports, the package's first, after the existing directives.
+        let existing = wired.find("import 'mosaic_host.dart';").expect("host import");
+        let include = wired.find("import 'probe_effects.dart';").expect("include");
+        let library = wired
+            .find("import 'mosaic_platform_effects.dart';")
+            .expect("library import");
+        let class = wired.find("class _MosaicAppState").expect("class");
+        assert!(
+            existing < include && include < library && library < class,
+            "{wired}"
+        );
+
+        let claimed = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "flutter", source = "host/flutter/effects.dart", target = "lib/probe_effects.dart" },
+]
+handlers = [
+  { backend = "flutter", include = "probe_effects.dart", install = "installProbeEffects", kinds = ["importAnki", "files.save"] },
+]
+"#,
+        );
+        let wired = flutter_main_with_host_effects(MAIN_DART, &claimed).expect("wiring");
+        let package = wired
+            .find("installProbeEffects(mosaicEffectHost);")
+            .expect("package install");
+        let platform = wired
+            .find("installMosaicPlatformEffects(mosaicEffectHost, appKinds: const <String>['importAnki', 'files.save']);")
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "{wired}");
+        assert_eq!(
+            wired.matches("installMosaicPlatformEffects(").count(),
+            1,
+            "{wired}"
+        );
+    }
+
+    /// The `appKinds:` argument checks each kind's shape itself before
+    /// splicing it into a Dart string literal (a quote, a backslash or a `$`
+    /// would become code), rather than trusting the manifest's check.
+    #[test]
+    fn the_flutter_install_line_refuses_a_kind_that_is_not_a_dotted_name() {
+        for bad in [
+            "a'); evil(); ('",
+            "a\\b",
+            "${evil()}",
+            "$evil",
+            "files.",
+            ".save",
+            "files..save",
+            "has space",
+            "1st",
+            "line\nbreak",
+            "caf\u{e9}",
+            "",
+        ] {
+            let kinds = vec![bad.to_string()];
+            let error = flutter_platform_app_kinds(Some(&kinds))
+                .expect_err("a kind outside the dotted-name shape must be refused");
+            assert!(
+                format!("{error:?}").contains("not a dotted name"),
+                "{bad:?}: {error:?}"
+            );
+        }
+        let kinds: Vec<String> = ["files.save", "importAnki", "a_b.c9"]
+            .iter()
+            .map(|kind| kind.to_string())
+            .collect();
+        assert_eq!(
+            flutter_platform_app_kinds(Some(&kinds)).expect("valid kinds"),
+            "const <String>['files.save', 'importAnki', 'a_b.c9']"
+        );
+        assert_eq!(flutter_platform_app_kinds(None).expect("none"), "null");
+        // A bad kind fails the whole wiring, before anything is written.
+        let bad = mosaic_package_manifest::HostEffectsSection {
+            files: Vec::new(),
+            handlers: vec![mosaic_package_manifest::HostEffectHandler {
+                backend: "flutter".to_string(),
+                include: Some("probe_effects.dart".to_string()),
+                install: "installProbeEffects".to_string(),
+                kinds: Some(vec!["a'b".to_string()]),
+            }],
+        };
+        assert!(flutter_main_with_host_effects(MAIN_DART, &bad).is_err());
+    }
+
+    /// An empty list claims nothing, spelled as Dart says it.
+    #[test]
+    fn an_empty_flutter_kind_list_is_an_empty_const_list() {
+        assert_eq!(
+            flutter_platform_app_kinds(Some(&[])).expect("empty kinds"),
+            "const <String>[]"
+        );
+    }
+
+    /// A handler for another backend leaves the Flutter package handler out;
+    /// the platform library is installed either way, with no claimed kinds --
+    /// the Qt handler's kinds are the Qt router's business.
+    #[test]
+    fn a_qt_only_handler_leaves_the_flutter_entry_point_alone() {
+        let qt_only = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/effects.cpp", target = "probe_effects.cpp" },
+]
+handlers = [
+  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects", kinds = ["importAnki"] },
+]
+"#,
+        );
+        assert_eq!(
+            flutter_main_with_host_effects(MAIN_DART, &qt_only).expect("wiring must succeed"),
+            flutter_main_with_host_effects(MAIN_DART, &section("")).expect("wiring must succeed"),
         );
     }
 
@@ -18025,12 +18324,32 @@ handlers = [
                     !wired.contains("mosaicEffectHost != null"),
                     "the strict local needs no null guard:\n{wired}"
                 );
+                // The platform library on the same local, after the package
+                // handler and before the first props read (UI87 §7.7).
+                let package = wired.find("installProbeEffects(host);").expect("package");
+                let platform = wired
+                    .find("installMosaicPlatformEffects(host, appKinds: null);")
+                    .expect("platform library on the strict local");
+                let props = wired
+                    .find("host.setPropsChangedHandler")
+                    .expect("props handler");
+                assert!(package < platform && platform < props, "{wired}");
             } else {
                 assert!(
                     wired.contains("if (mosaicEffectHost != null)"),
                     "a nullable field needs the guard:\n{wired}"
                 );
+                assert!(
+                    wired.contains(
+                        "if (mosaicEffectHost != null) { installMosaicPlatformEffects(mosaicEffectHost, appKinds: null); }"
+                    ),
+                    "the permissive shape installs through the same guarded local:\n{wired}"
+                );
             }
+            assert!(
+                wired.contains("import 'mosaic_platform_effects.dart';"),
+                "{wired}"
+            );
         }
     }
 }

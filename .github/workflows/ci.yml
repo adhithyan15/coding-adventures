@@ -2977,6 +2977,37 @@ jobs:
               flutter test test/task_app_lifecycle_test.dart
           )
 
+          # UI87 §7.7: every Flutter app gets Mosaic's platform library
+          # (files.open / files.save and the router), installed on each started
+          # host right after it is assigned. The TaskApp build above compiled
+          # and analysed its file_selector dialogs; this runs the rest -- the
+          # plain-Dart core, exactly as generated -- headless on the Dart VM
+          # with a fake host and fake dialogs.
+          python3 - "$taskapp_output/flutter/lib/main.dart" <<'PY'
+          import sys
+
+          text = open(sys.argv[1], encoding="utf-8").read()
+          assert "import 'mosaic_platform_effects.dart';" in text, "the platform library is never imported"
+          assign = text.index("_mosaicHost = host;")
+          install = text.index("installMosaicPlatformEffects(host, appKinds: null);")
+          props = text.index("host.setPropsChangedHandler")
+          assert assign < install < props, "the platform library is not installed on the started host"
+          PY
+          platform_harness="$RUNNER_TEMP/mosaic-flutter-platform-effects"
+          rm -rf "$platform_harness"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/flutter-platform-effects "$platform_harness"
+          mkdir -p "$platform_harness/lib"
+          cp "$taskapp_output/flutter/lib/mosaic_host.dart" \
+            "$taskapp_output/flutter/lib/mosaic_platform_effects_core.dart" \
+            "$platform_harness/lib/"
+          (
+            cd "$platform_harness"
+            dart pub get
+            dart analyze --fatal-infos
+            dart run bin/conformance.dart | tee "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
+          )
+          grep -F "Mosaic Flutter platform effects conformance passed" "$RUNNER_TEMP/mosaic-flutter-platform-effects.log"
+
           strict_output="$RUNNER_TEMP/mosaic-flutter-native-complete-rating-controls"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend flutter --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/flutter/mosaic-degradations.json"
