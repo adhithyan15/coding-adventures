@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Headless conformance for the XAML platform library (UI87 §7.6).
+
+    MOSAIC_HEADLESS_TEST compiles MosaicPlatformEffects.cs without its WinUI
+    fence (the pickers, the window handle, the DispatcherQueue), so everything
+    else (the contract, the file I/O and the router) runs on plain .NET with
+    a fake dialog and a fake host. No Windows App SDK is referenced: nothing
+    here bootstraps WinUI.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DefineConstants>$(DefineConstants);MOSAIC_HEADLESS_TEST</DefineConstants>
+  </PropertyGroup>
+</Project>

@@ -65,6 +65,22 @@ pub fn qt_platform_effects() -> QtPlatformEffects {
     }
 }
 
+/// The XAML platform library (UI87 §7, §7.6): `files.open` and `files.save`
+/// through WinUI 3's `FileOpenPicker` / `FileSavePicker`, deferred and answered
+/// from the window's `DispatcherQueue`, and the router that sends each effect
+/// to the app's own handler or to this library by kind -- the same contract
+/// the Compose, SwiftUI and Qt libraries answer. Written beside
+/// `MosaicRuntimeHost.cs` in every XAML project, in the same C# namespace;
+/// installed by the generated `MainWindow.xaml.cs`.
+///
+/// Everything WinUI sits behind `#if !MOSAIC_HEADLESS_TEST`, which no
+/// generated project defines, so the headless conformance harness can run the
+/// rest on plain .NET with a fake picker.
+pub fn xaml_platform_effects(namespace: &str) -> String {
+    include_str!("../templates/xaml/MosaicPlatformEffects.cs")
+        .replace("__MOSAIC_NAMESPACE__", namespace)
+}
+
 /// Files that make the fixed Mosaic application C ABI available to SwiftUI.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SwiftRuntimeBinding {
@@ -552,6 +568,149 @@ mod tests {
         assert_eq!(qt_mimes, kotlin_mimes);
         assert!(header.contains("MosaicMaxOpenBytes = 50LL * 1024 * 1024"));
         assert!(header.contains("MosaicMaxSaveBytes = 16LL * 1024 * 1024"));
+    }
+
+    /// The XAML library answers the same contract (UI87 §7.6): the same kinds,
+    /// limits, MIME rows in the same order, executable list and failure
+    /// messages as the Compose library. Pinned here because the C# is only
+    /// compiled where .NET is installed, and the WinUI half only on Windows.
+    #[test]
+    fn xaml_platform_effects_match_the_compose_contract() {
+        let xaml = xaml_platform_effects("Mosaic.Generated");
+        let kotlin = compose_platform_effects();
+        assert!(xaml.contains(
+            "new HashSet<string>(StringComparer.Ordinal) { \"files.open\", \"files.save\" };"
+        ));
+        assert!(kotlin.contains("setOf(\"files.open\", \"files.save\")"));
+        assert!(xaml.contains("public const long MaxOpenBytes = 50L * 1024 * 1024;"));
+        assert!(kotlin.contains("MOSAIC_MAX_OPEN_BYTES: Long = 50L * 1024 * 1024"));
+        assert!(xaml.contains("public const int MaxSaveBytes = 16 * 1024 * 1024;"));
+        assert!(kotlin.contains("MOSAIC_MAX_SAVE_BYTES: Int = 16 * 1024 * 1024"));
+        // Every MIME -> extensions row, in the same order, in both tables.
+        let kotlin_rows: Vec<(String, String)> = kotlin
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix('"')?.split_once("\" to listOf(")?;
+                Some((mime.to_string(), rest.trim_end_matches("),").to_string()))
+            })
+            .collect();
+        let xaml_rows: Vec<(String, String)> = xaml
+            .lines()
+            .filter_map(|line| {
+                let line = line.trim();
+                let (mime, rest) = line.strip_prefix("(\"")?.split_once("\", new[] { ")?;
+                Some((mime.to_string(), rest.trim_end_matches(" }),").to_string()))
+            })
+            .collect();
+        assert_eq!(kotlin_rows.len(), 13, "{kotlin_rows:?}");
+        assert_eq!(xaml_rows, kotlin_rows);
+        // The executable-extension denylist is one set.
+        fn listed(source: &str, start: &str, end: &str) -> std::collections::BTreeSet<String> {
+            let from = source.find(start).expect("list start") + start.len();
+            let to = from + source[from..].find(end).expect("list end");
+            source[from..to]
+                .lines()
+                .filter(|line| !line.trim_start().starts_with("//"))
+                .flat_map(|line| line.split(','))
+                .map(|item| item.trim().trim_matches('"').to_string())
+                .filter(|item| !item.is_empty())
+                .collect()
+        }
+        let xaml_list = listed(
+            &xaml,
+            "ExecutableExtensions = new HashSet<string>(StringComparer.Ordinal)\n    {",
+            "};",
+        );
+        let kotlin_list = listed(
+            &kotlin,
+            "val MOSAIC_EXECUTABLE_EXTENSIONS: Set<String> = setOf(",
+            ")\n",
+        );
+        assert!(xaml_list.len() >= 60, "{xaml_list:?}");
+        assert_eq!(xaml_list, kotlin_list);
+        // The failure messages an app can see are the ones Compose sends.
+        for message in [
+            "that is not a regular file",
+            "couldn't read the selected file",
+            "suggestedName must be a plain file name",
+            "bytes must be base64 text",
+            "suggestedName must end in an extension of an accepted type",
+            "suggestedName must not end in an executable extension",
+            "couldn't save the file",
+            "another file operation is in progress",
+            "the file dialog failed",
+        ] {
+            let quoted = format!("\"{message}\"");
+            assert!(xaml.contains(&quoted), "XAML: {message}");
+            assert!(kotlin.contains(&quoted), "Compose: {message}");
+        }
+        assert!(xaml.contains("$\"the selected file is larger than {MaxOpenBytes} bytes\""));
+        assert!(xaml.contains("$\"the file is larger than {MaxSaveBytes} bytes\""));
+        // Routing: the same three outcomes, null meaning nobody.
+        assert!(xaml.contains("if (appKinds is not null && appKinds.Contains(kind)) return false;"));
+        assert!(xaml.contains("if (StandardEffectKinds.Contains(kind)) return true;"));
+        assert!(xaml.contains("if (appKinds is null) return false;\n        return null;"));
+        // The namespace placeholder is bound, as MosaicRuntimeHost.cs's is.
+        assert!(xaml.contains("namespace Mosaic.Generated;"));
+        assert!(!xaml.contains("__MOSAIC_NAMESPACE__"));
+    }
+
+    /// WinUI exists only in the generated project; the headless harness
+    /// compiles this file with `MOSAIC_HEADLESS_TEST`. So every WinUI use must
+    /// sit inside `#if !MOSAIC_HEADLESS_TEST`, and the fence must be the only
+    /// conditional -- a second symbol could switch the real pickers off in a
+    /// generated project.
+    #[test]
+    fn xaml_platform_effects_fence_winui_from_the_headless_test() {
+        let xaml = xaml_platform_effects("Mosaic.Generated");
+        let mut inside = false;
+        let mut fences = 0;
+        for line in xaml.lines() {
+            let trimmed = line.trim();
+            if trimmed.starts_with("#if") {
+                assert_eq!(trimmed, "#if !MOSAIC_HEADLESS_TEST", "{line}");
+                assert!(!inside, "nested fence");
+                inside = true;
+                fences += 1;
+            } else if trimmed.starts_with("#else") || trimmed.starts_with("#elif") {
+                panic!("the fence has no alternative branch: {line}");
+            } else if trimmed == "#endif" {
+                inside = false;
+            } else if !trimmed.starts_with("//") && !trimmed.starts_with("///") {
+                for winui in [
+                    "Microsoft.UI",
+                    "Windows.Storage",
+                    "WinRT.Interop",
+                    "DispatcherQueue",
+                    "FileOpenPicker",
+                    "FileSavePicker",
+                ] {
+                    assert!(
+                        !trimmed.contains(winui) || inside,
+                        "`{winui}` outside the fence: {line}"
+                    );
+                }
+            }
+        }
+        assert!(!inside, "unclosed fence");
+        assert_eq!(fences, 2, "the WinUI Install overload and the picker class");
+        // The window's handle owns the pickers (unpackaged WinUI 3), and its
+        // queue runs them after the settle.
+        assert!(xaml.contains("WinRT.Interop.WindowNative.GetWindowHandle(window)"));
+        assert_eq!(
+            xaml.matches("WinRT.Interop.InitializeWithWindow.Initialize(picker, window);")
+                .count(),
+            2
+        );
+        assert!(xaml.contains("work => queue.TryEnqueue(() => work())"));
+        // Deferred before any picker; a refused queue is answered, not lost.
+        let deferred = xaml.find("if (!host.DeferEffect(id))").expect("defer");
+        let queued = xaml.find("queued = runOnUi(").expect("queue");
+        let refused = xaml
+            .find("TryComplete(id, MosaicPlatformEffects.Failed(\"the file dialog failed\"));")
+            .expect("refused");
+        assert!(deferred < queued && queued < refused);
     }
 
     /// AppKit exists only on macOS; the iOS app target compiles this file too

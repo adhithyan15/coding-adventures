@@ -34,7 +34,17 @@ contract through `QFileDialog`. The Qt host delivers effects through one
 routed handler (`MosaicHost::setEffectHandler`) that the library's router
 occupies, falling back to the `effectRequested` signal for the app's own kinds
 (UI87 §7.4a). It is tested headless, with fake dialogs, by
-`tests/qt_effect_driver`. XAML and Flutter follow (UI87 §7.3).
+`tests/qt_effect_driver`.
+
+XAML's `MosaicPlatformEffects.cs` (`xaml_platform_effects(namespace)`) answers
+the same contract through WinUI 3's `FileOpenPicker` / `FileSavePicker`, owned
+by the app's window. Each standard effect is deferred and answered from the
+window's `DispatcherQueue`, because the static host runs its handler inside
+the settle (UI87 §7.6). The WinUI half sits behind `#if !MOSAIC_HEADLESS_TEST`,
+so `conformance/xaml-platform-effects/` runs everything else on plain .NET
+with a fake host and a fake picker; `tests/xaml_platform_effects.rs` builds
+and runs that harness wherever `dotnet` is installed. Flutter follows (UI87
+§7.3).
 
 ## Persistence
 
