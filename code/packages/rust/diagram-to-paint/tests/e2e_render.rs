@@ -2162,10 +2162,15 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_event_modeling_to_png() {
         let diagram = parse_event_modeling(
-            "eventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01\ntf 03 evt Sales.OrderSubmitted ->> 02",
+            "eventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 `json`{ \"total\": 42 }\ntf 03 evt Sales.OrderSubmitted ->> 02",
         )
         .expect("event modeling parse failed");
         let layout = layout_event_model_diagram(&diagram, 720.0);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            diagram_ir::LayoutedEventModelItem::Frame { data_label: Some(data), .. }
+                if data == "json: \"total\": 42"
+        )));
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

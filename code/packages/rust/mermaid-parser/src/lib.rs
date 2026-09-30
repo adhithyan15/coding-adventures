@@ -4033,7 +4033,22 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                     Some(token.value[open + 1..close].trim().to_string());
             }
             "FRAME_STATEMENT" => {
-                let fields = token.value.split_whitespace().collect::<Vec<_>>();
+                let inline_open = token.value.find('{');
+                let data = inline_open.map(|open| {
+                    let close = token.value.rfind('}').expect("grammar requires inline data to close");
+                    token.value[open + 1..close].trim().to_string()
+                });
+                let mut frame_end = inline_open.unwrap_or(token.value.len());
+                let data_type = inline_open.and_then(|open| {
+                    let prefix = token.value[..open].trim_end();
+                    if !prefix.ends_with('`') {
+                        return None;
+                    }
+                    let start = prefix[..prefix.len() - 1].rfind('`')?;
+                    frame_end = start;
+                    Some(prefix[start + 1..prefix.len() - 1].to_string())
+                });
+                let fields = token.value[..frame_end].split_whitespace().collect::<Vec<_>>();
                 let reset = matches!(fields[0], "rf" | "resetframe");
                 let id = fields[1].to_string();
                 if !frame_ids.insert(id.clone()) {
@@ -4068,6 +4083,8 @@ pub fn parse_event_modeling(source: &str) -> Result<EventModelDiagram, ParseErro
                     kind,
                     reset,
                     source_frames,
+                    data_type,
+                    data,
                 });
                 previous_id = Some(id);
             }
