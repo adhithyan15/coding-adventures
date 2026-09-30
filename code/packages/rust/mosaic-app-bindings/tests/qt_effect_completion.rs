@@ -176,7 +176,8 @@ fn the_emitted_qt_host_answers_effects() {
             .env("MOSAIC_PROBE_STATE_F", project.join("state-f.json"))
             .env("MOSAIC_PROBE_STATE_G", project.join("state-g.json"))
             .env("MOSAIC_PROBE_STATE_H", project.join("state-h.json"))
-            .env("MOSAIC_PROBE_STATE_I", project.join("state-i.json")),
+            .env("MOSAIC_PROBE_STATE_I", project.join("state-i.json"))
+            .env("MOSAIC_PROBE_STATE_J", project.join("state-j.json")),
         "qt effect driver",
     );
 
@@ -212,6 +213,19 @@ fn the_emitted_qt_host_answers_effects() {
         "a second owner of a deferred effect is refused",
         "an unclaimed non-standard kind reaches no handler",
         "an unclaimed non-standard kind is failed, not left pending",
+        "a phone-sized light window reports the six values",
+        "size classes split at 600 and 1024, and a square window is landscape",
+        "an ignored environment keeps the revision",
+        "an ignored environment keeps the props",
+        "the host still shows the same props",
+        "an unchanged environment is not sent again",
+        "an invalid environment is refused",
+        "the same refused report is not resent",
+        "a native-complete answer is mapped to QML names",
+        "a native-complete answer missing a required prop is refused",
+        "a refused environment leaves the props",
+        "a changed size class is sent",
+        "a refused report was not remembered, and going back is a change",
         "the platform library routes by kind",
         "files.save writes the bytes under the chosen name",
         "files.save leaves no temporary file behind",
