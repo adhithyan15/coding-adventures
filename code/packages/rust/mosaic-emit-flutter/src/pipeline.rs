@@ -5027,6 +5027,30 @@ fn emit_text(
     } else {
         text
     };
+
+    // A Flutter `Text` has no padding argument. Preserve CSS-shaped padding
+    // by wrapping the visual widget, using the same per-edge resolver as
+    // containers and host buttons. Keeping this before the accessibility
+    // wrappers means Semantics/ExcludeSemantics still describe the entire
+    // padded visual node rather than only its glyph child (#16241).
+    let text_props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .map(parse_style_props)
+        .unwrap_or_default();
+    let text = match flutter_padding_edges(&text_props) {
+        Some(edges) => {
+            let insets = flutter_edge_insets(&edges, false);
+            if let Some(child) = text.strip_prefix("const ") {
+                format!("const Padding(padding: {insets}, child: {child})")
+            } else {
+                format!("Padding(padding: const {insets}, child: {text})")
+            }
+        }
+        None => text,
+    };
     let hidden = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
         || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true");
     if hidden {
@@ -15006,6 +15030,87 @@ mod tests {
         assert!(
             drops.is_empty(),
             "implemented typography was reported dropped: {drops:?}"
+        );
+    }
+
+    // ====================================================================
+    // #16241 -- Text parts keep authored directional padding
+    // ====================================================================
+
+    #[test]
+    fn text_padding_resolves_each_edge_with_longhand_precedence() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("Text", "label", vec![]));
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![
+                StyleProp {
+                    name: "padding".into(),
+                    value: "8px".into(),
+                },
+                StyleProp {
+                    name: "padding-left".into(),
+                    value: "18px".into(),
+                },
+                StyleProp {
+                    name: "padding-top".into(),
+                    value: "6px".into(),
+                },
+                StyleProp {
+                    name: "padding-right".into(),
+                    value: "7px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "const Padding(padding: EdgeInsets.fromLTRB(18, 6, 7, 8), child: Text(\"\"))"
+            ),
+            "directional padding did not wrap the Text widget:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented Text padding was reported dropped"
+        );
+    }
+
+    #[test]
+    fn uniform_text_padding_keeps_compact_insets_inside_semantics() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            LayoutNode {
+                tag: "Text".into(),
+                part_name: Some("label".into()),
+                props: vec![LayoutProp {
+                    name: "a11y-role".into(),
+                    value: LayoutPropValue::Keyword("heading".into()),
+                }],
+                children: vec![],
+            },
+        );
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![StyleProp {
+                name: "padding".into(),
+                value: "4px".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "Semantics(header: true, child: const Padding(padding: EdgeInsets.all(4), child: Text(\"\")))"
+            ),
+            "Semantics must wrap the padded Text widget:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented Text padding was reported dropped"
         );
     }
 
