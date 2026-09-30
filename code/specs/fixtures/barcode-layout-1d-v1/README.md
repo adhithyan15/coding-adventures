@@ -38,4 +38,3 @@ marked `conformant`.
 
 The generator is the independent reference oracle for corpus construction; it
 is not production code and grants no runtime authority to package adapters.
-
