@@ -8,3 +8,5 @@
   Go, Haskell, Swift, C#, and F# consumers of the shared authority.
 - Prime and verify Cabal's Hackage index cache after Haskell setup so fresh
   hosted runners do not hand the first package test a test-disabled plan.
+- Keep Haskell package and build-tool project test components enabled during
+  dependency solving so each BUILD front can execute its declared test suite.
