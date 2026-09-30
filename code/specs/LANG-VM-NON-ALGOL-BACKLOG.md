@@ -46,18 +46,16 @@ Both backends now execute structured branches and loops with control-flow
 liveness and final byte-address resolution while retaining the bounded
 two-slot contract.
 
-The fresh non-ALGOL audit selected VM-069's expansion-provenance half as one
-bounded item. The separate `defined()` operand rule remains the next PREP01
-item; this slice does not blur the two semantics changes together.
+PR #16273 delivered VM-069 expansion provenance and merged as
+`ee4f37613136b749ec364a4613a1fa45af1f7a39` after every protected platform and
+metadata gate passed. The fresh non-ALGOL audit selected the remaining
+`defined()` operand contract as exactly one next PREP01 item.
 
 The current queue is:
 
-1. **VM-069 / PREP01 expansion provenance (selected):** connect the already
-   interned expansion arena to emitted loci, preserving physical spelling,
-   definition, invocation, and nested parent sites.
-2. **VM-069 / PREP01 `defined()` operand handling:** specify and implement the
+1. **VM-069 / PREP01 `defined()` operand handling (selected):** specify and implement the
    no-expansion operand rule before the C dialect.
-3. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
+2. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
    claims recorded below.
 
 The following run records the first VM-067 selection.
@@ -539,10 +537,12 @@ Worth doing before C (slice 4): C programs nest macros deeply enough that
 "which expansion produced this token" is the difference between a usable
 diagnostic and an unusable one.
 
-**Still open as a separate VM-069 slice:** a `defined()`-style operator must
-leave its operand unexpanded while expanding the rest of the controlling
-expression. That dialect/engine contract is intentionally not changed by the
-provenance slice.
+**Completed in the following VM-069 slice:** `Dialect::prepare_condition`
+runs before ordinary condition expansion with read-only access to the macro
+table. A future C dialect can replace `defined(NAME)` with a truth-value token,
+leaving `NAME` unexpanded while the shared engine expands the remainder. The
+default identity hook preserves dialects without this operator, and the engine
+rejects a growing result so the hook cannot produce unmetered tokens.
 
 ### VM-068 — controlling expressions were not macro-expanded (found and fixed in slice 2)
 
@@ -584,11 +584,11 @@ undefined-name row, and an always-truthy one passes the defined-name row:
 Also pinned in the engine's own suite, including that grouping introduced *by a
 macro body* is still depth-bounded.
 
-**Still open, deliberately:** a `defined()`-style operator needs its operand
-left *un*expanded while the rest of the expression is expanded — C special-cases
-exactly this. `Directive::If(Vec<Token>)` does not yet say whether its tokens
-are pre- or post-expansion, and that question has to be answered before slice 4,
-because `#if defined(X)` is unimplementable without it.
+**Resolved by VM-069:** `Directive::If(Vec<Token>)` carries raw controlling
+tokens. The engine depth-checks them, calls the dialect's non-growing
+`prepare_condition` hook, expands the remaining tokens, depth-checks again,
+then calls `eval_condition`. This makes `#if defined(X)` implementable without
+teaching the generic engine C's spelling or expanding `X` first.
 
 ### VM-067 — Rust compiled grammars have no CI regeneration check (found 2026-09-21)
 

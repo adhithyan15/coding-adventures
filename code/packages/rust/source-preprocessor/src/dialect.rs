@@ -30,6 +30,7 @@
 
 use crate::diag::PpError;
 use crate::fs::IncludeRequest;
+use crate::macros::MacroTable;
 use crate::source_map::FileId;
 use lexer::token::Token;
 
@@ -64,6 +65,26 @@ pub trait Dialect {
     /// `None` means "ordinary source" — the engine passes those tokens through
     /// untouched (or drops them, if they sit in a skipped conditional group).
     fn classify(&self, line: &[Token]) -> Option<Result<Directive, PpError>>;
+
+    /// Rewrite operators whose operands must be inspected before ordinary
+    /// macro expansion.
+    ///
+    /// The engine calls this after checking the raw expression's grouping
+    /// depth and before expanding the remaining tokens. The default is an
+    /// identity transform. A C dialect can use the hook to replace
+    /// `defined(NAME)` with a truth-value token after querying
+    /// [`MacroTable::is_defined`]; consequently `NAME` is never expanded,
+    /// while macros elsewhere in the expression still are.
+    ///
+    /// Implementations must not increase the token count. The engine enforces
+    /// that restriction so this hook cannot become an unmetered producer.
+    fn prepare_condition(
+        &self,
+        tokens: Vec<Token>,
+        _macros: &MacroTable,
+    ) -> Result<Vec<Token>, PpError> {
+        Ok(tokens)
+    }
 
     /// Evaluate a conditional's controlling expression.
     ///

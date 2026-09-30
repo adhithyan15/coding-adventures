@@ -63,7 +63,9 @@
 //! Slice 1 delivered includes, conditionals, source mapping, and bounds. Slice
 //! 2 added object-like and function-like macro expansion with hide sets.
 //! VM-069 connects each emitted macro token to an interned expansion chain
-//! containing its definition, invocation, and parent sites.
+//! containing its definition, invocation, and parent sites. Its condition
+//! preparation hook also lets a dialect resolve `defined(NAME)` before the
+//! generic engine expands the remainder of the controlling expression.
 //!
 //! # Example
 //!
