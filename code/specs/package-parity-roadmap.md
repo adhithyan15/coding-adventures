@@ -15309,6 +15309,15 @@ positive modules, and digest bytes must be normative and independently checked.
 The focused suite also mutation-tests those schema boundaries. The repo-wide
 metadata-contract workflow now executes it.
 
+Local validation passes eight strict corpus tests, the byte-for-byte generator
+check, Ruff check and format, Bandit, and ten package-parity reporter tests. The
+existing Go implementation passes its two direct tests at 80% statement
+coverage, `go vet`, and the checked-in `BUILD` command. The TypeScript
+human-language-data build and complete doc-shard reconstruction gate pass.
+JSON/schema parsing, the 940-owner/1,811-edge acyclic state graph, changelog
+identity, changed-line credential and file-mode review, diff hygiene, and exact
+package/build-metadata neutrality also pass.
+
 Before publication, `origin/main` advanced through Italian curriculum and
 Telugu ductus changes to `e07375d500da64d31373ecf0c79e947a78609fcd`.
 The branch rebased cleanly. The intervening package changes remain inside two
