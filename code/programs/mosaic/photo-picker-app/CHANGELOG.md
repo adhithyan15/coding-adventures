@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed — the XAML `files.open` handler (UI87 §7.4)
+
+`host/xaml/PhotoPickerEffects.cs` and its `[host_effects]` file and handler
+entries are gone. Mosaic's XAML platform library (UI87 §7.6) answers
+`files.open` for every WinUI app, and this app claims no effect kinds, so the
+router sent `files.open` to the library and the handler was never reached.
+The generated native-complete `MainWindow` now installs only
+`MosaicPlatformEffects`. Flutter keeps the app's handler until its library
+lands. The smoke test asserts there is no Compose, SwiftUI, Qt or XAML handler
+and that `host/xaml/` is gone; UI59 §4 is marked retired.
+
 ### Removed — the Qt `files.open` handler (UI87 §7.4)
 
 `host/qt/PhotoPickerEffects.{h,cpp}` and their `[host_effects]` file and

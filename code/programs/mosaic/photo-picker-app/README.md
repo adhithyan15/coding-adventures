@@ -14,8 +14,8 @@ how the effect result is rendered) lives in the separate
 `UI47`'s `[host_effects]` mechanism wires a package-declared handler
 into each backend's generated entry point, but until now no *generic*
 (non-Engram-specific) effect kind had a real handler on any backend.
-This package is that first one. XAML and Flutter answer `files.open` with
-this package's own handlers (`UI59` §2); Compose, SwiftUI and Qt answer it
+This package is that first one. Flutter answers `files.open` with this
+package's own handler (`UI59` §2); Compose, SwiftUI, Qt and XAML answer it
 from Mosaic's platform library (`UI87` §7).
 
 ## Layout
@@ -24,54 +24,25 @@ from Mosaic's platform library (`UI87` §7).
 src/PhotoPickerApp.mil          -- interface: status/picking slots, onPickPhoto emit
 src/PhotoPickerApp.mll          -- layout: status text + "Pick a Photo" button
 src/PhotoPickerApp.{light,dark}.msl -- styling (native controls pick up dark mode themselves)
-host/xaml/PhotoPickerEffects.cs -- the XAML files.open handler ([host_effects])
 host/flutter/PhotoPickerEffects.dart -- the Flutter files.open handler ([host_effects])
 mosaic-package.toml             -- exports + [host_effects]/[host_assets] wiring
 ```
 
-## The XAML handler
+## Compose, SwiftUI, Qt and XAML: Mosaic's platform library
 
-`host/xaml/PhotoPickerEffects.cs`'s `PhotoPickerHost.PhotoPickerEffects
-.Install()` sets `MosaicRuntimeHost.EffectHandler`, defers the effect
-(`FileOpenPicker.PickSingleFileAsync()` is necessarily async; the
-handler itself must return synchronously), and completes it as
-`ok`/`cancelled`/`failed` once the user's picker interaction resolves.
-Full design rationale — the namespace choice, the `GetForegroundWindow()`
-owner-window approach, the MIME-type/extension mapping — is documented
-inline in the file itself and in `UI59` §4.
-
-Two non-obvious build errors this file's real `dotnet build` caught,
-both now guarded by inline comments so a future edit doesn't
-reintroduce them:
-
-- **Namespace collision (CS0117).** The handler's C# namespace cannot
-  be `PhotoPickerApp` — the generated component class is
-  `Mosaic.Generated.PhotoPickerApp` (from this package's own
-  `component PhotoPickerApp`), and the generated `Install();` call
-  site lives inside `namespace Mosaic.Generated`, where an unqualified
-  `PhotoPickerApp` resolves to that class first. The handler's
-  namespace is `PhotoPickerHost` instead.
-- **Lexical variable scoping (CS0136).** Two `var mimeType = ...`
-  declarations in the same method — one building the request filter,
-  one building the result's MIME type — collide even though their
-  runtime lifetimes never overlap, because C# scoping is lexical
-  across the whole method. The filter-building one is named
-  `candidateMimeType`.
-
-## Compose, SwiftUI and Qt: Mosaic's platform library
-
-This app carries no Compose, SwiftUI or Qt handler. Every generated Compose,
-SwiftUI and Qt project gets Mosaic's platform library
-(`MosaicPlatformEffects.kt` / `MosaicPlatformEffects.swift` /
-`MosaicPlatformEffects.{h,cpp}`, UI87 §7), which answers `files.open` with the
-same UI59 contract — the native file dialog, the picked file's name, MIME type
-and bytes, never its path — so the generated entry point installs only
-`installMosaicPlatformEffects`. The Compose and Qt handlers this app used to
-carry (`host/compose/PhotoPickerEffects.kt`, `host/qt/PhotoPickerEffects.{h,cpp}`)
-were retired for it (UI87 §7.4): the app claims no effect kinds, so the
-router sends `files.open` to the library and a package handler would never
-be reached. The XAML and Flutter handlers follow as those backends' libraries
-land.
+This app carries no Compose, SwiftUI, Qt or XAML handler. Every generated
+Compose, SwiftUI, Qt and XAML project gets Mosaic's platform library
+(`MosaicPlatformEffects.kt` / `.swift` / `.{h,cpp}` / `.cs`, UI87 §7), which
+answers `files.open` with the same UI59 contract — the native file dialog, the
+picked file's name, MIME type and bytes, never its path — so the generated
+entry point installs only the library. The Compose, Qt and XAML handlers this
+app used to carry (`host/compose/PhotoPickerEffects.kt`,
+`host/qt/PhotoPickerEffects.{h,cpp}`, `host/xaml/PhotoPickerEffects.cs`) were
+retired for it (UI87 §7.4): the app claims no effect kinds, so the router
+sends `files.open` to the library and a package handler would never be
+reached. The XAML handler's design notes (the namespace choice, the owner
+window, the MIME mapping) live on in UI59 §4, which the library follows. The
+Flutter handler follows when that backend's library lands.
 
 ## The Flutter handler
 
@@ -123,33 +94,26 @@ cargo test
 ```
 
 `tests/package_compiles.rs` (mirrors `task-app`'s/`engram-app`'s own
-harness), 5 tests:
+harness), 4 tests:
 
 1. `.mil`/`.mll`/both `.msl` themes compile, and the component's
    slots/emits match what's expected.
-2. The manifest declares `PhotoPickerApp` as the sole export, the XAML
-   `[host_effects]` file and handler exactly as documented (no
-   `include` — the XAML emitter refuses one outright), the Flutter `[host_effects]` file and handler (with
-   `include`, since Dart resolves nothing across files without one) plus
-   the `[host_assets].dependencies` entry for `file_selector`, and that
-   none of Compose, SwiftUI or Qt has a `[host_effects]` entry (the
-   platform library answers there).
-3. `PhotoPickerEffects.cs` exists and declares `Install()`,
-   `MosaicRuntimeHost.EffectHandler`, and the `"files.open"` kind
-   string.
-4. There is no Compose, SwiftUI or Qt handler, and `host/compose/` and
-   `host/qt/` are gone (the platform library answers `files.open` there).
-5. `PhotoPickerEffects.dart` exists and declares
+2. The manifest declares `PhotoPickerApp` as the sole export, the Flutter
+   `[host_effects]` file and handler (with `include`, since Dart resolves
+   nothing across files without one) plus the `[host_assets].dependencies`
+   entry for `file_selector`, and that none of Compose, SwiftUI, Qt or XAML
+   has a `[host_effects]` entry (the platform library answers there).
+3. There is no Compose, Qt or XAML handler: `host/compose/`, `host/qt/` and
+   `host/xaml/` are gone.
+4. `PhotoPickerEffects.dart` exists and declares
    `installPhotoPickerEffects(MosaicHost host)`, `effectHandler`, and
    the `'files.open'` kind string.
 
 ### Real builds (manual, not part of `cargo test`)
 
-- **XAML**: a real `dotnet build` of the emitted `--profile
-  native-complete` project — succeeds with 0 errors, 0 warnings.
-  Interactively exercising the native `FileOpenPicker` dialog itself
-  isn't something this environment can automate; that gap is stated
-  explicitly rather than silently skipped (`UI59` §5).
+- **XAML**: no handler of its own any more; the platform library's
+  `files.open` is exercised by its headless conformance harness in
+  `mosaic-app-bindings` (UI87 §7.6).
 - **Qt**: no handler of its own any more; the platform library's
   `files.open` is exercised by the Qt effect driver in
   `mosaic-app-bindings` (UI87 §7.4a).

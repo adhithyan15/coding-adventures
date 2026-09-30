@@ -7,9 +7,9 @@ license = "MIT"
 [components]
 exports = ["PhotoPickerApp"]
 
-# XAML and Flutter carry this app's own `files.open` handler (UI59 §2).
-# Compose, SwiftUI and Qt answer it from Mosaic's platform library (UI87 §7),
-# and the other two move onto theirs as those libraries land (UI87 §7.4).
+# Flutter carries this app's own `files.open` handler (UI59 §2). Compose,
+# SwiftUI, Qt and XAML answer it from Mosaic's platform library (UI87 §7),
+# and Flutter moves onto its own when that library lands (UI87 §7.4).
 #
 # `[host_assets]` exists ONLY to declare the Flutter handler's third-party pub
 # dependency -- unlike Engram, this app has no legacy hand-written host to
@@ -26,10 +26,9 @@ dependencies = [
 
 [host_effects]
 files = [
-  { backend = "xaml", source = "host/xaml/PhotoPickerEffects.cs", target = "PhotoPickerEffects.cs" },
-  # No Compose, SwiftUI or Qt entry: Mosaic's platform library answers
-  # `files.open` for every app on those backends (UI87 §7, §7.4a), so this
-  # app keeps no copy of its own (UI87 §7.4).
+  # No Compose, SwiftUI, Qt or XAML entry: Mosaic's platform library answers
+  # `files.open` for every app on those backends (UI87 §7, §7.4a, §7.6), so
+  # this app keeps no copy of its own (UI87 §7.4).
   # Dart compiles everything under `lib/`, like Kotlin does under
   # `src/main/kotlin` -- but unlike Kotlin, Dart resolves nothing across
   # files without an import, so this one still needs an `include` below.
@@ -37,19 +36,6 @@ files = [
   { backend = "flutter", source = "host/flutter/PhotoPickerEffects.dart", target = "lib/PhotoPickerEffects.dart" },
 ]
 handlers = [
-  # No `include`: the XAML emitter refuses one outright (every type in the
-  # assembly is already visible; `install` must be fully namespace-
-  # qualified instead) -- confirmed against `xaml_main_with_host_effects`'s
-  # own refusal message, not assumed from the `[host_assets]` precedent.
-  #
-  # Namespace is `PhotoPickerHost`, not `PhotoPickerApp` -- the generated
-  # component class is `Mosaic.Generated.PhotoPickerApp` (from this
-  # package's own `component PhotoPickerApp`), and the generated
-  # `Install();` call site lives inside `namespace Mosaic.Generated`, where
-  # an unqualified `PhotoPickerApp` would resolve to that class instead of
-  # a same-named handler namespace. Confirmed by a real `dotnet build`
-  # failure (CS0117) before this was caught.
-  { backend = "xaml", install = "PhotoPickerHost.PhotoPickerEffects.Install" },
   # `include` names the file relative to `lib/`, matching engram-app's own
   # Flutter entry -- Dart, unlike Kotlin/Swift, resolves nothing across
   # files without an explicit import, and `flutter_main_with_host_effects`

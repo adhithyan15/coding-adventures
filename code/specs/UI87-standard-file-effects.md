@@ -199,10 +199,10 @@ escape hatch, used deliberately and visibly.
 ### 7.4 Migration
 
 - `photo-picker-app` drops its four per-backend `files.open` handlers and uses
-  the platform library, becoming the second consumer. *Compose and Qt done*
-  (their handlers removed; SwiftUI never had one). XAML's library exists
-  (§7.6); photo-picker's XAML handler claims no kinds, so it is no longer
-  reached, and removing it is the follow-up. Flutter follows its library.
+  the platform library, becoming the second consumer. *Compose, Qt and XAML
+  done* (their handlers removed; SwiftUI never had one): the app claims no
+  kinds, so once each backend's library existed the router sent `files.open`
+  there and the app's handler was never reached. Flutter follows its library.
 - Engram's `importAnki` / `exportAnki` can later become `files.open` /
   `files.save` plus Rust-side parsing, which removes about 1,300 lines of
   per-backend handler code. That is a separate change.

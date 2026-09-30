@@ -103,6 +103,11 @@ nature of every target platform's real picker API.
 
 ## 4. XAML implementation
 
+> **Retired (UI87 §7.4).** This XAML handler no longer exists: Mosaic's
+> XAML platform library (UI87 §7.6) answers `files.open` for every app,
+> and `photo-picker-app` claims no effect kinds, so the router sends it
+> there. The section is kept as the design record the library follows.
+
 ### 4.1 Where the handler lives
 
 Per-app, like every other `[host_effects]` handler (`UI47` §5.5.2) —
