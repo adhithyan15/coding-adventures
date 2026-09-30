@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Adult, Elderly person, Newborn, Twin, Grandson",
+  "label": "ch:it-adult-elderly-person-newborn-twin-grandson",
+  "canDo": "I can say an adult, an elderly person, a newborn, a twin and a grandson.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C224-nipote",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can say an adult, an elderly person, a newborn, a twin and a grandson.",
+    "assesses": [
+      "IT-LEX-C224-COSE224-03",
+      "IT-LEX-C224-COSE224-04",
+      "IT-LEX-C224-COSE224-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C227-bagaglio",
+  "pathSegment": "IT-PATH-227-COSE227",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-227-COSE227",
+      "order": 3
+    }
+  ]
+}

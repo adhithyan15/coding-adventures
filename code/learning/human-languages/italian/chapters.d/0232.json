@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Number, Sheet of paper, Newspaper, Magazine, Dictionary",
+  "label": "ch:it-number-sheet-of-paper-newspaper-magazine-dictionary",
+  "canDo": "I can say a number, a sheet of paper, a newspaper, a magazine and a dictionary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R232-second-pass-words-from-chapters-230-232",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say a number, a sheet of paper, a newspaper, a magazine and a dictionary.",
+    "assesses": [
+      "IT-LEX-C232-LAV232-03",
+      "IT-LEX-C232-LAV232-04",
+      "IT-LEX-C232-LAV232-05"
+    ]
+  }
+}

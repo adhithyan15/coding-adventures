@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C204-risparmiare",
+    "language": "italian",
+    "chapter": 204,
+    "sequence": 11760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:236cf031ff2f90c5"
+  },
+  "findings": []
+}

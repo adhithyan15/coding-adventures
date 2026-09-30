@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "To mix, To hide oneself, To obey, To host, To recommend",
+  "label": "ch:it-to-mix-to-hide-oneself-to-obey-to-host-to-recommend",
+  "canDo": "I can say to mix, to hide oneself, to obey, to host and to recommend.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C213-raccomandare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say to mix, to hide oneself, to obey, to host and to recommend.",
+    "assesses": [
+      "IT-LEX-C213-VERBI213-03",
+      "IT-LEX-C213-VERBI213-04",
+      "IT-LEX-C213-VERBI213-05"
+    ]
+  }
+}

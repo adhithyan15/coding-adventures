@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:44a5ed494b7a2cf0",
+  "lessonIds": [
+    "IT-C227-guida",
+    "IT-C227-ingresso",
+    "IT-C227-uscita",
+    "IT-C227-bagaglio",
+    "IT-C227-posto",
+    "IT-R227-first-pass-words-from-chapters-222-224",
+    "IT-R227-second-pass-words-from-chapters-225-227"
+  ],
+  "tex": "italian/book/chapters/ch227-guide-entrance-exit-luggage-place.tex"
+}

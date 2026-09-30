@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C232-numero",
+    "language": "italian",
+    "chapter": 232,
+    "sequence": 13670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ac8827b0ca984a2"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:6cb86e4ba8199b82",
+  "lessonIds": [
+    "IT-C226-scontrino",
+    "IT-C226-resto",
+    "IT-C226-moneta",
+    "IT-C226-banconota",
+    "IT-C226-bancomat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch226.txt",
+  "json": "italian/narration/ch226.json",
+  "textHash": "fnv1a64:e1cd8f49828a4dda",
+  "jsonHash": "fnv1a64:10e92d691980fe5c",
+  "findings": []
+}

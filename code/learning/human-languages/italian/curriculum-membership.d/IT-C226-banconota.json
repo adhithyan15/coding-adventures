@@ -1,0 +1,11 @@
+{
+  "id": "IT-C226-banconota",
+  "pathSegment": "IT-PATH-226-COSE226",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-226-COSE226",
+      "order": 3
+    }
+  ]
+}

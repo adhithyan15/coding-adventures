@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C210-raccogliere",
+    "language": "italian",
+    "chapter": 210,
+    "sequence": 12070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10461159c6dabbf3"
+  },
+  "findings": []
+}

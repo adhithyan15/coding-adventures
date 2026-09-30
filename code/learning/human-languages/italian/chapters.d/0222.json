@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Soldier, Flag, Religion, Culture, Tradition",
+  "label": "ch:it-soldier-flag-religion-culture-tradition",
+  "canDo": "I can say a soldier, a flag, religion, culture and a tradition.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C222-tradizione",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say a soldier, a flag, religion, culture and a tradition.",
+    "assesses": [
+      "IT-LEX-C222-COSE222-03",
+      "IT-LEX-C222-COSE222-04",
+      "IT-LEX-C222-COSE222-05"
+    ]
+  }
+}

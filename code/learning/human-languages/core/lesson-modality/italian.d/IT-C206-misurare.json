@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C206-misurare",
+    "language": "italian",
+    "chapter": 206,
+    "sequence": 11870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44177b082d33f0f3"
+  },
+  "findings": []
+}

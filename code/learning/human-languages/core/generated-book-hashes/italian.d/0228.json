@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:05c171bca0c4ec73",
+  "lessonIds": [
+    "IT-C228-grattacielo",
+    "IT-C228-castello",
+    "IT-C228-torre",
+    "IT-C228-monumento",
+    "IT-C228-statua"
+  ],
+  "tex": "italian/book/chapters/ch228-skyscraper-castle-tower-monument-statue.tex"
+}

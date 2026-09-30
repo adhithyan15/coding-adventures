@@ -1,0 +1,11 @@
+{
+  "id": "IT-R227-second-pass-words-from-chapters-225-227",
+  "pathSegment": "IT-PATH-227-COSE227",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-227-COSE227",
+      "order": 6
+    }
+  ]
+}

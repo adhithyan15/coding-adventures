@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C228-castello",
+    "language": "italian",
+    "chapter": 228,
+    "sequence": 13480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ca9043c0577a234"
+  },
+  "findings": []
+}

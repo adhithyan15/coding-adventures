@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "To try, To finish, To continue, To stop, To halt",
+  "label": "ch:it-to-try-to-finish-to-continue-to-stop-to-halt",
+  "canDo": "I can say to try, to finish, to continue, to stop and to halt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C205-fermare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say to try, to finish, to continue, to stop and to halt.",
+    "assesses": [
+      "IT-LEX-C205-VERBI205-03",
+      "IT-LEX-C205-VERBI205-04",
+      "IT-LEX-C205-VERBI205-05"
+    ]
+  }
+}

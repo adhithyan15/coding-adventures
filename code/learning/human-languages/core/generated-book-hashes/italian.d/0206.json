@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:daa3396adb7c4df6",
+  "lessonIds": [
+    "IT-C206-raffreddare",
+    "IT-C206-riempire",
+    "IT-C206-svuotare",
+    "IT-C206-contare",
+    "IT-C206-misurare"
+  ],
+  "tex": "italian/book/chapters/ch206-to-cool-down-to-fill-to-empty-to-count-to-measure.tex"
+}

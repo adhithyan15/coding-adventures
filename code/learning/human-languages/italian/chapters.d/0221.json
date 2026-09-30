@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Bakery, Butcher's, Forest, Coast, Valley",
+  "label": "ch:it-bakery-butcher-s-forest-coast-valley",
+  "canDo": "I can say a bakery, a butcher's, a forest, a coast and a valley.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-R221-second-pass-words-from-chapters-217-221",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say a bakery, a butcher's, a forest, a coast and a valley.",
+    "assesses": [
+      "IT-LEX-C221-COSE221-03",
+      "IT-LEX-C221-COSE221-04",
+      "IT-LEX-C221-COSE221-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C217-magari",
+  "pathSegment": "IT-PATH-217-PERCHE217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-217-PERCHE217",
+      "order": 2
+    }
+  ]
+}

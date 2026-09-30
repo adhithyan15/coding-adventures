@@ -1,0 +1,11 @@
+{
+  "id": "IT-C210-raccogliere",
+  "pathSegment": "IT-PATH-210-VERBI210",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-210-VERBI210",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R232-first-pass-words-from-chapters-228-229",
+    "language": "italian",
+    "chapter": 232,
+    "sequence": 13720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2936e9a7ead7620"
+  },
+  "findings": []
+}

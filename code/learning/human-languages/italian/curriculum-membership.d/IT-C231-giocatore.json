@@ -1,0 +1,11 @@
+{
+  "id": "IT-C231-giocatore",
+  "pathSegment": "IT-PATH-231-COSE231",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-231-COSE231",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C231-sconfitta",
+    "language": "italian",
+    "chapter": 231,
+    "sequence": 13630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:040d45d1b2661b9e"
+  },
+  "findings": []
+}

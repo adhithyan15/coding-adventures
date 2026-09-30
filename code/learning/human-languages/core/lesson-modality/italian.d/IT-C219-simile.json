@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C219-simile",
+    "language": "italian",
+    "chapter": 219,
+    "sequence": 12680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a054f8009ebc057"
+  },
+  "findings": []
+}

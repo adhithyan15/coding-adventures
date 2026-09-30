@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:687f020db5d8fced",
+  "lessonIds": [
+    "IT-C228-grattacielo",
+    "IT-C228-castello",
+    "IT-C228-torre",
+    "IT-C228-monumento",
+    "IT-C228-statua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch228.txt",
+  "json": "italian/narration/ch228.json",
+  "textHash": "fnv1a64:5529d01d0793359e",
+  "jsonHash": "fnv1a64:75a57f6656a9f0ca",
+  "findings": []
+}

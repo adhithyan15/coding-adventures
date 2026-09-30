@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C213-ospitare",
+    "language": "italian",
+    "chapter": 213,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:383a291e8e6c5654"
+  },
+  "findings": []
+}

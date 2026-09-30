@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:5134b223be6dece2",
+  "lessonIds": [
+    "IT-C207-crescere",
+    "IT-C207-invecchiare",
+    "IT-C207-sposare",
+    "IT-C207-divorziare",
+    "IT-C207-traslocare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch207.txt",
+  "json": "italian/narration/ch207.json",
+  "textHash": "fnv1a64:e694dab776c27416",
+  "jsonHash": "fnv1a64:645e557d91350676",
+  "findings": []
+}

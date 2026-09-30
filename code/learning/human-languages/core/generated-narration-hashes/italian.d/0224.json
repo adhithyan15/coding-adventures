@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:43115185062e06cd",
+  "lessonIds": [
+    "IT-C224-adulto",
+    "IT-C224-anziano",
+    "IT-C224-neonato",
+    "IT-C224-gemello",
+    "IT-C224-nipote"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch224.txt",
+  "json": "italian/narration/ch224.json",
+  "textHash": "fnv1a64:588e1be569c6c25a",
+  "jsonHash": "fnv1a64:17582133ff0e753b",
+  "findings": []
+}

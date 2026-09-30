@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:7c5e351376660c66",
+  "lessonIds": [
+    "IT-C210-preparare",
+    "IT-C210-prestare",
+    "IT-C210-produrre",
+    "IT-C210-proporre",
+    "IT-C210-raccogliere"
+  ],
+  "tex": "italian/book/chapters/ch210-to-prepare-to-lend-to-produce-to-propose-to-pick-up.tex"
+}

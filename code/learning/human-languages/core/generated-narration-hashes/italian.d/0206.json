@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:535de07a0d8f897c",
+  "lessonIds": [
+    "IT-C206-raffreddare",
+    "IT-C206-riempire",
+    "IT-C206-svuotare",
+    "IT-C206-contare",
+    "IT-C206-misurare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch206.txt",
+  "json": "italian/narration/ch206.json",
+  "textHash": "fnv1a64:e3cf516c2a5f2331",
+  "jsonHash": "fnv1a64:b44198f2d703c84d",
+  "findings": []
+}

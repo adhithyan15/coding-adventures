@@ -1,0 +1,11 @@
+{
+  "id": "IT-C223-scrittore",
+  "pathSegment": "IT-PATH-223-COSE223",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-223-COSE223",
+      "order": 2
+    }
+  ]
+}

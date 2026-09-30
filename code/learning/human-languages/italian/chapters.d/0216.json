@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Trust, Courage, Shame, Jealousy, Surprise",
+  "label": "ch:it-trust-courage-shame-jealousy-surprise",
+  "canDo": "I can say trust, courage, shame, jealousy and surprise.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C216-sorpresa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say trust, courage, shame, jealousy and surprise.",
+    "assesses": [
+      "IT-LEX-C216-SAL216-03",
+      "IT-LEX-C216-SAL216-04",
+      "IT-LEX-C216-SAL216-05"
+    ]
+  }
+}

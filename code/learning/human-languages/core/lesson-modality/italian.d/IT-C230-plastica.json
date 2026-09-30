@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C230-plastica",
+    "language": "italian",
+    "chapter": 230,
+    "sequence": 13570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cfddcdde8808d44"
+  },
+  "findings": []
+}

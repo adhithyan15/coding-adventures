@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-226-COSE226",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a till receipt, change, a coin, a banknote and a cash machine.",
+  "prerequisites": []
+}

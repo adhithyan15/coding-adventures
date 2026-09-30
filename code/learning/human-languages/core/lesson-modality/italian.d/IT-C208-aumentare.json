@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C208-aumentare",
+    "language": "italian",
+    "chapter": 208,
+    "sequence": 11960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34b84c8cb5589ea3"
+  },
+  "findings": []
+}

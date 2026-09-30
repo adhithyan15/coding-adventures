@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-220-COSE220",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a T-shirt, stockings, a belt, pyjamas and a pocket.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C209-girare",
+  "pathSegment": "IT-PATH-209-VERBI209",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-209-VERBI209",
+      "order": 2
+    }
+  ]
+}

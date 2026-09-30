@@ -1,0 +1,11 @@
+{
+  "id": "IT-C206-svuotare",
+  "pathSegment": "IT-PATH-206-VERBI206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-206-VERBI206",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:fac539e563934c6c",
+  "lessonIds": [
+    "IT-C229-pianura",
+    "IT-C229-sasso",
+    "IT-C229-fango",
+    "IT-C229-polvere",
+    "IT-C229-fumo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch229.txt",
+  "json": "italian/narration/ch229.json",
+  "textHash": "fnv1a64:dd444eadfc91c704",
+  "jsonHash": "fnv1a64:0c2ff433de43b26e",
+  "findings": []
+}

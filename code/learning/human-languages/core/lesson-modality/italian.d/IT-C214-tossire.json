@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C214-tossire",
+    "language": "italian",
+    "chapter": 214,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11a7ab347246e0c8"
+  },
+  "findings": []
+}

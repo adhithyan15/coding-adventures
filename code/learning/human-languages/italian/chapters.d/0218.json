@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Jealous, Proud, Nervous, Calm, Silent",
+  "label": "ch:it-jealous-proud-nervous-calm-silent",
+  "canDo": "I can say jealous, proud, nervous, calm and silent.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C218-silenzioso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say jealous, proud, nervous, calm and silent.",
+    "assesses": [
+      "IT-LEX-C218-QUAL218-03",
+      "IT-LEX-C218-QUAL218-04",
+      "IT-LEX-C218-QUAL218-05"
+    ]
+  }
+}

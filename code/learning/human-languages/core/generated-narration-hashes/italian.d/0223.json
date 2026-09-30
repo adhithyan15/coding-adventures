@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:d926e3dc091f4d55",
+  "lessonIds": [
+    "IT-C223-poesia",
+    "IT-C223-quadro",
+    "IT-C223-scrittore",
+    "IT-C223-pittore",
+    "IT-C223-fotografo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch223.txt",
+  "json": "italian/narration/ch223.json",
+  "textHash": "fnv1a64:c91615418fac3556",
+  "jsonHash": "fnv1a64:8832c019e75c51ca",
+  "findings": []
+}

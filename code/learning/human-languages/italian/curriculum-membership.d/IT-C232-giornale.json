@@ -1,0 +1,11 @@
+{
+  "id": "IT-C232-giornale",
+  "pathSegment": "IT-PATH-232-LAV232",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-232-LAV232",
+      "order": 2
+    }
+  ]
+}

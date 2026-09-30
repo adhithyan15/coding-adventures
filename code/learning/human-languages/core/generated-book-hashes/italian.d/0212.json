@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:c07ef29dd1cd8424",
+  "lessonIds": [
+    "IT-C212-affrettarsi",
+    "IT-C212-allontanarsi",
+    "IT-C212-avvicinarsi",
+    "IT-C212-chiacchierare",
+    "IT-C212-collegare",
+    "IT-R212-first-pass-words-from-chapters-204-207",
+    "IT-R212-second-pass-words-from-chapters-208-212"
+  ],
+  "tex": "italian/book/chapters/ch212-to-hurry-to-move-away-to-come-near-to-chat-to-connect.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C222-cultura",
+  "pathSegment": "IT-PATH-222-COSE222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-222-COSE222",
+      "order": 3
+    }
+  ]
+}

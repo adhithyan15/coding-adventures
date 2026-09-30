@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C204-parcheggiare",
+    "language": "italian",
+    "chapter": 204,
+    "sequence": 11730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc70eb394f26c111"
+  },
+  "findings": []
+}

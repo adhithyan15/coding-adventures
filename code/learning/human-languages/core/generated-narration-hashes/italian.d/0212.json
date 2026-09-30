@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:d28a8122713eaade",
+  "lessonIds": [
+    "IT-C212-affrettarsi",
+    "IT-C212-allontanarsi",
+    "IT-C212-avvicinarsi",
+    "IT-C212-chiacchierare",
+    "IT-C212-collegare",
+    "IT-R212-first-pass-words-from-chapters-204-207",
+    "IT-R212-second-pass-words-from-chapters-208-212"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch212.txt",
+  "json": "italian/narration/ch212.json",
+  "textHash": "fnv1a64:273db5e05236f385",
+  "jsonHash": "fnv1a64:d99629985ad99316",
+  "findings": []
+}

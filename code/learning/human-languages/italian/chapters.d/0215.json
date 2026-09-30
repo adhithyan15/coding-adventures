@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Flu, Prescription, Pill, Syrup, Ointment",
+  "label": "ch:it-flu-prescription-pill-syrup-ointment",
+  "canDo": "I can say flu, a prescription, a pill, a syrup and an ointment.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C215-pomata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say flu, a prescription, a pill, a syrup and an ointment.",
+    "assesses": [
+      "IT-LEX-C215-SAL215-03",
+      "IT-LEX-C215-SAL215-04",
+      "IT-LEX-C215-SAL215-05"
+    ]
+  }
+}

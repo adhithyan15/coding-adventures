@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C227-bagaglio",
+    "language": "italian",
+    "chapter": 227,
+    "sequence": 13290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e760fa11df58779"
+  },
+  "findings": []
+}

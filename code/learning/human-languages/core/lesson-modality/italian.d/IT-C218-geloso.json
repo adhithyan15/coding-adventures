@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C218-geloso",
+    "language": "italian",
+    "chapter": 218,
+    "sequence": 12620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c88d6f98a6dd25f"
+  },
+  "findings": []
+}

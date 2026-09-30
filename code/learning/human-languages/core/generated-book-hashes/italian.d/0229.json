@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:4e9b0232649acbd6",
+  "lessonIds": [
+    "IT-C229-pianura",
+    "IT-C229-sasso",
+    "IT-C229-fango",
+    "IT-C229-polvere",
+    "IT-C229-fumo"
+  ],
+  "tex": "italian/book/chapters/ch229-plain-pebble-mud-dust-smoke.tex"
+}
