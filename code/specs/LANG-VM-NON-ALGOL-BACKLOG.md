@@ -40,15 +40,23 @@ PR #16253 delivered WORD03a and merged as
 execute normalized unsigned comparisons at both widths; the Z80 proof includes
 high/low-byte ordering and the 8086 proof includes unsigned boundary cases.
 
-WORD03b is now selected. It adds control-flow edges, fixed-point liveness, and
-final byte-address resolution while retaining the bounded two-slot contract.
+PR #16261 delivered WORD03b and merged as
+`62bbac265ee5ce1ca70b18cdf37cf0b1aaa5e83f` after all required checks passed.
+Both backends now execute structured branches and loops with control-flow
+liveness and final byte-address resolution while retaining the bounded
+two-slot contract.
+
+The fresh non-ALGOL audit selected VM-069's expansion-provenance half as one
+bounded item. The separate `defined()` operand rule remains the next PREP01
+item; this slice does not blur the two semantics changes together.
 
 The current queue is:
 
-1. **WORD03b / VM-072 (selected):** add structured branches and loops with control-flow
-   liveness and final byte-address resolution on both target backends.
-2. **VM-069 / PREP01:** continue expansion-definition provenance and
-   `defined()` operand expansion.
+1. **VM-069 / PREP01 expansion provenance (selected):** connect the already
+   interned expansion arena to emitted loci, preserving physical spelling,
+   definition, invocation, and nested parent sites.
+2. **VM-069 / PREP01 `defined()` operand handling:** specify and implement the
+   no-expansion operand rule before the C dialect.
 3. **VM-075 / VM-076:** reconcile the 8086 and Z80 simulator documentation
    claims recorded below.
 
@@ -492,7 +500,7 @@ non-recursive expansion algorithm, and gives MacroOct `@define`. Stringize and
 paste stay unimplemented dialect hooks — MacroOct declines both, which is
 itself a test that the engine does not assume they exist.
 
-### VM-069 — expanded tokens have no expansion provenance (interim fix in slice 2)
+### VM-069 — expansion provenance and `defined()` operand handling
 
 Slice 2's security review found that an expanded token carried the macro
 **body's** line and column while `emit` stamped it with the file currently
@@ -501,28 +509,37 @@ position inside the *including* file's `@include` line — pointing at text with
 no relationship to the token. Confidently wrong provenance, not merely absent:
 a reader follows it and lands somewhere unrelated.
 
-**Interim, shipped:** expanded tokens now carry the position of the
-**invocation**, which is real text in the file that genuinely produced them.
-Pinned by `an_expanded_token_points_at_its_invocation_not_at_unrelated_text`.
+**Historical interim:** expanded tokens were restamped with the position of the
+**invocation**, which at least named real text in the file that produced them.
+The completed provenance path below supersedes that approximation.
 
-**Still open:** `Locus::expansion` is always `None`, so the interned expansion
-arena in `source_map.rs` — `intern_expansion`, `expansion_parent`,
-`expansion_site` — is entirely unexercised. That arena is not incidental:
+**Expansion provenance implemented in this selected slice:** `MToken` now
+carries its physical `Position` and `Option<ExpansionId>` alongside the hide
+set. Every actual substitution interns one expansion node with the macro name,
+definition position, invocation position, and parent. `emit` writes that data
+to `Locus`, and `SourceMap::expansion_definition` exposes the definition end of
+the chain. Macro-body spellings keep their defining file/line/column rather
+than being restamped with an unrelated file.
+
+The arena is not incidental:
 `lib.rs` names "keeping a token's true origin across inclusion **and
 expansion**" as one of the three hard parts this crate exists to solve, and
 `source_map.rs` documents the interning design at length precisely so the map
 stays `O(tokens + expansions)` rather than `O(tokens × depth)`.
 
-Closing it needs an `Option<ExpansionId>` on `MToken` alongside `hide`,
-`intern_expansion` called at each substitution, and the macro body's defining
-`FileId` recorded in `MacroDef` so a chain can name it. Then a diagnostic can
-say "in expansion of `FOO`, defined at `ports.oct:3`, used at `main.oct:12`" —
-which is the whole reason the side-table design was chosen over widening
-`Token`.
+The acceptance proof covers an included-file definition used in the main file,
+nested object-like macros, and function-argument pre-expansion. It asserts one
+arena node per actual substitution, correct innermost-to-outermost parents, and
+ordinary tokens with no expansion. The shared lexer `Token` remains unchanged.
 
 Worth doing before C (slice 4): C programs nest macros deeply enough that
 "which expansion produced this token" is the difference between a usable
 diagnostic and an unusable one.
+
+**Still open as a separate VM-069 slice:** a `defined()`-style operator must
+leave its operand unexpanded while expanding the rest of the controlling
+expression. That dialect/engine contract is intentionally not changed by the
+provenance slice.
 
 ### VM-068 — controlling expressions were not macro-expanded (found and fixed in slice 2)
 

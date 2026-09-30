@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — VM-069 expansion provenance
+
+- Expanded tokens now retain the physical position of their macro-body
+  spelling and carry an interned `ExpansionId` through `Locus::expansion`.
+- Expansion nodes record the macro name, invocation position, definition
+  position, and parent expansion. `SourceMap::expansion_definition` exposes the
+  definition end of that diagnostic chain.
+- Nested object-like expansion and function-argument pre-expansion preserve
+  parent links. One node is allocated per actual substitution, so provenance
+  remains `O(tokens + expansions)` rather than copying a chain per token.
+- `MacroDef` records its definition position and `MToken` carries position and
+  expansion metadata alongside its hide set. The shared lexer `Token` remains
+  unchanged.
+
 ## 0.2.0 — PREP01 slice 2: macro expansion
 
 Macros. Object-like and function-like, argument pre-expansion, and termination

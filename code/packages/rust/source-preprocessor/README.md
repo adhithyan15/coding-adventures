@@ -114,11 +114,18 @@ had to be fixed: `eval_condition` receives a bare `&[Token]` with no table and
 no expansion applied, so *no dialect could have fixed it* — it was an engine
 defect surfacing in a dialect (VM-068).
 
-Two gaps remain, recorded rather than papered over. `Locus::expansion` is always
-`None`, so an expanded token carries the position of its *invocation* rather
-than a full "in expansion of FOO, defined at …" chain (VM-069). And argument
-pre-expansion is the one place the expander recurses natively; it is bounded by
-`macro_depth`, which assumes roughly 1 MiB of stack.
+VM-069 wires the expansion arena through the engine. An expanded token keeps
+the macro body's physical file/line/column, while `Locus::expansion` names an
+interned chain whose nodes record the macro name, definition site, invocation
+site, and parent expansion. Nested object-like expansion and function-argument
+pre-expansion both preserve that chain, while the side table remains
+`O(tokens + expansions)`.
+
+One implementation limitation remains recorded rather than papered over:
+argument pre-expansion is the one place the expander recurses natively; it is
+bounded by `macro_depth`, which assumes roughly 1 MiB of stack. The separate
+`defined()` operand rule for C controlling expressions also remains a later
+VM-069 slice.
 
 **Slice 3**: MacroNib, a second dialect in a third syntax. **Slice 4**: C.
 **Slice 5**: COBOL `COPY`.

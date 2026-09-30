@@ -60,9 +60,10 @@
 //!
 //! # Status
 //!
-//! Slice 1: includes, conditionals, source mapping, bounds. Macro expansion
-//! (`@define` and friends) arrives in slice 2 and is refused with a diagnostic
-//! until then, rather than silently ignored.
+//! Slice 1 delivered includes, conditionals, source mapping, and bounds. Slice
+//! 2 added object-like and function-like macro expansion with hide sets.
+//! VM-069 connects each emitted macro token to an interned expansion chain
+//! containing its definition, invocation, and parent sites.
 //!
 //! # Example
 //!

@@ -77,6 +77,8 @@ struct Expansion {
     name: String,
     /// Where the invocation appeared.
     at: Position,
+    /// Where the macro was defined.
+    defined_at: Position,
     /// The expansion this one happened inside, if any.
     parent: Option<ExpansionId>,
 }
@@ -147,10 +149,16 @@ impl SourceMap {
         &mut self,
         name: impl Into<String>,
         at: Position,
+        defined_at: Position,
         parent: Option<ExpansionId>,
     ) -> ExpansionId {
         let id = ExpansionId(self.expansions.len() as u32);
-        self.expansions.push(Expansion { name: name.into(), at, parent });
+        self.expansions.push(Expansion {
+            name: name.into(),
+            at,
+            defined_at,
+            parent,
+        });
         id
     }
 
@@ -165,6 +173,12 @@ impl SourceMap {
     #[must_use]
     pub fn expansion_site(&self, id: ExpansionId) -> Option<(&str, Position)> {
         self.expansions.get(id.0 as usize).map(|e| (e.name.as_str(), e.at))
+    }
+
+    /// Where the named macro was defined for this expansion.
+    #[must_use]
+    pub fn expansion_definition(&self, id: ExpansionId) -> Option<Position> {
+        self.expansions.get(id.0 as usize).map(|e| e.defined_at)
     }
 
     /// Number of interned expansions. With [`SourceMap::len`] this is the whole
@@ -231,13 +245,16 @@ mod tests {
     fn expansion_chain_is_walkable_to_the_root() {
         let mut map = SourceMap::new();
         let f = FileId::new(0);
-        let outer = map.intern_expansion("OUTER", pos(f, 1), None);
-        let inner = map.intern_expansion("INNER", pos(f, 2), Some(outer));
+        let outer = map.intern_expansion("OUTER", pos(f, 10), pos(f, 1), None);
+        let inner = map.intern_expansion("INNER", pos(f, 20), pos(f, 2), Some(outer));
 
         assert_eq!(map.expansion_parent(inner), Some(outer));
         assert_eq!(map.expansion_parent(outer), None);
         assert_eq!(map.expansion_site(inner).unwrap().0, "INNER");
         assert_eq!(map.expansion_site(outer).unwrap().0, "OUTER");
+        assert_eq!(map.expansion_site(inner).unwrap().1, pos(f, 20));
+        assert_eq!(map.expansion_definition(inner), Some(pos(f, 2)));
+        assert_eq!(map.expansion_definition(outer), Some(pos(f, 1)));
     }
 
     #[test]
@@ -246,7 +263,7 @@ mod tests {
         // one expansion must cost ONE expansion entry, not 1000 chains.
         let mut map = SourceMap::new();
         let f = FileId::new(0);
-        let e = map.intern_expansion("BIG", pos(f, 1), None);
+        let e = map.intern_expansion("BIG", pos(f, 2), pos(f, 1), None);
         for line in 0..1000 {
             map.push(Locus { position: pos(f, line), expansion: Some(e) });
         }
