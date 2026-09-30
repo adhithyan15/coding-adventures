@@ -8,21 +8,21 @@ type: word
 headword: vir
 gloss: "to come — and the missing n that explains why the infinitive is so short"
 concept_tag: VERB-COME
-prerequisites: [PT-C18-ir, PT-C17-mao]
+prerequisites: [PT-C18-ir, PT-C17-mao, PT-C18-ter-que]
 sounds: [nh-palatal, circumflex-tem]
 roots: [venire-latin]
 etymology_hook: "vir ← venīre: the -n- between vowels dissolved, the same change that turned manus into mão; venīre → venue, advent, adventure, convene, convenient, intervene, prevent, invent, revenue, avenue, souvenir, event"
 duration:
   max_seconds: 216
 requires:
-  knowledge: [PT-LEX-IR-02, PT-ETYMON-MAO-03]
+  knowledge: [PT-LEX-IR-02, PT-ETYMON-MAO-03, PT-GRAMMAR-TER-QUE-04]
 introduces:
   knowledge: [PT-LEX-VIR-02, PT-ETYMON-VIR-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-IR-02, PT-ETYMON-MAO-03, PT-LEX-VIR-02, PT-ETYMON-VIR-03]
+  knowledge: [PT-LEX-IR-02, PT-ETYMON-MAO-03, PT-LEX-VIR-02, PT-ETYMON-VIR-03, PT-GRAMMAR-TER-QUE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [PT-C17-mao, PT-C14-ter, PT-C11-agua-vinho]
 # vir — coming, and the n that dissolved
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-GRAMMAR-TER-QUE-04] -->
 
 [PAUSE 2s] The opposite of *ir* is **vir**, and it is short for exactly the
 reason *mão* is short.
+
+[PAUSE 2s] *Tenho que falar.* Only *ter* changes with the person: *temos que falar*.
 
 ## You'll want to know: The forms, and two traps
 <!-- hl-knowledge: introduces=[PT-LEX-VIR-02]; assesses=[] -->

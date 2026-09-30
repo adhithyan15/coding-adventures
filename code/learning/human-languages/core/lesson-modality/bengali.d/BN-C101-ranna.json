@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C101-ranna",
+    "language": "bengali",
+    "chapter": 101,
+    "sequence": 5350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8204eef061e5aa90"
+  },
+  "findings": []
+}

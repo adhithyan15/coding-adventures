@@ -43,7 +43,7 @@ a family separate from the widespread *qiṭṭ/cattus/gato/chat/Katze* story.
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C23-BILLI-HISTORY-01]; assesses=[] -->
 
 **बिल्ली** (*billī*, "cat") traces through Sauraseni Prakrit to Sanskrit
-**बिडालिका** (*biḍālikā*), a diminutive of **बिडाल** (*biḍāla*, "cat").
+*biḍālikā*, a diminutive of *biḍāla* ("cat").
 
 Be honest about the deeper step: most linguists consider *biḍāla* a loanword
 **into Sanskrit from Dravidian**, but this is not universal. Some scholars are

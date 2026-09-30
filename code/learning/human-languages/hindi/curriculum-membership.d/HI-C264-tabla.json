@@ -1,0 +1,11 @@
+{
+  "id": "HI-C264-tabla",
+  "pathSegment": "HI-PATH-264-THG264",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-264-THG264",
+      "order": 1
+    }
+  ]
+}

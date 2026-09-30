@@ -66,7 +66,7 @@ forward. Hear the two *t*-sounds apart: *pa-ṭha-ti*.
 This is the verb four living languages still read with — Hindi and Urdu
 *paṛhnā*, Bengali *poṛa*, Marathi *paḍhṇe*. The change is regular: that
 curled-back **ठ** softens between vowels, and the old ending drops off. A word
-reshaped by centuries of ordinary speech is **तद्भव** (*tadbhava*), "become from
+reshaped by centuries of ordinary speech is *tadbhava*, "become from
 that."
 
 Now set **चिन्ता** beside it. It sits in Hindi, Marathi and Bengali
@@ -78,9 +78,9 @@ the same claim.
 ## Grammar Lens: where पठति itself came from
 <!-- hl-knowledge: introduces=[]; assesses=[SA-ETYMON-PUNCH-DISPUTED, SA-HISTORY-TATSAMA-TADBHAVA] -->
 
-The usual account runs back through **प्रथ्** (*prath*), "to spread, to become
+The usual account runs back through *prath*, "to spread, to become
 widely known" — reciting as broadcasting — and behind that a root that also
-gives **पृथिवी** (*pṛthivī*), "the earth, the wide one."
+gives *pṛthivī*, "the earth, the wide one."
 
 Some hold instead that *paṭhati* is a later, spoken form that scholars dressed
 up as Sanskrit. Keep the label on it, exactly as you did with *punch*: a common
@@ -99,7 +99,7 @@ account, not a settled one.
 
 [PAUSE 3s] What did *paṭhati* mean before "read," and which class builds it?
 (**Recite aloud**; **class 1**.) Name the two ways a Sanskrit word reaches a
-modern language. (**तद्भव**, worn down through speech; **तत्सम**, carried over
+modern language. (*tadbhava*, worn down through speech; **तत्सम**, carried over
 whole.) Which is *paṛhnā*, which is *cintā*, and what label belongs on
 *paṭhati*'s own ancestry? (*Tadbhava*; *tatsama*; **a common account, not
 settled** — the caution you kept on *punch*.)

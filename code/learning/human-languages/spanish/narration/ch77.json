@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "La Comida --- A Noun You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:68053fa44aac5bdd",
+  "sourceHash": "fnv1a64:cf209496de30e96a",
   "lessons": [
     {
       "id": "ES-C43-comida",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c017cd9a9ba400bd",
+      "sourceHash": "fnv1a64:b26ca825474da897",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,16 @@
             {
               "kind": "speech",
               "text": "Say \"to eat.\" (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Derive the plurals: podemos, but pueden, because the stem breaks only where it is stressed. And hacemos, hacen: the -go lives in the yo form and nowhere else."
             }
           ]
         },

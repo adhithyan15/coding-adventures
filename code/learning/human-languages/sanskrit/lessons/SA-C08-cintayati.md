@@ -39,7 +39,7 @@ reviews_of: [SA-C07-janati, SA-C06-number-cognates, SA-C03-na-cinta]
 
 [PAUSE 1s] Say "no worries." (*Na cintā*.) Keep that *cintā*, "worry, thought," in mind.
 
-[PAUSE 2s] Say "it knows." (*Jānāti*, root **ज्ञा** — the root English *know* is
+[PAUSE 2s] Say "it knows." (*Jānāti*, root *jñā* — the root English *know* is
 made of.) Here is what you do *before* you know.
 
 ## You'll want to know: चिन्तयति
@@ -63,7 +63,7 @@ handed you the noun: **न चिन्ता** (*na cintā*), "no worry," is th
 ## Grammar Lens: the tenth class plants अय
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-GANA-TEN-AYA]; assesses=[SA-GRAMMAR-DHATU-GANA] -->
 
-Three ways a गण class has turned a root into a present stem: add nothing
+Three ways a *gaṇa* class has turned a root into a present stem: add nothing
 (*as-ti*), add a vowel (*bhava-ti*), plant a syllable inside (*jā-nā-ti*). Here
 is the fourth.
 
@@ -100,5 +100,5 @@ saying so beats inventing a cousin.
 *cintayati*'s root? (**-अय-**; **चिन्त्**, the root of *na cintā*.)
 Why does the word begin with *c* and not *k*? (**A rounded PIE *k*, merged and then
 palatalised** — the numbers' rule.) Which verb of knowing came just before this
-one, and does *cint* have an English cousin? (**जानाति**; **no** — this root left
+one, and does *cint* have an English cousin? (*jānāti*; **no** — this root left
 English nothing.)

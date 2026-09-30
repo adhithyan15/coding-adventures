@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C106-chhora",
+    "language": "bengali",
+    "chapter": 106,
+    "sequence": 5600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8aba4e9418c73f3"
+  },
+  "findings": []
+}

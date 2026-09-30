@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:99a6e394a4dc3b30",
+  "lessonIds": [
+    "BN-C99-sompotti",
+    "BN-C99-ay",
+    "BN-C99-chakri",
+    "BN-C99-buddhi",
+    "BN-C99-gyan",
+    "BN-R99-first-pass-times-of-day-and-the-week",
+    "BN-R99-second-pass-wanting-and-having"
+  ],
+  "tex": "bengali/book/chapters/ch99-property-income-job-intelligence-knowledge.tex"
+}

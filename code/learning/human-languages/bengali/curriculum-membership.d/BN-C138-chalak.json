@@ -1,0 +1,11 @@
+{
+  "id": "BN-C138-chalak",
+  "pathSegment": "BN-PATH-138-QUAL138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-138-QUAL138",
+      "order": 1
+    }
+  ]
+}

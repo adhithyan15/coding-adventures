@@ -1,0 +1,11 @@
+{
+  "id": "HI-C212-kamzor",
+  "pathSegment": "HI-PATH-212-QUAL212",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-212-QUAL212",
+      "order": 2
+    }
+  ]
+}

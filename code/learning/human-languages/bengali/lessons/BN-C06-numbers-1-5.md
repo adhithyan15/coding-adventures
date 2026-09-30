@@ -18,9 +18,9 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]
+  knowledge: [BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]
 practises:
-  knowledge: [BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-SCRIPT-CHANDRABINDU-01, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]
+  knowledge: [BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-SCRIPT-CHANDRABINDU-01, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,30 +52,6 @@ something both of them lost.
 The **ঁ** on *pā̃ch* is the **chandrabindu**, the same moon-dot Hindi uses,
 nasalising the vowel.
 
-## The word, taken apart — দুই and the conservative two
-<!-- hl-knowledge: introduces=[BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY]; assesses=[] -->
-
-| language | 2 |
-|---|---|
-| Sanskrit | stem *dvá-* (masc. *dváu*, fem./neut. *dvé*) |
-| Prakrit | *do* / *duve* |
-| Hindi | *do* |
-| Marathi | *don* |
-| **Bengali** | ***dui*** |
-
-Hindi and Marathi flattened the old form into a single *o*. Bengali kept a trace
-of the following **-i**, which is why it has two syllables where its neighbours
-have one.
-
-The *dv-* cluster itself is gone from the **numeral** in all of them. (Not from
-the languages — *dv-* is alive in words borrowed straight back out of Sanskrit,
-like Bengali **দ্বার** *dvār* "door." It's the everyday inherited word that
-simplified.)
-
-And Bengali isn't unique in keeping that vowel: **Assamese, Odia and Nepali**
-have *dui* too. Among the four languages in this chapter it stands alone; across
-the eastern Indo-Aryan languages it has plenty of company.
-
 ## Sounds you'll need: where Bengali's inherent *ô* does not appear
 <!-- hl-knowledge: introduces=[BN-SOUND-INHERENT-O-NOT-IN-NUMBERS]; assesses=[] -->
 
@@ -90,20 +66,16 @@ moment a word does have one.
 Don't let a neighbouring language's spelling tell you how Bengali sounds.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-NUMBERS-ONE-TO-FIVE, BN-ETYMON-DUI-COMPARISON, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ek, dui, tin, chār, pā̃ch"]
-- [YOU SAY: the twos — "dvá- … do … don … **dui**"]
 - [YOU SAY: the Ch. 1 echo — "**no**moshkar, not **na**maskār"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-SCRIPT-CHANDRABINDU-01, BN-ETYMON-DUI-COMPARISON, BN-HISTORY-DV-NUMERAL-SIMPLIFICATION, BN-HISTORY-DUI-AREAL-COMPANY, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-NUMBERS-ONE-TO-FIVE, BN-SCRIPT-CHANDRABINDU-NASAL, BN-SCRIPT-CHANDRABINDU-01, BN-SOUND-INHERENT-O-NOT-IN-NUMBERS] -->
 
-[PAUSE 3s] Count to five in Bengali. (*Ek, dui, tin, chār, pā̃ch*.) What does
-**দুই** keep that Hindi and Marathi flattened away? (**The following *-i***,
-which is why it has two syllables.) Is Bengali alone in that? (**No** — Assamese,
-Odia and Nepali have *dui* too; it's alone only among the four here.)
-Did the *dv-* cluster survive anywhere in the everyday numeral? (**No** — though
-*dv-* is alive in words re-borrowed from Sanskrit, like *dvār* "door".) What is
-the **ঁ**? (The **chandrabindu**, nasalising the vowel.) Next: six to ten.
+[PAUSE 3s] Count to five in Bengali. (*Ek, dui, tin, chār, pā̃ch*.) What is
+the **ঁ**? (The **chandrabindu**, nasalising the vowel.) Where do you hear
+Bengali's inherent *ô* in these five? (**Nowhere** — keep listening for it in
+the next word that has one.) Next: why **দুই** has two syllables.

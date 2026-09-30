@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:5d458851e9e9d329",
+  "lessonIds": [
+    "BN-C113-kuyo",
+    "BN-C113-kada",
+    "BN-C113-dhulo",
+    "BN-C113-bojro",
+    "BN-C113-rongdhonu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch113.txt",
+  "json": "bengali/narration/ch113.json",
+  "textHash": "fnv1a64:d1cf64fb97caac4f",
+  "jsonHash": "fnv1a64:423edf3c36d45953",
+  "findings": []
+}

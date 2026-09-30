@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C275-jhapki",
+    "language": "hindi",
+    "chapter": 275,
+    "sequence": 15250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea959397f203eb69"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C171-chipna",
+  "pathSegment": "HI-PATH-171-ACT171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-171-ACT171",
+      "order": 3
+    }
+  ]
+}

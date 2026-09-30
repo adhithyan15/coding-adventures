@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R183-first-pass-verbs-of-feeling-and-conflict",
+    "language": "hindi",
+    "chapter": 183,
+    "sequence": 8860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09b2e4047bb5edc7"
+  },
+  "findings": []
+}

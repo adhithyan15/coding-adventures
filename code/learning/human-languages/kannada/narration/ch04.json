@@ -4,22 +4,22 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c095e624ee7172af",
+  "sourceHash": "fnv1a64:7fa2687a82121ba0",
   "lessons": [
     {
       "id": "KA-C04-hoogu",
       "sequence": 210,
-      "title": "ಹೋಗು (hōgu) — \"go,\" and ಬಾ (come)",
+      "title": "ಹೋಗು (hōgu) — \"go,\" and bā (come)",
       "headword": "ಹೋಗು",
       "romanization": "hōgu",
-      "gloss": "to go (and ಬಾ, come)",
+      "gloss": "to go (and bā, come)",
       "script": "kannada",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:edfa61759a8a288b",
+      "sourceHash": "fnv1a64:6871b7870fd38a02",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹೋ (hō, ha + long-ō sign) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner: ಬಾ (bā, \"come\")."
+              "text": "ಹೋ (hō, ha + long-ō sign) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner: bā (\"come\")."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹೋಗು (hōgu, \"to go\") and ಬಾ (bā, \"come\") are native Dravidian verbs. As commands they are whole words: hōgu! (\"go!\"), bā! (\"come!\"). You need both, because Kannada — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
+              "text": "ಹೋಗು (hōgu, \"to go\") and bā (\"come\") are native Dravidian verbs. As commands they are whole words: hōgu! (\"go!\"), bā! (\"come!\"). You need both, because Kannada — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
             }
           ]
         },
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1917d6e0c7019576",
+      "sourceHash": "fnv1a64:aa36501ac2e5620e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -519,7 +519,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನಾಳೆ (nāḷe, \"tomorrow\") is native Dravidian, from ನಾಳ್ (nāḷ, \"day\") — the very same nāḷ behind Tamil's nāḷai. ಸಿಗೋಣ (sigōṇa, \"let's meet\") is from ಸಿಗು (sigu, \"to meet, to be found\") — so the phrase is \"tomorrow, let's meet.\" The -ಓಣ (-ōṇa) ending is Kannada's warm \"let's ___\": hōgōṇa (\"let's go\"), tinnōṇa (\"let's eat\")."
+              "text": "ನಾಳೆ (nāḷe, \"tomorrow\") is native Dravidian, from ನಾಳ್ (nāḷ, \"day\") — the very same nāḷ behind Tamil's nāḷai. ಸಿಗೋಣ (sigōṇa, \"let's meet\") is from ಸಿಗು (sigu, \"to meet, to be found\") — so the phrase is \"tomorrow, let's meet.\" The -ōṇa ending is Kannada's warm \"let's ___\": hōgōṇa (\"let's go\"), tinnōṇa (\"let's eat\")."
             }
           ]
         },

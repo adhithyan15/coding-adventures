@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C275-hicki",
+    "language": "hindi",
+    "chapter": 275,
+    "sequence": 15240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9df1d6e8890de146"
+  },
+  "findings": []
+}

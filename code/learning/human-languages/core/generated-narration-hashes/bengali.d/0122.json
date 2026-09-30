@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:0381d95ea95b509a",
+  "lessonIds": [
+    "BN-C122-machhi",
+    "BN-C122-mosha",
+    "BN-C122-kecho",
+    "BN-C122-tiktiki",
+    "BN-C122-kochchhop"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch122.txt",
+  "json": "bengali/narration/ch122.json",
+  "textHash": "fnv1a64:1ac1cb5f3b70adcd",
+  "jsonHash": "fnv1a64:c29aa407e27923bc",
+  "findings": []
+}

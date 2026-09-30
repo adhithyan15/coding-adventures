@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Rasgulla, Rice pudding, Luchi, Puffed rice, Coffee",
+  "label": "ch:bn-rasgulla-rice-pudding-luchi-puffed-rice-coffee",
+  "canDo": "I can say rasgulla, rice pudding, a luchi, puffed rice and coffee.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "BN-C118-kophi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say rasgulla, rice pudding, a luchi, puffed rice and coffee.",
+    "assesses": [
+      "BN-LEX-C118-THINGS118-03",
+      "BN-LEX-C118-THINGS118-04",
+      "BN-LEX-C118-THINGS118-05"
+    ]
+  }
+}

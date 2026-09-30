@@ -224,7 +224,7 @@ Warm-up.
 The warm close — and, true to Kannada, a Sanskrit word where Tamil used a native one.
 
 You'll want to know: The phrase.
-The full form is ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ (nimmannu bhēṭiyāgi santōṣa) — "having met you, joy."
+The full form is nimmannu bhēṭiyāgi santōṣa — "having met you, joy."
 
 The word, taken apart.
 ಸಂತೋಷ (santōṣa, "joy, contentment") is Sanskrit — sam- ("fully") + toṣa ("satisfaction") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for "pleased." The same split you saw over "hello" (namaskāra) and "thanks" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own.
@@ -290,8 +290,8 @@ You'll want to know: The dialogue.
 [a table of 4 rows, read aloud]
 ನನ್ನ ಹೆಸರು ಮೀರಾ. (nanna hesaru Mira) means My name is Mira.
 ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) (nimma hesaru ēnu) means What's your name?
-ನನ್ನ ಹೆಸರು ಅರುಣ್. (nanna hesaru Arun) means My name is Arun.
-ಸಂತೋಷ. (santōṣa) means Pleased to meet you.
+nanna hesaru Arun means My name is Arun.
+santōṣa means Pleased to meet you.
 Every atom traced:
 hesaru from Dravidian pesar (p becomes h; cousin of Tamil peyar, not name).
 nanna from nānu ("I").

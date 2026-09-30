@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "To measure, To stand, To lie down, Closed, To wipe",
+  "label": "ch:bn-to-measure-to-stand-to-lie-down-closed-to-wipe",
+  "canDo": "I can say to measure, to stand, to lie down, closed and to wipe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C104-mochha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say to measure, to stand, to lie down, closed and to wipe.",
+    "assesses": [
+      "BN-LEX-C104-ACT104-03",
+      "BN-LEX-C104-ACT104-04",
+      "BN-LEX-C104-ACT104-05"
+    ]
+  }
+}

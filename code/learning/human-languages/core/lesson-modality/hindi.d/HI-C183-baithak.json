@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C183-baithak",
+    "language": "hindi",
+    "chapter": 183,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f6fa6ae4e8e7cf4"
+  },
+  "findings": []
+}

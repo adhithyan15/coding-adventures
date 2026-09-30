@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R175-first-pass-verbs-of-change-and-movement",
+    "language": "hindi",
+    "chapter": 175,
+    "sequence": 8360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1b60b55aeee4f04"
+  },
+  "findings": []
+}

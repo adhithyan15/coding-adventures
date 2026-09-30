@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C129-byag",
+    "language": "bengali",
+    "chapter": 129,
+    "sequence": 6990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:956f55811cd103d1"
+  },
+  "findings": []
+}

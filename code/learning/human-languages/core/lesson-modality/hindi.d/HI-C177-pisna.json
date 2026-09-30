@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C177-pisna",
+    "language": "hindi",
+    "chapter": 177,
+    "sequence": 8530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2feb7755ebe9c6d7"
+  },
+  "findings": []
+}

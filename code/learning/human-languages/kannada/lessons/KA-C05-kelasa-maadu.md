@@ -50,7 +50,7 @@ reviews_of: [KA-C05-maatanaadu, KA-C05-iru]
 compound verbs by putting a noun in front of it:
 
 - **ಕೆಲಸ ಮಾಡು** (*kelasa māḍu*) = "work-do" = "**to work**" (*kelasa*, "work")
-- **ಅಡುಗೆ ಮಾಡು** (*aḍuge māḍu*) = "to cook"
+- *aḍuge māḍu* = "to cook"
 - **ಸಹಾಯ ಮಾಡು** (*sahāya māḍu*) = "to help" (*sahāya* ← Sanskrit)
 
 So "I work" is **ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ** (*nānu kelasa māḍuttēne*). Notice *sahāya

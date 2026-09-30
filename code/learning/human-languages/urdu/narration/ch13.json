@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Four Colors",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:34405b422a7b6dd8",
+  "sourceHash": "fnv1a64:ab378ebc5c59fc95",
   "lessons": [
     {
       "id": "UR-C13-lal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:faca4706778e5020",
+      "sourceHash": "fnv1a64:158c58cc2e5e0c90",
       "notice": null,
       "blocks": [
         {
@@ -72,7 +72,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لال (lāl) is borrowed from Classical Persian لَال, \"red.\" No further ancestor is documented for the Persian word itself — the trail stops, the same honest kind of dead end roṭī's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one."
+              "text": "لال is borrowed from Classical Persian lāl, \"red.\" No further ancestor is documented for the Persian word itself — the trail stops, the same honest kind of dead end roṭī's Sanskrit root hit last lesson, except this time on the Persian side of the book's two layers rather than the inherited one."
             }
           ]
         },
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fb59786b596d8d4",
+      "sourceHash": "fnv1a64:4e3e90c0ba5b28d8",
       "notice": null,
       "blocks": [
         {
@@ -330,7 +330,7 @@
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: a color that agrees like مِیرا",
+          "title": "Grammar Lens: a color that agrees like میرا",
           "segments": [
             {
               "kind": "speech",

@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 7,
   "title": "Six Verbs at the Core",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c34edd12bd9cfd72",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b18c4bccdb60327a",
   "lessons": [
     {
       "id": "PA-C07-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2d10ebaa5663205",
+      "sourceHash": "fnv1a64:ba3ab7f69d487caa",
       "notice": null,
       "blocks": [
         {
@@ -75,21 +75,6 @@
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one verb, two roots",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Chapter 2 traced ਹੈ hai to a different Sanskrit verb altogether — asti, “is,” the root behind English is, Latin est, German ist. So Punjabi's “to be” is two ancient verbs braided into one: the name and the stem come from bhū-, the everyday present tense comes from as-."
-            },
-            {
-              "kind": "speech",
-              "text": "English braids the very same two, at the very same seam, and nobody notices: am, is, are belong to the as- verb; be, being, been belong to the bʰuH- verb."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -119,6 +104,99 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CONNECT: **hoṇā** ← *bhavati* → English **be**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending names a Punjabi verb, and what is left of hoṇā once you take it off? (-ṇā; the stem ho-.) Which English word shares its root? (be, from the same bhū- verb as bhavati.) Next: why hai looks nothing like it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C07-hona-two-roots",
+      "sequence": 363,
+      "title": "(ਹੋਣਾ, continued) ((hoṇā, continued)) — one verb, two roots",
+      "headword": "(ਹੋਣਾ, continued)",
+      "romanization": "(hoṇā, continued)",
+      "gloss": "one verb, two roots",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adf3f52b8b026ca4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say ਹੋਣਾ (hoṇā) again, and what it means."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What turned Sanskrit pañca into Punjabi panj? (A stop voiced after a nasal: -ñc- became -nj-.) And the proof? (Panjāh \"fifty,\" against Hindi pacās.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one verb, two roots",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chapter 2 traced ਹੈ hai to a different Sanskrit verb altogether — asti, “is,” the root behind English is, Latin est, German ist. So Punjabi's “to be” is two ancient verbs braided into one: the name and the stem come from bhū-, the everyday present tense comes from as-."
+            },
+            {
+              "kind": "speech",
+              "text": "English braids the very same two, at the very same seam, and nobody notices: am, is, are belong to the as- verb; be, being, been belong to the bʰuH- verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "CONNECT",
+              "instruction": "hoṇā from bhavati becomes English be",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONNECT: **hoṇā** ← *bhavati* → English **be**]"
             },
             {
               "kind": "prompt",
@@ -132,7 +210,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -144,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ending names a Punjabi verb, and what is left of hoṇā once you take it off? (-ṇā; the stem ho-.) And why do hoṇā and hai not resemble each other at all? (They are two different ancient verbs braided into one — the bhū- verb and the as- verb, exactly as English braids be with is.)"
+              "text": "Why do hoṇā and hai not resemble each other at all? (They are two different ancient verbs braided into one — the bhū- verb and the as- verb, exactly as English braids be with is.)"
             }
           ]
         }
@@ -165,7 +243,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e30026567f8d243c",
+      "sourceHash": "fnv1a64:b8e33a89b32dca3a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -786,7 +864,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:511ff1648542bd3c",
+      "sourceHash": "fnv1a64:3121e5e3ffe6689d",
       "notice": null,
       "blocks": [
         {
@@ -827,6 +905,83 @@
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāṇā — to eat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **khāṇā** — to eat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "STRIP",
+              "instruction": "khāṇā minus -ṇā leaves the stem khā-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU STRIP: **khāṇā** minus **-ṇā** leaves the stem **khā-**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to eat.\" (khāṇā.) What is its stem? (khā-.) Which Sanskrit word does it come from? (khādati, \"chews, eats.\") Next: the tone that only Punjabi kept."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C07-khana-tone",
+      "sequence": 395,
+      "title": "(ਖਾਣਾ, continued) ((khāṇā, continued)) — Sounds you'll need — the tone that only Punjabi kept",
+      "headword": "(ਖਾਣਾ, continued)",
+      "romanization": "(khāṇā, continued)",
+      "gloss": "Sounds you'll need — the tone that only Punjabi kept",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f20b619d725c362",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say ਖਾਣਾ (khāṇā) again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
           "type": "pronunciation",
           "title": "Sounds you'll need — the tone that only Punjabi kept",
           "segments": [
@@ -866,7 +1021,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -900,7 +1055,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1199,7 +1354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76bae8734524f3d1",
+      "sourceHash": "fnv1a64:99a3358ab8285932",
       "notice": null,
       "blocks": [
         {

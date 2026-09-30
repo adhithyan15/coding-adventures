@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:bd753cf2e7e1f6b1",
+  "lessonIds": [
+    "BN-C110-kachi",
+    "BN-C110-hariken",
+    "BN-C110-mombati",
+    "BN-C110-deshlai",
+    "BN-C110-koyla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch110.txt",
+  "json": "bengali/narration/ch110.json",
+  "textHash": "fnv1a64:a8eab26ae2031063",
+  "jsonHash": "fnv1a64:610af0c6cbdf0d7c",
+  "findings": []
+}

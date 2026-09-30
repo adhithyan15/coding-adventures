@@ -1,1 +1,0 @@
-| 402 | 72 | PA-C72-shabad | a word |

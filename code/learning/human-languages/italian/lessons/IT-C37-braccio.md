@@ -17,11 +17,11 @@ roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [IT-LEX-MOLTO-POCO-02, IT-LEX-ABBASTANZA-02]
+  knowledge: [IT-LEX-MOLTO-POCO-02, IT-LEX-ABBASTANZA-02, IT-GRAMMAR-MOLTO-POCO-03]
 introduces:
   knowledge: [IT-LEX-C37-CORPO1-01]
 practises:
-  knowledge: [IT-LEX-C37-CORPO1-01, IT-LEX-MOLTO-POCO-02, IT-LEX-ABBASTANZA-02]
+  knowledge: [IT-LEX-C37-CORPO1-01, IT-LEX-MOLTO-POCO-02, IT-LEX-ABBASTANZA-02, IT-GRAMMAR-MOLTO-POCO-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -33,9 +33,11 @@ reviews_of: [IT-C35-abbastanza]
 # il braccio — an arm
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-MOLTO-POCO-02, IT-LEX-ABBASTANZA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-MOLTO-POCO-02, IT-LEX-ABBASTANZA-02, IT-GRAMMAR-MOLTO-POCO-03] -->
 
 [PAUSE 2s] Before the new one: say the Italian for much, then the Italian for enough.
+
+[PAUSE 2s] *Un po'* is *poco* with its last syllable cut off, and the apostrophe is compulsory: *parlo un po'*. Its opposite is *molto*.
 
 ## You'll want to know: il braccio
 <!-- hl-knowledge: introduces=[IT-LEX-C37-CORPO1-01]; assesses=[] -->

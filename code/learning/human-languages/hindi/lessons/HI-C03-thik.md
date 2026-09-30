@@ -43,7 +43,7 @@ besides.
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C03-THIK-01]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01] -->
 
 **ठ** (*ṭha*, a **retroflex** *th* — tongue curled back to the roof of the mouth)
-+ **ी** (the long-*ī* mātrā) + **क** (*ka*) → **ठीक** (*ṭhīk*). The retroflex ट-ठ-ड
++ **ी** (the long-*ī* mātrā) + **क** (*ka*) → **ठीक** (*ṭhīk*). The retroflex *ṭ-ṭh-ḍ*
 series is a hallmark of Indian languages; the tongue touches further back than for
 an English "t."
 
@@ -59,7 +59,7 @@ worth seeing too: *ṭhīk* is Indian to the core.
 ## The exchange — the reply
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C03-HUN-01, HI-CONCEPT-C03-MAIN-01, HI-CONCEPT-C03-THIK-01] -->
 
-Put it together with Chapter 3's atoms: **मैं ठीक हूँ** (*maiṁ ṭhīk hūṁ*) —
+Put it together with Chapter 3's atoms: *maiṁ ṭhīk hūṁ* —
 "**I am fine**." Literally "I fine am," verb last. Add thanks: *maiṁ ṭhīk hūṁ,
 dhanyavād.* And the whole exchange stands:
 
@@ -71,7 +71,7 @@ dhanyavād.* And the whole exchange stands:
 
 ठ (*ṭha*, a **retroflex** *th* — tongue curled to the
 roof of the mouth) + ी (long *ī*) + क (*ka*) →
-ठीक. The retroflex ट-ठ-ड series is a hallmark of Indian
+ठीक. The retroflex *ṭ-ṭh-ḍ* series is a hallmark of Indian
 sound.
 
 ## Guided Practice

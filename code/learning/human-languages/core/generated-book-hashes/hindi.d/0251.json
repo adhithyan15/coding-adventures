@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:f24da348cf2e2165",
+  "lessonIds": [
+    "HI-C251-thok",
+    "HI-C251-tarazu",
+    "HI-C251-kilo",
+    "HI-C251-litar",
+    "HI-C251-mitar",
+    "HI-R251-first-pass-words-from-chapters-243-246",
+    "HI-R251-second-pass-words-from-chapters-247-251"
+  ],
+  "tex": "hindi/book/chapters/ch251-wholesale-scales-a-kilo-a-litre-a-metre.tex"
+}

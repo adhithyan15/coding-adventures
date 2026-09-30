@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C258-himmat",
+    "language": "hindi",
+    "chapter": 258,
+    "sequence": 14020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e1820ee28452c6a"
+  },
+  "findings": []
+}

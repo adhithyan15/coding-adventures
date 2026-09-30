@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C201-jharna",
+    "language": "hindi",
+    "chapter": 201,
+    "sequence": 9940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0987fc3bcd343214"
+  },
+  "findings": []
+}

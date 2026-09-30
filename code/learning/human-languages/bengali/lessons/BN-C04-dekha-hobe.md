@@ -47,10 +47,10 @@ way English never would.
 
 **দেখা হবে** literally means "**[a] seeing will happen**" — *dækhā* (the noun
 "seeing," from **দেখা** *dækhā* "to see") + *hôbe* ("will be/happen," the future
-of **হওয়া** *hôwā*, "to be, to become"). Bengali says "a meeting will occur"
+of *hôwā*, "to be, to become"). Bengali says "a meeting will occur"
 rather than "we will meet" — an impersonal, gentle way to promise reunion. The
 verb *hôwā* ("to be/become") is the same one behind *āchhā*'s cousin, and its
-root **ভূ / হ** ties (distantly) to English **be**.
+root *bhū* / **হ** ties (distantly) to English **be**.
 
 ## Grammar Lens: the impersonal future
 <!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C04-DEKHAHOBE-01] -->

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C122-kecho",
+  "pathSegment": "BN-PATH-122-THINGS122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-122-THINGS122",
+      "order": 2
+    }
+  ]
+}

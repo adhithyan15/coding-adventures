@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-123-THINGS123",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a cat, an elbow, the chest, the waist and an ankle.",
+  "prerequisites": []
+}

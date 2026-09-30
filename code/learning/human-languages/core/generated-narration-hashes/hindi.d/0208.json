@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:89f7ff63129ee357",
+  "lessonIds": [
+    "HI-C208-nuqsan",
+    "HI-C208-fayda",
+    "HI-C208-kimat",
+    "HI-C208-sikka",
+    "HI-C208-not"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch208.txt",
+  "json": "hindi/narration/ch208.json",
+  "textHash": "fnv1a64:021c493f94f67b69",
+  "jsonHash": "fnv1a64:e3decbdd9de634ea",
+  "findings": []
+}

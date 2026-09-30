@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:48f3bfca5955d7c0",
+  "lessonIds": [
+    "BN-C127-raja",
+    "BN-C127-rani",
+    "BN-C127-pujari",
+    "BN-C127-karkhana",
+    "BN-C127-mojur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch127.txt",
+  "json": "bengali/narration/ch127.json",
+  "textHash": "fnv1a64:7b1618a81375c453",
+  "jsonHash": "fnv1a64:d6b4c9a1a2caab6a",
+  "findings": []
+}

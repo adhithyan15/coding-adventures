@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Dear, Famous, Clean, Sturdy, Weak",
+  "label": "ch:bn-dear-famous-clean-sturdy-weak",
+  "canDo": "I can say dear, famous, clean, sturdy and weak.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C142-durbol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say dear, famous, clean, sturdy and weak.",
+    "assesses": [
+      "BN-LEX-C142-QUAL142-03",
+      "BN-LEX-C142-QUAL142-04",
+      "BN-LEX-C142-QUAL142-05"
+    ]
+  }
+}

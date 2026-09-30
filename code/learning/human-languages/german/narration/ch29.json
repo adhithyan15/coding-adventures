@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "The Past That Takes To Be",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:7663d5407e8f2dfd",
+  "sourceHash": "fnv1a64:00503e83f01ee2e8",
   "lessons": [
     {
       "id": "GE-C16-perfekt-sein",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c0927b160159428",
+      "sourceHash": "fnv1a64:0da23cd167f7bb46",
       "notice": null,
       "blocks": [
         {
@@ -194,6 +194,16 @@
             {
               "kind": "speech",
               "text": "Motion takes sein. Here is the motion verb you will use as often as gehen, and it is an English word you already own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Wir waren, we were. Sie waren and Sie waren, polite, use the same form."
             }
           ]
         },

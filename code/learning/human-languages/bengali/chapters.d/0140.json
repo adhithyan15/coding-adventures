@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Sharp, Blunt, Fresh, Stale, Raw",
+  "label": "ch:bn-sharp-blunt-fresh-stale-raw",
+  "canDo": "I can say sharp, blunt, fresh, stale and raw.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C140-kacha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say sharp, blunt, fresh, stale and raw.",
+    "assesses": [
+      "BN-LEX-C140-QUAL140-03",
+      "BN-LEX-C140-QUAL140-04",
+      "BN-LEX-C140-QUAL140-05"
+    ]
+  }
+}

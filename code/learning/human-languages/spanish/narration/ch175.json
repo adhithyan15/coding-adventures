@@ -4,7 +4,7 @@
   "chapter": 175,
   "title": "Saying Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:395224041f0c23c7",
+  "sourceHash": "fnv1a64:bd219cd5807886cb",
   "lessons": [
     {
       "id": "ES-C41-creer",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f69329c1bb02c31",
+      "sourceHash": "fnv1a64:f05a5dda33b921b5",
       "notice": null,
       "blocks": [
         {
@@ -405,6 +405,16 @@
             {
               "kind": "speech",
               "text": "You can now say what you think and what follows from it. This verb adds the third move in any explanation: what somebody ought to do about it. It gets there from an unexpected direction — money."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two verbs answer: contestar, from calling witnesses, and responder, from pledging back. Say contesto, then respondo."
             }
           ]
         },

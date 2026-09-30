@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:85c79b5911047449",
+  "sourceHash": "fnv1a64:ef632078883d63c7",
   "lessons": [
     {
       "id": "KA-C03-hege",
@@ -588,7 +588,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:624d49de1d76f83d",
+      "sourceHash": "fnv1a64:331e444143faa591",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -646,7 +646,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Fuse it with the iru verb: ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ (nānu cennāgiddēne) — \"I am well\" (cennāgi + iddēne, \"I am\"). The whole exchange:"
+              "text": "Fuse it with the iru verb: nānu cennāgiddēne — \"I am well\" (cennāgi + iddēne, \"I am\"). The whole exchange:"
             },
             {
               "kind": "speech",

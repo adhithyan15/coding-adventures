@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:32e37ab7217eb118",
+  "sourceHash": "fnv1a64:24cd0ed458b1c6a9",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -914,7 +914,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e77940ad2c9ab92",
+      "sourceHash": "fnv1a64:81d2f939555c23dc",
       "notice": null,
       "blocks": [
         {
@@ -941,7 +941,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The full form is ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ (nimmannu bhēṭiyāgi santōṣa) — \"having met you, joy.\""
+              "text": "The full form is nimmannu bhēṭiyāgi santōṣa — \"having met you, joy.\""
             }
           ]
         },
@@ -1188,7 +1188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a25956ed66f7eba",
+      "sourceHash": "fnv1a64:ab44b8ed06ae35b6",
       "notice": null,
       "blocks": [
         {
@@ -1224,8 +1224,8 @@
               "utterances": [
                 "ನನ್ನ ಹೆಸರು ಮೀರಾ. (nanna hesaru Mira) means My name is Mira.",
                 "ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) (nimma hesaru ēnu) means What's your name?",
-                "ನನ್ನ ಹೆಸರು ಅರುಣ್. (nanna hesaru Arun) means My name is Arun.",
-                "ಸಂತೋಷ. (santōṣa) means Pleased to meet you."
+                "nanna hesaru Arun means My name is Arun.",
+                "santōṣa means Pleased to meet you."
               ]
             },
             {

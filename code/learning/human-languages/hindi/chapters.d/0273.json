@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "The police, A pharmacy, A patient, A disease, An illness",
+  "label": "ch:hi-the-police-a-pharmacy-a-patient-a-disease-an-illness",
+  "canDo": "I can say the police, a pharmacy, a patient, a disease and an illness.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C273-bimari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: i can say the police, a pharmacy, a patient, a disease and an illness.",
+    "assesses": [
+      "HI-LEX-C273-THG273-03",
+      "HI-LEX-C273-THG273-04",
+      "HI-LEX-C273-THG273-05"
+    ]
+  }
+}

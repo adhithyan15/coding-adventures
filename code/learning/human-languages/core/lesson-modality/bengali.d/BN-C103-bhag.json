@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C103-bhag",
+    "language": "bengali",
+    "chapter": 103,
+    "sequence": 5490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36563ac21071a272"
+  },
+  "findings": []
+}

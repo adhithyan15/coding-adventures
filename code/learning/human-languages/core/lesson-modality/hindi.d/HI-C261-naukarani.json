@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C261-naukarani",
+    "language": "hindi",
+    "chapter": 261,
+    "sequence": 14340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6ba14918b0fd997"
+  },
+  "findings": []
+}

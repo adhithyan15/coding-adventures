@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Asking a Question — Three Ways, and Which One to Use",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:4ff27ece247315eb",
+  "sourceHash": "fnv1a64:97f04bd9760d41e6",
   "lessons": [
     {
       "id": "FR-C32-intonation",
@@ -123,7 +123,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3794fb8fcab5231",
+      "sourceHash": "fnv1a64:6bcbec15d9a4181f",
       "notice": null,
       "blocks": [
         {
@@ -140,6 +140,16 @@
             {
               "kind": "speech",
               "text": "Recall the previous piece before adding another."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Vous m'aidez. An ordinary -er verb: j'aide, nous aidons."
             }
           ]
         },
@@ -347,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ae2464609b777db",
+      "sourceHash": "fnv1a64:55e1acd426a05d97",
       "notice": null,
       "blocks": [
         {
@@ -364,6 +374,16 @@
             {
               "kind": "speech",
               "text": "Recall the previous piece before adding another."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Entendre once covered hearing, attending, understanding and intending. Hearing took the word when ouïr wore out."
             }
           ]
         },

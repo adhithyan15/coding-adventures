@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:d9fb4bcc8f4e0e42",
+  "lessonIds": [
+    "HI-C252-bori",
+    "HI-C252-dali",
+    "HI-C252-kali",
+    "HI-C252-kata",
+    "HI-C252-kicar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch252.txt",
+  "json": "hindi/narration/ch252.json",
+  "textHash": "fnv1a64:585e151537798e30",
+  "jsonHash": "fnv1a64:ad86997a2d16054c",
+  "findings": []
+}

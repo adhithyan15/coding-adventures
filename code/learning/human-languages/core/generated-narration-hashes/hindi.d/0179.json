@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:c642942a34ee3b97",
+  "lessonIds": [
+    "HI-C179-thakna",
+    "HI-C179-sahna",
+    "HI-C179-hatana",
+    "HI-C179-hatna",
+    "HI-C179-guzarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch179.txt",
+  "json": "hindi/narration/ch179.json",
+  "textHash": "fnv1a64:ce134e612bf7129b",
+  "jsonHash": "fnv1a64:030e55ac44c8d80c",
+  "findings": []
+}

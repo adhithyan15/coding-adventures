@@ -64,6 +64,39 @@ function realReport() {
   return REAL_REPORT;
 }
 
+// The atom-budget witness, built synthetically and at IMPORT for the same reason
+// REAL_REPORT is. The claim it carries is "a track can attain pre-A1 while an A1
+// lesson is over budget", and the corpus stopped holding a real example of it when
+// Bengali, the last one, attained A1. So take a track that attains A1 on the real
+// corpus, mark one of its A1 lessons over budget in the ramp report, and run the
+// gate again on otherwise identical inputs.
+const SYNTHETIC_WITNESS = (() => {
+  const e = loadEverything();
+  const inputs = {
+    lessons: e.lessons,
+    levels: summarizeLevels(e.lessons, e.curricula, e.spine),
+    curricula: e.curricula,
+    spine: e.spine,
+    ramp: measureRamp(e.lessons, loadChapterPolicy()),
+    continuity: measureContinuity(e.lessons),
+  };
+  const baseline = runLevelGate(inputs);
+  const track = baseline.tracks
+    .filter((t) => t.attained === "A1")
+    .map((t) => t.language)
+    .sort()[0]!;
+  const stageOf = new Map(e.spine.nodes.map((node) => [node.id, node.stage]));
+  const nodeOf = lessonSpineNodes(e.curricula);
+  const lesson = e.lessons
+    .filter((l) => l.language === track)
+    .map((l) => l.realization.lessonId)
+    .sort()
+    .find((id) => stageOf.get(nodeOf.get(id) ?? "") === "A1")!;
+  const overBudget = { lessonId: lesson, language: track, chapter: null, atoms: 4, budget: 3 };
+  const gate = runLevelGate({ ...inputs, ramp: { ...inputs.ramp, lessons: [...inputs.ramp.lessons, overBudget] } });
+  return { track, lesson, baseline: baseline.tracks.find((t) => t.language === track)!, gate };
+})();
+
 describe("level-gate attainment owner discovery", () => {
   function fixture(): string {
     return mkdtempSync(join(tmpdir(), "level-gate-attainment-"));
@@ -229,6 +262,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // after its two over-budget lessons were split.
     // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
     // only with glyphs the script lessons have taught).
+    // The count stays 22 when a track climbs a second rung: Hindi was the first to
+    // attain A2, with chapters 166-275 (the practical-reading node, 540 headwords,
+    // sixty verbs), which moved it from the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
@@ -311,18 +347,18 @@ describe("the gate that would have caught the A2 claim", () => {
     // Hindi showed it end to end first: with chapters 106-127 it ATTAINED pre-A1
     // while that one over-budget lesson was still in the track, and the lesson
     // surfaced as an atom-budget blocker only on the rung it actually sat on, A1.
-    // Hindi's A1 tranche then fixed that lesson and Hindi attained A1, so the
-    // witness is now any track in the same position. Several still are (Bengali,
-    // Gujarati, Malayalam, Punjabi and Sanskrit when this was written). If none
-    // were left, this would fail, and the claim would need a synthetic fixture.
-    const gate = realReport().levelGate!;
-    const witnesses = gate.tracks.filter(
-      (t) =>
-        t.attained === "pre-A1" &&
-        t.inProgressAt === "A1" &&
-        t.blockers.some((b) => b.criterion === "atom-budget"),
-    );
-    expect(witnesses.length, "a track that attains pre-A1 despite an A1 over-budget lesson").toBeGreaterThan(0);
+    // Bengali, Gujarati, Malayalam, Punjabi and Sanskrit were later witnesses. Each
+    // split its over-budget lessons on the way to A1, and when Bengali, the last,
+    // did so the claim moved to the synthetic fixture built above: one A1 lesson of
+    // an A1 track marked over budget, everything else the real corpus.
+    const { track, lesson, baseline, gate } = SYNTHETIC_WITNESS;
+    expect(baseline.attained, `${track} attains A1 before the injection`).toBe("A1");
+    const witness = gate.tracks.find((t) => t.language === track)!;
+    expect(witness.attained, `${track} with ${lesson} over budget`).toBe("pre-A1");
+    expect(witness.inProgressAt).toBe("A1");
+    expect(witness.blockers.filter((b) => b.criterion === "atom-budget")).toEqual([
+      expect.objectContaining({ shortfall: 1 }),
+    ]);
   });
 
   it("fails an authored-but-unrealized level on a COUNT, not on absence", () => {
@@ -686,18 +722,62 @@ describe("etymology is a hook, not a skill", () => {
     // assertion. A pinned integer on one track's unfinished work serialises every
     // parallel authoring tranche behind this file, and it names a number that is
     // supposed to fall to zero. What is checked now is the waiver itself.
-    const gate = realReport().levelGate!;
-    const waiving = gate.tracks.filter((track) =>
-      track.blockers.some(
-        (b) => b.criterion === "reinforcement" && /etymology hook\(s\) waived/.test(b.detail),
-      ),
-    );
+    const e = loadEverything();
+    const base = measureContinuity(e.lessons);
+    const gateInputs = {
+      lessons: e.lessons,
+      levels: summarizeLevels(e.lessons, e.curricula, e.spine),
+      curricula: e.curricula,
+      spine: e.spine,
+      ramp: measureRamp(e.lessons, loadChapterPolicy()),
+    };
+
     // The waiver must be VISIBLE. A silently loosened gate is worse than a strict one.
-    expect(waiving.length).toBeGreaterThan(0);
-    for (const track of waiving) {
-      const reinforcement = track.blockers.find((b) => b.criterion === "reinforcement")!;
-      expect(reinforcement.detail).toContain(`atom(s) at or below ${track.inProgressAt} are rev`);
-    }
+    //
+    // This used to read the waiver off whichever real track still had a reinforcement
+    // blocker. The A2 reinforcement tranches closed the last of them, so the corpus no
+    // longer holds one, and the witness is built instead: take a track that has
+    // waived etymology atoms at or below the level it is working on, add ONE
+    // non-etymology atom there that nothing revisits, and read the blocker that
+    // produces. The detail must name the level and the number of hooks waived.
+    const baseline = runLevelGate({ ...gateInputs, continuity: base });
+    const stageOf = new Map(e.spine.nodes.map((node) => [node.id, node.stage]));
+    const nodeOf = lessonSpineNodes(e.curricula);
+    const atOrBelow = (lessonId: string, level: CefrLevel) => {
+      const stage = stageOf.get(nodeOf.get(lessonId) ?? "");
+      return stage !== undefined && levelRank(stage as CefrLevel) <= levelRank(level);
+    };
+    const witness = baseline.tracks
+      .filter((t) => t.inProgressAt !== null)
+      .sort((a, b) => a.language.localeCompare(b.language))
+      .find((t) =>
+        base.reinforcement.some(
+          (d) => d.language === t.language && isEtymologyAtom(d.atom) && atOrBelow(d.introducedBy, t.inProgressAt!),
+        ),
+      )!;
+    expect(witness).toBeDefined();
+    const level = witness.inProgressAt!;
+    const host = e.lessons
+      .filter((l) => l.language === witness.language)
+      .map((l) => l.realization.lessonId)
+      .sort()
+      .find((id) => stageOf.get(nodeOf.get(id) ?? "") === level)!;
+    const thinAtom = {
+      atom: "SYNTHETIC-GRAMMAR-UNREVISITED-01",
+      language: witness.language,
+      introducedBy: host,
+      introducedAt: 0,
+      missed: ["R1", "R2", "R3", "R4"],
+      revisits: 0,
+    } as ContinuityReport["reinforcement"][number];
+    const withThin = runLevelGate({
+      ...gateInputs,
+      continuity: { ...base, reinforcement: [...base.reinforcement, thinAtom] },
+    }).tracks.find((t) => t.language === witness.language)!;
+    const reinforcement = withThin.blockers.find((b) => b.criterion === "reinforcement")!;
+    expect(reinforcement).toBeDefined();
+    expect(reinforcement.detail).toContain(`atom(s) at or below ${level} are rev`);
+    expect(reinforcement.detail).toMatch(/\(\d+ etymology hook\(s\) waived\)/);
 
     // And it must BITE. Two earlier versions of this assertion did not: `shortfall <
     // shortfall + waived` is true of any number, and comparing against a whole-track
@@ -710,15 +790,6 @@ describe("etymology is a hook, not a skill", () => {
     // waived and some track's reinforcement shortfall must rise; with the waiver
     // deleted the rename changes nothing at all and this fails. No corpus figure is
     // pinned, so no authoring tranche has to edit it.
-    const e = loadEverything();
-    const base = measureContinuity(e.lessons);
-    const gateInputs = {
-      lessons: e.lessons,
-      levels: summarizeLevels(e.lessons, e.curricula, e.spine),
-      curricula: e.curricula,
-      spine: e.spine,
-      ramp: measureRamp(e.lessons, loadChapterPolicy()),
-    };
     const renamed: ContinuityReport = {
       ...base,
       reinforcement: base.reinforcement.map((defect) =>

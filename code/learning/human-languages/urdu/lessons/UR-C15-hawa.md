@@ -57,7 +57,7 @@ handed across two borrowings in a row.
 
 **ہوا** is borrowed from Classical Persian *hawā* — but Persian did not
 invent it either. Persian itself borrowed the word from Arabic
-**هَوَاء** *hawā*. *khudā*, back in the take-leave chapter, came into
+*hawāʾ*. *khudā*, back in the take-leave chapter, came into
 Urdu directly from Persian, inherited within Iranian the whole way.
 *dil* and *safed* each split from one PIE root into two independent
 roads, Iranian and Indo-Aryan. **ہوا** is a different shape again: a

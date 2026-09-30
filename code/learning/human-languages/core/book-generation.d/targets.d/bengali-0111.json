@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 111,
+  "output": "bengali/book/chapters/ch111-rope-nail-hammer-axe-umbrella.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:040b2ce1f74cad7e",
+  "lessonIds": [
+    "HI-C214-cikana",
+    "HI-C214-vyast",
+    "HI-C214-alsi",
+    "HI-C214-imandar",
+    "HI-C214-sacca"
+  ],
+  "tex": "hindi/book/chapters/ch214-smooth-busy-lazy-honest-true.tex"
+}

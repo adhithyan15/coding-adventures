@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:f89f41504788f16c",
+  "lessonIds": [
+    "BN-C90-bikel",
+    "BN-C90-bhor",
+    "BN-C90-majhrat",
+    "BN-C90-porshu",
+    "BN-C90-gotokal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch90.txt",
+  "json": "bengali/narration/ch90.json",
+  "textHash": "fnv1a64:beba63c6acb76ac2",
+  "jsonHash": "fnv1a64:f738bbbc5c4512d5",
+  "findings": []
+}

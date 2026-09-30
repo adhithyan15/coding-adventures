@@ -8,21 +8,21 @@ type: word
 headword: o ovo
 gloss: egg — three letters, unchanged for two thousand years
 concept_tag: PT-FOOD-EGG
-prerequisites: [PT-C24-queijo]
+prerequisites: [PT-C24-queijo, PT-C21-comprar]
 sounds: [o-open-closed]
 roots: [ovum-latin]
 etymology_hook: "ovo ← Latin ovum, barely worn down at all in two thousand years — the plural ovos even keeps ovum's own -a-turned-o pattern visible; English kept the learned shape whole in oval, ovum, ovary"
 duration:
   max_seconds: 195
 requires:
-  knowledge: [PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03]
+  knowledge: [PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03, PT-LEX-COMPRAR-02]
 introduces:
   knowledge: [PT-LEX-OVO-02, PT-ETYMON-OVO-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03, PT-LEX-OVO-02, PT-ETYMON-OVO-03, PT-LEX-LEITE-02, PT-NOTICE-C23-BEBIDAS-04]
+  knowledge: [PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03, PT-LEX-OVO-02, PT-ETYMON-OVO-03, PT-LEX-LEITE-02, PT-NOTICE-C23-BEBIDAS-04, PT-LEX-COMPRAR-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,11 +34,13 @@ reviews_of: [PT-C24-queijo]
 # o ovo — barely touched in two thousand years
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-LEX-COMPRAR-02] -->
 
 [PAUSE 2s] After *pão* worn to a nasal hum and *mão* losing its *-n-*
 entirely, here is the opposite case: a word Latin handed Portuguese almost
 **unchanged**.
+
+[PAUSE 2s] *Compro o pão.* And the trap from before: *tenho comprado pão* means I have been buying bread lately, not that I bought it once.
 
 ## You'll want to know: The word
 <!-- hl-knowledge: introduces=[PT-LEX-OVO-02]; assesses=[] -->

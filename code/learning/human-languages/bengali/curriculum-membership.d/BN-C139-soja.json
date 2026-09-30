@@ -1,0 +1,11 @@
+{
+  "id": "BN-C139-soja",
+  "pathSegment": "BN-PATH-139-QUAL139",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-139-QUAL139",
+      "order": 3
+    }
+  ]
+}

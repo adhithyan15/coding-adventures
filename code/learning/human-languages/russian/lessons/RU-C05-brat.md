@@ -9,7 +9,7 @@ headword: брать
 gloss: "to take — English bear, and a partner from a completely different root"
 concept_tag: VERB-TAKE
 romanization: brat'
-prerequisites: [RU-C04-pisat]
+prerequisites: [RU-C04-pisat, RU-C03-govorit-false-friend]
 sounds: [stress-unmarked]
 roots: [pie-bher]
 etymology_hook: "брать is PIE *bʰer- 'to carry' — English bear and birth, Latin ferre, Greek pherein in metaphor"

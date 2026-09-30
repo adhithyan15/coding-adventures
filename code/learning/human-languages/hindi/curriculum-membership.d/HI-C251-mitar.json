@@ -1,0 +1,11 @@
+{
+  "id": "HI-C251-mitar",
+  "pathSegment": "HI-PATH-251-THG251",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-251-THG251",
+      "order": 4
+    }
+  ]
+}

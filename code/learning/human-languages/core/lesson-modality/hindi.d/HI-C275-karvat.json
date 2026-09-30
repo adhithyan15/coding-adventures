@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C275-karvat",
+    "language": "hindi",
+    "chapter": 275,
+    "sequence": 15260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4114a3d92dba20a0"
+  },
+  "findings": []
+}

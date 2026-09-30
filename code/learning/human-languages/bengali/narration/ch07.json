@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:417ae23117990be4",
+  "sourceHash": "fnv1a64:670cf52ccdd1a14d",
   "lessons": [
     {
       "id": "BN-C04-abar",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:37ede85ae1200518",
+      "sourceHash": "fnv1a64:211f2af47af78a76",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -189,7 +189,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "দেখা হবে (dækhā hôbe) literally means \"[a] seeing will happen\" — dækhā (the noun \"seeing,\" from দেখা dækhā \"to see\") + hôbe (\"will be/happen,\" the future of হওয়া hôwā, \"to be, to become\"). Bengali says \"a meeting will occur\" rather than \"we will meet\" — an impersonal, gentle way to promise reunion. The verb hôwā (\"to be/become\") is the same one behind āchhā's cousin, and its root ভূ / হ ties (distantly) to English be."
+              "text": "দেখা হবে (dækhā hôbe) literally means \"[a] seeing will happen\" — dækhā (the noun \"seeing,\" from দেখা dækhā \"to see\") + hôbe (\"will be/happen,\" the future of hôwā, \"to be, to become\"). Bengali says \"a meeting will occur\" rather than \"we will meet\" — an impersonal, gentle way to promise reunion. The verb hôwā (\"to be/become\") is the same one behind āchhā's cousin, and its root bhū / হ ties (distantly) to English be."
             }
           ]
         },
@@ -668,7 +668,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a606eec2990ce305",
+      "sourceHash": "fnv1a64:768804d1b2cfad9d",
       "notice": null,
       "blocks": [
         {
@@ -702,13 +702,13 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "আবার দেখা হবে (ābār dækhā hôbe), we'll meet again.",
-                "কাল দেখা হবে (kāl dækhā hôbe), see you tomorrow."
+                "ābār dækhā hôbe, we'll meet again.",
+                "kāl dækhā hôbe, see you tomorrow."
               ]
             },
             {
               "kind": "speech",
-              "text": "দেখা হবে (dækhā hôbe) — \"a meeting will happen\" — does the work in both. What changes is the one word in front: again, or tomorrow. Neither goodbye says goodbye; both name the next meeting, and the front word is how far off it is."
+              "text": "dækhā hôbe — \"a meeting will happen\" — does the work in both. What changes is the one word in front: again, or tomorrow. Neither goodbye says goodbye; both name the next meeting, and the front word is how far off it is."
             },
             {
               "kind": "speech",
@@ -778,7 +778,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do both goodbyes share? (দেখা হবে (dækhā hôbe) — a meeting will happen.) What changes between them? (The word in front — again, or tomorrow.) What is odd about কাল? (It is also yesterday.) And what tells you which one is meant? (The verb around it.)"
+              "text": "What do both goodbyes share? (dækhā hôbe — a meeting will happen.) What changes between them? (The word in front — again, or tomorrow.) What is odd about kāl? (It is also yesterday.) And what tells you which one is meant? (The verb around it.)"
             }
           ]
         }

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C178-maarnaa",
+  "pathSegment": "HI-PATH-178-ACT178",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-178-ACT178",
+      "order": 1
+    }
+  ]
+}

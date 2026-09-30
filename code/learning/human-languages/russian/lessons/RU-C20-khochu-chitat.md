@@ -9,7 +9,7 @@ headword: "я хочу читать"
 gloss: "I want to read — one finite verb, one infinitive, and nothing at all in between"
 concept_tag: RU-GRAMMAR-INFINITIVE-CLAUSE
 romanization: "ya khachú chitát"
-prerequisites: [RU-C20-khotet]
+prerequisites: [RU-C20-khotet, RU-C03-govorit-false-friend]
 sounds: []
 roots: []
 etymology_hook: "the fourteen infinitives this book has taught have never once stood after another verb — the pattern was missing, not the words"

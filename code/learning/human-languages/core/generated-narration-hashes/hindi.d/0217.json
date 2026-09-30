@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:176080d3697c3643",
+  "lessonIds": [
+    "HI-C217-anar",
+    "HI-C217-amrud",
+    "HI-C217-tyohar",
+    "HI-C217-puja",
+    "HI-C217-dharm",
+    "HI-R217-first-pass-words-from-chapters-210-213",
+    "HI-R217-second-pass-words-from-chapters-214-217"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch217.txt",
+  "json": "hindi/narration/ch217.json",
+  "textHash": "fnv1a64:64d1071621e9e9fe",
+  "jsonHash": "fnv1a64:1671624cc5f862ee",
+  "findings": []
+}

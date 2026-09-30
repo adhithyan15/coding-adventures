@@ -1,0 +1,11 @@
+{
+  "id": "BN-C141-aramdayok",
+  "pathSegment": "BN-PATH-141-QUAL141",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-141-QUAL141",
+      "order": 2
+    }
+  ]
+}

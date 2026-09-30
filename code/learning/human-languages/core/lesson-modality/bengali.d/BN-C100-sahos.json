@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C100-sahos",
+    "language": "bengali",
+    "chapter": 100,
+    "sequence": 5300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf73dc1bfc705988"
+  },
+  "findings": []
+}

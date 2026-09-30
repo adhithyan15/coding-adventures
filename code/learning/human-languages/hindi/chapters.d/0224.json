@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "A bat, A win, A defeat, A team, A race",
+  "label": "ch:hi-a-bat-a-win-a-defeat-a-team-a-race",
+  "canDo": "I can say a bat, a win, a defeat, a team and a race.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-R224-second-pass-words-from-chapters-221-224",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: i can say a bat, a win, a defeat, a team and a race.",
+    "assesses": [
+      "HI-LEX-C224-THG224-03",
+      "HI-LEX-C224-THG224-04",
+      "HI-LEX-C224-THG224-05"
+    ]
+  }
+}

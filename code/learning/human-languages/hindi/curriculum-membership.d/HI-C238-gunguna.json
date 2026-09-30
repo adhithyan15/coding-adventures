@@ -1,0 +1,11 @@
+{
+  "id": "HI-C238-gunguna",
+  "pathSegment": "HI-PATH-238-QUAL238",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-238-QUAL238",
+      "order": 1
+    }
+  ]
+}

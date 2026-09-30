@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C174-sudharna",
+    "language": "hindi",
+    "chapter": 174,
+    "sequence": 8290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3cffbebe526bbcd"
+  },
+  "findings": []
+}

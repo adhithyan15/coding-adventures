@@ -1,0 +1,11 @@
+{
+  "id": "HI-C220-jivan",
+  "pathSegment": "HI-PATH-220-THG220",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-220-THG220",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:8c4dc60a3172cee6",
+  "lessonIds": [
+    "BN-C107-bati",
+    "BN-C107-hari",
+    "BN-C107-korai",
+    "BN-C107-kolsi",
+    "BN-C107-balti"
+  ],
+  "tex": "bengali/book/chapters/ch107-bowl-cooking-pot-wok-water-pot-bucket.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C183-karkhana",
+    "language": "hindi",
+    "chapter": 183,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:526c76be84cf6a2e"
+  },
+  "findings": []
+}

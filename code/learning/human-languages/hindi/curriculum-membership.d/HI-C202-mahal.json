@@ -1,0 +1,11 @@
+{
+  "id": "HI-C202-mahal",
+  "pathSegment": "HI-PATH-202-THG202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-202-THG202",
+      "order": 1
+    }
+  ]
+}

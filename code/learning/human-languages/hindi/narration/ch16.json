@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:02bb75c19e402d04",
+  "sourceHash": "fnv1a64:b651ed9cf00791ee",
   "lessons": [
     {
       "id": "HI-C16-mahine",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41b4e8b8538d3177",
+      "sourceHash": "fnv1a64:4a5bc101aa0d10bd",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hindu tradition keeps its own, much older lunisolar calendar — विक्रम संवत् (Vikram Samvat) — with twelve different month names: चैत्र, वैशाख, ज्येष्ठ, आषाढ़, श्रावण, भाद्रपद, आश्विन, कार्तिक, मार्गशीर्ष, पौष, माघ, फाल्गुन (Chaitra, Vaiśākh, Jyeṣṭha, Āṣāḍh, Śrāvaṇ, Bhādrapad, Āśvin, Kārtik, Mārgaśīrṣ, Pauṣ, Māgh, Phālgun)."
+              "text": "Hindu tradition keeps its own, much older lunisolar calendar — Vikram Samvat — with twelve different month names: Chaitra, Vaiśākh, Jyeṣṭha, Āṣāḍh, Śrāvaṇ, Bhādrapad, Āśvin, Kārtik, Mārgaśīrṣ, Pauṣ, Māgh, Phālgun."
             },
             {
               "kind": "speech",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C132-khat",
+    "language": "bengali",
+    "chapter": 132,
+    "sequence": 7230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3246e50e94a4cd4a"
+  },
+  "findings": []
+}

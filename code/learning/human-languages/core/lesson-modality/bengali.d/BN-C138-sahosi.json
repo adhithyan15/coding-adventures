@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C138-sahosi",
+    "language": "bengali",
+    "chapter": 138,
+    "sequence": 7640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2942d4d009962dcb"
+  },
+  "findings": []
+}

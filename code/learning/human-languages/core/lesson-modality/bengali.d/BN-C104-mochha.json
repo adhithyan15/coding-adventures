@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C104-mochha",
+    "language": "bengali",
+    "chapter": 104,
+    "sequence": 5540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60d4965666db679e"
+  },
+  "findings": []
+}

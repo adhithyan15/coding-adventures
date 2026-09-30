@@ -1,0 +1,11 @@
+{
+  "id": "BN-C100-jontro",
+  "pathSegment": "BN-PATH-100-CAN100",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-100-CAN100",
+      "order": 2
+    }
+  ]
+}

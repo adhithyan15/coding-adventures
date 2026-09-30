@@ -1,0 +1,11 @@
+{
+  "id": "HI-C227-bona",
+  "pathSegment": "HI-PATH-227-ACT227",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-227-ACT227",
+      "order": 4
+    }
+  ]
+}

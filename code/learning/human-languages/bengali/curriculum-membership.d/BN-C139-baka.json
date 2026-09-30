@@ -1,0 +1,11 @@
+{
+  "id": "BN-C139-baka",
+  "pathSegment": "BN-PATH-139-QUAL139",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-139-QUAL139",
+      "order": 4
+    }
+  ]
+}

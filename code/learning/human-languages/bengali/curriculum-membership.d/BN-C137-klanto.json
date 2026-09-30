@@ -1,0 +1,11 @@
+{
+  "id": "BN-C137-klanto",
+  "pathSegment": "BN-PATH-137-QUAL137",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-137-QUAL137",
+      "order": 3
+    }
+  ]
+}

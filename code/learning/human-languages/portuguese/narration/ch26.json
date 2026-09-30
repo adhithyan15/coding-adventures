@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "The Body, Asking How You Are",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:303e00188ed3114e",
+  "sourceHash": "fnv1a64:44c205c8428f8c58",
   "lessons": [
     {
       "id": "PT-C26-olho",
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:088f2e762e11e7c7",
+      "sourceHash": "fnv1a64:9aafda6220610f99",
       "notice": null,
       "blocks": [
         {
@@ -302,6 +302,16 @@
             {
               "kind": "speech",
               "text": "The word for what all this talking has been coming out of — and it started life meaning something narrower."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three ways to play: jogo futebol, o meu irmão brinca, toco piano. Portugal says jogar à bola; Brazil says jogar bola."
             }
           ]
         },

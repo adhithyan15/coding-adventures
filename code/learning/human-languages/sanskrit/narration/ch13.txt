@@ -21,8 +21,8 @@ The letters in this word.
 ना is nā, न under the long-ā sign. सि is स under a short-i. का closes it, क under long-ā again: nā-si-kā.
 
 The word, taken apart — kin to two words, parent of neither.
-नासिका (nāsikā) is built on an older word, नासा (nāsā), "nose," plus the diminutive suffix -इका. नासा itself, and the still-older root नस् (nas) behind it, go back to PIE nehas-, the unbroken root of English nose and Latin nasus ( becomes nasal).
-Here is the correction worth making carefully: नासिका (nāsikā) is not the ancestor of Bengali nāk or Gujarati nāk. Both of those wore straight down from नस् itself, through Prakrit ṇakka, by adding a completely different suffix. नासिका (nāsikā) and नाक share a root, the way ग्रह् and English grab share one — relatives, not parent and child. Reaching for the nearest-looking Sanskrit word is not always reaching for the right ancestor.
+नासिका (nāsikā) is built on an older word, नासा (nāsā), "nose," plus the diminutive suffix -ikā. नासा itself, and the still-older root नस् (nas) behind it, go back to PIE nehas-, the unbroken root of English nose and Latin nasus ( becomes nasal).
+Here is the correction worth making carefully: नासिका (nāsikā) is not the ancestor of Bengali nāk or Gujarati nāk. Both of those wore straight down from नस् itself, through Prakrit ṇakka, by adding a completely different suffix. नासिका (nāsikā) and नाक share a root, the way grah and English grab share one — relatives, not parent and child. Reaching for the nearest-looking Sanskrit word is not always reaching for the right ancestor.
 
 Guided Practice.
 [pause 1 second]
@@ -99,7 +99,7 @@ Sanskrit: मम हृदयम्. sound: mama hṛdayam. meaning: my heart.
 Neuter — the family this whole chapter keeps returning to.
 
 The letters in this word.
-हृ is hṛ: ह ha carrying the vocalic ऋ, the same buzzing vowel you first sounded out in गृह्णाति. द is da, य is ya, म् closes it neuter: hṛ-da-ya-m.
+हृ is hṛ: ह ha carrying the vocalic ṛ, the same buzzing vowel you first sounded out in gṛhṇāti. द is da, य is ya, म् closes it neuter: hṛ-da-ya-m.
 
 The word, taken apart — a root barely disguised anywhere.
 हृदयम् (hṛdayam) is PIE kerd-, and almost nothing about it has changed shape on the way anywhere: English heart, Latin cor, genitive cordis ( becomes cordial, courage, accord), Greek kardia ( becomes cardiac) — one root, four languages, all still recognisable. The same root anchors Italian cuore, Portuguese coração, and Russian serdtse, each an independent inheritance of the identical PIE ancestor rather than a loan from any of the others.

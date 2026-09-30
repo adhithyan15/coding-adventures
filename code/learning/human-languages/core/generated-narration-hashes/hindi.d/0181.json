@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:b44d0dcb0ea68210",
+  "lessonIds": [
+    "HI-C181-naqsa",
+    "HI-C181-rasta",
+    "HI-C181-mor",
+    "HI-C181-cauraha",
+    "HI-C181-jahaz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch181.txt",
+  "json": "hindi/narration/ch181.json",
+  "textHash": "fnv1a64:eaae9fddec05d439",
+  "jsonHash": "fnv1a64:141dd84c5125773e",
+  "findings": []
+}

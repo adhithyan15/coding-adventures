@@ -1,0 +1,11 @@
+{
+  "id": "HI-C235-nice",
+  "pathSegment": "HI-PATH-235-LOC235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-235-LOC235",
+      "order": 1
+    }
+  ]
+}

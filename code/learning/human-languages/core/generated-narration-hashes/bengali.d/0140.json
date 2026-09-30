@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:33bd1a9dfd62cf55",
+  "lessonIds": [
+    "BN-C140-dharalo",
+    "BN-C140-bhota",
+    "BN-C140-tatka",
+    "BN-C140-basi",
+    "BN-C140-kacha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch140.txt",
+  "json": "bengali/narration/ch140.json",
+  "textHash": "fnv1a64:cd63c0933564b7b2",
+  "jsonHash": "fnv1a64:e45b806009133974",
+  "findings": []
+}

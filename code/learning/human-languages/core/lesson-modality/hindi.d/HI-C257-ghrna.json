@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C257-ghrna",
+    "language": "hindi",
+    "chapter": 257,
+    "sequence": 13970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea6b5fa504b5109d"
+  },
+  "findings": []
+}

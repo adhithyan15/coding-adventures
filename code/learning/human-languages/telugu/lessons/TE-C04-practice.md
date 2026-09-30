@@ -41,14 +41,14 @@ All three, side by side — none of them a blunt "goodbye":
 
 | Telugu | | English |
 |---|---|---|
-| **వెళ్ళి వస్తాను.** | *veḷḷi vastānu* | I'll go and come back. (the goodbye) |
-| **వెళ్ళి రండి.** | *veḷḷi raṇḍi* | Go and come back. (the reply) |
+| — | *veḷḷi vastānu* | I'll go and come back. (the goodbye) |
+| — | *veḷḷi raṇḍi* | Go and come back. (the reply) |
 | **రేపు కలుద్దాం.** | *rēpu kaluddām* | See you tomorrow. |
-| **మళ్ళీ కలుద్దాం.** | *maḷḷī kaluddām* | We'll meet again. |
+| — | *maḷḷī kaluddām* | We'll meet again. |
 
-A few of these characters have not had their own lesson yet. They are here to
-be **recognised**, not decoded — the romanization beside each line is what
-you read from. The letters catch up in the chapters ahead.
+Three of these stay in romanization for now: their doubled *ḷ* and their
+*e*-sign have not had their own lessons yet, and a line you cannot decode is
+not a line to read from. The letters catch up in the chapters ahead.
 [PAUSE 1s each]
 - [YOU SAY: the everyday goodbye — *veḷḷi vastānu* ("I'll go and come back")]
 - [YOU SAY: the warm reply — *veḷḷi raṇḍi* ("go and come back")]

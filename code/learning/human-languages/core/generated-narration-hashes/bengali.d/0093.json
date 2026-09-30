@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:a325430abb5309b9",
+  "lessonIds": [
+    "BN-C93-bosonto",
+    "BN-C93-hemonto",
+    "BN-C93-sekend",
+    "BN-C93-shuru",
+    "BN-C93-ajkal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch93.txt",
+  "json": "bengali/narration/ch93.json",
+  "textHash": "fnv1a64:3e994ea3c50835bf",
+  "jsonHash": "fnv1a64:07193b4928b5ffc5",
+  "findings": []
+}

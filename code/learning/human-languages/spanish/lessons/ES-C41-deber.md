@@ -8,18 +8,18 @@ type: word
 headword: deber
 gloss: should, ought to — and to owe, because the word is literally "to have something from someone"
 concept_tag: MODAL-SHOULD
-prerequisites: [ES-C41-asi-que]
+prerequisites: [ES-C41-asi-que, ES-C40-contestar, ES-C40-contestar]
 sounds: [b-soft, r-tap]
 roots: [debere-latin, habere-latin]
 etymology_hook: "deber ← Latin dēbēre, itself dē- ('from') + habēre ('to have') — 'to have something from someone', which is what owing is; English took the same verb four times over as debt, debit, due and duty, and English calqued the French phrase mettre en devoir into put in dever, which fused into endeavour"
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-ASI-QUE-03, ES-LEX-CREER-01]
+  knowledge: [ES-LEX-ASI-QUE-03, ES-LEX-CREER-01, ES-LEX-CONTESTAR-04, ES-LEX-RESPONDER-06]
 introduces:
   knowledge: [ES-LEX-DEBER-05, ES-ETYMON-DEBERE-06]
 practises:
-  knowledge: [ES-LEX-ASI-QUE-03, ES-LEX-CREER-01, ES-LEX-DEBER-05, ES-ETYMON-DEBERE-06]
+  knowledge: [ES-LEX-ASI-QUE-03, ES-LEX-CREER-01, ES-LEX-DEBER-05, ES-ETYMON-DEBERE-06, ES-LEX-CONTESTAR-04, ES-LEX-RESPONDER-06]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,11 +31,13 @@ reviews_of: [ES-C41-asi-que, ES-C41-creer]
 # deber — to owe, and therefore to ought
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ASI-QUE-03, ES-LEX-CREER-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-ASI-QUE-03, ES-LEX-CREER-01, ES-LEX-CONTESTAR-04, ES-LEX-RESPONDER-06] -->
 
 [PAUSE 2s] You can now say what you think and what follows from it. This verb
 adds the third move in any explanation: what somebody **ought** to do about it.
 It gets there from an unexpected direction — money.
+
+[PAUSE 2s] Two verbs answer: *contestar*, from calling witnesses, and *responder*, from pledging back. Say *contesto*, then *respondo*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

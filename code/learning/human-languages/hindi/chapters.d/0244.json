@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "A thousand, A hundred thousand, Ten million, Several, Both",
+  "label": "ch:hi-a-thousand-a-hundred-thousand-ten-million-several-both",
+  "canDo": "I can say a thousand, a hundred thousand, ten million, several and both.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C244-dono",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: i can say a thousand, a hundred thousand, ten million, several and both.",
+    "assesses": [
+      "HI-LEX-C244-THG244-03",
+      "HI-LEX-C244-THG244-04",
+      "HI-LEX-C244-THG244-05"
+    ]
+  }
+}

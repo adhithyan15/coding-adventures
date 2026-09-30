@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:0af3509e0710823f",
+  "lessonIds": [
+    "BN-C125-chamra",
+    "BN-C125-jele",
+    "BN-C125-kamar",
+    "BN-C125-kumor",
+    "BN-C125-tati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch125.txt",
+  "json": "bengali/narration/ch125.json",
+  "textHash": "fnv1a64:b94525324ded8885",
+  "jsonHash": "fnv1a64:dd41f4bf60fc0a49",
+  "findings": []
+}

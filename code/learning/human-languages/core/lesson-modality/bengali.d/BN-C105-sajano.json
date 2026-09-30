@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C105-sajano",
+    "language": "bengali",
+    "chapter": 105,
+    "sequence": 5570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:146013ff3a0bfdb4"
+  },
+  "findings": []
+}

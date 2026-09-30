@@ -224,7 +224,9 @@ recurrence, or through an exact mutually recursive selector cycle. The same
 selector recurrence may itself contain a conditional expression selected by
 an exact snapshot in that graph. The same exact snapshots may select
 conditional statement branches containing recurrence-cycle writes. Those changing
-dependency recurrences may contain conditional expressions when their selectors
+selector-cycle assignments may themselves appear in statically selected
+conditional statement branches while still resolving dependencies across the
+whole loop body. Changing dependency recurrences may contain conditional expressions when their selectors
 are the controlled scalar or other exact local snapshots in that graph. The
 recurrence assignment itself may also appear in one or both branches of a
 conditional statement selected by those snapshots; a branch without the

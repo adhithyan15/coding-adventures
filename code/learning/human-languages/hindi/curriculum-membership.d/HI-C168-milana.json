@@ -1,0 +1,11 @@
+{
+  "id": "HI-C168-milana",
+  "pathSegment": "HI-PATH-168-ACT168",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-168-ACT168",
+      "order": 1
+    }
+  ]
+}

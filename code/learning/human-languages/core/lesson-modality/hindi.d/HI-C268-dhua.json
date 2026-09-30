@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C268-dhua",
+    "language": "hindi",
+    "chapter": 268,
+    "sequence": 14710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9eb40fff7eb2b6b"
+  },
+  "findings": []
+}

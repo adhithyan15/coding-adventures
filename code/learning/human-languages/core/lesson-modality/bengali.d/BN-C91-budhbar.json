@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C91-budhbar",
+    "language": "bengali",
+    "chapter": 91,
+    "sequence": 4770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8181ab9b6140b8fd"
+  },
+  "findings": []
+}

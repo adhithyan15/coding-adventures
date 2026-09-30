@@ -1,0 +1,11 @@
+{
+  "id": "BN-C117-kumro",
+  "pathSegment": "BN-PATH-117-THINGS117",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-117-THINGS117",
+      "order": 1
+    }
+  ]
+}

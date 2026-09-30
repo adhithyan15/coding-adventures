@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C126-nars",
+    "language": "bengali",
+    "chapter": 126,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29f7e285c6b4f026"
+  },
+  "findings": []
+}

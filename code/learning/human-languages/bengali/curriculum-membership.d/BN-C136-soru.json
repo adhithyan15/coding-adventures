@@ -1,0 +1,11 @@
+{
+  "id": "BN-C136-soru",
+  "pathSegment": "BN-PATH-136-QUAL136",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-136-QUAL136",
+      "order": 2
+    }
+  ]
+}

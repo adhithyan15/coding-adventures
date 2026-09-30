@@ -39,8 +39,9 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(818);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 818 }, (_, index) => index + 1));
+  // 818 -> 820: chapter 7's hona and khana each split a continuation off.
+  expect(rows).toHaveLength(820);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 820 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

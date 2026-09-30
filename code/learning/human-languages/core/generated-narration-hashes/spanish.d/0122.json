@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 122,
-  "sourceHash": "fnv1a64:62bcd219ddfc2570",
+  "sourceHash": "fnv1a64:a10c7b270fd68068",
   "lessonIds": [
     "ES-C17-futuro",
     "ES-C17-comer-futuro",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch122.txt",
   "json": "spanish/narration/ch122.json",
-  "textHash": "fnv1a64:8dd448a576f06208",
-  "jsonHash": "fnv1a64:e940c2d4a9a81741",
+  "textHash": "fnv1a64:83bd5b89f6cd5b13",
+  "jsonHash": "fnv1a64:d6d6e7f0e0109825",
   "findings": []
 }

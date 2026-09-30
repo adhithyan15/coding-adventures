@@ -1,0 +1,11 @@
+{
+  "id": "HI-C230-dubna",
+  "pathSegment": "HI-PATH-230-ACT230",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-230-ACT230",
+      "order": 4
+    }
+  ]
+}

@@ -48,7 +48,7 @@ reviews_of: [HI-C02-meraa]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERAA-01, HI-CONCEPT-C03-MAIN-01] -->
 
-**मैं** (*maiṁ*, "I") ← Sanskrit **मया** (*mayā*, "by me"), on the first-person
+**मैं** (*maiṁ*, "I") ← Sanskrit *mayā* ("by me"), on the first-person
 root **म-** (*ma-*) — the same root that gave you *merā* ("my") last chapter, and
 the same **m-** behind English **me**, **my**, **mine** and Latin *mē*. Hindi's
 "I," its "my," and English's "me/my" all grow from one ancient first-person

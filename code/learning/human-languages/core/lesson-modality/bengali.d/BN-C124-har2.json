@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C124-har2",
+    "language": "bengali",
+    "chapter": 124,
+    "sequence": 6740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c33a6485b79e4845"
+  },
+  "findings": []
+}

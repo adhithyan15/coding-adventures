@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C191-sadi",
+    "language": "hindi",
+    "chapter": 191,
+    "sequence": 9330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6490cb62a0b5e244"
+  },
+  "findings": []
+}

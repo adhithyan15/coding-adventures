@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-121-THINGS121",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an owl, a parrot, a pigeon, a sparrow and a heron.",
+  "prerequisites": []
+}

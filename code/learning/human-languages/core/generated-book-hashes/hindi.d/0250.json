@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:4e88bd3fac86bf9d",
+  "lessonIds": [
+    "HI-C250-fail",
+    "HI-C250-tijori",
+    "HI-C250-mohar",
+    "HI-C250-chut",
+    "HI-C250-khudra"
+  ],
+  "tex": "hindi/book/chapters/ch250-a-file-a-safe-a-stamp-a-discount-retail.tex"
+}

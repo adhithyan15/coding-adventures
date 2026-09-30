@@ -1,8 +1,8 @@
 Punjabi, chapter 7: Six Verbs at the Core.
-9 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+11 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 9.
+Lesson 1 of 11.
 ਹੋਣਾ (hoṇā) — “to be,” and the two old verbs braided inside it.
 
 Warm-up.
@@ -18,10 +18,6 @@ The word, taken apart — the root English wore down to “be”.
 hoṇā comes from Sanskrit bhavati, “becomes,” built on the root bhū-. Middle Indo-Aryan softened that bh- to h-, so bhavati thinned to hoi and then to hoṇā.
 The root is Indo-European, bʰuH-, “grow, become.” English keeps it in be and been, and — by way of “the place where one dwells” — in build, booth, and bower. Latin held it as fuī “I was” and futūrus, which English borrowed as future. Greek held it as phúsis “nature,” which English borrowed as physics.
 
-Grammar Lens: one verb, two roots.
-Chapter 2 traced ਹੈ hai to a different Sanskrit verb altogether — asti, “is,” the root behind English is, Latin est, German ist. So Punjabi's “to be” is two ancient verbs braided into one: the name and the stem come from bhū-, the everyday present tense comes from as-.
-English braids the very same two, at the very same seam, and nobody notices: am, is, are belong to the as- verb; be, being, been belong to the bʰuH- verb.
-
 Guided Practice.
 [your turn — say: hoṇā — to be]
 [pause 8 seconds for the answer]
@@ -29,15 +25,37 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — connect: hoṇā from bhavati becomes English be]
 [pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending names a Punjabi verb, and what is left of hoṇā once you take it off? (-ṇā; the stem ho-.) Which English word shares its root? (be, from the same bhū- verb as bhavati.) Next: why hai looks nothing like it.
+
+
+Lesson 2 of 11.
+(ਹੋਣਾ, continued) ((hoṇā, continued)) — one verb, two roots.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: say ਹੋਣਾ (hoṇā) again, and what it means.
+[pause 1 second]
+What turned Sanskrit pañca into Punjabi panj? (A stop voiced after a nasal: -ñc- became -nj-.) And the proof? (Panjāh "fifty," against Hindi pacās.)
+
+Grammar Lens: one verb, two roots.
+Chapter 2 traced ਹੈ hai to a different Sanskrit verb altogether — asti, “is,” the root behind English is, Latin est, German ist. So Punjabi's “to be” is two ancient verbs braided into one: the name and the stem come from bhū-, the everyday present tense comes from as-.
+English braids the very same two, at the very same seam, and nobody notices: am, is, are belong to the as- verb; be, being, been belong to the bʰuH- verb.
+
+Guided Practice.
+[your turn — connect: hoṇā from bhavati becomes English be]
+[pause 8 seconds for the answer]
 [your turn — connect: hai from asti becomes English is]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which ending names a Punjabi verb, and what is left of hoṇā once you take it off? (-ṇā; the stem ho-.) And why do hoṇā and hai not resemble each other at all? (They are two different ancient verbs braided into one — the bhū- verb and the as- verb, exactly as English braids be with is.)
+Why do hoṇā and hai not resemble each other at all? (They are two different ancient verbs braided into one — the bhū- verb and the as- verb, exactly as English braids be with is.)
 
 
-Lesson 2 of 9.
+Lesson 3 of 11.
 ਣ, ਜ, ਵ — three pieces met inside a word you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ਣ, ਜ, ਵ until you have stopped, and I will say so again when we reach it.
@@ -79,7 +97,7 @@ Name today's pieces: ṇāṇā, jajjā, vāvvā. Which of them is a mātrā or 
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 3 of 9.
+Lesson 4 of 11.
 ਜਾਣਾ (jāṇā) — “to go,” and a sound law you can run yourself.
 
 Warm-up.
@@ -113,7 +131,7 @@ Wrap-up Recall.
 Which Sanskrit verb is jāṇā, and what happened to its first sound? (Yāti, “goes”; the y- became j-.) Give one more word the same change caught. (Jog, javān, or Jamnā.)
 
 
-Lesson 4 of 9.
+Lesson 5 of 11.
 ਆਉਣਾ (āuṇā) — “to come,” which is “go” pointed back at you.
 
 Warm-up.
@@ -143,7 +161,7 @@ Wrap-up Recall.
 What two pieces are inside āuṇā? (The prefix ā-, “toward,” and the old verb gam-, “go.”) Which everyday English verb is that second piece? (Come.)
 
 
-Lesson 5 of 9.
+Lesson 6 of 11.
 ੜ, ਘ, ਦ — three pieces met inside a word you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: ੜ, ਘ, ਦ until you have stopped, and I will say so again when we reach it.
@@ -185,7 +203,7 @@ Name today's pieces: ṛāṛā, ghaggā, daddā. Which of them is a mātrā or 
 Source: Unicode Gurmukhi chart.
 
 
-Lesson 6 of 9.
+Lesson 7 of 11.
 ਖਾਣਾ (khāṇā) — “to eat,” and the tone hiding one letter away.
 
 Warm-up.
@@ -196,6 +214,24 @@ You'll want to know first — one word.
 ਖਾਣਾ — khāṇā — to eat.
 ਖ is kh: a k with a puff of breath after it, as in English back-hand said fast. Then ਾ, then the ending ਣਾ. The stem is khā-.
 It comes straight from Sanskrit khādati, “chews, eats.” No English cousin has been securely traced from that root, and that is fine — the prize in this word is its sound.
+
+Guided Practice.
+[your turn — say: khāṇā — to eat]
+[pause 8 seconds for the answer]
+[your turn — strip: khāṇā minus -ṇā leaves the stem khā-]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "to eat." (khāṇā.) What is its stem? (khā-.) Which Sanskrit word does it come from? (khādati, "chews, eats.") Next: the tone that only Punjabi kept.
+
+
+Lesson 8 of 11.
+(ਖਾਣਾ, continued) ((khāṇā, continued)) — Sounds you'll need — the tone that only Punjabi kept.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: say ਖਾਣਾ (khāṇā) again, and what it means.
 
 Sounds you'll need — the tone that only Punjabi kept.
 Gurmukhi keeps its consonants in rows of five. The k-row runs ਕ ka, ਖ kha, ਗ ga, ਘ — and that fourth letter was once gha, a g said with a breathy voice.
@@ -220,7 +256,7 @@ Wrap-up Recall.
 What separates kòṛā “horse” from koṛā “whip”? (Pitch alone — the first dips and rises.) Where did that pitch come from? (From ਘ, an old breathy gh that stopped being breathy.) And does khāṇā carry one? (No — ਖ kh has no voice to lose.)
 
 
-Lesson 7 of 9.
+Lesson 9 of 11.
 ਵੇਖਣਾ (vekhṇā) — “to see,” a verb built out of the eye itself.
 
 Warm-up.
@@ -250,7 +286,7 @@ Wrap-up Recall.
 What noun is hiding inside vekhṇā? (The eye — Sanskrit akṣi, behind the verb īkṣ-.) Name two English words off that root. (Any of eye, window, ocular, optic, autopsy.) And what is the Hindi-shaped twin of this verb? (Dekhṇā.)
 
 
-Lesson 8 of 9.
+Lesson 10 of 11.
 Every wellbeing atom returns at R3 — retrieve every Chapter 3 wellbeing atom at R3.
 
 Warm-up.
@@ -275,7 +311,7 @@ Wrap-up Recall.
 Ask, answer, and close the exchange once more from meaning alone.
 
 
-Lesson 9 of 9.
+Lesson 11 of 11.
 ਜਾਣਨਾ (jāṇnā) — “to know,” one letter from “to go”.
 
 Warm-up.

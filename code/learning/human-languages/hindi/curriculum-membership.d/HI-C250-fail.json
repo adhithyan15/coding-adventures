@@ -1,0 +1,11 @@
+{
+  "id": "HI-C250-fail",
+  "pathSegment": "HI-PATH-250-THG250",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-250-THG250",
+      "order": 0
+    }
+  ]
+}

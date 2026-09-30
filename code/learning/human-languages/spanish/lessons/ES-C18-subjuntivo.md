@@ -8,18 +8,18 @@ type: grammar
 headword: hable · hables · hable
 gloss: the singular present subjunctive of hablar
 concept_tag: ES-SUBJUNCTIVE-AR-SINGULAR
-prerequisites: [ES-C18-quiero-que, ES-C06-hablar]
+prerequisites: [ES-C18-quiero-que, ES-C06-hablar, ES-C17-vivir-condicional]
 sounds: [vowel-e, stress-default-vowel-ns]
 roots: [latin-subiunctivus, pie-yewg]
 etymology_hook: "subjuntivo descends from Latin subiunctivus, 'subjoined'; build the regular forms from the present yo stem and the opposite family vowel"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST, ES-GRAMMAR-IR-CONDITIONAL-SINGULAR]
 introduces:
   knowledge: [ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP, ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS]
 practises:
-  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST, ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP, ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS]
+  knowledge: [ES-LEX-HABLAR, ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST, ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR, ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP, ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS, ES-GRAMMAR-IR-CONDITIONAL-SINGULAR]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ES-C18-quiero-que, ES-C06-hablar]
 # hable · hables · hable — the singular -ar row
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED] -->
+<!-- hl-knowledge: introduces=[ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR]; assesses=[ES-LEX-HABLAR, ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED, ES-GRAMMAR-IR-CONDITIONAL-SINGULAR] -->
 
 [PAUSE 2s] You already used **hables** for one friend. Today add only the other
 two singular slots:
@@ -43,6 +43,8 @@ two singular slots:
 | él / ella / usted | habl**e** |
 
 Plural forms wait. Say the small row: **hable · hables · hable**.
+
+[PAUSE 2s] *Viviría, vivirías, viviría*: the conditional rides on the whole infinitive.
 
 ## Grammar Lens: the yo stem, then a vowel swap
 <!-- hl-knowledge: introduces=[ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP]; assesses=[ES-GRAMMAR-AR-PRESENT-SINGULAR, ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR] -->

@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Ordinary, Special, Famous, Useless, Successful",
+  "label": "ch:hi-ordinary-special-famous-useless-successful",
+  "canDo": "I can say ordinary, special, famous, useless and successful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-R242-second-pass-words-from-chapters-238-242",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: i can say ordinary, special, famous, useless and successful.",
+    "assesses": [
+      "HI-LEX-C242-QUAL242-03",
+      "HI-LEX-C242-QUAL242-04",
+      "HI-LEX-C242-QUAL242-05"
+    ]
+  }
+}

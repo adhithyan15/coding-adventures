@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C169-bacna",
+    "language": "hindi",
+    "chapter": 169,
+    "sequence": 8050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d225e6eafd4c7f7"
+  },
+  "findings": []
+}

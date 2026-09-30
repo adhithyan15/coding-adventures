@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C123-komor",
+    "language": "bengali",
+    "chapter": 123,
+    "sequence": 6680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab94b9c10d3068a0"
+  },
+  "findings": []
+}

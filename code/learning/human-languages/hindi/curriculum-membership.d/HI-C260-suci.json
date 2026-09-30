@@ -1,0 +1,11 @@
+{
+  "id": "HI-C260-suci",
+  "pathSegment": "HI-PATH-260-THG260",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-260-THG260",
+      "order": 3
+    }
+  ]
+}

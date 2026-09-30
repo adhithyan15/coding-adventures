@@ -8,21 +8,21 @@ type: word
 headword: o queijo
 gloss: cheese — the word English and Portuguese still share, though French and Italian moved on
 concept_tag: PT-FOOD-CHEESE
-prerequisites: [PT-C23-leite]
+prerequisites: [PT-C23-leite, PT-C22-encontrar-meet]
 sounds: [diphthong-ei, j-as-zh]
 roots: [caseus-latin]
 etymology_hook: "queijo ← Latin caseus, the same root that gave English cheese (via a West Germanic borrowing of caseus) — so queijo and cheese are true cousins, while French fromage and Italian formaggio abandoned caseus for formaticum, 'something shaped in a mold'"
 duration:
   max_seconds: 214
 requires:
-  knowledge: [PT-LEX-LEITE-02, PT-ETYMON-LEITE-03]
+  knowledge: [PT-LEX-LEITE-02, PT-ETYMON-LEITE-03, PT-GRAMMAR-ENCONTRAR-MEET-04]
 introduces:
   knowledge: [PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PT-LEX-LEITE-02, PT-ETYMON-LEITE-03, PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03, PT-LEX-CHA-02, PT-NOTICE-C23-BEBIDAS-04, PT-LEX-FALO-PORTUGUES-03]
+  knowledge: [PT-LEX-LEITE-02, PT-ETYMON-LEITE-03, PT-LEX-QUEIJO-02, PT-ETYMON-QUEIJO-03, PT-LEX-CHA-02, PT-NOTICE-C23-BEBIDAS-04, PT-LEX-FALO-PORTUGUES-03, PT-GRAMMAR-ENCONTRAR-MEET-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,12 +34,14 @@ reviews_of: [PT-C23-leite]
 # o queijo — a cousin English didn't lose
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PT-GRAMMAR-ENCONTRAR-MEET-04] -->
 
 [PAUSE 2s] New chapter, new table. This word is a rare thing in this book: an
 everyday Portuguese noun whose closest cousin is an everyday **English** one
 — not a "learned" borrowing like *aquatic* or *annual*, but the ordinary word
 you'd use every day.
+
+[PAUSE 2s] Make the plan again: *Encontramo-nos no sábado.* The *nos* means each other; in Brazil, *nós nos encontramos*.
 
 ## You'll want to know: The word
 <!-- hl-knowledge: introduces=[PT-LEX-QUEIJO-02]; assesses=[] -->

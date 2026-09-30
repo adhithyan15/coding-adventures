@@ -1,0 +1,11 @@
+{
+  "id": "BN-C95-sokalbela",
+  "pathSegment": "BN-PATH-95-TIME95",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-95-TIME95",
+      "order": 4
+    }
+  ]
+}

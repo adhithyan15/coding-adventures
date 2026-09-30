@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C168-manna",
+    "language": "hindi",
+    "chapter": 168,
+    "sequence": 7960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44efa3fef17c5354"
+  },
+  "findings": []
+}

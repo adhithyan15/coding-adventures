@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "To be able to, Strength, Chance, Owner, Land",
+  "label": "ch:bn-to-be-able-to-strength-chance-owner-land",
+  "canDo": "I can say to be able to, strength, a chance, an owner and land.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "BN-C98-jomi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say to be able to, strength, a chance, an owner and land.",
+    "assesses": [
+      "BN-LEX-C98-CAN98-03",
+      "BN-LEX-C98-CAN98-04",
+      "BN-LEX-C98-CAN98-05"
+    ]
+  }
+}

@@ -79,7 +79,7 @@ for" (**petition**, **appetite**), and English **feather**.
 | সে পড়ে | *pôṛe* — the open inherent vowel stands |
 
 Third verb, third pair, one law: the high *-i* of "I" pulls the stem vowel up
-after it. দেখি against দেখে, বুঝি against বোঝে, পড়ি against পড়ে.
+after it. দেখি against দেখে, *bujhi* against *bojhe*, পড়ি against পড়ে.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C08-PORA-01, BN-SOUND-C08-PORA-02, BN-GRAMMAR-C08-BOJHA-02, BN-GRAMMAR-C07-DEKHA-02, BN-LEX-C08-BOJHA-01, BN-LEX-C08-BHABA-01] -->

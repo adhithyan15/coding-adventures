@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:675c33adcce19950",
+  "lessonIds": [
+    "HI-C261-naukarani",
+    "HI-C261-mali",
+    "HI-C261-kumhar",
+    "HI-C261-lohar",
+    "HI-C261-sunar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch261.txt",
+  "json": "hindi/narration/ch261.json",
+  "textHash": "fnv1a64:c5108c84b12af3f4",
+  "jsonHash": "fnv1a64:163359340500b308",
+  "findings": []
+}

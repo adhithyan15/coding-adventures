@@ -8,21 +8,21 @@ type: word
 headword: ich machte
 gloss: I made, I did — the second verb through the -te ending
 concept_tag: GE-PRAETERITUM-MACHTE
-prerequisites: [GE-C15-sagte]
+prerequisites: [GE-C15-sagte, GE-C15-perfekt-als-vergangenheit]
 sounds: [ch-ach, final-te]
 roots: [germanic-makon]
 etymology_hook: "machte and gemacht are built from the same stem by two different machines, and the stem itself never notices: German marks its past on the outside of a weak verb, never inside it"
 duration:
   max_seconds: 150
 requires:
-  knowledge: [GE-LEX-SAGTE-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-PERFEKT-ER-01]
+  knowledge: [GE-LEX-SAGTE-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-PERFEKT-ER-01, GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01]
 introduces:
   knowledge: [GE-LEX-MACHTE-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-MACHTE-01, GE-LEX-SAGTE-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-PERFEKT-ER-01]
+  knowledge: [GE-LEX-MACHTE-01, GE-LEX-SAGTE-01, GE-GRAMMAR-PRAETERITUM-TE-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-PERFEKT-ER-01, GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,10 +34,12 @@ reviews_of: [GE-C15-sagte, GE-C15-gemacht, GE-C15-er-hat-gemacht]
 # ich machte — "I made," "I did"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SAGTE-01, GE-LEX-GEMACHT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SAGTE-01, GE-LEX-GEMACHT-01, GE-GRAMMAR-PERFEKT-ALS-VERGANGENHEIT-01] -->
 
 [PAUSE 2s] You have *gemacht*. Build the other past of the same verb before
 reading on.
+
+[PAUSE 2s] *Ich habe gesagt* covers both *I said* and *I have said*. Spoken German keeps one past for both.
 
 ## You'll want to know: ich machte
 <!-- hl-knowledge: introduces=[GE-LEX-MACHTE-01]; assesses=[GE-GRAMMAR-PRAETERITUM-TE-01] -->

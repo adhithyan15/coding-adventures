@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C190-rang",
+    "language": "hindi",
+    "chapter": 190,
+    "sequence": 9300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b84f26a4c4c6ca19"
+  },
+  "findings": []
+}

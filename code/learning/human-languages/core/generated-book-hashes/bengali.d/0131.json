@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:1fe26f578314ab80",
+  "lessonIds": [
+    "BN-C131-bol",
+    "BN-C131-bashi",
+    "BN-C131-tobla",
+    "BN-C131-gitar",
+    "BN-C131-kyamera"
+  ],
+  "tex": "bengali/book/chapters/ch131-ball-flute-tabla-guitar-camera.tex"
+}

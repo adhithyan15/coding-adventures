@@ -1,0 +1,11 @@
+{
+  "id": "HI-C183-dukandar",
+  "pathSegment": "HI-PATH-183-THG183",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-183-THG183",
+      "order": 1
+    }
+  ]
+}

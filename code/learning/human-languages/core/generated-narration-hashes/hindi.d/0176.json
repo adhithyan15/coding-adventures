@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:fa2affb0244b47ae",
+  "lessonIds": [
+    "HI-C176-hilana",
+    "HI-C176-khicna",
+    "HI-C176-dhakelna",
+    "HI-C176-phekna",
+    "HI-C176-cakhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch176.txt",
+  "json": "hindi/narration/ch176.json",
+  "textHash": "fnv1a64:31337d77799e03c9",
+  "jsonHash": "fnv1a64:e883b233c2531b79",
+  "findings": []
+}

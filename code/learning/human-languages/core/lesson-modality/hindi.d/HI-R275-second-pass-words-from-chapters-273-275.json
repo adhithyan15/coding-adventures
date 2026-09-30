@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R275-second-pass-words-from-chapters-273-275",
+    "language": "hindi",
+    "chapter": 275,
+    "sequence": 15290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cefc11c0b397934"
+  },
+  "findings": []
+}

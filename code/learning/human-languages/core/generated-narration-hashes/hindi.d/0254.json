@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:7a657ad2ccb106da",
+  "lessonIds": [
+    "HI-C254-saheli",
+    "HI-C254-sathi",
+    "HI-C254-sambandhi",
+    "HI-C254-sas",
+    "HI-C254-sasur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch254.txt",
+  "json": "hindi/narration/ch254.json",
+  "textHash": "fnv1a64:82fde5eb04b4cee8",
+  "jsonHash": "fnv1a64:64109fdf96a00226",
+  "findings": []
+}

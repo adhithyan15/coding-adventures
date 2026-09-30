@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C175-girana",
+    "language": "hindi",
+    "chapter": 175,
+    "sequence": 8320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66e4f6bb571ad654"
+  },
+  "findings": []
+}

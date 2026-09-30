@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:0253f4f4012641ee",
+  "lessonIds": [
+    "BN-C136-gobhir",
+    "BN-C136-choora",
+    "BN-C136-soru",
+    "BN-C136-gol",
+    "BN-C136-beguni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch136.txt",
+  "json": "bengali/narration/ch136.json",
+  "textHash": "fnv1a64:f64bb7af742bf6da",
+  "jsonHash": "fnv1a64:5a8c5e085f1e7c7a",
+  "findings": []
+}

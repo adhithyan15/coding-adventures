@@ -45,7 +45,7 @@ turning it into a working Kannada verb.
   noun, unchanged.
 - **‑ಇಸು** (*‑isu*) = a **verb-making suffix**: bolt it onto a Sanskrit noun
   and you get a brand-new Kannada verb. *kṣamā* + *‑isu* → **ಕ್ಷಮಿಸು**
-  (*kṣamisu*), "**to forgive**." (The same move builds ಪ್ರಾರಂಭಿಸು
+  (*kṣamisu*), "**to forgive**." (The same move builds
   *prārambhisu*, "to begin," from Sanskrit *prārambha*.)
 - **‑ಿ** (*‑i*) = the plain **imperative** ending — the very one you met on
   *kuḷitukoḷḷi* ("please sit") in the please lesson.

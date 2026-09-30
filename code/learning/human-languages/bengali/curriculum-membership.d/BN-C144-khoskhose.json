@@ -1,0 +1,11 @@
+{
+  "id": "BN-C144-khoskhose",
+  "pathSegment": "BN-PATH-144-QUAL144",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-144-QUAL144",
+      "order": 4
+    }
+  ]
+}

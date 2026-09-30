@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R275-first-pass-words-from-chapters-270-272",
+    "language": "hindi",
+    "chapter": 275,
+    "sequence": 15280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf453bb22748fa2f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:d2d769d0393554cd",
+  "lessonIds": [
+    "HI-C167-kiraya",
+    "HI-C167-tarikh",
+    "HI-C167-nambar",
+    "HI-C167-manzil",
+    "HI-C167-rasid",
+    "HI-R167-first-pass-notices-and-messages",
+    "HI-R167-second-pass-rent-dates-and-rooms"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch167.txt",
+  "json": "hindi/narration/ch167.json",
+  "textHash": "fnv1a64:b06cd53c119f185c",
+  "jsonHash": "fnv1a64:325d0d8721d64c9f",
+  "findings": []
+}

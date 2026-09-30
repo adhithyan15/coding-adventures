@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C185-tufan",
+    "language": "hindi",
+    "chapter": 185,
+    "sequence": 9040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cc340ad3744a056"
+  },
+  "findings": []
+}

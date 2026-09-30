@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:efe44c4ee1cf79d0",
+  "lessonIds": [
+    "HI-C272-gali",
+    "HI-C272-nukkar",
+    "HI-C272-mela",
+    "HI-C272-jalus",
+    "HI-C272-bhasan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch272.txt",
+  "json": "hindi/narration/ch272.json",
+  "textHash": "fnv1a64:8eed83757f0dd843",
+  "jsonHash": "fnv1a64:4797737a3b1a6e34",
+  "findings": []
+}

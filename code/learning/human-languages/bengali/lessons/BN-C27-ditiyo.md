@@ -9,7 +9,7 @@ headword: দ্বিতীয়
 romanization: ditiyô
 gloss: "second — the word chapter twelve promised you without naming it, and a cluster that is on the page but not in the mouth"
 concept_tag: BN-ORDINAL-TATSAMA
-prerequisites: [BN-R26-here-there-where, BN-W05-tha, BN-C23-she, BN-C13-sbagotom, BN-C06-numbers-1-5, BN-C22-adj-order]
+prerequisites: [BN-R26-here-there-where, BN-W05-tha, BN-C23-she, BN-C13-sbagotom, BN-C06-numbers-1-5, BN-C22-adj-order, BN-C06-numbers-1-5-dui]
 sounds: []
 roots: [sanskrit-dvi]
 etymology_hook: "Chapter twelve said the old dv- was gone from the everyday numeral but alive in words borrowed straight back out of Sanskrit. This is one of those words."

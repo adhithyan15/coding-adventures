@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:a2a761190eb78f6e",
+  "lessonIds": [
+    "HI-C171-dikhana",
+    "HI-C171-dikhna",
+    "HI-C171-chipana",
+    "HI-C171-chipna",
+    "HI-C171-rukna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch171.txt",
+  "json": "hindi/narration/ch171.json",
+  "textHash": "fnv1a64:3c78fbb9648b1277",
+  "jsonHash": "fnv1a64:8f29fe7183e0589a",
+  "findings": []
+}

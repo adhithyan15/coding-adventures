@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:91474f154f0bd3c8",
+  "lessonIds": [
+    "BN-C116-tormuj",
+    "BN-C116-begun",
+    "BN-C116-rosun",
+    "BN-C116-ada",
+    "BN-C116-tometo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch116.txt",
+  "json": "bengali/narration/ch116.json",
+  "textHash": "fnv1a64:662c458e9c5d869c",
+  "jsonHash": "fnv1a64:8b71d82e52e3f253",
+  "findings": []
+}

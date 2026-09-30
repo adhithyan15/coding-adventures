@@ -246,7 +246,7 @@ You'll want to know: an Urdu word arrives by one of several roads.
 [a table of 3 rows, read aloud]
 word: کوٹ koṭ. the road it took: straight from English, one generation old.
 word: ہوا hawā. the road it took: Arabic to Persian, Persian to Urdu — a loan of a loan.
-word: گرمی garmī. the road it took: Persian, on a root it shares with Greek thermós.
+word: garmī. the road it took: Persian, on a root it shares with Greek thermós.
 Three different histories, and the spelling announces none of them. کوٹ is the sharpest case: an identical کوٹ meaning "fort" came in from Sanskrit koṭṭa centuries earlier, so the two are homographs rather than cousins and the page gives you no warning at all.
 ہوا is the shape worth naming, because it is not the usual one. A word that splits from a shared root into two roads has two descendants; ہوا was handed along a single chain, Arabic to Persian to Urdu, arriving once.
 

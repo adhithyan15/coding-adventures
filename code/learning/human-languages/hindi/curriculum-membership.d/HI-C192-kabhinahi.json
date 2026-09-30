@@ -1,0 +1,11 @@
+{
+  "id": "HI-C192-kabhinahi",
+  "pathSegment": "HI-PATH-192-FREQ192",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-192-FREQ192",
+      "order": 4
+    }
+  ]
+}

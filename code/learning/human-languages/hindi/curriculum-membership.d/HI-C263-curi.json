@@ -1,0 +1,11 @@
+{
+  "id": "HI-C263-curi",
+  "pathSegment": "HI-PATH-263-THG263",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-263-THG263",
+      "order": 2
+    }
+  ]
+}

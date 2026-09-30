@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C224-har",
+    "language": "hindi",
+    "chapter": 224,
+    "sequence": 11640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5253b67a2ebb0455"
+  },
+  "findings": []
+}

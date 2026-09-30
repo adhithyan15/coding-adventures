@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Simple Past",
   "drivablePrefix": 10,
-  "sourceHash": "fnv1a64:448c0f298ea27ffb",
+  "sourceHash": "fnv1a64:8853b5d99fbd784a",
   "lessons": [
     {
       "id": "GE-C15-praeteritum",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3afa675418acc47",
+      "sourceHash": "fnv1a64:ef8f3f4a21bb475b",
       "notice": null,
       "blocks": [
         {
@@ -160,6 +160,16 @@
             {
               "kind": "speech",
               "text": "Run the new ending on the verb this chapter started from."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Wir haben gesagt: for wir, the helper is the infinitive itself, unchanged."
             }
           ]
         },
@@ -282,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db3c4800a7a1813d",
+      "sourceHash": "fnv1a64:04cd4a4ef0adfe40",
       "notice": null,
       "blocks": [
         {
@@ -299,6 +309,16 @@
             {
               "kind": "speech",
               "text": "You have gemacht. Build the other past of the same verb before reading on."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ich habe gesagt covers both I said and I have said. Spoken German keeps one past for both."
             }
           ]
         },

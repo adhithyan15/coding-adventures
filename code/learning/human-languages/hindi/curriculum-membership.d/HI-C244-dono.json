@@ -1,0 +1,11 @@
+{
+  "id": "HI-C244-dono",
+  "pathSegment": "HI-PATH-244-THG244",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-244-THG244",
+      "order": 4
+    }
+  ]
+}

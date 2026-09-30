@@ -38,8 +38,8 @@ reviews_of: [TE-C02-nuvvu-miiru, TE-C03-elaa]
 ## The letters in this word
 <!-- hl-knowledge: introduces=[TE-LEX-C03-MIIRU-ELAA-UNNAARU-01]; assesses=[] -->
 
-The new word is **ఉన్నారు** (*unnāru*, "you are/exist"): from the verb **ఉండు**
-(*uṇḍu*, "to be, to exist, to stay") + the respectful-you ending **-ారు**
+The new word is **ఉన్నారు** (*unnāru*, "you are/exist"): from the verb *uṇḍu*
+( "to be, to exist, to stay") + the respectful-you ending **-ారు**
 (*-āru*). Note the doubled **న్న** (*nn*).
 
 ## The phrase, taken apart
@@ -47,7 +47,7 @@ The new word is **ఉన్నారు** (*unnāru*, "you are/exist"): from the
 
 **మీరు ఎలా ఉన్నారు?** = **మీరు** (*mīru*, "you," respectful) + **ఎలా** (*elā*,
 "how") + **ఉన్నారు** (*unnāru*, "are") — "you how are?", the verb **last**, as in
-every Telugu sentence. The verb is **ఉండు** (*uṇḍu*), "to be / to exist / to
+every Telugu sentence. The verb is *uṇḍu*, "to be / to exist / to
 stay" — native Dravidian, and the workhorse behind "how are you," "I'm well," and
 (you'll see in Chapter 5) "I live."
 

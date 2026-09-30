@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C241-kimti",
+    "language": "hindi",
+    "chapter": 241,
+    "sequence": 12800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d91319b14894bab"
+  },
+  "findings": []
+}

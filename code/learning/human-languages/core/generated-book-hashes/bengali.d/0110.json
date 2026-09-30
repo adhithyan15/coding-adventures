@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:db2cbfa43c6207be",
+  "lessonIds": [
+    "BN-C110-kachi",
+    "BN-C110-hariken",
+    "BN-C110-mombati",
+    "BN-C110-deshlai",
+    "BN-C110-koyla"
+  ],
+  "tex": "bengali/book/chapters/ch110-scissors-hurricane-lamp-candle-matches-coal.tex"
+}

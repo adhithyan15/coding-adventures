@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Every, All, Some, A dozen, A pair",
+  "label": "ch:hi-every-all-some-a-dozen-a-pair",
+  "canDo": "I can say every, all, some, a dozen and a pair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C245-jora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: i can say every, all, some, a dozen and a pair.",
+    "assesses": [
+      "HI-LEX-C245-THG245-03",
+      "HI-LEX-C245-THG245-04",
+      "HI-LEX-C245-THG245-05"
+    ]
+  }
+}

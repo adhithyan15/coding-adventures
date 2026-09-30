@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Shy, Sociable, Quiet, Smooth, Rough",
+  "label": "ch:bn-shy-sociable-quiet-smooth-rough",
+  "canDo": "I can say shy, sociable, quiet, smooth and rough.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-R144-second-pass-describing-people",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say shy, sociable, quiet, smooth and rough.",
+    "assesses": [
+      "BN-LEX-C144-QUAL144-03",
+      "BN-LEX-C144-QUAL144-04",
+      "BN-LEX-C144-QUAL144-05"
+    ]
+  }
+}

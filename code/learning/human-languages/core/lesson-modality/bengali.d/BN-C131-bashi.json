@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C131-bashi",
+    "language": "bengali",
+    "chapter": 131,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b785a8418d12388"
+  },
+  "findings": []
+}

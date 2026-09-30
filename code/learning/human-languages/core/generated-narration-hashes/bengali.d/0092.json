@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:a97b12847367fafa",
+  "lessonIds": [
+    "BN-C92-shonibar",
+    "BN-C92-robibar",
+    "BN-C92-protidin",
+    "BN-C92-roj",
+    "BN-C92-shit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch92.txt",
+  "json": "bengali/narration/ch92.json",
+  "textHash": "fnv1a64:154358db67b72a1c",
+  "jsonHash": "fnv1a64:176e893bca9e07b6",
+  "findings": []
+}

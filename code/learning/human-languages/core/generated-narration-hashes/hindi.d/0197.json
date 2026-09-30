@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:d78ae3f9cc2cb17e",
+  "lessonIds": [
+    "HI-C197-kaksa",
+    "HI-C197-pariksa",
+    "HI-C197-path",
+    "HI-C197-abhyas",
+    "HI-C197-ank"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch197.txt",
+  "json": "hindi/narration/ch197.json",
+  "textHash": "fnv1a64:b8ee4afcd997d11e",
+  "jsonHash": "fnv1a64:d49ce182c2c440b5",
+  "findings": []
+}

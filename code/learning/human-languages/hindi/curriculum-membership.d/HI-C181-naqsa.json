@@ -1,0 +1,11 @@
+{
+  "id": "HI-C181-naqsa",
+  "pathSegment": "HI-PATH-181-THG181",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-181-THG181",
+      "order": 0
+    }
+  ]
+}

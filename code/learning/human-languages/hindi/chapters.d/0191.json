@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "A week, A year, A century, A moment, A minute",
+  "label": "ch:hi-a-week-a-year-a-century-a-moment-a-minute",
+  "canDo": "I can say a week, a year, a century, a moment and a minute.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C191-minit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: i can say a week, a year, a century, a moment and a minute.",
+    "assesses": [
+      "HI-LEX-C191-TIME191-03",
+      "HI-LEX-C191-TIME191-04",
+      "HI-LEX-C191-TIME191-05"
+    ]
+  }
+}

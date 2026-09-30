@@ -22,7 +22,7 @@ The word, taken apart.
 দয়া is Sanskrit দয়া (dayā), "compassion, pity." Most Indo-Europeanists trace its root back to PIE deh₂-, "to divide, to apportion" — the same root proposed for Greek daíomai, "to divide," and dêmos, "a portion of land, the people," which English holds without inheriting it directly: democracy, epidemic, demographic. If the comparison is right, compassion and sharing are the same idea at the root — you feel দয়া for someone by dividing your own good fortune with them, the warmth this book already located in হৃদয়, the heart.
 
 Grammar Lens: করা wears a new outfit.
-Noun plus করা already builds a verb — কাজ করা, "to work"; জিজ্ঞাসা করা, "to ask." Here করা takes a different shape, করে, "having done": not a full sentence on its own, but a piece that leans on the next word.
+Noun plus করা already builds a verb — কাজ করা, "to work"; jijñāsā kôrā, "to ask." Here করা takes a different shape, করে, "having done": not a full sentence on its own, but a piece that leans on the next word.
 [a table of 2 rows, read aloud]
 shape of করা: a finite ending (করি, করে, করেন…) job: states an action. example: আমি কাজ করি — I work.
 shape of করা: করে, unchanged. job: "having done," leaning forward. example: দয়া করে (doya kore) বসুন — please, sit.
@@ -90,13 +90,13 @@ Last lesson's word for "sorry" was a native Sanskrit word. This one is a loanwor
 
 You'll want to know: মাফ করবেন.
 মাফ করবেন — maf korben — excuse me.
-মাফ করবেন, একটু জায়গা দেবেন? (maf korben, êktu jāygā debên?) — excuse me, could you make a little room?
+maf korben, êktu jāygā debên? — excuse me, could you make a little room?
 
 The letters in this word.
 মাফ is ম (mô) with া (ā) plus ফ (ph, the puffed p). Notice what is missing: Hindi marks this same borrowed sound with a small dot under its own letter for pha, a nuqtā, to write a dedicated letter for f. Bengali's script has no such mark at all — ফ alone serves for both the native puffed p and this borrowed f, and only habit tells a reader which one a given word means.
 
 The word, taken apart.
-মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, "to pardon, to wipe a wrong away." Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, ক্ষমা করবেন, from ক্ষমা (kṣamā), "patience, forbearance" — the everyday loan and the bookish native word side by side, the same split Hindi keeps.
+মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, "to pardon, to wipe a wrong away." Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, kṣamā korben, from kṣamā, "patience, forbearance" — the everyday loan and the bookish native word side by side, the same split Hindi keeps.
 
 Grammar Lens: the future, asked to be gentle.
 The tea-offering pattern you already own reuses a present verb — আপনি খান — to make a request. করবেন does the same job with a different tense: it is the plain future, "you will do," not a command at all by its grammar, and yet its job here is exactly a request — a third shape for করা, beside last lesson's participle করে.
@@ -149,4 +149,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give "welcome" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? ("Good" plus "come" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, "hither" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (দয়া করে (doya kore), দুঃখিত (dukkhito), মাফ করবেন (maf korben).) One more reach: what tense softened that pardon into a request? (Future — করবেন, "you will do.")
+Give "welcome" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? ("Good" plus "come" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, "hither" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (doya kore, dukkhito, maf korben.) One more reach: what tense softened that pardon into a request? (Future — করবেন, "you will do.")

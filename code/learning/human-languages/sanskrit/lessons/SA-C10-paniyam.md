@@ -47,7 +47,7 @@ starting with the one you would ask for first.
 | Sanskrit | sound | meaning |
 |---|---|---|
 | पानीयम् | *pānīyam* | **water** |
-| पिबति | *pibati* | he, she, or it **drinks** |
+| — | *pibati* | he, she, or it **drinks** |
 
 **पानीयम्** is neuter, and its final **-म्** marks that — a whole family of
 everyday nouns ends this way, and it will keep coming back this chapter.
@@ -73,7 +73,7 @@ Eastward, **पानीयम्** wore down through Prakrit *pāṇīya* into 
 water-word of the daughter languages: Hindi **पानी** (*pānī*), Gujarati
 *pāṇī*, and, in the Bangladesh register of Bengali, *pani* — every one
 **तद्भव**, worn down by ordinary speech, not carried
-over whole. Sanskrit's own oldest water-words, **जल** and **उदक**, took a
+over whole. Sanskrit's own oldest water-words, *jala* and *udaka*, took a
 different road entirely; this is not that word.
 
 ## Guided Practice

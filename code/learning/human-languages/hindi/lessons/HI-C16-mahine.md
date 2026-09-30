@@ -56,11 +56,10 @@ borrowing, not an ancient Sanskrit system.
 ## You'll want to know — Be honest: the traditional calendar is a genuinely different structure
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C16-MAHINE-02]; assesses=[] -->
 
-Hindu tradition keeps its **own**, much older lunisolar calendar — **विक्रम
-संवत्** (*Vikram Samvat*) — with twelve **different** month names:
-**चैत्र, वैशाख, ज्येष्ठ, आषाढ़, श्रावण, भाद्रपद, आश्विन, कार्तिक,
-मार्गशीर्ष, पौष, माघ, फाल्गुन** (*Chaitra, Vaiśākh, Jyeṣṭha, Āṣāḍh,
-Śrāvaṇ, Bhādrapad, Āśvin, Kārtik, Mārgaśīrṣ, Pauṣ, Māgh, Phālgun*).
+Hindu tradition keeps its **own**, much older lunisolar calendar — *Vikram
+Samvat* — with twelve **different** month names:
+*Chaitra, Vaiśākh, Jyeṣṭha, Āṣāḍh,
+Śrāvaṇ, Bhādrapad, Āśvin, Kārtik, Mārgaśīrṣ, Pauṣ, Māgh, Phālgun*.
 
 This isn't just a second set of labels for the same twelve solar months —
 these months are tied to the **six-ṛtu** seasonal calendar from the

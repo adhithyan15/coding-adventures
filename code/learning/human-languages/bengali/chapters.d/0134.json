@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Short, Spicy, Salty, Hard, Soft",
+  "label": "ch:bn-short-spicy-salty-hard-soft",
+  "canDo": "I can say short, spicy, salty, hard and soft.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "BN-C134-norom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say short, spicy, salty, hard and soft.",
+    "assesses": [
+      "BN-LEX-C134-QUAL134-03",
+      "BN-LEX-C134-QUAL134-04",
+      "BN-LEX-C134-QUAL134-05"
+    ]
+  }
+}

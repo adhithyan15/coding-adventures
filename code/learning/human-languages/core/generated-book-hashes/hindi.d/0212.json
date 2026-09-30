@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:9917a61032622472",
+  "lessonIds": [
+    "HI-C212-bhadda",
+    "HI-C212-mazbut",
+    "HI-C212-kamzor",
+    "HI-C212-sasta",
+    "HI-C212-kathin"
+  ],
+  "tex": "hindi/book/chapters/ch212-ugly-strong-weak-cheap-hard.tex"
+}

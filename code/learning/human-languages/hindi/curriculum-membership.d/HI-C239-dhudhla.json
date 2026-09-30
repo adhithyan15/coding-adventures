@@ -1,0 +1,11 @@
+{
+  "id": "HI-C239-dhudhla",
+  "pathSegment": "HI-PATH-239-QUAL239",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-239-QUAL239",
+      "order": 1
+    }
+  ]
+}

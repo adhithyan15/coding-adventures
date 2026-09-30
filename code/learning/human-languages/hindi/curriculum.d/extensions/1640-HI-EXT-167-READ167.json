@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-167-READ167",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the rent, a date, a room number, a floor and a receipt in a short notice.",
+  "prerequisites": []
+}

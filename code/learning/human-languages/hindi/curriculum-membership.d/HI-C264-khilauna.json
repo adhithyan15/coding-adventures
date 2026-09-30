@@ -1,0 +1,11 @@
+{
+  "id": "HI-C264-khilauna",
+  "pathSegment": "HI-PATH-264-THG264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-264-THG264",
+      "order": 3
+    }
+  ]
+}

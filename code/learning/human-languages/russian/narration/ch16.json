@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "And, Or, and Neither",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e60c8ab454b7f82b",
+  "sourceHash": "fnv1a64:855ba0cfcd00f84f",
   "lessons": [
     {
       "id": "RU-C16-i",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53e28a7c3f84cf01",
+      "sourceHash": "fnv1a64:a01a501e62ff0cbb",
       "notice": null,
       "blocks": [
         {

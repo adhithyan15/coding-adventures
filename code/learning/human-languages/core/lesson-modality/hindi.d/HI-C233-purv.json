@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C233-purv",
+    "language": "hindi",
+    "chapter": 233,
+    "sequence": 12200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4edd8c1ba21be206"
+  },
+  "findings": []
+}

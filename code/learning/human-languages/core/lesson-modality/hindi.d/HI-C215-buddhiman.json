@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C215-buddhiman",
+    "language": "hindi",
+    "chapter": 215,
+    "sequence": 11000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dafb4b55cfcdffe"
+  },
+  "findings": []
+}

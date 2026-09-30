@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:77b74085adb00290",
+  "lessonIds": [
+    "HI-C184-fars",
+    "HI-C184-cabi",
+    "HI-C184-almari",
+    "HI-C184-aina",
+    "HI-C184-baris"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch184.txt",
+  "json": "hindi/narration/ch184.json",
+  "textHash": "fnv1a64:d363c5af4a070aeb",
+  "jsonHash": "fnv1a64:ccceb675857a206c",
+  "findings": []
+}

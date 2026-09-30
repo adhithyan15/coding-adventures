@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C127-mojur",
+    "language": "bengali",
+    "chapter": 127,
+    "sequence": 6890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24bca60184cc42b2"
+  },
+  "findings": []
+}

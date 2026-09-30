@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:0d7f1c93aa5ad708",
+  "lessonIds": [
+    "BN-C99-sompotti",
+    "BN-C99-ay",
+    "BN-C99-chakri",
+    "BN-C99-buddhi",
+    "BN-C99-gyan",
+    "BN-R99-first-pass-times-of-day-and-the-week",
+    "BN-R99-second-pass-wanting-and-having"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch99.txt",
+  "json": "bengali/narration/ch99.json",
+  "textHash": "fnv1a64:5a2e70e4435d11c5",
+  "jsonHash": "fnv1a64:25b3080beecd1748",
+  "findings": []
+}

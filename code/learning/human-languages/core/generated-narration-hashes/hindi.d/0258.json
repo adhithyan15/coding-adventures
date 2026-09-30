@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:7766a0ba3eff9b84",
+  "lessonIds": [
+    "HI-C258-ahankar",
+    "HI-C258-dhiraj",
+    "HI-C258-himmat",
+    "HI-C258-visvas",
+    "HI-C258-akelapan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch258.txt",
+  "json": "hindi/narration/ch258.json",
+  "textHash": "fnv1a64:0ca40aea998de2c5",
+  "jsonHash": "fnv1a64:fec7de3434fa5cb3",
+  "findings": []
+}

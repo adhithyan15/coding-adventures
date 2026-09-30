@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C240-videsi",
+    "language": "hindi",
+    "chapter": 240,
+    "sequence": 12750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ad2b448ffe1f3ff"
+  },
+  "findings": []
+}

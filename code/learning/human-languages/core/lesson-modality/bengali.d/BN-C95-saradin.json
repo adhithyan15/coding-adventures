@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C95-saradin",
+    "language": "bengali",
+    "chapter": 95,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b377f7158869d81a"
+  },
+  "findings": []
+}

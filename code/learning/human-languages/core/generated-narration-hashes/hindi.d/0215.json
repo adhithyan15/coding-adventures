@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:2205bb33bd9736a0",
+  "lessonIds": [
+    "HI-C215-jhutha",
+    "HI-C215-buddhiman",
+    "HI-C215-murkh",
+    "HI-C215-bahadur",
+    "HI-C215-dayalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch215.txt",
+  "json": "hindi/narration/ch215.json",
+  "textHash": "fnv1a64:84fba79d17e99723",
+  "jsonHash": "fnv1a64:39eabdd935f2419d",
+  "findings": []
+}

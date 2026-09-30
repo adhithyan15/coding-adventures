@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C115-bash",
+    "language": "bengali",
+    "chapter": 115,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36bd5f7e007a5ca2"
+  },
+  "findings": []
+}

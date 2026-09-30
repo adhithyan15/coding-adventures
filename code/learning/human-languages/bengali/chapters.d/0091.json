@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Tomorrow, Monday, Wednesday, Thursday, Friday",
+  "label": "ch:bn-tomorrow-monday-wednesday-thursday-friday",
+  "canDo": "I can say tomorrow, Monday, Wednesday, Thursday and Friday.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "BN-C91-shukrobar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say tomorrow, Monday, Wednesday, Thursday and Friday.",
+    "assesses": [
+      "BN-LEX-C91-TIME91-03",
+      "BN-LEX-C91-TIME91-04",
+      "BN-LEX-C91-TIME91-05"
+    ]
+  }
+}

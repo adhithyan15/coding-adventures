@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C182-mazdur",
+    "language": "hindi",
+    "chapter": 182,
+    "sequence": 8800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ff3472a575e45e0"
+  },
+  "findings": []
+}

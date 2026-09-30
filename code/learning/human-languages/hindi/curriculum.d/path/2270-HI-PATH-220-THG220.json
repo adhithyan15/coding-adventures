@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-220-THG220",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "HI-EXT-220-THG220"
+  ],
+  "after": []
+}

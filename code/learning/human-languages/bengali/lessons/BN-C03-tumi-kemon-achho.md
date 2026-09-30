@@ -40,7 +40,7 @@ verb "to be."
 <!-- hl-knowledge: introduces=[BN-CONCEPT-C03-TUMIKEMONACHHO-01]; assesses=[BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C02-TUMIAPNI-01] -->
 
 The new word is **আছো** (*āchho*, "are you"), from the verb **আছা** (*āchhā*, "to
-be, to exist, to have") + the familiar-you ending **-ও** (*-o*). Note the **ছ**
+be, to exist, to have") + the familiar-you ending *-o*. Note the **ছ**
 (*chh*) — a breathy *ch*.
 
 ## The phrase, taken apart
@@ -56,7 +56,7 @@ In Chapter 3, Bengali dropped "is": *āmār nām Arun* ("my name Arun"). That **
 copula** works for *equations* (X is Y). But "how are you?" asks about a **state**
 — how you *exist* — and for that Bengali uses a real verb, **আছা** (*āchhā*). So:
 no verb for "my name is Arun," a real verb for "how are you." Respectful form:
-**আপনি কেমন আছেন?** (*āpni kēmon āchhen?* — *āchhen* for *āpni*). Match the "you"
+*āpni kēmon āchhen?* (*āchhen* for *āpni*). Match the "you"
 to the verb-ending.
 
 ## Guided Practice

@@ -269,7 +269,13 @@ describe("corpus snapshot", () => {
   it("names the steepest lesson, which is where a burn-down starts", () => {
     const { lessons } = loadEverything();
     const report = measureRamp(lessons, loadChapterPolicy());
-    expect(report.summary.steepestLesson).toMatchObject({ atoms: 6, budget: 3 });
+    // 6 -> 4: Bengali's one-to-five, the last six-atom lesson, split its দুই history
+    // into a continuation. 4 -> none: PA-C07-hona, PA-C07-khana and RU-C03-govorit,
+    // the last three at four atoms, split too. The burn-down this test named the
+    // start of is finished: no lesson in the corpus exceeds the atom budget, and a
+    // new one that does fails here by name.
+    expect(report.lessons.map((lesson) => lesson.lessonId)).toEqual([]);
+    expect(report.summary.steepestLesson).toBeNull();
   });
 });
 

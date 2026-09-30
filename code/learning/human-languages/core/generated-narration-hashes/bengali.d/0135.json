@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:7112eee1eb37dd0c",
+  "lessonIds": [
+    "BN-C135-bhije",
+    "BN-C135-shukno",
+    "BN-C135-bhora",
+    "BN-C135-druto",
+    "BN-C135-dhir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch135.txt",
+  "json": "bengali/narration/ch135.json",
+  "textHash": "fnv1a64:9d81e0eafb04339d",
+  "jsonHash": "fnv1a64:349484c0107370c2",
+  "findings": []
+}

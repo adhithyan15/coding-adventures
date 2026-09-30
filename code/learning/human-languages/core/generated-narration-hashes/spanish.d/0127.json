@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 127,
-  "sourceHash": "fnv1a64:1c0716b5d2c1d268",
+  "sourceHash": "fnv1a64:a16d6b125de845cc",
   "lessonIds": [
     "ES-C18-subjuntivo",
     "ES-C18-comer-subjuntivo",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch127.txt",
   "json": "spanish/narration/ch127.json",
-  "textHash": "fnv1a64:25a3c147bd17404f",
-  "jsonHash": "fnv1a64:275f9d06ded07e6c",
+  "textHash": "fnv1a64:535e2342a61ace10",
+  "jsonHash": "fnv1a64:161bc4335a04874c",
   "findings": []
 }

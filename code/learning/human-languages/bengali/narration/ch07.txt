@@ -44,7 +44,7 @@ The letters in this word.
 দেখা (dækhā, "seeing") = দে (dæ) + খা (khā). হবে (hôbe, "will be/happen") = হ (hô) + বে (be).
 
 The word, taken apart.
-দেখা হবে (dækhā hôbe) literally means "[a] seeing will happen" — dækhā (the noun "seeing," from দেখা dækhā "to see") + hôbe ("will be/happen," the future of হওয়া hôwā, "to be, to become"). Bengali says "a meeting will occur" rather than "we will meet" — an impersonal, gentle way to promise reunion. The verb hôwā ("to be/become") is the same one behind āchhā's cousin, and its root ভূ / হ ties (distantly) to English be.
+দেখা হবে (dækhā hôbe) literally means "[a] seeing will happen" — dækhā (the noun "seeing," from দেখা dækhā "to see") + hôbe ("will be/happen," the future of hôwā, "to be, to become"). Bengali says "a meeting will occur" rather than "we will meet" — an impersonal, gentle way to promise reunion. The verb hôwā ("to be/become") is the same one behind āchhā's cousin, and its root bhū / হ ties (distantly) to English be.
 
 Grammar Lens: the impersonal future.
 Many Bengali "we'll…" expressions use this noun + hôbe ("…will happen") shape: dækhā hôbe ("[a] seeing will happen"), kôthā hôbe ("[a] talk will happen"). No "we," no active verb — the event itself is the subject.
@@ -163,9 +163,9 @@ Four chapters, four exchanges, each practised once in the chapter that taught it
 
 You'll want to know: the two goodbyes differ by one word.
 [a table of 2 rows, read aloud]
-আবার দেখা হবে (ābār dækhā hôbe), we'll meet again.
-কাল দেখা হবে (kāl dækhā hôbe), see you tomorrow.
-দেখা হবে (dækhā hôbe) — "a meeting will happen" — does the work in both. What changes is the one word in front: again, or tomorrow. Neither goodbye says goodbye; both name the next meeting, and the front word is how far off it is.
+ābār dækhā hôbe, we'll meet again.
+kāl dækhā hôbe, see you tomorrow.
+dækhā hôbe — "a meeting will happen" — does the work in both. What changes is the one word in front: again, or tomorrow. Neither goodbye says goodbye; both name the next meeting, and the front word is how far off it is.
 কাল is the one to keep an eye on. It is the same word for yesterday and tomorrow, and only the verb around it tells you which way time is running.
 
 Guided Practice.
@@ -181,4 +181,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What do both goodbyes share? (দেখা হবে (dækhā hôbe) — a meeting will happen.) What changes between them? (The word in front — again, or tomorrow.) What is odd about কাল? (It is also yesterday.) And what tells you which one is meant? (The verb around it.)
+What do both goodbyes share? (dækhā hôbe — a meeting will happen.) What changes between them? (The word in front — again, or tomorrow.) What is odd about kāl? (It is also yesterday.) And what tells you which one is meant? (The verb around it.)

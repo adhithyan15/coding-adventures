@@ -55,10 +55,10 @@ children: **know** and **knowledge** by the direct Germanic road; **notice**,
 **diagnosis** through Greek *gignṓskein*. Bengali *jāni* and English *know* are
 one verb, separated only by time.
 
-## Sounds you'll need: জ্ঞ, the letter that lies
+## Sounds you'll need: *jñ*, the letter that lies
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Sanskrit writes the root with **জ্ঞ**, a knot of *j* and *ñ*. Bengali does not say
+Sanskrit writes the root with *jñ*, a knot of *j* and *ñ*. Bengali does not say
 *jñ* at all — it says **gg**, so *jñāna* comes out *ggān*. The plain verb spares
 you the knot: **জানা** is জা + না, *jā-nā*, and nothing more.
 
