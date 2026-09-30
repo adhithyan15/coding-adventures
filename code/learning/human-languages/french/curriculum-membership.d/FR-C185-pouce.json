@@ -1,0 +1,11 @@
+{
+  "id": "FR-C185-pouce",
+  "pathSegment": "FR-PATH-185-SANTE185",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-185-SANTE185",
+      "order": 1
+    }
+  ]
+}

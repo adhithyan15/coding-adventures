@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C186-amitie",
+    "language": "french",
+    "chapter": 186,
+    "sequence": 9850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82ff209023f66b59"
+  },
+  "findings": []
+}

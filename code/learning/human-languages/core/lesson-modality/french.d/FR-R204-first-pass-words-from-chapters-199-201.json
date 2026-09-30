@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R204-first-pass-words-from-chapters-199-201",
+    "language": "french",
+    "chapter": 204,
+    "sequence": 11150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bd3c05ddcc7ebc8"
+  },
+  "findings": []
+}

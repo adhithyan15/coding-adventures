@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:013b252293749c5e",
+  "lessonIds": [
+    "FR-C189-malgre",
+    "FR-C189-malheureusement",
+    "FR-C189-heureusement",
+    "FR-C189-certainement",
+    "FR-C189-vraiment"
+  ],
+  "tex": "french/book/chapters/ch189-despite-unfortunately-luckily-certainly-really.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C182-detruire",
+  "pathSegment": "FR-PATH-182-VERBES182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-182-VERBES182",
+      "order": 2
+    }
+  ]
+}

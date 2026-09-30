@@ -1,0 +1,11 @@
+{
+  "id": "FR-C194-vallee",
+  "pathSegment": "FR-PATH-194-CHOSES194",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-194-CHOSES194",
+      "order": 0
+    }
+  ]
+}

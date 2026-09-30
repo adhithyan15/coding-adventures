@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:e952da942874cec4",
+  "lessonIds": [
+    "FR-C176-arreter",
+    "FR-C176-changer",
+    "FR-C176-deplacer",
+    "FR-C176-enlever",
+    "FR-C176-tenir"
+  ],
+  "tex": "french/book/chapters/ch176-to-stop-to-change-to-move-to-take-off-to-hold.tex"
+}

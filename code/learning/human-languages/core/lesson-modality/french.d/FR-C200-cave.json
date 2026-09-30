@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C200-cave",
+    "language": "french",
+    "chapter": 200,
+    "sequence": 10920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:410e68884dc132c6"
+  },
+  "findings": []
+}

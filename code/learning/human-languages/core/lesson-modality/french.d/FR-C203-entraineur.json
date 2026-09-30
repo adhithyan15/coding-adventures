@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C203-entraineur",
+    "language": "french",
+    "chapter": 203,
+    "sequence": 11080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:957d88df2701b186"
+  },
+  "findings": []
+}

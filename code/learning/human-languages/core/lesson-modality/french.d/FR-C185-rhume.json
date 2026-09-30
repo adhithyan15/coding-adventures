@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C185-rhume",
+    "language": "french",
+    "chapter": 185,
+    "sequence": 9840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:000fe5b68dd2c257"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C181-depasser",
+  "pathSegment": "FR-PATH-181-VERBES181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-181-VERBES181",
+      "order": 4
+    }
+  ]
+}

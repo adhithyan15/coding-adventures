@@ -1,0 +1,11 @@
+{
+  "id": "FR-C199-bagages",
+  "pathSegment": "FR-PATH-199-CHOSES199",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-199-CHOSES199",
+      "order": 2
+    }
+  ]
+}

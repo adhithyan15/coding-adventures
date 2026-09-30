@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C187-soudain",
+    "language": "french",
+    "chapter": 187,
+    "sequence": 9920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28696f67258aa1b4"
+  },
+  "findings": []
+}

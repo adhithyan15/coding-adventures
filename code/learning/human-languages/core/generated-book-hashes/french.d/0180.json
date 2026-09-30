@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:5ecf28f5940ccb03",
+  "lessonIds": [
+    "FR-C180-preparer",
+    "FR-C180-presenter",
+    "FR-C180-preter",
+    "FR-C180-proposer",
+    "FR-C180-ramasser"
+  ],
+  "tex": "french/book/chapters/ch180-to-prepare-to-introduce-to-lend-to-propose-to-pick-up.tex"
+}

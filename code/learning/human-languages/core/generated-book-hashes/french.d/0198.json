@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:185ef0766166d70f",
+  "lessonIds": [
+    "FR-C198-promesse",
+    "FR-C198-reduction",
+    "FR-C198-soldes",
+    "FR-C198-piece",
+    "FR-C198-billet-de-banque",
+    "FR-R198-first-pass-words-from-chapters-193-195",
+    "FR-R198-second-pass-words-from-chapters-196-198"
+  ],
+  "tex": "french/book/chapters/ch198-promise-discount-sales-coin-banknote.tex"
+}

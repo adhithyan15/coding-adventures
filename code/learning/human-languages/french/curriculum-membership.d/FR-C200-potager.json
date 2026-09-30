@@ -1,0 +1,11 @@
+{
+  "id": "FR-C200-potager",
+  "pathSegment": "FR-PATH-200-CHOSES200",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-200-CHOSES200",
+      "order": 4
+    }
+  ]
+}

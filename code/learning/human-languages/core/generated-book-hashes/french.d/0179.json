@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:e751c997dc150ffe",
+  "lessonIds": [
+    "FR-C179-dependre",
+    "FR-C179-partager",
+    "FR-C179-eviter",
+    "FR-C179-lancer",
+    "FR-C179-tourner"
+  ],
+  "tex": "french/book/chapters/ch179-to-depend-to-share-to-avoid-to-throw-to-turn.tex"
+}

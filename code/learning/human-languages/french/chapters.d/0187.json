@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "In that case, Late, Suddenly, Until, Since",
+  "label": "ch:fr-in-that-case-late-suddenly-until-since",
+  "canDo": "I can say in that case, late, suddenly, until and since.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "FR-C187-depuis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can say in that case, late, suddenly, until and since.",
+    "assesses": [
+      "FR-LEX-C187-TEMPS187-03",
+      "FR-LEX-C187-TEMPS187-04",
+      "FR-LEX-C187-TEMPS187-05"
+    ]
+  }
+}

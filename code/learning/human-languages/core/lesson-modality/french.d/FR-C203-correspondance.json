@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C203-correspondance",
+    "language": "french",
+    "chapter": 203,
+    "sequence": 11090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19ff5abad0a6627c"
+  },
+  "findings": []
+}

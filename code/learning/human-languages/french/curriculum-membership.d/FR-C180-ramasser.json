@@ -1,0 +1,11 @@
+{
+  "id": "FR-C180-ramasser",
+  "pathSegment": "FR-PATH-180-VERBES180",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-180-VERBES180",
+      "order": 4
+    }
+  ]
+}

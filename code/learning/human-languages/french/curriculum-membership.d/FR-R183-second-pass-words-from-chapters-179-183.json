@@ -1,0 +1,11 @@
+{
+  "id": "FR-R183-second-pass-words-from-chapters-179-183",
+  "pathSegment": "FR-PATH-183-VERBES183",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FR-EXT-183-VERBES183",
+      "order": 6
+    }
+  ]
+}

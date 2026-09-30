@@ -1,0 +1,11 @@
+{
+  "id": "FR-C204-carriere",
+  "pathSegment": "FR-PATH-204-TRAV204",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-204-TRAV204",
+      "order": 1
+    }
+  ]
+}

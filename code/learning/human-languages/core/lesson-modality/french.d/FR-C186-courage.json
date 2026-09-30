@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C186-courage",
+    "language": "french",
+    "chapter": 186,
+    "sequence": 9880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ed10b16f0d7ba44"
+  },
+  "findings": []
+}

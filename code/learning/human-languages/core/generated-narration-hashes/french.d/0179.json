@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:dc767b6cb881ef2d",
+  "lessonIds": [
+    "FR-C179-dependre",
+    "FR-C179-partager",
+    "FR-C179-eviter",
+    "FR-C179-lancer",
+    "FR-C179-tourner"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch179.txt",
+  "json": "french/narration/ch179.json",
+  "textHash": "fnv1a64:201c37a3ba41b6a0",
+  "jsonHash": "fnv1a64:75cb2657ce489fa1",
+  "findings": []
+}

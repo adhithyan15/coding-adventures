@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C199-sortie",
+    "language": "french",
+    "chapter": 199,
+    "sequence": 10860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dadba85d5048c18"
+  },
+  "findings": []
+}

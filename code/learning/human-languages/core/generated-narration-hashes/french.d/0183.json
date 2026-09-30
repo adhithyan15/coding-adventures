@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:5c06d51794d5709f",
+  "lessonIds": [
+    "FR-C183-renoncer",
+    "FR-C183-echanger",
+    "FR-C183-telecharger",
+    "FR-C183-skier",
+    "FR-C183-glisser",
+    "FR-R183-first-pass-words-from-chapters-175-178",
+    "FR-R183-second-pass-words-from-chapters-179-183"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch183.txt",
+  "json": "french/narration/ch183.json",
+  "textHash": "fnv1a64:63abf26aae999f1f",
+  "jsonHash": "fnv1a64:bccd3e5975d934d7",
+  "findings": []
+}

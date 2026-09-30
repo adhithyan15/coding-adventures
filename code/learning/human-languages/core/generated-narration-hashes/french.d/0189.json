@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:d692303d9e7dd6b4",
+  "lessonIds": [
+    "FR-C189-malgre",
+    "FR-C189-malheureusement",
+    "FR-C189-heureusement",
+    "FR-C189-certainement",
+    "FR-C189-vraiment"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch189.txt",
+  "json": "french/narration/ch189.json",
+  "textHash": "fnv1a64:6745f2f348e9d1a3",
+  "jsonHash": "fnv1a64:f7be4abc07660ad4",
+  "findings": []
+}

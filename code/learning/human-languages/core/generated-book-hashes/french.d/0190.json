@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:6e491dca308b02fc",
+  "lessonIds": [
+    "FR-C190-joyeux-joyeuse",
+    "FR-C190-serieux-serieuse",
+    "FR-C190-timide",
+    "FR-C190-courageux-courageuse",
+    "FR-C190-peureux-peureuse"
+  ],
+  "tex": "french/book/chapters/ch190-cheerful-serious-shy-brave-fearful.tex"
+}

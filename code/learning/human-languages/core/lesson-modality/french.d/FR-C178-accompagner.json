@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C178-accompagner",
+    "language": "french",
+    "chapter": 178,
+    "sequence": 9270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c538dbfc2834537d"
+  },
+  "findings": []
+}

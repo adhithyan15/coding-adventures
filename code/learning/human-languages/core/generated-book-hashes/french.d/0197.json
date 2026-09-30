@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:07e50d9bcb040696",
+  "lessonIds": [
+    "FR-C197-marie",
+    "FR-C197-mariee",
+    "FR-C197-veuf",
+    "FR-C197-succes",
+    "FR-C197-echec"
+  ],
+  "tex": "french/book/chapters/ch197-bridegroom-bride-widower-success-failure.tex"
+}

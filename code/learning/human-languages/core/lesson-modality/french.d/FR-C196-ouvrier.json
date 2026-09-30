@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C196-ouvrier",
+    "language": "french",
+    "chapter": 196,
+    "sequence": 10580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee202f4514b9162a"
+  },
+  "findings": []
+}

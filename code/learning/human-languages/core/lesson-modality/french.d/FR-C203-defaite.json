@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C203-defaite",
+    "language": "french",
+    "chapter": 203,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:733e139b0d8ecc8d"
+  },
+  "findings": []
+}

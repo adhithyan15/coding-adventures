@@ -1,0 +1,11 @@
+{
+  "id": "FR-C188-a-gauche",
+  "pathSegment": "FR-PATH-188-LIEU188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-188-LIEU188",
+      "order": 4
+    }
+  ]
+}

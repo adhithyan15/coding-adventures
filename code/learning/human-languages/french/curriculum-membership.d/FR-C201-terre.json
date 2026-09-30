@@ -1,0 +1,11 @@
+{
+  "id": "FR-C201-terre",
+  "pathSegment": "FR-PATH-201-CHOSES201",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-201-CHOSES201",
+      "order": 0
+    }
+  ]
+}

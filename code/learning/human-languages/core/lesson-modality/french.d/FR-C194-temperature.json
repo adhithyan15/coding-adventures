@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C194-temperature",
+    "language": "french",
+    "chapter": 194,
+    "sequence": 10450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9acc3ba8d833ac55"
+  },
+  "findings": []
+}

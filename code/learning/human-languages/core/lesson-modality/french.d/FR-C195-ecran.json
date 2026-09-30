@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C195-ecran",
+    "language": "french",
+    "chapter": 195,
+    "sequence": 10520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19f1c28a761c59d7"
+  },
+  "findings": []
+}

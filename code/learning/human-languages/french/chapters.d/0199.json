@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Entrance, Exit, Luggage, Seat, Steering wheel",
+  "label": "ch:fr-entrance-exit-luggage-seat-steering-wheel",
+  "canDo": "I can say an entrance, an exit, luggage, a seat and a steering wheel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C199-volant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can say an entrance, an exit, luggage, a seat and a steering wheel.",
+    "assesses": [
+      "FR-LEX-C199-CHOSES199-03",
+      "FR-LEX-C199-CHOSES199-04",
+      "FR-LEX-C199-CHOSES199-05"
+    ]
+  }
+}

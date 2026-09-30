@@ -1,0 +1,11 @@
+{
+  "id": "FR-C193-fauteuil",
+  "pathSegment": "FR-PATH-193-CHOSES193",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-193-CHOSES193",
+      "order": 2
+    }
+  ]
+}

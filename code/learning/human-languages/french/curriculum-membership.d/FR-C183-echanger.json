@@ -1,0 +1,11 @@
+{
+  "id": "FR-C183-echanger",
+  "pathSegment": "FR-PATH-183-VERBES183",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-183-VERBES183",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "To depend, To share, To avoid, To throw, To turn",
+  "label": "ch:fr-to-depend-to-share-to-avoid-to-throw-to-turn",
+  "canDo": "I can say to depend, to share, to avoid, to throw and to turn.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C179-tourner",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can say to depend, to share, to avoid, to throw and to turn.",
+    "assesses": [
+      "FR-LEX-C179-VERBES179-03",
+      "FR-LEX-C179-VERBES179-04",
+      "FR-LEX-C179-VERBES179-05"
+    ]
+  }
+}

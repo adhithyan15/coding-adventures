@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Sheet, Drawer, Armchair, Saucepan, Frying pan",
+  "label": "ch:fr-sheet-drawer-armchair-saucepan-frying-pan",
+  "canDo": "I can say a sheet, a drawer, an armchair, a saucepan and a frying pan.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C193-poele",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can say a sheet, a drawer, an armchair, a saucepan and a frying pan.",
+    "assesses": [
+      "FR-LEX-C193-CHOSES193-03",
+      "FR-LEX-C193-CHOSES193-04",
+      "FR-LEX-C193-CHOSES193-05"
+    ]
+  }
+}

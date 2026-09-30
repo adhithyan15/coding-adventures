@@ -1,0 +1,11 @@
+{
+  "id": "FR-C189-certainement",
+  "pathSegment": "FR-PATH-189-POURQUOI189",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-189-POURQUOI189",
+      "order": 3
+    }
+  ]
+}

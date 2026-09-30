@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:6ea3dd8545310989",
+  "lessonIds": [
+    "FR-C184-bouger",
+    "FR-C184-cueillir",
+    "FR-C184-defendre",
+    "FR-C184-disparaitre",
+    "FR-C184-emprunter"
+  ],
+  "tex": "french/book/chapters/ch184-to-stir-to-pick-to-defend-to-disappear-to-borrow.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C181-gaspiller",
+    "language": "french",
+    "chapter": 181,
+    "sequence": 9440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33ca7082f59ade3d"
+  },
+  "findings": []
+}

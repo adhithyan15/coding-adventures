@@ -1,0 +1,11 @@
+{
+  "id": "FR-C200-grenier",
+  "pathSegment": "FR-PATH-200-CHOSES200",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-200-CHOSES200",
+      "order": 3
+    }
+  ]
+}
