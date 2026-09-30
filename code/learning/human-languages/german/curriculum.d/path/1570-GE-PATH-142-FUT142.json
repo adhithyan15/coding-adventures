@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-142-FUT142",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "GE-EXT-142-FUT142"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C143-quittung",
+  "pathSegment": "GE-PATH-143-READ143",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-143-READ143",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C143-termin",
+  "pathSegment": "GE-PATH-143-READ143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-143-READ143",
+      "order": 2
+    }
+  ]
+}

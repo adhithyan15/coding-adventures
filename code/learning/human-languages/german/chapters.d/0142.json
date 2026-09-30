@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "The Future, Next Week, the Day after Tomorrow, Next Year, To Plan",
+  "label": "ch:ge-the-future-next-week-the-day-after-tomorrow-next-year-to-plan",
+  "canDo": "I can say what will happen, and when: next week, the day after tomorrow, next year.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GE-C142-vorhaben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say what will happen, and when: next week, the day after tomorrow, next year.",
+    "assesses": [
+      "GE-LEX-C142-FUT142-03",
+      "GE-LEX-C142-FUT142-04",
+      "GE-LEX-C142-FUT142-05"
+    ]
+  }
+}

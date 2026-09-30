@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:ea731d1a2aa577d7",
+  "lessonIds": [
+    "GE-C143-miete",
+    "GE-C143-anzeige",
+    "GE-C143-termin",
+    "GE-C143-oeffnungszeiten",
+    "GE-C143-quittung",
+    "GE-R143-first-pass-the-future",
+    "GE-R143-second-pass-reading-notices"
+  ],
+  "tex": "german/book/chapters/ch143-the-rent-an-advert-an-appointment-opening-hours-a-receipt.tex"
+}

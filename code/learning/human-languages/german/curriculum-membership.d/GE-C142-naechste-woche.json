@@ -1,0 +1,11 @@
+{
+  "id": "GE-C142-naechste-woche",
+  "pathSegment": "GE-PATH-142-FUT142",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-142-FUT142",
+      "order": 1
+    }
+  ]
+}
