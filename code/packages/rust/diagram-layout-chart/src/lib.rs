@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.22.0";
+pub const VERSION: &str = "0.23.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -97,6 +97,11 @@ const SERIES_COLORS: &[&str] = &[
     "#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#a855f7", "#14b8a6",
 ];
 
+const RADAR_SERIES_COLORS: &[&str] = &[
+    "#8686ff", "#ffff86", "#d7ff86", "#c286ff", "#ff86ff", "#ff86c2", "#ff8686",
+    "#ffc286", "#c2ff86", "#86ffc2", "#86ffff", "#86c2ff",
+];
+
 fn xy_series_color(diagram: &ChartDiagram, index: usize) -> String {
     diagram
         .xy_config
@@ -105,6 +110,16 @@ fn xy_series_color(diagram: &ChartDiagram, index: usize) -> String {
         .filter(|palette| !palette.is_empty())
         .map(|palette| palette[index % palette.len()].clone())
         .unwrap_or_else(|| SERIES_COLORS[index % SERIES_COLORS.len()].into())
+}
+
+fn radar_series_color(diagram: &ChartDiagram, index: usize) -> String {
+    diagram
+        .radar_config
+        .series_colors
+        .get(index)
+        .filter(|color| !color.is_empty())
+        .cloned()
+        .unwrap_or_else(|| RADAR_SERIES_COLORS[index % RADAR_SERIES_COLORS.len()].into())
 }
 
 /// Lay out a `ChartDiagram` on a canvas of `cw × ch` pixels.
@@ -1407,27 +1422,13 @@ fn radar_cubic_segments(points: &[Point], tension: f64) -> Vec<CubicCurveSegment
         .collect()
 }
 
-fn chart_color_with_opacity(color: &str, opacity: f64) -> String {
-    let hex = color.trim_start_matches('#');
-    if hex.len() == 6 {
-        if let (Ok(r), Ok(g), Ok(b)) = (
-            u8::from_str_radix(&hex[0..2], 16),
-            u8::from_str_radix(&hex[2..4], 16),
-            u8::from_str_radix(&hex[4..6], 16),
-        ) {
-            return format!("rgba({r},{g},{b},{})", opacity.clamp(0.0, 1.0));
-        }
-    }
-    color.to_string()
-}
-
-fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
-    let margin_top = diagram.radar_config.margin_top.unwrap_or(0.0);
-    let margin_bottom = diagram.radar_config.margin_bottom.unwrap_or(0.0);
-    let margin_left = diagram.radar_config.margin_left.unwrap_or(0.0);
-    let margin_right = diagram.radar_config.margin_right.unwrap_or(0.0);
-    let plot_width = diagram.radar_config.width.unwrap_or(cw);
-    let plot_height = diagram.radar_config.height.unwrap_or(ch);
+fn layout_radar(diagram: &ChartDiagram, _cw: f64, _ch: f64) -> LayoutedChartDiagram {
+    let margin_top = diagram.radar_config.margin_top.unwrap_or(50.0);
+    let margin_bottom = diagram.radar_config.margin_bottom.unwrap_or(50.0);
+    let margin_left = diagram.radar_config.margin_left.unwrap_or(50.0);
+    let margin_right = diagram.radar_config.margin_right.unwrap_or(50.0);
+    let plot_width = diagram.radar_config.width.unwrap_or(600.0);
+    let plot_height = diagram.radar_config.height.unwrap_or(600.0);
     let width = plot_width + margin_left + margin_right;
     let height = plot_height + margin_top + margin_bottom;
     let categories = diagram
@@ -1435,15 +1436,9 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
         .as_ref()
         .map(|axis| axis.categories.as_slice())
         .unwrap_or(&[]);
-    let title_height = diagram.title.as_ref().map_or(0.0, |_| TITLE_H);
-    let legend_height = if diagram.series.is_empty() || !diagram.radar_config.show_legend {
-        0.0
-    } else {
-        LEGEND_H
-    };
     let cx = margin_left + plot_width / 2.0;
-    let cy = margin_top + title_height + (plot_height - title_height - legend_height) / 2.0;
-    let radius = ((plot_width.min(plot_height - title_height - legend_height) / 2.0) - 58.0).max(20.0);
+    let cy = margin_top + plot_height / 2.0;
+    let radius = plot_width.min(plot_height) / 2.0;
     let count = categories.len().max(1);
     let mut items = Vec::new();
 
@@ -1504,7 +1499,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 .radar_config
                 .axis_color
                 .clone()
-                .unwrap_or_else(|| "#374151".into()),
+                .unwrap_or_else(|| "#333333".into()),
             stroke_width: diagram.radar_config.axis_stroke_width.unwrap_or(2.0),
         });
         items.push(LayoutedChartItem::AnchoredLabel {
@@ -1516,7 +1511,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 .radar_config
                 .axis_color
                 .clone()
-                .unwrap_or_else(|| "#374151".into()),
+                .unwrap_or_else(|| "#333333".into()),
             anchor: if cos_angle > 0.01 {
                 ChartTextAnchor::Start
             } else if cos_angle < -0.01 {
@@ -1555,12 +1550,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
                 )
             })
             .collect::<Vec<_>>();
-        let color = diagram
-            .radar_config
-            .series_colors
-            .get(series_index % diagram.radar_config.series_colors.len().max(1))
-            .cloned()
-            .unwrap_or_else(|| SERIES_COLORS[series_index % SERIES_COLORS.len()].into());
+        let color = radar_series_color(diagram, series_index);
         let curve_opacity = diagram.radar_config.curve_opacity.unwrap_or(0.5);
         let curve_stroke_width = diagram.radar_config.curve_stroke_width.unwrap_or(2.0);
         if diagram.radar_config.graticule == RadarGraticule::Circle && points.len() >= 3 {
@@ -1591,30 +1581,37 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
     }
 
     if !diagram.series.is_empty() && diagram.radar_config.show_legend {
-        items.push(LayoutedChartItem::Legend {
-            x: MARGIN,
-            y: height - margin_bottom - LEGEND_H,
+        items.push(LayoutedChartItem::VerticalLegend {
+            x: cx + ((plot_width / 2.0 + margin_right) * 3.0) / 4.0,
+            y: cy - ((plot_height / 2.0 + margin_top) * 3.0) / 4.0,
             entries: diagram
                 .series
                 .iter()
                 .enumerate()
                 .map(|(index, plot)| LegendEntry {
-                    color: chart_color_with_opacity(
-                        diagram
-                            .radar_config
-                            .series_colors
-                            .get(index % diagram.radar_config.series_colors.len().max(1))
-                            .map(String::as_str)
-                            .unwrap_or(SERIES_COLORS[index % SERIES_COLORS.len()]),
-                        diagram.radar_config.curve_opacity.unwrap_or(0.5),
-                    ),
+                    color: radar_series_color(diagram, index),
                     label: plot
                         .label
                         .clone()
                         .unwrap_or_else(|| format!("Series {}", index + 1)),
                 })
                 .collect(),
-            font_size: Some(diagram.radar_config.legend_font_size.unwrap_or(12.0)),
+            box_size: 12.0,
+            font_size: diagram.radar_config.legend_font_size.unwrap_or(12.0),
+            line_height: 20.0,
+            fill_opacity: diagram.radar_config.curve_opacity.unwrap_or(0.5),
+        });
+    }
+
+    if let Some(title) = &diagram.title {
+        items.push(LayoutedChartItem::AnchoredLabel {
+            x: cx,
+            y: 0.0,
+            text: title.clone(),
+            font_size: 16.0,
+            color: "#333333".into(),
+            anchor: ChartTextAnchor::Middle,
+            baseline: ChartTextBaseline::Top,
         });
     }
 
@@ -1624,14 +1621,7 @@ fn layout_radar(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagra
         background_color: None,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
-        title_box: diagram
-            .title
-            .as_ref()
-            .map(|text| diagram_ir::LayoutedLabel {
-                x: cx,
-                y: margin_top + MARGIN,
-                text: text.clone(),
-            }),
+        title_box: None,
         items,
     }
 }
@@ -1706,7 +1696,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.22.0");
+        assert_eq!(crate::VERSION, "0.23.0");
     }
 
     #[test]
@@ -2478,7 +2468,7 @@ mod tests {
             }
             _ => None,
         });
-        assert_eq!(first_axis, Some((220.0, 170.0, 220.0, 124.0)));
+        assert_eq!(first_axis, Some((220.0, 170.0, 220.0, 95.0)));
 
         let first_label = layout.items.iter().find_map(|item| match item {
             LayoutedChartItem::AnchoredLabel { x, y, text, .. } if text == "A" => {
@@ -2488,7 +2478,7 @@ mod tests {
         });
         let (label_x, label_y) = first_label.expect("first radar axis label");
         assert!((label_x - 220.0).abs() < f64::EPSILON);
-        assert!((label_y - 55.6).abs() < 1e-10);
+        assert!((label_y + 14.0).abs() < 1e-10);
     }
 
     #[test]
@@ -2540,6 +2530,70 @@ mod tests {
             anchors[6],
             ("W", ChartTextAnchor::End, ChartTextBaseline::Middle)
         );
+    }
+
+    #[test]
+    fn radar_layout_matches_upstream_default_frame_palette_title_and_legend() {
+        let mut diagram = xy_diagram();
+        diagram.kind = ChartKind::Radar;
+        diagram.title = Some("Defaults".into());
+        diagram.x_axis = Some(Axis {
+            kind: AxisKind::Categorical,
+            title: None,
+            categories: vec!["A".into(), "B".into(), "C".into()],
+            min: 0.0,
+            max: 3.0,
+        });
+        diagram.series.push(ChartSeries {
+            kind: SeriesKind::Line,
+            label: Some("Second".into()),
+            data: [3.0, 2.0, 1.0]
+                .into_iter()
+                .map(|value| ChartDataPoint { value, label: None })
+                .collect(),
+        });
+
+        let layout = layout_chart_diagram(&diagram, 320.0, 240.0);
+        assert_eq!((layout.width, layout.height), (700.0, 700.0));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::CubicPath { color, .. } if color == "#8686ff"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::CubicPath { color, .. } if color == "#ffff86"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::VerticalLegend {
+                x,
+                y,
+                box_size,
+                line_height,
+                ..
+            } if *x == 612.5 && *y == 87.5 && *box_size == 12.0 && *line_height == 20.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::AnchoredLabel {
+                y,
+                text,
+                color,
+                ..
+            } if *y == 0.0 && text == "Defaults" && color == "#333333"
+        )));
+        assert!(layout.title_box.is_none());
+
+        diagram.radar_config.series_colors = vec![String::new(), "#708090".into()];
+        let sparse_palette_layout = layout_chart_diagram(&diagram, 320.0, 240.0);
+        assert!(sparse_palette_layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::CubicPath { color, .. } if color == "#8686ff"
+        )));
+        assert!(sparse_palette_layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::CubicPath { color, .. } if color == "#708090"
+        )));
     }
 
     #[test]
