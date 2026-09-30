@@ -660,7 +660,11 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "  bool _usedProvidedHost = false;\n",
             "{host_props_field}",
             "  bool _hostReady = false;\n",
-            "  String? _startupFailure;\n\n",
+            "  String? _startupFailure;\n",
+            "  // UI48 ENV4 (§7.8): the window's environment as the last build saw it,\n",
+            "  // and whether a report of it is already waiting for the end of a frame.\n",
+            "  Map<String, String>? _environment;\n",
+            "  bool _environmentReportQueued = false;\n\n",
             "  @override\n",
             "  void initState() {{\n",
             "    super.initState();\n",
@@ -740,6 +744,68 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "      debugPrint('host error: $error');\n",
             "    }}\n",
             "  }}\n\n",
+            "  // UI48 ENV4 (§7.8): tell the runtime the window's size class,\n",
+            "  // orientation, colour scheme and reduce-motion setting once it has\n",
+            "  // started, then whenever one of them changes.\n",
+            "  //\n",
+            "  // MaterialApp's builder runs below the MediaQuery the app provides and\n",
+            "  // above every route, so it sees the whole window. Reading only the\n",
+            "  // aspects the report needs (size, platform brightness -- the rendered\n",
+            "  // theme, since themeMode is system -- and disableAnimations) makes a\n",
+            "  // change to exactly those rebuild it, and nothing else. It only records\n",
+            "  // and queues: dispatching here would call into the runtime, and\n",
+            "  // setState, in the middle of a build.\n",
+            "  Widget _observeEnvironment(BuildContext context, Widget? child) {{\n",
+            "    final size = MediaQuery.sizeOf(context);\n",
+            "    _environment = MosaicHost.environmentReport(\n",
+            "      size.width,\n",
+            "      size.height,\n",
+            "      MediaQuery.platformBrightnessOf(context) == Brightness.dark,\n",
+            "      reduceMotion: MediaQuery.disableAnimationsOf(context),\n",
+            "    );\n",
+            "    _queueEnvironmentReport();\n",
+            "    return child ?? const SizedBox.shrink();\n",
+            "  }}\n\n",
+            "  // Reports once the frame being built is done, never during it. One report\n",
+            "  // is queued at a time and it sends whatever the LAST build saw, so a burst\n",
+            "  // of resize frames costs one.\n",
+            "  void _queueEnvironmentReport() {{\n",
+            "    if (_environmentReportQueued) return;\n",
+            "    _environmentReportQueued = true;\n",
+            "    WidgetsBinding.instance.addPostFrameCallback((_) {{\n",
+            "      _environmentReportQueued = false;\n",
+            "      _reportEnvironment();\n",
+            "    }});\n",
+            "  }}\n\n",
+            "  // The host sends only a report that differs from the last one the runtime\n",
+            "  // took (or refused), so dragging an edge sends nothing until a threshold\n",
+            "  // is crossed, and a retried start reports afresh to its new host. Nothing\n",
+            "  // is reported before the runtime is up and showing.\n",
+            "  void _reportEnvironment() {{\n",
+            "    final host = _mosaicHost;\n",
+            "    final environment = _environment;\n",
+            "    if (!mounted || !_hostReady || host == null || environment == null) {{\n",
+            "      return;\n",
+            "    }}\n",
+            "    try {{\n",
+            "      // Null: nothing new to show -- the app did not react, or nothing\n",
+            "      // was sent. An answer with props is shown like an event's; a\n",
+            "      // failure is only logged. A resize is not something the user did,\n",
+            "      // so it never replaces the screen with a startup failure.\n",
+            "      final answer = host.reportEnvironment(environment);\n",
+            "      if (answer == null) return;\n",
+            "      if (answer['props'] is Map) {{\n",
+            "        _applyMosaicResponse(answer);\n",
+            "        return;\n",
+            "      }}\n",
+            "      final error = answer['error'];\n",
+            "      if (error != null) {{\n",
+            "        debugPrint('host error: $error');\n",
+            "      }}\n",
+            "    }} on Object catch (error) {{\n",
+            "      debugPrint('host error: Mosaic environment report failed: $error');\n",
+            "    }}\n",
+            "  }}\n\n",
             "  @override\n",
             "  Widget build(BuildContext context) {{\n",
             "    return MaterialApp(\n",
@@ -747,6 +813,7 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "      theme: ThemeData.light(),\n",
             "      darkTheme: ThemeData.dark(),\n",
             "      themeMode: ThemeMode.system,\n",
+            "      builder: _observeEnvironment,\n",
             "      home: Scaffold(\n",
             "        appBar: AppBar(title: const Text('{component_name}')),\n",
             "        body: Center(\n",
@@ -1258,6 +1325,19 @@ fn build_mosaic_host_dart(require_runtime: bool) -> String {
             "    throw StateError('native-complete requires the Mosaic Rust application runtime');\n",
         );
         out.push_str("  }\n\n");
+        // UI48 ENV4 (§7.8): the native-complete `main.dart` reports the
+        // window's environment through these two. This placeholder has no
+        // runtime to tell, so it answers "nothing to show"; the builder
+        // replaces it with the standard binding, which reduces and sends.
+        out.push_str("  static Map<String, String> environmentReport(\n");
+        out.push_str("    double width,\n");
+        out.push_str("    double height,\n");
+        out.push_str("    bool dark, {\n");
+        out.push_str("    bool reduceMotion = false,\n");
+        out.push_str("  }) => const <String, String>{};\n\n");
+        out.push_str(
+            "  Map<String, Object?>? reportEnvironment(Map<String, String> environment) => null;\n\n",
+        );
     }
     out.push_str("  FutureOr<Map<String, Object?>?> props() => null;\n\n");
     out.push_str(
@@ -13027,6 +13107,98 @@ mod tests {
         assert!(project
             .readme
             .contains("never substitutes preview/sample values"));
+    }
+
+    /// UI48 ENV4 (§7.8): the strict shell observes the window through
+    /// MaterialApp's builder and hands each change to the host, which dedupes,
+    /// sends and answers.
+    #[test]
+    fn native_complete_shell_reports_its_environment_to_the_runtime() {
+        let m = component("Card", vec![slot("label", SlotType::Text, true)], vec![]);
+        let opts = EmitOptions {
+            emit_project: true,
+            require_runtime: true,
+            ..EmitOptions::default()
+        };
+        let project = from_pipeline_with_options(
+            &m,
+            &layout("Card", node("Box")),
+            &empty_style("Card"),
+            &opts,
+        )
+        .unwrap()
+        .project
+        .expect("strict project shell");
+        let main = &project.main_dart;
+
+        // Observed below MaterialApp's MediaQuery, for every route.
+        assert!(
+            main.contains("      themeMode: ThemeMode.system,\n      builder: _observeEnvironment,\n"),
+            "{main}"
+        );
+        assert!(main.contains("Widget _observeEnvironment(BuildContext context, Widget? child) {"));
+        // The aspects the report needs, through the host's reducer.
+        assert!(main.contains("final size = MediaQuery.sizeOf(context);"));
+        assert!(main.contains(
+            "_environment = MosaicHost.environmentReport(\n      size.width,\n      size.height,\n      MediaQuery.platformBrightnessOf(context) == Brightness.dark,\n      reduceMotion: MediaQuery.disableAnimationsOf(context),\n    );"
+        ));
+        assert!(main.contains("return child ?? const SizedBox.shrink();"));
+        // Never during build: after the frame, one queued at a time.
+        let observe = main.find("Widget _observeEnvironment(").unwrap();
+        let queue = main[observe..].find("_queueEnvironmentReport();").unwrap() + observe;
+        let report_call = main[observe..].find("host.reportEnvironment(").unwrap() + observe;
+        assert!(queue < report_call, "{main}");
+        assert!(main.contains("if (_environmentReportQueued) return;"));
+        assert!(main.contains(
+            "WidgetsBinding.instance.addPostFrameCallback((_) {\n      _environmentReportQueued = false;\n      _reportEnvironment();\n    });"
+        ));
+        assert_eq!(main.matches("builder: _observeEnvironment").count(), 1);
+        // Nothing before the runtime is up and showing.
+        assert!(main.contains(
+            "if (!mounted || !_hostReady || host == null || environment == null) {"
+        ));
+        // An answer with props is shown like an event's; a failure is only
+        // logged and never reaches the startup-failure screen.
+        let body = &main[main.find("void _reportEnvironment() {").unwrap()..];
+        let body = &body[..body.find("\n  }\n").unwrap()];
+        assert!(body.contains("final answer = host.reportEnvironment(environment);"));
+        assert!(body.contains("if (answer == null) return;"));
+        assert!(body.contains("if (answer['props'] is Map) {\n        _applyMosaicResponse(answer);"));
+        assert!(body.contains("debugPrint('host error: $error');"));
+        assert!(body.contains("} on Object catch (error) {"));
+        assert!(!body.contains("_showStartupFailure"), "{body}");
+
+        // The emit-only placeholder host answers both calls, so the shell
+        // type-checks before the builder installs the standard binding.
+        assert!(project
+            .mosaic_host_dart
+            .contains("  static Map<String, String> environmentReport(\n"));
+        assert!(project.mosaic_host_dart.contains(
+            "  Map<String, Object?>? reportEnvironment(Map<String, String> environment) => null;\n"
+        ));
+    }
+
+    /// A sample-props shell has no runtime to tell, and its host may be a
+    /// package's own (Venture's replaces `mosaic_host.dart`), so it does not
+    /// observe and its placeholder host is unchanged.
+    #[test]
+    fn only_the_native_complete_shell_observes_the_environment() {
+        let m = component("Card", vec![slot("label", SlotType::Text, true)], vec![]);
+        let opts = EmitOptions {
+            emit_project: true,
+            ..EmitOptions::default()
+        };
+        let project = from_pipeline_with_options(
+            &m,
+            &layout("Card", node("Box")),
+            &empty_style("Card"),
+            &opts,
+        )
+        .unwrap()
+        .project
+        .expect("sample project shell");
+        assert!(!project.main_dart.contains("Environment"), "{}", project.main_dart);
+        assert!(!project.mosaic_host_dart.contains("Environment"));
     }
 
     #[test]
