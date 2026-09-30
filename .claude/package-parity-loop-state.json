@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16257,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16257",
+    "branch": "codex/parity-perl-blib-registry-20260927",
+    "implementation_revision": "51ccaa3c23067acd59663e6a66438b4f955b4614",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-30T11:41:38Z",
-    "pr_number": 16204,
-    "status": "merged",
-    "notes": "External Forme plugin-host PR #16204 completed all final-head checks acceptably and merged automatically as 2ab5963263a70206616078aef0bf1c7de69bea8c. The parity loop did not manually merge it or mutate its implementation; the selected blib tranche remained in-progress until this terminal disposition and was then rebased and reconciled onto the exact merge."
+    "observed_at": "2026-09-30T12:21:46Z",
+    "pr_number": 16257,
+    "status": "checks-pending",
+    "notes": "Ready-for-review parity PR #16257 is open from the current rebased branch. GitHub reports MERGEABLE with queued and in-progress checks, so auto-merge remains disabled and the implementation will not be changed merely to create activity."
   },
   "last_inventory": {
     "revision": "9240d08f6c6af840e9378cdb90420c53b1821e2d",
@@ -1432,10 +1438,10 @@
     {
       "id": "build-tool-perl-blib-generated-directory-registry-repair",
       "title": "Resolve Perl blib generated-directory registry authority",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
       "branch": "codex/parity-perl-blib-registry-20260927",
-      "pr_number": null,
+      "pr_number": 16257,
       "selected_at": "2026-09-28T00:07:00Z",
       "selection_revision": "fc06b4ca20f911fcb3334bb7b73d9f20408d7a88",
       "selection_notes": "Selected only after PR #16198 completed every final-head check acceptably and merged through guarded squash auto-merge. The collision-checked exact-main schema-3 inventory remains unchanged at 15 established lanes, 1,470 implementation identities, 4,737 implementation slots, 1,512 all-reported identities, 178 high-consensus packages with 265 missing slots, 805 Rust singletons, five emerging OCaml packages, zero canonical collisions, and zero unknown buckets. All three formal dependencies are merged, the owner is not selection-blocked, and the refreshed dependency/leverage audit ranks this bounded Perl registry repair first with two direct and eight transitive unfinished descendants.",
