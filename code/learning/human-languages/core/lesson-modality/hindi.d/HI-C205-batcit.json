@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C205-batcit",
+    "language": "hindi",
+    "chapter": 205,
+    "sequence": 10350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4941283ae921a761"
+  },
+  "findings": []
+}

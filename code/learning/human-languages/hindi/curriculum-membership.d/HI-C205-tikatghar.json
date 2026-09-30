@@ -1,0 +1,11 @@
+{
+  "id": "HI-C205-tikatghar",
+  "pathSegment": "HI-PATH-205-THG205",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-205-THG205",
+      "order": 2
+    }
+  ]
+}

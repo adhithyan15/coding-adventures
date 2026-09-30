@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C223-sauq",
+    "language": "hindi",
+    "chapter": 223,
+    "sequence": 11580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a61d70c76f4b637"
+  },
+  "findings": []
+}

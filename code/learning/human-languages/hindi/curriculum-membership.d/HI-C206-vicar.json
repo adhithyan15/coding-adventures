@@ -1,0 +1,11 @@
+{
+  "id": "HI-C206-vicar",
+  "pathSegment": "HI-PATH-206-THG206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-206-THG206",
+      "order": 2
+    }
+  ]
+}

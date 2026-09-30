@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C213-zaruri",
+    "language": "hindi",
+    "chapter": 213,
+    "sequence": 10890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5769d9f97b872ec5"
+  },
+  "findings": []
+}

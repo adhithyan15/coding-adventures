@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C224-balla",
+    "language": "hindi",
+    "chapter": 224,
+    "sequence": 11620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2751f044dbd1e74"
+  },
+  "findings": []
+}

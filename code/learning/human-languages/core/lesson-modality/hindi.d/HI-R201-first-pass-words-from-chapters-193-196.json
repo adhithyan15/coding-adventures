@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R201-first-pass-words-from-chapters-193-196",
+    "language": "hindi",
+    "chapter": 201,
+    "sequence": 9970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f82883074b92697e"
+  },
+  "findings": []
+}

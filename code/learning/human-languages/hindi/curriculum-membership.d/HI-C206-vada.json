@@ -1,0 +1,11 @@
+{
+  "id": "HI-C206-vada",
+  "pathSegment": "HI-PATH-206-THG206",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-206-THG206",
+      "order": 4
+    }
+  ]
+}

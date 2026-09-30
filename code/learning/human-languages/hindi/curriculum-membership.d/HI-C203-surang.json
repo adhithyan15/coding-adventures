@@ -1,0 +1,11 @@
+{
+  "id": "HI-C203-surang",
+  "pathSegment": "HI-PATH-203-THG203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-203-THG203",
+      "order": 2
+    }
+  ]
+}

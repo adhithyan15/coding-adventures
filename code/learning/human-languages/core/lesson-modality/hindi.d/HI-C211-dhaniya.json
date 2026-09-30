@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C211-dhaniya",
+    "language": "hindi",
+    "chapter": 211,
+    "sequence": 10820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:126b1fd872bb06b3"
+  },
+  "findings": []
+}

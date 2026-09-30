@@ -1,0 +1,11 @@
+{
+  "id": "HI-C213-zaruri",
+  "pathSegment": "HI-PATH-213-QUAL213",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-213-QUAL213",
+      "order": 0
+    }
+  ]
+}

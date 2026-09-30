@@ -1,0 +1,11 @@
+{
+  "id": "HI-C216-papita",
+  "pathSegment": "HI-PATH-216-THG216",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-216-THG216",
+      "order": 4
+    }
+  ]
+}

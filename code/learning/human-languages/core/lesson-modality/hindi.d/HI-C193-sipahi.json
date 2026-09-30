@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C193-sipahi",
+    "language": "hindi",
+    "chapter": 193,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26c49bbe09f9ed22"
+  },
+  "findings": []
+}

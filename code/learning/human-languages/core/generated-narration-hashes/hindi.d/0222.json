@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:5666b74a823d86a4",
+  "lessonIds": [
+    "HI-C222-patjhar",
+    "HI-C222-karan",
+    "HI-C222-natija",
+    "HI-C222-samasya",
+    "HI-C222-upay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch222.txt",
+  "json": "hindi/narration/ch222.json",
+  "textHash": "fnv1a64:6d7c6c77ede31eef",
+  "jsonHash": "fnv1a64:c2a58f73cc9c4fbf",
+  "findings": []
+}

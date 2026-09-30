@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:2a1dfba155c5678a",
+  "lessonIds": [
+    "HI-C213-zaruri",
+    "HI-C213-khatarnak",
+    "HI-C213-suraksit",
+    "HI-C213-mitha",
+    "HI-C213-narm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch213.txt",
+  "json": "hindi/narration/ch213.json",
+  "textHash": "fnv1a64:7a2ba2577c3177e8",
+  "jsonHash": "fnv1a64:31a3db77abf90eda",
+  "findings": []
+}

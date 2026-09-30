@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:9e27dbb296484bc5",
+  "lessonIds": [
+    "HI-C218-samaj",
+    "HI-C218-sarkar",
+    "HI-C218-kanun",
+    "HI-C218-adalat",
+    "HI-C218-cunav"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch218.txt",
+  "json": "hindi/narration/ch218.json",
+  "textHash": "fnv1a64:95ba43a2a84e322a",
+  "jsonHash": "fnv1a64:2716836904ad4540",
+  "findings": []
+}

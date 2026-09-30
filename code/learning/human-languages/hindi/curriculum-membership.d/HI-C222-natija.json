@@ -1,0 +1,11 @@
+{
+  "id": "HI-C222-natija",
+  "pathSegment": "HI-PATH-222-THG222",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-222-THG222",
+      "order": 2
+    }
+  ]
+}

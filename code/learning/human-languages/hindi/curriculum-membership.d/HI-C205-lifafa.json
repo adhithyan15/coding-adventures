@@ -1,0 +1,11 @@
+{
+  "id": "HI-C205-lifafa",
+  "pathSegment": "HI-PATH-205-THG205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-205-THG205",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:3159a602ea8e930e",
+  "lessonIds": [
+    "HI-C196-mantri",
+    "HI-C196-raja",
+    "HI-C196-rani",
+    "HI-C196-naukar",
+    "HI-C196-cor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch196.txt",
+  "json": "hindi/narration/ch196.json",
+  "textHash": "fnv1a64:3097bc87568d16ec",
+  "jsonHash": "fnv1a64:88ea293081d16557",
+  "findings": []
+}

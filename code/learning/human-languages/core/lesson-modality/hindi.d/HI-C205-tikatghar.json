@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C205-tikatghar",
+    "language": "hindi",
+    "chapter": 205,
+    "sequence": 10330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e03a4e13591c738"
+  },
+  "findings": []
+}

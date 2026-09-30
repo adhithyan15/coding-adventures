@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C196-raja",
+    "language": "hindi",
+    "chapter": 196,
+    "sequence": 9680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4384f956165bf8c3"
+  },
+  "findings": []
+}

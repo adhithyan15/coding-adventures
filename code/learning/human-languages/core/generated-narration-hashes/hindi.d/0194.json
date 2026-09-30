@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:43d1fc3c092772b0",
+  "lessonIds": [
+    "HI-C194-dhobi",
+    "HI-C194-bavarci",
+    "HI-C194-draivar",
+    "HI-C194-injiniyar",
+    "HI-C194-lekhak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch194.txt",
+  "json": "hindi/narration/ch194.json",
+  "textHash": "fnv1a64:094bdabfe440b695",
+  "jsonHash": "fnv1a64:537fb06896b17d79",
+  "findings": []
+}

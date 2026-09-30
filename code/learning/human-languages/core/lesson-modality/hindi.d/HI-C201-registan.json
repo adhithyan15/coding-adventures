@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C201-registan",
+    "language": "hindi",
+    "chapter": 201,
+    "sequence": 9920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97518dfab4528e01"
+  },
+  "findings": []
+}

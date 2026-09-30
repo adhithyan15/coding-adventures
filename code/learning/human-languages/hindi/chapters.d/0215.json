@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "False, Clever, Foolish, Brave, Kind",
+  "label": "ch:hi-false-clever-foolish-brave-kind",
+  "canDo": "I can say false, clever, foolish, brave and kind.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C215-dayalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: i can say false, clever, foolish, brave and kind.",
+    "assesses": [
+      "HI-LEX-C215-QUAL215-03",
+      "HI-LEX-C215-QUAL215-04",
+      "HI-LEX-C215-QUAL215-05"
+    ]
+  }
+}

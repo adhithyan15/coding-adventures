@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:222587facca5efe3",
+  "lessonIds": [
+    "HI-C223-adat",
+    "HI-C223-sauq",
+    "HI-C223-sapna",
+    "HI-C223-khelkud",
+    "HI-C223-ged"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch223.txt",
+  "json": "hindi/narration/ch223.json",
+  "textHash": "fnv1a64:3c3d94aa57e6a250",
+  "jsonHash": "fnv1a64:c77a77be80504a9f",
+  "findings": []
+}

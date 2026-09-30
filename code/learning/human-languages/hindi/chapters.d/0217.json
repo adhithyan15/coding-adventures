@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "A pomegranate, A guava, A festival, Worship, Religion",
+  "label": "ch:hi-a-pomegranate-a-guava-a-festival-worship-religion",
+  "canDo": "I can say a pomegranate, a guava, a festival, worship and religion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-R217-second-pass-words-from-chapters-214-217",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: i can say a pomegranate, a guava, a festival, worship and religion.",
+    "assesses": [
+      "HI-LEX-C217-THG217-03",
+      "HI-LEX-C217-THG217-04",
+      "HI-LEX-C217-THG217-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C219-azadi",
+    "language": "hindi",
+    "chapter": 219,
+    "sequence": 11380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b4229f26ee3f4c4"
+  },
+  "findings": []
+}
