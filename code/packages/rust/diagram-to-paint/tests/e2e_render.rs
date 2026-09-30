@@ -2162,7 +2162,7 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_event_modeling_to_png() {
         let diagram = parse_event_modeling(
-            "%%{init: {\"eventmodeling\": {\"padding\": 24, \"rowHeight\": 40, \"useMaxWidth\": false}}}%%\neventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nentity Sales.CheckoutUI\nentity Sales.SubmitOrder\nentity Sales.OrderSubmitted\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 [[OrderData]]\ntf 03 evt Sales.OrderSubmitted ->> 02 `text`\"order accepted\"\ndata OrderData `json`{ \"total\": 42 }\nnote 02 `md` {\n  Order reviewed\n}\ngwt 02 given evt CartCreated when ui CheckoutUI then evt OrderSubmitted",
+            "%%{init: {\"eventmodeling\": {\"padding\": 24, \"rowHeight\": 40, \"useMaxWidth\": false}, \"themeVariables\": {\"emCommandFill\": \"#cdeffd\", \"emCommandStroke\": \"#405060\"}}}%%\neventmodeling\ntitle Checkout flow\naccTitle: Checkout event model\nentity Sales.CheckoutUI\nentity Sales.SubmitOrder\nentity Sales.OrderSubmitted\nrf 01 ui Sales.CheckoutUI\ntf 02 cmd Sales.SubmitOrder ->> 01 [[OrderData]]\ntf 03 evt Sales.OrderSubmitted ->> 02 `text`\"order accepted\"\ndata OrderData `json`{ \"total\": 42 }\nnote 02 `md` {\n  Order reviewed\n}\ngwt 02 given evt CartCreated when ui CheckoutUI then evt OrderSubmitted",
         )
         .expect("event modeling parse failed");
         let layout = layout_event_model_diagram(&diagram, 720.0);
@@ -2203,6 +2203,8 @@ line "Target" [35, 50, 68, 82]"##,
             PaintInstruction::Rect(rect)
                 if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("eventModel.dataReference"))
                     == Some(&"OrderData".to_string())
+                    && rect.fill.as_deref() == Some("#cdeffd")
+                    && rect.stroke.as_deref() == Some("#405060")
         )));
         assert_eq!(
             scene.metadata.as_ref().and_then(|metadata| metadata.get("eventModel.note.0.data")),

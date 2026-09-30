@@ -232,6 +232,15 @@ fn pinned_event_modeling_subset_corpus_parses_to_semantic_ir() {
             assert_eq!(diagram.config.padding, 22.0);
             assert_eq!(diagram.config.row_height, 36.0);
             assert!(!diagram.config.use_max_width);
+        } else if id == "init-theme-colors" {
+            assert_eq!(diagram.config.styles.ui_fill, "#102030");
+            assert_eq!(diagram.config.styles.command_stroke, "#405060");
+            assert_eq!(diagram.config.styles.event_fill, "#506070");
+        } else if id == "front-matter-theme-colors" {
+            assert_eq!(diagram.config.styles.processor_fill, "#112233");
+            assert_eq!(diagram.config.styles.processor_stroke, "#223344");
+            assert_eq!(diagram.config.styles.read_model_fill, "#334455");
+            assert_eq!(diagram.config.styles.read_model_stroke, "#445566");
         }
     }
     assert!(parse_event_modeling(

@@ -723,14 +723,7 @@ where
                     label_color,
                 ));
             }
-            LayoutedEventModelItem::Frame { x, y, width, height, label, data_reference, data_label, kind } => {
-                let fill = match kind {
-                    EventModelEntityKind::Ui => "#dbeafe",
-                    EventModelEntityKind::Processor => "#e0e7ff",
-                    EventModelEntityKind::Command => "#fef3c7",
-                    EventModelEntityKind::ReadModel => "#dcfce7",
-                    EventModelEntityKind::Event => "#fee2e2",
-                };
+            LayoutedEventModelItem::Frame { x, y, width, height, label, data_reference, data_label, kind: _, fill, stroke } => {
                 let frame_metadata = data_reference.as_ref().map(|reference| {
                     HashMap::from([("eventModel.dataReference".into(), reference.clone())])
                 });
@@ -740,8 +733,8 @@ where
                     y: *y,
                     width: *width,
                     height: *height,
-                    fill: Some(fill.into()),
-                    stroke: Some("#475569".into()),
+                    fill: Some(fill.clone()),
+                    stroke: Some(stroke.clone()),
                     stroke_width: Some(1.5),
                     corner_radius: Some(5.0),
                     stroke_dash: None,

@@ -572,7 +572,7 @@ use diagram_ir::{
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
-    EventModelConfig, EventModelDataBlock, EventModelDiagram, EventModelEntity, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, GitDiagram, GitEvent, JourneyConfig,
+    EventModelConfig, EventModelDataBlock, EventModelDiagram, EventModelEntity, EventModelEntityKind, EventModelFrame, EventModelGwt, EventModelGwtStatement, EventModelNote, EventModelStyles, GitDiagram, GitEvent, JourneyConfig,
     JourneyDiagram, JourneySection, JourneyTask, PieSlice,
     QuadrantConfig, QuadrantPoint, RadarConfig, RadarGraticule, RelKind,
     RequirementElementMetadata, RequirementKind,
@@ -4031,10 +4031,39 @@ fn parse_event_model_config(source: &str) -> EventModelConfig {
             _ => None,
         })
         .unwrap_or(defaults.use_max_width);
+    let theme_front = mermaid_front_matter_section(source, &["themeVariables"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .or(theme_front.as_deref())
+        .unwrap_or("");
+    let theme_value = |key: &str, fallback: &str| {
+        quadrant_directive_value(theme_source, key)
+            .or_else(|| {
+                theme_source.lines().find_map(|line| {
+                    let (name, value) = line.trim().split_once(':')?;
+                    (name.trim() == key)
+                        .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+                })
+            })
+            .filter(|value| !value.is_empty())
+            .unwrap_or_else(|| fallback.to_string())
+    };
+    let style_defaults = EventModelStyles::default();
     EventModelConfig {
         padding: non_negative("padding", defaults.padding),
         row_height: positive("rowHeight", defaults.row_height),
         use_max_width,
+        styles: EventModelStyles {
+            ui_fill: theme_value("emUiFill", &style_defaults.ui_fill),
+            ui_stroke: theme_value("emUiStroke", &style_defaults.ui_stroke),
+            processor_fill: theme_value("emProcessorFill", &style_defaults.processor_fill),
+            processor_stroke: theme_value("emProcessorStroke", &style_defaults.processor_stroke),
+            read_model_fill: theme_value("emReadModelFill", &style_defaults.read_model_fill),
+            read_model_stroke: theme_value("emReadModelStroke", &style_defaults.read_model_stroke),
+            command_fill: theme_value("emCommandFill", &style_defaults.command_fill),
+            command_stroke: theme_value("emCommandStroke", &style_defaults.command_stroke),
+            event_fill: theme_value("emEventFill", &style_defaults.event_fill),
+            event_stroke: theme_value("emEventStroke", &style_defaults.event_stroke),
+        },
     }
 }
 

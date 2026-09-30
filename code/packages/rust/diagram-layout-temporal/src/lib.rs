@@ -1268,6 +1268,28 @@ pub fn layout_event_model_diagram(
     let height = title_height + lane_indices.len() as f64 * lane_height + 20.0 + 2.0 * padding;
     let mut items = Vec::new();
     let mut positions = HashMap::<String, (f64, f64)>::new();
+    let frame_colors = |kind: &EventModelEntityKind| match kind {
+        EventModelEntityKind::Ui => (
+            diagram.config.styles.ui_fill.clone(),
+            diagram.config.styles.ui_stroke.clone(),
+        ),
+        EventModelEntityKind::Processor => (
+            diagram.config.styles.processor_fill.clone(),
+            diagram.config.styles.processor_stroke.clone(),
+        ),
+        EventModelEntityKind::Command => (
+            diagram.config.styles.command_fill.clone(),
+            diagram.config.styles.command_stroke.clone(),
+        ),
+        EventModelEntityKind::ReadModel => (
+            diagram.config.styles.read_model_fill.clone(),
+            diagram.config.styles.read_model_stroke.clone(),
+        ),
+        EventModelEntityKind::Event => (
+            diagram.config.styles.event_fill.clone(),
+            diagram.config.styles.event_stroke.clone(),
+        ),
+    };
 
     let mut lanes = lane_indices.iter().collect::<Vec<_>>();
     lanes.sort_by_key(|(_, index)| **index);
@@ -1285,6 +1307,7 @@ pub fn layout_event_model_diagram(
         let lane = lane_indices[&lane_name(frame)];
         let x = padding + label_width + 24.0 + index as f64 * frame_step;
         let y = padding + title_height + lane as f64 * lane_height + 15.0;
+        let (fill, stroke) = frame_colors(&frame.kind);
         positions.insert(frame.id.clone(), (x, y));
         items.push(LayoutedEventModelItem::Frame {
             x,
@@ -1298,6 +1321,8 @@ pub fn layout_event_model_diagram(
                 None => data.clone(),
             }),
             kind: frame.kind.clone(),
+            fill,
+            stroke,
         });
     }
     for frame in &diagram.frames {
@@ -2479,10 +2504,14 @@ mod tests {
             LayoutedEventModelItem::Frame {
                 data_reference: Some(reference),
                 data_label: Some(data),
+                fill,
+                stroke,
                 ..
             }
                 if reference == "OrderData"
                     && data == "json: \"total\": 42"
+                    && fill == "#bcd6fe"
+                    && stroke == "#679ac3"
         )));
         assert_eq!(layout.notes, diagram.notes);
         assert_eq!(layout.gwt, diagram.gwt);
